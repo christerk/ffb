@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * The player may attempt to use this skill when an opposing player attempts to
@@ -21,4 +22,8 @@ public class Tentacles extends Skill {
 		super("Tentacles", SkillCategory.MUTATION);
 	}
 
+	@Override
+	public void postConstruct() {
+		registerProperty(NamedProperties.canHoldPlayersLeavingTacklezones);
+	}
 }

@@ -1,13 +1,5 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.table.AbstractTableModel;
-
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -18,6 +10,13 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
+
+import javax.swing.ImageIcon;
+import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class StarPlayerTableModel extends AbstractTableModel {
@@ -135,7 +134,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
 			if (PlayerType.STAR == pos.getType()) {
 				RosterPlayer player = new RosterPlayer();
-				player.updatePosition(pos);
+				player.updatePosition(pos, fDialog.getClient().getGame().getApplicationSource());
 				player.setName(pos.getName());
 				Object[] star = new Object[5];
 				star[0] = new Boolean(false);

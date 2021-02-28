@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * The player's appearance is so horrible that any opposing player that wants to
@@ -19,4 +20,8 @@ public class FoulAppearance extends Skill {
 		super("Foul Appearance", SkillCategory.MUTATION);
 	}
 
+	@Override
+	public void postConstruct() {
+		registerProperty(NamedProperties.forceRollBeforeBeingBlocked);
+	}
 }

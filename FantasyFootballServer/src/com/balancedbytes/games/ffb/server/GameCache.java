@@ -1,19 +1,5 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import com.balancedbytes.games.ffb.model.TeamSkeleton;
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameList;
@@ -30,6 +16,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.TeamSkeleton;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
@@ -49,6 +36,18 @@ import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilTeamValue;
+import org.eclipse.jetty.websocket.api.Session;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  *
@@ -82,7 +81,7 @@ public class GameCache {
 				throw new FantasyFootballException(ioe);
 			}
 			try {
-				teamCache.init(new File("teams"));
+				teamCache.init(new File("teams"), fServer);
 			} catch (IOException ioe) {
 				throw new FantasyFootballException(ioe);
 			}
@@ -241,7 +240,7 @@ public class GameCache {
 
 	private Team updateRoster(Team team, Game game) {
 		if (ServerMode.STANDALONE == getServer().getMode()) {
-			team.updateRoster(rosterCache.getRosterById(team.getRosterId(), game));
+			team.updateRoster(rosterCache.getRosterById(team.getRosterId(), game), game.getApplicationSource());
 			team.setTeamValue(UtilTeamValue.findTeamValue(team));
 		}
 		return team;
@@ -305,7 +304,7 @@ public class GameCache {
 			} else if (player instanceof RosterPlayer) {
 				if (pGameState.isZapped(player)) {
 					ZappedPlayer zappedPlayer = new ZappedPlayer();
-					zappedPlayer.init((RosterPlayer) player);
+					zappedPlayer.init((RosterPlayer) player, game.getApplicationSource());
 					player = zappedPlayer;
 					pTeam.addPlayer(player);
 				}

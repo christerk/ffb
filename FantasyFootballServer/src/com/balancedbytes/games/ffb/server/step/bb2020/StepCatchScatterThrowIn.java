@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
@@ -325,7 +325,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					pCoordinate);
 			if (ArrayTool.isProvided(divingCatchersHome) && ArrayTool.isProvided(divingCatchersAway)) {
 				fDivingCatchChoice = false;
-				getResult().addReport(new ReportSkillUse(SkillConstants.DIVING_CATCH, false, SkillUse.CANCEL_DIVING_CATCH));
+				Skill skill = divingCatchersHome[0].getSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
+				getResult().addReport(new ReportSkillUse(skill, false, SkillUse.CANCEL_DIVING_CATCH));
 			} else if (ArrayTool.isProvided(divingCatchersHome)) {
 				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamHome().getId(),
 						PlayerChoiceMode.DIVING_CATCH, divingCatchersHome, null, 1), !game.isHomePlaying());
@@ -340,8 +341,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			if (fDivingCatchChoice) {
 				Player<?> divingCatcher = game.getPlayerById(fCatcherId);
 				if (getReRollSource() == null) {
+					Skill skill = divingCatcher.getSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
 					getResult().addReport(
-							new ReportSkillUse(divingCatcher.getId(), SkillConstants.DIVING_CATCH, true, SkillUse.CATCH_BALL));
+							new ReportSkillUse(divingCatcher.getId(), skill, true, SkillUse.CATCH_BALL));
 				}
 				return catchBall();
 			} else {

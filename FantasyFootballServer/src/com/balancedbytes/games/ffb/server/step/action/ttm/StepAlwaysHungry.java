@@ -8,7 +8,8 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -117,8 +118,8 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 		if (thrownPlayer == null) {
 			return;
 		}
-		boolean doAlwaysHungry = UtilCards.hasUnusedSkill(game, actingPlayer, SkillConstants.ALWAYS_HUNGRY);
-		boolean doEscape = UtilCards.hasSkill(game, actingPlayer, SkillConstants.ALWAYS_HUNGRY) && !doAlwaysHungry;
+		boolean doAlwaysHungry = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.mightEatPlayerToThrow);
+		boolean doEscape = UtilCards.hasSkillWithProperty(game, actingPlayer.getPlayer(), NamedProperties.mightEatPlayerToThrow) && !doAlwaysHungry;
 		if (doAlwaysHungry) {
 			if (ReRolledActions.ALWAYS_HUNGRY == getReRolledAction()) {
 				if ((getReRollSource() == null)
@@ -148,7 +149,8 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 			}
 		}
 		if (doEscape) {
-			actingPlayer.markSkillUsed(SkillConstants.ALWAYS_HUNGRY);
+			Skill skill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer, NamedProperties.mightEatPlayerToThrow);
+			actingPlayer.markSkillUsed(skill);
 			ReRollSource reRollSource = null;
 			if (ReRolledActions.ESCAPE == getReRolledAction()) {
 				if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {

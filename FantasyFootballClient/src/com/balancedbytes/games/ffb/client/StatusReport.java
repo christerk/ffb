@@ -32,7 +32,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -902,7 +901,7 @@ public class StatusReport {
 						print(getIndent(), false, player);
 						println(getIndent(), " using a Secret Weapon.");
 					}
-					Integer secretWeaponValue = player.getPosition().getSkillValue(SkillConstants.SECRET_WEAPON);
+					Integer secretWeaponValue = player.getPosition().getSkillValue(player.getSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive));
 					if ((rolls[i] > 0) && (secretWeaponValue != null)) {
 						StringBuilder penalty = new StringBuilder();
 						penalty.append("Penalty roll was ").append(rolls[i]);
@@ -1113,7 +1112,7 @@ public class StatusReport {
 		}
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		if (!pReport.isReRolled()) {
-			if (actingPlayer.getPlayer().hastActiveProperty(NamedProperties.ignoreTacklezonesWhenDodging)) {
+			if (UtilCards.hasUncanceledSkillWithProperty(game, actingPlayer.getPlayer(), NamedProperties.ignoreTacklezonesWhenDodging)) {
 				print(getIndent() + 1, false, actingPlayer.getPlayer());
 				println(getIndent() + 1, " is Stunty and ignores tacklezones.");
 			}
@@ -1616,20 +1615,19 @@ public class StatusReport {
 				String confusionMessage = confusionSkill.getConfusionMessage();
 				println(getIndent() + 1, " " + confusionMessage + ".");
 
-				status = new StringBuilder();
 				if (!pReport.isReRolled() && fShowModifiersOnFailure) {
 					neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
 				}
 			}
 			if (neededRoll != null) {
-				if (SkillConstants.WILD_ANIMAL == pReport.getConfusionSkill()) {
+				if (pReport.getConfusionSkill().hasSkillProperty(NamedProperties.needsToRollForActionButKeepsTacklezone)) {
 					if (pReport.getMinimumRoll() > 2) {
 						neededRoll.append(" (Wild Animal does not attack)");
 					} else {
 						neededRoll.append(" (Wild Animal does attack)");
 					}
 				}
-				if (SkillConstants.REALLY_STUPID == pReport.getConfusionSkill()) {
+				if (pReport.getConfusionSkill().hasSkillProperty(NamedProperties.needsToRollHighToAvoidConfusion)) {
 					if (pReport.getMinimumRoll() > 2) {
 						neededRoll.append(" (Really Stupid player without assistance)");
 					} else {
@@ -1799,13 +1797,13 @@ public class StatusReport {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
 		if (!pReport.isReRolled()) {
-			if (pReport.getSkill() == SkillConstants.SHADOWING) {
+			if (pReport.getSkill().hasSkillProperty(NamedProperties.canFollowPlayerLeavingTacklezones)) {
 				print(getIndent(), true, defender);
 				print(getIndent(), TextStyle.BOLD, " tries to shadow ");
 				print(getIndent(), true, actingPlayer.getPlayer());
 				println(getIndent(), TextStyle.BOLD, ":");
 			}
-			if (pReport.getSkill() == SkillConstants.TENTACLES) {
+			if (pReport.getSkill().hasSkillProperty(NamedProperties.canHoldPlayersLeavingTacklezones)) {
 				status = new StringBuilder();
 				print(getIndent(), true, defender);
 				print(getIndent(), TextStyle.BOLD, " tries to hold ");
@@ -1818,7 +1816,7 @@ public class StatusReport {
 		if (ArrayTool.isProvided(pReport.getRoll())) {
 			rolledTotal = pReport.getRoll()[0] + pReport.getRoll()[1];
 		}
-		if (pReport.getSkill() == SkillConstants.SHADOWING) {
+		if (pReport.getSkill().hasSkillProperty(NamedProperties.canFollowPlayerLeavingTacklezones)) {
 			if (rolledTotal > 0) {
 				status = new StringBuilder();
 				status.append("Shadowing Escape Roll [ ").append(pReport.getRoll()[0]).append(" ][ ")
@@ -1850,7 +1848,7 @@ public class StatusReport {
 				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 			}
 		}
-		if (pReport.getSkill() == SkillConstants.TENTACLES) {
+		if (pReport.getSkill().hasSkillProperty(NamedProperties.canHoldPlayersLeavingTacklezones)) {
 			if (rolledTotal > 0) {
 				status = new StringBuilder();
 				status.append("Tentacles Escape Roll [ ").append(pReport.getRoll()[0]).append(" ][ ")
@@ -2388,8 +2386,8 @@ public class StatusReport {
 				}
 				break;
 			case POW_PUSHBACK:
-				if (UtilCards.hasSkill(game, defender, SkillConstants.DODGE)
-					&& UtilCards.hasSkill(game, attacker, SkillConstants.TACKLE)) {
+				if (UtilCards.hasSkillWithProperty(game, defender, NamedProperties.ignoreDefenderStumblesResult)
+					&& UtilCards.hasSkillToCancelProperty(game, attacker, NamedProperties.ignoreDefenderStumblesResult)) {
 					print(getIndent() + 1, false, attacker);
 					println(getIndent() + 1, " uses Tackle to bring opponent down.");
 				}
@@ -2709,16 +2707,19 @@ public class StatusReport {
 		Game game = getClient().getGame();
 		Player<?> player = game.getPlayerById(pReport.getPlayerId());
 		if (player != null) {
-			int indent = getIndent() + 1;
-			print(indent, false, player);
-			StringBuilder status = new StringBuilder();
-			if (!pReport.isUsed()) {
-				status.append(" does not use ").append(SkillConstants.PILING_ON.getName()).append(".");
-			} else {
-				status.append(" uses ").append(SkillConstants.PILING_ON.getName()).append(" to re-roll ");
-				status.append(pReport.isReRollInjury() ? "Injury" : "Armor").append(".");
+			Skill skill = player.getSkillWithProperty(NamedProperties.canPileOnOpponent);
+			if (skill != null) {
+				int indent = getIndent() + 1;
+				print(indent, false, player);
+				StringBuilder status = new StringBuilder();
+				if (!pReport.isUsed()) {
+					status.append(" does not use ").append(skill.getName()).append(".");
+				} else {
+					status.append(" uses ").append(skill.getName()).append(" to re-roll ");
+					status.append(pReport.isReRollInjury() ? "Injury" : "Armor").append(".");
+				}
+				println(indent, status.toString());
 			}
-			println(indent, status.toString());
 		}
 	}
 

@@ -34,9 +34,9 @@ public class ClientCommandHandlerAddPlayer extends ClientCommandHandler {
 		if (oldPlayer == null) {
 			team.addPlayer(addPlayerCommand.getPlayer());
 			RosterPosition rosterPosition = team.getRoster().getPositionById(addPlayerCommand.getPlayer().getPositionId());
-			addPlayerCommand.getPlayer().updatePosition(rosterPosition);
+			addPlayerCommand.getPlayer().updatePosition(rosterPosition, game.getApplicationSource());
 		} else if (oldPlayer instanceof RosterPlayer) {
-			oldPlayer.init(addPlayerCommand.getPlayer());
+			oldPlayer.init(addPlayerCommand.getPlayer(), game.getApplicationSource());
 		} else {
 			return false;
 		}

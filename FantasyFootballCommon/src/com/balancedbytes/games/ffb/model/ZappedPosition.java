@@ -1,23 +1,29 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.skill.Dodge;
+import com.balancedbytes.games.ffb.skill.Leap;
+import com.balancedbytes.games.ffb.skill.NoHands;
+import com.balancedbytes.games.ffb.skill.Stunty;
+import com.balancedbytes.games.ffb.skill.Titchy;
+import com.balancedbytes.games.ffb.skill.VeryLongLegs;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ZappedPosition implements Position {
 
@@ -35,15 +41,15 @@ public class ZappedPosition implements Position {
 
 	private RosterPosition originalPosition;
 
-	public ZappedPosition(RosterPosition originalPosition) {
+	public ZappedPosition(RosterPosition originalPosition, IFactorySource game) {
 		this.originalPosition = originalPosition;
-
-		skills.add(SkillConstants.DODGE);
-		skills.add(SkillConstants.NO_HANDS);
-		skills.add(SkillConstants.TITCHY);
-		skills.add(SkillConstants.STUNTY);
-		skills.add(SkillConstants.VERY_LONG_LEGS);
-		skills.add(SkillConstants.LEAP);
+		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
+		skills.add(factory.forClass(Dodge.class));
+		skills.add(factory.forClass(NoHands.class));
+		skills.add(factory.forClass(Titchy.class));
+		skills.add(factory.forClass(Stunty.class));
+		skills.add(factory.forClass(VeryLongLegs.class));
+		skills.add(factory.forClass(Leap.class));
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.model.SkillConstants;
-
 /**
  * 
  * @author Kalimar
@@ -11,33 +9,33 @@ public enum PlayerChoiceMode implements INamedObject {
 	TENTACLES("tentacles"), SHADOWING("shadowing"), DIVING_TACKLE("divingTackle"), FEED("feed"),
 	DIVING_CATCH("divingCatch"), CARD("card"), BLOCK("block"), MVP("mvp");
 
-	private String fName;
+	private final String name;
 
-	private PlayerChoiceMode(String pName) {
-		fName = pName;
+	PlayerChoiceMode(String pName) {
+		name = pName;
 	}
 
 	public String getName() {
-		return fName;
+		return name;
 	}
 
 	public String getDialogHeader(int nrOfPlayers) {
 		StringBuilder header = new StringBuilder();
 		switch (this) {
 		case DIVING_TACKLE:
-			header.append("Select a player to use ").append(SkillConstants.DIVING_TACKLE.getName());
+			header.append("Select a player to use Diving Tackle");
 			break;
 		case SHADOWING:
-			header.append("Select a player to use ").append(SkillConstants.SHADOWING.getName());
+			header.append("Select a player to use Shadowing");
 			break;
 		case TENTACLES:
-			header.append("Select a player to use ").append(SkillConstants.TENTACLES.getName());
+			header.append("Select a player to use Tentacles");
 			break;
 		case FEED:
 			header.append("Select a player to feed on");
 			break;
 		case DIVING_CATCH:
-			header.append("Select a player to use ").append(SkillConstants.DIVING_CATCH.getName());
+			header.append("Select a player to use Diving Catch");
 			break;
 		case CARD:
 			header.append("Select a player to play this card on");
@@ -46,7 +44,7 @@ public enum PlayerChoiceMode implements INamedObject {
 			header.append("Select a player to block");
 			break;
 		case MVP:
-			header.append("Nominate " + nrOfPlayers + " for the MVP");
+			header.append("Nominate ").append(nrOfPlayers).append(" for the MVP");
 			break;
 		default:
 			break;
@@ -58,19 +56,19 @@ public enum PlayerChoiceMode implements INamedObject {
 		StringBuilder title = new StringBuilder();
 		switch (this) {
 		case DIVING_TACKLE:
-			title.append(SkillConstants.DIVING_TACKLE.getName());
+			title.append("Diving Tackle");
 			break;
 		case SHADOWING:
-			title.append(SkillConstants.SHADOWING.getName());
+			title.append("Shadowing");
 			break;
 		case TENTACLES:
-			title.append(SkillConstants.TENTACLES.getName());
+			title.append("Tentacles");
 			break;
 		case FEED:
 			title.append("Feed on player");
 			break;
 		case DIVING_CATCH:
-			title.append(SkillConstants.DIVING_CATCH.getName());
+			title.append("Diving Catch");
 			break;
 		case CARD:
 			title.append("Play Card");
@@ -91,19 +89,19 @@ public enum PlayerChoiceMode implements INamedObject {
 		StringBuilder message = new StringBuilder();
 		switch (this) {
 		case DIVING_TACKLE:
-			message.append("Waiting for coach to use ").append(SkillConstants.DIVING_TACKLE.getName()).append(".");
+			message.append("Waiting for coach to use Diving Tackle.");
 			break;
 		case SHADOWING:
-			message.append("Waiting for coach to use ").append(SkillConstants.SHADOWING.getName()).append(".");
+			message.append("Waiting for coach to use Shadowing.");
 			break;
 		case TENTACLES:
-			message.append("Waiting for coach to use ").append(SkillConstants.TENTACLES.getName()).append(".");
+			message.append("Waiting for coach to use Tentacles.");
 			break;
 		case FEED:
 			message.append("Waiting for coach to choose player to feed on.");
 			break;
 		case DIVING_CATCH:
-			message.append("Waiting for coach to use ").append(SkillConstants.DIVING_CATCH.getName()).append(".");
+			message.append("Waiting for coach to use Diving Catch.");
 			break;
 		case CARD:
 			message.append("Waiting for coach to play card on player.");

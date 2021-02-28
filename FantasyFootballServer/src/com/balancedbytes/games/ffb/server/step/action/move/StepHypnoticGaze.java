@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.GazeModifierContext;
@@ -108,8 +107,8 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 				doGaze = false;
 			}
 		} else {
-			gazeSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
-			doGaze = gazeSkill != null && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.HYPNOTIC_GAZE);
+			gazeSkill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer, NamedProperties.inflictsConfusion);
+			doGaze = gazeSkill != null && !UtilCards.hasSkillToCancelProperty(game, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
 		}
 		if (doGaze && gazeSkill != null) {
 			actingPlayer.markSkillUsed(gazeSkill);

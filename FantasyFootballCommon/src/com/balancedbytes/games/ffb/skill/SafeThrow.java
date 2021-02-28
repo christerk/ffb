@@ -22,7 +22,7 @@ public class SafeThrow extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canForceInterceptionReroll);
+		registerProperty(NamedProperties.canCancelInterceptions);
 		registerProperty(NamedProperties.dontDropFumbles);
 	}
 

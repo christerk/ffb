@@ -1,15 +1,8 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.table.AbstractTableModel;
-
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Position;
@@ -18,6 +11,13 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
+
+import javax.swing.ImageIcon;
+import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class MercenaryTableModel extends AbstractTableModel {
@@ -121,7 +121,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 				int playerInPosition = fDialog.getTeam().getNrOfAvailablePlayersInPosition(pos);
 				for (int i = 0; i < pos.getQuantity() - playerInPosition; i++) {
 					RosterPlayer player = new RosterPlayer();
-					player.updatePosition(pos);
+					player.updatePosition(pos, fDialog.getClient().getGame().getApplicationSource());
 					player.setName(pos.getName());
 					Object[] mecenary = new Object[6];
 					mecenary[0] = new Boolean(false);
@@ -145,5 +145,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 		});
 		return mercenaries;
 	}
-
+	public Game getGame() {
+		return fDialog.getClient().getGame();
+	}
 }

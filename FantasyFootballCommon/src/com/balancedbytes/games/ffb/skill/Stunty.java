@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
@@ -45,7 +44,7 @@ public class Stunty extends Skill {
 
 				if (!context.isStab() &&
 					!UtilCards.hasCard(context.getGame(), context.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE) &&
-					context.getDefender().hasSkill(SkillConstants.STUNTY)) {
+					context.getDefender().hasSkillWithProperty(NamedProperties.isHurtMoreEasily)) {
 					applies = true;
 				}
 
@@ -55,7 +54,7 @@ public class Stunty extends Skill {
 
 		registerProperty(NamedProperties.smallIcon);
 		registerProperty(NamedProperties.preventRaiseFromDead);
-		registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
+		registerProperty(new CancelSkillProperty(NamedProperties.hasNurglesRot));
 		registerProperty(NamedProperties.ignoreTacklezonesWhenDodging);
 		registerProperty(NamedProperties.isHurtMoreEasily);
 	}

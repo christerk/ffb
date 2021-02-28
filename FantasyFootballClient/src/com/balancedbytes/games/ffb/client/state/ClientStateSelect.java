@@ -17,7 +17,6 @@ import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -302,8 +301,8 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& playerState.isActive() && UtilCards.hasSkill(game, pPlayer, SkillConstants.MULTIPLE_BLOCK)
-				&& !UtilCards.cancelsSkill(pPlayer, SkillConstants.MULTIPLE_BLOCK)
+				&& playerState.isActive() && UtilCards.hasSkillWithProperty(game, pPlayer, NamedProperties.canBlockMoreThanOnce)
+				&& !UtilCards.hasSkillToCancelProperty(game, pPlayer, NamedProperties.canBlockMoreThanOnce)
 				&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
 						&& pPlayer.hasSkillWithProperty(NamedProperties.canStandUpForFree)))) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);

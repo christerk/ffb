@@ -1,15 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -20,6 +10,14 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -75,10 +73,10 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		}
 	}
 
-	public Team() {
+	public Team(IFactorySource game) {
 		fPlayerById = new HashMap<>();
 		fPlayerByNr = new HashMap<>();
-		updateRoster(new Roster());
+		updateRoster(new Roster(), game);
 	}
 
 	public void setId(String pId) {
@@ -206,18 +204,18 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		return fRoster;
 	}
 
-	public void updateRoster(Roster pRoster) {
-		updateRoster(pRoster, true);
+	public void updateRoster(Roster pRoster, IFactorySource game) {
+		updateRoster(pRoster, true, game);
 	}
 
-	public void updateRoster(Roster pRoster, boolean updateStats) {
+	public void updateRoster(Roster pRoster, boolean updateStats, IFactorySource game) {
 		fRoster = pRoster;
 		if (fRoster != null) {
 			setRosterId(fRoster.getId());
 			setRace(fRoster.getName());
 			for (Player<?> player : getPlayers()) {
 				String positionId = player.getPositionId();
-				player.updatePosition(fRoster.getPositionById(positionId), updateStats);
+				player.updatePosition(fRoster.getPositionById(positionId), updateStats, game);
 			}
 		}
 	}
@@ -474,7 +472,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		if (rosterObject != null) {
 			roster = new Roster().initFrom(game, rosterObject);
 		}
-		updateRoster(roster, false);
+		updateRoster(roster, false, game);
 
 		return this;
 

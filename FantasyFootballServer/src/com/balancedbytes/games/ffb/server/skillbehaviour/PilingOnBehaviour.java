@@ -12,7 +12,6 @@ import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.option.GameOptionId;
@@ -127,7 +126,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						}
 						boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
 						if ((attackerState.getBase() != PlayerState.FALLING)
-								&& UtilCards.hasUnusedSkill(game, actingPlayer, SkillConstants.PILING_ON)
+								&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPileOnOpponent)
 								&& (!usesATeamReroll
 										|| UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), actingPlayer.getPlayer()))
 								&& attackerCoordinate.isAdjacent(defenderCoordinate)
@@ -138,7 +137,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 										|| !state.injuryResultDefender.injuryContext().isArmorBroken())
 								&& (!UtilCards.hasCard(game, game.getDefender(), Card.BELT_OF_INVULNERABILITY)
 										|| state.injuryResultDefender.injuryContext().isArmorBroken())
-								&& !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.PILING_ON)
+								&& !UtilCards.hasSkillToCancelProperty(game, actingPlayer.getPlayer(), NamedProperties.canPileOnOpponent)
 								&& !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)) {
 							state.injuryResultDefender.report(step);
 							UtilServerDialog.showDialog(step.getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(),

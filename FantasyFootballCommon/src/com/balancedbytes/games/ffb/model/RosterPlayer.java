@@ -1,13 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -25,6 +17,13 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 
@@ -54,8 +53,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private String fPositionId;
 	private transient int fIconSetIndex;
 
-	private List<Skill> fSkills;
-	private List<SeriousInjury> fLastingInjuries;
+	private final List<Skill> fSkills;
+	private final List<SeriousInjury> fLastingInjuries;
 	private SeriousInjury fRecoveringInjury;
 
 	private transient RosterPosition fPosition;
@@ -216,12 +215,12 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition) {
-		updatePosition(pPosition, true);
+	public void updatePosition(RosterPosition pPosition, IFactorySource game) {
+		updatePosition(pPosition, true, game);
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, boolean updateStats) {
+	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game) {
 		fPosition = pPosition;
 		if (fPosition != null) {
 			setPositionId(fPosition.getId());
@@ -534,7 +533,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void init(RosterPlayer pPlayer) {
+	public void init(RosterPlayer pPlayer, IFactorySource source) {
 
 		if (pPlayer == null) {
 			return;

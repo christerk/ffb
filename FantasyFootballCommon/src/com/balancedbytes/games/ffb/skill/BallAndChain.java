@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -60,10 +59,10 @@ public class BallAndChain extends Skill {
 		registerProperty(NamedProperties.movesRandomly);
 		registerProperty(NamedProperties.ignoreTacklezonesWhenMoving);
 		registerProperty(NamedProperties.convertStunToKO);
-		registerProperty(new CancelSkillProperty(SkillConstants.MULTIPLE_BLOCK));
-		registerProperty(new CancelSkillProperty(SkillConstants.PILING_ON));
-		registerProperty(new CancelSkillProperty(SkillConstants.FOUL_APPEARANCE));
-		registerProperty(new CancelSkillProperty(SkillConstants.HYPNOTIC_GAZE));
+		registerProperty(new CancelSkillProperty(NamedProperties.canBlockMoreThanOnce));
+		registerProperty(new CancelSkillProperty(NamedProperties.canPileOnOpponent));
+		registerProperty(new CancelSkillProperty(NamedProperties.forceRollBeforeBeingBlocked));
+		registerProperty(new CancelSkillProperty(NamedProperties.inflictsConfusion));
 	}
 
 }

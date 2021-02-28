@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -29,7 +28,7 @@ public class Grab extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canPushBackToAnySquare);
-		registerProperty(new CancelSkillProperty(SkillConstants.SIDE_STEP));
+		registerProperty(new CancelSkillProperty(NamedProperties.canChooseOwnPushedBackSquare));
 	}
 
 }

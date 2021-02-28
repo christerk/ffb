@@ -1,17 +1,16 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
-import java.io.IOException;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.report.ReportRiotousRookies;
@@ -21,8 +20,11 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
+import com.balancedbytes.games.ffb.skill.Loner;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
+
+import java.io.IOException;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepRiotousRookies extends AbstractStep {
@@ -58,17 +60,18 @@ public class StepRiotousRookies extends AbstractStep {
 	}
 
 	private void riotousPlayer(Game game, Team team, int index, RosterPosition position) {
+		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
 		int genderOrdinal = getGameState().getDiceRoller().rollGender();
 		PlayerGender gender = PlayerGender.fromOrdinal(genderOrdinal);
 		String name = rookieName(position.getNameGenerator(), gender, "RiotousRookie #" + index);
 		RosterPlayer riotousPlayer = new RosterPlayer();
 		riotousPlayer.setId(team.getId() + "Riotous" + index);
-		riotousPlayer.updatePosition(position);
+		riotousPlayer.updatePosition(position, game.getApplicationSource());
 		riotousPlayer.setName(name);
 		riotousPlayer.setNr(team.getMaxPlayerNr() + 1);
 		riotousPlayer.setGender(gender);
 		riotousPlayer.setType(PlayerType.RIOTOUS_ROOKIE);
-		riotousPlayer.addSkill(SkillConstants.LONER);
+		riotousPlayer.addSkill(factory.forClass(Loner.class));
 		team.addPlayer(riotousPlayer);
 		game.getFieldModel().setPlayerState(riotousPlayer, new PlayerState(PlayerState.RESERVE));
 		UtilBox.putPlayerIntoBox(game, riotousPlayer);

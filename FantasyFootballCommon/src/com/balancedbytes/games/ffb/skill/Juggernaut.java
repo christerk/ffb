@@ -4,8 +4,8 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * A player with this skill is virtually impossible to stop once he is in
@@ -23,10 +23,9 @@ public class Juggernaut extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(new CancelSkillProperty(SkillConstants.JUGGERNAUT));
-		registerProperty(new CancelSkillProperty(SkillConstants.WRESTLE));
-		registerProperty(new CancelSkillProperty(SkillConstants.STAND_FIRM));
-		registerProperty(new CancelSkillProperty(SkillConstants.FEND));
+		registerProperty(new CancelSkillProperty(NamedProperties.canTakeDownPlayersWithHimOnBothDown));
+		registerProperty(new CancelSkillProperty(NamedProperties.canRefuseToBePushed));
+		registerProperty(new CancelSkillProperty(NamedProperties.preventOpponentFollowingUp));
 
 	}
 

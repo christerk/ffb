@@ -1,10 +1,9 @@
 package com.balancedbytes.games.ffb.model.modifier;
 
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.modifiers.PassContext;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,9 +27,10 @@ public class NamedProperties {
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
 	public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
+	public static final ISkillProperty canCancelInterceptions = new NamedProperty("Can Force Interception Reroll");
 	public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty(
 			"Can Choose Own Pushed Back Square");
-	public static final ISkillProperty canForceInterceptionReroll = new NamedProperty("Can Force Interception Reroll");
+	public static final ISkillProperty canFollowPlayerLeavingTacklezones = new NamedProperty("Can Follow Player Leaving Tackelzones");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
 		private final Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
 				add(PassingDistance.LONG_PASS);
@@ -41,6 +41,7 @@ public class NamedProperties {
 			return longDistances.contains(context.getDistance());
 		}
 	};
+	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Use Special Block Rules");
@@ -51,14 +52,18 @@ public class NamedProperties {
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlock = new NamedProperty(
 			"Can Perform Armour Roll Instead Of Block");
 	public static final ISkillProperty canPushBackToAnySquare = new NamedProperty("Can Push Back To Any Square");
+	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
+	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
+	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 			"Can Roll To Match Opponents Strength");
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
 	public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty(
 			"Can Sneak Extra Players Onto Pitch");
 	public static final ISkillProperty canStandUpForFree = new NamedProperty("Can Stand Up For Free");
+	public static final ISkillProperty canTakeDownPlayersWithHimOnBothDown = new NamedProperty("Can Take Down Players With Him On Both Down");
 	public static final ISkillProperty canThrowTeamMates = new NamedProperty("Can Throw Team Mates");
 	public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
 	public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
@@ -72,6 +77,7 @@ public class NamedProperties {
 			"Force Opponent To Drop Ball On Pushback");
 	public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
 	public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
+	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
 	public static final ISkillProperty forceSecondBlock = new NamedProperty("Force Second Block");
 	public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
@@ -97,7 +103,11 @@ public class NamedProperties {
 	public static final ISkillProperty inflictsConfusion = new NamedProperty("Inflicts Confusion");
 	public static final ISkillProperty inflictsDisturbingPresence = new NamedProperty("Inflicts Disturbing Presence");
 	public static final ISkillProperty isHurtMoreEasily = new NamedProperty("Is Hurt More Easily");
+	public static final ISkillProperty makesDodgingHarder = new NamedProperty("Makes Dodging Harder");
+	public static final ISkillProperty mightEatPlayerToThrow = new NamedProperty("Might Eat Player To Throw");
 	public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
+	public static final ISkillProperty needsToRollForActionButKeepsTacklezone = new NamedProperty("Needs To Roll For Action But Keeps Tacklezone");
+	public static final ISkillProperty needsToRollHighToAvoidConfusion = new NamedProperty("Need To Roll High To Avoid Confusion");
 	public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Causes Injury Roll");
 	public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");
 	public static final ISkillProperty preventCardRabbitsFoot = new NamedProperty("Prevent Rabbit's Foot Card");
@@ -118,7 +128,7 @@ public class NamedProperties {
 			"Prevent Regular Hand Over Action");
 	public static final ISkillProperty preventRegularPassAction = new NamedProperty("Prevent Regular Pass Action");
 	public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
-	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier", Collections.singleton(ignoreTacklezonesWhenDodging));
+	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");

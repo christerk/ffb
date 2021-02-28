@@ -24,6 +24,7 @@ public class WildAnimal extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.enableStandUpAndEndBlitzAction);
+		registerProperty(NamedProperties.needsToRollForActionButKeepsTacklezone);
 	}
 
 	@Override

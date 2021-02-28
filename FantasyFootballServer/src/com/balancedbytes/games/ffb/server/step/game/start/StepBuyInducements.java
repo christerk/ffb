@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogBuyInducementsParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -18,7 +19,6 @@ import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
@@ -38,10 +38,11 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Inducement.SequenceParams;
 import com.balancedbytes.games.ffb.server.step.generator.common.RiotousRookies;
-import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.skill.Loner;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.eclipsesource.json.JsonObject;
@@ -274,13 +275,14 @@ public final class StepBuyInducements extends AbstractStep {
 		List<RosterPlayer> addedPlayerList = new ArrayList<>();
 		Map<RosterPosition, Integer> nrByPosition = new HashMap<>();
 
+		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
 		for (int i = 0; i < pPositionIds.length; i++) {
 			RosterPosition position = roster.getPositionById(pPositionIds[i]);
 			RosterPlayer mercenary = new RosterPlayer();
 			addedPlayerList.add(mercenary);
 			StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("M").append(addedPlayerList.size());
 			mercenary.setId(playerId.toString());
-			mercenary.updatePosition(position);
+			mercenary.updatePosition(position, game.getApplicationSource());
 			Integer mercNr = nrByPosition.get(position);
 			if (mercNr == null) {
 				mercNr = 1;
@@ -293,7 +295,7 @@ public final class StepBuyInducements extends AbstractStep {
 			mercenary.setName(name.toString());
 			mercenary.setNr(pTeam.getMaxPlayerNr() + 1);
 			mercenary.setType(PlayerType.MERCENARY);
-			mercenary.addSkill(SkillConstants.LONER);
+			mercenary.addSkill(factory.forClass(Loner.class));
 			if (pSkills[i] != null) {
 				mercenary.addSkill(pSkills[i]);
 			}
@@ -351,7 +353,7 @@ public final class StepBuyInducements extends AbstractStep {
 					addedPlayerList.add(starPlayer);
 					StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("S").append(addedPlayerList.size());
 					starPlayer.setId(playerId.toString());
-					starPlayer.updatePosition(position);
+					starPlayer.updatePosition(position, game.getApplicationSource());
 					starPlayer.setName(position.getName());
 					starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
 					starPlayer.setGender(position.getGender());

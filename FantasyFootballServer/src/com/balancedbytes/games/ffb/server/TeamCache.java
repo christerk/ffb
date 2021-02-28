@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamSkeleton;
@@ -66,20 +67,20 @@ public class TeamCache {
   private Team mapToTeam(File file, Game game) throws IOException {
     try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
       InputSource xmlSource = new InputSource(xmlIn);
-      Team team = new Team();
+      Team team = new Team(game.getApplicationSource());
       XmlHandler.parse(game, xmlSource, team);
       return team;
     }
   }
 
-  public void init(File pTeamDirectory) throws IOException {
+  public void init(File pTeamDirectory, IFactorySource source) throws IOException {
     FileIterator fileIterator = new FileIterator(pTeamDirectory, false,
       pathname -> pathname.getName().endsWith(".xml"));
     while (fileIterator.hasNext()) {
       File file = fileIterator.next();
       try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
         InputSource xmlSource = new InputSource(xmlIn);
-        TeamSkeleton team = new TeamSkeleton();
+        TeamSkeleton team = new TeamSkeleton(source);
         XmlHandler.parse(null, xmlSource, team);
         teamFiles.put(team, file);
       } catch (FantasyFootballException pFfe) {

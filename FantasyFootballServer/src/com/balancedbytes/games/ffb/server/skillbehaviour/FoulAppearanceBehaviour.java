@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
@@ -39,7 +39,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), skill)
-						&& !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.FOUL_APPEARANCE)) {
+						&& !UtilCards.hasSkillToCancelProperty(game, actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
 					boolean doRoll = true;
 					if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)

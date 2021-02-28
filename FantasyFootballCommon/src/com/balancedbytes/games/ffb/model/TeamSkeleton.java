@@ -1,10 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -12,6 +7,10 @@ import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
 
 /**
  * 
@@ -32,6 +31,10 @@ public class TeamSkeleton extends Team {
 	private int fTeamValue;
 	private String fCoach;
 	private String xmlContent;
+
+	public TeamSkeleton(IFactorySource game) {
+		super(game);
+	}
 
 	public String getXmlContent() {
 		return xmlContent;

@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -89,7 +89,7 @@ public class StepBlockBallAndChain extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (UtilCards.hasSkill(game, actingPlayer, SkillConstants.BALL_AND_CHAIN) && (fOldDefenderState != null)
+		if (UtilCards.hasSkillWithProperty(game, actingPlayer.getPlayer(), NamedProperties.movesRandomly) && (fOldDefenderState != null)
 				&& fOldDefenderState.isProne()) {
 			publishParameters(UtilBlockSequence.initPushback(this));
 			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.FALLING));

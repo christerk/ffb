@@ -59,8 +59,8 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 			return false;
 		}
 
-		home.updateRoster(rosterHome);
-		away.updateRoster(rosterAway);
+		home.updateRoster(rosterHome, gameState.getGame().getApplicationSource());
+		away.updateRoster(rosterAway, gameState.getGame().getApplicationSource());
 
 		getServer().getGameCache().addTeamToGame(gameState, home, true);
 		getServer().getGameCache().addTeamToGame(gameState, away, false);
@@ -70,7 +70,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 	}
 
 	private Team inflateTeam(TeamSkeleton skeleton, GameState gameState) {
-		Team team = new Team();
+		Team team = new Team(gameState.getGame().getApplicationSource());
 		try {
 			try (BufferedReader xmlReader = new BufferedReader(new StringReader(skeleton.getXmlContent()))) {
 				InputSource xmlSource = new InputSource(xmlReader);

@@ -1,22 +1,11 @@
 package com.balancedbytes.games.ffb.server.request.fumbbl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URLEncoder;
-import java.security.NoSuchAlgorithmException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.balancedbytes.games.ffb.model.TeamSkeleton;
-import org.eclipse.jetty.websocket.api.Session;
-import org.xml.sax.InputSource;
-
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PasswordChallenge;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.TeamSkeleton;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -26,6 +15,16 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
+import org.eclipse.jetty.websocket.api.Session;
+import org.xml.sax.InputSource;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLEncoder;
+import java.security.NoSuchAlgorithmException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -144,7 +143,7 @@ public class UtilFumbblRequest {
 			String teamUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_TEAM), pTeamId);
 			String teamXml = UtilServerHttpClient.fetchPage(teamUrl);
 			if (StringTool.isProvided(teamXml)) {
-				team = new TeamSkeleton();
+				team = new TeamSkeleton(pServer);
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamXml))) {
 					InputSource xmlSource = new InputSource(xmlReader);
 					XmlHandler.parse(null, xmlSource, team);

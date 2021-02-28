@@ -4,8 +4,8 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * Opposing players who are standing in any of this player's tackle zones are
@@ -22,7 +22,8 @@ public class Tackle extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(new CancelSkillProperty(SkillConstants.DODGE));
+		registerProperty(new CancelSkillProperty(NamedProperties.canRerollDodge));
+		registerProperty(new CancelSkillProperty(NamedProperties.ignoreDefenderStumblesResult));
 	}
 
 }

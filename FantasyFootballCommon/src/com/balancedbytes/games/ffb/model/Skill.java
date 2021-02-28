@@ -202,12 +202,7 @@ public abstract class Skill implements INamedObject {
 	}
 
 	public boolean hasSkillProperty(ISkillProperty property) {
-		for (ISkillProperty skillProperty : skillProperties) {
-			if (property.matches(skillProperty)) {
-				return true;
-			}
-		}
-		return false;
+		return skillProperties.contains(property);
 	}
 
 	public String getConfusionMessage() {

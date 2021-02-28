@@ -4,11 +4,29 @@ import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
-import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
+import com.balancedbytes.games.ffb.skill.Bombardier;
+import com.balancedbytes.games.ffb.skill.BoneHead;
+import com.balancedbytes.games.ffb.skill.Catch;
+import com.balancedbytes.games.ffb.skill.DirtyPlayer;
+import com.balancedbytes.games.ffb.skill.DisturbingPresence;
+import com.balancedbytes.games.ffb.skill.Fend;
+import com.balancedbytes.games.ffb.skill.HypnoticGaze;
+import com.balancedbytes.games.ffb.skill.Kick;
+import com.balancedbytes.games.ffb.skill.MightyBlow;
+import com.balancedbytes.games.ffb.skill.NoHands;
+import com.balancedbytes.games.ffb.skill.Pass;
+import com.balancedbytes.games.ffb.skill.PassBlock;
+import com.balancedbytes.games.ffb.skill.Pro;
+import com.balancedbytes.games.ffb.skill.SecretWeapon;
+import com.balancedbytes.games.ffb.skill.Shadowing;
+import com.balancedbytes.games.ffb.skill.SideStep;
+import com.balancedbytes.games.ffb.skill.SureHands;
+import com.balancedbytes.games.ffb.skill.bb2016.Accurate;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Collections;
@@ -36,7 +54,16 @@ public enum Card implements INamedObject {
 
 	BEGUILING_BRACERS("Beguiling Bracers", "Beguiling Bracers", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_GAME,
-			"Player gets Hypnotic Gaze, Side Step & Bone-Head"),
+			"Player gets Hypnotic Gaze, Side Step & Bone-Head") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return new HashSet<Class<? extends Skill>>() {{
+				add(BoneHead.class);
+				add(HypnoticGaze.class);
+				add(SideStep.class);
+			}};
+		}
+	},
 	// Description:
 	// The player has come across the bracers of Count Luthor to use for the match.
 	// They are so good that they even distract the player wearing them sometimes.
@@ -73,12 +100,12 @@ public enum Card implements INamedObject {
 			}
 
 		@Override
-		public Set<String> grantedSkills() {
-			return new HashSet<String>() {
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return new HashSet<Class<? extends Skill>>() {
 				private static final long serialVersionUID = 641368470326607756L;
 				{
-					add("Pass");
-					add("Accurate");
+					add(Pass.class);
+					add(Accurate.class);
 				}
 			};
 		}
@@ -96,7 +123,15 @@ public enum Card implements INamedObject {
 
 	FORCE_SHIELD("Force Shield", "Force Shield", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT },
-			InducementDuration.WHILE_HOLDING_THE_BALL, "Player gets Sure Hands & Fend"),
+			InducementDuration.WHILE_HOLDING_THE_BALL, "Player gets Sure Hands & Fend") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return new HashSet<Class<? extends Skill>>() {{
+				add(Fend.class);
+				add(SureHands.class);
+			}};
+		}
+	},
 	// Description:
 	// Your player paid top gold for a Ring of Invincibility, but it's not all that
 	// was advertised.
@@ -123,7 +158,15 @@ public enum Card implements INamedObject {
 
 	GLOVES_OF_HOLDING("Gloves of Holding", "Gloves of Holding", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_GAME,
-			"Player gets Catch & Sure Hands, but may not Pass or Hand-off"),
+			"Player gets Catch & Sure Hands, but may not Pass or Hand-off") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return new HashSet<Class<? extends Skill>>() {{
+				add(Catch.class);
+				add(SureHands.class);
+			}};
+		}
+	},
 	// Description:
 	// A player puts a magic salve, Grisnick's Stickum, onto his gloves
 	// before the drive.
@@ -178,8 +221,8 @@ public enum Card implements INamedObject {
 		}
 
 		@Override
-		public Set<String> grantedSkills() {
-			return Collections.singleton("Pass Block");
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return Collections.singleton(PassBlock.class);
 		}
 	},
 	// Description:
@@ -209,7 +252,12 @@ public enum Card implements INamedObject {
 
 	RABBITS_FOOT("Rabbit's Foot", "Rabbit's Foot", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_GAME,
-			"Player gets Pro (not playable on a Loner)"),
+			"Player gets Pro (not playable on a Loner)") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return Collections.singleton(Pro.class);
+		}
+	},
 	// Description:
 	// One player finds himself a lucky rabbit's foot after the pre-game meal
 	// of, well, rabbit.
@@ -239,7 +287,12 @@ public enum Card implements INamedObject {
 
 	WAND_OF_SMASHING("Wand of Smashing", "Wand of Smashing", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-			"Player gets +1 ST & Mighty Blow"),
+			"Player gets +1 ST & Mighty Blow") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return Collections.singleton(MightyBlow.class);
+		}
+	},
 	// Description:
 	// Stick! Smash!
 	// Timing:
@@ -296,7 +349,12 @@ public enum Card implements INamedObject {
 	DISTRACT("Distract", "Distract", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT },
 			InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
-			"Player gets Disturbing Presence & opponents in 3 squares get Bone-head"),
+			"Player gets Disturbing Presence & opponents in 3 squares get Bone-head") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return Collections.singleton(DisturbingPresence.class);
+		}
+	},
 	// Description:
 	// Your player is very good at distracting all those around him.
 	// Timing:
@@ -330,11 +388,11 @@ public enum Card implements INamedObject {
 		}
 
 		@Override
-		public Set<String> grantedSkills() {
-			return new HashSet<String>() {{
-				add("No Hands");
-				add("Bombardier");
-				add("Secret Weapon");
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return new HashSet<Class<? extends Skill>>() {{
+				add(NoHands.class);
+				add(Bombardier.class);
+				add(SecretWeapon.class);
 			}};
 		}
 	},
@@ -364,7 +422,15 @@ public enum Card implements INamedObject {
 
 	KICKING_BOOTS("Kicking Boots", "Kicking Boots", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_GAME,
-			"Player gets Kick, Dirty Player & -1 MA"),
+			"Player gets Kick, Dirty Player & -1 MA") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return new HashSet<Class<? extends Skill>>() {{
+				add(Kick.class);
+				add(DirtyPlayer.class);
+			}};
+		}
+	},
 	// Description:
 	// These boots were made for stomping, and that is just what they will do!
 	// Timing:
@@ -403,7 +469,15 @@ public enum Card implements INamedObject {
 
 	STOLEN_PLAYBOOK("Stolen Playbook", "Stolen Playbook", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_DRIVE,
-			"Player gets Pass Block and Shadowing"),
+			"Player gets Pass Block and Shadowing") {
+		@Override
+		public Set<Class<? extends Skill>> grantedSkills() {
+			return new HashSet<Class<? extends Skill>>() {{
+				add(PassBlock.class);
+				add(Shadowing.class);
+			}};
+		}
+	},
 	// Description:
 	// You nabbed a playbook from the opponent's coach! He sure will be
 	// surprised when you know exactly how to ruin his play.
@@ -532,7 +606,7 @@ public enum Card implements INamedObject {
 		return Collections.emptySet();
 	}
 
-	public Set<String> grantedSkills() {
+	public Set<Class<? extends Skill>> grantedSkills() {
 		return Collections.emptySet();
 	}
 

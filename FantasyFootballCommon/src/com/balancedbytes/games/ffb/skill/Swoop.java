@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
@@ -32,6 +33,7 @@ public class Swoop extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.preventStuntyDodgeModifier);
 		registerProperty(NamedProperties.ttmScattersInSingleDirection);
+		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
 	}
 
 }

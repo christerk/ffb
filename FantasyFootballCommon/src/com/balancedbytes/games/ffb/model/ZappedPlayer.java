@@ -1,10 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
@@ -14,6 +9,10 @@ import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
 
 public class ZappedPlayer extends Player<ZappedPosition> {
 
@@ -163,14 +162,14 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, boolean updateStats) {
-		position = new ZappedPosition(pPosition);
-		originalPlayer.updatePosition(pPosition, updateStats);
+	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game) {
+		position = new ZappedPosition(pPosition, game);
+		originalPlayer.updatePosition(pPosition, updateStats, game);
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition) {
-		updatePosition(pPosition, true);
+	public void updatePosition(RosterPosition pPosition, IFactorySource game) {
+		updatePosition(pPosition, true, game);
 	}
 
 	@Override
@@ -254,9 +253,9 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void init(RosterPlayer pPlayer) {
+	public void init(RosterPlayer pPlayer, IFactorySource game) {
 		this.originalPlayer = pPlayer;
-		this.position = new ZappedPosition(pPlayer.getPosition());
+		this.position = new ZappedPosition(pPlayer.getPosition(), game);
 	}
 
 	@Override
@@ -284,7 +283,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 		if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
 			RosterPlayer player = new RosterPlayer();
 			player.startXmlElement(game, pXmlTag, pXmlAttributes);
-			init(player);
+			init(player, game.getApplicationSource());
 		}
 		return xmlElement;
 	}

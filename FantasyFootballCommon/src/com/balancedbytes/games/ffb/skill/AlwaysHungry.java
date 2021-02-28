@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * The player is always ravenously hungry - and what's more they'll eat
@@ -25,4 +26,8 @@ public class AlwaysHungry extends Skill {
 		super("Always Hungry", SkillCategory.EXTRAORDINARY);
 	}
 
+	@Override
+	public void postConstruct() {
+		registerProperty(NamedProperties.mightEatPlayerToThrow);
+	}
 }

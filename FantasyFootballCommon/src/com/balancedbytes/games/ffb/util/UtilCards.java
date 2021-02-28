@@ -12,16 +12,14 @@ import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
-import com.balancedbytes.games.ffb.modifiers.DodgeContext;
-import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -38,6 +36,28 @@ public final class UtilCards {
 		return (pPlayer.hasSkill(pSkill) || cardSkills.contains(pSkill));
 	}
 
+	public static boolean hasSkillWithProperty(Game game, Player<?> player, ISkillProperty property) {
+		return Arrays.stream(findAllSkills(game, player)).anyMatch(skill -> skill.hasSkillProperty(property));
+	}
+
+	public static Optional<Skill> getSkillWithProperty(Game game, Player<?> player, ISkillProperty property) {
+		return Arrays.stream(findAllSkills(game, player)).filter(skill -> skill.hasSkillProperty(property)).findFirst();
+	}
+
+	public static boolean hasUncanceledSkillWithProperty(Game game, Player<?> player, ISkillProperty property) {
+		Skill[] skills = findAllSkills(game, player);
+		return Arrays.stream(skills).anyMatch(skill -> skill.hasSkillProperty(property))
+			&& Arrays.stream(skills)
+			.flatMap(skill -> skill.getSkillProperties().stream())
+			.noneMatch(skillProperty -> skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsProperty(property));
+	}
+
+	public static boolean hasSkillToCancelProperty(Game game, Player<?> player, ISkillProperty property) {
+		return Arrays.stream(findAllSkills(game, player))
+			.flatMap(skill -> skill.getSkillProperties().stream())
+			.anyMatch(skillProperty -> skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsProperty(property));
+	}
+
 	public static boolean hasSkill(Game pGame, ActingPlayer pActingPlayer, Skill pSkill) {
 		if (pActingPlayer == null) {
 			return false;
@@ -52,82 +72,17 @@ public final class UtilCards {
 		return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
 	}
 
-	public static Collection<DodgeModifier> getDodgeModifiers(ActingPlayer player, DodgeContext context) {
-		Set<DodgeModifier> result = new HashSet<>();
-
-		for (Skill skill : player.getPlayer().getSkills()) {
-			for (DodgeModifier modifier : skill.getDodgeModifiers()) {
-				if (modifier.appliesToContext(skill, context)) {
-					result.add(modifier);
-				}
-			}
-		}
-
-		return result;
-	}
-
 	private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
 		Set<Skill> cardSkills = new HashSet<>();
 		if ((pGame == null) || (pPlayer == null)) {
 			return cardSkills;
 		}
 		Card[] cards = pGame.getFieldModel().getCards(pPlayer);
-		for (Card card : cards) {
-			switch (card) {
-			case BEGUILING_BRACERS:
-				cardSkills.add(SkillConstants.BONE_HEAD);
-				cardSkills.add(SkillConstants.HYPNOTIC_GAZE);
-				cardSkills.add(SkillConstants.SIDE_STEP);
-				break;
-			case FORCE_SHIELD:
-				cardSkills.add(SkillConstants.FEND);
-				cardSkills.add(SkillConstants.SURE_HANDS);
-				break;
-			case GLOVES_OF_HOLDING:
-				cardSkills.add(SkillConstants.CATCH);
-				cardSkills.add(SkillConstants.SURE_HANDS);
-				break;
-			case RABBITS_FOOT:
-				cardSkills.add(SkillConstants.PRO);
-				break;
-			case WAND_OF_SMASHING:
-				cardSkills.add(SkillConstants.MIGHTY_BLOW);
-				break;
-			case DISTRACT:
-				cardSkills.add(SkillConstants.DISTURBING_PRESENCE);
-				break;
-			case STOLEN_PLAYBOOK:
-				cardSkills.add(SkillConstants.PASS_BLOCK);
-				cardSkills.add(SkillConstants.SHADOWING);
-				break;
-			case KICKING_BOOTS:
-				cardSkills.add(SkillConstants.KICK);
-				cardSkills.add(SkillConstants.DIRTY_PLAYER);
-			default:
-				break;
-			}
-		}
-
 		SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
-		Arrays.stream(cards).flatMap(card -> card.grantedSkills().stream()).map(skillFactory::forName).forEach(cardSkills::add);
+		Arrays.stream(cards).flatMap(card -> card.grantedSkills().stream()).map(skillFactory::forClass).forEach(cardSkills::add);
 
 		CardEffect[] cardEffects = pGame.getFieldModel().getCardEffects(pPlayer);
-		for (CardEffect cardEffect : cardEffects) {
-			switch (cardEffect) {
-			case DISTRACTED:
-				cardSkills.add(SkillConstants.BONE_HEAD);
-				break;
-			case SEDATIVE:
-				cardSkills.add(SkillConstants.REALLY_STUPID);
-				break;
-			case MAD_CAP_MUSHROOM_POTION:
-				cardSkills.add(SkillConstants.JUMP_UP);
-				cardSkills.add(SkillConstants.NO_HANDS);
-				break;
-			default:
-				break;
-			}
-		}
+		Arrays.stream(cardEffects).flatMap(cardEffect -> cardEffect.skills().stream()).map(skillFactory::forClass).forEach(cardSkills::add);
 		return cardSkills;
 	}
 
@@ -223,8 +178,8 @@ public final class UtilCards {
 		return getSkillCancelling(player, skill) != null;
 	}
 
-	public static Skill getUnusedSkillWithProperty(ActingPlayer actingPlayer, ISkillProperty property) {
-		for (Skill playerSkill : actingPlayer.getPlayer().getSkills()) {
+	public static Skill getUnusedSkillWithProperty(Game game, ActingPlayer actingPlayer, ISkillProperty property) {
+		for (Skill playerSkill : UtilCards.findAllSkills(game, actingPlayer.getPlayer())) {
 			if (playerSkill.hasSkillProperty(property) && !actingPlayer.isSkillUsed(playerSkill)) {
 				return playerSkill;
 			}

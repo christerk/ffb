@@ -8,14 +8,13 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifierCollection;
-import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -68,7 +67,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 		int nrOfPrehensileTails = 0;
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
 		for (Player<?> opponent : opponents) {
-			if (UtilCards.hasSkill(pGame, opponent, SkillConstants.PREHENSILE_TAIL)) {
+			if (UtilCards.hasSkillWithProperty(pGame, opponent, NamedProperties.makesDodgingHarder)) {
 				nrOfPrehensileTails++;
 			}
 		}
@@ -113,7 +112,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 
 	@Override
 	protected boolean isAffectedByTackleZones(DodgeContext context) {
-		return !context.getPlayer().hastActiveProperty(NamedProperties.ignoreTacklezonesWhenDodging);
+		return !UtilCards.hasUncanceledSkillWithProperty(context.getGame(), context.getPlayer(), NamedProperties.ignoreTacklezonesWhenDodging);
 	}
 
 	@Override

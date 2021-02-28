@@ -1,14 +1,5 @@
 package com.balancedbytes.games.ffb.server.request.fumbbl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
@@ -20,12 +11,19 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -258,7 +256,7 @@ public class FumbblResult implements IXmlWriteable {
 						rosterSkills.add(skill);
 					}
 					for (Skill skill : mercenary.getSkills()) {
-						if (!rosterSkills.contains(skill) && (skill != SkillConstants.LONER)) {
+						if (!rosterSkills.contains(skill) && (!skill.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll))) {
 							addedSkill = skill;
 							break;
 						}

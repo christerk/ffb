@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * The player may use this s kill when a player performing an Action on the
@@ -26,4 +27,8 @@ public class Shadowing extends Skill {
 		super("Shadowing", SkillCategory.GENERAL);
 	}
 
+	@Override
+	public void postConstruct() {
+		registerProperty(NamedProperties.canFollowPlayerLeavingTacklezones);
+	}
 }

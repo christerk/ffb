@@ -33,6 +33,7 @@ public class ReallyStupid extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.appliesConfusion);
+		registerProperty(NamedProperties.needsToRollHighToAvoidConfusion);
 	}
 
 }

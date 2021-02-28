@@ -19,7 +19,6 @@ import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -87,8 +86,8 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 		fHomePlaying = true;
 
-		setTeamHome(new Team());
-		setTeamAway(new Team());
+		setTeamHome(new Team(applicationSource));
+		setTeamAway(new Team(applicationSource));
 
 		fOptions = new GameOptions(this);
 		rules = new GameRules(applicationSource, manager);
@@ -113,6 +112,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public ModifierAggregator getModifierAggregator() {
 		return modifierAggregator;
+	}
+
+	public IFactorySource getApplicationSource() {
+		return applicationSource;
 	}
 
 	public GameRules getRules() {

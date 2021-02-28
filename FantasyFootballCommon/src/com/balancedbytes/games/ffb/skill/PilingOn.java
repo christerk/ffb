@@ -4,6 +4,8 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * The player may use this skill after he has made a block as part of one of his
@@ -23,4 +25,8 @@ public class PilingOn extends Skill {
 		super("Piling On", SkillCategory.STRENGTH);
 	}
 
+	@Override
+	public void postConstruct() {
+		registerProperty(new CancelSkillProperty(NamedProperties.canPileOnOpponent));
+	}
 }
