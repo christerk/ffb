@@ -21,6 +21,7 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	public InjuryTypeBlock() {
@@ -44,20 +45,24 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 				);
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
+			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			if (chainsaw != null) {
 				chainsaw.getArmorModifiers().forEach(injuryContext::addArmorModifier);
-			}
-			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			// do not use armorModifiers on blocking own team-mate
-			if (pAttacker.getTeam() != pDefender.getTeam()) {
-
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+			} else if (!injuryContext.isArmorBroken() && pAttacker.getTeam() != pDefender.getTeam()) {
+				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
+					isFoul());
+				if (!armorModifiers.isEmpty()) {
+					Set<ArmorModifier> reducedModifiers = armorModifiers.stream().filter(modifier -> !modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).collect(Collectors.toSet());
+					if (!reducedModifiers.isEmpty() && reducedModifiers.size() < armorModifiers.size()) {
+						injuryContext.addArmorModifiers(reducedModifiers);
+						injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+					}
 
-				if (!injuryContext.isArmorBroken()) {
-					Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
-							isFoul());
-					injuryContext.addArmorModifiers(armorModifiers);
-					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+					if (!injuryContext.isArmorBroken()) {
+						injuryContext.addArmorModifiers(armorModifiers);
+						injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+					}
 				}
 			}
 		}

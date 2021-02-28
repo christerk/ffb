@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
@@ -16,6 +15,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -47,7 +47,7 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 
 		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
 
-		return getInjuryModifiers(attacker, context);
+		return getInjuryModifiers(context);
 	}
 
 	public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {
@@ -64,16 +64,13 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 	}
 
 
-	public Set<InjuryModifier> getInjuryModifiers(Player<?> player, InjuryModifierContext context) {
-		Set<InjuryModifier> result = new HashSet<>();
-		for (Skill skill : UtilCards.findAllSkills(context.getGame(), player)) {
-			for (InjuryModifier modifier : skill.getInjuryModifiers()) {
-				if (modifier.appliesToContext(context)) {
-					result.add(modifier);
-				}
-			}
-		}
-		return result;
+	public Set<InjuryModifier> getInjuryModifiers(InjuryModifierContext context) {
+		return Stream.concat(
+			Arrays.stream(UtilCards.findAllSkills(context.getGame(), context.getAttacker())),
+			Arrays.stream(UtilCards.findAllSkills(context.getGame(), context.getDefender()))
+		).flatMap(skill -> skill.getInjuryModifiers().stream())
+			.filter(modifier -> modifier.appliesToContext(context))
+			.collect(Collectors.toSet());
 	}
 
 	@Override

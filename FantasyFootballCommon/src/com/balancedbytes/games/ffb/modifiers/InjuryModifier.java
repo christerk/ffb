@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.model.Skill;
-
 /**
  * 
  * @author Kalimar
@@ -29,10 +26,6 @@ public class InjuryModifier extends RegistrationAwareModifier {
 
 	public boolean isNigglingInjuryModifier() {
 		return fNigglingInjuryModifier;
-	}
-
-	public boolean appliesToContext(Skill skill, InjuryContext context) {
-		return true;
 	}
 
 	public boolean appliesToContext(InjuryModifierContext context) {

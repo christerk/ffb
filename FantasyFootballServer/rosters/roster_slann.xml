@@ -26,7 +26,7 @@
 			<skill>Very Long Legs</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
+			<normal>General</normal>
 			<double>Agility</double>
 			<double>Strength</double>
 			<double>Passing</double>
@@ -52,8 +52,8 @@
 			<skill>Very Long Legs</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Agility</Normal>
+			<normal>General</normal>
+			<normal>Agility</normal>
 			<double>Strength</double>
 			<double>Passing</double>
 		</skillCategoryList>
@@ -79,9 +79,9 @@
 			<skill>Very Long Legs</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Agility</Normal>
-			<Normal>Strength</Normal>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<normal>Strength</normal>
 			<double>Passing</double>
 		</skillCategoryList>
 	</position>
@@ -107,7 +107,7 @@
 			<skill>Thick Skull</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>Strength</Normal>
+			<normal>Strength</normal>
 			<double>General</double>
 			<double>Agility</double>
 			<double>Passing</double>

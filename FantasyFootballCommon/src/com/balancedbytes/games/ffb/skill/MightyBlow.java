@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
-import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 
 import java.util.Arrays;
@@ -28,12 +28,13 @@ public class MightyBlow extends Skill {
 	@Override
 	public void postConstruct() {
 		registerModifier(new ArmorModifier("Mighty Blow", 1, false));
-		registerModifier(new InjuryModifier("Mighty Blow", 1, false) {
+		registerModifier(new InjuryModifierAttacker("Mighty Blow", 1, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
-				return (!context.isFoul()
+				return super.appliesToContext(context)
+					&& !context.isFoul()
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
-					.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)));
+					.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock));
 			}
 		});
 		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock);

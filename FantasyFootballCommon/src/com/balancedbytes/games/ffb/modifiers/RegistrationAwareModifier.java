@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Skill;
 
 public abstract class RegistrationAwareModifier implements INamedObject {
-	private Skill registeredTo;
+	protected Skill registeredTo;
 
 	public boolean isRegisteredToSkillWithProperty(ISkillProperty property) {
 		return registeredTo != null && registeredTo.hasSkillProperty(property);
