@@ -26,8 +26,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.balancedbytes.games.ffb.FactoryType.Factory;
-import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.dialog.Dialog;

@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;

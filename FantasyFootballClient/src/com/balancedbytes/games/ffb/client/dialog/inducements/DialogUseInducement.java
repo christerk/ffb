@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.dialog.Dialog;
 import com.balancedbytes.games.ffb.dialog.DialogId;

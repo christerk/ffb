@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.generator.common;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.InducementPhase;
+import com.balancedbytes.games.ffb.inducement.InducementPhase;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;

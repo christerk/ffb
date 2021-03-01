@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
+import com.balancedbytes.games.ffb.inducement.InducementDuration;
+import com.balancedbytes.games.ffb.inducement.InducementPhase;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;

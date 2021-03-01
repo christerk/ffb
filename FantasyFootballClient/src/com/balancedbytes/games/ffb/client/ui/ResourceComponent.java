@@ -1,5 +1,16 @@
 package com.balancedbytes.games.ffb.client.ui;
 
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.client.IconCache;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.InducementType;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.TurnData;
+
+import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,18 +21,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-import javax.swing.ToolTipManager;
-
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.client.IIconProperty;
-import com.balancedbytes.games.ffb.client.IconCache;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.model.TurnData;
 
 /**
  * 

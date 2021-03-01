@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
-import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogArgueTheCallParameter;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;

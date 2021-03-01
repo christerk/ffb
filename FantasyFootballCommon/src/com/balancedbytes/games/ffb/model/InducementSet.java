@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
-import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;

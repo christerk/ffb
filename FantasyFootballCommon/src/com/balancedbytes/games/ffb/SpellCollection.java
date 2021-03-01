@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.inducement.InducementType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

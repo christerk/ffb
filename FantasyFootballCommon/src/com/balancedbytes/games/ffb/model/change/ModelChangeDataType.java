@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.INamedObject;
-import com.balancedbytes.games.ffb.Inducement;
+import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerAction;

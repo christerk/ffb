@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.inducement;
 
 import javax.xml.transform.sax.TransformerHandler;
 

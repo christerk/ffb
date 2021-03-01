@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
