@@ -1,16 +1,25 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.client.dialog.Dialog;
+import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.InducementType;
+import com.balancedbytes.games.ffb.inducement.Usage;
+import com.balancedbytes.games.ffb.model.GameOptions;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
+import com.balancedbytes.games.ffb.option.IGameOption;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,26 +33,17 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
-
-import com.balancedbytes.games.ffb.FactoryType.Factory;
-import com.balancedbytes.games.ffb.inducement.Inducement;
-import com.balancedbytes.games.ffb.inducement.InducementType;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.PlayerIconFactory;
-import com.balancedbytes.games.ffb.client.dialog.Dialog;
-import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.factory.SkillFactory;
-import com.balancedbytes.games.ffb.model.GameOptions;
-import com.balancedbytes.games.ffb.model.InducementSet;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.GameOptionInt;
-import com.balancedbytes.games.ffb.option.IGameOption;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilInducements;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 public class DialogBuyInducements extends Dialog implements ActionListener, KeyListener {
@@ -101,9 +101,9 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		GameOptions gameOptions = client.getGame().getOptions();
 
 		mercExtraCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
-				.getValue();
+			.getValue();
 		mercSkillCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST))
-				.getValue();
+			.getValue();
 
 		JPanel leftPanel = buildLeftPanel(gameOptions);
 		JPanel rightPanel = buildRightPanel(gameOptions);
@@ -170,14 +170,9 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		leftPanel.add(labelPanel);
 		leftPanel.add(Box.createVerticalStrut(10));
 
-		createPanel(InducementType.BLOODWEISER_KEGS, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.BRIBES, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.EXTRA_TEAM_TRAINING, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.MASTER_CHEF, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.IGOR, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.WANDERING_APOTHECARIES, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.WIZARD, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.RIOTOUS_ROOKIES, leftPanel, verticalStrut, gameOptions);
+		((InducementTypeFactory) gameOptions.getGame().getFactory(Factory.INDUCEMENT_TYPE)).allTypes().stream()
+			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.contains(type.getUsage()))
+			.forEach(type -> createPanel(type, leftPanel, verticalStrut, gameOptions));
 
 		leftPanel.add(Box.createVerticalGlue());
 
@@ -196,14 +191,19 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 				indSet.addInducement(new Inducement(pan.getInducementType(), pan.getSelectedAmount()));
 			}
 		}
-		String[] starPlayerIds = getSelectedStarPlayerIds();
-		if (starPlayerIds.length > 0) {
-			indSet.addInducement(new Inducement(InducementType.STAR_PLAYERS, starPlayerIds.length));
-		}
-		String[] mercenaryIds = getSelectedMercenaryIds();
-		if (mercenaryIds.length > 0) {
-			indSet.addInducement(new Inducement(InducementType.MERCENARIES, mercenaryIds.length));
-		}
+		InducementTypeFactory factory = getClient().getGame().getFactory(Factory.INDUCEMENT_TYPE);
+		factory.allTypes().stream().filter(type -> type.getUsage() == Usage.STAR).findFirst().ifPresent(type -> {
+			String[] starPlayerIds = getSelectedStarPlayerIds();
+			if (starPlayerIds.length > 0) {
+				indSet.addInducement(new Inducement(type, starPlayerIds.length));
+			}
+		});
+		factory.allTypes().stream().filter(type -> type.getUsage() == Usage.LONER).findFirst().ifPresent(type -> {
+			String[] mercenaryIds = getSelectedMercenaryIds();
+			if (mercenaryIds.length > 0) {
+				indSet.addInducement(new Inducement(type, mercenaryIds.length));
+			}
+		});
 		return indSet;
 	}
 
@@ -271,7 +271,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 						int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
 						if (selectedRowIndex >= 0) {
 							getClient().getClientData()
-									.setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
+								.setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
 							getClient().getUserInterface().refreshSideBars();
 						}
 					}
@@ -302,7 +302,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		fTableModelMercenaries = new MercenaryTableModel(this, gameOptions);
 
 		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX))
-				.getValue();
+			.getValue();
 		if (maxMercs > 0) {
 			fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
 			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -312,7 +312,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 						int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
 						if (selectedRowIndex >= 0) {
 							getClient().getClientData()
-									.setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
+								.setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
 							getClient().getUserInterface().refreshSideBars();
 						}
 					}
@@ -366,14 +366,14 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	}
 
 	private void createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut,
-			GameOptions gameOptions) {
+	                         GameOptions gameOptions) {
 		int maxCount = pInducementType.availability(fRoster, gameOptions);
 		if (maxCount <= 0) {
 			return;
 		}
 		int cost = findInducementCost(fRoster, pInducementType, gameOptions);
 		DropDownPanel panel = new DropDownPanel(pInducementType, maxCount, pInducementType.getDescription(), cost, this,
-				fAvailableGold);
+			fAvailableGold);
 		pAddToPanel.add(panel);
 		if (pVertStrut > 0) {
 			pAddToPanel.add(Box.createVerticalStrut(pVertStrut));
@@ -439,15 +439,15 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	public void keyReleased(KeyEvent pKeyEvent) {
 		boolean keyHandled = false;
 		switch (pKeyEvent.getKeyCode()) {
-		case KeyEvent.VK_R:
-			resetPanels();
-			break;
-		case KeyEvent.VK_O:
-			keyHandled = true;
-			break;
-		default:
-			keyHandled = false;
-			break;
+			case KeyEvent.VK_R:
+				resetPanels();
+				break;
+			case KeyEvent.VK_O:
+				keyHandled = true;
+				break;
+			default:
+				keyHandled = false;
+				break;
 		}
 		if (keyHandled) {
 			if (getCloseListener() != null) {

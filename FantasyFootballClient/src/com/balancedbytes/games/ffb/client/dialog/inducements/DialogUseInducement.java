@@ -1,13 +1,15 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.dialog.Dialog;
+import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
+import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
+import com.balancedbytes.games.ffb.inducement.InducementType;
+import com.balancedbytes.games.ffb.inducement.Usage;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,14 +18,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.inducement.InducementType;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.dialog.Dialog;
-import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
-import com.balancedbytes.games.ffb.util.ArrayTool;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -87,7 +89,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			}
 		}
 
-		if (inducementSet.contains(InducementType.WIZARD)) {
+		if (inducementSet.stream().anyMatch(type -> type.getUsage() == Usage.SPELL)) {
 
 			JPanel panelWizard = new JPanel();
 			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
@@ -133,7 +135,8 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	public void actionPerformed(ActionEvent pActionEvent) {
 		fInducement = null;
 		if (pActionEvent.getSource() == fButtonWizard) {
-			fInducement = InducementType.WIZARD;
+			fInducement = ((InducementTypeFactory)getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
+				.allTypes().stream().filter(type -> type.getUsage() == Usage.SPELL).findFirst().orElse(null);
 		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {

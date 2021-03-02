@@ -232,22 +232,22 @@ public class StatusReport {
 				print(getIndent(), TextStyle.AWAY, game.getTeamAway().getName());
 			}
 			StringBuilder status = new StringBuilder();
-			switch (pReport.getInducementType()) {
-				case EXTRA_TEAM_TRAINING:
+			switch (pReport.getInducementType().getUsage()) {
+				case REROLL:
 					print(getIndent(), " use ");
 					print(getIndent(), TextStyle.BOLD, "Extra Team Training");
 					status.append(" to add ").append(pReport.getValue())
 						.append((pReport.getValue() == 1) ? " Re-Roll." : " Re-Rolls.");
 					println(getIndent(), status.toString());
 					break;
-				case WANDERING_APOTHECARIES:
+				case APOTHECARY:
 					print(getIndent(), " use ");
 					print(getIndent(), TextStyle.BOLD, "Wandering Apothecaries");
 					status.append(" to add ").append(pReport.getValue())
 						.append((pReport.getValue() == 1) ? " Apothecary." : " Apothecaries.");
 					println(getIndent(), status.toString());
 					break;
-				case IGOR:
+				case REGENERATION:
 					print(getIndent(), " use ");
 					print(getIndent(), TextStyle.BOLD, "Igor");
 					println(getIndent(), " to re-roll the failed Regeneration.");

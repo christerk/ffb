@@ -8,7 +8,9 @@ import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.util.Set;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -27,8 +29,8 @@ public class InducementTypeFactory implements INamedObjectFactory<InducementType
 		return null;
 	}
 
-	public Set<InducementType> allTypes() {
-		return types.getTypes();
+	public List<InducementType> allTypes() {
+		return types.getTypes().stream().sorted(Comparator.comparing(InducementType::getName)).collect(Collectors.toList());
 	}
 
 	@Override
