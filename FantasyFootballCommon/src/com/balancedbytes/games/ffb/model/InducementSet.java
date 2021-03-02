@@ -79,6 +79,10 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		}
 	}
 
+	public Map<InducementType, Inducement> getInducementMapping() {
+		return fInducements;
+	}
+
 	public Inducement[] getInducements() {
 		return fInducements.values().toArray(new Inducement[fInducements.size()]);
 	}

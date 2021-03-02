@@ -21,9 +21,10 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -32,11 +33,11 @@ public class ResourceComponent extends JPanel {
 	public static final int WIDTH = 145;
 	public static final int HEIGHT = 168; // 256
 
-	private SideBarComponent fSideBar;
-	private BufferedImage fImage;
+	private final SideBarComponent fSideBar;
+	private final BufferedImage fImage;
 	private boolean fRefreshNecessary;
 	private int fNrOfSlots;
-	private ResourceSlot[] fSlots;
+	private final ResourceSlot[] fSlots;
 
 	private int fCurrentReRolls;
 	private int fCurrentApothecaries;
@@ -46,6 +47,8 @@ public class ResourceComponent extends JPanel {
 	private int fCurrentMasterChef;
 	private int fCurrentWizard;
 	private int fCurrentCards;
+
+	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
 	private static final int _SLOT_HEIGHT = 40;
 	private static final int _SLOT_WIDTH = 56;
@@ -66,27 +69,27 @@ public class ResourceComponent extends JPanel {
 	}
 
 	private ResourceSlot[] createResourceSlots() {
-		ResourceSlot[] resourceSlots = null;
+		ResourceSlot[] resourceSlots;
 		if (getSideBar().isHomeSide()) {
-			resourceSlots = new ResourceSlot[] {
-					new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)) };
+			resourceSlots = new ResourceSlot[]{
+				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
 		} else {
-			resourceSlots = new ResourceSlot[] {
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)) };
+			resourceSlots = new ResourceSlot[]{
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
 		}
 		return resourceSlots;
 	}
@@ -172,6 +175,21 @@ public class ResourceComponent extends JPanel {
 			apothecarySlot.setValue(fCurrentApothecaries);
 			apothecarySlot.setIconProperty(IIconProperty.RESOURCE_APOTHECARY);
 		}
+
+
+		for (turnData.getInducementSet().getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getValue() != null)
+			.forEach(entry -> {
+				query.bind
+				InducementType type = entry.getKey();
+				Inducement inducement = entry.getValue();
+
+				fRefreshNecessary |= ((inducement.getValue() - inducement.getUses()) != inducementValues.get(type));
+				inducementValues.put(type, inducement.getValue() - inducement.getUses());
+				if (inducementValues.get(type) > 0) {
+					ResourceSlot slot = fSlots[slotIndex++];
+				}
+			});
 
 		Inducement igor = turnData.getInducementSet().get(InducementType.IGOR);
 		if (igor != null) {
