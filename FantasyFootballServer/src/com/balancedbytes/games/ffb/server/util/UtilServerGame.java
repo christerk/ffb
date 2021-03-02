@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.inducement.Inducement;
-import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -32,8 +32,9 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
- *
  * @author Kalimar
  */
 public class UtilServerGame {
@@ -51,27 +52,27 @@ public class UtilServerGame {
 	}
 
 	public static boolean syncGameModel(GameState pGameState, ReportList pReportList, Animation pAnimation,
-			SoundId pSound) {
+	                                    SoundId pSound) {
 		boolean synced = false;
 		Game game = pGameState.getGame();
 		FantasyFootballServer server = pGameState.getServer();
 		UtilServerTimer.syncTime(pGameState, System.currentTimeMillis());
 		ModelChangeList modelChanges = pGameState.fetchChanges();
 		if ((modelChanges.size() > 0) || ((pReportList != null) && (pReportList.size() > 0)) || (pAnimation != null)
-				|| (pSound != null)) {
+			|| (pSound != null)) {
 			server.getCommunication().sendModelSync(pGameState, modelChanges, pReportList, pAnimation, pSound,
-					game.getGameTime(), game.getTurnTime());
+				game.getGameTime(), game.getTurnTime());
 			synced = true;
 		}
 		return synced;
 	}
 
 	public static void changeActingPlayer(IStep pStep, String pActingPlayerId, PlayerAction pPlayerAction,
-			boolean pLeaping) {
+	                                      boolean pLeaping) {
 		Game game = pStep.getGameState().getGame();
 		PlayerAction oldPlayerAction = game.getActingPlayer().getPlayerAction();
 		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, pPlayerAction, pLeaping) && (pPlayerAction != null)
-				&& ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
+			&& ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
 			if (oldPlayerAction == null) {
 				pStep.getResult().setSound(SoundId.CLICK);
 			}
@@ -142,7 +143,7 @@ public class UtilServerGame {
 	}
 
 	protected static void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
-			IStep pStep) {
+	                                                 IStep pStep) {
 		if (!LeaderState.USED.equals(pTurnData.getLeaderState())) {
 			if (teamHasLeaderOnField(pTeam, pFieldModel)) {
 				if (LeaderState.NONE.equals(pTurnData.getLeaderState())) {
@@ -163,7 +164,7 @@ public class UtilServerGame {
 	protected static boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (playerOnField(player, pFieldModel)
-					&& player.hasSkillWithProperty(NamedProperties.grantsTeamRerollWhenOnPitch)) {
+				&& player.hasSkillWithProperty(NamedProperties.grantsTeamRerollWhenOnPitch)) {
 				return true;
 			}
 		}
@@ -180,12 +181,15 @@ public class UtilServerGame {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setApothecaries(team.getApothecaries());
-		Inducement wanderingApothecaries = turnData.getInducementSet().get(InducementType.WANDERING_APOTHECARIES);
-		if ((wanderingApothecaries != null) && (wanderingApothecaries.getValue() > 0)) {
-			turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
-			pStep.getResult().addReport(
-					new ReportInducement(team.getId(), InducementType.WANDERING_APOTHECARIES, wanderingApothecaries.getValue()));
-		}
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.APOTHECARY)
+			.findFirst().ifPresent(entry -> {
+			Inducement wanderingApothecaries = entry.getValue();
+			if (wanderingApothecaries.getValue() > 0) {
+				turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
+				pStep.getResult().addReport(
+					new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
+			}
+		});
 	}
 
 	private static void addReRolls(IStep pStep, boolean pHomeTeam) {
@@ -193,31 +197,36 @@ public class UtilServerGame {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setReRolls(team.getReRolls());
-		Inducement extraTraining = turnData.getInducementSet().get(InducementType.EXTRA_TEAM_TRAINING);
-		if ((extraTraining != null) && (extraTraining.getValue() > 0)) {
-			turnData.setReRolls(turnData.getReRolls() + extraTraining.getValue());
-			pStep.getResult()
-					.addReport(new ReportInducement(team.getId(), InducementType.EXTRA_TEAM_TRAINING, extraTraining.getValue()));
-		}
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.REROLL)
+			.findFirst().ifPresent(entry -> {
+			Inducement extraTraining = entry.getValue();
+			if (extraTraining.getValue() > 0) {
+				turnData.setReRolls(turnData.getReRolls() + extraTraining.getValue());
+				pStep.getResult()
+					.addReport(new ReportInducement(team.getId(), entry.getKey(), extraTraining.getValue()));
+			}
+		});
 	}
 
 	private static int rollMasterChef(IStep pStep, boolean pHomeTeam) {
-		int reRollsStolenTotal = 0;
+		AtomicInteger reRollsStolenTotal = new AtomicInteger(0);
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		InducementSet inducementSet = pHomeTeam ? game.getTurnDataHome().getInducementSet()
-				: game.getTurnDataAway().getInducementSet();
-		Inducement masterChef = inducementSet.get(InducementType.MASTER_CHEF);
-		if ((masterChef != null) && (masterChef.getValue() > 0)) {
+			: game.getTurnDataAway().getInducementSet();
+		inducementSet.getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getKey().getUsage() == Usage.STEAL_REROLL
+				&& entry.getValue().getValue() > 0).findFirst().ifPresent(entry -> {
+			Inducement masterChef = entry.getValue();
 			for (int i = 0; i < masterChef.getValue(); i++) {
 				Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 				int[] masterChefRoll = gameState.getDiceRoller().rollMasterChef();
 				int reRollsStolen = DiceInterpreter.getInstance().interpretMasterChefRoll(masterChefRoll);
 				pStep.getResult().addReport(new ReportMasterChefRoll(team.getId(), masterChefRoll, reRollsStolen));
-				reRollsStolenTotal += reRollsStolen;
+				reRollsStolenTotal.addAndGet(reRollsStolen);
 			}
-		}
-		return reRollsStolenTotal;
+		});
+		return reRollsStolenTotal.get();
 	}
 
 	public static void closeGame(GameState pGameState) {

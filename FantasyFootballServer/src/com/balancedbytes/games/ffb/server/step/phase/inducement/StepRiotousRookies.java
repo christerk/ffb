@@ -1,13 +1,12 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.inducement.Inducement;
-import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
+import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
@@ -47,8 +46,8 @@ public class StepRiotousRookies extends AbstractStep {
 	}
 
 	private void hireRiotousRookies(TurnData turnData, Team team) {
-		Inducement riotousRookies = turnData.getInducementSet().get(InducementType.RIOTOUS_ROOKIES);
-		if (riotousRookies != null) {
+		if (turnData.getInducementSet().getInducementMapping().keySet().stream()
+			.anyMatch(type -> type.getUsage() == Usage.ADD_LINEMEN)) {
 			int[] rookiesRoll = getGameState().getDiceRoller().rollRiotousRookies();
 			int rookies = rookiesRoll[0] + rookiesRoll[1] + 1;
 			RosterPosition position = team.getRoster().getRiotousPosition();

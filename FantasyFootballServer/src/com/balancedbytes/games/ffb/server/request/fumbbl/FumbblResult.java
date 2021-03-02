@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.inducement.Inducement;
-import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -204,8 +204,7 @@ public class FumbblResult implements IXmlWriteable {
 
 			List<Inducement> inducements = new ArrayList<>();
 			for (Inducement inducement : pInducementSet.getInducements()) {
-				if ((inducement.getType() != InducementType.STAR_PLAYERS)
-						&& (inducement.getType() != InducementType.MERCENARIES)) {
+				if (!Usage.EXCLUDE_FROM_RESULT.contains(inducement.getType().getUsage())) {
 					inducements.add(inducement);
 				}
 			}

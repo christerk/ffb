@@ -1,20 +1,19 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.Direction;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.inducement.Inducement;
-import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
+import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -54,6 +53,10 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Step in kickoff sequence to apply the kickoff result.
@@ -211,22 +214,21 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	private void handleGetTheRef() {
 		Game game = getGameState().getGame();
-		InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
-		Inducement bribesHome = inducementSetHome.get(InducementType.BRIBES);
-		if (bribesHome != null) {
-			bribesHome.setValue(bribesHome.getValue() + 1);
-		} else {
-			bribesHome = new Inducement(InducementType.BRIBES, 1);
-		}
-		inducementSetHome.addInducement(bribesHome);
-		InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
-		Inducement bribesAway = inducementSetAway.get(InducementType.BRIBES);
-		if (bribesAway != null) {
-			bribesAway.setValue(bribesAway.getValue() + 1);
-		} else {
-			bribesAway = new Inducement(InducementType.BRIBES, 1);
-		}
-		inducementSetAway.addInducement(bribesAway);
+		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
+			.findFirst().ifPresent(bribesType -> {
+				InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
+				Inducement bribesHome = inducementSetHome.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
+				bribesHome.setValue(bribesHome.getValue() + 1);
+				inducementSetHome.addInducement(bribesHome);
+
+				InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
+				Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
+				bribesHome.setValue(bribesHome.getValue() + 1);
+				inducementSetAway.addInducement(bribesAway);
+
+			});
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_GET_THE_REF));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -35,6 +36,7 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Step to init the inducement sequence.
@@ -133,7 +135,7 @@ public final class StepInitInducement extends AbstractStep {
 			} else {
 				leaveStep(true);
 			}
-		} else if (InducementType.WIZARD == fInducementType) {
+		} else if (fInducementType != null && Usage.SPELL == fInducementType.getUsage()) {
 			((Wizard)factory.forName(SequenceGenerator.Type.Wizard.name()))
 				.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 			leaveStep(false);
@@ -157,17 +159,13 @@ public final class StepInitInducement extends AbstractStep {
 		Set<InducementType> useableInducements = new HashSet<>();
 		Game game = getGameState().getGame();
 		TurnData turnData = fHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
-		if (InducementPhase.END_OF_OWN_TURN == fInducementPhase) {
-			if (!fTouchdownOrEndOfHalf && (turnData.getInducementSet().hasUsesLeft(InducementType.WIZARD))) {
-				useableInducements.add(InducementType.WIZARD);
-			}
+		Set<InducementType> availableTypes = turnData.getInducementSet().getInducementTypes().stream()
+			.filter(type -> type.getUsage() == Usage.SPELL && turnData.getInducementSet().hasUsesLeft(type))
+			.collect(Collectors.toSet());
+		if ((InducementPhase.END_OF_OWN_TURN == fInducementPhase && !fTouchdownOrEndOfHalf) || InducementPhase.START_OF_OWN_TURN == fInducementPhase) {
+			useableInducements.addAll(availableTypes);
 		}
-		if (InducementPhase.START_OF_OWN_TURN == fInducementPhase) {
-			if (turnData.getInducementSet().hasUsesLeft(InducementType.WIZARD)) {
-				useableInducements.add(InducementType.WIZARD);
-			}
-		}
-		return useableInducements.toArray(new InducementType[useableInducements.size()]);
+		return useableInducements.toArray(new InducementType[0]);
 	}
 
 	private Card[] findPlayableCards() {

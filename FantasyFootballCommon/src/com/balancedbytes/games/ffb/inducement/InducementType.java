@@ -1,11 +1,15 @@
 package com.balancedbytes.games.ffb.inducement;
 
 import com.balancedbytes.games.ffb.INamedObject;
+import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.option.IGameOption;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class InducementType implements INamedObject {
 
@@ -16,20 +20,20 @@ public class InducementType implements INamedObject {
 	private final GameOptionId maxId;
 	private final GameOptionId costId;
 	private final GameOptionId reducedCostId;
-	private final boolean usesGenericSlot, requiresExplicitSelection;
+	private final boolean usesGenericSlot;
 	private final Usage usage;
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	                       GameOptionId costId, boolean usesGenericSlot, boolean requiresExplicitSelection) {
-		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, usesGenericSlot, requiresExplicitSelection, Usage.UNSPECIFIC);
+	                       GameOptionId costId, boolean usesGenericSlot) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, usesGenericSlot, Usage.UNSPECIFIC);
 	}
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	               GameOptionId costId, boolean usesGenericSlot, boolean requiresExplicitSelection, Usage usage) {
-		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, usesGenericSlot, requiresExplicitSelection, usage);
+	               GameOptionId costId, boolean usesGenericSlot, Usage usage) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, usesGenericSlot, usage);
 	}
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	               GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, boolean requiresExplicitSelection, Usage usage) {
+	               GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, Usage usage) {
 		fName = pName;
 		fDescription = pDescription;
 		fSingular = pSingular;
@@ -38,7 +42,6 @@ public class InducementType implements INamedObject {
 		this.costId = costId;
 		this.reducedCostId = reducedCostId;
 		this.usesGenericSlot = usesGenericSlot;
-		this.requiresExplicitSelection = requiresExplicitSelection;
 		this.usage = usage;
 	}
 
@@ -74,16 +77,8 @@ public class InducementType implements INamedObject {
 		return usesGenericSlot;
 	}
 
-	public boolean requiresExplicitSelection() {
-		return requiresExplicitSelection;
-	}
-
 	public Usage getUsage() {
 		return usage;
-	}
-
-	public enum Usage {
-		UNSPECIFIC, KNOCKOUT_RECOVERY, AVOID_BAN
 	}
 
 	public GameOptionId getActualCostId(Roster roster) {
@@ -103,4 +98,9 @@ public class InducementType implements INamedObject {
 
 		return 0;
 	}
+
+	public Set<SpecialEffect> effects() {
+		return Collections.emptySet();
+	}
+
 }

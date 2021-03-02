@@ -8,6 +8,8 @@ import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.Scanner;
 
+import java.util.Set;
+
 /**
  * @author Kalimar
  */
@@ -25,11 +27,14 @@ public class InducementTypeFactory implements INamedObjectFactory<InducementType
 		return null;
 	}
 
+	public Set<InducementType> allTypes() {
+		return types.getTypes();
+	}
+
 	@Override
 	public void initialize(Game game) {
 		new Scanner<>(InducementCollection.class).getClassesImplementing(game.getOptions())
 				.stream().findFirst().ifPresent(types -> this.types = types);
-
 	}
 
 }

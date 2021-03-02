@@ -1,21 +1,20 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.inducement.Usage;
+import com.balancedbytes.games.ffb.model.InducementSet;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.balancedbytes.games.ffb.inducement.InducementType;
-import com.balancedbytes.games.ffb.SpecialEffect;
-import com.balancedbytes.games.ffb.SpellCollection;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.dialog.DialogId;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * 
@@ -149,6 +148,10 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 	}
 
 	private boolean spellEnabled(SpecialEffect effect) {
-		return SpellCollection.spells(InducementType.WIZARD).contains(effect);
+		InducementSet inducementSet = getClient().getGame().isHomePlaying() ? getClient().getGame().getTeamHome().getInducementSet() : getClient().getGame().getTeamAway().getInducementSet();
+		return inducementSet.getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getKey().getUsage() == Usage.SPELL && entry.getValue().getUsesLeft() > 0)
+			.flatMap(entry -> entry.getKey().effects().stream()).anyMatch(specialEffect -> specialEffect == effect);
+
 	}
 }

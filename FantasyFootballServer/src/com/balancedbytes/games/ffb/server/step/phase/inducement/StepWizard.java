@@ -4,13 +4,13 @@ import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogWizardSpellParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -131,36 +131,41 @@ public final class StepWizard extends AbstractStep {
 
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			getResult().addReport(new ReportWizardUse(team.getId(), fWizardSpell));
-			UtilServerInducementUse.useInducement(getGameState(), team, InducementType.WIZARD, 1);
-			List<Player<?>> affectedPlayers = new ArrayList<>();
-			if (fWizardSpell == SpecialEffect.ZAP) {
-				getResult().setAnimation(new Animation(AnimationType.SPELL_ZAP, fTargetCoordinate));
-				affectedPlayers.add(game.getFieldModel().getPlayer(fTargetCoordinate));
-			}
-			if (fWizardSpell == SpecialEffect.LIGHTNING) {
-				getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
-				addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
-			}
-			if (fWizardSpell == SpecialEffect.FIREBALL) {
-				getResult().setAnimation(new Animation(AnimationType.SPELL_FIREBALL, fTargetCoordinate));
-				FieldCoordinate[] targetCoordinates = game.getFieldModel().findAdjacentCoordinates(fTargetCoordinate,
-						FieldCoordinateBounds.FIELD, 1, true);
-				for (int i = targetCoordinates.length - 1; i >= 0; i--) {
-					addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(targetCoordinates[i]));
-				}
-			}
-			if (fOldTurnMode != null) {
-				game.setTurnMode(fOldTurnMode);
-			}
-			UtilServerGame.syncGameModel(this);
-			PlayerState bloodSpotInjury = new PlayerState(
-					(fWizardSpell == SpecialEffect.FIREBALL) ? PlayerState.HIT_BY_FIREBALL : PlayerState.HIT_BY_LIGHTNING);
-			game.getFieldModel().add(new BloodSpot(fTargetCoordinate, bloodSpotInjury));
-			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-			com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect generator =
-				(com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
-			affectedPlayers.stream().map(affectedPlayer -> new SequenceParams(getGameState(), fWizardSpell, affectedPlayer.getId(),
-				true)).forEach(generator::pushSequence);
+			team.getInducementSet().getInducementMapping().keySet().stream()
+				.filter(inducementType -> inducementType.getUsage() == Usage.SPELL
+					&& inducementType.effects().contains(fWizardSpell)).findFirst().ifPresent(type -> {
+
+					UtilServerInducementUse.useInducement(getGameState(), team, type, 1);
+					List<Player<?>> affectedPlayers = new ArrayList<>();
+					if (fWizardSpell == SpecialEffect.ZAP) {
+						getResult().setAnimation(new Animation(AnimationType.SPELL_ZAP, fTargetCoordinate));
+						affectedPlayers.add(game.getFieldModel().getPlayer(fTargetCoordinate));
+					}
+					if (fWizardSpell == SpecialEffect.LIGHTNING) {
+						getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
+						addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
+					}
+					if (fWizardSpell == SpecialEffect.FIREBALL) {
+						getResult().setAnimation(new Animation(AnimationType.SPELL_FIREBALL, fTargetCoordinate));
+						FieldCoordinate[] targetCoordinates = game.getFieldModel().findAdjacentCoordinates(fTargetCoordinate,
+							FieldCoordinateBounds.FIELD, 1, true);
+						for (int i = targetCoordinates.length - 1; i >= 0; i--) {
+							addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(targetCoordinates[i]));
+						}
+					}
+					if (fOldTurnMode != null) {
+						game.setTurnMode(fOldTurnMode);
+					}
+					UtilServerGame.syncGameModel(this);
+					PlayerState bloodSpotInjury = new PlayerState(
+						(fWizardSpell == SpecialEffect.FIREBALL) ? PlayerState.HIT_BY_FIREBALL : PlayerState.HIT_BY_LIGHTNING);
+					game.getFieldModel().add(new BloodSpot(fTargetCoordinate, bloodSpotInjury));
+					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+					com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect generator =
+						(com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
+					affectedPlayers.stream().map(affectedPlayer -> new SequenceParams(getGameState(), fWizardSpell, affectedPlayer.getId(),
+						true)).forEach(generator::pushSequence);
+				});
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			if (game.getTurnMode() != (TurnMode.WIZARD)) {
