@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.client;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public interface IIconProperty {
@@ -81,7 +81,7 @@ public interface IIconProperty {
 
 	// Resources
 	String RESOURCE_APOTHECARY = "resource.apothecary";
-	String RESOURCE_BLOODWEISER_BABE = "resource.bloodweiserBabe";
+	String RESOURCE_BLOODWEISER_BABE = "resource.bloodweiserKeg";
 	String RESOURCE_BRIBE = "resource.bribe";
 	String RESOURCE_CARD = "resource.card";
 	String RESOURCE_MASTER_CHEF = "resource.masterChef";

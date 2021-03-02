@@ -21,13 +21,14 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ResourceComponent extends JPanel {
 
 	public static final int WIDTH = 145;
@@ -38,15 +39,6 @@ public class ResourceComponent extends JPanel {
 	private boolean fRefreshNecessary;
 	private int fNrOfSlots;
 	private final ResourceSlot[] fSlots;
-
-	private int fCurrentReRolls;
-	private int fCurrentApothecaries;
-	private int fCurrentIgor;
-	private int fCurrentBribes;
-	private int fCurrentBloodweiserBabes;
-	private int fCurrentMasterChef;
-	private int fCurrentWizard;
-	private int fCurrentCards;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
@@ -72,24 +64,24 @@ public class ResourceComponent extends JPanel {
 		ResourceSlot[] resourceSlots;
 		if (getSideBar().isHomeSide()) {
 			resourceSlots = new ResourceSlot[]{
-				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
+					new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
 		} else {
 			resourceSlots = new ResourceSlot[]{
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+					new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
 		}
 		return resourceSlots;
 	}
@@ -150,8 +142,11 @@ public class ResourceComponent extends JPanel {
 	}
 
 	private void updateSlots() {
+		int fCurrentReRolls = 0;
+		int fCurrentApothecaries = 0;
+		int fCurrentCards = 0;
 
-		int slotIndex = 0;
+		AtomicInteger slotIndex = new AtomicInteger(0);
 		Game game = getSideBar().getClient().getGame();
 		TurnData turnData = getSideBar().isHomeSide() ? game.getTurnDataHome() : game.getTurnDataAway();
 		Team team = getSideBar().isHomeSide() ? game.getTeamHome() : game.getTeamAway();
@@ -159,8 +154,9 @@ public class ResourceComponent extends JPanel {
 		fRefreshNecessary |= (turnData.getReRolls() != fCurrentReRolls);
 		fCurrentReRolls = turnData.getReRolls();
 		if ((team.getReRolls() > 0) || (turnData.getReRolls() > 0)) {
-			ResourceSlot reRollSlot = fSlots[slotIndex++];
-			reRollSlot.setType(ResourceSlot.TYPE_RE_ROLL);
+			ResourceSlot reRollSlot = fSlots[slotIndex.getAndIncrement()];
+			reRollSlot.setSingular("Re-Roll");
+			reRollSlot.setPlural("Re-Rolls");
 			fRefreshNecessary |= (turnData.isReRollUsed() == reRollSlot.isEnabled());
 			reRollSlot.setEnabled(!turnData.isReRollUsed());
 			reRollSlot.setValue(fCurrentReRolls);
@@ -170,98 +166,45 @@ public class ResourceComponent extends JPanel {
 		fRefreshNecessary |= (turnData.getApothecaries() != fCurrentApothecaries);
 		fCurrentApothecaries = turnData.getApothecaries();
 		if ((team.getApothecaries() > 0) || (turnData.getApothecaries() > 0)) {
-			ResourceSlot apothecarySlot = fSlots[slotIndex++];
-			apothecarySlot.setType(ResourceSlot.TYPE_APOTHECARY);
+			ResourceSlot apothecarySlot = fSlots[slotIndex.getAndIncrement()];
+			apothecarySlot.setSingular("Apothecary");
+			apothecarySlot.setPlural("Apothecaries");
 			apothecarySlot.setValue(fCurrentApothecaries);
 			apothecarySlot.setIconProperty(IIconProperty.RESOURCE_APOTHECARY);
 		}
 
 
-		for (turnData.getInducementSet().getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getValue() != null)
-			.forEach(entry -> {
-				query.bind
-				InducementType type = entry.getKey();
-				Inducement inducement = entry.getValue();
+		turnData.getInducementSet().getInducementMapping().entrySet().stream()
+				.filter(entry -> entry.getValue() != null && entry.getKey().isUsingGenericSlot())
+				.sorted(Comparator.comparing(o -> o.getKey().getName()))
+				.forEach(entry -> {
+					InducementType type = entry.getKey();
+					Inducement inducement = entry.getValue();
 
-				fRefreshNecessary |= ((inducement.getValue() - inducement.getUses()) != inducementValues.get(type));
-				inducementValues.put(type, inducement.getValue() - inducement.getUses());
-				if (inducementValues.get(type) > 0) {
-					ResourceSlot slot = fSlots[slotIndex++];
-				}
-			});
-
-		Inducement igor = turnData.getInducementSet().get(InducementType.IGOR);
-		if (igor != null) {
-			fRefreshNecessary |= ((igor.getValue() - igor.getUses()) != fCurrentIgor);
-			fCurrentIgor = igor.getValue() - igor.getUses();
-			if (fCurrentIgor > 0) {
-				ResourceSlot igorSlot = fSlots[slotIndex++];
-				igorSlot.setType(ResourceSlot.TYPE_IGOR);
-				igorSlot.setValue(fCurrentIgor);
-				igorSlot.setIconProperty(IIconProperty.RESOURCE_IGOR);
-			}
-		}
-
-		Inducement bribes = turnData.getInducementSet().get(InducementType.BRIBES);
-		if (bribes != null) {
-			fRefreshNecessary |= ((bribes.getValue() - bribes.getUses()) != fCurrentBribes);
-			fCurrentBribes = bribes.getValue() - bribes.getUses();
-			if (fCurrentBribes > 0) {
-				ResourceSlot bribesSlot = fSlots[slotIndex++];
-				bribesSlot.setType(ResourceSlot.TYPE_BRIBE);
-				bribesSlot.setValue(fCurrentBribes);
-				bribesSlot.setIconProperty(IIconProperty.RESOURCE_BRIBE);
-			}
-		}
-
-		Inducement bloodweiserBabes = turnData.getInducementSet().get(InducementType.BLOODWEISER_KEGS);
-		if (bloodweiserBabes != null) {
-			fRefreshNecessary |= ((bloodweiserBabes.getValue() - bloodweiserBabes.getUses()) != fCurrentBloodweiserBabes);
-			fCurrentBloodweiserBabes = bloodweiserBabes.getValue() - bloodweiserBabes.getUses();
-			if (fCurrentBloodweiserBabes > 0) {
-				ResourceSlot bloodweiserBabesSlot = fSlots[slotIndex++];
-				bloodweiserBabesSlot.setType(ResourceSlot.TYPE_BLOODWEISER_BABE);
-				bloodweiserBabesSlot.setValue(fCurrentBloodweiserBabes);
-				bloodweiserBabesSlot.setIconProperty(IIconProperty.RESOURCE_BLOODWEISER_BABE);
-			}
-		}
-
-		Inducement masterChef = turnData.getInducementSet().get(InducementType.MASTER_CHEF);
-		if (masterChef != null) {
-			fRefreshNecessary |= ((masterChef.getValue() - masterChef.getUses()) != fCurrentMasterChef);
-			fCurrentMasterChef = masterChef.getValue() - masterChef.getUses();
-			if (fCurrentMasterChef > 0) {
-				ResourceSlot masterChefSlot = fSlots[slotIndex++];
-				masterChefSlot.setType(ResourceSlot.TYPE_MASTER_CHEF);
-				masterChefSlot.setValue(fCurrentMasterChef);
-				masterChefSlot.setIconProperty(IIconProperty.RESOURCE_MASTER_CHEF);
-			}
-		}
-
-		Inducement wizard = turnData.getInducementSet().get(InducementType.WIZARD);
-		if (wizard != null) {
-			fRefreshNecessary |= ((wizard.getValue() - wizard.getUses()) != fCurrentWizard);
-			fCurrentWizard = wizard.getValue() - wizard.getUses();
-			if (fCurrentWizard > 0) {
-				ResourceSlot wizardSlot = fSlots[slotIndex++];
-				wizardSlot.setType(ResourceSlot.TYPE_WIZARD);
-				wizardSlot.setValue(fCurrentWizard);
-				wizardSlot.setIconProperty(IIconProperty.RESOURCE_WIZARD);
-			}
-		}
+					int newValue = inducement.getValue() - inducement.getUses();
+					fRefreshNecessary |= (newValue != inducementValues.get(type));
+					inducementValues.put(type, newValue);
+					if (newValue > 0) {
+						ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
+						slot.setPlural(type.getPlural());
+						slot.setSingular(type.getSingular());
+						slot.setValue(newValue);
+						slot.setIconProperty("resource." + type.getName());
+					}
+				});
 
 		Card[] availableCards = turnData.getInducementSet().getAvailableCards();
 		fRefreshNecessary |= (availableCards.length != fCurrentCards);
 		fCurrentCards = availableCards.length;
 		if (fCurrentCards > 0) {
-			ResourceSlot bribesSlot = fSlots[slotIndex++];
-			bribesSlot.setType(ResourceSlot.TYPE_CARD);
+			ResourceSlot bribesSlot = fSlots[slotIndex.getAndIncrement()];
+			bribesSlot.setPlural("Cards");
+			bribesSlot.setSingular("Card");
 			bribesSlot.setValue(fCurrentCards);
 			bribesSlot.setIconProperty(IIconProperty.RESOURCE_CARD);
 		}
 
-		fNrOfSlots = slotIndex;
+		fNrOfSlots = slotIndex.get();
 
 	}
 

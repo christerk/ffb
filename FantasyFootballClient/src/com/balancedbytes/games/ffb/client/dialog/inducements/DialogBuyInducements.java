@@ -41,6 +41,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilInducements;
 
@@ -366,11 +367,11 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 	private void createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut,
 			GameOptions gameOptions) {
-		int maxCount = UtilInducements.findInducementsAvailable(fRoster, pInducementType, gameOptions);
+		int maxCount = pInducementType.availability(fRoster, gameOptions);
 		if (maxCount <= 0) {
 			return;
 		}
-		int cost = UtilInducements.findInducementCost(fRoster, pInducementType, gameOptions);
+		int cost = findInducementCost(fRoster, pInducementType, gameOptions);
 		DropDownPanel panel = new DropDownPanel(pInducementType, maxCount, pInducementType.getDescription(), cost, this,
 				fAvailableGold);
 		pAddToPanel.add(panel);
@@ -458,4 +459,14 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	public void keyTyped(KeyEvent pKeyEvent) {
 	}
 
+	public int findInducementCost(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
+
+		IGameOption gameOption = gameOptions.getOptionWithDefault(pInducement.getActualCostId(pRoster));
+
+		if (gameOption instanceof GameOptionInt) {
+			return ((GameOptionInt) gameOption).getValue();
+		}
+
+		return 0;
+	}
 }

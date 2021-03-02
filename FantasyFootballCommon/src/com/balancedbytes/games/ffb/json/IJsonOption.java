@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.json;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public interface IJsonOption {
@@ -43,7 +43,7 @@ public interface IJsonOption {
 	JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
 	JsonIntOption BLOCKS = new JsonIntOption("blocks");
 	JsonArrayOption BLOODSPOT_ARRAY = new JsonArrayOption("bloodspotArray");
-	JsonIntOption BLOODWEISER_KEGS = new JsonIntOption("bloodweiserBabes");
+	JsonIntOption BLOODWEISER_KEGS = new JsonIntOption("bloodweiserBabes");// retain old key to maintain compatibility with old replays.
 	JsonBooleanOption BOMB = new JsonBooleanOption("bomb");
 	JsonFieldCoordinateOption BOMB_COORDINATE = new JsonFieldCoordinateOption("bombCoordinate");
 	JsonBooleanOption BOMB_MOVING = new JsonBooleanOption("bombMoving");
