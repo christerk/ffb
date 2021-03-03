@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;

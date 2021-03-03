@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.client.ClientReplayer;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.client.IClientPropertyValue;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.dialog.DialogAbout;

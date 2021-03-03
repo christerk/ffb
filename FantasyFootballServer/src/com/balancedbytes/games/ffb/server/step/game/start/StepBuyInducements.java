@@ -287,7 +287,7 @@ public final class StepBuyInducements extends AbstractStep {
 			addedPlayerList.add(mercenary);
 			StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("M").append(addedPlayerList.size());
 			mercenary.setId(playerId.toString());
-			mercenary.updatePosition(position, game.getApplicationSource());
+			mercenary.updatePosition(position, game.getRules());
 			Integer mercNr = nrByPosition.get(position);
 			if (mercNr == null) {
 				mercNr = 1;
@@ -359,7 +359,7 @@ public final class StepBuyInducements extends AbstractStep {
 					addedPlayerList.add(starPlayer);
 					StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("S").append(addedPlayerList.size());
 					starPlayer.setId(playerId.toString());
-					starPlayer.updatePosition(position, game.getApplicationSource());
+					starPlayer.updatePosition(position, game.getRules());
 					starPlayer.setName(position.getName());
 					starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
 					starPlayer.setGender(position.getGender());

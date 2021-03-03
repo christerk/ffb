@@ -17,7 +17,7 @@ import javax.swing.ToolTipManager;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.ClientData;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.util.UtilClientGraphics;
 import com.balancedbytes.games.ffb.model.FieldModel;

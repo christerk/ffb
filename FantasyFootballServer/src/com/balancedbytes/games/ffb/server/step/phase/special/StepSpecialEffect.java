@@ -130,7 +130,7 @@ public final class StepSpecialEffect extends AbstractStep {
 				}
 				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
 					ZappedPlayer zappedPlayer = new ZappedPlayer();
-					zappedPlayer.init((RosterPlayer) player, game.getApplicationSource());
+					zappedPlayer.init((RosterPlayer) player, game.getRules());
 					Team team = game.findTeam(player);
 					team.addPlayer(zappedPlayer);
 					getGameState().addZappedPlayer(player);

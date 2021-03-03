@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.layer.FieldLayerRangeRuler;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;

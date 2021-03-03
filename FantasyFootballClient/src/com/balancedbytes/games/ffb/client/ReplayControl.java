@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.ui.ChatComponent;
 
 /**

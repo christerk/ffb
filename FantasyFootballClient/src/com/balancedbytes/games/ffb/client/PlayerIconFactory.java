@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.PlayerMarker;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;

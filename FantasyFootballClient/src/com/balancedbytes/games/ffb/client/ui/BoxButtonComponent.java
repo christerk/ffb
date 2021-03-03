@@ -22,7 +22,7 @@ import javax.swing.ToolTipManager;
 
 import com.balancedbytes.games.ffb.BoxType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.model.FieldModel;
 

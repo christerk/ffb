@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
@@ -131,7 +132,9 @@ public final class StepWizard extends AbstractStep {
 
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			getResult().addReport(new ReportWizardUse(team.getId(), fWizardSpell));
-			team.getInducementSet().getInducementMapping().keySet().stream()
+			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+
+			inducementSet.getInducementMapping().keySet().stream()
 				.filter(inducementType -> inducementType.getUsage() == Usage.SPELL
 					&& inducementType.effects().contains(fWizardSpell)).findFirst().ifPresent(type -> {
 

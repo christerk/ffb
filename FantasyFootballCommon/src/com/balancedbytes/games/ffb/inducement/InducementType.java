@@ -13,27 +13,27 @@ import java.util.Set;
 
 public class InducementType implements INamedObject {
 
-	private final String fName;
-	private final String fDescription;
-	private final String fSingular;
-	private final String fPlural;
-	private final GameOptionId maxId;
-	private final GameOptionId costId;
-	private final GameOptionId reducedCostId;
+	private final String fName, fDescription, fSingular, fPlural, slotIconProperty;
+	private final GameOptionId maxId, costId, reducedCostId;
 	private final boolean usesGenericSlot;
 	private final Usage usage;
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	                       GameOptionId costId, boolean usesGenericSlot) {
-		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, usesGenericSlot, Usage.UNSPECIFIC);
-	}
-	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	               GameOptionId costId, boolean usesGenericSlot, Usage usage) {
-		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, usesGenericSlot, usage);
+	                      GameOptionId costId, String slotIconProperty, Usage usage) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, true, slotIconProperty, usage);
 	}
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	               GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, Usage usage) {
+	                       GameOptionId costId) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, false, null, Usage.UNSPECIFIC);
+	}
+	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
+	               GameOptionId costId, Usage usage) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, false, null, usage);
+	}
+
+	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
+	               GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, String slotIconProperty, Usage usage) {
 		fName = pName;
 		fDescription = pDescription;
 		fSingular = pSingular;
@@ -43,6 +43,7 @@ public class InducementType implements INamedObject {
 		this.reducedCostId = reducedCostId;
 		this.usesGenericSlot = usesGenericSlot;
 		this.usage = usage;
+		this.slotIconProperty = slotIconProperty;
 	}
 
 	public String getDescription() {
@@ -79,6 +80,10 @@ public class InducementType implements INamedObject {
 
 	public Usage getUsage() {
 		return usage;
+	}
+
+	public String getSlotIconProperty() {
+		return slotIconProperty;
 	}
 
 	public GameOptionId getActualCostId(Roster roster) {

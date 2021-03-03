@@ -283,7 +283,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 		if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
 			RosterPlayer player = new RosterPlayer();
 			player.startXmlElement(game, pXmlTag, pXmlAttributes);
-			init(player, game.getApplicationSource());
+			init(player, game.getRules());
 		}
 		return xmlElement;
 	}

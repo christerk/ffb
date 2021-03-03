@@ -67,7 +67,7 @@ public class TeamCache {
   private Team mapToTeam(File file, Game game) throws IOException {
     try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
       InputSource xmlSource = new InputSource(xmlIn);
-      Team team = new Team(game.getApplicationSource());
+      Team team = new Team(game.getRules());
       XmlHandler.parse(game, xmlSource, team);
       return team;
     }

@@ -9,7 +9,7 @@ import javax.swing.KeyStroke;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.client.ActionKey;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.state.ClientState;
 import com.balancedbytes.games.ffb.client.state.IPlayerPopupMenuKeys;

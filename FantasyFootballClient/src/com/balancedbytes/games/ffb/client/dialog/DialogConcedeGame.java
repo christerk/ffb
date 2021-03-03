@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.client.dialog;
 import java.awt.event.ActionListener;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
 /**

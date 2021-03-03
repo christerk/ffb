@@ -241,7 +241,7 @@ public class UtilServerInjury {
 			StringBuilder raisedPlayerId = new StringBuilder().append(killedId).append("R")
 					.append(pNecroTeamResult.getRaisedDead());
 			raisedPlayer.setId(raisedPlayerId.toString());
-			raisedPlayer.updatePosition(zombiePosition, pGame.getApplicationSource());
+			raisedPlayer.updatePosition(zombiePosition, pGame.getRules());
 			raisedPlayer.setName(pPlayerName);
 			raisedPlayer.setNr(pNecroTeam.getMaxPlayerNr() + 1);
 			raisedPlayer.setType(PlayerType.RAISED_FROM_DEAD);

@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;

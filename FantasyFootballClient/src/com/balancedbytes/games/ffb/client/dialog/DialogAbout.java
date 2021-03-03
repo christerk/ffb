@@ -14,7 +14,7 @@ import javax.swing.event.InternalFrameEvent;
 
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
 @SuppressWarnings("serial")

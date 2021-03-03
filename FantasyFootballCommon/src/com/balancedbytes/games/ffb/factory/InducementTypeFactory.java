@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 public class InducementTypeFactory implements INamedObjectFactory<InducementType> {
 	private InducementCollection types;
 
+	public InducementTypeFactory() {
+	}
+
 	public InducementType forName(String pName) {
 		for (InducementType type : types.getTypes()) {
 			if (type.getName().equalsIgnoreCase(pName)) {
@@ -35,7 +38,7 @@ public class InducementTypeFactory implements INamedObjectFactory<InducementType
 
 	@Override
 	public void initialize(Game game) {
-		new Scanner<>(InducementCollection.class).getClassesImplementing(game.getOptions())
+		new Scanner<>(InducementCollection.class).getSubclasses(game.getOptions())
 				.stream().findFirst().ifPresent(types -> this.types = types);
 	}
 

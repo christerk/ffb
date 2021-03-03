@@ -240,7 +240,7 @@ public class GameCache {
 
 	private Team updateRoster(Team team, Game game) {
 		if (ServerMode.STANDALONE == getServer().getMode()) {
-			team.updateRoster(rosterCache.getRosterById(team.getRosterId(), game), game.getApplicationSource());
+			team.updateRoster(rosterCache.getRosterById(team.getRosterId(), game), game.getRules());
 			team.setTeamValue(UtilTeamValue.findTeamValue(team));
 		}
 		return team;
@@ -304,7 +304,7 @@ public class GameCache {
 			} else if (player instanceof RosterPlayer) {
 				if (pGameState.isZapped(player)) {
 					ZappedPlayer zappedPlayer = new ZappedPlayer();
-					zappedPlayer.init((RosterPlayer) player, game.getApplicationSource());
+					zappedPlayer.init((RosterPlayer) player, game.getRules());
 					player = zappedPlayer;
 					pTeam.addPlayer(player);
 				}

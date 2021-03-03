@@ -1,10 +1,17 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.IIconProperty;
+import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -13,19 +20,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.balancedbytes.games.ffb.FactoryType.Factory;
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRollSources;
-import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IIconProperty;
-import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
-import com.balancedbytes.games.ffb.factory.SkillFactory;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
 /**
  *

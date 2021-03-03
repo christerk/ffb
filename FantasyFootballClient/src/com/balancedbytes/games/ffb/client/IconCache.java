@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.DiceDecoration;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.Weather;

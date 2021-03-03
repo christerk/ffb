@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.client.ui;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.inducement.InducementType;
@@ -182,14 +182,14 @@ public class ResourceComponent extends JPanel {
 					Inducement inducement = entry.getValue();
 
 					int newValue = inducement.getValue() - inducement.getUses();
-					fRefreshNecessary |= (newValue != inducementValues.get(type));
+					fRefreshNecessary |= inducementValues.get(type) != null && (newValue != inducementValues.get(type));
 					inducementValues.put(type, newValue);
 					if (newValue > 0) {
 						ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
 						slot.setPlural(type.getPlural());
 						slot.setSingular(type.getSingular());
 						slot.setValue(newValue);
-						slot.setIconProperty("resource." + type.getName());
+						slot.setIconProperty(type.getSlotIconProperty());
 					}
 				});
 

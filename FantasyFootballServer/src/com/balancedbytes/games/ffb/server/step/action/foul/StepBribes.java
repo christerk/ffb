@@ -121,7 +121,8 @@ public class StepBribes extends AbstractStep {
 		}
 		if ((fBribesChoice != null) && fBribesChoice && (fBribeSuccessful == null)) {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			team.getInducementSet().getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
+			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+			inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
 				.findFirst().ifPresent(type -> {
 				if (UtilServerInducementUse.useInducement(getGameState(), team, type, 1)) {
 					int roll = getGameState().getDiceRoller().rollBribes();

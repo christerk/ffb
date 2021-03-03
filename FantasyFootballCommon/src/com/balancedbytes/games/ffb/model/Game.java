@@ -114,10 +114,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return modifierAggregator;
 	}
 
-	public IFactorySource getApplicationSource() {
-		return applicationSource;
-	}
-
 	public GameRules getRules() {
 		return rules;
 	}

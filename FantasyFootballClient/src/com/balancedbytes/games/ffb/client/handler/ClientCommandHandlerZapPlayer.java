@@ -29,7 +29,7 @@ public class ClientCommandHandlerZapPlayer extends ClientCommandHandler {
 		if (player instanceof RosterPlayer) {
 			RosterPlayer rosterPlayer = (RosterPlayer) player;
 			ZappedPlayer zappedPlayer = new ZappedPlayer();
-			zappedPlayer.init(rosterPlayer, getClient().getGame().getApplicationSource());
+			zappedPlayer.init(rosterPlayer, getClient().getGame().getRules());
 			team.addPlayer(zappedPlayer);
 			getClient().getGame().getFieldModel().sendPosition(player);
 		}

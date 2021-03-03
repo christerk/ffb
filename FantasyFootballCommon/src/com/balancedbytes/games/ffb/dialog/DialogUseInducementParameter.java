@@ -1,19 +1,19 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
+import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -82,7 +82,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
 		String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPE_ARRAY.getFrom(game, jsonObject);
 		fInducementTypes = new InducementType[inducementTypeNames.length];
-		InducementTypeFactory inducementTypeFactory = new InducementTypeFactory();
+		InducementTypeFactory inducementTypeFactory = game.getFactory(Factory.INDUCEMENT_TYPE);
 		for (int i = 0; i < fInducementTypes.length; i++) {
 			fInducementTypes[i] = inducementTypeFactory.forName(inducementTypeNames[i]);
 		}

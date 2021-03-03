@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.inducement.Usage;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 
 import javax.swing.Box;
@@ -148,7 +149,10 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 	}
 
 	private boolean spellEnabled(SpecialEffect effect) {
-		InducementSet inducementSet = getClient().getGame().isHomePlaying() ? getClient().getGame().getTeamHome().getInducementSet() : getClient().getGame().getTeamAway().getInducementSet();
+		final Game game = getClient().getGame();
+		InducementSet inducementSet = game.isHomePlaying()
+			? game.getTurnDataHome().getInducementSet()
+			: game.getTurnDataAway().getInducementSet();
 		return inducementSet.getInducementMapping().entrySet().stream()
 			.filter(entry -> entry.getKey().getUsage() == Usage.SPELL && entry.getValue().getUsesLeft() > 0)
 			.flatMap(entry -> entry.getKey().effects().stream()).anyMatch(specialEffect -> specialEffect == effect);

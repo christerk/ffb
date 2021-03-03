@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.inducement;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -16,6 +12,10 @@ import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
 
 /**
  * 
@@ -82,10 +82,10 @@ public class Inducement implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
-		InducementTypeFactory typeFactory = new InducementTypeFactory();
+		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
 		if (XML_TAG.equals(pXmlTag)) {
 			String typeName = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_TYPE);
-			fType = typeFactory.forName(typeName);
+			fType = inducementTypeFactory.forName(typeName);
 			fValue = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_VALUE);
 			fUses = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_USES);
 		}
