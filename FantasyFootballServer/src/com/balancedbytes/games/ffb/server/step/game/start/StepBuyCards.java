@@ -1,13 +1,16 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardType;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
+import com.balancedbytes.games.ffb.factory.CardTypeFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
@@ -52,7 +55,7 @@ public final class StepBuyCards extends AbstractStep {
 	private boolean fReportedHome;
 	private boolean fReportedAway;
 
-	private transient Map<CardType, CardDeck> fDeckByType;
+	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
 	private transient CardType fBuyCardAway;
 	private transient Map<CardType, Integer> cardPrices;
@@ -79,8 +82,7 @@ public final class StepBuyCards extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_BUY_CARD:
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_BUY_CARD) {
 				ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pReceivedCommand.getCommand();
 				if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 					fBuyCardHome = buyCardCommand.getCardType();
@@ -94,9 +96,6 @@ public final class StepBuyCards extends AbstractStep {
 					}
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -121,14 +120,14 @@ public final class StepBuyCards extends AbstractStep {
 		buildDecks();
 
 		cardPrices = new HashMap<>();
-		for (CardType cardType : CardType.values()) {
+		((CardTypeFactory)game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(cardType -> {
 			int price = ((GameOptionInt) game.getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
 			cardPrices.put(cardType, price);
 			CardDeck deck = fDeckByType.get(cardType);
 			if (deck != null && deck.size() > 0) {
 				minimumCardPrice = Math.min(minimumCardPrice, price);
 			}
-		}
+		});
 
 		if (fBuyCardHome != null) {
 			fInducementGoldHome -= cardPrices.getOrDefault(fBuyCardHome, 0);
@@ -209,11 +208,11 @@ public final class StepBuyCards extends AbstractStep {
 	private void buildDecks() {
 		Game game = getGameState().getGame();
 		fDeckByType.clear();
-		for (CardType type : CardType.values()) {
+		((CardTypeFactory)game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(type -> {
 			CardDeck deck = new CardDeck(type);
 			deck.build(game);
 			fDeckByType.put(type, deck);
-		}
+		});
 	}
 
 	private DialogBuyCardsParameter createDialogParameter(String pTeamId, int pAvailableGold) {

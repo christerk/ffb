@@ -1,14 +1,21 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.HashMap;
-import java.util.Map;
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.ParagraphStyle;
+import com.balancedbytes.games.ffb.client.TextStyle;
+import com.balancedbytes.games.ffb.client.dialog.Dialog;
+import com.balancedbytes.games.ffb.client.ui.ChatLogScrollPane;
+import com.balancedbytes.games.ffb.client.ui.ChatLogTextPane;
+import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
+import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.factory.CardTypeFactory;
+import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
+import com.balancedbytes.games.ffb.inducement.CardType;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,52 +25,37 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardType;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.ParagraphStyle;
-import com.balancedbytes.games.ffb.client.TextStyle;
-import com.balancedbytes.games.ffb.client.dialog.Dialog;
-import com.balancedbytes.games.ffb.client.ui.ChatLogScrollPane;
-import com.balancedbytes.games.ffb.client.ui.ChatLogTextPane;
-import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
-import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
-import com.balancedbytes.games.ffb.model.InducementSet;
-import com.balancedbytes.games.ffb.option.GameOptionInt;
-import com.balancedbytes.games.ffb.util.StringTool;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogBuyCards extends Dialog implements ActionListener, KeyListener, ListSelectionListener {
 
-	private Map<CardType, Integer> fNrOfCardsPerType;
-	private Map<CardType, JButton> fButtonPerType;
-	private Map<CardType, Integer> cardPrices;
-	private Map<CardType, Integer> cardLimits;
+	private final Map<CardType, Integer> fNrOfCardsPerType;
+	private final Map<CardType, JButton> fButtonPerType;
+	private final Map<CardType, Integer> cardPrices;
+	private final Map<CardType, Integer> cardLimits;
 
 	private int fAvailableGold;
-	private JLabel fLabelAvailableGold;
+	private final JLabel fLabelAvailableGold;
 
 	private int fAvailableCards;
-	private JLabel fLabelAvailableCards;
+	private final JLabel fLabelAvailableCards;
 
-	// private JButton fButtonMiscellaneousMayhem;
-	// private JButton fButtonSpecialTeamPlay;
-	private JButton fButtonMagicItem;
-	private JButton fButtonDirtyTrick;
-	// private JButton fButtonGoodKarma;
-	// private JButton fButtonRandomEvent;
-	// private JButton fButtonDesperateMeasure;
+	private final ChatLogTextPane fCardLogTextPane;
 
-	private ChatLogScrollPane fCardLogScrollPane;
-	private ChatLogTextPane fCardLogTextPane;
-
-	private JButton fButtonContinue;
+	private final JButton fButtonContinue;
 
 	public DialogBuyCards(FantasyFootballClient pClient, DialogBuyCardsParameter pParameter) {
 
@@ -100,7 +92,9 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		cardPrices = new HashMap<>();
 		cardLimits = new HashMap<>();
 
-		for (CardType cardType : CardType.values()) {
+		Set<CardType> cardTypes = ((CardTypeFactory)getClient().getGame().getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes();
+
+		for (CardType cardType : cardTypes) {
 			int price = ((GameOptionInt) pClient.getGame().getOptions().getOptionWithDefault(cardType.getCostId()))
 					.getValue();
 			cardPrices.put(cardType, price);
@@ -113,66 +107,18 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 			}
 		}
 
-		// Icon cardIcon = new
-		// ImageIcon(pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
 
-		// fButtonMiscellaneousMayhem = new JButton();
-		// fButtonMiscellaneousMayhem.addActionListener(this);
-		// fButtonPerType.put(CardType.MISCELLANEOUS_MAYHEM,
-		// fButtonMiscellaneousMayhem);
-		// fNrOfCardsPerType.put(CardType.MISCELLANEOUS_MAYHEM,
-		// pParameter.getNrOfCards(CardType.MISCELLANEOUS_MAYHEM));
-		// panelMain.add(createDeckPanel(CardType.MISCELLANEOUS_MAYHEM));
-		// panelMain.add(Box.createVerticalStrut(5));
-
-		// fButtonSpecialTeamPlay = new JButton();
-		// fButtonSpecialTeamPlay.addActionListener(this);
-		// fButtonPerType.put(CardType.SPECIAL_TEAM_PLAY, fButtonSpecialTeamPlay);
-		// fNrOfCardsPerType.put(CardType.SPECIAL_TEAM_PLAY,
-		// pParameter.getNrOfCards(CardType.SPECIAL_TEAM_PLAY));
-		// panelMain.add(createDeckPanel(CardType.SPECIAL_TEAM_PLAY));
-		// panelMain.add(Box.createVerticalStrut(5));
-
-		fButtonMagicItem = new JButton();
-		fButtonMagicItem.addActionListener(this);
-		fButtonPerType.put(CardType.MAGIC_ITEM, fButtonMagicItem);
-		fNrOfCardsPerType.put(CardType.MAGIC_ITEM, pParameter.getNrOfCards(CardType.MAGIC_ITEM));
-		panelMain.add(createDeckPanel(CardType.MAGIC_ITEM));
-		panelMain.add(Box.createVerticalStrut(5));
-
-		fButtonDirtyTrick = new JButton();
-		fButtonDirtyTrick.addActionListener(this);
-		fButtonPerType.put(CardType.DIRTY_TRICK, fButtonDirtyTrick);
-		fNrOfCardsPerType.put(CardType.DIRTY_TRICK, pParameter.getNrOfCards(CardType.DIRTY_TRICK));
-		panelMain.add(createDeckPanel(CardType.DIRTY_TRICK));
-		panelMain.add(Box.createVerticalStrut(5));
-
-		// fButtonGoodKarma = new JButton();
-		// fButtonGoodKarma.addActionListener(this);
-		// fButtonPerType.put(CardType.GOOD_KARMA, fButtonGoodKarma);
-		// fNrOfCardsPerType.put(CardType.GOOD_KARMA,
-		// pParameter.getNrOfCards(CardType.GOOD_KARMA));
-		// panelMain.add(createDeckPanel(CardType.GOOD_KARMA));
-		// panelMain.add(Box.createVerticalStrut(5));
-		//
-		// fButtonRandomEvent = new JButton();
-		// fButtonRandomEvent.addActionListener(this);
-		// fButtonPerType.put(CardType.RANDOM_EVENT, fButtonRandomEvent);
-		// fNrOfCardsPerType.put(CardType.RANDOM_EVENT,
-		// pParameter.getNrOfCards(CardType.RANDOM_EVENT));
-		// panelMain.add(createDeckPanel(CardType.RANDOM_EVENT));
-		// panelMain.add(Box.createVerticalStrut(5));
-		//
-		// fButtonDesperateMeasure = new JButton();
-		// fButtonDesperateMeasure.addActionListener(this);
-		// fButtonPerType.put(CardType.DESPERATE_MEASURE, fButtonDesperateMeasure);
-		// fNrOfCardsPerType.put(CardType.DESPERATE_MEASURE,
-		// pParameter.getNrOfCards(CardType.DESPERATE_MEASURE));
-		// panelMain.add(createDeckPanel(CardType.DESPERATE_MEASURE));
-		// panelMain.add(Box.createVerticalStrut(10));
+		for (CardType cardType: cardTypes) {
+			JButton button = new JButton();
+			button.addActionListener(this);
+			fButtonPerType.put(cardType, button);
+			fNrOfCardsPerType.put(cardType, pParameter.getNrOfCards(cardType));
+			panelMain.add(createDeckPanel(cardType));
+			panelMain.add(Box.createVerticalStrut(5));
+		}
 
 		fCardLogTextPane = new ChatLogTextPane();
-		fCardLogScrollPane = new ChatLogScrollPane(fCardLogTextPane);
+		ChatLogScrollPane fCardLogScrollPane = new ChatLogScrollPane(fCardLogTextPane);
 
 		JPanel panelCardLog = new JPanel();
 		panelCardLog.setLayout(new BorderLayout());
@@ -234,27 +180,17 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		return deckPanel;
 	}
 
-	private JLabel updateAvailableGoldLabel() {
+	private void updateAvailableGoldLabel() {
 
-		StringBuilder gold = new StringBuilder();
-		gold.append("Available Gold: ").append(StringTool.formatThousands(fAvailableGold));
-
-		fLabelAvailableGold.setText(gold.toString());
+		fLabelAvailableGold.setText("Available Gold: " + StringTool.formatThousands(fAvailableGold));
 		fLabelAvailableGold.setFont(new Font("Sans Serif", Font.BOLD, 12));
-
-		return fLabelAvailableGold;
 
 	}
 
-	private JLabel updateAvailableCardsLabel() {
+	private void updateAvailableCardsLabel() {
 
-		StringBuilder cards = new StringBuilder();
-		cards.append("Available Cards: ").append(fAvailableCards);
-
-		fLabelAvailableCards.setText(cards.toString());
+		fLabelAvailableCards.setText("Available Cards: " + fAvailableCards);
 		fLabelAvailableCards.setFont(new Font("Sans Serif", Font.BOLD, 12));
-
-		return fLabelAvailableCards;
 
 	}
 
@@ -302,27 +238,11 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 
-		// if (pActionEvent.getSource() == fButtonMiscellaneousMayhem) {
-		// buyCard(CardType.MISCELLANEOUS_MAYHEM);
-		// }
-		// if (pActionEvent.getSource() == fButtonSpecialTeamPlay) {
-		// buyCard(CardType.SPECIAL_TEAM_PLAY);
-		// }
-		if (pActionEvent.getSource() == fButtonMagicItem) {
-			buyCard(CardType.MAGIC_ITEM);
-		}
-		if (pActionEvent.getSource() == fButtonDirtyTrick) {
-			buyCard(CardType.DIRTY_TRICK);
-		}
-		// if (pActionEvent.getSource() == fButtonGoodKarma) {
-		// buyCard(CardType.GOOD_KARMA);
-		// }
-		// if (pActionEvent.getSource() == fButtonRandomEvent) {
-		// buyCard(CardType.RANDOM_EVENT);
-		// }
-		// if (pActionEvent.getSource() == fButtonDesperateMeasure) {
-		// buyCard(CardType.DESPERATE_MEASURE);
-		// }
+		fButtonPerType.entrySet().stream()
+			.filter(entry -> entry.getValue() == pActionEvent.getSource())
+			.map(Map.Entry::getKey)
+			.findFirst()
+			.ifPresent(this::buyCard);
 
 		if (pActionEvent.getSource() == fButtonContinue) {
 			if (getCloseListener() != null) {
@@ -350,14 +270,8 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 			cardLimits.put(pType, cardLimits.get(pType) - 1);
 		}
 
-		// updateDeckButton(CardType.MISCELLANEOUS_MAYHEM);
-		// updateDeckButton(CardType.SPECIAL_TEAM_PLAY);
-		updateDeckButton(CardType.MAGIC_ITEM);
-		updateDeckButton(CardType.DIRTY_TRICK);
-		// updateDeckButton(CardType.GOOD_KARMA);
-		// updateDeckButton(CardType.RANDOM_EVENT);
-		// updateDeckButton(CardType.DESPERATE_MEASURE);
-
+		((CardTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.CARD_TYPE))
+			.getCardTypes().forEach(this::updateDeckButton);
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {

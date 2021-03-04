@@ -1,5 +1,15 @@
 package com.balancedbytes.games.ffb.client.animation;
 
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.IClientProperty;
+import com.balancedbytes.games.ffb.client.IClientPropertyValue;
+import com.balancedbytes.games.ffb.client.IconCache;
+import com.balancedbytes.games.ffb.client.layer.FieldLayer;
+import com.balancedbytes.games.ffb.client.sound.SoundEngine;
+import com.balancedbytes.games.ffb.model.Animation;
+
+import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,18 +19,6 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import javax.swing.Timer;
-
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IClientProperty;
-import com.balancedbytes.games.ffb.client.IClientPropertyValue;
-import com.balancedbytes.games.ffb.IIconProperty;
-import com.balancedbytes.games.ffb.client.IconCache;
-import com.balancedbytes.games.ffb.client.layer.FieldLayer;
-import com.balancedbytes.games.ffb.client.sound.SoundEngine;
-import com.balancedbytes.games.ffb.model.Animation;
-
 /**
  * 
  * @author Kalimar
@@ -28,7 +26,7 @@ import com.balancedbytes.games.ffb.model.Animation;
 public class AnimationSequenceCard implements IAnimationSequence, ActionListener {
 
 	public static AnimationSequenceCard createAnimationSequence(FantasyFootballClient pClient, Animation pAnimation) {
-		String cardBackProperty = getCardBackProperty(pAnimation.getCard());
+		String cardBackProperty = pAnimation.getCard().getType().getCardBack();
 		BufferedImage cardFront = createCardFront(pClient, pAnimation.getCard());
 		return new AnimationSequenceCard(new AnimationFrame[] { new AnimationFrame(cardBackProperty, 0.5f, 0.3, 100),
 				new AnimationFrame(cardBackProperty, 0.6f, 0.4, 100), new AnimationFrame(cardBackProperty, 0.7f, 0.5, 100),
@@ -57,37 +55,9 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 				new AnimationFrame(cardFront, 1.0f, 1.0, 1.0, 2000) });
 	}
 
-	private static String getCardFrontProperty(Card pCard) {
-		if (pCard != null) {
-			switch (pCard.getType()) {
-			case DIRTY_TRICK:
-				return IIconProperty.ANIMATION_CARD_DIRTY_TRICK_FRONT;
-			case MAGIC_ITEM:
-				return IIconProperty.ANIMATION_CARD_MAGIC_ITEM_FRONT;
-			default:
-				break;
-			}
-		}
-		return null;
-	}
-
-	private static String getCardBackProperty(Card pCard) {
-		if (pCard != null) {
-			switch (pCard.getType()) {
-			case DIRTY_TRICK:
-				return IIconProperty.ANIMATION_CARD_DIRTY_TRICK_BACK;
-			case MAGIC_ITEM:
-				return IIconProperty.ANIMATION_CARD_MAGIC_ITEM_BACK;
-			default:
-				break;
-			}
-		}
-		return null;
-	}
-
 	private static BufferedImage createCardFront(FantasyFootballClient pClient, Card pCard) {
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
-		BufferedImage frontIcon = iconCache.getIconByProperty(getCardFrontProperty(pCard));
+		BufferedImage frontIcon = iconCache.getIconByProperty(pCard.getType().getCardFront());
 		if (frontIcon == null) {
 			return null;
 		}

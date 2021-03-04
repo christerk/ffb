@@ -1,10 +1,15 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.util.Scanner;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 
@@ -12,21 +17,24 @@ import com.balancedbytes.games.ffb.model.Game;
  */
 @FactoryType(FactoryType.Factory.CARD_TYPE)
 @RulesCollection(Rules.COMMON)
-public class CardTypeFactory implements INamedObjectFactory {
+public class CardTypeFactory implements INamedObjectFactory<CardType> {
+
+	private final Set<com.balancedbytes.games.ffb.inducement.CardType> cardTypes = new HashSet<>();
 
 	public CardType forName(String pName) {
-		for (CardType type : CardType.values()) {
-			if (type.getName().equalsIgnoreCase(pName)) {
-				return type;
-			}
-		}
-		return null;
+		return cardTypes.stream().filter(type -> type.getName().equalsIgnoreCase(pName))
+			.findFirst().orElse(null);
+	}
+
+	public Set<CardType> getCardTypes() {
+		return cardTypes;
 	}
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
+		new Scanner<>(com.balancedbytes.games.ffb.inducement.CardType.class)
+			.getClassObjectsImplementing(game.getOptions()).stream().findFirst()
+			.ifPresent(cls -> cardTypes.addAll(Arrays.asList(cls.getEnumConstants())));
 	}
 
 }

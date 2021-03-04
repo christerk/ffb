@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.server;
 
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.CardType;
+import com.balancedbytes.games.ffb.model.Game;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardType;
-import com.balancedbytes.games.ffb.model.Game;
 
 /**
  * 

@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.client.ui;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.ConcedeGameStatus;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.client.ActionKey;
@@ -15,7 +15,6 @@ import com.balancedbytes.games.ffb.client.ClientReplayer;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.client.IClientPropertyValue;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.dialog.DialogAbout;
@@ -26,6 +25,7 @@ import com.balancedbytes.games.ffb.client.dialog.DialogSoundVolume;
 import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.model.Game;
@@ -57,9 +57,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -77,76 +77,70 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private static final String _REPLAY_MODE_ON = "Replay Mode";
 	private static final String _REPLAY_MODE_OFF = "Spectator Mode";
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
-	private JMenu fGameMenu;
-	private JMenuItem fGameReplayMenuItem;
-	private JMenuItem fGameConcessionMenuItem;
-	private JMenuItem fGameStatisticsMenuItem;
+	private final JMenuItem fGameReplayMenuItem;
+	private final JMenuItem fGameConcessionMenuItem;
+	private final JMenuItem fGameStatisticsMenuItem;
 
-	private JMenu fTeamSetupMenu;
-	private JMenuItem fLoadSetupMenuItem;
-	private JMenuItem fSaveSetupMenuItem;
+	private final JMenuItem fLoadSetupMenuItem;
+	private final JMenuItem fSaveSetupMenuItem;
 
-	private JMenu fUserSettingsMenu;
-	private JMenuItem fRestoreDefaultsMenuItem;
+	private final JMenuItem fRestoreDefaultsMenuItem;
 
-	private JMenu fSoundMenu;
-	private JMenuItem fSoundVolumeItem;
-	private JRadioButtonMenuItem fSoundOnMenuItem;
-	private JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
-	private JRadioButtonMenuItem fSoundOffMenuItem;
+	private final JMenuItem fSoundVolumeItem;
+	private final JRadioButtonMenuItem fSoundOnMenuItem;
+	private final JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
+	private final JRadioButtonMenuItem fSoundOffMenuItem;
 
-	private JMenu fIconsMenu;
-	private JRadioButtonMenuItem fIconsAbstract;
-	private JRadioButtonMenuItem fIconsRosterOpponent;
-	private JRadioButtonMenuItem fIconsRosterBoth;
-	private JRadioButtonMenuItem fIconsTeam;
+	private final JRadioButtonMenuItem fIconsAbstract;
+	private final JRadioButtonMenuItem fIconsRosterOpponent;
+	private final JRadioButtonMenuItem fIconsRosterBoth;
+	private final JRadioButtonMenuItem fIconsTeam;
 
-	private JMenu fAutomoveMenu;
-	private JRadioButtonMenuItem fAutomoveOnMenuItem;
-	private JRadioButtonMenuItem fAutomoveOffMenuItem;
+	private final JMenu fAutomoveMenu;
+	private final JRadioButtonMenuItem fAutomoveOnMenuItem;
+	private final JRadioButtonMenuItem fAutomoveOffMenuItem;
 
-	private JMenu fPitchMenu;
+	private final JMenu fPitchMenu;
 
-	private JMenu fPitchCustomizationMenu;
-	private JRadioButtonMenuItem fCustomPitchMenuItem;
-	private JRadioButtonMenuItem fDefaultPitchMenuItem;
-	private JRadioButtonMenuItem fBasicPitchMenuItem;
+	private final JMenu fPitchCustomizationMenu;
+	private final JRadioButtonMenuItem fCustomPitchMenuItem;
+	private final JRadioButtonMenuItem fDefaultPitchMenuItem;
+	private final JRadioButtonMenuItem fBasicPitchMenuItem;
 
-	private JMenu fPitchMarkingsMenu;
-	private JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
-	private JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
+	private final JMenu fPitchMarkingsMenu;
+	private final JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
+	private final JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
 
-	private JMenu fTeamLogoMenu;
-	private JRadioButtonMenuItem fTeamLogoBothMenuItem;
-	private JRadioButtonMenuItem fTeamLogoOwnMenuItem;
-	private JRadioButtonMenuItem fTeamLogoNoneMenuItem;
+	private final JMenu fTeamLogoMenu;
+	private final JRadioButtonMenuItem fTeamLogoBothMenuItem;
+	private final JRadioButtonMenuItem fTeamLogoOwnMenuItem;
+	private final JRadioButtonMenuItem fTeamLogoNoneMenuItem;
 
-	private JMenu fPitchWeatherMenu;
-	private JRadioButtonMenuItem fPitchWeatherOnMenuItem;
-	private JRadioButtonMenuItem fPitchWeatherOffMenuItem;
+	private final JRadioButtonMenuItem fPitchWeatherOnMenuItem;
+	private final JRadioButtonMenuItem fPitchWeatherOffMenuItem;
 
-	private JMenu fRangeGridMenu;
-	private JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
-	private JRadioButtonMenuItem fRangeGridToggleMenuItem;
+	private final JMenu fRangeGridMenu;
+	private final JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
+	private final JRadioButtonMenuItem fRangeGridToggleMenuItem;
 
-	private JMenu fMissingPlayersMenu;
+	private final JMenu fMissingPlayersMenu;
 
-	private JMenu fInducementsMenu;
+	private final JMenu fInducementsMenu;
 	private JMenu fInducementsHomeMenu;
 	private JMenu fInducementsAwayMenu;
 
-	private JMenu fActiveCardsMenu;
+	private final JMenu fActiveCardsMenu;
 	private JMenu fActiveCardsHomeMenu;
 	private JMenu fActiveCardsAwayMenu;
 
-	private JMenu fGameOptionsMenu;
+	private final JMenu fGameOptionsMenu;
 
-	private JMenu fHelpMenu;
-	private JMenuItem fAboutMenuItem;
-	private JMenuItem fChatCommandsMenuItem;
-	private JMenuItem fKeyBindingsMenuItem;
+	private final JMenu fHelpMenu;
+	private final JMenuItem fAboutMenuItem;
+	private final JMenuItem fChatCommandsMenuItem;
+	private final JMenuItem fKeyBindingsMenuItem;
 
 	private IDialog fDialogShown;
 
@@ -160,7 +154,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
-		private Player<?> fPlayer;
+		private final Player<?> fPlayer;
 
 		public MenuPlayerMouseListener(Player<?> pPlayer) {
 			fPlayer = pPlayer;
@@ -183,7 +177,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		fClient = pClient;
 
-		fGameMenu = new JMenu("Game");
+		JMenu fGameMenu = new JMenu("Game");
 		fGameMenu.setMnemonic(KeyEvent.VK_G);
 		add(fGameMenu);
 
@@ -205,7 +199,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fGameStatisticsMenuItem.setEnabled(false);
 		fGameMenu.add(fGameStatisticsMenuItem);
 
-		fTeamSetupMenu = new JMenu("Team Setup");
+		JMenu fTeamSetupMenu = new JMenu("Team Setup");
 		fTeamSetupMenu.setMnemonic(KeyEvent.VK_T);
 		add(fTeamSetupMenu);
 
@@ -225,12 +219,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fSaveSetupMenuItem.addActionListener(this);
 		fTeamSetupMenu.add(fSaveSetupMenuItem);
 
-		fUserSettingsMenu = new JMenu("User Settings");
-		;
+		JMenu fUserSettingsMenu = new JMenu("User Settings");
 		fUserSettingsMenu.setMnemonic(KeyEvent.VK_U);
 		add(fUserSettingsMenu);
 
-		fSoundMenu = new JMenu("Sound");
+		JMenu fSoundMenu = new JMenu("Sound");
 		fSoundMenu.setMnemonic(KeyEvent.VK_S);
 		fUserSettingsMenu.add(fSoundMenu);
 
@@ -258,7 +251,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		soundGroup.add(fSoundOffMenuItem);
 		fSoundMenu.add(fSoundOffMenuItem);
 
-		fIconsMenu = new JMenu("Icons");
+		JMenu fIconsMenu = new JMenu("Icons");
 		fIconsMenu.setMnemonic(KeyEvent.VK_I);
 		fUserSettingsMenu.add(fIconsMenu);
 
@@ -366,7 +359,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		teamLogoGroup.add(fTeamLogoNoneMenuItem);
 		fTeamLogoMenu.add(fTeamLogoNoneMenuItem);
 
-		fPitchWeatherMenu = new JMenu("Pitch Weather");
+		JMenu fPitchWeatherMenu = new JMenu("Pitch Weather");
 		fPitchWeatherMenu.setMnemonic(KeyEvent.VK_W);
 		fPitchMenu.add(fPitchWeatherMenu);
 
@@ -1069,19 +1062,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private Map<CardType, List<Card>> buildCardMap(InducementSet pInducementSet) {
 		Card[] allCards = pInducementSet.getAllCards();
-		Map<CardType, List<Card>> cardMap = new HashMap<>();
-		for (CardType type : CardType.values()) {
-			List<Card> cardList = new ArrayList<>();
-			for (Card card : allCards) {
-				if (type == card.getType()) {
-					cardList.add(card);
-				}
-			}
-			if (cardList.size() > 0) {
-				cardMap.put(type, cardList);
-			}
-		}
-		return cardMap;
+
+		return Arrays.stream(allCards).collect(Collectors.groupingBy(Card::getType));
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;

@@ -1,16 +1,16 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -64,9 +64,7 @@ public class DialogBuyCardsParameter implements IDialogParameter {
 	public IDialogParameter transform() {
 		DialogBuyCardsParameter dialogParameter = new DialogBuyCardsParameter(getTeamId(), getAvailableCards(),
 				getAvailableGold());
-		for (CardType type : CardType.values()) {
-			dialogParameter.put(type, getNrOfCards(type));
-		}
+		fNrOfCardsPerType.forEach(dialogParameter::put);
 		return dialogParameter;
 	}
 
