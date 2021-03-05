@@ -10,6 +10,8 @@ import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.Arrays;
+
 /**
  * 
  * @author Kalimar
@@ -83,7 +85,9 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	abstract boolean removeSkill(Skill pSkill);
 
-	public abstract boolean hasSkill(Skill pSkill);
+	public boolean hasSkill(Skill pSkill) {
+		return Arrays.asList(getSkills()).contains(pSkill);
+	}
 
 	public abstract Skill[] getSkills();
 

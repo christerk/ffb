@@ -117,11 +117,6 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public boolean hasSkill(Skill pSkill) {
-		return getPosition().hasSkill(pSkill);
-	}
-
-	@Override
 	public Skill[] getSkills() {
 		return getPosition().getSkills();
 	}

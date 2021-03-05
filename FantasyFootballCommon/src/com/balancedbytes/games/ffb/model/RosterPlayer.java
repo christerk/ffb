@@ -170,11 +170,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public boolean hasSkill(Skill pSkill) {
-		return fSkills.contains(pSkill);
-	}
-
-	@Override
 	public Skill[] getSkills() {
 		return fSkills.toArray(new Skill[0]);
 	}
