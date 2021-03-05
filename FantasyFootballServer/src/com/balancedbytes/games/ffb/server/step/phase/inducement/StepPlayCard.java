@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.util;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.ReRollSource;

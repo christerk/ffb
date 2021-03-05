@@ -1,14 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.BloodSpot;
-import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
@@ -25,6 +17,7 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.CardEffectFactory;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -34,6 +27,13 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -242,7 +242,7 @@ public class FieldModel implements IJsonSerializable {
 		if (cards == null) {
 			return new Card[0];
 		}
-		return cards.toArray(new Card[cards.size()]);
+		return cards.toArray(new Card[0]);
 	}
 
 	public Player<?> findPlayer(Card pCard) {

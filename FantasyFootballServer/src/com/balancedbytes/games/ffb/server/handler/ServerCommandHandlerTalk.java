@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.eclipse.jetty.websocket.api.Session;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.FieldCoordinate;

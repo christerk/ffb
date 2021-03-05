@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;

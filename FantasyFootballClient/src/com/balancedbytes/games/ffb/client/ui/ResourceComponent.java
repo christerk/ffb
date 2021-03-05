@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.client.ui;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.inducement.Inducement;

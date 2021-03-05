@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.client.ui;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.ConcedeGameStatus;

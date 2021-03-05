@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.model.change;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.BloodSpot;
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FactoryType.Factory;

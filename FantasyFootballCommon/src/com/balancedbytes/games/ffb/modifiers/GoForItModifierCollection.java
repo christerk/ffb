@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.util.UtilCards;

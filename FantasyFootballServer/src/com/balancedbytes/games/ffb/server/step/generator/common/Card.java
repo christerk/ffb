@@ -31,10 +31,10 @@ public class Card extends SequenceGenerator<Card.SequenceParams> {
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final com.balancedbytes.games.ffb.Card card;
+		private final com.balancedbytes.games.ffb.inducement.Card card;
 		private final boolean homeTeam;
 
-		public SequenceParams(GameState gameState, com.balancedbytes.games.ffb.Card card, boolean homeTeam) {
+		public SequenceParams(GameState gameState, com.balancedbytes.games.ffb.inducement.Card card, boolean homeTeam) {
 			super(gameState);
 			this.card = card;
 			this.homeTeam = homeTeam;

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;

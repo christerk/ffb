@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;

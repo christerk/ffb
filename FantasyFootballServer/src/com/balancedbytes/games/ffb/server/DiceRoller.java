@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.fumbbl.rng.Fortuna;

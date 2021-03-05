@@ -1,10 +1,14 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.inducement.Card;
+import com.balancedbytes.games.ffb.inducement.Cards;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.util.Scanner;
+
+import java.util.Set;
 
 /**
  * 
@@ -12,10 +16,11 @@ import com.balancedbytes.games.ffb.model.Game;
  */
 @FactoryType(FactoryType.Factory.CARD)
 @RulesCollection(Rules.COMMON)
-public class CardFactory implements INamedObjectFactory {
+public class CardFactory implements INamedObjectFactory<Card> {
+	private Cards cards;
 
 	public Card forName(String pName) {
-		for (Card card : Card.values()) {
+		for (Card card : cards.allCards()) {
 			if (card.getName().equalsIgnoreCase(pName)) {
 				return card;
 			}
@@ -24,7 +29,7 @@ public class CardFactory implements INamedObjectFactory {
 	}
 
 	public Card forShortName(String pName) {
-		for (Card card : Card.values()) {
+		for (Card card : cards.allCards()) {
 			if (card.getShortName().equalsIgnoreCase(pName)) {
 				return card;
 			}
@@ -32,10 +37,14 @@ public class CardFactory implements INamedObjectFactory {
 		return null;
 	}
 
+	public Set<Card> allCards() {
+		return cards.allCards();
+	}
+
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
+		new Scanner<>(Cards.class).getClassesImplementing(game.getOptions()).stream().findFirst()
+			.ifPresent(instance -> this.cards = instance);
 	}
 
 }

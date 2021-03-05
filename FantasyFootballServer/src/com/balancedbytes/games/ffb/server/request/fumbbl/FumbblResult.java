@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.request.fumbbl;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.inducement.Inducement;

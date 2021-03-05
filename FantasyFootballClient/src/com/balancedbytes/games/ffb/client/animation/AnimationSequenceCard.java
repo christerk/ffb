@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.client.animation;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.client.IClientPropertyValue;

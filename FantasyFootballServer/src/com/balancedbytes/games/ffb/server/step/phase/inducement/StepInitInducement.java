@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.inducement.InducementPhase;
 import com.balancedbytes.games.ffb.inducement.InducementType;

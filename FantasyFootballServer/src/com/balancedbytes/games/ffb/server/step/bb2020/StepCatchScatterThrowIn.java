@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;

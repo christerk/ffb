@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.inducement.InducementType;
