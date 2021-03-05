@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.client;
 
 import com.balancedbytes.games.ffb.BlockResult;
-import com.balancedbytes.games.ffb.inducement.Card;
-import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
@@ -1522,19 +1520,12 @@ public class StatusReport {
 	}
 
 	public void reportCardEffectRoll(ReportCardEffectRoll pReport) {
-		StringBuilder status = new StringBuilder();
-		if (Card.WITCH_BREW == pReport.getCard()) {
-			status.append("Witch Brew Roll [ ").append(pReport.getRoll()).append(" ]");
-			println(getIndent(), TextStyle.ROLL, status.toString());
-			if (CardEffect.SEDATIVE == pReport.getCardEffect()) {
-				println(getIndent() + 1, "Sedative! The player gains the Really Stupid skill until the drive ends.");
-			} else if (CardEffect.MAD_CAP_MUSHROOM_POTION == pReport.getCardEffect()) {
-				println(getIndent() + 1,
-					"Mad Cap Mushroom potion! The player gains the Jump Up and No Hands skills until the drive ends.");
-			} else {
-				println(getIndent() + 1, "Snake Oil! Bad taste, but no effect.");
+		pReport.getCard().cardReport(pReport.getCardEffect(), pReport.getRoll()).ifPresent(
+			effectReport -> {
+				println(getIndent(), TextStyle.ROLL, effectReport.getRoll());
+				println(getIndent() + 1, effectReport.getDescription());
 			}
-		}
+		);
 	}
 
 	public void reportAnimosity(ReportSkillRoll pReport) {

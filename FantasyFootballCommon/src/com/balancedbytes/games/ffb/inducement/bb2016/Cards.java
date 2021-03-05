@@ -1,13 +1,14 @@
 package com.balancedbytes.games.ffb.inducement.bb2016;
 
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.inducement.Card;
+import com.balancedbytes.games.ffb.inducement.CardReport;
 import com.balancedbytes.games.ffb.inducement.InducementDuration;
 import com.balancedbytes.games.ffb.inducement.InducementPhase;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
@@ -35,6 +36,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
@@ -131,7 +133,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// the Sure Hands and Fend skills until he no longer has the ball.
 		add(new Card("Force Shield", "Force Shield", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
-			InducementDuration.WHILE_HOLDING_THE_BALL, "Player gets Sure Hands & Fend") {
+			InducementDuration.WHILE_HOLDING_THE_BALL, "Player gets Sure Hands & Fend", CardHandlerKey.FORCE_SHIELD) {
 			@Override
 			public Set<Class<? extends Skill>> grantedSkills() {
 				return new HashSet<Class<? extends Skill>>() {{
@@ -252,7 +254,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			InducementDuration.UNTIL_END_OF_GAME, "Player cannot be fouled and no modifiers to injury rolls") {
 			@Override
 			public Set<ISkillProperty> addedProperties() {
-				return Collections.singleton(NamedProperties.preventDamagingInjuryModifications);
+				return Collections.emptySet(); //Collections.singleton(NamedProperties.preventDamagingInjuryModifications);
 			}
 		});
 
@@ -266,7 +268,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// remainder of this game.
 		add(new Card("Rabbit's Foot", "Rabbit's Foot", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_GAME,
-			"Player gets Pro (not playable on a Loner)") {
+			"Player gets Pro (not playable on a Loner)", CardHandlerKey.RABBITS_FOOT) {
 			@Override
 			public Set<Class<? extends Skill>> grantedSkills() {
 				return Collections.singleton(Pro.class);
@@ -319,7 +321,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// considered Stunned.
 		add(new Card("Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_TURN,
-			"Unmoved player drops prone and stuns an adjacent player"));
+			"Unmoved player drops prone and stuns an adjacent player", CardHandlerKey.CHOP_BLOCK));
 
 		// Description:
 		// One of your players thrusts a cleverly concealed custard pie in the
@@ -333,7 +335,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// remainder of this turn as per a successful Hypnotic Gaze roll.
 		add(new Card("Custard Pie", "Custard Pie", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_TURN,
-			"Opponent distracted as per Hypnotic Gaze"));
+			"Opponent distracted as per Hypnotic Gaze", CardHandlerKey.CUSTARD_PIE));
 
 		// Description:
 		// Your player is very good at distracting all those around him.
@@ -348,7 +350,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		add(new Card("Distract", "Distract", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
 			InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
-			"Player gets Disturbing Presence & opponents in 3 squares get Bone-head") {
+			"Player gets Disturbing Presence & opponents in 3 squares get Bone-head", CardHandlerKey.DISTRACT) {
 			@Override
 			public Set<Class<? extends Skill>> grantedSkills() {
 				return Collections.singleton(DisturbingPresence.class);
@@ -407,7 +409,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// the remainder of the drive.
 		add(new Card("Illegal Substitution", "Illegal Substitution", CardType.DIRTY_TRICK, CardTarget.TURN, false,
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_TURN,
-			"Place an extra player in your end zone"));
+			"Place an extra player in your end zone", CardHandlerKey.ILLEGAL_SUBSTITUTION));
 
 		// Description:
 		// These boots were made for stomping, and that is just what they will do!
@@ -439,7 +441,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// and if the player had the ball bounce it as normal.
 		add(new Card("Pit Trap", "Pit Trap", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_TURN,
-			"Player is placed prone, no armour roll"));
+			"Player is placed prone, no armour roll", CardHandlerKey.PIT_TRAP));
 
 		// Description:
 		// A Bloodthirster is in the crowd today, so in honour of this event a
@@ -493,9 +495,25 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 
 		add(new Card("Witch's Brew", "Witch Brew", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
 			new InducementPhase[]{InducementPhase.BEFORE_KICKOFF_SCATTER}, InducementDuration.UNTIL_END_OF_DRIVE,
-			"Poison an opponent (random effect)"));
+			"Poison an opponent (random effect)", CardHandlerKey.WITCH_BREW) {
+			@Override
+			public Optional<CardReport> cardReport(CardEffect effect, int roll) {
 
-
+				String rollReport = "Witch Brew Roll [ " + roll +" ]";
+				String effectReport;
+				switch (effect) {
+					case SEDATIVE:
+						effectReport = "Sedative! The player gains the Really Stupid skill until the drive ends.";
+						break;
+					case MAD_CAP_MUSHROOM_POTION:
+						effectReport = "Mad Cap Mushroom potion! The player gains the Jump Up and No Hands skills until the drive ends.";
+						break;
+					default:
+						effectReport = "Snake Oil! Bad taste, but no effect.";
+				}
+				return Optional.of(new CardReport(rollReport, effectReport));
+			}
+		});
 	}};
 
 	@Override

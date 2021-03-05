@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.inducement;
 
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
@@ -12,6 +13,7 @@ import com.balancedbytes.games.ffb.modifiers.RollModifier;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -28,9 +30,15 @@ public class Card implements INamedObject {
 	private final InducementPhase[] fPhases;
 	private final InducementDuration fDuration;
 	private final String fDescription;
+	private final CardHandlerKey handlerKey;
 
 	public Card(String pName, String pShortName, CardType pType, CardTarget pTarget, boolean pRemainsInPlay,
-	     InducementPhase[] pPhases, InducementDuration pDuration, String pDescription) {
+	            InducementPhase[] pPhases, InducementDuration pDuration, String pDescription) {
+		this(pName, pShortName, pType, pTarget, pRemainsInPlay, pPhases, pDuration, pDescription, null);
+	}
+
+	public Card(String pName, String pShortName, CardType pType, CardTarget pTarget, boolean pRemainsInPlay,
+	     InducementPhase[] pPhases, InducementDuration pDuration, String pDescription, CardHandlerKey handlerKey) {
 		fName = pName;
 		fShortName = pShortName;
 		fType = pType;
@@ -39,6 +47,7 @@ public class Card implements INamedObject {
 		fPhases = pPhases;
 		fDuration = pDuration;
 		fDescription = pDescription;
+		this.handlerKey = handlerKey;
 	}
 
 	public String getName() {
@@ -103,8 +112,15 @@ public class Card implements INamedObject {
 
 	public Set<ISkillProperty> addedProperties() { return Collections.emptySet(); }
 
+	public Optional<CardReport> cardReport(CardEffect effect, int roll) {
+		return Optional.empty();
+	}
+
+	public Optional<CardHandlerKey> handlerKey() {
+		return Optional.ofNullable(handlerKey);
+	}
+
 	public static Comparator<Card> createComparator() {
 		return Comparator.comparing(Card::getName);
 	}
-
 }
