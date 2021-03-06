@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class TemporaryEnhancements {
 	private Set<TemporaryStatModifier> modifiers = new HashSet<>();
-	private Set<Skill> skills = new HashSet<>();
+	private Set<Class<? extends Skill>> skills = new HashSet<>();
 	private Set<ISkillProperty> properties = new HashSet<>();
 
 	public Set<TemporaryStatModifier> getModifiers() {
@@ -20,11 +20,11 @@ public class TemporaryEnhancements {
 		return this;
 	}
 
-	public Set<Skill> getSkills() {
+	public Set<Class<? extends Skill>> getSkills() {
 		return skills;
 	}
 
-	public TemporaryEnhancements withSkills(Set<Skill> skills) {
+	public TemporaryEnhancements withSkills(Set<Class<? extends Skill>> skills) {
 		this.skills = skills;
 		return this;
 	}

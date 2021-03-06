@@ -112,7 +112,9 @@ public class UtilServerCards {
 		if (pCard.getTarget().isPlayedOnPlayer()) {
 			player = game.getFieldModel().findPlayer(pCard);
 			if (player != null) {
-				if (!pCard.isRemainsInPlay()) {
+				if (pCard.isRemainsInPlay()) {
+					game.getFieldModel().keepDeactivatedCard(player, pCard);
+				} else {
 					game.getFieldModel().removeCard(player, pCard);
 				}
 			}

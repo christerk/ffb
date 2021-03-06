@@ -5,11 +5,10 @@ import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.inducement.bb2016.CardType;
-import com.balancedbytes.games.ffb.model.property.ISkillProperty;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.RollModifier;
+import com.balancedbytes.games.ffb.modifiers.TemporaryEnhancements;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -106,11 +105,9 @@ public class Card implements INamedObject {
 		return Collections.emptySet();
 	}
 
-	public Set<Class<? extends Skill>> grantedSkills() {
-		return Collections.emptySet();
-	}
+	public TemporaryEnhancements activationEnhancement() { return new TemporaryEnhancements(); }
 
-	public Set<ISkillProperty> addedProperties() { return Collections.emptySet(); }
+	public TemporaryEnhancements deactivationEnhancement() { return new TemporaryEnhancements(); }
 
 	public Optional<CardReport> cardReport(CardEffect effect, int roll) {
 		return Optional.empty();

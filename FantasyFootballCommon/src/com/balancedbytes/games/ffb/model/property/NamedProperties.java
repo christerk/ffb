@@ -111,6 +111,7 @@ public class NamedProperties {
 	public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");
 	public static final ISkillProperty preventCardRabbitsFoot = new NamedProperty("Prevent Rabbit's Foot Card");
 	public static final ISkillProperty preventCatch = new NamedProperty("Prevent Catch");
+	public static final ISkillProperty preventDamagingInjuryModifications = new NamedProperty("PreventDamagingInjuryModifications");
 	public static final ISkillProperty preventFallOnBothDown = new NamedProperty("Prevent Fall on Both Down");
 	public static final ISkillProperty preventHoldBall = new NamedProperty("Prevent Hold Ball");
 	public static final ISkillProperty preventKickTeamMateAction = new NamedProperty("Prevent Kick Team Mate Action");

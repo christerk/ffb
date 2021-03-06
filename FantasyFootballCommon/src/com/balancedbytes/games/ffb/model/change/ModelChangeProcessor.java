@@ -120,6 +120,9 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_ADD_TRACK_NUMBER:
 				pGame.getFieldModel().add((TrackNumber) pModelChange.getValue());
 				return true;
+			case FIELD_MODEL_KEEP_DEACTIVATED_CARD:
+				pGame.getFieldModel().keepDeactivatedCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_REMOVE_CARD:
 				pGame.getFieldModel().removeCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
 				return true;

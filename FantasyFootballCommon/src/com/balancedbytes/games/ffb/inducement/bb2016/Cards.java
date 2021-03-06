@@ -7,13 +7,14 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardReport;
 import com.balancedbytes.games.ffb.inducement.InducementDuration;
 import com.balancedbytes.games.ffb.inducement.InducementPhase;
-import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.modifiers.RollModifier;
+import com.balancedbytes.games.ffb.modifiers.TemporaryEnhancements;
 import com.balancedbytes.games.ffb.skill.Bombardier;
 import com.balancedbytes.games.ffb.skill.BoneHead;
 import com.balancedbytes.games.ffb.skill.Catch;
@@ -60,12 +61,14 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Hypnotic Gaze, Side Step & Bone-Head") {
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return new HashSet<Class<? extends Skill>>() {{
-					add(BoneHead.class);
-					add(HypnoticGaze.class);
-					add(SideStep.class);
-				}};
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(
+					new HashSet<Class<? extends Skill>>() {{
+						add(BoneHead.class);
+						add(HypnoticGaze.class);
+						add(SideStep.class);
+					}}
+				);
 			}
 		});
 
@@ -110,16 +113,15 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			}
 
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return new HashSet<Class<? extends Skill>>() {
-					private static final long serialVersionUID = 641368470326607756L;
-
-					{
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(
+					new HashSet<Class<? extends Skill>>() {{
 						add(Pass.class);
 						add(Accurate.class);
-					}
-				};
+					}}
+				);
 			}
+
 		});
 
 		// Description:
@@ -135,11 +137,12 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
 			InducementDuration.WHILE_HOLDING_THE_BALL, "Player gets Sure Hands & Fend", CardHandlerKey.FORCE_SHIELD) {
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return new HashSet<Class<? extends Skill>>() {{
-					add(Fend.class);
-					add(SureHands.class);
-				}};
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(
+					new HashSet<Class<? extends Skill>>() {{
+						add(Fend.class);
+						add(SureHands.class);
+					}});
 			}
 		});
 
@@ -171,11 +174,13 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.BEFORE_KICKOFF_SCATTER}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Catch & Sure Hands, but may not Pass or Hand-off") {
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return new HashSet<Class<? extends Skill>>() {{
-					add(Catch.class);
-					add(SureHands.class);
-				}};
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(
+					new HashSet<Class<? extends Skill>>() {{
+						add(Catch.class);
+						add(SureHands.class);
+					}}
+				);
 			}
 		});
 
@@ -233,9 +238,10 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			}
 
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return Collections.singleton(PassBlock.class);
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(Collections.singleton(PassBlock.class));
 			}
+
 		});
 
 		// Description:
@@ -252,9 +258,10 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		add(new Card("Good Old Magic Codpiece", "Magic Codpiece", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER,
 			false, new InducementPhase[]{InducementPhase.AFTER_INDUCEMENTS_PURCHASED},
 			InducementDuration.UNTIL_END_OF_GAME, "Player cannot be fouled and no modifiers to injury rolls") {
+
 			@Override
-			public Set<ISkillProperty> addedProperties() {
-				return Collections.emptySet(); //Collections.singleton(NamedProperties.preventDamagingInjuryModifications);
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withProperties(Collections.singleton(NamedProperties.preventDamagingInjuryModifications));
 			}
 		});
 
@@ -270,9 +277,10 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Pro (not playable on a Loner)", CardHandlerKey.RABBITS_FOOT) {
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return Collections.singleton(Pro.class);
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(Collections.singleton(Pro.class));
 			}
+
 		});
 
 
@@ -286,9 +294,10 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		add(new Card("Wand of Smashing", "Wand of Smashing", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_TURN,
 			"Player gets +1 ST & Mighty Blow") {
+
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return Collections.singleton(MightyBlow.class);
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(Collections.singleton(MightyBlow.class));
 			}
 		});
 
@@ -352,8 +361,8 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 			"Player gets Disturbing Presence & opponents in 3 squares get Bone-head", CardHandlerKey.DISTRACT) {
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return Collections.singleton(DisturbingPresence.class);
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(Collections.singleton(DisturbingPresence.class));
 			}
 		});
 
@@ -389,12 +398,13 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			}
 
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return new HashSet<Class<? extends Skill>>() {{
-					add(NoHands.class);
-					add(Bombardier.class);
-					add(SecretWeapon.class);
-				}};
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(
+					new HashSet<Class<? extends Skill>>() {{
+						add(NoHands.class);
+						add(Bombardier.class);
+						add(SecretWeapon.class);
+					}});
 			}
 		});
 
@@ -423,11 +433,12 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.BEFORE_KICKOFF_SCATTER}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Kick, Dirty Player & -1 MA") {
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return new HashSet<Class<? extends Skill>>() {{
-					add(Kick.class);
-					add(DirtyPlayer.class);
-				}};
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(
+					new HashSet<Class<? extends Skill>>() {{
+						add(Kick.class);
+						add(DirtyPlayer.class);
+					}});
 			}
 		});
 
@@ -471,11 +482,12 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_DRIVE,
 			"Player gets Pass Block and Shadowing") {
 			@Override
-			public Set<Class<? extends Skill>> grantedSkills() {
-				return new HashSet<Class<? extends Skill>>() {{
-					add(PassBlock.class);
-					add(Shadowing.class);
-				}};
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement().withSkills(
+					new HashSet<Class<? extends Skill>>() {{
+						add(PassBlock.class);
+						add(Shadowing.class);
+					}});
 			}
 		});
 
@@ -499,7 +511,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public Optional<CardReport> cardReport(CardEffect effect, int roll) {
 
-				String rollReport = "Witch Brew Roll [ " + roll +" ]";
+				String rollReport = "Witch Brew Roll [ " + roll + " ]";
 				String effectReport;
 				switch (effect) {
 					case SEDATIVE:

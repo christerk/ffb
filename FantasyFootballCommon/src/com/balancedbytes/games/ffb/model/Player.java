@@ -4,9 +4,12 @@ import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.modifiers.TemporaryEnhancements;
 import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.eclipsesource.json.JsonObject;
@@ -234,4 +237,25 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract void addTemporaryProperties(String source, Set<ISkillProperty> properties);
 	public abstract void removeTemporaryProperties(String source);
+
+	public void removeEnhancements(Card card) {
+		removeTemporaryModifiers(card.getName());
+		removeTemporaryProperties(card.getName());
+		removeTemporarySkills(card.getName());
+	}
+
+	public void addActivationEnhancements(Card card, SkillFactory factory) {
+		addEnhancement(card.getName(), card.activationEnhancement(), factory);
+	}
+
+	public void addDeactivationEnhancements(Card card, SkillFactory factory) {
+		addEnhancement(card.getName(), card.deactivationEnhancement(), factory);
+	}
+
+	public void addEnhancement(String name, TemporaryEnhancements enhancements, SkillFactory factory) {
+		addTemporaryModifiers(name, enhancements.getModifiers());
+		addTemporaryProperties(name, enhancements.getProperties());
+		addTemporarySkills(name, enhancements.getSkills().stream().map(factory::forClass).collect(Collectors.toSet()));
+
+	}
 }

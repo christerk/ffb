@@ -210,18 +210,23 @@ public class FieldModel implements IJsonSerializable {
 		if ((pPlayer == null) || (pCard == null)) {
 			return;
 		}
-		Set<Card> cards = fCardsByPlayerId.get(pPlayer.getId());
-		if (cards == null) {
-			cards = new HashSet<>();
-			fCardsByPlayerId.put(pPlayer.getId(), cards);
-		}
+		Set<Card> cards = fCardsByPlayerId.computeIfAbsent(pPlayer.getId(), k -> new HashSet<>());
 		cards.add(pCard);
+		pPlayer.addActivationEnhancements(pCard, getGame().getFactory(Factory.SKILL));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD, pPlayer.getId(), pCard);
 	}
 
-	public boolean removeCard(Player<?> pPlayer, Card pCard) {
+	public void keepDeactivatedCard(Player<?> player, Card card) {
+		if ((player == null) || (card == null) || !fCardsByPlayerId.containsKey(player.getId())) {
+			return;
+		}
+		player.addDeactivationEnhancements(card, getGame().getFactory(Factory.SKILL));
+		notifyObservers(ModelChangeId.FIELD_MODEL_KEEP_DEACTIVATED_CARD, player.getId(), card);
+	}
+
+	public void removeCard(Player<?> pPlayer, Card pCard) {
 		if ((pPlayer == null) || (pCard == null)) {
-			return false;
+			return;
 		}
 		boolean removed = false;
 		Set<Card> cards = fCardsByPlayerId.get(pPlayer.getId());
@@ -229,9 +234,9 @@ public class FieldModel implements IJsonSerializable {
 			removed = cards.remove(pCard);
 		}
 		if (removed) {
+			pPlayer.removeEnhancements(pCard);
 			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CARD, pPlayer.getId(), pCard);
 		}
-		return removed;
 	}
 
 	public Card[] getCards(Player<?> pPlayer) {
