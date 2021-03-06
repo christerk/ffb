@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.inducement.InducementPhase;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
@@ -435,6 +436,11 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public Set<ISkillProperty> globalProperties() {
 				return Collections.singleton(NamedProperties.setGfiRollToFive);
+			}
+
+			@Override
+			public Set<RollModifier<?>> rollModifiers() {
+				return Collections.singleton(new GoForItModifier("Greased Shoes", 3));
 			}
 		});
 

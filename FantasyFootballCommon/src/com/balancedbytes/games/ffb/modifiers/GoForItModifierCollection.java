@@ -12,11 +12,5 @@ public class GoForItModifierCollection extends ModifierCollection<GoForItContext
 				return !context.getGame().isActive(NamedProperties.setGfiRollToFive) && context.getGame().getFieldModel().getWeather() == Weather.BLIZZARD;
 			}
 		});
-		add(new GoForItModifier("Greased Shoes", 3) {
-			@Override
-			public boolean appliesToContext(Skill skill, GoForItContext context) {
-				return context.getGame().isActive(NamedProperties.setGfiRollToFive);
-			}
-		});
 	}
 }

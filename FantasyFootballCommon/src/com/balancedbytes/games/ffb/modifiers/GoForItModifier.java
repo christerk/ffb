@@ -10,7 +10,7 @@ public class GoForItModifier extends RollModifier<GoForItContext> {
 	private final int fModifier;
 	private final ModifierType type;
 
-	GoForItModifier(String pName, int pModifier) {
+	public GoForItModifier(String pName, int pModifier) {
 		fName = pName;
 		fModifier = pModifier;
 		type = ModifierType.REGULAR;
