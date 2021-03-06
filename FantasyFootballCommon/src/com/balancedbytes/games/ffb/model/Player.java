@@ -146,7 +146,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract JsonObject toJsonValue();
 
-	public abstract void applyModifiers();
+	public abstract void applyPlayerModifiers();
 
 	public static Player<?> getFrom(IFactorySource source, JsonValue jsonValue) {
 		Player<?> player = createPlayer(source, jsonValue);

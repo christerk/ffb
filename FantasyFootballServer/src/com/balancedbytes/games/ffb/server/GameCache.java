@@ -308,7 +308,7 @@ public class GameCache {
 					player = zappedPlayer;
 					pTeam.addPlayer(player);
 				}
-				player.applyModifiers();
+				player.applyPlayerModifiers();
 			}
 
 			if (player.getRecoveringInjury() != null) {

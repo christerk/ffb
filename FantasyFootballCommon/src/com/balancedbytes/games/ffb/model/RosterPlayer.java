@@ -600,7 +600,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void applyModifiers() {
+	public void applyPlayerModifiers() {
 		fSkills.stream().map(Skill::getSkillBehaviour).filter(Objects::nonNull)
 			.flatMap(behaviour -> behaviour.getPlayerModifiers().stream()).forEach(playerModifier -> playerModifier.apply(this));
 	}

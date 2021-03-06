@@ -262,8 +262,8 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void applyModifiers() {
-		originalPlayer.applyModifiers();
+	public void applyPlayerModifiers() {
+		originalPlayer.applyPlayerModifiers();
 	}
 
 	@Override
