@@ -4,8 +4,8 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.model.property.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 
 /**
  * This player is equipped with a rudimentary set of wings, either natural or

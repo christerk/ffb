@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.model.modifier;
+package com.balancedbytes.games.ffb.model.property;
 
 import com.balancedbytes.games.ffb.modifiers.PassContext;
 

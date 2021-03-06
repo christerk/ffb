@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardReport;
 import com.balancedbytes.games.ffb.inducement.InducementDuration;
 import com.balancedbytes.games.ffb.inducement.InducementPhase;
-import com.balancedbytes.games.ffb.model.ISkillProperty;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
@@ -100,7 +100,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			private final Card instance = this;
 
 			@Override
-			public Set<RollModifier<?>> modifiers() {
+			public Set<RollModifier<?>> rollModifiers() {
 				return Collections.singleton(new InterceptionModifier("Fawndough's Headband", -1, ModifierType.REGULAR) {
 					@Override
 					public boolean appliesToContext(Skill skill, InterceptionContext context) {
@@ -223,7 +223,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			private final Card instance = this;
 
 			@Override
-			public Set<RollModifier<?>> modifiers() {
+			public Set<RollModifier<?>> rollModifiers() {
 				return Collections.singleton(new InterceptionModifier("Magic Gloves of Jark Longarm", -1, ModifierType.REGULAR) {
 					@Override
 					public boolean appliesToContext(Skill skill, InterceptionContext context) {
@@ -383,7 +383,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			CardTarget.OWN_PLAYER, false, new InducementPhase[]{InducementPhase.BEFORE_SETUP},
 			InducementDuration.UNTIL_END_OF_GAME, "Player gets Bombardier, No Hands, Secret Weapon & -1 to pass") {
 			@Override
-			public Set<RollModifier<?>> modifiers() {
+			public Set<RollModifier<?>> rollModifiers() {
 				return Collections.singleton(new PassModifier("Gromskull's Exploding Runes", 1,
 					ModifierType.REGULAR));
 			}

@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;

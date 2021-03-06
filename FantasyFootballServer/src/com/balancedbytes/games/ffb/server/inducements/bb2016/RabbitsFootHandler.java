@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardHandlerKey;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.server.inducements.CardHandler;
 
 import static com.balancedbytes.games.ffb.inducement.bb2016.CardHandlerKey.RABBITS_FOOT;

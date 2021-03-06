@@ -1,6 +1,4 @@
-package com.balancedbytes.games.ffb.model.modifier;
-
-import com.balancedbytes.games.ffb.model.ISkillProperty;
+package com.balancedbytes.games.ffb.model.property;
 
 import java.util.Objects;
 
