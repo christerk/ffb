@@ -12,6 +12,8 @@ import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
@@ -22,8 +24,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 
@@ -59,6 +64,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	private transient RosterPosition fPosition;
 	private transient int fCurrentSpps;
+	private Map<String, Set<TemporaryStatModifier>> temporaryModifiers = new HashMap<>();
+	private Map<String, Set<Skill>> temporarySkills = new HashMap<>();
+	private Map<String, Set<ISkillProperty>> temporaryProperties = new HashMap<>();
 
 	// attributes used for parsing
 	private transient boolean fInsideSkillList;
@@ -595,6 +603,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 		}
 		IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
 
+		IJsonOption.TEMPORARY_SKILL_MAP.addTo(jsonObject, temporarySkills);
+		IJsonOption.TEMPORARY_MODIFIERS_MAP.addTo(jsonObject, temporaryModifiers);
 		return jsonObject;
 
 	}
@@ -644,8 +654,54 @@ public class RosterPlayer extends Player<RosterPosition> {
 			fSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
 		}
 
+		temporaryModifiers = IJsonOption.TEMPORARY_MODIFIERS_MAP.getFrom(source, jsonObject);
+		temporarySkills = IJsonOption.TEMPORARY_SKILL_MAP.getFrom(source, jsonObject);
 		return this;
 
 	}
 
+	@Override
+	public Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers() {
+		return temporaryModifiers;
+	}
+
+	@Override
+	public void addTemporaryModifiers(String source, Set<TemporaryStatModifier> modifiers) {
+		temporaryModifiers.put(source, modifiers);
+	}
+
+	@Override
+	public void removeTemporaryModifiers(String source) {
+		temporaryModifiers.remove(source);
+	}
+
+	@Override
+	protected Map<String, Set<Skill>> getTemporarySkills() {
+		return temporarySkills;
+	}
+
+	@Override
+	public void addTemporarySkills(String source, Set<Skill> skills) {
+		temporarySkills.put(source, skills);
+	}
+
+	@Override
+	public void removeTemporarySkills(String source) {
+		temporarySkills.remove(source);
+	}
+
+	@Override
+	protected Map<String, Set<ISkillProperty>> getTemporaryProperties() {
+		return temporaryProperties;
+	}
+
+	@Override
+	public void addTemporaryProperties(String source, Set<ISkillProperty> properties) {
+		temporaryProperties.put(source, properties);
+	}
+
+	@Override
+	public void removeTemporaryProperties(String source) {
+		temporaryProperties.remove(source);
+	}
 }

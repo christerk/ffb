@@ -1,4 +1,6 @@
 package com.balancedbytes.games.ffb.model.property;
 
-public interface ISkillProperty {
+import com.balancedbytes.games.ffb.INamedObject;
+
+public interface ISkillProperty extends INamedObject {
 }

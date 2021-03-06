@@ -1,18 +1,17 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.util.Scanner;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  *
@@ -70,11 +69,6 @@ public class SkillFactory implements INamedObjectFactory<Skill> {
 		Scanner<Skill> scanner = new Scanner<>(Skill.class);
 
 		scanner.getSubclasses(game.getOptions()).forEach(this::addSkill);
-		skills.values().forEach(s -> {
-			s.postConstruct();
-			if (game.getRules() != null) {
-				game.getRules().<PassModifierFactory>getFactory(Factory.PASS_MODIFIER).register(s.getPassModifiers());
-			}
-		});
+		skills.values().forEach(Skill::postConstruct);
 	}
 }

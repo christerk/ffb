@@ -5,6 +5,8 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
@@ -13,6 +15,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
+import java.util.Map;
+import java.util.Set;
 
 public class ZappedPlayer extends Player<ZappedPosition> {
 
@@ -264,6 +268,51 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	@Override
 	public void applyPlayerModifiers() {
 		originalPlayer.applyPlayerModifiers();
+	}
+
+	@Override
+	protected Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers() {
+		return originalPlayer.getTemporaryModifiers();
+	}
+
+	@Override
+	public void addTemporaryModifiers(String source, Set<TemporaryStatModifier> modifiers) {
+		originalPlayer.addTemporaryModifiers(source, modifiers);
+	}
+
+	@Override
+	public void removeTemporaryModifiers(String source) {
+		originalPlayer.removeTemporaryModifiers(source);
+	}
+
+	@Override
+	protected Map<String, Set<Skill>> getTemporarySkills() {
+		return originalPlayer.getTemporarySkills();
+	}
+
+	@Override
+	public void addTemporarySkills(String source, Set<Skill> skills) {
+		originalPlayer.addTemporarySkills(source, skills);
+	}
+
+	@Override
+	public void removeTemporarySkills(String source) {
+		originalPlayer.removeTemporarySkills(source);
+	}
+
+	@Override
+	protected Map<String, Set<ISkillProperty>> getTemporaryProperties() {
+		return originalPlayer.getTemporaryProperties();
+	}
+
+	@Override
+	public void addTemporaryProperties(String source, Set<ISkillProperty> properties) {
+		originalPlayer.addTemporaryProperties(source, properties);
+	}
+
+	@Override
+	public void removeTemporaryProperties(String source) {
+		originalPlayer.removeTemporaryProperties(source);
 	}
 
 	@Override

@@ -390,6 +390,9 @@ public interface IJsonOption {
 	JsonEnumWithNameOption TEAM_STATUS = new JsonEnumWithNameOption("teamStatus", Factory.TEAM_STATUS);
 	JsonIntOption TEAM_VALUE = new JsonIntOption("teamValue");
 	JsonStringOption TEAM_WITH_POSITION_ID = new JsonStringOption("teamWithPositionId");
+	JsonTemporaryModifiersMapOption TEMPORARY_MODIFIERS_MAP = new JsonTemporaryModifiersMapOption("temporaryModifiersMap");
+	JsonSkillPropertiesMapOption TEMPORARY_PROPERTIES_MAP = new JsonSkillPropertiesMapOption("temporaryPropertiesMap");
+	JsonSkillsMapOption TEMPORARY_SKILL_MAP = new JsonSkillsMapOption("temporarySkillsMap");
 	JsonIntArrayOption TENTACLE_ROLL = new JsonIntArrayOption("tentacleRoll");
 	JsonBooleanOption TESTING = new JsonBooleanOption("testing");
 	JsonStringOption TEXT = new JsonStringOption("text");

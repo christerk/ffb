@@ -7,11 +7,17 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -175,4 +181,57 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return getSkillWithProperty(property) != null;
 	}
 
+	public int getAgilityWithModifiers() {
+		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.AG, getAgility());
+	}
+
+	public int getMovementWithModifiers() {
+		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.MA, getMovement());
+	}
+
+	public int getStrengthWithModifiers() {
+		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.ST, getStrength());
+	}
+
+	public int getPassingWithModifiers() {
+		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.PA, getPassing());
+	}
+
+	public int getArmourWithModifiers() {
+		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.AV, getArmour());
+	}
+
+	private int getStatWithModifiers(TemporaryStatModifier.PlayerStat stat, int baseValue) {
+		return getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
+			.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
+	}
+
+	protected abstract Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers();
+
+	public abstract void addTemporaryModifiers(String source, Set<TemporaryStatModifier> modifiers);
+	public abstract void removeTemporaryModifiers(String source);
+
+	public Set<Skill> getSkillsIncludingTemporaryOnes() {
+		return Stream.concat(
+			getTemporarySkills().values().stream().flatMap(Collection::stream),
+			Arrays.stream(getSkills())
+		).collect(Collectors.toSet());
+	}
+
+	protected abstract Map<String, Set<Skill>> getTemporarySkills();
+
+	public abstract void addTemporarySkills(String source, Set<Skill> skills);
+	public abstract void removeTemporarySkills(String source);
+
+	public boolean hasSkillProperty(ISkillProperty property) {
+		return Stream.concat(
+			getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),
+			getTemporaryProperties().values().stream().flatMap(Collection::stream)
+		).anyMatch(prop -> prop.equals(property));
+	}
+
+	protected abstract Map<String, Set<ISkillProperty>> getTemporaryProperties();
+
+	public abstract void addTemporaryProperties(String source, Set<ISkillProperty> properties);
+	public abstract void removeTemporaryProperties(String source);
 }

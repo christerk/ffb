@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Collection;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.IKeyedItem;
 import com.balancedbytes.games.ffb.INamedObject;
@@ -21,6 +19,4 @@ public interface INamedObjectFactory<T> extends IKeyedItem {
 		FactoryType a = this.getClass().getAnnotation(FactoryType.class);
 		return a.value().name();
 	}
-
-	default void register(Collection<T> items) {}
 }

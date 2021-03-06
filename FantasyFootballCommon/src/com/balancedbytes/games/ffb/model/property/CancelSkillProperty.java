@@ -20,6 +20,11 @@ public class CancelSkillProperty implements ISkillProperty {
 	}
 
 	@Override
+	public String getName() {
+		return "cancel" + cancelledProperty.getName();
+	}
+
+	@Override
 	public int hashCode() {
 		return Objects.hash(cancelledProperty);
 	}
