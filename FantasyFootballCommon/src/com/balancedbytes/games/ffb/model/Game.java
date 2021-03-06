@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.model.change.ModelChangeObservable;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -516,6 +517,13 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 			return getTeamAway();
 		}
 		return null;
+	}
+
+	public boolean isActive(ISkillProperty property) {
+		return Arrays.stream(new TurnData[]{getTurnDataHome(), getTurnDataAway()})
+			.flatMap(turnData -> Arrays.stream(turnData.getInducementSet().getActiveCards()))
+			.flatMap(card -> card.globalProperties().stream())
+			.anyMatch(prop -> prop.equals(property));
 	}
 
 	// change tracking

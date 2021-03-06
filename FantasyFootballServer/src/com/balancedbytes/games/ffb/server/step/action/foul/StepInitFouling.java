@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -8,6 +7,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFoul;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -23,7 +23,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -134,7 +133,7 @@ public class StepInitFouling extends AbstractStep {
 		} else {
 			Player<?> foulDefender = game.getPlayerById(fFoulDefenderId);
 			if ((actingPlayer.getPlayer() != null) && !actingPlayer.hasFouled() && (foulDefender != null)
-					&& !UtilCards.hasCard(game, foulDefender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
+					&& !foulDefender.hasSkillProperty(NamedProperties.preventBeingFouled)) {
 				game.setDefenderId(fFoulDefenderId);
 				actingPlayer.setHasFouled(true);
 				game.getTurnData().setTurnStarted(true);

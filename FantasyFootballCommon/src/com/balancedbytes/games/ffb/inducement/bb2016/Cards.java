@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.inducement.CardReport;
 import com.balancedbytes.games.ffb.inducement.InducementDuration;
 import com.balancedbytes.games.ffb.inducement.InducementPhase;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
@@ -15,6 +16,9 @@ import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.TemporaryEnhancements;
+import com.balancedbytes.games.ffb.modifiers.TemporaryStatDecrementer;
+import com.balancedbytes.games.ffb.modifiers.TemporaryStatIncrementer;
+import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.skill.Bombardier;
 import com.balancedbytes.games.ffb.skill.BoneHead;
 import com.balancedbytes.games.ffb.skill.Catch;
@@ -85,7 +89,13 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// Dirty Player, Piling On, fouling assists and Chainsaw attacks.
 		add(new Card("Belt of Invulnerability", "Invulnerability Belt", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER,
 			false, new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
-			InducementDuration.UNTIL_END_OF_GAME, "No modifiers or re-rolls on armour rolls"));
+			InducementDuration.UNTIL_END_OF_GAME, "No modifiers or re-rolls on armour rolls") {
+			@Override
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement()
+					.withProperties(Collections.singleton(NamedProperties.preventArmourModifications));
+			}
+		});
 
 		// Description:
 		// One of the great passers of all time has loaned your player his
@@ -158,7 +168,19 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		add(new Card("Gikta's Strength of da Bear", "Gikta's Strength", CardType.MAGIC_ITEM,
 			CardTarget.OWN_PLAYER, true, new InducementPhase[]{InducementPhase.START_OF_OWN_TURN},
 			InducementDuration.UNTIL_END_OF_DRIVE,
-			"Player gets +1 ST for this drive, then -1 ST for the remainder of the game"));
+			"Player gets +1 ST for this drive, then -1 ST for the remainder of the game") {
+			@Override
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement()
+					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStat.ST)));
+			}
+
+			@Override
+			public TemporaryEnhancements deactivationEnhancement() {
+				return super.deactivationEnhancement()
+					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStat.ST)));
+			}
+		});
 
 		// Description:
 		// A player puts a magic salve, Grisnick's Stickum, onto his gloves
@@ -175,12 +197,17 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			"Player gets Catch & Sure Hands, but may not Pass or Hand-off") {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(
-					new HashSet<Class<? extends Skill>>() {{
-						add(Catch.class);
-						add(SureHands.class);
-					}}
-				);
+				return super.activationEnhancement()
+					.withSkills(
+						new HashSet<Class<? extends Skill>>() {{
+							add(Catch.class);
+							add(SureHands.class);
+						}}
+					)
+					.withProperties(
+						new HashSet<ISkillProperty>() {{
+							add(NamedProperties.preventRegularHandOverAction);
+						}});
 			}
 		});
 
@@ -197,7 +224,13 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// for the block attempt.
 		add(new Card("Inertia Damper", "Inertia Damper", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
-			InducementDuration.UNTIL_END_OF_DRIVE, "Opponents get -1 ST to Blitzing from 1 or more squares away"));
+			InducementDuration.UNTIL_END_OF_DRIVE, "Opponents get -1 ST to Blitzing from 1 or more squares away") {
+			@Override
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement()
+					.withProperties(Collections.singleton(NamedProperties.weakenOpposingBlitzer));
+			}
+		});
 
 
 		// Description:
@@ -211,7 +244,13 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// crowd or throw a rock, is not affected by a lucky charm.
 		add(new Card("Lucky Charm", "Lucky Charm", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.AFTER_INDUCEMENTS_PURCHASED}, InducementDuration.UNTIL_USED,
-			"Ignore first armour break roll"));
+			"Ignore first armour break roll") {
+			@Override
+			public TemporaryEnhancements activationEnhancement() {
+				return super.activationEnhancement()
+					.withProperties(Collections.singleton(NamedProperties.ignoreFirstArmourBreak));
+			}
+		});
 
 		// Description:
 		// Your team is featured in Spike! magazine and the magazine gives you
@@ -261,7 +300,10 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withProperties(Collections.singleton(NamedProperties.preventDamagingInjuryModifications));
+				return super.activationEnhancement().withProperties(new HashSet<ISkillProperty>() {{
+					add(NamedProperties.preventDamagingInjuryModifications);
+					add(NamedProperties.preventBeingFouled);
+				}});
 			}
 		});
 
@@ -297,7 +339,9 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(MightyBlow.class));
+				return super.activationEnhancement()
+					.withSkills(Collections.singleton(MightyBlow.class))
+					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStat.ST)));
 			}
 		});
 
@@ -316,7 +360,12 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// foul must be rolled as normal with the player sent off on doubles.
 		add(new Card("Blatant Foul", "Blatant Foul", CardType.DIRTY_TRICK, CardTarget.TURN, false,
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_TURN,
-			"Next foul breaks armour automatically"));
+			"Next foul breaks armour automatically") {
+			@Override
+			public Set<ISkillProperty> globalProperties() {
+				return Collections.singleton(NamedProperties.foulBreaksArmourWithoutRoll);
+			}
+		});
 
 		// Description:
 		// A player throws a dirty block on the opponent.
@@ -330,7 +379,13 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// considered Stunned.
 		add(new Card("Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_TURN,
-			"Unmoved player drops prone and stuns an adjacent player", CardHandlerKey.CHOP_BLOCK));
+			"Unmoved player drops prone and stuns an adjacent player", CardHandlerKey.CHOP_BLOCK) {
+
+			@Override
+			public boolean requiresBlockablePlayerSelection() {
+				return true;
+			}
+		});
 
 		// Description:
 		// One of your players thrusts a cleverly concealed custard pie in the
@@ -376,7 +431,12 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// the normal 2+.
 		add(new Card("Greased Shoes", "Greased Shoes", CardType.DIRTY_TRICK, CardTarget.TURN, false,
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
-			InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, "Opposing players need to roll 5+ to Go For It"));
+			InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, "Opposing players need to roll 5+ to Go For It") {
+			@Override
+			public Set<ISkillProperty> globalProperties() {
+				return Collections.singleton(NamedProperties.setGfiRollToFive);
+			}
+		});
 
 		// Description:
 		// A player purchased some exploding runes from a dwarven runesmith
@@ -434,11 +494,13 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			"Player gets Kick, Dirty Player & -1 MA") {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(
-					new HashSet<Class<? extends Skill>>() {{
-						add(Kick.class);
-						add(DirtyPlayer.class);
-					}});
+				return super.activationEnhancement()
+					.withSkills(
+						new HashSet<Class<? extends Skill>>() {{
+							add(Kick.class);
+							add(DirtyPlayer.class);
+						}})
+					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStat.MA)));
 			}
 		});
 
@@ -467,7 +529,12 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 		// opponent.
 		add(new Card("Spiked Ball", "Spiked Ball", CardType.DIRTY_TRICK, CardTarget.TURN, false,
 			new InducementPhase[]{InducementPhase.BEFORE_KICKOFF_SCATTER}, InducementDuration.UNTIL_END_OF_DRIVE,
-			"Any failed pick up or catch roll results in being stabbed"));
+			"Any failed pick up or catch roll results in being stabbed") {
+			@Override
+			public Set<ISkillProperty> globalProperties() {
+				return Collections.singleton(NamedProperties.droppedBallCausesArmourRoll);
+			}
+		});
 
 		// Description:
 		// You nabbed a playbook from the opponent's coach! He sure will be

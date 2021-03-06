@@ -19,7 +19,8 @@ public class PitTrapHandler extends CardHandler {
 	}
 
 	@Override
-	public void activate(Card card, IStep step, Player<?> player) {
+	public boolean activate(Card card, IStep step, Player<?> player) {
 		step.publishParameters(UtilServerInjury.dropPlayer(step, player, ApothecaryMode.DEFENDER));
+		return true;
 	}
 }

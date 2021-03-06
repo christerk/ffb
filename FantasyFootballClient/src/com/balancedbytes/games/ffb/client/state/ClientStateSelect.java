@@ -1,14 +1,13 @@
 package com.balancedbytes.games.ffb.client.state;
 
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
@@ -361,7 +360,7 @@ public class ClientStateSelect extends ClientState {
 			&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
 			&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularPassAction)
 			&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
-			&& !UtilCards.hasCard(game, pPlayer, Card.GLOVES_OF_HOLDING));
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularPassAction));
 	}
 
 	private boolean isHandOverActionAvailable(Player<?> pPlayer) {
@@ -372,7 +371,7 @@ public class ClientStateSelect extends ClientState {
 				&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
 				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularHandOverAction)
 				&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
-				&& !UtilCards.hasCard(game, pPlayer, Card.GLOVES_OF_HOLDING));
+				&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularHandOverAction));
 	}
 
 	private boolean isThrowTeamMateActionAvailable(Player<?>pPlayer) {

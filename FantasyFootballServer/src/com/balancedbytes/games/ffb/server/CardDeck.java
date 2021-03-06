@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.server;
 
+import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -48,7 +50,8 @@ public class CardDeck {
 	}
 
 	public void build(Game pGame) {
-		for (Card card : Card.values()) {
+		CardFactory factory = pGame.getFactory(FactoryType.Factory.CARD);
+		for (Card card : factory.allCards()) {
 			add(card);
 		}
 		for (Card card : pGame.getTurnDataHome().getInducementSet().getAvailableCards()) {

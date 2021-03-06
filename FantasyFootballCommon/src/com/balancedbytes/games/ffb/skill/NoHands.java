@@ -24,6 +24,7 @@ public class NoHands extends Skill {
 		registerProperty(NamedProperties.preventCatch);
 		registerProperty(NamedProperties.preventHoldBall);
 		registerProperty(NamedProperties.preventRegularPassAction);
+		registerProperty(NamedProperties.preventRegularHandOverAction);
 	}
 
 }

@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.CardEffectFactory;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -271,6 +273,8 @@ public class FieldModel implements IJsonSerializable {
 			fCardEffectsByPlayerId.put(pPlayer.getId(), cardEffects);
 		}
 		cardEffects.add(pCardEffect);
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(factory::forClass).collect(Collectors.toSet()));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
 	}
 
@@ -284,6 +288,7 @@ public class FieldModel implements IJsonSerializable {
 			removed = cardEffects.remove(pCardEffect);
 		}
 		if (removed) {
+			pPlayer.removeTemporarySkills(pCardEffect.getName());
 			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CARD_EFFECT, pPlayer.getId(), pCardEffect);
 		}
 		return removed;

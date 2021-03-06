@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server;
 
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
@@ -22,7 +21,6 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
 import java.util.Arrays;
@@ -231,7 +229,7 @@ public class DiceInterpreter {
 			Game game = pGameState.getGame();
 			int[] injuryRoll = pInjuryContext.getInjuryRoll();
 			Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
-			if ((defender != null) && UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
+			if ((defender != null) && defender.hasSkillProperty(NamedProperties.preventDamagingInjuryModifications)) {
 				pInjuryContext.clearInjuryModifiers();
 			}
 			if (injuryRoll == null) {
@@ -367,7 +365,7 @@ public class DiceInterpreter {
 		int[] armourRoll = pInjuryContext.getArmorRoll();
 		Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
 		int armour = defender.getArmour();
-		if (UtilCards.hasCard(game, defender, Card.BELT_OF_INVULNERABILITY)) {
+		if (defender.hasSkillProperty(NamedProperties.preventArmourModifications)) {
 			pInjuryContext.clearArmorModifiers();
 		}
 		if ((armour > 7) &&

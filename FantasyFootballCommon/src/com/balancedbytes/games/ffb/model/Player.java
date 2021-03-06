@@ -258,4 +258,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		addTemporarySkills(name, enhancements.getSkills().stream().map(factory::forClass).collect(Collectors.toSet()));
 
 	}
+
+	public String getSource(ISkillProperty property) {
+		return getTemporaryProperties().entrySet().stream().filter(entry -> entry.getValue().contains(property)).map(Map.Entry::getKey).findFirst().orElse(null);
+	}
 }

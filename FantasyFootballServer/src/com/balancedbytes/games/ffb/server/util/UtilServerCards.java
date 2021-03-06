@@ -61,10 +61,10 @@ public class UtilServerCards {
 		return allowedPlayers.toArray(new Player[0]);
 	}
 
-	public static void activateCard(IStep pStep, Card pCard, boolean pHomeTeam, String pPlayerId) {
+	public static boolean activateCard(IStep pStep, Card pCard, boolean pHomeTeam, String pPlayerId) {
 
 		if ((pStep == null) || (pCard == null)) {
-			return;
+			return true;
 		}
 
 		// play animation first before activating card and its effects
@@ -85,10 +85,10 @@ public class UtilServerCards {
 		Player<?> player = game.getPlayerById(pPlayerId);
 		if (player != null) {
 			game.getFieldModel().addCard(player, pCard);
-			((CardHandlerFactory) game.getFactory(FactoryType.Factory.CARD_HANDLER))
-				.forCard(pCard).ifPresent(handler -> handler.activate(pCard, pStep, player));
 		}
-
+		Optional<CardHandler> cardHandler = ((CardHandlerFactory) game.getFactory(FactoryType.Factory.CARD_HANDLER))
+				.forCard(pCard);
+		return cardHandler.map(handler -> handler.activate(pCard, pStep, player)).orElse(true);
 	}
 
 	public static void deactivateCard(IStep pStep, Card pCard) {

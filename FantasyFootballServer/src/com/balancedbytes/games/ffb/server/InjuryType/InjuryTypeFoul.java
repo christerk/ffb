@@ -1,11 +1,9 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Foul;
@@ -16,11 +14,11 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import java.util.Optional;
@@ -39,7 +37,7 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		// Blatant Foul breaks armor without roll
-		if (UtilCards.isCardActive(game, Card.BLATANT_FOUL)) {
+		if (game.isActive(NamedProperties.foulBreaksArmourWithoutRoll)) {
 			injuryContext.setArmorBroken(true);
 		}
 

@@ -67,6 +67,7 @@ public class NamedProperties {
 	public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
 	public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
 	public static final ISkillProperty dontDropFumbles = new NamedProperty("Don't Drop 2+ Fumbles");
+	public static final ISkillProperty droppedBallCausesArmourRoll = new NamedProperty("Dropped Ball Causes Armour Roll");
 	public static final ISkillProperty enableStandUpAndEndBlitzAction = new NamedProperty(
 			"Enable Stand Up and End Blitz Action");
 	public static final ISkillProperty enableThrowBombAction = new NamedProperty("Enable Throw Bomb Action");
@@ -78,6 +79,7 @@ public class NamedProperties {
 	public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
 	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
 	public static final ISkillProperty forceSecondBlock = new NamedProperty("Force Second Block");
+	public static final ISkillProperty foulBreaksArmourWithoutRoll = new NamedProperty("Foul Breaks Armour Without Roll");
 	public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
@@ -88,6 +90,7 @@ public class NamedProperties {
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
 	public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty(
 			"Ignore Defender Stumbles Result");
+	public static final ISkillProperty ignoreFirstArmourBreak = new NamedProperty("Ignore First Armour Break");
 	public static final ISkillProperty ignoreTackleWhenBlocked = new NamedProperty("Ignore Tackle When Blocked");
 	public static final ISkillProperty ignoreTacklezonesWhenCatching = new NamedProperty(
 			"Ignore Tacklezones when Catching");
@@ -108,10 +111,12 @@ public class NamedProperties {
 	public static final ISkillProperty needsToRollForActionButKeepsTacklezone = new NamedProperty("Needs To Roll For Action But Keeps Tacklezone");
 	public static final ISkillProperty needsToRollHighToAvoidConfusion = new NamedProperty("Need To Roll High To Avoid Confusion");
 	public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Causes Injury Roll");
+	public static final ISkillProperty preventArmourModifications = new NamedProperty("Prevent Armour Modifications");
 	public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");
+	public static final ISkillProperty preventBeingFouled = new NamedProperty("Prevent Being Fouled");
 	public static final ISkillProperty preventCardRabbitsFoot = new NamedProperty("Prevent Rabbit's Foot Card");
 	public static final ISkillProperty preventCatch = new NamedProperty("Prevent Catch");
-	public static final ISkillProperty preventDamagingInjuryModifications = new NamedProperty("PreventDamagingInjuryModifications");
+	public static final ISkillProperty preventDamagingInjuryModifications = new NamedProperty("Prevent Damaging Injury Modifications");
 	public static final ISkillProperty preventFallOnBothDown = new NamedProperty("Prevent Fall on Both Down");
 	public static final ISkillProperty preventHoldBall = new NamedProperty("Prevent Hold Ball");
 	public static final ISkillProperty preventKickTeamMateAction = new NamedProperty("Prevent Kick Team Mate Action");
@@ -133,7 +138,9 @@ public class NamedProperties {
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");
 	public static final ISkillProperty smallIcon = new NamedProperty("Display with a small icon");
+	public static final ISkillProperty setGfiRollToFive = new NamedProperty("Set Gfi Roll To Five");
 	public static final ISkillProperty ttmScattersInSingleDirection = new NamedProperty(
 			"Throw Team Mate Scatters In Single Direction");
 	public static final ISkillProperty useSpecialBlockRules = new NamedProperty("Use Special Block Rules");
+	public static final ISkillProperty weakenOpposingBlitzer = new NamedProperty("Weaken Opposing Blitzer");
 }

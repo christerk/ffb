@@ -22,10 +22,11 @@ public class CustardPieHandler extends CardHandler {
 	}
 
 	@Override
-	public void activate(Card card, IStep step, Player<?> player) {
+	public boolean activate(Card card, IStep step, Player<?> player) {
 		Game game = step.getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		game.getFieldModel().setPlayerState(player, playerState.changeHypnotized(true));
+		return true;
 	}
 
 	@Override

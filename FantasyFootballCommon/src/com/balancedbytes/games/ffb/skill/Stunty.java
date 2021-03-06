@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * The player is so small that they are very difficult to tackle because they
@@ -42,7 +41,7 @@ public class Stunty extends Skill {
 				boolean applies = false;
 
 				if (!context.isStab() &&
-					!UtilCards.hasCard(context.getGame(), context.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE) &&
+					!context.getDefender().hasSkillProperty(NamedProperties.preventDamagingInjuryModifications) &&
 					context.getDefender().hasSkillWithProperty(NamedProperties.isHurtMoreEasily)) {
 					applies = true;
 				}

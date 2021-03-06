@@ -22,7 +22,7 @@ public class WitchBrewHandler extends CardHandler {
 	}
 
 	@Override
-	public void activate(Card card, IStep step, Player<?> player) {
+	public boolean activate(Card card, IStep step, Player<?> player) {
 		Game game = step.getGameState().getGame();
 		int roll = step.getGameState().getDiceRoller().rollCardEffect();
 		CardEffect cardEffect = DiceInterpreter.getInstance().interpretWitchBrewRoll(roll);
@@ -31,6 +31,7 @@ public class WitchBrewHandler extends CardHandler {
 		ReportCardEffectRoll cardEffectReport = new ReportCardEffectRoll(card, roll);
 		cardEffectReport.setCardEffect(cardEffect);
 		step.getResult().addReport(cardEffectReport);
+		return true;
 	}
 
 	@Override

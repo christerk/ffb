@@ -19,7 +19,7 @@ public abstract class CardHandler implements INamedObject {
 		return card.handlerKey().isPresent() && card.handlerKey().get() == handlerKey();
 	}
 
-	public void activate(Card card, IStep step, Player<?> player) {}
+	public boolean activate(Card card, IStep step, Player<?> player) { return true; }
 
 	public void deactivate(Card card, IStep step, Player<?> player) {}
 

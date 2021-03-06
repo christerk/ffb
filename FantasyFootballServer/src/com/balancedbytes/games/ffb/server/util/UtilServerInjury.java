@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ApothecaryStatus;
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -11,6 +11,8 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.factory.CardFactory;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -34,7 +36,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.util.UtilBox;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -82,10 +83,12 @@ public class UtilServerInjury {
 				oldInjuryContext, pApothecaryMode);
 
 		if (injuryContext.isArmorBroken()) {
-			if (UtilCards.hasCard(game, pDefender, Card.LUCKY_CHARM) && (injuryContext.getArmorRoll() != null)) {
+			if (pDefender.hasSkillProperty(NamedProperties.ignoreFirstArmourBreak) && (injuryContext.getArmorRoll() != null)) {
 				injuryContext.setArmorBroken(false);
 				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-				UtilServerCards.deactivateCard(pStep, Card.LUCKY_CHARM);
+				String source = pDefender.getSource(NamedProperties.ignoreFirstArmourBreak);
+				Card card = ((CardFactory) game.getFactory(FactoryType.Factory.CARD)).forName(source);
+				UtilServerCards.deactivateCard(pStep, card);
 			}
 		}
 

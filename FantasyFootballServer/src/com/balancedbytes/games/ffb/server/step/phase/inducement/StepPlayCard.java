@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
@@ -9,6 +8,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -38,7 +38,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to play a card.
- *
+ * <p>
  * Needs to be initialized with stepParameter CARD. Needs to be initialized with
  * stepParameter HOME_TEAM.
  *
@@ -70,16 +70,16 @@ public final class StepPlayCard extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case CARD:
-					fCard = (Card) parameter.getValue();
-					break;
-				// mandatory
-				case HOME_TEAM:
-					fHomeTeam = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				default:
-					break;
+					// mandatory
+					case CARD:
+						fCard = (Card) parameter.getValue();
+						break;
+					// mandatory
+					case HOME_TEAM:
+						fHomeTeam = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -100,43 +100,43 @@ public final class StepPlayCard extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_PLAYER_CHOICE:
-				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-				if (PlayerChoiceMode.BLOCK == playerChoiceCommand.getPlayerChoiceMode()) {
-					fOpponentId = playerChoiceCommand.getPlayerId();
-				} else {
-					fPlayerId = playerChoiceCommand.getPlayerId();
-					if (!StringTool.isProvided(fPlayerId)) {
-						fEndCardPlaying = true;
+				case CLIENT_PLAYER_CHOICE:
+					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+					if (PlayerChoiceMode.BLOCK == playerChoiceCommand.getPlayerChoiceMode()) {
+						fOpponentId = playerChoiceCommand.getPlayerId();
+					} else {
+						fPlayerId = playerChoiceCommand.getPlayerId();
+						if (!StringTool.isProvided(fPlayerId)) {
+							fEndCardPlaying = true;
+						}
 					}
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			case CLIENT_SETUP_PLAYER:
-				if (fIllegalSubstitution) {
-					ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-					fSetupPlayerId = setupPlayerCommand.getPlayerId();
-					fSetupPlayerCoordinate = setupPlayerCommand.getCoordinate();
-					commandStatus = StepCommandStatus.SKIP_STEP;
-				}
-				break;
-			case CLIENT_END_TURN:
-				if (fIllegalSubstitution && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
-					fEndCardPlaying = true;
-					Player<?> setupPlayer = game.getPlayerById(fSetupPlayerId);
-					if ((setupPlayer != null) && (fSetupPlayerCoordinate != null)) {
-						game.getFieldModel().addCardEffect(setupPlayer, CardEffect.ILLEGALLY_SUBSTITUTED);
-						UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate);
-					}
-					fSetupPlayerId = null;
-					fSetupPlayerCoordinate = null;
-					fIllegalSubstitution = false;
-					game.setTurnMode(TurnMode.REGULAR);
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
-				}
-				break;
-			default:
-				break;
+					break;
+				case CLIENT_SETUP_PLAYER:
+					if (fIllegalSubstitution) {
+						ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
+						fSetupPlayerId = setupPlayerCommand.getPlayerId();
+						fSetupPlayerCoordinate = setupPlayerCommand.getCoordinate();
+						commandStatus = StepCommandStatus.SKIP_STEP;
+					}
+					break;
+				case CLIENT_END_TURN:
+					if (fIllegalSubstitution && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						fEndCardPlaying = true;
+						Player<?> setupPlayer = game.getPlayerById(fSetupPlayerId);
+						if ((setupPlayer != null) && (fSetupPlayerCoordinate != null)) {
+							game.getFieldModel().addCardEffect(setupPlayer, CardEffect.ILLEGALLY_SUBSTITUTED);
+							UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate);
+						}
+						fSetupPlayerId = null;
+						fSetupPlayerCoordinate = null;
+						fIllegalSubstitution = false;
+						game.setTurnMode(TurnMode.REGULAR);
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -157,22 +157,15 @@ public final class StepPlayCard extends AbstractStep {
 			// step initInducement has already checked if this card can be played
 			Player<?>[] allowedPlayers = UtilServerCards.findAllowedPlayersForCard(game, fCard);
 			game.setDialogParameter(
-					new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
+				new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
 		} else {
 			playCardOnTurn();
 		}
 	}
 
 	private void playCardOnTurn() {
-		boolean doNextStep = true;
-		switch (fCard) {
-		case ILLEGAL_SUBSTITUTION:
-			doNextStep = playIllegalSubstitution();
-			break;
-		default:
-			UtilServerCards.activateCard(this, fCard, fHomeTeam, null);
-			break;
-		}
+		boolean doNextStep = UtilServerCards.activateCard(this, fCard, fHomeTeam, null);
+		fIllegalSubstitution = !doNextStep;
 		if (doNextStep) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
@@ -185,28 +178,17 @@ public final class StepPlayCard extends AbstractStep {
 			return;
 		}
 		boolean doNextStep = true;
-		switch (fCard) {
-		case CHOP_BLOCK:
-			doNextStep = playCardChopBlock();
-			break;
-		default:
+		if (fCard.requiresBlockablePlayerSelection()) {
+			doNextStep = playCardWithBlockablePlayerSelection();
+		} else {
 			UtilServerCards.activateCard(this, fCard, fHomeTeam, fPlayerId);
-			break;
 		}
 		if (doNextStep) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
 
-	private boolean playIllegalSubstitution() {
-		Game game = getGameState().getGame();
-		UtilServerCards.activateCard(this, fCard, fHomeTeam, null);
-		game.setTurnMode(TurnMode.ILLEGAL_SUBSTITUTION);
-		fIllegalSubstitution = true;
-		return false;
-	}
-
-	private boolean playCardChopBlock() {
+	private boolean playCardWithBlockablePlayerSelection() {
 		boolean doNextStep = false;
 		Game game = getGameState().getGame();
 		Player<?> player = game.getPlayerById(fPlayerId);
@@ -219,7 +201,7 @@ public final class StepPlayCard extends AbstractStep {
 				fOpponentId = blockablePlayers[0].getId();
 			} else {
 				game.setDialogParameter(
-						new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.BLOCK, blockablePlayers, null, 1));
+					new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.BLOCK, blockablePlayers, null, 1));
 			}
 			UtilServerCards.activateCard(this, fCard, fHomeTeam, fPlayerId);
 		}

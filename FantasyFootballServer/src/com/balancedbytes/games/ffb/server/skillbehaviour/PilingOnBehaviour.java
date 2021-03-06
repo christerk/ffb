@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -135,10 +134,10 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 										|| state.injuryResultDefender.injuryContext().isArmorBroken())
 								&& (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_ARMOR_ONLY)
 										|| !state.injuryResultDefender.injuryContext().isArmorBroken())
-								&& (!UtilCards.hasCard(game, game.getDefender(), Card.BELT_OF_INVULNERABILITY)
+								&& (!game.getDefender().hasSkillProperty(NamedProperties.preventArmourModifications)
 										|| state.injuryResultDefender.injuryContext().isArmorBroken())
 								&& !UtilCards.hasSkillToCancelProperty(game, actingPlayer.getPlayer(), NamedProperties.canPileOnOpponent)
-								&& !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)) {
+								&& !game.getDefender().hasSkillProperty(NamedProperties.preventDamagingInjuryModifications)) {
 							state.injuryResultDefender.report(step);
 							UtilServerDialog.showDialog(step.getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(),
 									state.injuryResultDefender.injuryContext().isArmorBroken(), usesATeamReroll), false);

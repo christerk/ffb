@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.inducements.bb2016;
 
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardHandlerKey;
 import com.balancedbytes.games.ffb.model.Game;
@@ -16,6 +17,13 @@ public class IllegalSubstitutionHandler extends CardHandler {
 	@Override
 	protected CardHandlerKey handlerKey() {
 		return ILLEGAL_SUBSTITUTION;
+	}
+
+	@Override
+	public boolean activate(Card card, IStep step, Player<?> player) {
+		Game game = step.getGameState().getGame();
+		game.setTurnMode(TurnMode.ILLEGAL_SUBSTITUTION);
+		return false;
 	}
 
 	@Override

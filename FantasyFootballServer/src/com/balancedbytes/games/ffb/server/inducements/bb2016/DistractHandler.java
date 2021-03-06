@@ -25,7 +25,7 @@ public class DistractHandler extends CardHandler {
 	}
 
 	@Override
-	public void activate(Card card, IStep step, Player<?> player) {
+	public boolean activate(Card card, IStep step, Player<?> player) {
 		Game game = step.getGameState().getGame();
 		Team otherTeam = UtilPlayer.findOtherTeam(game, player);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
@@ -37,6 +37,7 @@ public class DistractHandler extends CardHandler {
 				game.getFieldModel().addCardEffect(otherPlayer, CardEffect.DISTRACTED);
 			}
 		}
+		return true;
 	}
 
 	@Override

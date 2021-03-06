@@ -1,26 +1,20 @@
 package com.balancedbytes.games.ffb.util;
 
-import com.balancedbytes.games.ffb.inducement.Card;
-import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.factory.SkillFactory;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.property.ISkillProperty;
-import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  *
@@ -32,8 +26,8 @@ public final class UtilCards {
 		if ((pGame == null) || (pPlayer == null) || (pSkill == null)) {
 			return false;
 		}
-		Set<Skill> cardSkills = findSkillsProvidedByCardsAndEffects(pGame, pPlayer);
-		return (pPlayer.hasSkill(pSkill) || cardSkills.contains(pSkill));
+
+		return pPlayer.getSkillsIncludingTemporaryOnes().contains(pSkill);
 	}
 
 	public static boolean hasSkillWithProperty(Game game, Player<?> player, ISkillProperty property) {
@@ -72,69 +66,25 @@ public final class UtilCards {
 		return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
 	}
 
-	private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
-		Set<Skill> cardSkills = new HashSet<>();
-		if ((pGame == null) || (pPlayer == null)) {
-			return cardSkills;
-		}
-		Card[] cards = pGame.getFieldModel().getCards(pPlayer);
-		SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
-		Arrays.stream(cards).flatMap(card -> card.grantedSkills().stream()).map(skillFactory::forClass).forEach(cardSkills::add);
-
-		CardEffect[] cardEffects = pGame.getFieldModel().getCardEffects(pPlayer);
-		Arrays.stream(cardEffects).flatMap(cardEffect -> cardEffect.skills().stream()).map(skillFactory::forClass).forEach(cardSkills::add);
-		return cardSkills;
-	}
-
 	public static int getPlayerStrength(Game pGame, Player<?> pPlayer) {
 		if ((pGame == null) || (pPlayer == null)) {
 			return 0;
 		}
-		int strength = pPlayer.getStrength();
-		InducementSet inducementSet = (pPlayer.getTeam() == pGame.getTeamHome())
-				? pGame.getTurnDataHome().getInducementSet()
-				: pGame.getTurnDataAway().getInducementSet();
-		for (Card card : pGame.getFieldModel().getCards(pPlayer)) {
-			switch (card) {
-			case GIKTAS_STRENGTH_OF_DA_BEAR:
-				if (inducementSet.isActive(card)) {
-					strength += 1;
-				} else {
-					strength -= 1;
-				}
-				break;
-			case WAND_OF_SMASHING:
-				strength += 1;
-				break;
-			default:
-				break;
-			}
-		}
-		return strength;
+
+
+		return pPlayer.getStrength();
 	}
 
 	public static int getPlayerMovement(Game pGame, Player<?> pPlayer) {
 		if ((pGame == null) || (pPlayer == null)) {
 			return 0;
 		}
-		int movement = pPlayer.getMovement();
-		InducementSet inducementSet = (pPlayer.getTeam() == pGame.getTeamHome())
-				? pGame.getTurnDataHome().getInducementSet()
-				: pGame.getTurnDataAway().getInducementSet();
-		for (Card card : pGame.getFieldModel().getCards(pPlayer)) {
-			if (card == Card.KICKING_BOOTS) {
-				if (inducementSet.isActive(card)) {
-					movement -= 1;
-				}
-			}
-		}
-		return movement;
+
+		return pPlayer.getMovement();
 	}
 
 	public static Skill[] findAllSkills(Game pGame, Player<?> pPlayer) {
-		Set<Skill> allSkills = findSkillsProvidedByCardsAndEffects(pGame, pPlayer);
-		allSkills.addAll(Arrays.asList(pPlayer.getSkills()));
-		return allSkills.toArray(new Skill[0]);
+		return pPlayer.getSkillsIncludingTemporaryOnes().toArray(new Skill[0]);
 	}
 
 	public static Card[] findAllActiveCards(Game pGame) {

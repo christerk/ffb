@@ -397,7 +397,7 @@ public class UtilPlayer {
 			foulable = (((defenderState.getBase() == PlayerState.PRONE) || (defenderState.getBase() == PlayerState.STUNNED))
 					&& pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
 					&& defenderCoordinate.isAdjacent(attackerCoordinate)
-					&& !UtilCards.hasCard(pGame, pPlayer, Card.GOOD_OLD_MAGIC_CODPIECE));
+					&& !pPlayer.hasSkillProperty(NamedProperties.preventBeingFouled));
 		}
 		return foulable;
 	}

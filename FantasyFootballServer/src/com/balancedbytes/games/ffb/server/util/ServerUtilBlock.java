@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.util;
 
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -83,7 +82,7 @@ public class ServerUtilBlock {
 			if ((pAttacker == actingPlayer.getPlayer())
 					&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
 							|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))
-					&& actingPlayer.hasMoved() && UtilCards.hasCard(pGame, pDefender, Card.INERTIA_DAMPER)) {
+					&& actingPlayer.hasMoved() && pDefender.hasSkillProperty(NamedProperties.weakenOpposingBlitzer)) {
 				blockStrengthAttacker -= 1;
 			}
 			int defenderStrength = pUsingMultiBlock ? UtilCards.getPlayerStrength(pGame, pDefender) + 2
