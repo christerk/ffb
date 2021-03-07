@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -11,10 +8,12 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -70,7 +69,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fSufferingBloodLust = false;
 		fSufferingAnimosity = false;
 		Player<?> player = getGame().getPlayerById(getPlayerId());
-		setStrength((player != null) ? UtilCards.getPlayerStrength(getGame(), player) : 0);
+		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, fPlayerId);
 	}
 

@@ -23,7 +23,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -154,7 +153,7 @@ public class StepInitBlocking extends AbstractStep {
 			Player<?> defender = game.getPlayerById(fBlockDefenderId);
 			if (defender != null) {
 				game.setDefenderId(defender.getId());
-				actingPlayer.setStrength(UtilCards.getPlayerStrength(game, actingPlayer.getPlayer()));
+				actingPlayer.setStrength(actingPlayer.getPlayer().getStrengthWithModifiers());
 				PlayerState oldDefenderState = game.getFieldModel().getPlayerState(defender);
 				publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldDefenderState));
 				publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION,

@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Tentacles;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.COMMON)
@@ -53,7 +52,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 							String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 							String[] descriptionArray = new String[playerArray.length];
 							for (int i = 0; i < playerArray.length; i++) {
-								int attributeDiff = UtilCards.getPlayerStrength(game, playerArray[i]) - actingPlayer.getStrength();
+								int attributeDiff = playerArray[i].getStrengthWithModifiers() - actingPlayer.getStrength();
 								StringBuilder description = new StringBuilder();
 								if (attributeDiff > 0) {
 									description.append("(").append(attributeDiff).append(" ST advantage)");
@@ -90,9 +89,9 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 						if (rollTentacles) {
 							int[] rollEscape = step.getGameState().getDiceRoller().rollTentaclesEscape();
 							boolean successful = DiceInterpreter.getInstance().isTentaclesEscapeSuccessful(rollEscape,
-									UtilCards.getPlayerStrength(game, game.getDefender()), actingPlayer.getStrength());
+								game.getDefender().getStrengthWithModifiers(), actingPlayer.getStrength());
 							int minimumRoll = DiceInterpreter.getInstance().minimumRollTentaclesEscape(
-									UtilCards.getPlayerStrength(game, game.getDefender()), actingPlayer.getStrength());
+								game.getDefender().getStrengthWithModifiers(), actingPlayer.getStrength());
 							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.TENTACLES_ESCAPE)
 									&& (step.getReRollSource() != null));
 							step.getResult().addReport(new ReportTentaclesShadowingRoll(skill, game.getDefenderId(), rollEscape,

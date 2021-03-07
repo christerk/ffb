@@ -37,8 +37,7 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 				boolean doNextStep = true;
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game,
-						game.getDefender()));
+				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < game.getDefender().getStrengthWithModifiers());
 				boolean usesSpecialBlockingRules = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.useSpecialBlockRules);
 
 				if (UtilCards.hasSkill(game, actingPlayer, skill) && lessStrengthThanDefender
@@ -53,14 +52,14 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 					if (doDauntless) {
 						int dauntlessRoll = step.getGameState().getDiceRoller().rollDauntless();
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollDauntless(actingPlayer.getStrength(),
-								UtilCards.getPlayerStrength(game, game.getDefender()));
+							game.getDefender().getStrengthWithModifiers());
 						boolean successful = (dauntlessRoll >= minimumRoll);
 						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.DAUNTLESS)
 								&& (step.getReRollSource() != null));
 						step.getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll,
-								minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
+								minimumRoll, reRolled, game.getDefender().getStrengthWithModifiers()));
 						if (successful) {
-							actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
+							actingPlayer.setStrength(game.getDefender().getStrengthWithModifiers());
 							actingPlayer.markSkillUsed(skill);
 						} else {
 							if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),

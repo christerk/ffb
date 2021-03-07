@@ -304,7 +304,7 @@ public class UtilPlayer {
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
 
-		if (!pPlayer.hasSkillWithProperty(NamedProperties.inflictsConfusion)) {
+		if (!pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)) {
 			return false;
 		} else if (!playerState.isActive()) {
 			return false;
@@ -422,12 +422,12 @@ public class UtilPlayer {
 				return false;
 			} else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
 					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canStandUpForFree)) {
-				nextMoveGoingForIt = (3 >= UtilCards.getPlayerMovement(pGame, player));
+				nextMoveGoingForIt = (3 >= player.getMovementWithModifiers());
 			} else {
 				if (actingPlayer.isLeaping()) {
-					nextMoveGoingForIt = ((actingPlayer.getCurrentMove() + 1) >= UtilCards.getPlayerMovement(pGame, player));
+					nextMoveGoingForIt = ((actingPlayer.getCurrentMove() + 1) >= player.getMovementWithModifiers());
 				} else {
-					nextMoveGoingForIt = (actingPlayer.getCurrentMove() >= UtilCards.getPlayerMovement(pGame, player));
+					nextMoveGoingForIt = (actingPlayer.getCurrentMove() >= player.getMovementWithModifiers());
 				}
 			}
 		}
@@ -464,7 +464,7 @@ public class UtilPlayer {
 					}
 				}
 				movePossible = (actingPlayer
-						.getCurrentMove() < (UtilCards.getPlayerMovement(pGame, actingPlayer.getPlayer()) + extraMove));
+						.getCurrentMove() < (actingPlayer.getPlayer().getMovementWithModifiers() + extraMove));
 			}
 		}
 		return movePossible;

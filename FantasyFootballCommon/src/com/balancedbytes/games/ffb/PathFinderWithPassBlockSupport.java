@@ -1,19 +1,18 @@
 package com.balancedbytes.games.ffb;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
+
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  *
@@ -197,7 +196,7 @@ public class PathFinderWithPassBlockSupport {
 			return null;
 
 		Team movingTeam = actingPlayer.getPlayer().getTeam();
-		int maxDistance = UtilCards.getPlayerMovement(pGame, actingPlayer.getPlayer()) - actingPlayer.getCurrentMove();
+		int maxDistance = actingPlayer.getPlayer().getMovementWithModifiers() - actingPlayer.getCurrentMove();
 
 		Set<FieldCoordinate> pEndCoords = new HashSet<>(1);
 		pEndCoords.add(pEndCoord);

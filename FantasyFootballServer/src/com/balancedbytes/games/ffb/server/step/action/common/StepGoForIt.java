@@ -112,7 +112,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));
 			}
 			if (actingPlayer.isGoingForIt()
-					&& (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()))) {
+					&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers())) {
 				if (ReRolledActions.GO_FOR_IT == getReRolledAction()) {
 					if ((getReRollSource() == null)
 							|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
@@ -140,7 +140,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.isLeaping()
-				&& (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()) + 1)
+				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)
 				&& !fSecondGoForIt) {
 			fSecondGoForIt = true;
 			setReRolledAction(null);

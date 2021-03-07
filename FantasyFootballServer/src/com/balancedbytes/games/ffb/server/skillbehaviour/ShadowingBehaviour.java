@@ -25,7 +25,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Shadowing;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.COMMON)
@@ -94,11 +93,11 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 						if (rollShadowing) {
 							int[] rollEscape = step.getGameState().getDiceRoller().rollShadowingEscape();
 							boolean successful = DiceInterpreter.getInstance().isShadowingEscapeSuccessful(rollEscape,
-									UtilCards.getPlayerMovement(game, game.getDefender()),
-									UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
+									game.getDefender().getMovementWithModifiers(),
+									actingPlayer.getPlayer().getMovementWithModifiers());
 							int minimumRoll = DiceInterpreter.getInstance().minimumRollShadowingEscape(
-									UtilCards.getPlayerMovement(game, game.getDefender()),
-									UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
+									game.getDefender().getMovementWithModifiers(),
+									actingPlayer.getPlayer().getMovementWithModifiers());
 							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.SHADOWING_ESCAPE)
 									&& (step.getReRollSource() != null));
 							step.getResult().addReport(new ReportTentaclesShadowingRoll(skill, game.getDefenderId(), rollEscape,

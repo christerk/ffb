@@ -120,7 +120,7 @@ public class StepEndBlocking extends AbstractStep {
 			boolean usedDauntless = (skillDauntless != null) && actingPlayer.isSkillUsed(skillDauntless);
 
 			if (usedHorns || usedDauntless) {
-				actingPlayer.setStrength(UtilCards.getPlayerStrength(game, actingPlayer.getPlayer()));
+				actingPlayer.setStrength(actingPlayer.getPlayer().getStrengthWithModifiers());
 			}
 
 			FieldCoordinate defenderPosition = game.getFieldModel().getPlayerCoordinate(game.getDefender());

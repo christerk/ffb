@@ -86,7 +86,7 @@ public class UtilServerReRoll {
 		if (minimumRoll >= 0) {
 			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			boolean proOption = (player.hasSkillWithProperty(NamedProperties.canRerollOncePerTurn)
+			boolean proOption = (player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
 					&& !playerState.hasUsedPro());
 			reRollAvailable = (teamReRollOption || proOption);
 			if (reRollAvailable) {

@@ -1,14 +1,8 @@
 package com.balancedbytes.games.ffb.client.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -18,7 +12,6 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
 import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.client.IClientPropertyValue;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
@@ -32,6 +25,12 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -353,7 +352,7 @@ public class ClientStateMove extends ClientState {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return (!actingPlayer.hasActed()
 				|| !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.forceFullMovement)
-				|| (actingPlayer.getCurrentMove() >= UtilCards.getPlayerMovement(game, actingPlayer.getPlayer())));
+				|| (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovementWithModifiers()));
 	}
 
 	private boolean isHypnoticGazeActionAvailable() {

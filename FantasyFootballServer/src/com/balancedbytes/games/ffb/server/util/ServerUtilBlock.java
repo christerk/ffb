@@ -85,8 +85,8 @@ public class ServerUtilBlock {
 					&& actingPlayer.hasMoved() && pDefender.hasSkillProperty(NamedProperties.weakenOpposingBlitzer)) {
 				blockStrengthAttacker -= 1;
 			}
-			int defenderStrength = pUsingMultiBlock ? UtilCards.getPlayerStrength(pGame, pDefender) + 2
-					: UtilCards.getPlayerStrength(pGame, pDefender);
+			int defenderStrength = pUsingMultiBlock ? pDefender.getStrengthWithModifiers() + 2
+					: pDefender.getStrengthWithModifiers();
 			int blockStrengthDefender = ServerUtilPlayer.findBlockStrength(pGame, pDefender, defenderStrength, pAttacker);
 			if (blockStrengthAttacker > blockStrengthDefender) {
 				nrOfDice = 2;

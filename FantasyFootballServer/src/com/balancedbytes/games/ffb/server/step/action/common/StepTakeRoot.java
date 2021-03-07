@@ -21,7 +21,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -128,7 +127,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		actingPlayer.setGoingForIt(false);
 		actingPlayer.setDodging(false);
-		actingPlayer.setCurrentMove(UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
+		actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovementWithModifiers());
 		switch (actingPlayer.getPlayerAction()) {
 		case BLITZ:
 		case BLITZ_MOVE:

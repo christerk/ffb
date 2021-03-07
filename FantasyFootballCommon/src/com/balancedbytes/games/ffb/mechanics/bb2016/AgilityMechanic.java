@@ -36,8 +36,8 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (DodgeModifier dodgeModifier : pDodgeModifiers) {
 			modifierTotal += dodgeModifier.getModifier();
 		}
-		int statistic = pDodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength) ? UtilCards.getPlayerStrength(pGame, pPlayer)
-			: pPlayer.getAgility();
+		int statistic = pDodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength) ? pPlayer.getStrengthWithModifiers()
+			: pPlayer.getAgilityWithModifiers();
 		return Math.max(2, getAgilityRollBase(statistic) - 1 + modifierTotal);
 	}
 
@@ -47,7 +47,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (PickupModifier pickupModifier : pPickupModifiers) {
 			modifierTotal += pickupModifier.getModifier();
 		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 1 + modifierTotal);
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) - 1 + modifierTotal);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (InterceptionModifier interceptionModifier : pInterceptionModifiers) {
 			modifierTotal += interceptionModifier.getModifier();
 		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + 2 + modifierTotal);
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + 2 + modifierTotal);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (LeapModifier leapModifier : pLeapModifiers) {
 			modifierTotal += leapModifier.getModifier();
 		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + modifierTotal);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (GazeModifier gazeModifier : pGazeModifiers) {
 			modifierTotal += gazeModifier.getModifier();
 		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + modifierTotal);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (CatchModifier catchModifier : pCatchModifiers) {
 			modifierTotal += catchModifier.getModifier();
 		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + modifierTotal);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (RightStuffModifier rightStuffModifier : pRightStuffModifiers) {
 			modifierTotal += rightStuffModifier.getModifier();
 		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + modifierTotal);
 	}
 
 	@Override
@@ -118,48 +118,48 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 
 	@Override
 	public String formatLeapResult(ReportSkillRoll report, Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) +
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
 
 	@Override
 	public String formatJumpUpResult(ReportSkillRoll report, Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) +
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
 
 	@Override
 	public String formatSafeThrowResult(Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) + " + Roll > 6).";
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) + " + Roll > 6).";
 	}
 
 	@Override
 	public String formatRightStuffResult(ReportSkillRoll report, Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) +
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
 
 	@Override
 	public String formatCatchResult(ReportSkillRoll report, Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) +
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
 
 	@Override
 	public String formatInterceptionResult(ReportSkillRoll report, Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) + " - 2 Interception" +
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) + " - 2 Interception" +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
 
 	@Override
 	public String formatHypnoticGazeResult(ReportSkillRoll report, Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) +
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
 
 	@Override
 	public String formatPickupResult(ReportSkillRoll report, Player<?> player) {
-		return " (AG " + Math.min(6, player.getAgility()) + " + 1 Pickup" +
+		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) + " + 1 Pickup" +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
 

@@ -1833,8 +1833,8 @@ public class StatusReport {
 				}
 			}
 			if (neededRoll != null) {
-				neededRoll.append(" (MA ").append(UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
-				neededRoll.append(" - MA ").append(UtilCards.getPlayerMovement(game, defender));
+				neededRoll.append(" (MA ").append(actingPlayer.getPlayer().getMovementWithModifiers());
+				neededRoll.append(" - MA ").append(defender.getMovementWithModifiers());
 				neededRoll.append(" + Roll > 7).");
 				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 			}
@@ -1866,7 +1866,7 @@ public class StatusReport {
 			}
 			if (neededRoll != null) {
 				neededRoll.append(" (ST ").append(actingPlayer.getStrength());
-				neededRoll.append(" - ST ").append(UtilCards.getPlayerStrength(game, defender));
+				neededRoll.append(" - ST ").append(defender.getStrengthWithModifiers());
 				neededRoll.append(" + Roll > 5).");
 				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 			}

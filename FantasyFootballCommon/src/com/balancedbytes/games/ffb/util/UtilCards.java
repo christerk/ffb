@@ -66,23 +66,6 @@ public final class UtilCards {
 		return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
 	}
 
-	public static int getPlayerStrength(Game pGame, Player<?> pPlayer) {
-		if ((pGame == null) || (pPlayer == null)) {
-			return 0;
-		}
-
-
-		return pPlayer.getStrength();
-	}
-
-	public static int getPlayerMovement(Game pGame, Player<?> pPlayer) {
-		if ((pGame == null) || (pPlayer == null)) {
-			return 0;
-		}
-
-		return pPlayer.getMovement();
-	}
-
 	public static Skill[] findAllSkills(Game pGame, Player<?> pPlayer) {
 		return pPlayer.getSkillsIncludingTemporaryOnes().toArray(new Skill[0]);
 	}

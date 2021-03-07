@@ -207,9 +207,9 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			boolean moveIsRed = false;
-			int moveLeft = UtilCards.getPlayerMovement(game, getPlayer())
+			int moveLeft = getPlayer().getMovementWithModifiers()
 				- findNewStatDecreases(playerResult, InjuryAttribute.MA);
-			int strength = UtilCards.getPlayerStrength(game, getPlayer())
+			int strength = getPlayer().getStrengthWithModifiers()
 				- findNewStatDecreases(playerResult, InjuryAttribute.ST);
 			int agility = getPlayer().getAgility() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
 			int armour = getPlayer().getArmour() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
@@ -234,8 +234,7 @@ public class PlayerDetailComponent extends JPanel {
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = player.getStrength() - position.getStrength();
-			boolean strengthIsRed = (getPlayer().getStrength() != UtilCards.getPlayerStrength(game, getPlayer()));
-			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, StatsDrawingModifier.positiveImproves(strengthModifier));
+			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = player.getAgility() - position.getAgility();
 			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
