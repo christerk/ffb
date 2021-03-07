@@ -385,7 +385,7 @@ public class PlayerDetailComponent extends JPanel {
 						&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
 						rosterSkills.add(skill.getName());
 					}
-				} else if (getPlayer().hasSkill(skill)) {
+				} else if (getPlayer().hasSkillExcludingTemporaryOnes(skill)) {
 					if ((SkillCategory.STAT_INCREASE != skill.getCategory())
 						&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
 						acquiredSkills.add(skill.getName());

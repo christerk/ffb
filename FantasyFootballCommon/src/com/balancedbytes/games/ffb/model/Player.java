@@ -95,7 +95,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	abstract boolean removeSkill(Skill pSkill);
 
-	public boolean hasSkill(Skill pSkill) {
+	public boolean hasSkillExcludingTemporaryOnes(Skill pSkill) {
 		return Arrays.asList(getSkills()).contains(pSkill);
 	}
 
