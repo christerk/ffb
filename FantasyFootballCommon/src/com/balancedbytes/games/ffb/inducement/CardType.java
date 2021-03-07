@@ -21,4 +21,7 @@ public interface CardType extends INamedObject {
 
 	GameOptionId getCostId();
 
+	String getCardFront();
+
+	String getCardBack();
 }

@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
-import com.balancedbytes.games.ffb.inducement.bb2016.CardType;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;

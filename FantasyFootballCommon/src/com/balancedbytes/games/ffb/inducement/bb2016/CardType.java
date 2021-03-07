@@ -31,34 +31,42 @@ public enum CardType implements com.balancedbytes.games.ffb.inducement.CardType 
 		this.costId = costId;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getDeckName() {
 		return deckName;
 	}
 
+	@Override
 	public String getInducementNameSingle() {
 		return inducementNameSingle;
 	}
 
+	@Override
 	public String getInducementNameMultiple() {
 		return inducementNameMultiple;
 	}
 
+	@Override
 	public GameOptionId getMaxId() {
 		return maxId;
 	}
 
+	@Override
 	public GameOptionId getCostId() {
 		return costId;
 	}
 
+	@Override
 	public String getCardFront() {
 		return cardFront;
 	}
 
+	@Override
 	public String getCardBack() {
 		return cardBack;
 	}

@@ -11,6 +11,8 @@ import com.balancedbytes.games.ffb.option.GameOptionId;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public enum CardType implements com.balancedbytes.games.ffb.inducement.CardType {
 
+	MAGIC_ITEM("magicItem", "Magic Items Deck", "Magic Item Card", "Magic Item Cards",
+		IIconProperty.ANIMATION_CARD_MAGIC_ITEM_FRONT, IIconProperty.ANIMATION_CARD_MAGIC_ITEM_BACK, GameOptionId.CARDS_MAGIC_ITEM_MAX, GameOptionId.CARDS_MAGIC_ITEM_COST),
 	DIRTY_TRICK("dirtyTrick", "Dirty Tricks Deck", "Dirty Trick Card", "Dirty Trick Cards",
 		IIconProperty.ANIMATION_CARD_DIRTY_TRICK_FRONT, IIconProperty.ANIMATION_CARD_DIRTY_TRICK_BACK, GameOptionId.CARDS_DIRTY_TRICK_MAX, GameOptionId.CARDS_DIRTY_TRICK_COST);
 
