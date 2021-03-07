@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.mechanics.bb2016;
 
-import com.balancedbytes.games.ffb.modifiers.GazeModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
-import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.mechanics.Wording;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -10,10 +7,12 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
+import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -27,7 +26,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 
 	@Override
 	public int minimumRollJumpUp(Player<?> pPlayer) {
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 2);
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) - 2);
 	}
 
 	@Override
@@ -97,7 +96,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 
 	@Override
 	public int minimumRollSafeThrow(Player<?> pPlayer) {
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()));
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()));
 	}
 
 	private boolean usedStrength(ReportSkillRoll report) {
@@ -108,9 +107,9 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	public String formatDodgeResult(ReportSkillRoll report, ActingPlayer player) {
 		StringBuilder neededRoll = new StringBuilder();
 		if (usedStrength(report)) {
-			neededRoll.append(" using Break Tackle (ST ").append(Math.min(6, player.getStrength()));
+			neededRoll.append(" using Break Tackle (ST ").append(Math.min(6, player.getPlayer().getStrengthWithModifiers()));
 		} else {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getPlayer().getAgility()));
+			neededRoll.append(" (AG ").append(Math.min(6, player.getPlayer().getAgilityWithModifiers()));
 		}
 		neededRoll.append(" + 1 Dodge").append(formatRollModifiers(report.getRollModifiers())).append(" + Roll > 6).");
 		return neededRoll.toString();

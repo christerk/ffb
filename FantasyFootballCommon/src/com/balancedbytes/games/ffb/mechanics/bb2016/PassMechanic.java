@@ -45,7 +45,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 	private int minimumRollInternal(Player<?> pThrower, PassingDistance pPassingDistance, Collection<PassModifier> pPassModifiers) {
 		int modifierTotal = calculateModifiers(pPassModifiers);
 		return Math.max(Math.max(2 - (pPassingDistance.getModifier2016() - modifierTotal), 2),
-			7 - Math.min(pThrower.getAgility(), 6) - pPassingDistance.getModifier2016() + modifierTotal);
+			7 - Math.min(pThrower.getAgilityWithModifiers(), 6) - pPassingDistance.getModifier2016() + modifierTotal);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 	@Override
 	public String formatRollRequirement(PassingDistance distance, String formattedModifiers, Player<?> thrower) {
 		StringBuilder rollRequirement = new StringBuilder();
-		rollRequirement.append(" (AG").append(Math.min(6, thrower.getAgility()));
+		rollRequirement.append(" (AG").append(Math.min(6, thrower.getAgilityWithModifiers()));
 		if (distance.getModifier2016() >= 0) {
 			rollRequirement.append(" + ");
 		} else {

@@ -23,92 +23,92 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 
 	@Override
 	public int minimumRollJumpUp(Player<?> pPlayer) {
-		return minimumRoll(pPlayer.getAgility(), Collections.emptySet());
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), Collections.emptySet());
 	}
 
 	@Override
 	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers) {
-		return minimumRoll(pPlayer.getAgility(), pDodgeModifiers);
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pDodgeModifiers);
 	}
 
 	@Override
 	public int minimumRollPickup(Player<?> pPlayer, Set<PickupModifier> pPickupModifiers) {
-		return minimumRoll(pPlayer.getAgility(), pPickupModifiers);
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pPickupModifiers);
 	}
 
 	@Override
 	public int minimumRollInterception(Player<?> pPlayer, Set<InterceptionModifier> pInterceptionModifiers) {
-		return minimumRoll(pPlayer.getAgility(), pInterceptionModifiers);
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pInterceptionModifiers);
 	}
 
 	@Override
 	public int minimumRollLeap(Player<?> pPlayer, Set<LeapModifier> pLeapModifiers) {
-		return minimumRoll(pPlayer.getAgility(), pLeapModifiers);
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pLeapModifiers);
 	}
 
 	@Override
 	public int minimumRollHypnoticGaze(Player<?> pPlayer, Set<GazeModifier> pGazeModifiers) {
-		return minimumRoll(pPlayer.getAgility(), pGazeModifiers);
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pGazeModifiers);
 	}
 
 	@Override
 	public int minimumRollCatch(Player<?> pPlayer, Set<CatchModifier> pCatchModifiers) {
-		return minimumRoll(pPlayer.getAgility(), pCatchModifiers);
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pCatchModifiers);
 	}
 
 	@Override
 	public int minimumRollRightStuff(Player<?> pPlayer, Set<RightStuffModifier> pRightStuffModifiers) {
-		return minimumRoll(pPlayer.getAgility(), pRightStuffModifiers);
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pRightStuffModifiers);
 	}
 
 	@Override
 	public int minimumRollSafeThrow(Player<?> pPlayer) {
-		return minimumRoll(pPlayer.getAgility(), Collections.emptySet());
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), Collections.emptySet());
 	}
 
 	@Override
 	public String formatDodgeResult(ReportSkillRoll report, ActingPlayer player) {
-		return formatResult(player.getPlayer().getAgility(), report.getRollModifiers());
+		return formatResult(player.getPlayer().getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
 	public String formatLeapResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgility(), report.getRollModifiers());
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
 	public String formatJumpUpResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgility(), report.getRollModifiers());
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
 	public String formatSafeThrowResult(Player<?> player) {
-		return formatResult(player.getAgility(), new RollModifier[0]);
+		return formatResult(player.getAgilityWithModifiers(), new RollModifier[0]);
 	}
 
 	@Override
 	public String formatRightStuffResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgility(), report.getRollModifiers());
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
 	public String formatCatchResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgility(), report.getRollModifiers());
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
 	public String formatInterceptionResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgility(), report.getRollModifiers());
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
 	public String formatHypnoticGazeResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgility(), report.getRollModifiers());
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
 	public String formatPickupResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgility(), report.getRollModifiers());
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
 	@Override
@@ -116,11 +116,11 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		return new Wording("Interference", "deflect", "deflects", "interfering player");
 	}
 
-	private int minimumRoll(int agility, Set<? extends RollModifier> modifiers) {
+	private int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {
 		return agility + modifiers.stream().mapToInt(RollModifier::getModifier).sum();
 	}
 
-	private String formatResult(int agility, RollModifier[] modifiers) {
+	private String formatResult(int agility, RollModifier<?>[] modifiers) {
 		return " (Roll" + formatRollModifiers(modifiers) + " >= " + Math.max(2, agility) + "+)";
 	}
 }
