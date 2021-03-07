@@ -67,7 +67,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 		int nrOfPrehensileTails = 0;
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
 		for (Player<?> opponent : opponents) {
-			if (UtilCards.hasSkillWithProperty(pGame, opponent, NamedProperties.makesDodgingHarder)) {
+			if (UtilCards.hasSkillWithProperty(opponent, NamedProperties.makesDodgingHarder)) {
 				nrOfPrehensileTails++;
 			}
 		}
@@ -112,7 +112,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 
 	@Override
 	protected boolean isAffectedByTackleZones(DodgeContext context) {
-		return !UtilCards.hasUncanceledSkillWithProperty(context.getGame(), context.getPlayer(), NamedProperties.ignoreTacklezonesWhenDodging);
+		return !UtilCards.hasUncanceledSkillWithProperty(context.getPlayer(), NamedProperties.ignoreTacklezonesWhenDodging);
 	}
 
 	@Override

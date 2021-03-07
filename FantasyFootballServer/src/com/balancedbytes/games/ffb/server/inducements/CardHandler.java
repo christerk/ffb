@@ -24,6 +24,6 @@ public abstract class CardHandler implements INamedObject {
 	public void deactivate(Card card, IStep step, Player<?> player) {}
 
 	public boolean allowsPlayer(Game game, Card card, Player<?> player) {
-		return false;
+		return true;
 	}
 }

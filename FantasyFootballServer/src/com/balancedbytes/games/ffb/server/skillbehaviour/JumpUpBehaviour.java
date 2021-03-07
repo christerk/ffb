@@ -45,7 +45,7 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved()
-						&& UtilCards.hasUnusedSkill(game, actingPlayer, skill))
+						&& UtilCards.hasUnusedSkill(actingPlayer, skill))
 						|| (ReRolledActions.JUMP_UP == step.getReRolledAction())) {
 					actingPlayer.setHasMoved(true);
 					game.setConcessionPossible(false);

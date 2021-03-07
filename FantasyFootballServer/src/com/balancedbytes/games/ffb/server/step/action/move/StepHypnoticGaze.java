@@ -107,8 +107,8 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 				doGaze = false;
 			}
 		} else {
-			gazeSkill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer, NamedProperties.inflictsConfusion);
-			doGaze = gazeSkill != null && !UtilCards.hasSkillToCancelProperty(game, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
+			gazeSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
+			doGaze = gazeSkill != null && !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
 		}
 		if (doGaze && gazeSkill != null) {
 			actingPlayer.markSkillUsed(gazeSkill);

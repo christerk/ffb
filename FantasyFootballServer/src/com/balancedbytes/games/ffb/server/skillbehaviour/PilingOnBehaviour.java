@@ -136,7 +136,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 										|| !state.injuryResultDefender.injuryContext().isArmorBroken())
 								&& (!game.getDefender().hasSkillProperty(NamedProperties.preventArmourModifications)
 										|| state.injuryResultDefender.injuryContext().isArmorBroken())
-								&& !UtilCards.hasSkillToCancelProperty(game, actingPlayer.getPlayer(), NamedProperties.canPileOnOpponent)
+								&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.canPileOnOpponent)
 								&& !game.getDefender().hasSkillProperty(NamedProperties.preventDamagingInjuryModifications)) {
 							state.injuryResultDefender.report(step);
 							UtilServerDialog.showDialog(step.getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(),

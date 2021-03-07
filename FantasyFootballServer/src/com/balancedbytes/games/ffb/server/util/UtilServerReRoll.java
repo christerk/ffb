@@ -67,7 +67,7 @@ public class UtilServerReRoll {
 						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, roll));
 					}
 				} else {
-					successful = UtilCards.hasSkill(game, pPlayer, pReRollSource.getSkill(game));
+					successful = UtilCards.hasSkill(pPlayer, pReRollSource.getSkill(game));
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();

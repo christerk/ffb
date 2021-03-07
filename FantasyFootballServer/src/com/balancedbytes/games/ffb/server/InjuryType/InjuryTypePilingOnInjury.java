@@ -47,7 +47,7 @@ public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury> {
 			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
 
 			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
-				Optional<Skill> availableSkill = Arrays.stream(UtilCards.findAllSkills(game, pAttacker))
+				Optional<Skill> availableSkill = Arrays.stream(UtilCards.findAllSkills(pAttacker))
 					.filter(skill -> skill.hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).findFirst();
 
 				availableSkill.ifPresent(skill -> {

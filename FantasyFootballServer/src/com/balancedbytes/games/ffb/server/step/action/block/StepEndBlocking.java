@@ -128,13 +128,13 @@ public class StepEndBlocking extends AbstractStep {
 			PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 
-			Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer,
+			Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
 					NamedProperties.forceSecondBlock);
 
 			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceSecondBlock)) {
 				actingPlayer.setGoingForIt(true);
 			}
-			Skill canBlockMultipleTimesSkill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer,
+			Skill canBlockMultipleTimesSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
 					NamedProperties.canBlockMoreThanOnce);
 			if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) && canBlockMultipleTimesSkill != null
 					&& attackerState.hasTacklezones()

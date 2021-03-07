@@ -119,7 +119,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 			return;
 		}
 		boolean doAlwaysHungry = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.mightEatPlayerToThrow);
-		boolean doEscape = UtilCards.hasSkillWithProperty(game, actingPlayer.getPlayer(), NamedProperties.mightEatPlayerToThrow) && !doAlwaysHungry;
+		boolean doEscape = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.mightEatPlayerToThrow) && !doAlwaysHungry;
 		if (doAlwaysHungry) {
 			if (ReRolledActions.ALWAYS_HUNGRY == getReRolledAction()) {
 				if ((getReRollSource() == null)
@@ -149,7 +149,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 			}
 		}
 		if (doEscape) {
-			Skill skill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer, NamedProperties.mightEatPlayerToThrow);
+			Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.mightEatPlayerToThrow);
 			actingPlayer.markSkillUsed(skill);
 			ReRollSource reRollSource = null;
 			if (ReRolledActions.ESCAPE == getReRolledAction()) {

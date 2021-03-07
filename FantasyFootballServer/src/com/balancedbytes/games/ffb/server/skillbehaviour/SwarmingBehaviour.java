@@ -95,7 +95,7 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 						if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
 							playersOnPitch.add(player);
 						} else if (game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE) {
-							if (UtilCards.hasSkill(game, player, skill)) {
+							if (UtilCards.hasSkill(player, skill)) {
 								hasSwarmingReserves = true;
 							} else {
 								playersReserveNoSwarming.add(player);

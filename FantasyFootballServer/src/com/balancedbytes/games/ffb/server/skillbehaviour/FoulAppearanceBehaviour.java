@@ -38,8 +38,8 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			public boolean handleExecuteStepHook(StepFoulAppearance step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), skill)
-						&& !UtilCards.hasSkillToCancelProperty(game, actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
+				if ((game.getDefender() != null) && UtilCards.hasSkill(game.getDefender(), skill)
+						&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
 					boolean doRoll = true;
 					if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)

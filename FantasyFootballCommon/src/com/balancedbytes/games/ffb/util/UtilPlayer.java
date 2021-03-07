@@ -33,7 +33,7 @@ public class UtilPlayer {
 	public static Player<?>[] findPlayersOnPitchWithSkill(Game pGame, Team pTeam, Skill pSkill) {
 		List<Player<?>> result = new ArrayList<>();
 		for (Player<?> player : pTeam.getPlayers()) {
-			if (UtilCards.hasSkill(pGame, player, pSkill)
+			if (UtilCards.hasSkill(player, pSkill)
 					&& FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
 				result.add(player);
 			}
@@ -60,7 +60,7 @@ public class UtilPlayer {
 		Set<Player<?>> shadowingPlayers = new HashSet<>();
 		for (Player<?> opponent : opponents) {
 			PlayerState opponentState = pGame.getFieldModel().getPlayerState(opponent);
-			if ((opponentState != null) && opponentState.hasTacklezones() && UtilCards.hasSkill(pGame, opponent, pSkill)
+			if ((opponentState != null) && opponentState.hasTacklezones() && UtilCards.hasSkill(opponent, pSkill)
 					&& (!pCheckAbleToMove || opponentState.isAbleToMove())) {
 				shadowingPlayers.add(opponent);
 			}

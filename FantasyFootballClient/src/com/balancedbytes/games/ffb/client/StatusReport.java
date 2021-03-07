@@ -1110,7 +1110,7 @@ public class StatusReport {
 		}
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		if (!pReport.isReRolled()) {
-			if (UtilCards.hasUncanceledSkillWithProperty(game, actingPlayer.getPlayer(), NamedProperties.ignoreTacklezonesWhenDodging)) {
+			if (UtilCards.hasUncanceledSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.ignoreTacklezonesWhenDodging)) {
 				print(getIndent() + 1, false, actingPlayer.getPlayer());
 				println(getIndent() + 1, " is Stunty and ignores tacklezones.");
 			}
@@ -2377,8 +2377,8 @@ public class StatusReport {
 				}
 				break;
 			case POW_PUSHBACK:
-				if (UtilCards.hasSkillWithProperty(game, defender, NamedProperties.ignoreDefenderStumblesResult)
-					&& UtilCards.hasSkillToCancelProperty(game, attacker, NamedProperties.ignoreDefenderStumblesResult)) {
+				if (UtilCards.hasSkillWithProperty(defender, NamedProperties.ignoreDefenderStumblesResult)
+					&& UtilCards.hasSkillToCancelProperty(attacker, NamedProperties.ignoreDefenderStumblesResult)) {
 					print(getIndent() + 1, false, attacker);
 					println(getIndent() + 1, " uses Tackle to bring opponent down.");
 				}

@@ -47,7 +47,7 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 				} else if (state.usingDumpOff == null) {
-					if (UtilCards.hasSkill(game, game.getDefender(), skill) && (state.defenderPosition != null)
+					if (UtilCards.hasSkill(game.getDefender(), skill) && (state.defenderPosition != null)
 							&& state.defenderPosition.equals(game.getFieldModel().getBallCoordinate())
 							&& !game.getFieldModel().isBallMoving()
 							&& !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused()

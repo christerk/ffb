@@ -51,7 +51,7 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 					com.balancedbytes.games.ffb.server.step.action.move.StepLeap.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				boolean doLeap = (actingPlayer.isLeaping() && UtilCards.hasUnusedSkill(game, actingPlayer, skill));
+				boolean doLeap = (actingPlayer.isLeaping() && UtilCards.hasUnusedSkill(actingPlayer, skill));
 				if (doLeap) {
 					if (ReRolledActions.LEAP == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)

@@ -56,7 +56,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 				}
 
 				// handle stand firm
-				if (UtilCards.hasSkill(game, state.defender, skill)
+				if (UtilCards.hasSkill(state.defender, skill)
 						&& state.standingFirm.getOrDefault(state.defender.getId(), true)) {
 					if (!state.standingFirm.containsKey(state.defender.getId())) {
 						UtilServerDialog.showDialog(step.getGameState(),

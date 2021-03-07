@@ -66,8 +66,8 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 
 	public Set<InjuryModifier> getInjuryModifiers(InjuryModifierContext context) {
 		return Stream.concat(
-			Arrays.stream(UtilCards.findAllSkills(context.getGame(), context.getAttacker())),
-			Arrays.stream(UtilCards.findAllSkills(context.getGame(), context.getDefender()))
+			Arrays.stream(UtilCards.findAllSkills(context.getAttacker())),
+			Arrays.stream(UtilCards.findAllSkills(context.getDefender()))
 		).flatMap(skill -> skill.getInjuryModifiers().stream())
 			.filter(modifier -> modifier.appliesToContext(context))
 			.collect(Collectors.toSet());

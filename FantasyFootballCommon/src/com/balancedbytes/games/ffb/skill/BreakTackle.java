@@ -28,7 +28,7 @@ public class BreakTackle extends Skill {
 			new DodgeModifier("Break Tackle", 0, ModifierType.REGULAR, true) {
 				@Override
 				public boolean appliesToContext(Skill skill, DodgeContext context) {
-					return context.isUseBreakTackle() || UtilCards.hasUnusedSkill(context.getGame(), context.getActingPlayer(), skill);
+					return context.isUseBreakTackle() || UtilCards.hasUnusedSkill(context.getActingPlayer(), skill);
 				}
 			});
 	}

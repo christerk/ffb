@@ -34,7 +34,7 @@ public class HornsBehaviour extends SkillBehaviour<Horns> {
 			public boolean handleExecuteStepHook(StepHorns step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				state.usingHorns = (UtilCards.hasSkill(game, actingPlayer, skill)
+				state.usingHorns = (UtilCards.hasSkill(actingPlayer, skill)
 						&& (PlayerAction.BLITZ == actingPlayer.getPlayerAction()));
 				if (state.usingHorns) {
 					actingPlayer.setStrength(actingPlayer.getStrength() + 1);

@@ -22,51 +22,54 @@ import java.util.Optional;
  */
 public final class UtilCards {
 
-	public static boolean hasSkill(Game pGame, Player<?> pPlayer, Skill pSkill) {
-		if ((pGame == null) || (pPlayer == null) || (pSkill == null)) {
+	public static boolean hasSkill(Player<?> pPlayer, Skill pSkill) {
+		if ((pPlayer == null) || (pSkill == null)) {
 			return false;
 		}
 
 		return pPlayer.getSkillsIncludingTemporaryOnes().contains(pSkill);
 	}
 
-	public static boolean hasSkillWithProperty(Game game, Player<?> player, ISkillProperty property) {
-		return Arrays.stream(findAllSkills(game, player)).anyMatch(skill -> skill.hasSkillProperty(property));
+	public static boolean hasSkillWithProperty(Player<?> player, ISkillProperty property) {
+		return Arrays.stream(findAllSkills(player)).anyMatch(skill -> skill.hasSkillProperty(property));
 	}
 
-	public static Optional<Skill> getSkillWithProperty(Game game, Player<?> player, ISkillProperty property) {
-		return Arrays.stream(findAllSkills(game, player)).filter(skill -> skill.hasSkillProperty(property)).findFirst();
+	public static Optional<Skill> getSkillWithProperty(Player<?> player, ISkillProperty property) {
+		return Arrays.stream(findAllSkills(player)).filter(skill -> skill.hasSkillProperty(property)).findFirst();
 	}
 
-	public static boolean hasUncanceledSkillWithProperty(Game game, Player<?> player, ISkillProperty property) {
-		Skill[] skills = findAllSkills(game, player);
+	public static boolean hasUncanceledSkillWithProperty(Player<?> player, ISkillProperty property) {
+		Skill[] skills = findAllSkills(player);
 		return Arrays.stream(skills).anyMatch(skill -> skill.hasSkillProperty(property))
 			&& Arrays.stream(skills)
 			.flatMap(skill -> skill.getSkillProperties().stream())
 			.noneMatch(skillProperty -> skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsProperty(property));
 	}
 
-	public static boolean hasSkillToCancelProperty(Game game, Player<?> player, ISkillProperty property) {
-		return Arrays.stream(findAllSkills(game, player))
+	public static boolean hasSkillToCancelProperty(Player<?> player, ISkillProperty property) {
+		return Arrays.stream(findAllSkills(player))
 			.flatMap(skill -> skill.getSkillProperties().stream())
 			.anyMatch(skillProperty -> skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsProperty(property));
 	}
 
-	public static boolean hasSkill(Game pGame, ActingPlayer pActingPlayer, Skill pSkill) {
+	public static boolean hasSkill(ActingPlayer pActingPlayer, Skill pSkill) {
 		if (pActingPlayer == null) {
 			return false;
 		}
-		return hasSkill(pGame, pActingPlayer.getPlayer(), pSkill);
+		return hasSkill(pActingPlayer.getPlayer(), pSkill);
 	}
 
-	public static boolean hasUnusedSkill(Game pGame, ActingPlayer pActingPlayer, Skill pSkill) {
+	public static boolean hasUnusedSkill(ActingPlayer pActingPlayer, Skill pSkill) {
 		if (pActingPlayer == null) {
 			return false;
 		}
-		return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
+		return (hasSkill(pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
 	}
 
-	public static Skill[] findAllSkills(Game pGame, Player<?> pPlayer) {
+	public static Skill[] findAllSkills(Player<?> pPlayer) {
+		if (pPlayer == null) {
+			return new Skill[0];
+		}
 		return pPlayer.getSkillsIncludingTemporaryOnes().toArray(new Skill[0]);
 	}
 
@@ -104,8 +107,8 @@ public final class UtilCards {
 		return getSkillCancelling(player, skill) != null;
 	}
 
-	public static Skill getUnusedSkillWithProperty(Game game, ActingPlayer actingPlayer, ISkillProperty property) {
-		for (Skill playerSkill : UtilCards.findAllSkills(game, actingPlayer.getPlayer())) {
+	public static Skill getUnusedSkillWithProperty(ActingPlayer actingPlayer, ISkillProperty property) {
+		for (Skill playerSkill : UtilCards.findAllSkills(actingPlayer.getPlayer())) {
 			if (playerSkill.hasSkillProperty(property) && !actingPlayer.isSkillUsed(playerSkill)) {
 				return playerSkill;
 			}
@@ -122,8 +125,8 @@ public final class UtilCards {
 		return false;
 	}
 
-	public static ReRollSource getRerollSource(Game game, Player<?> player, ReRolledAction action) {
-		for (Skill playerSkill : UtilCards.findAllSkills(game, player)) {
+	public static ReRollSource getRerollSource(Player<?> player, ReRolledAction action) {
+		for (Skill playerSkill : UtilCards.findAllSkills(player)) {
 			ReRollSource source = playerSkill.getRerollSource(action);
 			if (source != null) {
 				return source;

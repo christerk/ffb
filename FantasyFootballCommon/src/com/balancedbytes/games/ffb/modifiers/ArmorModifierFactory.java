@@ -97,7 +97,7 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 	}
 
 	private Set<ArmorModifier> getArmorModifiers(Player<?> player, ArmorModifierContext context) {
-		return Arrays.stream(UtilCards.findAllSkills(context.getGame(), player))
+		return Arrays.stream(UtilCards.findAllSkills(player))
 			.flatMap(skill -> skill.getArmorModifiers().stream())
 			.filter(modifier -> modifier.appliesToContext(context))
 			.collect(Collectors.toSet());

@@ -47,7 +47,7 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 
 				if ((state.argueTheCallSuccessful != null) && state.argueTheCallSuccessful) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-				} else if (UtilCards.hasSkill(game, actingPlayer, skill)
+				} else if (UtilCards.hasSkill(actingPlayer, skill)
 						&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
 							playerState.changeBase(PlayerState.KNOCKED_OUT));
@@ -80,9 +80,9 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean refereeSpotsFoul = false;
-				if (!game.isActive(NamedProperties.foulBreaksArmourWithoutRoll) && (!UtilCards.hasSkill(game, actingPlayer, skill)
+				if (!game.isActive(NamedProperties.foulBreaksArmourWithoutRoll) && (!UtilCards.hasSkill(actingPlayer, skill)
 						|| state.injuryResultDefender.injuryContext().isArmorBroken()
-						|| ((UtilCards.hasSkill(game, actingPlayer, skill)
+						|| ((UtilCards.hasSkill(actingPlayer, skill)
 								&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
 					int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
 					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);

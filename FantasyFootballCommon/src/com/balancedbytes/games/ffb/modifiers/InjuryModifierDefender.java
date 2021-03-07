@@ -9,6 +9,6 @@ public class InjuryModifierDefender extends InjuryModifier {
 
 	@Override
 	public boolean appliesToContext(InjuryModifierContext context) {
-		return UtilCards.hasSkill(context.getGame(), context.getDefender(), registeredTo);
+		return UtilCards.hasSkill(context.getDefender(), registeredTo);
 	}
 }

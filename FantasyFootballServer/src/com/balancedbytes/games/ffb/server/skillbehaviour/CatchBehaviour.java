@@ -29,7 +29,7 @@ public class CatchBehaviour extends SkillBehaviour<Catch> {
 			@Override
 			public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
 				Game game = step.getGameState().getGame();
-				if (UtilCards.hasSkill(game, state.catcher, skill)) {
+				if (UtilCards.hasSkill(state.catcher, skill)) {
 					step.setReRolledAction(ReRolledActions.CATCH);
 					step.setReRollSource(skill.getRerollSource(ReRolledActions.CATCH));
 					state.rerollCatch = true;

@@ -50,7 +50,7 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 				boolean allowGrabOutsideBlock = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.grabOutsideBlock);
 
 				if (((state.grabbing == null) || state.grabbing) && state.freeSquareAroundDefender
-						&& UtilCards.hasSkill(game, actingPlayer, skill) && attackerCoordinate.isAdjacent(defenderCoordinate)
+						&& UtilCards.hasSkill(actingPlayer, skill) && attackerCoordinate.isAdjacent(defenderCoordinate)
 						&& cancellingSkill == null && ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
 								|| (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) || allowGrabOutsideBlock)) {
 					if ((state.grabbing == null) && ArrayTool.isProvided(state.pushbackSquares)) {

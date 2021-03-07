@@ -42,7 +42,7 @@ public class JuggernautBehaviour extends SkillBehaviour<Juggernaut> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				UtilServerDialog.hideDialog(step.getGameState());
-				if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, skill)
+				if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(actingPlayer, skill)
 						&& !state.oldDefenderState.isRooted()) {
 					if (state.usingJuggernaut == null) {
 						UtilServerDialog.showDialog(step.getGameState(),

@@ -91,7 +91,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 					if (PassResult.FUMBLE == state.result) {
 						if (step.getReRolledAction() != ReRolledActions.PASS) {
 							step.setReRolledAction(ReRolledActions.PASS);
-							if (UtilCards.hasSkill(game, game.getThrower(), skill) && !state.passSkillUsed) {
+							if (UtilCards.hasSkill(game.getThrower(), skill) && !state.passSkillUsed) {
 								doNextStep = false;
 								state.passSkillUsed = true;
 								Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();

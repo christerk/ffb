@@ -85,7 +85,7 @@ public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
 						}
 					} else {
 						if ((catcher != null) && (catcher.getRace() != null) && (thrower != null) && (thrower.getRace() != null)) {
-							state.doRoll = (UtilCards.hasSkill(game, thrower, skill)
+							state.doRoll = (UtilCards.hasSkill(thrower, skill)
 									&& !(thrower.getRace().equalsIgnoreCase(catcher.getRace())));
 						}
 					}

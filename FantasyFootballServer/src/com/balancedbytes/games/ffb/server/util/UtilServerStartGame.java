@@ -157,7 +157,7 @@ public class UtilServerStartGame {
 			game.getOptions().addOption(wizard);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
 			ruleSet.setValue("BB2016");
-			game.getOptions().addOption(ruleSet);
+			//game.getOptions().addOption(ruleSet);
 		}
 	}
 

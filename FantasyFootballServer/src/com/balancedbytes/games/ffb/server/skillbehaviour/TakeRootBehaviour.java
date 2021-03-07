@@ -50,7 +50,7 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 							state.continueOnFailure = step.cancelPlayerAction();
 						}
 					} else {
-						doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, skill);
+						doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
 					}
 					if (doRoll) {
 						int roll = step.getGameState().getDiceRoller().rollSkill();

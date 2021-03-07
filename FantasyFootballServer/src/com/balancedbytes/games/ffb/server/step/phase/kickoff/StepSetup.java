@@ -143,8 +143,9 @@ public final class StepSetup extends AbstractStep {
 					game.setSetupOffense(true);
 					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 					((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
+						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_SETUP, game.isHomePlaying()));
+					((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_SETUP, !game.isHomePlaying()));
-
 				}
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {

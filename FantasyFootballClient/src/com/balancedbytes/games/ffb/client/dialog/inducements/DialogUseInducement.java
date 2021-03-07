@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,15 +32,14 @@ import java.util.Set;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogUseInducement extends Dialog implements ActionListener {
 
 	private InducementType fInducement;
 	private Card fCard;
 
 	private JButton fButtonWizard;
-	private JButton fButtonContinue;
-	private Map<Card, JButton> fButtonPerCard;
+	private final JButton fButtonContinue;
+	private final Map<Card, JButton> fButtonPerCard;
 
 	public DialogUseInducement(FantasyFootballClient pClient, DialogUseInducementParameter pDialogParameter) {
 
@@ -47,9 +47,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		Set<InducementType> inducementSet = new HashSet<>();
 		if (ArrayTool.isProvided(pDialogParameter.getInducementTypes())) {
-			for (InducementType inducement : pDialogParameter.getInducementTypes()) {
-				inducementSet.add(inducement);
-			}
+			inducementSet.addAll(Arrays.asList(pDialogParameter.getInducementTypes()));
 		}
 
 		JPanel panelMain = new JPanel();
@@ -70,12 +68,11 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 				JPanel panelCard = new JPanel();
 				panelCard.setLayout(new BoxLayout(panelCard, BoxLayout.X_AXIS));
-				StringBuilder buttonText = new StringBuilder();
-				buttonText.append("<html>");
-				buttonText.append("<b>").append(card.getName()).append("</b>");
-				buttonText.append("<br>").append(card.getHtmlDescription());
-				buttonText.append("</html>");
-				JButton buttonCard = new JButton(buttonText.toString());
+				String buttonText = "<html>" +
+					"<b>" + card.getName() + "</b>" +
+					"<br>" + card.getHtmlDescription() +
+					"</html>";
+				JButton buttonCard = new JButton(buttonText);
 				buttonCard.setHorizontalAlignment(SwingConstants.LEFT);
 				buttonCard.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 				buttonCard.addActionListener(this);
@@ -93,12 +90,11 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 			JPanel panelWizard = new JPanel();
 			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
-			StringBuilder buttonText = new StringBuilder();
-			buttonText.append("<html>");
-			buttonText.append("<b>Wizard</b>");
-			buttonText.append("<br>Cast a spell");
-			buttonText.append("</html>");
-			fButtonWizard = new JButton(buttonText.toString());
+			String buttonText = "<html>" +
+				"<b>Wizard</b>" +
+				"<br>Cast a spell" +
+				"</html>";
+			fButtonWizard = new JButton(buttonText);
 			fButtonWizard.setHorizontalAlignment(SwingConstants.LEFT);
 			fButtonWizard.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			fButtonWizard.addActionListener(this);

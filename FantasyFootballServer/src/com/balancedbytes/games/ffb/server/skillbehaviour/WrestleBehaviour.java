@@ -72,7 +72,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 					step.getResult()
 							.addReport(new ReportSkillUse(game.getDefenderId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
 				} else {
-					if (UtilCards.hasSkill(game, actingPlayer, skill) || UtilCards.hasSkill(game, game.getDefender(), skill)) {
+					if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
 						step.getResult().addReport(new ReportSkillUse(null, skill, false, null));
 					}
 				}
@@ -95,7 +95,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-				boolean defenderCanUseSkill = UtilCards.hasSkill(game, game.getDefender(), skill) && !defenderState.isRooted();
+				boolean defenderCanUseSkill = UtilCards.hasSkill(game.getDefender(), skill) && !defenderState.isRooted();
 				boolean actingPlayerIsBlitzing = actingPlayer.getPlayerAction() == PlayerAction.BLITZ;
 				if (!state.usingWrestleAttacker && defenderCanUseSkill
 						&& !(actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill))) {
@@ -112,7 +112,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				boolean attackerCanUseSkill = UtilCards.hasSkill(game, actingPlayer, skill) && !attackerState.isRooted();
+				boolean attackerCanUseSkill = UtilCards.hasSkill(actingPlayer, skill) && !attackerState.isRooted();
 				if (attackerCanUseSkill) {
 					UtilServerDialog.showDialog(step.getGameState(),
 							new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), skill, 0), false);

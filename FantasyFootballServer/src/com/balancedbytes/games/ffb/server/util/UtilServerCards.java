@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -37,7 +36,6 @@ public class UtilServerCards {
 		Team otherTeam = (pGame.getTeamHome() == ownTeam) ? pGame.getTeamAway() : pGame.getTeamHome();
 		for (Player<?> player : pGame.getPlayers()) {
 			PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
-			FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
 			boolean playerAllowed = ((playerState != null) && !playerState.isCasualty()
 					&& (playerState.getBase() != PlayerState.BANNED) && (playerState.getBase() != PlayerState.MISSING));
 			if (pCard.getTarget() == CardTarget.OWN_PLAYER) {

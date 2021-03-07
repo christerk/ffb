@@ -54,7 +54,7 @@ public class BloodLustBehaviour extends SkillBehaviour<BloodLust> {
 						actingPlayer.setSufferingBloodLust(true);
 					}
 				} else {
-					doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, skill);
+					doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
 				}
 				if (doRoll) {
 					int roll = step.getGameState().getDiceRoller().rollSkill();

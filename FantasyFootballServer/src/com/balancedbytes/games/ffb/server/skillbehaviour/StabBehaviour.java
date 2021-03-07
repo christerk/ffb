@@ -39,7 +39,7 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 			public boolean handleExecuteStepHook(StepStab step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				if (UtilCards.hasSkill(game, actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
+				if (UtilCards.hasSkill(actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
 					step.getResult().setSound(SoundId.STAB);
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(),

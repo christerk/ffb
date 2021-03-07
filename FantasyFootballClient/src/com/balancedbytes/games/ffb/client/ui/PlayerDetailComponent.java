@@ -373,7 +373,7 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			PlayerState playerState = game.getFieldModel().getPlayerState(getPlayer());
-			Skill[] skills = UtilCards.findAllSkills(game, getPlayer());
+			Skill[] skills = UtilCards.findAllSkills(getPlayer());
 			List<String> cardSkills = new ArrayList<>();
 			List<String> acquiredSkills = new ArrayList<>();
 			List<String> rosterSkills = new ArrayList<>();

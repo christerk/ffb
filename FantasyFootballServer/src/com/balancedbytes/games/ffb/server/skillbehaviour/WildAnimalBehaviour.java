@@ -56,7 +56,7 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 				if (playerState.isHypnotized()) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
 				}
-				if (UtilCards.hasSkill(game, actingPlayer, skill)) {
+				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
 					if ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())) {
@@ -67,7 +67,7 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 							cancelPlayerAction(step);
 						}
 					} else {
-						doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, skill);
+						doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
 					}
 					if (doRoll) {
 						int roll = step.getGameState().getDiceRoller().rollSkill();

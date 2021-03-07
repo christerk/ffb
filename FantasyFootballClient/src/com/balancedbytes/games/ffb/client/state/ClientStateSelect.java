@@ -300,8 +300,8 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& playerState.isActive() && UtilCards.hasSkillWithProperty(game, pPlayer, NamedProperties.canBlockMoreThanOnce)
-				&& !UtilCards.hasSkillToCancelProperty(game, pPlayer, NamedProperties.canBlockMoreThanOnce)
+				&& playerState.isActive() && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
+				&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
 				&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
 						&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
@@ -317,8 +317,7 @@ public class ClientStateSelect extends ClientState {
 		return ((playerState != null)
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& !playerState.isProne()
-			&& pPlayer.hasSkillProperty(NamedProperties.enableThrowBombAction)
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularPassAction));
+			&& pPlayer.hasSkillProperty(NamedProperties.enableThrowBombAction));
 	}
 
 	private boolean isMoveActionAvailable(Player<?> pPlayer) {

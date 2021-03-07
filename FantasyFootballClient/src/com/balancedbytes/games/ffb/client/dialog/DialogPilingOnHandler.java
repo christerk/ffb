@@ -47,7 +47,7 @@ public class DialogPilingOnHandler extends DialogHandler {
 			DialogPilingOn pilingOnDialog = (DialogPilingOn) pDialog;
 			String playerId = ((DialogPilingOnParameter) getClient().getGame().getDialogParameter()).getPlayerId();
 			Player<?> player = getClient().getGame().getPlayerById(playerId);
-			UtilCards.getSkillWithProperty(getClient().getGame(), player, NamedProperties.canPileOnOpponent).ifPresent(
+			UtilCards.getSkillWithProperty(player, NamedProperties.canPileOnOpponent).ifPresent(
 				skill -> getClient().getCommunication().sendUseSkill(skill, pilingOnDialog.isChoiceYes(), playerId)
 			);
 		}
