@@ -199,7 +199,7 @@ public class StepSwoop extends AbstractStep {
 			if (state.thrownPlayerHasBall) {
 				game.getFieldModel().setBallCoordinate(passCoordinate);
 			}
-			game.getActingPlayer().setCurrentMove(thrownPlayer.getMovement() - 3);
+			game.getActingPlayer().setCurrentMove(thrownPlayer.getMovementWithModifiers() - 3);
 
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, state.thrownPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, state.thrownPlayerState));

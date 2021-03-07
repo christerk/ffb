@@ -29,7 +29,7 @@ public class Claw extends Skill {
 				if (context.isStab() || context.isFoul() || context.getAttacker().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
 					return false;
 				}
-				return context.getDefender().getArmour() > 7;
+				return context.getDefender().getArmourWithModifiers() > 7;
 			}
 		});
 		registerProperty(NamedProperties.reducesArmourToFixedValue);

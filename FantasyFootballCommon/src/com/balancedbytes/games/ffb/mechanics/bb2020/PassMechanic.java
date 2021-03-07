@@ -37,7 +37,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 
 	@Override
 	public Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers) {
-		if (thrower.getPassing() > 0) {
+		if (thrower.getPassingWithModifiers() > 0) {
 			return Optional.of(minimumRollInternal(thrower, distance, modifiers));
 		} else {
 			return Optional.empty();
@@ -45,13 +45,13 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 	}
 
 	private int minimumRollInternal(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers) {
-		int roll = thrower.getPassing() + distance.getModifier2020() + modifiers.stream().mapToInt(PassModifier::getModifier).sum();
+		int roll = thrower.getPassingWithModifiers() + distance.getModifier2020() + modifiers.stream().mapToInt(PassModifier::getModifier).sum();
 		return Math.max(roll, 2);
 	}
 
 	@Override
 	public PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction) {
-		if (thrower.getPassing() <= 0) {
+		if (thrower.getPassingWithModifiers() <= 0) {
 			return PassResult.FUMBLE;
 		}
 		int minimumRoll = minimumRollInternal(thrower, distance, modifiers);
@@ -74,16 +74,16 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 
 	@Override
 	public String formatRollRequirement(PassingDistance distance, String formattedModifiers, Player<?> thrower) {
-		if (thrower.getPassing() <= 0) {
+		if (thrower.getPassingWithModifiers() <= 0) {
 			return "";
 		}
 		return " (Roll - " + distance.getModifier2020() + " " + distance.getName() + formattedModifiers +
-			" >= PA " + thrower.getPassing() + "+).";
+			" >= PA " + thrower.getPassingWithModifiers() + "+).";
 	}
 
 	@Override
 	public boolean eligibleToReRoll(ReRolledAction reRolledAction, Player<?> thrower) {
-		return reRolledAction != ReRolledActions.PASS && thrower.getPassing() > 0;
+		return reRolledAction != ReRolledActions.PASS && thrower.getPassingWithModifiers() > 0;
 	}
 
 	public boolean isModifiedFumble(int roll, PassingDistance pPassingDistance, Collection<PassModifier> pPassModifiers) {
@@ -93,7 +93,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 
 	@Override
 	public String formatReportRoll(int roll, Player<?> thrower) {
-		if (thrower.getPassing() > 0) {
+		if (thrower.getPassingWithModifiers() > 0) {
 			return "Pass Roll [ " + roll + " ]";
 		}
 		return "Pass fumbled automatically as " + thrower.getName() + " has no Passing Ability";

@@ -112,7 +112,7 @@ public class DiceInterpreter {
 		if (pSpecialEffect == SpecialEffect.LIGHTNING) {
 			return (roll >= 2);
 		} else if (pSpecialEffect == SpecialEffect.ZAP) {
-			return (roll == 6 || (roll > 1 && roll >= targetPlayer.getStrength()));
+			return (roll == 6 || (roll > 1 && roll >= targetPlayer.getStrengthWithModifiers()));
 		} else if ((pSpecialEffect == SpecialEffect.FIREBALL) || (pSpecialEffect == SpecialEffect.BOMB)) {
 			return (roll >= 4);
 		} else {
@@ -364,7 +364,7 @@ public class DiceInterpreter {
 		StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 		int[] armourRoll = pInjuryContext.getArmorRoll();
 		Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
-		int armour = defender.getArmour();
+		int armour = defender.getArmourWithModifiers();
 		if (defender.hasSkillProperty(NamedProperties.preventArmourModifications)) {
 			pInjuryContext.clearArmorModifiers();
 		}

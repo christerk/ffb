@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import java.util.List;
-
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
@@ -33,6 +31,8 @@ import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerSwoop;
 import com.balancedbytes.games.ffb.skill.Swoop;
+
+import java.util.List;
 
 @RulesCollection(Rules.COMMON)
 public class SwoopBehaviour extends SkillBehaviour<Swoop> {
@@ -98,7 +98,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 						}
 						int currentMove = actingPlayer.getCurrentMove() + 1;
 						actingPlayer.setCurrentMove(currentMove);
-						if (currentMove < actingPlayer.getPlayer().getMovement()) {
+						if (currentMove < actingPlayer.getPlayer().getMovementWithModifiers()) {
 							// Still swooping
 							UtilServerPlayerSwoop.updateSwoopSquares(gameState, swoopingPlayer);
 						} else {

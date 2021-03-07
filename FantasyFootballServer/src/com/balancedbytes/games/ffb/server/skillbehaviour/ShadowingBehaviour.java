@@ -58,7 +58,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 						String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 						String[] descriptionArray = new String[shadowers.length];
 						for (int i = 0; i < shadowers.length; i++) {
-							int attributeDiff = shadowers[i].getMovement() - actingPlayer.getPlayer().getMovement();
+							int attributeDiff = shadowers[i].getMovementWithModifiers() - actingPlayer.getPlayer().getMovementWithModifiers();
 							StringBuilder description = new StringBuilder();
 							if (attributeDiff > 0) {
 								description.append("(").append(attributeDiff).append(" MA advantage)");
