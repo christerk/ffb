@@ -56,7 +56,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 		}
 		int minimumRoll = minimumRollInternal(thrower, distance, modifiers);
 		if (roll == 1) {
-			if (thrower.hasSkillWithProperty(NamedProperties.dontDropFumbles) && !bombAction) {
+			if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles) && !bombAction) {
 				return PassResult.SAVED_FUMBLE;
 			} else {
 				return PassResult.FUMBLE;

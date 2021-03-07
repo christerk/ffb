@@ -218,7 +218,7 @@ public class PlayerDetailComponent extends JPanel {
 				moveLeft -= actingPlayer.getCurrentMove();
 				if (actingPlayer.isGoingForIt() && (moveLeft <= 0)) {
 					moveIsRed = true;
-					if (getPlayer().hasSkillWithProperty(NamedProperties.canMakeAnExtraGfi)) {
+					if (getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi)) {
 						moveLeft = 3 + moveLeft;
 					} else {
 						moveLeft = 2 + moveLeft;

@@ -356,7 +356,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		Game game = getGameState().getGame();
 		state.catcher = game.getPlayerById(fCatcherId);
-		if ((state.catcher == null) || state.catcher.hasSkillWithProperty(NamedProperties.preventCatch)) {
+		if ((state.catcher == null) || state.catcher.hasSkillProperty(NamedProperties.preventCatch)) {
 			return CatchScatterThrowInMode.SCATTER_BALL;
 		}
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(state.catcher);

@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @FactoryType(FactoryType.Factory.GAZE_MODIFIER)
 @RulesCollection(Rules.COMMON)
 public class GazeModifierFactory extends GenerifiedModifierFactory<GazeModifierContext, GazeModifier, GazeModifierCollection> {
-	private GazeModifierCollection gazeModifierCollection;
+	private GazeModifierCollection gazeModifierCollection = new GazeModifierCollection();
 
 	@Override
 	protected Scanner<GazeModifierCollection> getScanner() {

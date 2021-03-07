@@ -238,7 +238,7 @@ public class StepApothecary extends AbstractStep {
 						fInjuryResult.applyTo(this);
 						PlayerState playerState = game.getFieldModel().getPlayerState(player);
 						if ((playerState != null) && playerState.isCasualty()
-							&& player.hasSkillWithProperty(NamedProperties.canRollToSaveFromInjury)
+							&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
 							&& (fInjuryResult.injuryContext().getInjuryType().canUseApo())) {
 							if (!UtilServerInjury.handleRegeneration(this, player)) {
 								InducementSet inducementSet = game.getTeamHome().hasPlayer(player)

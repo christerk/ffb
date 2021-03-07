@@ -42,7 +42,7 @@ public class Stunty extends Skill {
 
 				if (!context.isStab() &&
 					!context.getDefender().hasSkillProperty(NamedProperties.preventDamagingInjuryModifications) &&
-					context.getDefender().hasSkillWithProperty(NamedProperties.isHurtMoreEasily)) {
+					context.getDefender().hasSkillProperty(NamedProperties.isHurtMoreEasily)) {
 					applies = true;
 				}
 

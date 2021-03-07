@@ -67,7 +67,7 @@ public class UtilServerPlayerMove {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 			if (actingPlayer.getPlayerAction().isMoving() && UtilPlayer.isNextMovePossible(game, pLeaping)
 					&& FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-				if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.movesRandomly)) {
+				if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.movesRandomly)) {
 					for (int x = -1; x < 2; x += 2) {
 						FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
 						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
@@ -118,7 +118,7 @@ public class UtilServerPlayerMove {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 		boolean goForIt;
 		int minimumRollDodge = 0;
-		boolean dodging = !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenMoving)
+		boolean dodging = !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenMoving)
 				&& (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		if (pLeaping) {
@@ -126,7 +126,7 @@ public class UtilServerPlayerMove {
 			Set<LeapModifier> leapModifiers = modifierFactory.findModifiers(new LeapContext(game, actingPlayer.getPlayer()));
 			minimumRollDodge = mechanic.minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
 			if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
-					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canStandUpForFree)) {
+					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
 				goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > actingPlayer.getPlayer().getMovementWithModifiers());
 			} else {
 				goForIt = ((actingPlayer.getCurrentMove() + playerCoordinate.distanceInSteps(pCoordinate)) > actingPlayer.getPlayer().getMovementWithModifiers());

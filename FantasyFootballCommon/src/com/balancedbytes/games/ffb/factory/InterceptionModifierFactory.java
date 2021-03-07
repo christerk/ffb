@@ -66,7 +66,7 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<Inter
 
 	@Override
 	protected boolean isAffectedByTackleZones(InterceptionContext context) {
-		return !context.getPlayer().hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching);
+		return !context.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenCatching);
 	}
 
 }

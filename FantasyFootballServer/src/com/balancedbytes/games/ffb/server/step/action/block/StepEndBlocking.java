@@ -131,14 +131,14 @@ public class StepEndBlocking extends AbstractStep {
 			Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer,
 					NamedProperties.forceSecondBlock);
 
-			if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.forceSecondBlock)) {
+			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceSecondBlock)) {
 				actingPlayer.setGoingForIt(true);
 			}
 			Skill canBlockMultipleTimesSkill = UtilCards.getUnusedSkillWithProperty(game, actingPlayer,
 					NamedProperties.canBlockMoreThanOnce);
 			if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) && canBlockMultipleTimesSkill != null
 					&& attackerState.hasTacklezones()
-					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)
+					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)
 					&& !attackerState.isConfused() && actingPlayer.hasBlocked()) {
 				actingPlayer.markSkillUsed(canBlockMultipleTimesSkill);
 				actingPlayer.setHasBlocked(false);
@@ -160,7 +160,7 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				// go-for-it
 				if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
-						&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)
+						&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)
 						&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());

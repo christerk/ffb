@@ -161,7 +161,7 @@ public class StepBlockChoice extends AbstractStep {
 			if (defenderDodgeSkill != null) {
 				Skill attackerCanCancelDodgeSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), defenderDodgeSkill);
 				if ((attackerCanCancelDodgeSkill != null)
-						&& (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canBlockSameTeamPlayer)
+						&& (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer)
 								|| actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
 
 					Skill playerCanBeThrownSkill = game.getDefender().getSkillWithProperty(NamedProperties.canBeThrown);

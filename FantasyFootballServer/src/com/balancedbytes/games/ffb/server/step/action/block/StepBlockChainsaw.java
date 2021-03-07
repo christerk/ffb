@@ -100,7 +100,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)) {
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {
 				if ((getReRollSource() == null)

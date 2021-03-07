@@ -84,7 +84,7 @@ public class ClientStateTouchback extends ClientState {
 			Game game = getClient().getGame();
 			PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 			selectable = ((playerState != null) && playerState.hasTacklezones() && game.getTeamHome().hasPlayer(pPlayer)
-					&& !pPlayer.hasSkillWithProperty(NamedProperties.preventHoldBall));
+					&& !pPlayer.hasSkillProperty(NamedProperties.preventHoldBall));
 		}
 		return selectable;
 	}

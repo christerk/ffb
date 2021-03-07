@@ -39,7 +39,7 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 				return
 					super.appliesToContext(skill, context) &&
 						(accurate.contains(context.getCatchMode()) ||
-							(context.getPlayer() != null && context.getPlayer().hasSkillWithProperty(NamedProperties.addBonusForAccuratePass) &&
+							(context.getPlayer() != null && context.getPlayer().hasSkillProperty(NamedProperties.addBonusForAccuratePass) &&
 								accurateAdjacent.contains(context.getCatchMode())));
 			}
 		});

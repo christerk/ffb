@@ -57,7 +57,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 		} else if (roll == 1) {
 			return PassResult.FUMBLE;
 		} else if (isModifiedFumble(roll, distance, modifiers)) {
-			if (thrower.hasSkillWithProperty(NamedProperties.dontDropFumbles) && !bombAction) {
+			if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles) && !bombAction) {
 				return PassResult.SAVED_FUMBLE;
 			} else {
 				return PassResult.FUMBLE;

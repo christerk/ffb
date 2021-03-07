@@ -23,7 +23,7 @@ public class ClientStateSwarming extends ClientStateSetup {
 	public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {
 		if (pCoordinate != null) {
 			Player<?> player = getClient().getGame().getFieldModel().getPlayer(pCoordinate);
-			return player != null && player.hasSkillWithProperty(NamedProperties.canSneakExtraPlayersOntoPitch);
+			return player != null && player.hasSkillProperty(NamedProperties.canSneakExtraPlayersOntoPitch);
 		}
 
 		return false;

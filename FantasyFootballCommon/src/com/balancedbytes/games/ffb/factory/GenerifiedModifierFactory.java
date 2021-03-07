@@ -65,7 +65,7 @@ public abstract class GenerifiedModifierFactory<
 	private Set<V> getSkillModifiers(C context) {
 		Set<V> result = new HashSet<>();
 
-		for (Skill skill : context.getPlayer().getSkills()) {
+		for (Skill skill : context.getPlayer().getSkillsIncludingTemporaryOnes()) {
 			for (V modifier : getModifier(skill)) {
 				if (modifier.appliesToContext(skill, context)) {
 					result.add(modifier);

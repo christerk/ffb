@@ -34,7 +34,6 @@ import com.balancedbytes.games.ffb.skill.DivingTackle;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -116,7 +115,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 
 						Optional<DodgeModifier> strengthModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
 
-						Optional<Skill> strengthSkill = Arrays.stream(actingPlayer.getPlayer().getSkills()).filter(skill -> strengthModifier.isPresent() && skill.getDodgeModifiers().contains(strengthModifier.get())).findFirst();
+						Optional<Skill> strengthSkill = actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().stream().filter(skill -> strengthModifier.isPresent() && skill.getDodgeModifiers().contains(strengthModifier.get())).findFirst();
 
 						if (strengthModifier.isPresent()
 							&& strengthSkill.isPresent()

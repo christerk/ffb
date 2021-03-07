@@ -41,7 +41,7 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 
 	@Override
 	protected boolean isAffectedByTackleZones(CatchContext context) {
-		return !context.getPlayer().hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching);
+		return !context.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenCatching);
 	}
 
 	@Override

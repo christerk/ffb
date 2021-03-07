@@ -30,7 +30,7 @@ public class UtilPassing {
 				PlayerState interceptorState = pGame.getFieldModel().getPlayerState(otherPlayer);
 				FieldCoordinate interceptorCoordinate = pGame.getFieldModel().getPlayerCoordinate(otherPlayer);
 				if ((interceptorCoordinate != null) && (interceptorState != null) && interceptorState.hasTacklezones()
-					&& !otherPlayer.hasSkillWithProperty(NamedProperties.preventCatch)) {
+					&& !otherPlayer.hasSkillProperty(NamedProperties.preventCatch)) {
 					if (canIntercept(throwerCoordinate, pTargetCoordinate, interceptorCoordinate)) {
 						interceptors.add(otherPlayer);
 					}

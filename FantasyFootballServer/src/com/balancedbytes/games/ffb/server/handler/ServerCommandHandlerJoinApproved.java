@@ -154,6 +154,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 				if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
 						pJoinApprovedCommand.getCoach(), homeTeam)) {
 					UtilServerStartGame.addDefaultGameOptions(pGameState);
+					pGameState.initRulesDependentMembers();
 					pGameState.getGame().initializeRules();
 					UtilSkillBehaviours.registerBehaviours(pGameState.getGame(), getServer().getDebugLog());
 					Team teamHome = getServer().getGameCache().getTeamById(game.getTeamHome().getId(), game);

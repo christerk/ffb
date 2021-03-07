@@ -61,7 +61,7 @@ public class StepFoul extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		getResult().addReport(new ReportFoul(game.getDefenderId()));
-		if (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
+		if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)) {
 			getResult().setSound(SoundId.FOUL);
 		}
 		UtilServerGame.syncGameModel(this);

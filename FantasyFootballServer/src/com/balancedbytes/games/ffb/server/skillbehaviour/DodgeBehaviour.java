@@ -106,8 +106,8 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 
 			PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
 			if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
-					&& attacker.hasSkillWithProperty(NamedProperties.canPushBackToAnySquare)
-					&& !game.getDefender().hasSkillWithProperty(NamedProperties.canChooseOwnPushedBackSquare)) {
+					&& attacker.hasSkillProperty(NamedProperties.canPushBackToAnySquare)
+					&& !game.getDefender().hasSkillProperty(NamedProperties.canChooseOwnPushedBackSquare)) {
 				grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);
 			}
 			if (ArrayTool.isProvided(regularPushbackSquares)) {

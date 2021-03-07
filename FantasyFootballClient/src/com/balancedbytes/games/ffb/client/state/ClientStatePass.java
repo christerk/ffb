@@ -200,7 +200,7 @@ public class ClientStatePass extends ClientStateMove {
 			menuItemList.add(passAction);
 		}
 
-		if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canPassToAnySquare)
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
 				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())
 				&& game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
@@ -263,7 +263,7 @@ public class ClientStatePass extends ClientStateMove {
 			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
 			fRangeGridHandler.refreshRangeGrid();
 		} else if (pMenuKey == IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS) {
-			if (game.getActingPlayer().getPlayer().hasSkillWithProperty(NamedProperties.canPassToAnySquare)) {
+			if (game.getActingPlayer().getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)) {
 				if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
 					communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isLeaping());
 					fShowRangeRuler = true;

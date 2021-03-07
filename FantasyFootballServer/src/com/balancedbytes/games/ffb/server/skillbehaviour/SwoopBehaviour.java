@@ -54,7 +54,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				Player<?> swoopingPlayer = actingPlayer.getPlayer();
 
-				if (swoopingPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection)) {
+				if (swoopingPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection)) {
 					// Send animation moving the player to the initial target square
 
 					state.coordinateFrom = game.getFieldModel().getPlayerCoordinate(swoopingPlayer);

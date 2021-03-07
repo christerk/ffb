@@ -92,7 +92,7 @@ public final class UtilCards {
 	}
 
 	public static Skill getSkillCancelling(Player<?> player, Skill skill) {
-		for (Skill playerSkill : player.getSkills()) {
+		for (Skill playerSkill : player.getSkillsIncludingTemporaryOnes()) {
 			if (playerSkill.canCancel(skill)) {
 				return playerSkill;
 			}
@@ -114,7 +114,7 @@ public final class UtilCards {
 	}
 
 	public static boolean hasUnusedSkillWithProperty(ActingPlayer actingPlayer, ISkillProperty property) {
-		for (Skill playerSkill : actingPlayer.getPlayer().getSkills()) {
+		for (Skill playerSkill : actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes()) {
 			if (playerSkill.hasSkillProperty(property) && !actingPlayer.isSkillUsed(playerSkill)) {
 				return true;
 			}
@@ -133,7 +133,7 @@ public final class UtilCards {
 	}
 
 	public static ReRollSource getUnusedRerollSource(ActingPlayer actingPlayer, ReRolledAction action) {
-		for (Skill playerSkill : actingPlayer.getPlayer().getSkills()) {
+		for (Skill playerSkill : actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes()) {
 			ReRollSource source = playerSkill.getRerollSource(action);
 			if (source != null && !actingPlayer.isSkillUsed(playerSkill)) {
 				return source;

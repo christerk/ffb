@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.ParagraphStyle;
@@ -12,6 +11,7 @@ import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.factory.CardTypeFactory;
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
@@ -33,8 +33,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -92,7 +93,8 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		cardPrices = new HashMap<>();
 		cardLimits = new HashMap<>();
 
-		Set<CardType> cardTypes = ((CardTypeFactory)getClient().getGame().getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes();
+		List<CardType> cardTypes = ((CardTypeFactory)getClient().getGame().getFactory(FactoryType.Factory.CARD_TYPE))
+			.getCardTypes().stream().sorted().collect(Collectors.toList());
 
 		for (CardType cardType : cardTypes) {
 			int price = ((GameOptionInt) pClient.getGame().getOptions().getOptionWithDefault(cardType.getCostId()))

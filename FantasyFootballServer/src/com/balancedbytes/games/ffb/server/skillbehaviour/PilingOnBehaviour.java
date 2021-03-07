@@ -116,7 +116,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						state.injuryResultDefender = UtilServerInjury.handleInjury(step, injuryType, actingPlayer.getPlayer(),
 								game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
 
-						if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.appliesPoisonOnBadlyHurt)
+						if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& state.injuryResultDefender.injuryContext().isBadlyHurt()) {
 							boolean success = rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender(), step);
 							if (success) {
@@ -165,7 +165,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
 								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
-						if (game.getDefender().hasSkillWithProperty(NamedProperties.appliesPoisonOnBadlyHurt)
+						if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
 							boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);
 							if (success) {

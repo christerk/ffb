@@ -198,7 +198,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 			}
 			if ((game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(playerCoordinate))
 					|| (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(playerCoordinate))) {
-				if (players[i].hasSkillWithProperty(NamedProperties.canReduceKickDistance)) {
+				if (players[i].hasSkillProperty(NamedProperties.canReduceKickDistance)) {
 					kickingPlayer = players[i];
 					break;
 				} else {

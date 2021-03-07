@@ -1,13 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
@@ -25,6 +17,14 @@ import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilUrl;
+
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Kalimar
@@ -96,7 +96,7 @@ public class PlayerIconFactory {
 				} else {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_AWAY);
 				}
-			} else if (pPlayer.hasSkillWithProperty(NamedProperties.smallIcon)) {
+			} else if (pPlayer.hasSkillProperty(NamedProperties.smallIcon)) {
 				fontSize = 13;
 				if (pHomePlayer) {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_HOME);

@@ -47,7 +47,7 @@ public class DistractHandler extends CardHandler {
 		for (Player<?> player : players) {
 			game.getFieldModel().removeCardEffect(player, CardEffect.DISTRACTED);
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			if (!player.hasSkillWithProperty(NamedProperties.appliesConfusion) && playerState.isConfused()) {
+			if (!player.hasSkillProperty(NamedProperties.appliesConfusion) && playerState.isConfused()) {
 				game.getFieldModel().setPlayerState(player, playerState.changeConfused(false));
 			}
 		}

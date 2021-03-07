@@ -40,7 +40,7 @@ public class UtilServerReRoll {
 				turnData.setReRollUsed(true);
 				turnData.setReRolls(turnData.getReRolls() - 1);
 
-				if (pPlayer.hasSkillWithProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+				if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 					int roll = gameState.getDiceRoller().rollSkill();
 					successful = DiceInterpreter.getInstance().isLonerSuccessful(roll);
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
@@ -58,7 +58,7 @@ public class UtilServerReRoll {
 			if (pReRollSource.getSkill(game) != null) {
 				if (ReRollSources.PRO == pReRollSource) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-					successful = (pPlayer.hasSkillWithProperty(NamedProperties.canRerollOncePerTurn)
+					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
 							&& !playerState.hasUsedPro());
 					if (successful) {
 						game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));

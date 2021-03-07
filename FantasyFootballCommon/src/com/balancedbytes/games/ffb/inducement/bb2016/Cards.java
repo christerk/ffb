@@ -208,6 +208,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 					.withProperties(
 						new HashSet<ISkillProperty>() {{
 							add(NamedProperties.preventRegularHandOverAction);
+							add(NamedProperties.preventRegularPassAction);
 						}});
 			}
 		});

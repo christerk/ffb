@@ -140,7 +140,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	private ActionStatus pickUp() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventHoldBall)) {
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventHoldBall)) {
 			return ActionStatus.FAILURE;
 		} else {
 			PickupModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.PICKUP_MODIFIER);

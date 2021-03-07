@@ -191,7 +191,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 		if (successful) {
 			Game game = getGameState().getGame();
 			boolean hasSwoop = kickedPlayer != null
-					&& kickedPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
+					&& kickedPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
 			game.getFieldModel().setPlayerState(game.getDefender(), fKickedPlayerState.changeBase(PlayerState.PICKED_UP));
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))

@@ -81,7 +81,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 					step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
 					step.publishParameters(UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 
-					if (game.getDefender().hasSkillWithProperty(NamedProperties.placedProneCausesInjuryRoll)) {
+					if (game.getDefender().hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
 						FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 								UtilServerInjury.handleInjury(step, new InjuryTypeBallAndChain(), actingPlayer.getPlayer(),

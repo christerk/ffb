@@ -161,7 +161,7 @@ public class StepFollowup extends AbstractStep {
 				usingSkillPreventingFollowUp = false;
 			}
 			if ((usingSkillPreventingFollowUp != null) && !usingSkillPreventingFollowUp
-					&& actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.forceFollowup)) {
+					&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFollowup)) {
 				publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
 			}
 			if ((followupChoice == null) && (usingSkillPreventingFollowUp != null)) {

@@ -191,7 +191,7 @@ public class ClientStateSelect extends ClientState {
 			menuItemList.add(confusionAction);
 		}
 		if (isStandUpActionAvailable(pPlayer)
-				&& pPlayer.hasSkillWithProperty(NamedProperties.enableStandUpAndEndBlitzAction)
+				&& pPlayer.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
 				&& !game.getTurnData().isBlitzUsed()) {
 			JMenuItem standUpAction = new JMenuItem("Stand Up & End Move (using Blitz)",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
@@ -286,9 +286,9 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& playerState.isActive() && !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularBlockAction)
+				&& playerState.isActive() && !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlockAction)
 				&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
-						&& pPlayer.hasSkillWithProperty(NamedProperties.canStandUpForFree)))) {
+						&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
 			return (blockablePlayers > 0);
@@ -303,7 +303,7 @@ public class ClientStateSelect extends ClientState {
 				&& playerState.isActive() && UtilCards.hasSkillWithProperty(game, pPlayer, NamedProperties.canBlockMoreThanOnce)
 				&& !UtilCards.hasSkillToCancelProperty(game, pPlayer, NamedProperties.canBlockMoreThanOnce)
 				&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
-						&& pPlayer.hasSkillWithProperty(NamedProperties.canStandUpForFree)))) {
+						&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
 			return (blockablePlayers > 1);
@@ -317,8 +317,8 @@ public class ClientStateSelect extends ClientState {
 		return ((playerState != null)
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& !playerState.isProne()
-			&& pPlayer.hasSkillWithProperty(NamedProperties.enableThrowBombAction)
-			&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularPassAction));
+			&& pPlayer.hasSkillProperty(NamedProperties.enableThrowBombAction)
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularPassAction));
 	}
 
 	private boolean isMoveActionAvailable(Player<?> pPlayer) {
@@ -333,7 +333,7 @@ public class ClientStateSelect extends ClientState {
 		return (!game.getTurnData().isBlitzUsed()
 				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED) && (playerState != null)
 				&& playerState.isActive() && playerState.isAbleToMove()
-				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularBlitzAction));
+				&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlitzAction));
 	}
 
 	private boolean isFoulActionAvailable(Player<?> pPlayer) {
@@ -341,7 +341,7 @@ public class ClientStateSelect extends ClientState {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 				&& playerState.isActive() && !game.getTurnData().isFoulUsed()
-				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularFoulAction)) {
+				&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
 				PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
 				if (opponentState.canBeFouled()) {
@@ -358,7 +358,6 @@ public class ClientStateSelect extends ClientState {
 		return (!game.getTurnData().isPassUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
-			&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularPassAction)
 			&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
 			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularPassAction));
 	}
@@ -369,7 +368,6 @@ public class ClientStateSelect extends ClientState {
 		return (!game.getTurnData().isHandOverUsed()
 				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 				&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
-				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularHandOverAction)
 				&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
 				&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularHandOverAction));
 	}
@@ -377,7 +375,7 @@ public class ClientStateSelect extends ClientState {
 	private boolean isThrowTeamMateActionAvailable(Player<?>pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((playerState == null) || pPlayer.hasSkillWithProperty(NamedProperties.preventThrowTeamMateAction)) {
+		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventThrowTeamMateAction)) {
 			return false;
 		}
 
@@ -386,7 +384,7 @@ public class ClientStateSelect extends ClientState {
 		Player<?>[] teamPlayers = pPlayer.getTeam().getPlayers();
 		for (int i = 0; i < teamPlayers.length; i++) {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
-			if (teamPlayers[i].hasSkillWithProperty(NamedProperties.canBeThrown)
+			if (teamPlayers[i].hasSkillProperty(NamedProperties.canBeThrown)
 					&& !playerCoordinate.isBoxCoordinate()) {
 				rightStuffAvailable = true;
 				break;
@@ -398,7 +396,7 @@ public class ClientStateSelect extends ClientState {
 		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
 				playerCoordinate, false);
 		for (int i = 0; i < adjacentTeamPlayers.length; i++) {
-			if (adjacentTeamPlayers[i].hasSkillWithProperty(NamedProperties.canBeThrown)) {
+			if (adjacentTeamPlayers[i].hasSkillProperty(NamedProperties.canBeThrown)) {
 				rightStuffAdjacent = true;
 				break;
 			}
@@ -406,14 +404,14 @@ public class ClientStateSelect extends ClientState {
 
 		return (!game.getTurnData().isPassUsed()
 				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& pPlayer.hasSkillWithProperty(NamedProperties.canThrowTeamMates) && rightStuffAvailable
+				&& pPlayer.hasSkillProperty(NamedProperties.canThrowTeamMates) && rightStuffAvailable
 				&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 
 	private boolean isKickTeamMateActionAvailable(Player<?>pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((playerState == null) || pPlayer.hasSkillWithProperty(NamedProperties.preventKickTeamMateAction)) {
+		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventKickTeamMateAction)) {
 			return false;
 		}
 
@@ -422,7 +420,7 @@ public class ClientStateSelect extends ClientState {
 		Player<?>[] teamPlayers = pPlayer.getTeam().getPlayers();
 		for (int i = 0; i < teamPlayers.length; i++) {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
-			if (teamPlayers[i].hasSkillWithProperty(NamedProperties.canBeKicked)
+			if (teamPlayers[i].hasSkillProperty(NamedProperties.canBeKicked)
 					&& !playerCoordinate.isBoxCoordinate()) {
 				rightStuffAvailable = true;
 				break;
@@ -434,7 +432,7 @@ public class ClientStateSelect extends ClientState {
 		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
 				playerCoordinate, false);
 		for (int i = 0; i < adjacentTeamPlayers.length; i++) {
-			if (adjacentTeamPlayers[i].hasSkillWithProperty(NamedProperties.canBeKicked)) {
+			if (adjacentTeamPlayers[i].hasSkillProperty(NamedProperties.canBeKicked)) {
 				rightStuffAdjacent = true;
 				break;
 			}
@@ -442,7 +440,7 @@ public class ClientStateSelect extends ClientState {
 
 		return (!game.getTurnData().isBlitzUsed()
 				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& pPlayer.hasSkillWithProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
+				&& pPlayer.hasSkillProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
 				&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 
@@ -450,7 +448,7 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null) && (playerState.getBase() == PlayerState.PRONE) && playerState.isActive()
-				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventStandUpAction));
+				&& !pPlayer.hasSkillProperty(NamedProperties.preventStandUpAction));
 	}
 
 	private boolean isRecoverFromConfusionActionAvailable(Player<?>pPlayer) {
@@ -458,14 +456,14 @@ public class ClientStateSelect extends ClientState {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null) && playerState.isConfused() && playerState.isActive()
 				&& (playerState.getBase() != PlayerState.PRONE)
-				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRecoverFromConcusionAction));
+				&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromConcusionAction));
 	}
 
 	private boolean isRecoverFromGazeActionAvailable(Player<?>pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null) && playerState.isHypnotized() && (playerState.getBase() != PlayerState.PRONE)
-				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRecoverFromGazeAction));
+				&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromGazeAction));
 	}
 
 }

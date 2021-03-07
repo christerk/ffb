@@ -1,13 +1,5 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -34,6 +26,14 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * 
  * @author Kalimar
@@ -54,7 +54,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private transient long fTurnTimeStarted;
 	private transient ModelChangeList fChangeList;
 	private final transient Map<String, Long> fSpectatorCooldownTime;
-	private final StepFactory stepFactory;
+	private StepFactory stepFactory;
 	private PassState passState;
 
 	
@@ -71,6 +71,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		fStepStack = new StepStack(this);
 		fChangeList = new ModelChangeList();
 		setGame(new Game(fServer.getFactorySource(), fServer.getFactoryManager()));
+	}
+
+	public void initRulesDependentMembers() {
 		stepFactory = new StepFactory(this);
 	}
 
@@ -335,16 +338,17 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			fGameLog.initFrom(source, gameLogObject);
 		}
 		fCurrentStep = null;
-		JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
-		if (currentStepObject != null) {
-			fCurrentStep = stepFactory.forJsonValue(source, currentStepObject);
-		}
 		setGame(null);
 		JsonObject gameObject = IServerJsonOption.GAME.getFrom(source, jsonObject);
 		if (gameObject != null) {
 			Game newGame = new Game(getServer().getFactorySource(), getServer().getFactoryManager());
 			newGame.initFrom(source, gameObject);
 			setGame(newGame);
+			initRulesDependentMembers();
+			JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
+			if (currentStepObject != null) {
+				fCurrentStep = stepFactory.forJsonValue(source, currentStepObject);
+			}
 		}
 		String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject);
 		if (ids != null) {

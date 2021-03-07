@@ -233,7 +233,7 @@ public class ClientStateBomb extends ClientState {
 	private boolean isHailMaryPassActionAvailable() {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canPassToAnySquare)
+		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
 				&& !(game.getFieldModel().getWeather().equals(Weather.BLIZZARD)));
 	}
 

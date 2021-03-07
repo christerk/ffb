@@ -66,7 +66,7 @@ public class PickupModifierFactory extends GenerifiedModifierFactory<PickupConte
 
 	@Override
 	protected boolean isAffectedByTackleZones(PickupContext context) {
-		return !context.getPlayer().hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenPickingUp);
+		return !context.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenPickingUp);
 	}
 
 }

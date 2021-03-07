@@ -44,7 +44,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -208,7 +207,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		Optional<DodgeModifier> btModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
 
-		Optional<Skill> btSkill = Arrays.stream(actingPlayer.getPlayer().getSkills()).filter(skill -> btModifier.isPresent() && skill.getDodgeModifiers().contains(btModifier.get())).findFirst();
+		Optional<Skill> btSkill = actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().stream().filter(skill -> btModifier.isPresent() && skill.getDodgeModifiers().contains(btModifier.get())).findFirst();
 
 		if (successful) {
 			if (btModifier.isPresent()) {

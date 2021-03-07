@@ -17,7 +17,7 @@ public class UtilServerPlayerSwoop {
 			fieldModel.clearMoveSquares();
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(swoopingPlayer);
 			if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-				if (swoopingPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection)) {
+				if (swoopingPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection)) {
 					for (int x = -1; x < 2; x += 2) {
 						FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
 						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {

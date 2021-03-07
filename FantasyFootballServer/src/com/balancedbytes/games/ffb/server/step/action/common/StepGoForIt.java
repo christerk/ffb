@@ -102,7 +102,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
-		boolean goForItAfterBlock = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.goForItAfterBlock);
+		boolean goForItAfterBlock = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.goForItAfterBlock);
 		boolean runGfi = (goForItAfterBlock == fBallandChainGfi);
 
 		if (runGfi) {

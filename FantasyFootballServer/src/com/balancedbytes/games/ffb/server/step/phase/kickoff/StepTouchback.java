@@ -111,7 +111,7 @@ public final class StepTouchback extends AbstractStep {
 				game.getFieldModel().setBallCoordinate(fTouchbackCoordinate);
 				Player<?> player = game.getFieldModel().getPlayer(fTouchbackCoordinate);
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
-				if ((player != null) && !player.hasSkillWithProperty(NamedProperties.preventHoldBall)
+				if ((player != null) && !player.hasSkillProperty(NamedProperties.preventHoldBall)
 						&& playerState.hasTacklezones()) {
 					game.getFieldModel().setBallMoving(false);
 					getResult().setSound(SoundId.CATCH);

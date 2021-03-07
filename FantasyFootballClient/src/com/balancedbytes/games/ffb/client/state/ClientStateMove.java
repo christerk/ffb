@@ -63,7 +63,7 @@ public class ClientStateMove extends ClientState {
 					&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
 					&& (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
 					&& (game.getTurnMode() != TurnMode.SWARMING)
-					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventAutoMove)) {
+					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)) {
 				FieldCoordinate[] shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
 				if (ArrayTool.isProvided(shortestPath)) {
 					fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
@@ -125,8 +125,8 @@ public class ClientStateMove extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
-			if (actingPlayer.hasActed() || pPlayer.hasSkillWithProperty(NamedProperties.canLeap)
-					|| pPlayer.hasSkillWithProperty(NamedProperties.inflictsConfusion)
+			if (actingPlayer.hasActed() || pPlayer.hasSkillProperty(NamedProperties.canLeap)
+					|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
 					|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 					|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 					|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)
@@ -351,7 +351,7 @@ public class ClientStateMove extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return (!actingPlayer.hasActed()
-				|| !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.forceFullMovement)
+				|| !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFullMovement)
 				|| (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovementWithModifiers()));
 	}
 

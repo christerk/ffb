@@ -86,7 +86,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		Game game = getClient().getGame();
 		Player<?> reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
 		if ((reRollingPlayer != null)
-				&& reRollingPlayer.hasSkillWithProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+				&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			messagePanel.add(Box.createVerticalStrut(5));
 			StringBuilder message3 = new StringBuilder();
 			message3.append("Player is a LONER - the Re-Roll is not guaranteed to help.");

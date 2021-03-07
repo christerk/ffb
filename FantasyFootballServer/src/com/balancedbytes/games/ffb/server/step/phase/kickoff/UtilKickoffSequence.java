@@ -48,7 +48,7 @@ public class UtilKickoffSequence {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			if ((pHomeTeam && FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate))
 					|| (!pHomeTeam && FieldCoordinateBounds.HALF_AWAY.isInBounds(playerCoordinate))) {
-				if (player.hasSkillWithProperty(NamedProperties.canSneakExtraPlayersOntoPitch)) {
+				if (player.hasSkillProperty(NamedProperties.canSneakExtraPlayersOntoPitch)) {
 					swarmersOnField++;
 				} else {
 					playersOnField++;

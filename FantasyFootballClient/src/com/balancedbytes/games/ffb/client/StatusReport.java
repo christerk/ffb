@@ -2353,7 +2353,7 @@ public class StatusReport {
 		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
 		switch (pReport.getBlockResult()) {
 			case BOTH_DOWN:
-				if (attacker.hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
+				if (attacker.hasSkillProperty(NamedProperties.preventFallOnBothDown)) {
 					print(getIndent() + 1, false, attacker);
 					status = new StringBuilder();
 					status
@@ -2364,7 +2364,7 @@ public class StatusReport {
 						.append(" skill.");
 					println(getIndent() + 1, status.toString());
 				}
-				if (defender.hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
+				if (defender.hasSkillProperty(NamedProperties.preventFallOnBothDown)) {
 					print(getIndent() + 1, false, defender);
 					status = new StringBuilder();
 					status

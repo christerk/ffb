@@ -240,7 +240,7 @@ public class DiceInterpreter {
 				boolean isStunty = Arrays.stream(pInjuryContext.getInjuryModifiers()).anyMatch(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily));
 				int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
 				if ((total == 8) && (defender != null)
-						&& defender.hasSkillWithProperty(NamedProperties.convertKOToStunOn8)) {
+						&& defender.hasSkillProperty(NamedProperties.convertKOToStunOn8)) {
 					playerState = new PlayerState(PlayerState.STUNNED);
 					defender.getSkillWithProperty(NamedProperties.convertKOToStunOn8).getInjuryModifiers()
 						.forEach(pInjuryContext::addInjuryModifier);

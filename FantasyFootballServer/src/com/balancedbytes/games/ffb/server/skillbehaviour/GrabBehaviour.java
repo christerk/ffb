@@ -47,7 +47,7 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 				FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 				FieldCoordinate defenderCoordinate = state.startingPushbackSquare.getCoordinate();
 				Skill cancellingSkill = UtilCards.getSkillCancelling(state.defender, skill);
-				boolean allowGrabOutsideBlock = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.grabOutsideBlock);
+				boolean allowGrabOutsideBlock = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.grabOutsideBlock);
 
 				if (((state.grabbing == null) || state.grabbing) && state.freeSquareAroundDefender
 						&& UtilCards.hasSkill(game, actingPlayer, skill) && attackerCoordinate.isAdjacent(defenderCoordinate)

@@ -23,7 +23,7 @@ public class UtilServerCatchScatterThrowIn {
 		Game game = pGameState.getGame();
 		Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pTeam, pCoordinate, false);
 		for (Player<?> player : adjacentPlayers) {
-			if (player.hasSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares)) {
+			if (player.hasSkillProperty(NamedProperties.canAttemptCatchInAdjacentSquares)) {
 				divingCatchPlayers.add(player);
 			}
 		}

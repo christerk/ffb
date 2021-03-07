@@ -11,7 +11,7 @@ public class PickupModifierCollection extends ModifierCollection<PickupContext, 
 			@Override
 			public boolean appliesToContext(Skill skill, PickupContext context) {
 				return context.getGame().getFieldModel().getWeather() == Weather.POURING_RAIN
-					&& !context.getPlayer().hasSkillWithProperty(NamedProperties.ignoreWeatherWhenPickingUp);
+					&& !context.getPlayer().hasSkillProperty(NamedProperties.ignoreWeatherWhenPickingUp);
 			}
 		});
 		add(new PickupModifier("1 Tacklezone", 1, ModifierType.TACKLEZONE));

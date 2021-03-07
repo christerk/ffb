@@ -56,7 +56,7 @@ public class InjuryResult implements IJsonSerializable {
 		Player<?> defender = game.getPlayerById(injuryContext.getDefenderId());
 
 		PlayerResult playerResult = gameResult.getPlayerResult(defender);
-		if (defender.hasSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive)) {
+		if (defender.hasSkillProperty(NamedProperties.getsSentOffAtEndOfDrive)) {
 			playerResult.setHasUsedSecretWeapon(true);
 		}
 

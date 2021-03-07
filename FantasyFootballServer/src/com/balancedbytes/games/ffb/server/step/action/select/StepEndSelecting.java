@@ -256,7 +256,7 @@ public final class StepEndSelecting extends AbstractStep {
 			endGenerator.pushSequence(endParams);
 			break;
 		case STAND_UP:
-			if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.inflictsConfusion)) {
+			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.inflictsConfusion)) {
 				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 			} else {
 				endGenerator.pushSequence(endParams);

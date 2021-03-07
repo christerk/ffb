@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class ServerUtilBlock {
@@ -20,8 +19,8 @@ public class ServerUtilBlock {
 		boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
 		boolean isBlock = PlayerAction.BLOCK == actingPlayer.getPlayerAction();
 		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction());
-		boolean canBlockMoreThanOnce = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canBlockMoreThanOnce);
-		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canBlockSameTeamPlayer);
+		boolean canBlockMoreThanOnce = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockMoreThanOnce);
+		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
 
 		if ((actingPlayer.getPlayer() != null)
 				&& (canBlockMoreThanOnce || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)))) {
@@ -50,7 +49,7 @@ public class ServerUtilBlock {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		if (pPlayers.length > 0) {
 			int attackerStrength = actingPlayer.getStrength();
-			if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.addStrengthOnBlitz)
+			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.addStrengthOnBlitz)
 					&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
 							|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
 				attackerStrength++;
@@ -59,7 +58,7 @@ public class ServerUtilBlock {
 			for (int i = 0; i < pPlayers.length; i++) {
 				if (!usingMultiBlock || (pPlayers[i] != pGame.getDefender())) {
 					int nrOfDice = 0;
-					if (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.useSpecialBlockRules)) {
+					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.useSpecialBlockRules)) {
 						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), attackerStrength, pPlayers[i],
 								usingMultiBlock);
 					}

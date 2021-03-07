@@ -19,6 +19,6 @@ public class RabbitsFootHandler extends CardHandler {
 
 	@Override
 	public boolean allowsPlayer(Game game, Card card, Player<?> player) {
-		return !player.hasSkillWithProperty(NamedProperties.preventCardRabbitsFoot);
+		return !player.hasSkillProperty(NamedProperties.preventCardRabbitsFoot);
 	}
 }

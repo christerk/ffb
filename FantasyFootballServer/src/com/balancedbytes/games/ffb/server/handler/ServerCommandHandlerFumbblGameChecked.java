@@ -41,6 +41,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 		InternalServerCommandFumbblGameChecked gameCheckedCommand = (InternalServerCommandFumbblGameChecked) pReceivedCommand
 				.getCommand();
 		GameState gameState = getServer().getGameCache().getGameStateById(gameCheckedCommand.getGameId());
+		gameState.initRulesDependentMembers();
 		gameState.getGame().initializeRules();
 		UtilSkillBehaviours.registerBehaviours(gameState.getGame(), getServer().getDebugLog());
 

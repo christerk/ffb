@@ -72,12 +72,12 @@ public class StepBothDown extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-		if (!game.getDefender().hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
+		if (!game.getDefender().hasSkillProperty(NamedProperties.preventFallOnBothDown)) {
 			game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
 		} else {
 			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
 		}
-		if (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
+		if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventFallOnBothDown)) {
 			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);

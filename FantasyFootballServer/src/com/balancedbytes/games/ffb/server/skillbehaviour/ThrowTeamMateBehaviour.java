@@ -83,7 +83,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					if (successful) {
 						Player<?> thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 						boolean scattersSingleDirection = thrownPlayer != null
-								&& thrownPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
+								&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
 						SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 						((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 							.pushSequence(new ScatterPlayer.SequenceParams(step.getGameState(), state.thrownPlayerId,
