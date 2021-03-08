@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.mechanics;
 
 public class Wording {
-	private String noun;
-	private String verb;
-	private String inflection;
-	private String playerCharacterization;
+	private final String noun;
+	private final String verb;
+	private final String inflection;
+	private final String playerCharacterization;
 
 	public Wording(String noun, String verb, String inflection, String playerCharacterization) {
 		this.noun = noun;

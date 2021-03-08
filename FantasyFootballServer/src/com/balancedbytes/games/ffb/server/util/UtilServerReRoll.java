@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.util;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -7,6 +8,8 @@ import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
+import com.balancedbytes.games.ffb.mechanics.GameMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -37,8 +40,9 @@ public class UtilServerReRoll {
 		if (pReRollSource != null) {
 			if (ReRollSources.TEAM_RE_ROLL == pReRollSource) {
 				TurnData turnData = game.getTurnData();
-				turnData.setReRollUsed(true);
-				turnData.setReRolls(turnData.getReRolls() - 1);
+				((GameMechanic)game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name()))
+					.updateTurnDataAfterReRollUsage(turnData);
+
 
 				if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 					int roll = gameState.getDiceRoller().rollSkill();

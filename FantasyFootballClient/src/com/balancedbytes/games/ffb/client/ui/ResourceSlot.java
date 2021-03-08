@@ -10,7 +10,7 @@ import java.awt.Rectangle;
  */
 public class ResourceSlot {
 
-	private Rectangle fLocation;
+	private final Rectangle fLocation;
 	private int fValue;
 	private boolean fEnabled;
 	private String fIconProperty, singular, plural;

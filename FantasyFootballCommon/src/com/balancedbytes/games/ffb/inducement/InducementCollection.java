@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class InducementCollection implements IKeyedItem {
-	private Set<InducementType> types = new HashSet<InducementType>() {{
+	private final Set<InducementType> types = new HashSet<InducementType>() {{
 		add(new InducementType("bloodweiserBabes", "Bloodweiser Kegs", "Bloodweiser Keg", "Bloodweiser Kegs",
 			GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.KNOCKOUT_RECOVERY));
 
@@ -103,7 +103,7 @@ public abstract class InducementCollection implements IKeyedItem {
 
 	public Set<InducementType> getTypes() {
 		return Stream.concat(types.stream(), getSubTypes().stream()).collect(Collectors.toSet());
-	};
+	}
 
 	protected abstract Set<InducementType> getSubTypes();
 }
