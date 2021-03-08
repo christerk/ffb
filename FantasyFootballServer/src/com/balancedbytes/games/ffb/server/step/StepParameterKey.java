@@ -20,6 +20,7 @@ public enum StepParameterKey {
 	CATCH_SCATTER_THROW_IN_MODE, // CatchScatterThrowinMode
 	CATCHER_ID, // String
 	CHOOSING_TEAM_ID, // String
+	CLIENT_RECEIVE_CHOICE, // Boolean
 	COORDINATE_FROM, // FieldCoordinate
 	COORDINATE_TO, // FieldCoordinate
 	DEFENDER_POSITION, // FieldCoordinate

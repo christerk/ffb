@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.phase.kickoff;
+package com.balancedbytes.games.ffb.server.step.generator.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -14,18 +14,17 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to determine receive choice.
- * 
+ * <p>
  * Expects stepParameter CHOOSING_TEAM_ID to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepReceiveChoice extends AbstractStep {
 
 	private String fChoosingTeamId;
@@ -43,11 +42,13 @@ public final class StepReceiveChoice extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case CHOOSING_TEAM_ID:
-				fChoosingTeamId = (String) pParameter.getValue();
-				return true;
-			default:
-				break;
+				case CHOOSING_TEAM_ID:
+					fChoosingTeamId = (String) pParameter.getValue();
+					return true;
+				case CLIENT_RECEIVE_CHOICE:
+					fReceiveChoice = (Boolean) pParameter.getValue();
+				default:
+					break;
 			}
 		}
 		return false;
@@ -64,13 +65,13 @@ public final class StepReceiveChoice extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_RECEIVE_CHOICE:
-				ClientCommandReceiveChoice receiveChoiceCommand = (ClientCommandReceiveChoice) pReceivedCommand.getCommand();
-				fReceiveChoice = receiveChoiceCommand.isChoiceReceive();
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
+				case CLIENT_RECEIVE_CHOICE:
+					ClientCommandReceiveChoice receiveChoiceCommand = (ClientCommandReceiveChoice) pReceivedCommand.getCommand();
+					fReceiveChoice = receiveChoiceCommand.isChoiceReceive();
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -82,7 +83,6 @@ public final class StepReceiveChoice extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		if (fReceiveChoice != null) {
-			UtilServerDialog.hideDialog(getGameState());
 			if (game.getTeamHome().getId().equals(fChoosingTeamId)) {
 				game.setHomePlaying(!fReceiveChoice);
 				getResult().addReport(new ReportReceiveChoice(game.getTeamHome().getId(), fReceiveChoice));

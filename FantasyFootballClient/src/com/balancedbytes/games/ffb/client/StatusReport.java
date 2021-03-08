@@ -1908,9 +1908,7 @@ public class StatusReport {
 		Game game = getClient().getGame();
 		print(getIndent() + 1, "Team ");
 		printTeamName(game, false, pReport.getTeamId());
-		StringBuilder status = new StringBuilder();
-		status.append(" is ").append(pReport.isReceiveChoice() ? "receiving." : "kicking.");
-		println(getIndent() + 1, status.toString());
+		println(getIndent() + 1, " is " + (pReport.isReceiveChoice() ? "receiving." : "kicking."));
 	}
 
 	public void reportPlayCard(ReportPlayCard pReport) {

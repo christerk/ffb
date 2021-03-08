@@ -1,8 +1,7 @@
-package com.balancedbytes.games.ffb.server.step.phase.kickoff;
+package com.balancedbytes.games.ffb.server.step.generator.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogCoinChoiceParameter;
-import com.balancedbytes.games.ffb.dialog.DialogReceiveChoiceParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -29,7 +28,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepCoinChoice extends AbstractStep {
 
 	protected Boolean fCoinChoiceHeads;
@@ -83,7 +82,7 @@ public final class StepCoinChoice extends AbstractStep {
 				choosingTeam = game.getTeamHome();
 			}
 			publishParameter(new StepParameter(StepParameterKey.CHOOSING_TEAM_ID, choosingTeam.getId()));
-			UtilServerDialog.showDialog(getGameState(), new DialogReceiveChoiceParameter(choosingTeam.getId()), false);
+			publishParameter(new StepParameter(StepParameterKey.CLIENT_RECEIVE_CHOICE, true));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
