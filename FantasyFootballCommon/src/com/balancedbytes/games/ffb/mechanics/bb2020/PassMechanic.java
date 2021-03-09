@@ -38,37 +38,32 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 	@Override
 	public Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers) {
 		if (thrower.getPassingWithModifiers() > 0) {
-			return Optional.of(minimumRollInternal(thrower, distance, modifiers));
+			int roll = thrower.getPassingWithModifiers() + distance.getModifier2020() + modifiers.stream().mapToInt(PassModifier::getModifier).sum();
+			return Optional.of(Math.max(roll, 2));
 		} else {
 			return Optional.empty();
 		}
 	}
 
-	private int minimumRollInternal(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers) {
-		int roll = thrower.getPassingWithModifiers() + distance.getModifier2020() + modifiers.stream().mapToInt(PassModifier::getModifier).sum();
-		return Math.max(roll, 2);
-	}
-
-	@Override
+ 	@Override
 	public PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction) {
 		if (thrower.getPassingWithModifiers() <= 0) {
 			return PassResult.FUMBLE;
 		}
-		int minimumRoll = minimumRollInternal(thrower, distance, modifiers);
+
+		int resultAfterModifiers = roll - calculateModifiers(modifiers) - distance.getModifier2020();
 		if (roll == 1) {
 			if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles) && !bombAction) {
 				return PassResult.SAVED_FUMBLE;
 			} else {
 				return PassResult.FUMBLE;
 			}
-		} else if (roll == 6) {
+		} else if (roll == 6 || resultAfterModifiers >= thrower.getPassingWithModifiers()) {
 			return PassResult.ACCURATE;
-		} else if (isModifiedFumble(roll, distance, modifiers)) {
+		} else if (resultAfterModifiers <= 1) {
 			return PassResult.WILDLY_INACCURATE;
-		} else if (roll < minimumRoll) {
-			return PassResult.INACCURATE;
 		} else {
-			return PassResult.ACCURATE;
+			return PassResult.INACCURATE;
 		}
 	}
 
@@ -84,11 +79,6 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 	@Override
 	public boolean eligibleToReRoll(ReRolledAction reRolledAction, Player<?> thrower) {
 		return reRolledAction != ReRolledActions.PASS && thrower.getPassingWithModifiers() > 0;
-	}
-
-	public boolean isModifiedFumble(int roll, PassingDistance pPassingDistance, Collection<PassModifier> pPassModifiers) {
-		int modifierTotal = calculateModifiers(pPassModifiers);
-		return roll - modifierTotal - pPassingDistance.getModifier2020() <= 1;
 	}
 
 	@Override
