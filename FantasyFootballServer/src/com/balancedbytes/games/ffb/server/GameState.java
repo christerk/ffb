@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
-import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
+import com.balancedbytes.games.ffb.server.step.bb2020.pass.state.PassState;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;

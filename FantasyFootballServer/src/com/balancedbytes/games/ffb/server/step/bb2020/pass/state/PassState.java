@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2020.state;
+package com.balancedbytes.games.ffb.server.step.bb2020.pass.state;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.TurnMode;

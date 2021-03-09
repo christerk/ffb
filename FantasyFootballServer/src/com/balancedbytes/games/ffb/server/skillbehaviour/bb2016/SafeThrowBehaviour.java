@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.bb2016.StepSafeThrow;
+import com.balancedbytes.games.ffb.server.step.bb2016.pass.StepSafeThrow;
 import com.balancedbytes.games.ffb.skill.SafeThrow;
 
 @RulesCollection(Rules.BB2016)

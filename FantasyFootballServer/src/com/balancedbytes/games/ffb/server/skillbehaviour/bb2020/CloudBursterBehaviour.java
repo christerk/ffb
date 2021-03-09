@@ -30,7 +30,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
+import com.balancedbytes.games.ffb.server.step.bb2020.pass.state.PassState;
 import com.balancedbytes.games.ffb.skill.bb2020.CloudBurster;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;

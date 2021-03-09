@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2020;
+package com.balancedbytes.games.ffb.server.step.bb2020.pass;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
+import com.balancedbytes.games.ffb.server.step.bb2020.pass.state.PassState;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Bomb;

@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2016;
+package com.balancedbytes.games.ffb.server.step.bb2016.pass;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;

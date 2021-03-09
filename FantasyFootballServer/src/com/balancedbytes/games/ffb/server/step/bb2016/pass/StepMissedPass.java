@@ -1,11 +1,16 @@
-package com.balancedbytes.games.ffb.server.step.bb2020;
+package com.balancedbytes.games.ffb.server.step.bb2016.pass;
 
+import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.RangeRuler;
+import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.mechanics.PassResult;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Animation;
+import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.report.ReportPassDeviate;
 import com.balancedbytes.games.ffb.report.ReportScatterBall;
@@ -16,8 +21,12 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +39,10 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepMissedPass extends AbstractStep {
+
+	private boolean passDeviates;
 
 	public StepMissedPass(GameState pGameState) {
 		super(pGameState);
@@ -48,6 +59,17 @@ public class StepMissedPass extends AbstractStep {
 	}
 
 	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			if (pParameter.getKey() == StepParameterKey.PASS_DEVIATES) {
+				passDeviates = (boolean) pParameter.getValue();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -59,14 +81,13 @@ public class StepMissedPass extends AbstractStep {
 	private void executeStep() {
 
 		Game game = getGameState().getGame();
-		PassState state = getGameState().getPassState();
 		FieldCoordinate coordinateEnd = null;
 		FieldCoordinate lastValidCoordinate = null;
 		List<Integer> rollList = new ArrayList<>();
 		List<Direction> directionList = new ArrayList<>();
 		FieldCoordinate coordinateStart;
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-		if (state.getResult().equals(PassResult.WILDLY_INACCURATE)) {
+		if (passDeviates) {
 			coordinateStart = throwerCoordinate;
 			int directionRoll = getGameState().getDiceRoller().rollScatterDirection();
 			int distanceRoll = getGameState().getDiceRoller().rollScatterDistance();
@@ -98,16 +119,71 @@ public class StepMissedPass extends AbstractStep {
 			Direction[] directions = directionList.toArray(new Direction[0]);
 			getResult().addReport(new ReportScatterBall(directions, rolls, false));
 		}
-		game.setPassCoordinate(lastValidCoordinate);
-		state.setLandingOutOfBounds(lastValidCoordinate != coordinateEnd);
-		RangeRuler rangeRuler = new RangeRuler(game.getThrowerId(), lastValidCoordinate, -1, false);
 
-		game.getFieldModel().setRangeRuler(rangeRuler);
-		game.getFieldModel().setBallCoordinate(lastValidCoordinate);
-		game.getFieldModel().setBallMoving(true);
+		game.getFieldModel().setRangeRuler(null);
+		if (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction()) {
+			getResult()
+				.setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
+		} else if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+			getResult()
+					.setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate, null));
+		} else if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+			getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, throwerCoordinate, lastValidCoordinate, null));
+		} else {
+			getResult().setAnimation(new Animation(AnimationType.PASS, throwerCoordinate, lastValidCoordinate, null));
+		}
+		UtilServerGame.syncGameModel(this);
+		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
+			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
+					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+				game.getFieldModel().setBombCoordinate(null);
+				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
+			} else {
+				publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+				publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, lastValidCoordinate));
+				game.getFieldModel().setBallMoving(true);
+			}
+		} else {
+			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
+					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+				publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+				game.getFieldModel().setBombCoordinate(coordinateEnd);
+				game.getFieldModel().setBombMoving(true);
+			} else {
+				publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
+				game.getFieldModel().setBallCoordinate(coordinateEnd);
+				game.getFieldModel().setBallMoving(true);
+			}
+		}
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
+	}
+
+	// ByteArray serialization
+
+	public int getByteArraySerializationVersion() {
+		return 1;
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.PASS_DEVIATES.addTo(jsonObject, passDeviates);
+		return jsonObject;
+	}
+
+	@Override
+	public StepMissedPass initFrom(IFactorySource game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		passDeviates = IJsonOption.PASS_DEVIATES.getFrom(game, jsonObject);
+		return this;
 	}
 
 }
