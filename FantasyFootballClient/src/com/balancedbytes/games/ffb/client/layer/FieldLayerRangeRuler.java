@@ -116,7 +116,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 				}
 
-				Color selectSquareColor = null;
+				Color selectSquareColor;
 				Team otherTeam = game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
 				Player<?> catcher = game.getFieldModel().getPlayer(pRangeRuler.getTargetCoordinate());
 				if ((catcher == null) || otherTeam.hasPlayer(catcher)) {

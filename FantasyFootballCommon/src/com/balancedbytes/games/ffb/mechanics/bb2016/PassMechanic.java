@@ -88,7 +88,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 		return reRolledAction != ReRolledActions.PASS;
 	}
 
-	public boolean isModifiedFumble(int roll, PassingDistance distance, Collection<PassModifier> modifiers) {
+	private boolean isModifiedFumble(int roll, PassingDistance distance, Collection<PassModifier> modifiers) {
 		return ((roll + distance.getModifier2016() - calculateModifiers(modifiers)) <= 1);
 	}
 

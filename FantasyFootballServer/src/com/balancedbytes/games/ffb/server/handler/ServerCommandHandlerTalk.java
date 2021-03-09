@@ -1,16 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.eclipse.jetty.websocket.api.Session;
-
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -23,6 +12,7 @@ import com.balancedbytes.games.ffb.factory.GameOptionFactory;
 import com.balancedbytes.games.ffb.factory.GameOptionIdFactory;
 import com.balancedbytes.games.ffb.factory.SoundIdFactory;
 import com.balancedbytes.games.ffb.factory.WeatherFactory;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -47,6 +37,15 @@ import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
+import org.eclipse.jetty.websocket.api.Session;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
