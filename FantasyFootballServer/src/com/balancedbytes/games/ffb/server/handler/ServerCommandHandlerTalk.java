@@ -663,6 +663,10 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					player.setAgility(stat);
 					reportStatChange(gameState, player, "AG", stat);
 				}
+				if ("pa".equalsIgnoreCase(commands[1])) {
+					player.setPassing(stat);
+					reportStatChange(gameState, player, "PA", stat);
+				}
 				if ("av".equalsIgnoreCase(commands[1])) {
 					player.setArmour(stat);
 					reportStatChange(gameState, player, "AV", stat);
