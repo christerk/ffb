@@ -103,6 +103,8 @@ public class StepMissedPass extends AbstractStep {
 		RangeRuler rangeRuler = new RangeRuler(game.getThrowerId(), lastValidCoordinate, -1, false);
 
 		game.getFieldModel().setRangeRuler(rangeRuler);
+		game.getFieldModel().setBallCoordinate(lastValidCoordinate);
+		game.getFieldModel().setBallMoving(true);
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
