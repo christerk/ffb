@@ -58,7 +58,9 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 	public String getMinimumRoll() {
 		if (fMinimumRoll == 0) {
 			return "--";
-		} else if (fMinimumRoll < 6) {
+		} else if (fMinimumRoll < 0) {
+			return "";
+		}else if (fMinimumRoll < 6) {
 			return fMinimumRoll + "+";
 		} else {
 			return "6";
