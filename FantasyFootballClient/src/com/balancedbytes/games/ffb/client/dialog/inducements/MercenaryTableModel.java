@@ -26,11 +26,11 @@ public class MercenaryTableModel extends AbstractTableModel {
 	private final int mercSkillCost;
 	private String[] fColumnNames;
 	private Object[][] fRowData;
-	private DialogBuyInducements fDialog;
+	private AbstractBuyDialog fDialog;
 	private int checkedRows = 0;
 	private int maxMercs;
 
-	public MercenaryTableModel(DialogBuyInducements pDialog, GameOptions gameOptions) {
+	public MercenaryTableModel(AbstractBuyDialog pDialog, GameOptions gameOptions) {
 		mercExtraCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 				.getValue();
 		mercSkillCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST))
@@ -99,7 +99,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 			fRowData[pRowIndex][pColumnIndex] = pValue;
 			fireTableCellUpdated(pRowIndex, pColumnIndex);
 			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? mercSkillCost : 0;
-			setValueAt(fDialog.formatGold(playerCost + skillCost), pRowIndex, 3);
+			setValueAt(StringTool.formatThousands(playerCost + skillCost), pRowIndex, 3);
 			if ((Boolean) fRowData[pRowIndex][0]) {
 				if (skillCost > fDialog.getAvailableGold()) {
 					fRowData[pRowIndex][0] = false;
@@ -128,7 +128,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 					mecenary[1] = new ImageIcon(
 							playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
 					mecenary[2] = pos.getName();
-					mecenary[3] = fDialog.formatGold(pos.getCost() + mercExtraCost);
+					mecenary[3] = StringTool.formatThousands(pos.getCost() + mercExtraCost);
 					mecenary[4] = "";
 					mecenary[5] = player;
 					mercenaryList.add(mecenary);

@@ -25,9 +25,9 @@ public class StarPlayerTableModel extends AbstractTableModel {
 	private Object[][] fRowData;
 	private int fNrOfCheckedRows;
 	private int fMaxNrOfStars;
-	private DialogBuyInducements fDialog;
+	private AbstractBuyDialog fDialog;
 
-	public StarPlayerTableModel(DialogBuyInducements pDialog, GameOptions gameOptions) {
+	public StarPlayerTableModel(AbstractBuyDialog pDialog, GameOptions gameOptions) {
 		fDialog = pDialog;
 		fColumnNames = new String[] { "", "Icon", "Name", "Gold" };
 		fRowData = buildRowData();
@@ -140,7 +140,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 				star[0] = new Boolean(false);
 				star[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
 				star[2] = pos.getName();
-				star[3] = fDialog.formatGold(pos.getCost());
+				star[3] = StringTool.formatThousands(pos.getCost());
 				star[4] = player;
 				starPlayerList.add(star);
 			}
