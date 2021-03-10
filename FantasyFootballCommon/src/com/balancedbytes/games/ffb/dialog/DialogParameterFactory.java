@@ -62,8 +62,6 @@ public class DialogParameterFactory {
 			return new DialogPilingOnParameter();
 		case BUY_INDUCEMENTS:
 			return new DialogBuyInducementsParameter();
-		case TRANSFER_PETTY_CASH:
-			return new DialogTransferPettyCashParameter();
 		case JOURNEYMEN:
 			return new DialogJourneymenParameter();
 		case KICKOFF_RESULT:
