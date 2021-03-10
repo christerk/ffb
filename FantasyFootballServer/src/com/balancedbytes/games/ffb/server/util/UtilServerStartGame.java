@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestResumeGamestate;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.common.StartGame;
+import com.balancedbytes.games.ffb.server.step.generator.StartGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 

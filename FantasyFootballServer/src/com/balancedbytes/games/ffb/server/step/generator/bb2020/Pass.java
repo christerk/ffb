@@ -13,10 +13,6 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class Pass extends com.balancedbytes.games.ffb.server.step.generator.Pass {
 
-	public Pass() {
-		super(Type.Pass);
-	}
-
 	@Override
 	public void pushSequence(SequenceParams params) {
 		GameState gameState = params.getGameState();

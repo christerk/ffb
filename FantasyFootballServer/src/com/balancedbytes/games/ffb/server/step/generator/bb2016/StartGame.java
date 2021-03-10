@@ -1,18 +1,13 @@
-package com.balancedbytes.games.ffb.server.step.generator.common;
+package com.balancedbytes.games.ffb.server.step.generator.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.generator.Sequence;
-import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class StartGame extends SequenceGenerator<SequenceGenerator.SequenceParams> {
-
-	public StartGame() {
-		super(Type.StartGame);
-	}
+@RulesCollection(RulesCollection.Rules.BB2016)
+public class StartGame extends com.balancedbytes.games.ffb.server.step.generator.StartGame {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
