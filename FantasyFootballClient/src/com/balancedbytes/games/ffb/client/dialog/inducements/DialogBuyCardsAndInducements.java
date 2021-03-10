@@ -28,7 +28,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private final JLabel labelAvailableGold, labelPettyCash;
 	private final Map<CardType, Integer> nrOfCardsPerType;
-	private final JButton buyCardButton;
+	private final JButton addCardButton;
 	private final int treasury;
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
@@ -39,43 +39,18 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		nrOfCardsPerType = pParameter.getNrOfCardsPerType();
 
 		treasury = pParameter.getTreasury();
+		addCardButton = new JButton("Add Card");
+		addCardButton.addActionListener(this);
+		labelAvailableGold = new JLabel();
+		labelPettyCash = new JLabel();
 
 		JPanel panelCards = new JPanel();
 		panelCards.setLayout(new BoxLayout(panelCards, BoxLayout.Y_AXIS));
 		panelCards.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		labelAvailableGold = new JLabel();
-		labelPettyCash = new JLabel();
-
-		JPanel panelGold = new JPanel();
-		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
-		panelGold.add(labelAvailableGold);
-		panelGold.add(labelPettyCash);
-		panelGold.add(Box.createHorizontalGlue());
 		panelCards.add(Box.createVerticalStrut(5));
+		panelCards.add(addCardButtonPanel());
 
-		JPanel panelButtons = new JPanel();
-		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
-
-		buyCardButton = new JButton("Add Card");
-		buyCardButton.addActionListener(this);
-
-		panelButtons.add(Box.createHorizontalGlue());
-		panelButtons.add(buyCardButton);
-		panelButtons.add(Box.createHorizontalGlue());
-
-		panelCards.add(panelButtons);
-
-		JPanel horizontalMainPanel = new JPanel();
-		horizontalMainPanel.setLayout(new BoxLayout(horizontalMainPanel, BoxLayout.X_AXIS));
-		horizontalMainPanel.add(panelCards);
-		horizontalMainPanel.add(buildInducementPanel(gameOptions));
-
-		JPanel verticalMainPanel = new JPanel();
-		verticalMainPanel.setLayout(new BoxLayout(verticalMainPanel, BoxLayout.Y_AXIS));
-		verticalMainPanel.add(panelGold);
-		verticalMainPanel.add(horizontalMainPanel);
-		verticalMainPanel.add(buttonPanel());
+		JPanel verticalMainPanel = verticalMainPanel(horizontalMainPanel(gameOptions, panelCards));
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(verticalMainPanel, BorderLayout.CENTER);
@@ -83,6 +58,42 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		pack();
 		setLocationToCenter();
 
+	}
+
+	private JPanel verticalMainPanel(JPanel horizontalMainPanel) {
+		JPanel verticalMainPanel = new JPanel();
+		verticalMainPanel.setLayout(new BoxLayout(verticalMainPanel, BoxLayout.Y_AXIS));
+		verticalMainPanel.add(goldPanel());
+		verticalMainPanel.add(horizontalMainPanel);
+		verticalMainPanel.add(buttonPanel());
+		return verticalMainPanel;
+	}
+
+	private JPanel horizontalMainPanel(GameOptions gameOptions, JPanel panelCards) {
+		JPanel horizontalMainPanel = new JPanel();
+		horizontalMainPanel.setLayout(new BoxLayout(horizontalMainPanel, BoxLayout.X_AXIS));
+		horizontalMainPanel.add(panelCards);
+		horizontalMainPanel.add(buildInducementPanel(gameOptions));
+		return horizontalMainPanel;
+	}
+
+	private JPanel goldPanel() {
+		JPanel panelGold = new JPanel();
+		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
+		panelGold.add(labelAvailableGold);
+		panelGold.add(labelPettyCash);
+		panelGold.add(Box.createHorizontalGlue());
+		return panelGold;
+	}
+
+	private JPanel addCardButtonPanel() {
+		JPanel panelButtons = new JPanel();
+		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
+
+		panelButtons.add(Box.createHorizontalGlue());
+		panelButtons.add(addCardButton);
+		panelButtons.add(Box.createHorizontalGlue());
+		return panelButtons;
 	}
 
 	protected void setGoldValue(int value) {
@@ -98,7 +109,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 
-		if (pActionEvent.getSource() == buyCardButton) {
+		if (pActionEvent.getSource() == addCardButton) {
 			buyCard();
 		}
 	}
