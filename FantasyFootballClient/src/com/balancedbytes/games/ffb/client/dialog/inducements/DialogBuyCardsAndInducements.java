@@ -26,6 +26,8 @@ import java.util.Map;
  */
 public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
+	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
+	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
 	private final JLabel labelAvailableGold, labelPettyCash;
 	private final Map<CardType, Integer> nrOfCardsPerType;
 	private final JButton addCardButton;
@@ -49,6 +51,11 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panelCards.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		panelCards.add(Box.createVerticalStrut(5));
 		panelCards.add(addCardButtonPanel());
+		panelCards.add(label("Available Cards:", BOLD_FONT));
+		nrOfCardsPerType.entrySet().forEach(entry -> {
+				panelCards.add(label(entry.getKey().getDeckName() + ": " + entry.getValue(), REGULAR_FONT));
+		});
+		panelCards.add(label("Drawn Cards:", BOLD_FONT));
 
 		JPanel verticalMainPanel = verticalMainPanel(horizontalMainPanel(gameOptions, panelCards));
 
@@ -59,6 +66,14 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		setLocationToCenter();
 
 	}
+
+	private JLabel label(String text, Font font) {
+		JLabel label = new JLabel();
+		label.setText(text);
+		label.setFont(font);
+		return label;
+	}
+
 
 	private JPanel verticalMainPanel(JPanel horizontalMainPanel) {
 		JPanel verticalMainPanel = new JPanel();
@@ -99,7 +114,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	protected void setGoldValue(int value) {
 
 		labelAvailableGold.setText("Available Gold: " + StringTool.formatThousands(value));
-		labelAvailableGold.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		labelAvailableGold.setFont(BOLD_FONT);
 
 	}
 
