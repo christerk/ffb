@@ -11,9 +11,9 @@ import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.Usage;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
@@ -72,12 +72,13 @@ public final class StepBuyCards extends AbstractStep {
 
 	private boolean fReportedHome;
 	private boolean fReportedAway;
+	private CardType sentType, sentRerolledType;
+	private Card sentCard1, sentCard2, sentRerolledCard1, sentRerolledCard2;
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
 	private transient CardType fBuyCardAway;
 	private transient Map<CardType, Integer> cardPrices;
-	private transient int minimumCardPrice = Integer.MAX_VALUE;
 
 	public StepBuyCards(GameState pGameState) {
 		super(pGameState);
@@ -146,7 +147,6 @@ public final class StepBuyCards extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		GameResult gameResult = game.getGameResult();
 		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
 			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
 
@@ -157,10 +157,6 @@ public final class StepBuyCards extends AbstractStep {
 			((CardTypeFactory) game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(cardType -> {
 				int price = ((GameOptionInt) game.getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
 				cardPrices.put(cardType, price);
-				CardDeck deck = fDeckByType.get(cardType);
-				if (deck != null && deck.size() > 0) {
-					minimumCardPrice = Math.min(minimumCardPrice, price);
-				}
 			});
 		}
 
@@ -287,8 +283,7 @@ public final class StepBuyCards extends AbstractStep {
 			RosterPosition position = roster.getPositionById(pPositionIds[i]);
 			RosterPlayer mercenary = new RosterPlayer();
 			addedPlayerList.add(mercenary);
-			StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("M").append(addedPlayerList.size());
-			mercenary.setId(playerId.toString());
+			mercenary.setId(pTeam.getId() + "M" + addedPlayerList.size());
 			mercenary.updatePosition(position, game.getRules());
 			Integer mercNr = nrByPosition.get(position);
 			if (mercNr == null) {
@@ -297,9 +292,8 @@ public final class StepBuyCards extends AbstractStep {
 				mercNr = mercNr + 1;
 			}
 			nrByPosition.put(position, mercNr);
-			StringBuilder name = new StringBuilder();
-			name.append("Merc ").append(position.getName()).append(" ").append(mercNr);
-			mercenary.setName(name.toString());
+
+			mercenary.setName("Merc " + position.getName() + " " + mercNr);
 			mercenary.setNr(pTeam.getMaxPlayerNr() + 1);
 			mercenary.setType(PlayerType.MERCENARY);
 			mercenary.addSkill(factory.forClass(Loner.class));
@@ -348,8 +342,8 @@ public final class StepBuyCards extends AbstractStep {
 
 			List<RosterPlayer> addedPlayerList = new ArrayList<>();
 			List<RosterPlayer> removedPlayerList = new ArrayList<>();
-			for (int i = 0; i < pPositionIds.length; i++) {
-				RosterPosition position = roster.getPositionById(pPositionIds[i]);
+			for (String pPositionId : pPositionIds) {
+				RosterPosition position = roster.getPositionById(pPositionId);
 				Player<?> otherTeamStarPlayer = otherTeamStarPlayerByName.get(position.getName());
 				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_STAR_ON_BOTH_TEAMS)
 					&& (otherTeamStarPlayer != null)) {
@@ -359,8 +353,7 @@ public final class StepBuyCards extends AbstractStep {
 				} else {
 					RosterPlayer starPlayer = new RosterPlayer();
 					addedPlayerList.add(starPlayer);
-					StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("S").append(addedPlayerList.size());
-					starPlayer.setId(playerId.toString());
+					starPlayer.setId(pTeam.getId() + "S" + addedPlayerList.size());
 					starPlayer.updatePosition(position, game.getRules());
 					starPlayer.setName(position.getName());
 					starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
@@ -402,6 +395,24 @@ public final class StepBuyCards extends AbstractStep {
 		if (fInducementGoldHome != null) {
 			IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
 		}
+		if (sentType != null) {
+			IJsonOption.CARD_TYPE.addTo(jsonObject, sentType);
+		}
+		if (sentCard1 != null) {
+			IJsonOption.SENT_CARD1.addTo(jsonObject, sentCard1);
+		}
+		if (sentCard2 != null) {
+			IJsonOption.SENT_CARD2.addTo(jsonObject, sentCard2);
+		}
+		if (sentRerolledType != null) {
+			IJsonOption.CARD_TYPE.addTo(jsonObject, sentRerolledType);
+		}
+		if (sentRerolledCard1 != null) {
+			IJsonOption.SENT_CARD1.addTo(jsonObject, sentRerolledCard1);
+		}
+		if (sentRerolledCard2 != null) {
+			IJsonOption.SENT_CARD2.addTo(jsonObject, sentRerolledCard2);
+		}
 		IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
 		IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
 		IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
@@ -419,6 +430,12 @@ public final class StepBuyCards extends AbstractStep {
 		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(game, jsonObject);
 		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(game, jsonObject);
 		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
+		sentType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, jsonObject);
+		sentCard1 = (Card) IJsonOption.SENT_CARD1.getFrom(game, jsonObject);
+		sentCard2 = (Card) IJsonOption.SENT_CARD2.getFrom(game, jsonObject);
+		sentRerolledType = (CardType) IJsonOption.SENT_REROLLED_TYPE.getFrom(game, jsonObject);
+		sentRerolledCard1 = (Card) IJsonOption.SENT_REROLLED_CARD1.getFrom(game, jsonObject);
+		sentRerolledCard2 = (Card) IJsonOption.SENT_REROLLED_CARD2.getFrom(game, jsonObject);
 		return this;
 	}
 

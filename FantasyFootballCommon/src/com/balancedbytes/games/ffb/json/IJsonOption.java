@@ -327,6 +327,11 @@ public interface IJsonOption {
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");
 	JsonEnumWithNameOption SEND_TO_BOX_REASON = new JsonEnumWithNameOption("sendToBoxReason", Factory.SEND_TO_BOX_REASON);
 	JsonIntOption SEND_TO_BOX_TURN = new JsonIntOption("sendToBoxTurn");
+	JsonEnumWithNameOption SENT_REROLLED_TYPE = new JsonEnumWithNameOption("sentRerolledType", Factory.CARD_TYPE);
+	JsonEnumWithNameOption SENT_CARD1 = new JsonEnumWithNameOption("sentCard1", Factory.CARD);
+	JsonEnumWithNameOption SENT_CARD2 = new JsonEnumWithNameOption("sentCard2", Factory.CARD);
+	JsonEnumWithNameOption SENT_REROLLED_CARD1 = new JsonEnumWithNameOption("sentRerolledCard1", Factory.CARD);
+	JsonEnumWithNameOption SENT_REROLLED_CARD2 = new JsonEnumWithNameOption("sentRerolledCard2", Factory.CARD);
 	JsonEnumWithNameOption SERIOUS_INJURY = new JsonEnumWithNameOption("seriousInjury", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_DECAY = new JsonEnumWithNameOption("seriousInjuryDecay", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_NEW = new JsonEnumWithNameOption("seriousInjuryNew", Factory.SERIOUS_INJURY);

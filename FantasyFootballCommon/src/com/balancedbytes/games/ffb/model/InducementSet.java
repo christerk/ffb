@@ -23,6 +23,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -382,9 +383,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		}
 		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
-			for (String starPlayerPositionId : starPlayerPositionIds) {
-				fStarPlayerPositionIds.add(starPlayerPositionId);
-			}
+			fStarPlayerPositionIds.addAll(Arrays.asList(starPlayerPositionIds));
 		}
 		return this;
 	}
