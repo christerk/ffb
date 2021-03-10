@@ -1,39 +1,52 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.start;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
+import com.balancedbytes.games.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.balancedbytes.games.ffb.factory.CardTypeFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardType;
+import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
-import com.balancedbytes.games.ffb.net.NetCommandId;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
+import com.balancedbytes.games.ffb.model.RosterPosition;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
-import com.balancedbytes.games.ffb.report.ReportCardsBought;
+import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
 import com.balancedbytes.games.ffb.server.CardDeck;
+import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.game.start.UtilInducementSequence;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.skill.Loner;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.UtilBox;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,11 +60,15 @@ import java.util.Map;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepBuyCards extends AbstractStep {
 
-	private int fInducementGoldHome;
-	private int fInducementGoldAway;
+	private Integer fInducementGoldHome;
+	private Integer fInducementGoldAway;
+	private Integer fGoldUsedHome = 0;
+	private Integer fGoldUsedAway = 0;
 
 	private boolean fCardsSelectedHome;
 	private boolean fCardsSelectedAway;
+	private boolean fInducementsSelectedHome;
+	private boolean fInducementsSelectedAway;
 
 	private boolean fReportedHome;
 	private boolean fReportedAway;
@@ -83,20 +100,42 @@ public final class StepBuyCards extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			if (pReceivedCommand.getId() == NetCommandId.CLIENT_BUY_CARD) {
-				ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pReceivedCommand.getCommand();
-				if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-					fBuyCardHome = buyCardCommand.getCardType();
-					if (fBuyCardHome == null) {
-						fCardsSelectedHome = true;
+			Game game = getGameState().getGame();
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_BUY_CARD:
+					ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pReceivedCommand.getCommand();
+					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+						fBuyCardHome = buyCardCommand.getCardType();
+						if (fBuyCardHome == null) {
+							fCardsSelectedHome = true;
+						}
+					} else {
+						fBuyCardAway = buyCardCommand.getCardType();
+						if (fBuyCardAway == null) {
+							fCardsSelectedAway = true;
+						}
 					}
-				} else {
-					fBuyCardAway = buyCardCommand.getCardType();
-					if (fBuyCardAway == null) {
-						fCardsSelectedAway = true;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_BUY_INDUCEMENTS:
+					ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
+					if (game.getTeamHome().getId().equals(buyInducementsCommand.getTeamId())) {
+						game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet());
+						addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
+						addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(),
+							buyInducementsCommand.getMercenarySkills());
+						fGoldUsedHome = fInducementGoldHome - buyInducementsCommand.getAvailableGold();
+						fInducementsSelectedHome = true;
+					} else {
+						game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet());
+						addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
+						addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(),
+							buyInducementsCommand.getMercenarySkills());
+						fGoldUsedAway = fInducementGoldAway - buyInducementsCommand.getAvailableGold();
+						fInducementsSelectedAway = true;
 					}
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -108,28 +147,34 @@ public final class StepBuyCards extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
-		if ((UtilGameOption.getIntOption(game, GameOptionId.MAX_NR_OF_CARDS) == 0)
-				|| UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
-			int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
-			fInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
-			publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
-			fInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false) + freeCash;
-			publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_AWAY, fInducementGoldAway));
-			getResult().setNextAction(StepAction.NEXT_STEP);
-			return;
+		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
+			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+
+		if (cardPrices == null) {
+			buildDecks();
+
+			cardPrices = new HashMap<>();
+			((CardTypeFactory) game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(cardType -> {
+				int price = ((GameOptionInt) game.getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
+				cardPrices.put(cardType, price);
+				CardDeck deck = fDeckByType.get(cardType);
+				if (deck != null && deck.size() > 0) {
+					minimumCardPrice = Math.min(minimumCardPrice, price);
+				}
+			});
 		}
-		buildDecks();
 
-		cardPrices = new HashMap<>();
-		((CardTypeFactory)game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(cardType -> {
-			int price = ((GameOptionInt) game.getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
-			cardPrices.put(cardType, price);
-			CardDeck deck = fDeckByType.get(cardType);
-			if (deck != null && deck.size() > 0) {
-				minimumCardPrice = Math.min(minimumCardPrice, price);
-			}
-		});
+		if (fInducementGoldHome == null) {
+			fInducementGoldHome = freeCash + game.getTeamHome().getTreasury() + game.getGameResult().getTeamResultHome().getPettyCashAvailable();
+			UtilServerDialog.showDialog(getGameState(),
+				createDialogParameter(game.getTeamHome().getId(), game.getTeamHome().getTreasury(), fInducementGoldHome), false);
+		}
 
+		if (fInducementGoldAway == null) {
+			fInducementGoldAway = game.getTeamAway().getTreasury() + game.getGameResult().getTeamResultAway().getPettyCashAvailable();
+		}
+		
+/*
 		if (fBuyCardHome != null) {
 			fInducementGoldHome -= cardPrices.getOrDefault(fBuyCardHome, 0);
 			CardDeck deck = fDeckByType.get(fBuyCardHome);
@@ -144,8 +189,7 @@ public final class StepBuyCards extends AbstractStep {
 			fBuyCardAway = null;
 		} else {
 			if (!fCardsSelectedHome && !fCardsSelectedAway) {
-				int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
-						+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+
 				fInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
 				fInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false) + freeCash;
 			}
@@ -184,7 +228,6 @@ public final class StepBuyCards extends AbstractStep {
 				UtilServerDialog.showDialog(getGameState(),
 						createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway), false);
 			} else {
-				int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
 				int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
 				publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME,
 						Math.min(fInducementGoldHome, maxInducementGoldHome)));
@@ -193,7 +236,8 @@ public final class StepBuyCards extends AbstractStep {
 						Math.min(fInducementGoldAway, maxInducementGoldAway)));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
-		}
+
+		}*/
 	}
 
 	private int calculateTotalCost(Card[] pCards) {
@@ -216,9 +260,10 @@ public final class StepBuyCards extends AbstractStep {
 		});
 	}
 
-	private DialogBuyCardsParameter createDialogParameter(String pTeamId, int pAvailableGold) {
-		int availableCards = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-		DialogBuyCardsParameter dialogParameter = new DialogBuyCardsParameter(pTeamId, availableCards, pAvailableGold);
+	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int treasury, int availableGold) {
+		boolean noCards = UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS);
+		int availableCards = noCards ? 0 : UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
+		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(pTeamId, availableCards, treasury, availableGold);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
 			dialogParameter.put(type, deck.size());
@@ -226,13 +271,137 @@ public final class StepBuyCards extends AbstractStep {
 		return dialogParameter;
 	}
 
+	private void addMercenaries(Team pTeam, String[] pPositionIds, Skill[] pSkills) {
+
+		if (!ArrayTool.isProvided(pPositionIds) || !ArrayTool.isProvided(pSkills)) {
+			return;
+		}
+
+		Roster roster = pTeam.getRoster();
+		Game game = getGameState().getGame();
+		List<RosterPlayer> addedPlayerList = new ArrayList<>();
+		Map<RosterPosition, Integer> nrByPosition = new HashMap<>();
+
+		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
+		for (int i = 0; i < pPositionIds.length; i++) {
+			RosterPosition position = roster.getPositionById(pPositionIds[i]);
+			RosterPlayer mercenary = new RosterPlayer();
+			addedPlayerList.add(mercenary);
+			StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("M").append(addedPlayerList.size());
+			mercenary.setId(playerId.toString());
+			mercenary.updatePosition(position, game.getRules());
+			Integer mercNr = nrByPosition.get(position);
+			if (mercNr == null) {
+				mercNr = 1;
+			} else {
+				mercNr = mercNr + 1;
+			}
+			nrByPosition.put(position, mercNr);
+			StringBuilder name = new StringBuilder();
+			name.append("Merc ").append(position.getName()).append(" ").append(mercNr);
+			mercenary.setName(name.toString());
+			mercenary.setNr(pTeam.getMaxPlayerNr() + 1);
+			mercenary.setType(PlayerType.MERCENARY);
+			mercenary.addSkill(factory.forClass(Loner.class));
+			if (pSkills[i] != null) {
+				mercenary.addSkill(pSkills[i]);
+			}
+			pTeam.addPlayer(mercenary);
+			game.getFieldModel().setPlayerState(mercenary, new PlayerState(PlayerState.RESERVE));
+			UtilBox.putPlayerIntoBox(game, mercenary);
+		}
+
+		if (addedPlayerList.size() > 0) {
+			RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
+			UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
+		}
+
+	}
+
+	private void removeStarPlayerInducements(TurnData pTurnData, int pRemoved) {
+		pTurnData.getInducementSet().getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getKey().getUsage() == Usage.STAR).map(Map.Entry::getValue).findFirst()
+			.ifPresent(starPlayerInducement -> {
+				starPlayerInducement.setValue(starPlayerInducement.getValue() - pRemoved);
+				if (starPlayerInducement.getValue() <= 0) {
+					pTurnData.getInducementSet().removeInducement(starPlayerInducement);
+				} else {
+					pTurnData.getInducementSet().addInducement(starPlayerInducement);
+				}
+			});
+	}
+
+	private void addStarPlayers(Team pTeam, String[] pPositionIds) {
+		if (ArrayTool.isProvided(pPositionIds)) {
+
+			Roster roster = pTeam.getRoster();
+			Game game = getGameState().getGame();
+			FantasyFootballServer server = getGameState().getServer();
+
+			Map<String, Player<?>> otherTeamStarPlayerByName = new HashMap<>();
+			Team otherTeam = (game.getTeamHome() == pTeam) ? game.getTeamAway() : game.getTeamHome();
+			for (Player<?> otherPlayer : otherTeam.getPlayers()) {
+				if (otherPlayer.getPlayerType() == PlayerType.STAR) {
+					otherTeamStarPlayerByName.put(otherPlayer.getName(), otherPlayer);
+				}
+			}
+
+			List<RosterPlayer> addedPlayerList = new ArrayList<>();
+			List<RosterPlayer> removedPlayerList = new ArrayList<>();
+			for (int i = 0; i < pPositionIds.length; i++) {
+				RosterPosition position = roster.getPositionById(pPositionIds[i]);
+				Player<?> otherTeamStarPlayer = otherTeamStarPlayerByName.get(position.getName());
+				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_STAR_ON_BOTH_TEAMS)
+					&& (otherTeamStarPlayer != null)) {
+					if (otherTeamStarPlayer instanceof RosterPlayer) {
+						removedPlayerList.add((RosterPlayer) otherTeamStarPlayer);
+					}
+				} else {
+					RosterPlayer starPlayer = new RosterPlayer();
+					addedPlayerList.add(starPlayer);
+					StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("S").append(addedPlayerList.size());
+					starPlayer.setId(playerId.toString());
+					starPlayer.updatePosition(position, game.getRules());
+					starPlayer.setName(position.getName());
+					starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
+					starPlayer.setGender(position.getGender());
+					pTeam.addPlayer(starPlayer);
+					game.getFieldModel().setPlayerState(starPlayer, new PlayerState(PlayerState.RESERVE));
+					UtilBox.putPlayerIntoBox(game, starPlayer);
+				}
+			}
+
+			if (removedPlayerList.size() > 0) {
+				removeStarPlayerInducements(game.getTurnDataHome(), removedPlayerList.size());
+				removeStarPlayerInducements(game.getTurnDataAway(), removedPlayerList.size());
+				DbTransaction transaction = new DbTransaction();
+				for (Player<?> player : removedPlayerList) {
+					server.getCommunication().sendRemovePlayer(getGameState(), player.getId());
+					getResult().addReport(new ReportDoubleHiredStarPlayer(player.getName()));
+				}
+				server.getDbUpdater().add(transaction);
+			}
+
+			if (addedPlayerList.size() > 0) {
+				RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
+				UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
+				// TODO: update persistence?
+			}
+
+		}
+
+	}
 	// JSON serialization
 
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.INDUCEMENT_GOLD_AWAY.addTo(jsonObject, fInducementGoldAway);
-		IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
+		if (fInducementGoldAway != null) {
+			IServerJsonOption.INDUCEMENT_GOLD_AWAY.addTo(jsonObject, fInducementGoldAway);
+		}
+		if (fInducementGoldHome != null) {
+			IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
+		}
 		IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
 		IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
 		IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);

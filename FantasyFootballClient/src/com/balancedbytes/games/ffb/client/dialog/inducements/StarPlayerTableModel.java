@@ -15,19 +15,17 @@ import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
-@SuppressWarnings("serial")
 public class StarPlayerTableModel extends AbstractTableModel {
 
-	private String[] fColumnNames;
-	private Object[][] fRowData;
+	private final String[] fColumnNames;
+	private final Object[][] fRowData;
 	private int fNrOfCheckedRows;
 	private int fMaxNrOfStars;
-	private AbstractBuyDialog fDialog;
+	private final AbstractBuyInducementsDialog fDialog;
 
-	public StarPlayerTableModel(AbstractBuyDialog pDialog, GameOptions gameOptions) {
+	public StarPlayerTableModel(AbstractBuyInducementsDialog pDialog, GameOptions gameOptions) {
 		fDialog = pDialog;
 		fColumnNames = new String[] { "", "Icon", "Name", "Gold" };
 		fRowData = buildRowData();
@@ -74,13 +72,13 @@ public class StarPlayerTableModel extends AbstractTableModel {
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
 		if (pColumnIndex == 0) {
-			Player<?> player = (Player) fRowData[pRowIndex][4];
+			Player<?> player = (Player<?>) fRowData[pRowIndex][4];
 			int cost = player.getPosition().getCost();
 			String teamWithPositionId = player.getPosition().getTeamWithPositionId();
 			if (StringTool.isProvided(teamWithPositionId)) {
 				int partnerRowId = -1;
 				for (int i = 0; i < getRowCount(); i++) {
-					Player<?> rowPlayer = (Player) fRowData[i][4];
+					Player<?> rowPlayer = (Player<?>) fRowData[i][4];
 					if (teamWithPositionId.equals(rowPlayer.getPositionId())) {
 						partnerRowId = i;
 						break;
@@ -88,7 +86,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 				}
 				if (partnerRowId >= 0) {
 					if ((Boolean) pValue) {
-						cost += ((Player) fRowData[partnerRowId][4]).getPosition().getCost();
+						cost += ((Player<?>) fRowData[partnerRowId][4]).getPosition().getCost();
 						if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < fMaxNrOfStars)
 								&& (fDialog.getFreeSlotsInRoster() > 1)) {
 							fRowData[pRowIndex][pColumnIndex] = true;
@@ -137,7 +135,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 				player.updatePosition(pos, fDialog.getClient().getGame().getRules());
 				player.setName(pos.getName());
 				Object[] star = new Object[5];
-				star[0] = new Boolean(false);
+				star[0] = Boolean.FALSE;
 				star[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
 				star[2] = pos.getName();
 				star[3] = StringTool.formatThousands(pos.getCost());
@@ -146,12 +144,10 @@ public class StarPlayerTableModel extends AbstractTableModel {
 			}
 		}
 		Object[][] starPlayers = starPlayerList.toArray(new Object[starPlayerList.size()][]);
-		Arrays.sort(starPlayers, new Comparator<Object[]>() {
-			public int compare(Object[] o1, Object[] o2) {
-				Position position1 = ((Player) o1[4]).getPosition();
-				Position position2 = ((Player) o2[4]).getPosition();
-				return position1.getCost() - position2.getCost();
-			}
+		Arrays.sort(starPlayers, (o1, o2) -> {
+			Position position1 = ((Player<?>) o1[4]).getPosition();
+			Position position2 = ((Player<?>) o2[4]).getPosition();
+			return position1.getCost() - position2.getCost();
 		});
 		return starPlayers;
 	}

@@ -40,7 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractBuyDialog extends Dialog implements ActionListener, KeyListener {
+public abstract class AbstractBuyInducementsDialog extends Dialog implements ActionListener, KeyListener {
 	protected JButton resetButton;
 	protected JButton okButton;
 	protected int mercExtraCost;
@@ -56,7 +56,7 @@ public abstract class AbstractBuyDialog extends Dialog implements ActionListener
 	private int fAvailableGold;
 	private int fStartGold;
 
-	public AbstractBuyDialog(FantasyFootballClient client, String title, String teamId, int availableGold, boolean closeable) {
+	public AbstractBuyInducementsDialog(FantasyFootballClient client, String title, String teamId, int availableGold, boolean closeable) {
 		super(client, title, closeable);
 		fStartGold = fAvailableGold = availableGold;
 		fTeamId = teamId;
@@ -67,14 +67,16 @@ public abstract class AbstractBuyDialog extends Dialog implements ActionListener
 			fRoster = client.getGame().getTeamAway().getRoster();
 			fTeam = client.getGame().getTeamAway();
 		}
-	}
 
-	protected void buildInducementPanel(GameOptions gameOptions) {
+		GameOptions gameOptions = client.getGame().getOptions();
 
 		mercExtraCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 			.getValue();
 		mercSkillCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST))
 			.getValue();
+	}
+
+	protected JPanel buildInducementPanel(GameOptions gameOptions) {
 
 		JPanel leftPanel = buildLeftPanel(gameOptions);
 		JPanel rightPanel = buildRightPanel(gameOptions);
@@ -87,12 +89,16 @@ public abstract class AbstractBuyDialog extends Dialog implements ActionListener
 
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+		return centerPanel;
+	}
+
+	protected JPanel buttonPanel() {
 		resetButton = new JButton("Reset");
 		resetButton.addActionListener(this);
 		resetButton.addKeyListener(this);
 		resetButton.setMnemonic((int) 'R');
 
-		okButton = new JButton("Buy");
+		okButton = new JButton("Buy & Close");
 		okButton.addActionListener(this);
 		okButton.addKeyListener(this);
 		okButton.setMnemonic((int) 'B');
@@ -104,9 +110,7 @@ public abstract class AbstractBuyDialog extends Dialog implements ActionListener
 		buttonPanel.add(resetButton);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		getContentPane().add(centerPanel);
-		getContentPane().add(buttonPanel);
-
+		return buttonPanel;
 	}
 
 	private JPanel buildLeftPanel(GameOptions gameOptions) {

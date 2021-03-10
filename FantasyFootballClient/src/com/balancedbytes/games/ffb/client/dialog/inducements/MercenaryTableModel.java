@@ -16,21 +16,19 @@ import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
-@SuppressWarnings("serial")
 public class MercenaryTableModel extends AbstractTableModel {
 
 	private final int mercExtraCost;
 	private final int mercSkillCost;
-	private String[] fColumnNames;
-	private Object[][] fRowData;
-	private AbstractBuyDialog fDialog;
+	private final String[] fColumnNames;
+	private final Object[][] fRowData;
+	private final AbstractBuyInducementsDialog fDialog;
 	private int checkedRows = 0;
-	private int maxMercs;
+	private final int maxMercs;
 
-	public MercenaryTableModel(AbstractBuyDialog pDialog, GameOptions gameOptions) {
+	public MercenaryTableModel(AbstractBuyInducementsDialog pDialog, GameOptions gameOptions) {
 		mercExtraCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 				.getValue();
 		mercSkillCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST))
@@ -77,7 +75,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 	}
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
-		Player<?> player = (Player) fRowData[pRowIndex][5];
+		Player<?> player = (Player<?>) fRowData[pRowIndex][5];
 		int playerCost = player.getPosition().getCost() + mercExtraCost;
 		if (pColumnIndex == 0) {
 			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? mercSkillCost : 0;
@@ -124,7 +122,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 					player.updatePosition(pos, fDialog.getClient().getGame().getRules());
 					player.setName(pos.getName());
 					Object[] mecenary = new Object[6];
-					mecenary[0] = new Boolean(false);
+					mecenary[0] = Boolean.FALSE;
 					mecenary[1] = new ImageIcon(
 							playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
 					mecenary[2] = pos.getName();
@@ -136,12 +134,10 @@ public class MercenaryTableModel extends AbstractTableModel {
 			}
 		}
 		Object[][] mercenaries = mercenaryList.toArray(new Object[mercenaryList.size()][]);
-		Arrays.sort(mercenaries, new Comparator<Object[]>() {
-			public int compare(Object[] o1, Object[] o2) {
-				Position position1 = ((Player) o1[5]).getPosition();
-				Position position2 = ((Player) o2[5]).getPosition();
-				return position1.getCost() - position2.getCost();
-			}
+		Arrays.sort(mercenaries, (o1, o2) -> {
+			Position position1 = ((Player<?>) o1[5]).getPosition();
+			Position position2 = ((Player<?>) o2[5]).getPosition();
+			return position1.getCost() - position2.getCost();
 		});
 		return mercenaries;
 	}

@@ -15,7 +15,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-public class DialogBuyInducements extends AbstractBuyDialog {
+public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 
 	private final JLabel fGoldLabelAmount;
 
@@ -44,7 +44,8 @@ public class DialogBuyInducements extends AbstractBuyDialog {
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(fGoldPanel);
 		GameOptions gameOptions = client.getGame().getOptions();
-		buildInducementPanel(gameOptions);
+		getContentPane().add(buildInducementPanel(gameOptions));
+		getContentPane().add(buttonPanel());
 
 		pack();
 		setLocationToCenter();
