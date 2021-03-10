@@ -30,7 +30,7 @@ public enum ReportId implements INamedObject {
 	PENALTY_SHOOTOUT("penaltyShootout"), DOUBLE_HIRED_STAR_PLAYER("doubleHiredStarPlayer"),
 	SPELL_EFFECT_ROLL("spellEffectRoll"), WIZARD_USE("wizardUse"), GAME_OPTIONS("gameOptions"), // only for conversion
 	PASS_BLOCK("passBlock"), NO_PLAYERS_TO_FIELD("noPlayersToField"), PLAY_CARD("playCard"),
-	CARD_DEACTIVATED("cardDeactivated"), BOMB_OUT_OF_BOUNDS("bombOutOfBounds"), PETTY_CASH("pettyCash"),
+	CARD_DEACTIVATED("cardDeactivated"), BOMB_OUT_OF_BOUNDS("bombOutOfBounds"), PETTY_CASH("pettyCash"), FREE_PETTY_CASH("freePettyCash"),
 	INDUCEMENTS_BOUGHT("inducementsBought"), CARDS_BOUGHT("cardsBought"), CARD_EFFECT_ROLL("cardEffectRoll"),
 	WEEPING_DAGGER_ROLL("weepingDaggerRoll"), KICK_TEAM_MATE_ROLL("kickTeamMateRoll"), RIOTOUS_ROOKIES("riotousRookies"),
 	SWARMING_PLAYERS_ROLL("swarmingPlayersRoll"), PASS_DEVIATE("passDeviate");
@@ -213,6 +213,8 @@ public enum ReportId implements INamedObject {
 				return new ReportBombOutOfBounds();
 			case PETTY_CASH:
 				return new ReportPettyCash();
+			case FREE_PETTY_CASH:
+				return new ReportFreePettyCash();
 			case INDUCEMENTS_BOUGHT:
 				return new ReportInducementsBought();
 			case CARDS_BOUGHT:

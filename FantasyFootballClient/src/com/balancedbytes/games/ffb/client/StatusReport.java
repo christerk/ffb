@@ -62,6 +62,7 @@ import com.balancedbytes.games.ffb.report.ReportDefectingPlayers;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
 import com.balancedbytes.games.ffb.report.ReportFanFactorRoll;
 import com.balancedbytes.games.ffb.report.ReportFoul;
+import com.balancedbytes.games.ffb.report.ReportFreePettyCash;
 import com.balancedbytes.games.ffb.report.ReportFumbblResultUpload;
 import com.balancedbytes.games.ffb.report.ReportHandOver;
 import com.balancedbytes.games.ffb.report.ReportInducement;
@@ -529,6 +530,22 @@ public class StatusReport {
 		} else {
 			println(getIndent(), TextStyle.BOLD, "Both teams have equal fan support (FAME 0).");
 		}
+	}
+
+	private void reportFreePettyCash(ReportFreePettyCash pReport) {
+		Game game = getClient().getGame();
+		println(getIndent(), TextStyle.BOLD, "Assigning Petty Cash");
+
+		print(getIndent() + 1, "Team ");
+		if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
+			print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+		} else {
+			print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
+		}
+		String status = " receives " +
+			StringTool.formatThousands(pReport.getGold()) +
+			" gold as petty cash from being the underdog before adding inducements.";
+		println(getIndent() + 1, status);
 	}
 
 	public void reportPettyCash(ReportPettyCash pReport) {
@@ -3031,6 +3048,9 @@ public class StatusReport {
 					break;
 				case BOMB_OUT_OF_BOUNDS:
 					reportBombOutOfBounds((ReportBombOutOfBounds) report);
+					break;
+				case FREE_PETTY_CASH:
+					reportFreePettyCash((ReportFreePettyCash) report);
 					break;
 				case PETTY_CASH:
 					reportPettyCash((ReportPettyCash) report);
