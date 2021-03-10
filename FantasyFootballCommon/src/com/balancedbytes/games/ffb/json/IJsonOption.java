@@ -239,7 +239,7 @@ public interface IJsonOption {
 	JsonStringOption PASSWORD = new JsonStringOption("password");
 	JsonIntOption PASSING = new JsonIntOption("passing");
 	JsonIntOption PETTY_CASH = new JsonIntOption("pettyCash");
-	JsonIntOption PETTY_CASH_TRANSFERRED = new JsonIntOption("pettyCashTransferred");
+	JsonIntOption PETTY_CASH_AVAILABLE = new JsonIntOption("pettyCashTransferred");
 	JsonIntOption PETTY_CASH_USED = new JsonIntOption("pettyCashUsed");
 	JsonObjectOption PLAYER = new JsonObjectOption("player");
 	JsonEnumWithNameOption PLAYER_ACTION = new JsonEnumWithNameOption("playerAction", Factory.PLAYER_ACTION);

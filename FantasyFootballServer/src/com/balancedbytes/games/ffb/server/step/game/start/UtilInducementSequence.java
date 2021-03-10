@@ -10,8 +10,8 @@ public class UtilInducementSequence {
 			return 0;
 		}
 		GameResult gameResult = pGame.getGameResult();
-		int inducementGoldHome = gameResult.getTeamResultHome().getPettyCashTransferred();
-		int inducementGoldAway = gameResult.getTeamResultAway().getPettyCashTransferred();
+		int inducementGoldHome = gameResult.getTeamResultHome().getPettyCashAvailable();
+		int inducementGoldAway = gameResult.getTeamResultAway().getPettyCashAvailable();
 		int homeTV = gameResult.getTeamResultHome().getTeamValue();
 		int awayTV = gameResult.getTeamResultAway().getTeamValue();
 		if ((awayTV > homeTV) && ((awayTV - homeTV) > inducementGoldHome)) {
