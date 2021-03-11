@@ -605,6 +605,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 		IJsonOption.TEMPORARY_SKILL_MAP.addTo(jsonObject, temporarySkills);
 		IJsonOption.TEMPORARY_MODIFIERS_MAP.addTo(jsonObject, temporaryModifiers);
+		IJsonOption.TEMPORARY_PROPERTIES_MAP.addTo(jsonObject, temporaryProperties);
 		return jsonObject;
 
 	}
@@ -656,6 +657,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 		temporaryModifiers = IJsonOption.TEMPORARY_MODIFIERS_MAP.getFrom(source, jsonObject);
 		temporarySkills = IJsonOption.TEMPORARY_SKILL_MAP.getFrom(source, jsonObject);
+		temporaryProperties = IJsonOption.TEMPORARY_PROPERTIES_MAP.getFrom(source, jsonObject);
 		return this;
 
 	}

@@ -9,9 +9,9 @@ import com.balancedbytes.games.ffb.factory.CardTypeFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
+import com.balancedbytes.games.ffb.inducement.CardChoice;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.Usage;
-import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -72,8 +72,7 @@ public final class StepBuyCards extends AbstractStep {
 
 	private boolean fReportedHome;
 	private boolean fReportedAway;
-	private CardType sentType, sentRerolledType;
-	private Card sentCard1, sentCard2, sentRerolledCard1, sentRerolledCard2;
+	private CardChoice initalChoice, rerolledChoice;
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
@@ -395,24 +394,14 @@ public final class StepBuyCards extends AbstractStep {
 		if (fInducementGoldHome != null) {
 			IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
 		}
-		if (sentType != null) {
-			IJsonOption.CARD_TYPE.addTo(jsonObject, sentType);
+
+		if (initalChoice != null) {
+			IServerJsonOption.CARD_CHOICE_INITIAL.addTo(jsonObject, initalChoice.toJsonValue());
 		}
-		if (sentCard1 != null) {
-			IJsonOption.SENT_CARD1.addTo(jsonObject, sentCard1);
+		if (rerolledChoice != null) {
+			IServerJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
 		}
-		if (sentCard2 != null) {
-			IJsonOption.SENT_CARD2.addTo(jsonObject, sentCard2);
-		}
-		if (sentRerolledType != null) {
-			IJsonOption.CARD_TYPE.addTo(jsonObject, sentRerolledType);
-		}
-		if (sentRerolledCard1 != null) {
-			IJsonOption.SENT_CARD1.addTo(jsonObject, sentRerolledCard1);
-		}
-		if (sentRerolledCard2 != null) {
-			IJsonOption.SENT_CARD2.addTo(jsonObject, sentRerolledCard2);
-		}
+
 		IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
 		IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
 		IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
@@ -430,12 +419,16 @@ public final class StepBuyCards extends AbstractStep {
 		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(game, jsonObject);
 		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(game, jsonObject);
 		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
-		sentType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, jsonObject);
-		sentCard1 = (Card) IJsonOption.SENT_CARD1.getFrom(game, jsonObject);
-		sentCard2 = (Card) IJsonOption.SENT_CARD2.getFrom(game, jsonObject);
-		sentRerolledType = (CardType) IJsonOption.SENT_REROLLED_TYPE.getFrom(game, jsonObject);
-		sentRerolledCard1 = (Card) IJsonOption.SENT_REROLLED_CARD1.getFrom(game, jsonObject);
-		sentRerolledCard2 = (Card) IJsonOption.SENT_REROLLED_CARD2.getFrom(game, jsonObject);
+		JsonObject choiceObject = IServerJsonOption.CARD_CHOICE_INITIAL.getFrom(game, jsonObject);
+		if (choiceObject != null) {
+			initalChoice = new CardChoice().initFrom(game, choiceObject);
+		}
+		
+		choiceObject = IServerJsonOption.CARD_CHOICE_REROLLED.getFrom(game, jsonObject);
+		if (choiceObject != null) {
+			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
+		}
+
 		return this;
 	}
 

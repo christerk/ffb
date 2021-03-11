@@ -54,6 +54,11 @@ public interface IJsonOption {
 	JsonStringArrayOption CARD_EFFECTS = new JsonStringArrayOption("cardEffects");
 	JsonStringArrayOption CARDS_ACTIVE = new JsonStringArrayOption("cardsActive");
 	JsonStringArrayOption CARDS_AVAILABLE = new JsonStringArrayOption("cardsAvailable");
+	JsonObjectOption CARD_CHOICE_INITIAL = new JsonObjectOption("cardChoiceFirst");
+	JsonObjectOption CARD_CHOICE_REROLLED = new JsonObjectOption("cardChoiceRerolled");
+	JsonEnumWithNameOption CARD_CHOICE_ONE = new JsonEnumWithNameOption("cardChoice1", Factory.CARD);
+	JsonEnumWithNameOption CARD_CHOICE_TWO = new JsonEnumWithNameOption("cardChoice2", Factory.CARD);
+	JsonEnumWithNameOption CARD_CHOICE_TYPE = new JsonEnumWithNameOption("cardChoiceType", Factory.CARD_TYPE);
 	JsonStringArrayOption CARDS_DEACTIVATED = new JsonStringArrayOption("cardsDeactivated");
 	JsonEnumWithNameOption CARD_TYPE = new JsonEnumWithNameOption("cardType", Factory.CARD_TYPE);
 	JsonIntOption CASUALTIES = new JsonIntOption("casualties");
@@ -327,11 +332,6 @@ public interface IJsonOption {
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");
 	JsonEnumWithNameOption SEND_TO_BOX_REASON = new JsonEnumWithNameOption("sendToBoxReason", Factory.SEND_TO_BOX_REASON);
 	JsonIntOption SEND_TO_BOX_TURN = new JsonIntOption("sendToBoxTurn");
-	JsonEnumWithNameOption SENT_REROLLED_TYPE = new JsonEnumWithNameOption("sentRerolledType", Factory.CARD_TYPE);
-	JsonEnumWithNameOption SENT_CARD1 = new JsonEnumWithNameOption("sentCard1", Factory.CARD);
-	JsonEnumWithNameOption SENT_CARD2 = new JsonEnumWithNameOption("sentCard2", Factory.CARD);
-	JsonEnumWithNameOption SENT_REROLLED_CARD1 = new JsonEnumWithNameOption("sentRerolledCard1", Factory.CARD);
-	JsonEnumWithNameOption SENT_REROLLED_CARD2 = new JsonEnumWithNameOption("sentRerolledCard2", Factory.CARD);
 	JsonEnumWithNameOption SERIOUS_INJURY = new JsonEnumWithNameOption("seriousInjury", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_DECAY = new JsonEnumWithNameOption("seriousInjuryDecay", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_NEW = new JsonEnumWithNameOption("seriousInjuryNew", Factory.SERIOUS_INJURY);
