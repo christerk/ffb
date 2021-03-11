@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.CardChoice;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -21,17 +22,20 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 	private String fTeamId;
 	private int treasury, availableGold, availableCards;
 	private final Map<CardType, Integer> fNrOfCardsPerType;
+	private CardChoice initialChoice, rerolledChoice;
 
 	public DialogBuyCardsAndInducementsParameter() {
 		fNrOfCardsPerType = new HashMap<>();
 	}
 
-	public DialogBuyCardsAndInducementsParameter(String teamId, int availableCards, int treasury, int availableGold) {
+	public DialogBuyCardsAndInducementsParameter(String teamId, int availableCards, int treasury, int availableGold, CardChoice initialChoice, CardChoice rerolledChoice) {
 		this();
 		fTeamId = teamId;
 		this.availableCards = availableCards;
 		this.treasury = treasury;
 		this.availableGold = availableGold;
+		this.initialChoice = initialChoice;
+		this.rerolledChoice = rerolledChoice;
 	}
 
 	public DialogId getId() {
@@ -65,7 +69,7 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 
 	public IDialogParameter transform() {
 		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), getAvailableCards(),
-			treasury, availableGold);
+			treasury, availableGold, initialChoice, rerolledChoice);
 		fNrOfCardsPerType.forEach(dialogParameter::put);
 		return dialogParameter;
 	}
@@ -88,6 +92,14 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 			nrOfCardsPerType.add(nrOfCardsForThisType);
 		}
 		IJsonOption.NR_OF_CARDS_PER_TYPE.addTo(jsonObject, nrOfCardsPerType);
+
+		if (initialChoice != null) {
+			IJsonOption.CARD_CHOICE_INITIAL.addTo(jsonObject, initialChoice.toJsonValue());
+		}
+		if (rerolledChoice != null) {
+			IJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
+		}
+
 		return jsonObject;
 	}
 
@@ -105,6 +117,15 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 			CardType cardType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, nrOfCardsForThisType);
 			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(game, nrOfCardsForThisType);
 			put(cardType, nrOfCards);
+		}
+		JsonObject choiceObject = IJsonOption.CARD_CHOICE_INITIAL.getFrom(game, jsonObject);
+		if (choiceObject != null) {
+			initialChoice = new CardChoice().initFrom(game, choiceObject);
+		}
+
+		choiceObject = IJsonOption.CARD_CHOICE_REROLLED.getFrom(game, jsonObject);
+		if (choiceObject != null) {
+			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
 		}
 		return this;
 	}

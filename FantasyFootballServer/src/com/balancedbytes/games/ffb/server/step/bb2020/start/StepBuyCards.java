@@ -72,7 +72,7 @@ public final class StepBuyCards extends AbstractStep {
 
 	private boolean fReportedHome;
 	private boolean fReportedAway;
-	private CardChoice initalChoice, rerolledChoice;
+	private CardChoice initialChoice, rerolledChoice;
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
@@ -258,7 +258,7 @@ public final class StepBuyCards extends AbstractStep {
 	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int treasury, int availableGold) {
 		boolean noCards = UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS);
 		int availableCards = noCards ? 0 : UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(pTeamId, availableCards, treasury, availableGold);
+		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(pTeamId, availableCards, treasury, availableGold, initialChoice, rerolledChoice);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
 			dialogParameter.put(type, deck.size());
@@ -395,8 +395,8 @@ public final class StepBuyCards extends AbstractStep {
 			IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
 		}
 
-		if (initalChoice != null) {
-			IServerJsonOption.CARD_CHOICE_INITIAL.addTo(jsonObject, initalChoice.toJsonValue());
+		if (initialChoice != null) {
+			IServerJsonOption.CARD_CHOICE_INITIAL.addTo(jsonObject, initialChoice.toJsonValue());
 		}
 		if (rerolledChoice != null) {
 			IServerJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
@@ -421,9 +421,9 @@ public final class StepBuyCards extends AbstractStep {
 		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
 		JsonObject choiceObject = IServerJsonOption.CARD_CHOICE_INITIAL.getFrom(game, jsonObject);
 		if (choiceObject != null) {
-			initalChoice = new CardChoice().initFrom(game, choiceObject);
+			initialChoice = new CardChoice().initFrom(game, choiceObject);
 		}
-		
+
 		choiceObject = IServerJsonOption.CARD_CHOICE_REROLLED.getFrom(game, jsonObject);
 		if (choiceObject != null) {
 			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
