@@ -29,12 +29,13 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), choiceOneLabel = new JLabel(), choiceTwoLabel = new JLabel();
-	private final JPanel dynamicPanel, addCardPanel, initialChoicePanel;
-	private final JButton addCardButton, rerollChoiceButton, selectChoiceButton;
+	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), typeLabel = new JLabel();
+	private final JPanel dynamicPanel, addCardPanel, deckChoicePanel, cardChoicePanel, textPanel = new JPanel();
+	private final JButton addCardButton, rerollChoiceButton, selectChoiceButton = new JButton(), choiceOneButton = new JButton(), choiceTwoButton = new JButton();
 	private final Map<CardType, Integer> nrOfCardsPerType;
 	private final int treasury;
 	private final CardChoice initialChoice, rerolledChoice;
+	private CardChoice currentChoice;
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
@@ -55,12 +56,23 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 			showDeckChoice();
 		});
 		rerollChoiceButton = new JButton("Reroll to get a different deck");
-		selectChoiceButton = new JButton();
 		selectChoiceButton.addActionListener(e -> {
+			showCardChoice(initialChoice);
+		});
+		rerollChoiceButton.addActionListener(e -> {
+			showCardChoice(rerolledChoice);
+		});
+		choiceOneButton.addActionListener(e -> {
+			textPanel.add(new JLabel(currentChoice.getChoiceOne().getName()));
+			showAddCardButton();
+		});
+		choiceTwoButton.addActionListener(e -> {
+			textPanel.add(new JLabel(currentChoice.getChoiceTwo().getName()));
 			showAddCardButton();
 		});
 		addCardPanel = buildAddCardPanel();
-		initialChoicePanel = buildDeckChoicePanel();
+		deckChoicePanel = buildDeckChoicePanel();
+		cardChoicePanel = buildCardChoicePanel();
 
 		JPanel panelCards = new JPanel();
 		panelCards.setLayout(new BoxLayout(panelCards, BoxLayout.Y_AXIS));
@@ -69,7 +81,6 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panelCards.add(Box.createVerticalStrut(5));
 		panelCards.add(dynamicPanel);
 
-		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 		textPanel.add(label("Available Cards:", BOLD_FONT));
 		nrOfCardsPerType.forEach((key, value) -> textPanel.add(label(key.getDeckName() + ": " + value, REGULAR_FONT)));
@@ -86,7 +97,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(verticalMainPanel, BorderLayout.CENTER);
-		showDeckChoice();
+		showAddCardButton();
 		pack();
 
 		setLocationToCenter();
@@ -136,7 +147,17 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private void showDeckChoice() {
 		dynamicPanel.removeAll();
 		selectChoiceButton.setText("Use " + initialChoice.getType() + " deck");
-		dynamicPanel.add(initialChoicePanel, BorderLayout.CENTER);
+		dynamicPanel.add(deckChoicePanel, BorderLayout.CENTER);
+		getContentPane().validate();
+	}
+
+	private void showCardChoice(CardChoice choice) {
+		currentChoice = choice;
+		dynamicPanel.removeAll();
+		typeLabel.setText("Choose from " + choice.getType() + " deck");
+		choiceOneButton.setText(choice.getChoiceOne().getName());
+		choiceTwoButton.setText(choice.getChoiceTwo().getName());
+		dynamicPanel.add(cardChoicePanel, BorderLayout.CENTER);
 		getContentPane().validate();
 	}
 
@@ -158,6 +179,18 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panel.add(rerollChoiceButton);
 		panel.add(Box.createVerticalGlue());
 		return panel;
+	}
+
+	private JPanel buildCardChoicePanel() {
+		JPanel wrapper = new JPanel();
+		wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
+		wrapper.add(typeLabel);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		panel.add(choiceOneButton);
+		panel.add(choiceTwoButton);
+		wrapper.add(panel);
+		return wrapper;
 	}
 
 	protected void setGoldValue(int value) {
