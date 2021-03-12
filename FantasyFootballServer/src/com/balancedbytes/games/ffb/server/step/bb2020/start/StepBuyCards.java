@@ -243,7 +243,7 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	private void updateChoices() {
-		List<CardType> types = new ArrayList<>(fDeckByType.keySet());
+		List<CardType> types = fDeckByType.entrySet().stream().filter(entry -> entry.getValue().size() > 1).map(Map.Entry::getKey).collect(Collectors.toList());
 		initialChoice = createChoice(drawRandom(types));
 		rerolledChoice = createChoice(drawRandom(types));
 	}

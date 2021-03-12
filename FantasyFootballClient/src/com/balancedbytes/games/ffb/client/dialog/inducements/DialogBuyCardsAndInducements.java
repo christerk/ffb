@@ -52,9 +52,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panelCards.add(Box.createVerticalStrut(5));
 		panelCards.add(addCardButtonPanel());
 		panelCards.add(label("Available Cards:", BOLD_FONT));
-		nrOfCardsPerType.entrySet().forEach(entry -> {
-				panelCards.add(label(entry.getKey().getDeckName() + ": " + entry.getValue(), REGULAR_FONT));
-		});
+		nrOfCardsPerType.forEach((key, value) -> panelCards.add(label(key.getDeckName() + ": " + value, REGULAR_FONT)));
 		panelCards.add(label("Drawn Cards:", BOLD_FONT));
 
 		JPanel verticalMainPanel = verticalMainPanel(horizontalMainPanel(gameOptions, panelCards));
