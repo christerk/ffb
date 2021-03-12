@@ -49,6 +49,10 @@ public class CardDeck {
 		return fCards.size();
 	}
 
+	public List<Card> getCards() {
+		return fCards;
+	}
+
 	public void build(Game pGame) {
 		CardFactory factory = pGame.getFactory(FactoryType.Factory.CARD);
 		for (Card card : factory.allCards()) {

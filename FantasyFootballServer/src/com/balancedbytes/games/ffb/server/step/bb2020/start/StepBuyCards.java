@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsAndInducementsParameter;
+import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.CardTypeFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
@@ -12,6 +13,7 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardChoice;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.Usage;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -45,9 +47,13 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Step in start game sequence to buy cards.
@@ -73,6 +79,7 @@ public final class StepBuyCards extends AbstractStep {
 	private boolean fReportedHome;
 	private boolean fReportedAway;
 	private CardChoice initialChoice, rerolledChoice;
+	private List<Card> selectedCards, discardedCards;
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
@@ -235,6 +242,28 @@ public final class StepBuyCards extends AbstractStep {
 		}*/
 	}
 
+	private void updateChoices() {
+		List<CardType> types = new ArrayList<>(fDeckByType.keySet());
+		initialChoice = createChoice(drawRandom(types));
+		rerolledChoice = createChoice(drawRandom(types));
+	}
+
+	private CardChoice createChoice(CardType type) {
+		Set<Card> drawnCards = Stream.concat(selectedCards.stream(), discardedCards.stream()).collect(Collectors.toSet());
+		List<Card> availableCards = new ArrayList<>(fDeckByType.get(type).getCards());
+		availableCards.removeAll(drawnCards);
+		return new CardChoice()
+			.withType(type)
+			.withChoiceOne(drawRandom(availableCards))
+			.withChoiceTwo(drawRandom(availableCards));
+	}
+
+	private <T> T drawRandom(List<T> all) {
+		T drawn = all.get(getGameState().getDiceRoller().rollDice(all.size()) - 1);
+		all.remove(drawn);
+		return drawn;
+	}
+
 	private int calculateTotalCost(Card[] pCards) {
 		int totalCost = 0;
 		if (ArrayTool.isProvided(pCards)) {
@@ -258,6 +287,7 @@ public final class StepBuyCards extends AbstractStep {
 	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int treasury, int availableGold) {
 		boolean noCards = UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS);
 		int availableCards = noCards ? 0 : UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
+		updateChoices();
 		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(pTeamId, availableCards, treasury, availableGold, initialChoice, rerolledChoice);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
@@ -402,6 +432,14 @@ public final class StepBuyCards extends AbstractStep {
 			IServerJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
 		}
 
+		if (selectedCards != null) {
+			IServerJsonOption.CARDS_SELECTED.addTo(jsonObject, selectedCards.stream().map(Card::getName).collect(Collectors.toList()));
+		}
+
+		if (discardedCards != null) {
+			IServerJsonOption.CARDS_DISCARDED.addTo(jsonObject, discardedCards.stream().map(Card::getName).collect(Collectors.toList()));
+		}
+
 		IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
 		IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
 		IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
@@ -427,6 +465,18 @@ public final class StepBuyCards extends AbstractStep {
 		choiceObject = IServerJsonOption.CARD_CHOICE_REROLLED.getFrom(game, jsonObject);
 		if (choiceObject != null) {
 			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
+		}
+
+		CardFactory cardFactory = game.<CardFactory>getFactory(FactoryType.Factory.CARD);
+
+		String[] selectedCardNames = IJsonOption.CARDS_SELECTED.getFrom(game, jsonObject);
+		if (ArrayTool.isProvided(selectedCardNames)) {
+			selectedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
+		}
+
+		String[] discardedCardNames = IJsonOption.CARDS_DISCARDED.getFrom(game, jsonObject);
+		if (ArrayTool.isProvided(discardedCardNames)) {
+			discardedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
 		}
 
 		return this;

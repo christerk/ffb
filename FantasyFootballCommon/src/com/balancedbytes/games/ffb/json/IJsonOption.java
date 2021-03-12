@@ -50,6 +50,8 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);
 	JsonStringArrayOption CARDS = new JsonStringArrayOption("cards");
+	JsonStringArrayOption CARDS_DISCARDED = new JsonStringArrayOption("cardsDiscarded");
+	JsonStringArrayOption CARDS_SELECTED = new JsonStringArrayOption("cardsSelected");
 	JsonEnumWithNameOption CARD_EFFECT = new JsonEnumWithNameOption("cardEffect", Factory.CARD_EFFECT);
 	JsonStringArrayOption CARD_EFFECTS = new JsonStringArrayOption("cardEffects");
 	JsonStringArrayOption CARDS_ACTIVE = new JsonStringArrayOption("cardsActive");

@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.fumbbl.rng.Fortuna;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -26,7 +26,7 @@ public class DiceRoller {
 		return fGameState;
 	}
 
-	private int rollDice(int pType) {
+	public int rollDice(int pType) {
 		Fortuna fortuna = getGameState().getServer().getFortuna();
 		while (fTestRolls.size() > 0) {
 			int testRoll = fTestRolls.remove(0).intValue();
