@@ -32,6 +32,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private final Map<CardType, Integer> nrOfCardsPerType;
 	private final JButton addCardButton;
 	private final int treasury;
+	private final JPanel dynamicPanel = new JPanel();
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
@@ -50,7 +51,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panelCards.setLayout(new BoxLayout(panelCards, BoxLayout.Y_AXIS));
 		panelCards.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		panelCards.add(Box.createVerticalStrut(5));
-		panelCards.add(addCardButtonPanel());
+		panelCards.add(dynamicPanel);
 		panelCards.add(label("Available Cards:", BOLD_FONT));
 		nrOfCardsPerType.forEach((key, value) -> panelCards.add(label(key.getDeckName() + ": " + value, REGULAR_FONT)));
 		panelCards.add(label("Drawn Cards:", BOLD_FONT));
@@ -59,7 +60,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(verticalMainPanel, BorderLayout.CENTER);
-
+		showAddCardButton();
 		pack();
 		setLocationToCenter();
 
@@ -99,14 +100,13 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		return panelGold;
 	}
 
-	private JPanel addCardButtonPanel() {
-		JPanel panelButtons = new JPanel();
-		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
+	private void showAddCardButton() {
+		dynamicPanel.setLayout(new BoxLayout(dynamicPanel, BoxLayout.X_AXIS));
 
-		panelButtons.add(Box.createHorizontalGlue());
-		panelButtons.add(addCardButton);
-		panelButtons.add(Box.createHorizontalGlue());
-		return panelButtons;
+		dynamicPanel.add(Box.createHorizontalGlue());
+		dynamicPanel.add(addCardButton);
+		dynamicPanel.add(Box.createHorizontalGlue());
+		getContentPane().validate();
 	}
 
 	protected void setGoldValue(int value) {
