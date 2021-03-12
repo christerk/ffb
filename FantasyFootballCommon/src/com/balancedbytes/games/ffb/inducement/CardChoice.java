@@ -55,7 +55,7 @@ public class CardChoice implements IJsonSerializable {
 			throw new FantasyFootballException("Type of choiceTwo " + choiceTwo.getType().getName() + " does not match type " + type.getName());
 		}
 
-		if (choiceOne != null && choiceTwo != null) {
+		if (choiceOne != null && choiceTwo != null && choiceOne.getType() != choiceTwo.getType()) {
 			throw new FantasyFootballException("Types of choiceOne " + choiceOne.getType().getName() + " and choiceTwo " + choiceTwo.getType().getName() + " do not match ");
 		}
 	}

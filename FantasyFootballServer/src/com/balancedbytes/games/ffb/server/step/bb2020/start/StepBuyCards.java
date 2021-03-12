@@ -79,7 +79,8 @@ public final class StepBuyCards extends AbstractStep {
 	private boolean fReportedHome;
 	private boolean fReportedAway;
 	private CardChoice initialChoice, rerolledChoice;
-	private List<Card> selectedCards, discardedCards;
+	private List<Card> selectedCards = new ArrayList<>();
+	private List<Card> discardedCards = new ArrayList<>();
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
@@ -432,13 +433,10 @@ public final class StepBuyCards extends AbstractStep {
 			IServerJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
 		}
 
-		if (selectedCards != null) {
-			IServerJsonOption.CARDS_SELECTED.addTo(jsonObject, selectedCards.stream().map(Card::getName).collect(Collectors.toList()));
-		}
+		IServerJsonOption.CARDS_SELECTED.addTo(jsonObject, selectedCards.stream().map(Card::getName).collect(Collectors.toList()));
 
-		if (discardedCards != null) {
-			IServerJsonOption.CARDS_DISCARDED.addTo(jsonObject, discardedCards.stream().map(Card::getName).collect(Collectors.toList()));
-		}
+		IServerJsonOption.CARDS_DISCARDED.addTo(jsonObject, discardedCards.stream().map(Card::getName).collect(Collectors.toList()));
+
 
 		IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
 		IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
@@ -467,16 +465,16 @@ public final class StepBuyCards extends AbstractStep {
 			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
 		}
 
-		CardFactory cardFactory = game.<CardFactory>getFactory(FactoryType.Factory.CARD);
+		CardFactory cardFactory = game.getFactory(FactoryType.Factory.CARD);
 
 		String[] selectedCardNames = IJsonOption.CARDS_SELECTED.getFrom(game, jsonObject);
-		if (ArrayTool.isProvided(selectedCardNames)) {
+		if (selectedCardNames != null) {
 			selectedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
 		}
 
 		String[] discardedCardNames = IJsonOption.CARDS_DISCARDED.getFrom(game, jsonObject);
-		if (ArrayTool.isProvided(discardedCardNames)) {
-			discardedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
+		if (discardedCardNames != null) {
+			discardedCards = Arrays.stream(discardedCardNames).map(cardFactory::forName).collect(Collectors.toList());
 		}
 
 		return this;
