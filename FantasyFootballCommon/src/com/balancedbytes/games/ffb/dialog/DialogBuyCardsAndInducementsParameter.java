@@ -65,7 +65,16 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 	public Map<CardType, Integer> getNrOfCardsPerType() {
 		return fNrOfCardsPerType;
 	}
-// transformation
+
+	public CardChoice getInitialChoice() {
+		return initialChoice;
+	}
+
+	public CardChoice getRerolledChoice() {
+		return rerolledChoice;
+	}
+
+	// transformation
 
 	public IDialogParameter transform() {
 		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), getAvailableCards(),

@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.client.dialog.inducements;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.inducement.CardChoice;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -17,6 +18,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -28,24 +30,35 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private final JLabel labelAvailableGold, labelPettyCash;
+	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), choiceOneLabel = new JLabel(), choiceTwoLabel = new JLabel();
+	private final JPanel dynamicPanel, addCardPanel, initialChoicePanel;
+	private final JButton addCardButton, rerollChoiceButton;
 	private final Map<CardType, Integer> nrOfCardsPerType;
-	private final JButton addCardButton;
 	private final int treasury;
-	private final JPanel dynamicPanel = new JPanel();
+	private final ActionListener addCardListener;
+	private final CardChoice initialChoice, rerolledChoice;
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
 		super(pClient, "Buy Cards And Inducements", null, pParameter.getAvailableGold(), false);
+		this.initialChoice = pParameter.getInitialChoice();
+		this.rerolledChoice = pParameter.getRerolledChoice();
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
 		nrOfCardsPerType = pParameter.getNrOfCardsPerType();
 
+		dynamicPanel = new JPanel();
+		dynamicPanel.setLayout(new BorderLayout());
+
 		treasury = pParameter.getTreasury();
 		addCardButton = new JButton("Add Card");
-		addCardButton.addActionListener(this);
-		labelAvailableGold = new JLabel();
-		labelPettyCash = new JLabel();
+		addCardListener = e -> {
+			showInitialChoice();
+		};
+		addCardButton.addActionListener(addCardListener);
+		rerollChoiceButton = new JButton("Reroll to choose from a different deck");
+		addCardPanel = buildAddCardPanel();
+		initialChoicePanel = buildInitialChoicePanel();
 
 		JPanel panelCards = new JPanel();
 		panelCards.setLayout(new BoxLayout(panelCards, BoxLayout.Y_AXIS));
@@ -101,12 +114,36 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	private void showAddCardButton() {
-		dynamicPanel.setLayout(new BoxLayout(dynamicPanel, BoxLayout.X_AXIS));
-
-		dynamicPanel.add(Box.createHorizontalGlue());
-		dynamicPanel.add(addCardButton);
-		dynamicPanel.add(Box.createHorizontalGlue());
+		dynamicPanel.removeAll();
+		dynamicPanel.add(addCardPanel, BorderLayout.CENTER);
 		getContentPane().validate();
+	}
+
+	private void showInitialChoice() {
+		dynamicPanel.removeAll();
+		choiceOneLabel.setText(initialChoice.getType().getName());
+		choiceTwoLabel.setText(initialChoice.getType().getName());
+		dynamicPanel.add(initialChoicePanel, BorderLayout.CENTER);
+		getContentPane().validate();
+	}
+
+	private JPanel buildAddCardPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+		panel.add(Box.createHorizontalGlue());
+		panel.add(addCardButton);
+		panel.add(Box.createHorizontalGlue());
+		return panel;
+	}
+
+	private JPanel buildInitialChoicePanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		panel.add(choiceOneLabel);
+		panel.add(choiceTwoLabel);
+		panel.add(rerollChoiceButton);
+		return panel;
 	}
 
 	protected void setGoldValue(int value) {
@@ -122,15 +159,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 
-		if (pActionEvent.getSource() == addCardButton) {
-			buyCard();
-		}
 	}
-
-	public void buyCard() {
-
-	}
-
 
 	public void keyPressed(KeyEvent pKeyEvent) {
 	}
