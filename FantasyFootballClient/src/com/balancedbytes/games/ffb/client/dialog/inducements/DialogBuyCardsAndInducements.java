@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -159,9 +160,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JLabel label = new JLabel();
-		label.setText("<html>Buy card from random deck<br/>" +
-			"for " + StringTool.formatThousands(pParameter.getMinimumCardPrice()) + "gp</html>");
+		label.setText("<html>Buy card from random<br/>deck for "
+				+ StringTool.formatThousands(pParameter.getMinimumCardPrice()) + " gp</html>");
+		label.setAlignmentX(CENTER_ALIGNMENT);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(label);
+		panel.add(Box.createVerticalStrut(3));
 		addCardButton.setText("Buy Special Play Card");
 		addCardButton.addActionListener(e -> showDeckChoice());
 		addCardButton.setAlignmentX(CENTER_ALIGNMENT);
