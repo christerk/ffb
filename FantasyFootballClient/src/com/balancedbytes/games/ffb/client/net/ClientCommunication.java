@@ -57,6 +57,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandPushback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReplay;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandRequestVersion;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandStartGame;
@@ -408,6 +409,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandWizardSpell(pWizardSpell, pCoordinate));
 	}
 
+	public void sendCardSelection(ClientCommandSelectCardToBuy.Selection selection){
+		send(new ClientCommandSelectCardToBuy(selection));
+	}
+	
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}

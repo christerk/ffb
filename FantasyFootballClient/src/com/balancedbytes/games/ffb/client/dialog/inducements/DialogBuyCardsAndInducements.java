@@ -3,9 +3,11 @@ package com.balancedbytes.games.ffb.client.dialog.inducements;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardChoice;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.model.GameOptions;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -216,22 +218,26 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panel.add(choiceOneButton);
 		panel.add(Box.createVerticalStrut(2));
 
-		choiceOneButton.addActionListener(e -> {
-			cardsSummaryPanel.add(Box.createVerticalStrut(3));
-			cardsSummaryPanel.add(new JLabel(currentChoice.getChoiceOne().getName()));
-			showAddCardButton();
-		});
+		choiceOneButton.addActionListener(e -> sendCommand(true));
 		choiceOneButton.setAlignmentX(CENTER_ALIGNMENT);
 
 		panel.add(choiceTwoButton);
-		choiceTwoButton.addActionListener(e -> {
-			cardsSummaryPanel.add(Box.createVerticalStrut(3));
-			cardsSummaryPanel.add(new JLabel(currentChoice.getChoiceTwo().getName()));
-			showAddCardButton();
-		});
+		choiceTwoButton.addActionListener(e -> sendCommand(false));
 		choiceTwoButton.setAlignmentX(CENTER_ALIGNMENT);
 
 		return panel;
+	}
+
+	private void addCard(Card card) {
+		cardsSummaryPanel.add(Box.createVerticalStrut(3));
+		cardsSummaryPanel.add(new JLabel(card.getName()));
+		showAddCardButton();
+	}
+
+	private void sendCommand(boolean firstCardChoice) {
+		ClientCommandSelectCardToBuy.Selection selection =
+			ClientCommandSelectCardToBuy.Selection.valueOf(currentChoice == initialChoice, firstCardChoice);
+		getClient().getCommunication().sendCardSelection(selection);
 	}
 
 	protected void updateGoldValue() {
