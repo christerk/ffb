@@ -127,6 +127,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption STARTED_HOME = new JsonBooleanOption("startedHome");
 	JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
 	JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", Factory.STEP_ID);
+	JsonStringOption STEP_PHASE = new JsonStringOption("stepPhase");
 	JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");
 	JsonObjectOption STEP_STACK = new JsonObjectOption("stepStack");
 	JsonArrayOption STEPS = new JsonArrayOption("steps");

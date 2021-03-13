@@ -48,6 +48,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption BOMB_COORDINATE = new JsonFieldCoordinateOption("bombCoordinate");
 	JsonBooleanOption BOMB_MOVING = new JsonBooleanOption("bombMoving");
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
+	JsonBooleanOption CAN_BUY_CARDS = new JsonBooleanOption("canBuyCards");
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);
 	JsonStringArrayOption CARDS = new JsonStringArrayOption("cards");
 	JsonStringArrayOption CARDS_DEACTIVATED = new JsonStringArrayOption("cardsDeactivated");

@@ -23,12 +23,13 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 	private int treasury, availableGold, availableCards, minimumCardPrice;
 	private final Map<CardType, Integer> fNrOfCardsPerType;
 	private CardChoice initialChoice, rerolledChoice;
+	private boolean canBuyCards;
 
 	public DialogBuyCardsAndInducementsParameter() {
 		fNrOfCardsPerType = new HashMap<>();
 	}
 
-	public DialogBuyCardsAndInducementsParameter(String teamId, int availableCards, int treasury, int availableGold, CardChoice initialChoice, CardChoice rerolledChoice, int minimumCardPrice) {
+	public DialogBuyCardsAndInducementsParameter(String teamId, boolean canBuyCards, int availableCards, int treasury, int availableGold, CardChoice initialChoice, CardChoice rerolledChoice, int minimumCardPrice) {
 		this();
 		fTeamId = teamId;
 		this.availableCards = availableCards;
@@ -37,6 +38,7 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		this.initialChoice = initialChoice;
 		this.rerolledChoice = rerolledChoice;
 		this.minimumCardPrice = minimumCardPrice;
+		this.canBuyCards = canBuyCards;
 	}
 
 	public int getMinimumCardPrice() {
@@ -79,10 +81,14 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		return rerolledChoice;
 	}
 
+	public boolean isCanBuyCards() {
+		return canBuyCards;
+	}
+
 	// transformation
 
 	public IDialogParameter transform() {
-		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), getAvailableCards(),
+		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), canBuyCards, getAvailableCards(),
 			treasury, availableGold, initialChoice, rerolledChoice, minimumCardPrice);
 		fNrOfCardsPerType.forEach(dialogParameter::put);
 		return dialogParameter;

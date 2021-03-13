@@ -183,6 +183,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		addCardButton.setText("Buy Special Play Card");
 		addCardButton.addActionListener(e -> showDeckChoice());
 		addCardButton.setAlignmentX(CENTER_ALIGNMENT);
+		addCardButton.setEnabled(pParameter.isCanBuyCards());
 
 		panel.add(addCardButton);
 		return panel;

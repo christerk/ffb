@@ -23,8 +23,8 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -36,6 +36,7 @@ import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
@@ -82,6 +83,8 @@ public final class StepBuyCards extends AbstractStep {
 	private CardChoice initialChoice, rerolledChoice;
 	private List<Card> selectedCards = new ArrayList<>();
 	private List<Card> discardedCards = new ArrayList<>();
+	private ClientCommandSelectCardToBuy.Selection currentSelection;
+	private Phase phase = Phase.INIT;
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
@@ -111,19 +114,9 @@ public final class StepBuyCards extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
-				case CLIENT_BUY_CARD:
-					ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-						fBuyCardHome = buyCardCommand.getCardType();
-						if (fBuyCardHome == null) {
-							fCardsSelectedHome = true;
-						}
-					} else {
-						fBuyCardAway = buyCardCommand.getCardType();
-						if (fBuyCardAway == null) {
-							fCardsSelectedAway = true;
-						}
-					}
+				case CLIENT_SELECT_CARD_TO_BUY:
+					ClientCommandSelectCardToBuy buyCardCommand = (ClientCommandSelectCardToBuy) pReceivedCommand.getCommand();
+					currentSelection = buyCardCommand.getSelection();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_BUY_INDUCEMENTS:
@@ -155,10 +148,8 @@ public final class StepBuyCards extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
-			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
 
-		if (cardPrices == null) {
+		if (cardPrices == null) { 
 			buildDecks();
 
 			cardPrices = new HashMap<>();
@@ -168,16 +159,22 @@ public final class StepBuyCards extends AbstractStep {
 			});
 		}
 
-		if (fInducementGoldHome == null) {
-			fInducementGoldHome = freeCash + game.getTeamHome().getTreasury() + game.getGameResult().getTeamResultHome().getPettyCashAvailable();
-			UtilServerDialog.showDialog(getGameState(),
-				createDialogParameter(game.getTeamHome().getId(), game.getTeamHome().getTreasury(), fInducementGoldHome), false);
+		switch (phase) {
+			case INIT:
+				init(game);
+				return;
+			case HOME:
+			case AWAY:
+				if (currentSelection != null) {
+					handleCard();
+				}
+				return;
+			case DONE:
+				getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 
-		if (fInducementGoldAway == null) {
-			fInducementGoldAway = game.getTeamAway().getTreasury() + game.getGameResult().getTeamResultAway().getPettyCashAvailable();
-		}
-		
+//			int removed = (int) Stream.concat(selectedCards.stream(), discardedCards.stream()).filter(card -> card.getType() == type).count();
+
 /*
 		if (fBuyCardHome != null) {
 			fInducementGoldHome -= cardPrices.getOrDefault(fBuyCardHome, 0);
@@ -244,7 +241,38 @@ public final class StepBuyCards extends AbstractStep {
 		}*/
 	}
 
+	private void init(Game game) {
+		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
+			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+
+		fInducementGoldHome = freeCash + game.getTeamHome().getTreasury() + game.getGameResult().getTeamResultHome().getPettyCashAvailable();
+		fInducementGoldAway = freeCash + game.getTeamAway().getTreasury() + game.getGameResult().getTeamResultAway().getPettyCashAvailable();
+		phase = Phase.HOME;
+
+		UtilServerDialog.showDialog(getGameState(),
+			createDialogParameter(game.getTeamHome().getId(), game.getTeamHome().getTreasury(), fInducementGoldHome), false);
+
+	}
+
+	private void handleCard() {
+		CardChoice choice = currentSelection.isInitialDeckChoice() ? initialChoice : rerolledChoice;
+		if (currentSelection.isFirstCardChoice()) {
+			selectedCards.add(choice.getChoiceOne());
+			discardedCards.add(choice.getChoiceTwo());
+		} else {
+			selectedCards.add(choice.getChoiceTwo());
+			discardedCards.add(choice.getChoiceOne());
+		}
+		if (phase == Phase.HOME) {
+			fInducementGoldHome -= cardPrices.get(choice.getType());
+		} else {
+			fInducementGoldAway -= cardPrices.get(choice.getType());
+		}
+		updateChoices();
+	}
+
 	private void updateChoices() {
+		currentSelection = null;
 		List<CardType> types = fDeckByType.entrySet().stream().filter(entry -> entry.getValue().size() > 1).map(Map.Entry::getKey).collect(Collectors.toList());
 		initialChoice = createChoice(drawRandom(types));
 		rerolledChoice = createChoice(drawRandom(types));
@@ -287,11 +315,14 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int treasury, int availableGold) {
-		boolean noCards = UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS);
-		int availableCards = noCards ? 0 : UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-		updateChoices();
 		int minimumPrice = cardPrices.values().stream().min(Comparator.naturalOrder()).orElse(0);
-		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(pTeamId, availableCards, treasury, availableGold, initialChoice, rerolledChoice, minimumPrice);
+		int cardSlotsLeft = UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS) ? 0
+			: UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS) - selectedCards.size();
+		boolean canBuyCards = cardSlotsLeft > 0 && availableGold >= minimumPrice;
+
+		updateChoices();
+		DialogBuyCardsAndInducementsParameter dialogParameter =
+			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlotsLeft, treasury, availableGold, initialChoice, rerolledChoice, minimumPrice);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
 			dialogParameter.put(type, deck.size());
@@ -444,6 +475,12 @@ public final class StepBuyCards extends AbstractStep {
 		IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
 		IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
 		IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
+
+		if (currentSelection != null) {
+			IServerJsonOption.CARD_SELECTION.addTo(jsonObject, currentSelection.name());
+		}
+
+		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
 		return jsonObject;
 	}
 
@@ -479,7 +516,18 @@ public final class StepBuyCards extends AbstractStep {
 			discardedCards = Arrays.stream(discardedCardNames).map(cardFactory::forName).collect(Collectors.toList());
 		}
 
+		String selectionName = IServerJsonOption.CARD_SELECTION.getFrom(game, jsonObject);
+		if (selectionName != null) {
+			currentSelection = ClientCommandSelectCardToBuy.Selection.valueOf(selectionName);
+		}
+
+		phase = Phase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(game, jsonObject));
+
 		return this;
+	}
+
+	private enum Phase {
+		INIT, HOME, AWAY, DONE
 	}
 
 }

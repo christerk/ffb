@@ -412,7 +412,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	public void sendCardSelection(ClientCommandSelectCardToBuy.Selection selection){
 		send(new ClientCommandSelectCardToBuy(selection));
 	}
-	
+
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}
