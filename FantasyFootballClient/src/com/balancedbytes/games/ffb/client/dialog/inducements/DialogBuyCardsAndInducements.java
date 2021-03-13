@@ -40,7 +40,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
-		super(pClient, "Buy Cards And Inducements", null, pParameter.getAvailableGold(), false);
+		super(pClient, "Buy Cards And Inducements", pParameter.getTeamId(), pParameter.getAvailableGold(), false);
 		this.initialChoice = pParameter.getInitialChoice();
 		this.rerolledChoice = pParameter.getRerolledChoice();
 
