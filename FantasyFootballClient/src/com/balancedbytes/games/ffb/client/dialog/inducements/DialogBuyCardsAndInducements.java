@@ -151,7 +151,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private void showDeckChoice() {
 		dynamicPanel.removeAll();
-		selectChoiceButton.setText("Use " + initialChoice.getType() + " deck");
+		selectChoiceButton.setText("Use " + initialChoice.getType().getDeckName());
 		dynamicPanel.add(deckChoicePanel);
 		getContentPane().validate();
 		pack();
@@ -160,7 +160,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private void showCardChoice(CardChoice choice) {
 		currentChoice = choice;
 		dynamicPanel.removeAll();
-		typeLabel.setText("Choose from " + choice.getType() + " deck");
+		typeLabel.setText("<html>Choose from<br/>" + choice.getType().getDeckName() + "</html>");
 		choiceOneButton.setText(choice.getChoiceOne().getName());
 		choiceTwoButton.setText(choice.getChoiceTwo().getName());
 		dynamicPanel.add(cardChoicePanel);
