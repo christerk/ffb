@@ -63,6 +63,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption CARD_CHOICE_ONE = new JsonEnumWithNameOption("cardChoice1", Factory.CARD);
 	JsonEnumWithNameOption CARD_CHOICE_TWO = new JsonEnumWithNameOption("cardChoice2", Factory.CARD);
 	JsonEnumWithNameOption CARD_CHOICE_TYPE = new JsonEnumWithNameOption("cardChoiceType", Factory.CARD_TYPE);
+	JsonStringOption CARD_SELECTION = new JsonStringOption("cardSelection");
 	JsonEnumWithNameOption CARD_TYPE = new JsonEnumWithNameOption("cardType", Factory.CARD_TYPE);
 	JsonIntOption CASUALTIES = new JsonIntOption("casualties");
 	JsonIntArrayOption CASUALTY_ROLL = new JsonIntArrayOption("casualtyRoll");
