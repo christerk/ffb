@@ -48,6 +48,7 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -289,7 +290,8 @@ public final class StepBuyCards extends AbstractStep {
 		boolean noCards = UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS);
 		int availableCards = noCards ? 0 : UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
 		updateChoices();
-		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(pTeamId, availableCards, treasury, availableGold, initialChoice, rerolledChoice);
+		int minimumPrice = cardPrices.values().stream().min(Comparator.naturalOrder()).orElse(0);
+		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(pTeamId, availableCards, treasury, availableGold, initialChoice, rerolledChoice, minimumPrice);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
 			dialogParameter.put(type, deck.size());

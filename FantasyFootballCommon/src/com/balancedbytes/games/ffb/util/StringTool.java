@@ -67,14 +67,14 @@ public class StringTool {
 		String numberString = Long.toString(pNumber);
 		int pos = 0;
 		if ((numberString.length() % 3) > 0) {
-			result.append(numberString.substring(0, numberString.length() % 3));
+			result.append(numberString, 0, numberString.length() % 3);
 			pos += numberString.length() % 3;
 		}
 		while (pos < numberString.length()) {
 			if (pos > 0) {
 				result.append(",");
 			}
-			result.append(numberString.substring(pos, pos + 3));
+			result.append(numberString, pos, pos + 3);
 			pos += 3;
 		}
 		return result.toString();
