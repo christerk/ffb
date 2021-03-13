@@ -175,7 +175,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JLabel label = new JLabel();
 		label.setText("<html>Buy card from random<br/>deck for "
-				+ StringTool.formatThousands(pParameter.getMinimumCardPrice()) + " gp</html>");
+				+ StringTool.formatThousands(pParameter.getCardPrice()) + " gp</html>");
 		label.setAlignmentX(CENTER_ALIGNMENT);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(label);

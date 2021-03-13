@@ -39,6 +39,7 @@ public enum GameOptionId implements INamedObject {
 	CARDS_GOOD_KARMA_COST("cardsGoodKarmaCost"), CARDS_GOOD_KARMA_MAX("cardsGoodKarmaMax"),
 	CARDS_RANDOM_EVENT_COST("cardsRandomEventCost"), CARDS_RANDOM_EVENT_MAX("cardsRandomEventMax"),
 	CARDS_DESPERATE_MEASURE_COST("cardsDesperateMeasureCost"), CARDS_DESPERATE_MEASURE_MAX("cardsDesperateMeasureMax"),
+	CARDS_SPECIAL_PLAY_COST("cardsSpecialPlayCost"),
 
 	INDUCEMENT_APOS_COST("inducementAposCost"), INDUCEMENT_APOS_MAX("inducementAposMax"),
 	INDUCEMENT_BRIBES_COST("inducementBribesCost"), INDUCEMENT_BRIBES_REDUCED_COST("inducementBribesReducedCost"),

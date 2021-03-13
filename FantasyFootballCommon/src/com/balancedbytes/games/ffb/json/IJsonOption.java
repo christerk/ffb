@@ -52,9 +52,8 @@ public interface IJsonOption {
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);
 	JsonStringArrayOption CARDS = new JsonStringArrayOption("cards");
 	JsonStringArrayOption CARDS_DEACTIVATED = new JsonStringArrayOption("cardsDeactivated");
-	JsonStringArrayOption CARDS_DISCARDED = new JsonStringArrayOption("cardsDiscarded");
-	JsonIntOption CARDS_MINIMUM_PRICE = new JsonIntOption("cardsMinimumPrice");
-	JsonStringArrayOption CARDS_SELECTED = new JsonStringArrayOption("cardsSelected");
+	JsonIntOption CARDS_PRICE = new JsonIntOption("cardsPrice");
+	JsonStringArrayOption CARDS_USED = new JsonStringArrayOption("cardsUsed");
 	JsonEnumWithNameOption CARD_EFFECT = new JsonEnumWithNameOption("cardEffect", Factory.CARD_EFFECT);
 	JsonStringArrayOption CARD_EFFECTS = new JsonStringArrayOption("cardEffects");
 	JsonStringArrayOption CARDS_ACTIVE = new JsonStringArrayOption("cardsActive");

@@ -20,7 +20,7 @@ import java.util.Map;
 public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 
 	private String fTeamId;
-	private int treasury, availableGold, availableCards, minimumCardPrice;
+	private int treasury, availableGold, cardSlots, cardPrice;
 	private final Map<CardType, Integer> fNrOfCardsPerType;
 	private CardChoice initialChoice, rerolledChoice;
 	private boolean canBuyCards;
@@ -29,20 +29,20 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		fNrOfCardsPerType = new HashMap<>();
 	}
 
-	public DialogBuyCardsAndInducementsParameter(String teamId, boolean canBuyCards, int availableCards, int treasury, int availableGold, CardChoice initialChoice, CardChoice rerolledChoice, int minimumCardPrice) {
+	public DialogBuyCardsAndInducementsParameter(String teamId, boolean canBuyCards, int cardSlots, int treasury, int availableGold, CardChoice initialChoice, CardChoice rerolledChoice, int cardPrice) {
 		this();
 		fTeamId = teamId;
-		this.availableCards = availableCards;
+		this.cardSlots = cardSlots;
 		this.treasury = treasury;
 		this.availableGold = availableGold;
 		this.initialChoice = initialChoice;
 		this.rerolledChoice = rerolledChoice;
-		this.minimumCardPrice = minimumCardPrice;
+		this.cardPrice = cardPrice;
 		this.canBuyCards = canBuyCards;
 	}
 
-	public int getMinimumCardPrice() {
-		return minimumCardPrice;
+	public int getCardPrice() {
+		return cardPrice;
 	}
 
 	public DialogId getId() {
@@ -53,8 +53,8 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		return fTeamId;
 	}
 
-	public int getAvailableCards() {
-		return availableCards;
+	public int getCardSlots() {
+		return cardSlots;
 	}
 
 	public int getAvailableGold() {
@@ -88,8 +88,8 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 	// transformation
 
 	public IDialogParameter transform() {
-		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), canBuyCards, getAvailableCards(),
-			treasury, availableGold, initialChoice, rerolledChoice, minimumCardPrice);
+		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), canBuyCards, getCardSlots(),
+			treasury, availableGold, initialChoice, rerolledChoice, cardPrice);
 		fNrOfCardsPerType.forEach(dialogParameter::put);
 		return dialogParameter;
 	}
@@ -100,7 +100,7 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
-		IJsonOption.AVAILABLE_CARDS.addTo(jsonObject, availableCards);
+		IJsonOption.AVAILABLE_CARDS.addTo(jsonObject, cardSlots);
 		IJsonOption.AVAILABLE_GOLD.addTo(jsonObject, availableGold);
 		IJsonOption.TREASURY.addTo(jsonObject, treasury);
 		// build array of inner jsonObjects with cardType + nrOfCards
@@ -120,7 +120,7 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 			IJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
 		}
 
-		IJsonOption.CARDS_MINIMUM_PRICE.addTo(jsonObject, minimumCardPrice);
+		IJsonOption.CARDS_PRICE.addTo(jsonObject, cardPrice);
 		return jsonObject;
 	}
 
@@ -128,7 +128,7 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		availableCards = IJsonOption.AVAILABLE_CARDS.getFrom(game, jsonObject);
+		cardSlots = IJsonOption.AVAILABLE_CARDS.getFrom(game, jsonObject);
 		availableGold = IJsonOption.AVAILABLE_GOLD.getFrom(game, jsonObject);
 		treasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
 		// get nrOfCards and cardType from array of inner jsonObjects
@@ -149,7 +149,7 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
 		}
 
-		minimumCardPrice = IJsonOption.CARDS_MINIMUM_PRICE.getFrom(game, jsonObject);
+		cardPrice = IJsonOption.CARDS_PRICE.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -26,7 +26,6 @@ import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
 import com.balancedbytes.games.ffb.server.CardDeck;
@@ -49,13 +48,10 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Step in start game sequence to buy cards.
@@ -81,15 +77,13 @@ public final class StepBuyCards extends AbstractStep {
 	private boolean fReportedHome;
 	private boolean fReportedAway;
 	private CardChoice initialChoice, rerolledChoice;
-	private List<Card> selectedCards = new ArrayList<>();
-	private List<Card> discardedCards = new ArrayList<>();
+	private List<Card> usedCards = new ArrayList<>();
 	private ClientCommandSelectCardToBuy.Selection currentSelection;
 	private Phase phase = Phase.INIT;
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
 	private transient CardType fBuyCardHome;
 	private transient CardType fBuyCardAway;
-	private transient Map<CardType, Integer> cardPrices;
 
 	public StepBuyCards(GameState pGameState) {
 		super(pGameState);
@@ -148,16 +142,6 @@ public final class StepBuyCards extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-
-		if (cardPrices == null) { 
-			buildDecks();
-
-			cardPrices = new HashMap<>();
-			((CardTypeFactory) game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(cardType -> {
-				int price = ((GameOptionInt) game.getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
-				cardPrices.put(cardType, price);
-			});
-		}
 
 		switch (phase) {
 			case INIT:
@@ -242,6 +226,7 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	private void init(Game game) {
+		buildDecks();
 		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
 			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
 
@@ -255,18 +240,18 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	private void handleCard() {
+		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
 		CardChoice choice = currentSelection.isInitialDeckChoice() ? initialChoice : rerolledChoice;
-		if (currentSelection.isFirstCardChoice()) {
-			selectedCards.add(choice.getChoiceOne());
-			discardedCards.add(choice.getChoiceTwo());
-		} else {
-			selectedCards.add(choice.getChoiceTwo());
-			discardedCards.add(choice.getChoiceOne());
-		}
+		usedCards.add(choice.getChoiceOne());
+		usedCards.add(choice.getChoiceTwo());
+		Card chosenCard = currentSelection.isFirstCardChoice() ? choice.getChoiceTwo() : choice.getChoiceOne();
+
 		if (phase == Phase.HOME) {
-			fInducementGoldHome -= cardPrices.get(choice.getType());
+			fInducementGoldHome -= cardPrice;
+			getGameState().getGame().getTurnDataHome().getInducementSet().addAvailableCard(chosenCard);
 		} else {
-			fInducementGoldAway -= cardPrices.get(choice.getType());
+			fInducementGoldAway -= cardPrice;
+			getGameState().getGame().getTurnDataAway().getInducementSet().addAvailableCard(chosenCard);
 		}
 		updateChoices();
 	}
@@ -279,9 +264,8 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	private CardChoice createChoice(CardType type) {
-		Set<Card> drawnCards = Stream.concat(selectedCards.stream(), discardedCards.stream()).collect(Collectors.toSet());
 		List<Card> availableCards = new ArrayList<>(fDeckByType.get(type).getCards());
-		availableCards.removeAll(drawnCards);
+		availableCards.removeAll(usedCards);
 		return new CardChoice()
 			.withType(type)
 			.withChoiceOne(drawRandom(availableCards))
@@ -298,7 +282,7 @@ public final class StepBuyCards extends AbstractStep {
 		int totalCost = 0;
 		if (ArrayTool.isProvided(pCards)) {
 			for (Card card : pCards) {
-				totalCost += cardPrices.getOrDefault(card.getType(), 0);
+				//totalCost += cardPrices.getOrDefault(card.getType(), 0);
 			}
 		}
 		return totalCost;
@@ -315,14 +299,13 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int treasury, int availableGold) {
-		int minimumPrice = cardPrices.values().stream().min(Comparator.naturalOrder()).orElse(0);
-		int cardSlotsLeft = UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS) ? 0
-			: UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS) - selectedCards.size();
-		boolean canBuyCards = cardSlotsLeft > 0 && availableGold >= minimumPrice;
+		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
+		int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
+		boolean canBuyCards = cardSlots > 0 && availableGold >= cardPrice && !UtilGameOption.isOptionEnabled(getGameState().getGame(), GameOptionId.USE_PREDEFINED_INDUCEMENTS);
 
 		updateChoices();
 		DialogBuyCardsAndInducementsParameter dialogParameter =
-			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlotsLeft, treasury, availableGold, initialChoice, rerolledChoice, minimumPrice);
+			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlots, treasury, availableGold, initialChoice, rerolledChoice, cardPrice);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
 			dialogParameter.put(type, deck.size());
@@ -466,9 +449,7 @@ public final class StepBuyCards extends AbstractStep {
 			IServerJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
 		}
 
-		IServerJsonOption.CARDS_SELECTED.addTo(jsonObject, selectedCards.stream().map(Card::getName).collect(Collectors.toList()));
-
-		IServerJsonOption.CARDS_DISCARDED.addTo(jsonObject, discardedCards.stream().map(Card::getName).collect(Collectors.toList()));
+		IServerJsonOption.CARDS_USED.addTo(jsonObject, usedCards.stream().map(Card::getName).collect(Collectors.toList()));
 
 
 		IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
@@ -506,14 +487,9 @@ public final class StepBuyCards extends AbstractStep {
 
 		CardFactory cardFactory = game.getFactory(FactoryType.Factory.CARD);
 
-		String[] selectedCardNames = IJsonOption.CARDS_SELECTED.getFrom(game, jsonObject);
+		String[] selectedCardNames = IJsonOption.CARDS_USED.getFrom(game, jsonObject);
 		if (selectedCardNames != null) {
-			selectedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
-		}
-
-		String[] discardedCardNames = IJsonOption.CARDS_DISCARDED.getFrom(game, jsonObject);
-		if (discardedCardNames != null) {
-			discardedCards = Arrays.stream(discardedCardNames).map(cardFactory::forName).collect(Collectors.toList());
+			usedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
 		}
 
 		String selectionName = IServerJsonOption.CARD_SELECTION.getFrom(game, jsonObject);
