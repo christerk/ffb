@@ -30,11 +30,11 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), typeLabel = new JLabel();
+	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), labelTreasury = new JLabel(), typeLabel = new JLabel();
 	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel, cardsSummaryPanel = new JPanel();
 	private final JButton addCardButton = new JButton(), rerollChoiceButton= new JButton(), selectChoiceButton = new JButton(), choiceOneButton = new JButton(), choiceTwoButton = new JButton();
 	private final Map<CardType, Integer> nrOfCardsPerType;
-	private final int treasury;
+	private final int availableGold, pettyCash, treasury;
 	private final CardChoice initialChoice, rerolledChoice;
 	private CardChoice currentChoice;
 
@@ -48,6 +48,10 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		nrOfCardsPerType = pParameter.getNrOfCardsPerType();
 
 		treasury = pParameter.getTreasury();
+		availableGold = pParameter.getAvailableGold();
+		pettyCash =  availableGold - treasury;
+		updateGoldValue();
+
 		addCardPanel = buildAddCardPanel(pParameter);
 		deckChoicePanel = buildDeckChoicePanel();
 		cardChoicePanel = buildCardChoicePanel();
@@ -124,8 +128,16 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private JPanel goldPanel() {
 		JPanel panelGold = new JPanel();
 		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
+		labelAvailableGold.setFont(BOLD_FONT);
+		labelPettyCash.setFont(BOLD_FONT);
+		labelTreasury.setFont(BOLD_FONT);
+
+		panelGold.add(Box.createHorizontalGlue());
 		panelGold.add(labelAvailableGold);
+		panelGold.add(Box.createHorizontalGlue());
 		panelGold.add(labelPettyCash);
+		panelGold.add(Box.createHorizontalGlue());
+		panelGold.add(labelTreasury);
 		panelGold.add(Box.createHorizontalGlue());
 		return panelGold;
 	}
@@ -222,11 +234,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		return panel;
 	}
 
-	protected void setGoldValue(int value) {
+	protected void updateGoldValue() {
+		labelAvailableGold.setText("Total Gold: " + StringTool.formatThousands(availableGold) + " gp");
 
-		labelAvailableGold.setText("Available Gold: " + StringTool.formatThousands(value));
-		labelAvailableGold.setFont(BOLD_FONT);
+		labelPettyCash.setText("Petty Cash (free): " + StringTool.formatThousands(pettyCash) + " gp");
 
+		labelTreasury.setText("Team Treasury: " + StringTool.formatThousands(treasury) + " gp");
 	}
 
 	public DialogId getId() {

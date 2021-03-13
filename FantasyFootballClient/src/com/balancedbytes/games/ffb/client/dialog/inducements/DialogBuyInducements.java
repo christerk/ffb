@@ -58,8 +58,8 @@ public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 	}
 
 	@Override
-	protected void setGoldValue(int pValue) {
-		fGoldLabelAmount.setText(StringTool.formatThousands(pValue));
+	protected void updateGoldValue() {
+		fGoldLabelAmount.setText(StringTool.formatThousands(getAvailableGold()));
 	}
 
 

@@ -283,7 +283,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		for (DropDownPanel pan1 : fPanels) {
 			pan1.availableGoldChanged(getAvailableGold());
 		}
-		setGoldValue(getAvailableGold());
+		updateGoldValue();
 	}
 
 	protected void resetPanels() {
@@ -374,7 +374,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		});
 		return indSet;
 	}
-	protected abstract void setGoldValue(int pValue);
+	protected abstract void updateGoldValue();
 	public String getTeamId() {
 		return fTeamId;
 	}
