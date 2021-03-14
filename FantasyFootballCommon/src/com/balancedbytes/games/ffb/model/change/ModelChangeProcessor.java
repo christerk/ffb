@@ -352,8 +352,8 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_FAN_FACTOR_MODIFIER:
 				getTeamResult(pGame, isHomeData(pModelChange)).setFanFactorModifier((Integer) pModelChange.getValue());
 				return true;
-			case TEAM_RESULT_SET_PETTY_CASH_AVAILABLE:
-				getTeamResult(pGame, isHomeData(pModelChange)).setPettyCashAvailable((Integer) pModelChange.getValue());
+			case TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED:
+				getTeamResult(pGame, isHomeData(pModelChange)).setPettyCashTransferred((Integer) pModelChange.getValue());
 				return true;
 			case TEAM_RESULT_SET_PETTY_CASH_USED:
 				getTeamResult(pGame, isHomeData(pModelChange)).setPettyCashUsed((Integer) pModelChange.getValue());
@@ -510,7 +510,7 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_FAME:
 			case TEAM_RESULT_SET_BADLY_HURT_SUFFERED:
 			case TEAM_RESULT_SET_FAN_FACTOR_MODIFIER:
-			case TEAM_RESULT_SET_PETTY_CASH_AVAILABLE:
+			case TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED:
 			case TEAM_RESULT_SET_PETTY_CASH_USED:
 			case TEAM_RESULT_SET_RAISED_DEAD:
 			case TEAM_RESULT_SET_RIP_SUFFERED:

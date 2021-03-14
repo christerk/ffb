@@ -33,15 +33,15 @@ public class TeamResult implements IJsonSerializable {
 
 	private boolean fConceded;
 	private int fRaisedDead;
-	private int pettyCashAvailable;
+	private int fPettyCashTransferred;
 	private int fPettyCashUsed;
 	private int fTeamValue;
 
-	private final Map<String, PlayerResult> fPlayerResultByPlayerId;
+	private Map<String, PlayerResult> fPlayerResultByPlayerId;
 
-	private final transient GameResult fGameResult;
+	private transient GameResult fGameResult;
 	private transient Team fTeam;
-	private final transient boolean fHomeData;
+	private transient boolean fHomeData;
 
 	public TeamResult(GameResult pGameResult, boolean pHomeData) {
 		fGameResult = pGameResult;
@@ -212,16 +212,16 @@ public class TeamResult implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TEAM_RESULT_SET_SPIRALLING_EXPENSES, fSpirallingExpenses);
 	}
 
-	public int getPettyCashAvailable() {
-		return pettyCashAvailable;
+	public int getPettyCashTransferred() {
+		return fPettyCashTransferred;
 	}
 
-	public void setPettyCashAvailable(int pPettyCash) {
-		if (pPettyCash == pettyCashAvailable) {
+	public void setPettyCashTransferred(int pPettyCash) {
+		if (pPettyCash == fPettyCashTransferred) {
 			return;
 		}
-		pettyCashAvailable = pPettyCash;
-		notifyObservers(ModelChangeId.TEAM_RESULT_SET_PETTY_CASH_AVAILABLE, pettyCashAvailable);
+		fPettyCashTransferred = pPettyCash;
+		notifyObservers(ModelChangeId.TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED, fPettyCashTransferred);
 	}
 
 	public int getPettyCashUsed() {
@@ -352,7 +352,7 @@ public class TeamResult implements IJsonSerializable {
 			fRipSuffered = pTeamResult.getRipSuffered();
 			fConceded = pTeamResult.hasConceded();
 			fRaisedDead = pTeamResult.getRaisedDead();
-			pettyCashAvailable = pTeamResult.getPettyCashAvailable();
+			fPettyCashTransferred = pTeamResult.getPettyCashTransferred();
 			fPettyCashUsed = pTeamResult.getPettyCashUsed();
 			fTeamValue = pTeamResult.getTeamValue();
 			for (Player<?> player : fTeam.getPlayers()) {
@@ -397,7 +397,7 @@ public class TeamResult implements IJsonSerializable {
 			}
 			IJsonOption.PLAYER_RESULTS.addTo(jsonObject, playerResultArray);
 		}
-		IJsonOption.PETTY_CASH_AVAILABLE.addTo(jsonObject, pettyCashAvailable);
+		IJsonOption.PETTY_CASH_TRANSFERRED.addTo(jsonObject, fPettyCashTransferred);
 		IJsonOption.PETTY_CASH_USED.addTo(jsonObject, fPettyCashUsed);
 		IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
 		return jsonObject;
@@ -425,7 +425,7 @@ public class TeamResult implements IJsonSerializable {
 				fPlayerResultByPlayerId.put(playerResult.getPlayer().getId(), playerResult);
 			}
 		}
-		pettyCashAvailable = IJsonOption.PETTY_CASH_AVAILABLE.getFrom(source, jsonObject);
+		fPettyCashTransferred = IJsonOption.PETTY_CASH_TRANSFERRED.getFrom(source, jsonObject);
 		fPettyCashUsed = IJsonOption.PETTY_CASH_USED.getFrom(source, jsonObject);
 		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
 		return this;
