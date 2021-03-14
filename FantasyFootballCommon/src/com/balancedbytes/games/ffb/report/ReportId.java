@@ -229,6 +229,8 @@ public enum ReportId implements INamedObject {
 				return new ReportSwarmingRoll();
 			case PASS_DEVIATE:
 				return new ReportPassDeviate();
+			case CARDS_AND_INDUCEMENTS_BOUGHT:
+				return new ReportCardsAndInducementsBought();
 			default:
 				throw new IllegalStateException("Unhandled report id " + getName() + ".");
 		}

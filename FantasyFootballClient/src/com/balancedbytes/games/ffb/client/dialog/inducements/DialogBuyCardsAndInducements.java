@@ -284,7 +284,6 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		setMaximumGold(getMaximumGold() - cardPrice);
 		setAvailableGold(availableGold - cardPrice);
 		nrOfCardsPerType.put(card.getType(), nrOfCardsPerType.get(card.getType()) - 2);
-		addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0);
 		updateSummaryPanel();
 		showAddCardButton();
 	}
@@ -331,6 +330,9 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		}
 		this.availableGold = availableGold;
 		pettyCash = availableGold - treasury;
+		if (superInitialized) {
+			addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0);
+		}
 		updateGoldValue();
 	}
 

@@ -77,6 +77,8 @@ public class ReportCardsAndInducementsBought implements IReport {
 		IJsonOption.NR_OF_STARS.addTo(jsonObject, stars);
 		IJsonOption.NR_OF_MERCENARIES.addTo(jsonObject, mercenaries);
 		IJsonOption.GOLD.addTo(jsonObject, gold);
+		IJsonOption.TEAM_VALUE.addTo(jsonObject, newTv);
+		IJsonOption.NR_OF_CARDS.addTo(jsonObject, cards);
 		return jsonObject;
 	}
 
@@ -88,6 +90,8 @@ public class ReportCardsAndInducementsBought implements IReport {
 		stars = IJsonOption.NR_OF_STARS.getFrom(game, jsonObject);
 		mercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(game, jsonObject);
 		gold = IJsonOption.GOLD.getFrom(game, jsonObject);
+		cards = IJsonOption.NR_OF_CARDS.getFrom(game, jsonObject);
+		newTv = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -52,6 +52,7 @@ import com.balancedbytes.games.ffb.report.ReportBombOutOfBounds;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
 import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
+import com.balancedbytes.games.ffb.report.ReportCardsAndInducementsBought;
 import com.balancedbytes.games.ffb.report.ReportCardsBought;
 import com.balancedbytes.games.ffb.report.ReportCatchRoll;
 import com.balancedbytes.games.ffb.report.ReportCloudBurster;
@@ -582,6 +583,61 @@ public class StatusReport {
 		}
 
 	}
+
+	public void reportCardsAndInducementsBought(ReportCardsAndInducementsBought pReport) {
+		Game game = getClient().getGame();
+		if (!fInducmentsBoughtReportReceived) {
+			fInducmentsBoughtReportReceived = true;
+			println(getIndent(), TextStyle.BOLD, "Buy Inducements");
+		}
+		print(getIndent() + 1, "Team ");
+		if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
+			print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+		} else {
+			print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
+		}
+		StringBuilder status = new StringBuilder();
+		status.append(" buys ");
+		int boughtItems = pReport.getCards() + pReport.getInducements() + pReport.getStars() + pReport.getMercenaries();
+		if (boughtItems == 0) {
+			status.append("no Inducements.");
+		} else {
+			List<String> itemList = new ArrayList<>();
+			if (pReport.getCards() > 0) {
+				if (pReport.getCards() == 1) {
+					itemList.add("1 Card");
+				} else {
+					itemList.add(StringTool.bind("$1 Cards", pReport.getCards()));
+				}
+			}
+			if (pReport.getInducements() > 0) {
+				if (pReport.getInducements() == 1) {
+					itemList.add("1 Inducement");
+				} else {
+					itemList.add(StringTool.bind("$1 Inducements", pReport.getInducements()));
+				}
+			}
+			if (pReport.getStars() > 0) {
+				if (pReport.getStars() == 1) {
+					itemList.add("1 Star");
+				} else {
+					itemList.add(StringTool.bind("$1 Stars", pReport.getStars()));
+				}
+			}
+			if (pReport.getMercenaries() > 0) {
+				if (pReport.getMercenaries() == 1) {
+					itemList.add("1 Mercenary");
+				} else {
+					itemList.add(StringTool.bind("$1 Mercenaries", pReport.getMercenaries()));
+				}
+			}
+			status.append(StringTool.buildEnumeration(itemList.toArray(new String[0])));
+			status.append(" for ").append(StringTool.formatThousands(pReport.getGold()))
+				.append(" gold total increasing their Team Value to ").append(StringTool.formatThousands(pReport.getNewTv()));
+		}
+		println(getIndent() + 1, status.toString());
+	}
+
 
 	public void reportInducementsBought(ReportInducementsBought pReport) {
 		Game game = getClient().getGame();
@@ -3057,6 +3113,9 @@ public class StatusReport {
 					break;
 				case INDUCEMENTS_BOUGHT:
 					reportInducementsBought((ReportInducementsBought) report);
+					break;
+				case CARDS_AND_INDUCEMENTS_BOUGHT:
+					reportCardsAndInducementsBought((ReportCardsAndInducementsBought) report);
 					break;
 				case CARDS_BOUGHT:
 					reportCardsBought((ReportCardsBought) report);
