@@ -170,6 +170,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	private void showAddCardButton() {
+		super.okButton.setEnabled(true);
 		dynamicPanel.removeAll();
 		dynamicPanel.add(addCardPanel);
 		getContentPane().validate();
@@ -177,6 +178,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	private void showDeckChoice() {
+		super.okButton.setEnabled(false);
 		dynamicPanel.removeAll();
 		selectChoiceButton.setText("Use " + cardChoices.getInitial().getType().getDeckName());
 		dynamicPanel.add(deckChoicePanel);
@@ -209,6 +211,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		addCardButton.addActionListener(e -> showDeckChoice());
 		addCardButton.setAlignmentX(CENTER_ALIGNMENT);
 		addCardButton.setEnabled(pParameter.isCanBuyCards());
+		addCardButton.setMnemonic((int)'C');
 
 		panel.add(addCardButton);
 		return panel;
@@ -220,6 +223,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		selectChoiceButton.addActionListener(e -> showCardChoice(cardChoices.getInitial()));
 		selectChoiceButton.setAlignmentX(CENTER_ALIGNMENT);
+		selectChoiceButton.setMnemonic((int)'U');
 		panel.add(selectChoiceButton);
 
 		panel.add(Box.createVerticalStrut(2));
@@ -227,6 +231,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		rerollChoiceButton.setText("Reroll to get a different deck");
 		rerollChoiceButton.addActionListener(e -> showCardChoice(cardChoices.getRerolled()));
 		rerollChoiceButton.setAlignmentX(CENTER_ALIGNMENT);
+		rerollChoiceButton.setMnemonic((int)'R');
 		panel.add(rerollChoiceButton);
 
 		return panel;
@@ -245,11 +250,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		choiceOneButton.addActionListener(e -> sendCommand(true));
 		choiceOneButton.setAlignmentX(CENTER_ALIGNMENT);
+		choiceOneButton.setMnemonic((int) '1');
 
 		panel.add(choiceTwoButton);
 		choiceTwoButton.addActionListener(e -> sendCommand(false));
 		choiceTwoButton.setAlignmentX(CENTER_ALIGNMENT);
-
+		choiceTwoButton.setMnemonic((int) '2');
 		return panel;
 	}
 
