@@ -40,10 +40,10 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		choiceOneButton = new JButton(), choiceTwoButton = new JButton();
 	private final Map<CardType, Integer> nrOfCardsPerType;
 	private final int cardPrice;
-	private int availableGold, cardSlots, pettyCash, treasury;
+	private int availableGold, cardSlots, pettyCash, treasury, maximumTreasury;
 	private CardChoices cardChoices;
 	private CardChoice currentChoice;
-	private boolean superInitialized;
+	private final boolean superInitialized;
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
@@ -56,7 +56,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		cardSlots = pParameter.getCardSlots();
 		cardPrice = pParameter.getCardPrice();
-		treasury = pParameter.getTreasury();
+		treasury = maximumTreasury = pParameter.getTreasury();
 		availableGold = pParameter.getAvailableGold();
 		pettyCash =  availableGold - treasury;
 		updateGoldValue();
@@ -275,7 +275,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		cardsListPanel.add(Box.createVerticalStrut(3));
 		cardsListPanel.add(new JLabel(card.getName()));
 		cardSlots--;
-		setStartGold(getStartGold() - cardPrice);
+		setMaximumGold(getMaximumGold() - cardPrice);
 		setAvailableGold(availableGold - cardPrice);
 		nrOfCardsPerType.put(card.getType(), nrOfCardsPerType.get(card.getType()) - 2);
 		addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0);
@@ -297,14 +297,33 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	@Override
+	public void setMaximumGold(int maximumGold) {
+		super.setMaximumGold(maximumGold);
+		maximumTreasury = Math.min(maximumTreasury, getMaximumGold());
+	}
+
+	@Override
+	protected void resetPanels() {
+		super.resetPanels();
+		treasury = maximumTreasury;
+	}
+
+	@Override
 	public int getAvailableGold() {
 		return availableGold;
 	}
 
 	@Override
 	public void setAvailableGold(int availableGold) {
+		if (this.availableGold == availableGold) {
+			return;
+		}
+		if (this.availableGold < availableGold) {
+			treasury = Math.min(availableGold, maximumTreasury);
+		} else {
+			treasury = Math.min(availableGold, treasury);
+		}
 		this.availableGold = availableGold;
-		treasury = Math.min(availableGold, treasury);
 		pettyCash = availableGold - treasury;
 		updateGoldValue();
 	}

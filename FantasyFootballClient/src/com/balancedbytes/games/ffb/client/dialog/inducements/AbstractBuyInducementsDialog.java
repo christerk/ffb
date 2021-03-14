@@ -29,8 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -54,12 +52,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	private final String fTeamId;
 	private final Roster fRoster;
 	private final Team fTeam;
-	private int fStartGold;
+	private int maximumGold;
 
 	public AbstractBuyInducementsDialog(FantasyFootballClient client, String title, String teamId, int availableGold, boolean closeable) {
 		super(client, title, closeable);
-		fStartGold = availableGold;
-		setAvailableGold(fStartGold);
+		maximumGold = availableGold;
+		setAvailableGold(maximumGold);
 		fTeamId = teamId;
 		if (client.getGame().getTeamHome().getId().equals(fTeamId)) {
 			fRoster = client.getGame().getTeamHome().getRoster();
@@ -152,15 +150,13 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 			fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
 			fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			fTableStarPlayers.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent pE) {
-					if (!pE.getValueIsAdjusting()) {
-						int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
-						if (selectedRowIndex >= 0) {
-							getClient().getClientData()
-								.setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
-							getClient().getUserInterface().refreshSideBars();
-						}
+			fTableStarPlayers.getSelectionModel().addListSelectionListener(pE -> {
+				if (!pE.getValueIsAdjusting()) {
+					int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
+					if (selectedRowIndex >= 0) {
+						getClient().getClientData()
+							.setSelectedPlayer((Player<?>) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
+						getClient().getUserInterface().refreshSideBars();
 					}
 				}
 			});
@@ -193,15 +189,13 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		if (maxMercs > 0) {
 			fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
 			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			fTableMercenaries.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent pE) {
-					if (!pE.getValueIsAdjusting()) {
-						int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
-						if (selectedRowIndex >= 0) {
-							getClient().getClientData()
-								.setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
-							getClient().getUserInterface().refreshSideBars();
-						}
+			fTableMercenaries.getSelectionModel().addListSelectionListener(pE -> {
+				if (!pE.getValueIsAdjusting()) {
+					int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
+					if (selectedRowIndex >= 0) {
+						getClient().getClientData()
+							.setSelectedPlayer((Player<?>) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
+						getClient().getUserInterface().refreshSideBars();
 					}
 				}
 			});
@@ -267,12 +261,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		}
 		for (int i = 0; i < fTableModelStarPlayers.getRowCount(); i++) {
 			if ((Boolean) fTableModelStarPlayers.getValueAt(i, 0)) {
-				cost += ((Player) fTableModelStarPlayers.getValueAt(i, 4)).getPosition().getCost();
+				cost += ((Player<?>) fTableModelStarPlayers.getValueAt(i, 4)).getPosition().getCost();
 			}
 		}
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				cost += ((Player) fTableModelMercenaries.getValueAt(i, 5)).getPosition().getCost();
+				cost += ((Player<?>) fTableModelMercenaries.getValueAt(i, 5)).getPosition().getCost();
 				cost += mercExtraCost;
 				String skillSlot = ((String) fTableModelMercenaries.getValueAt(i, 4));
 				if (StringTool.isProvided(skillSlot)) {
@@ -280,7 +274,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 				}
 			}
 		}
-		setAvailableGold(fStartGold - cost);
+		setAvailableGold(maximumGold - cost);
 		for (DropDownPanel pan1 : fPanels) {
 			pan1.availableGoldChanged(getAvailableGold());
 		}
@@ -294,19 +288,19 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			fTableModelMercenaries.setValueAt(false, i, 0);
 		}
-		setAvailableGold(fStartGold);
+		setAvailableGold(maximumGold);
 		for (DropDownPanel pan : fPanels) {
-			pan.reset(getStartGold());
+			pan.reset(getMaximumGold());
 		}
 	}
 
 
-	protected int getStartGold() {
-		return fStartGold;
+	protected int getMaximumGold() {
+		return maximumGold;
 	}
 
-	public void setStartGold(int startGold) {
-		this.fStartGold = startGold;
+	public void setMaximumGold(int maximumGold) {
+		this.maximumGold = maximumGold;
 	}
 
 	protected abstract int getAvailableGold();
@@ -318,22 +312,22 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		List<String> starPlayerPositionIds = new ArrayList<>();
 		for (int i = 0; i < fTableModelStarPlayers.getRowCount(); i++) {
 			if ((Boolean) fTableModelStarPlayers.getValueAt(i, 0)) {
-				Player<?> starPlayer = (Player) fTableModelStarPlayers.getValueAt(i, 4);
+				Player<?> starPlayer = (Player<?>) fTableModelStarPlayers.getValueAt(i, 4);
 				starPlayerPositionIds.add(starPlayer.getPositionId());
 			}
 		}
-		return starPlayerPositionIds.toArray(new String[starPlayerPositionIds.size()]);
+		return starPlayerPositionIds.toArray(new String[0]);
 	}
 
 	public String[] getSelectedMercenaryIds() {
 		List<String> mercenaryPositionIds = new ArrayList<>();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Player<?> mercenary = (Player) fTableModelMercenaries.getValueAt(i, 5);
+				Player<?> mercenary = (Player<?>) fTableModelMercenaries.getValueAt(i, 5);
 				mercenaryPositionIds.add(mercenary.getPositionId());
 			}
 		}
-		return mercenaryPositionIds.toArray(new String[mercenaryPositionIds.size()]);
+		return mercenaryPositionIds.toArray(new String[0]);
 	}
 
 	public Skill[] getSelectedMercenarySkills() {
@@ -344,7 +338,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 				mercenarySkills.add(mercenarySkill);
 			}
 		}
-		return mercenarySkills.toArray(new Skill[mercenarySkills.size()]);
+		return mercenarySkills.toArray(new Skill[0]);
 	}
 
 	public int getFreeSlotsInRoster() {
