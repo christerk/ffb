@@ -21,7 +21,6 @@ public class StartGame extends com.balancedbytes.games.ffb.server.step.generator
 		sequence.add(StepId.WEATHER);
 		sequence.add(StepId.PETTY_CASH);
 		sequence.add(StepId.BUY_CARDS);
-		sequence.add(StepId.BUY_INDUCEMENTS);
 		// inserts inducement sequence at this point
 		sequence.add(StepId.SPECTATORS);
 		// continues with kickoffSequence after that
