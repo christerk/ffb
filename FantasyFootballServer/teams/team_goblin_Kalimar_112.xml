@@ -12,6 +12,7 @@
 	<teamRating>100</teamRating>
 	<teamStrength>88</teamStrength>
 	<division>[X]</division>
+	<treasury>500000</treasury>
 
 	<player nr="1" id="teamGoblinKalimar1">
 		<name>Troll1</name>

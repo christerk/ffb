@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 
 	private final JLabel fGoldLabelAmount;
+	private int availableGold;
 
 
 	public DialogBuyInducements(FantasyFootballClient client, String teamId, int availableGold) {
@@ -62,20 +63,15 @@ public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 		fGoldLabelAmount.setText(StringTool.formatThousands(getAvailableGold()));
 	}
 
-
-	public void actionPerformed(ActionEvent pActionEvent) {
-		if ((pActionEvent.getSource() == okButton)) {
-			if (getCloseListener() != null) {
-				getCloseListener().dialogClosed(this);
-			}
-		} else if (pActionEvent.getSource() == resetButton) {
-			resetPanels();
-		} else {
-			recalculateGold();
-		}
+	@Override
+	public int getAvailableGold() {
+		return availableGold;
 	}
 
-
+	@Override
+	public void setAvailableGold(int availableGold) {
+		this.availableGold = availableGold;
+	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {
 	}
@@ -104,4 +100,8 @@ public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 	}
 
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		super.actionPerformed(e);
+	}
 }

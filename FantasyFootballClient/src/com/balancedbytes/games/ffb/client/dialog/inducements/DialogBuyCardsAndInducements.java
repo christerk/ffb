@@ -21,7 +21,6 @@ import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -44,10 +43,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private int availableGold, cardSlots, pettyCash, treasury;
 	private CardChoices cardChoices;
 	private CardChoice currentChoice;
+	private boolean superInitialized;
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
 		super(pClient, "Buy Cards And Inducements", pParameter.getTeamId(), pParameter.getAvailableGold(), false);
+		superInitialized = true;
 		this.cardChoices = pParameter.getCardChoices();
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
@@ -259,34 +260,31 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	protected void updateGoldValue() {
-		labelAvailableGold.setText("Total Gold: " + StringTool.formatThousands(availableGold) + " gp");
+		if (superInitialized) {
+			labelAvailableGold.setText("Total Gold: " + StringTool.formatThousands(availableGold) + " gp");
 
-		labelPettyCash.setText("Petty Cash (free): " + StringTool.formatThousands(pettyCash) + " gp");
+			labelPettyCash.setText("Petty Cash (free): " + StringTool.formatThousands(pettyCash) + " gp");
 
-		labelTreasury.setText("Team Treasury: " + StringTool.formatThousands(treasury) + " gp");
+			labelTreasury.setText("Team Treasury: " + StringTool.formatThousands(treasury) + " gp");
+
+			getContentPane().validate();
+		}
 	}
 
 	public void addCard(Card card) {
 		cardsListPanel.add(Box.createVerticalStrut(3));
 		cardsListPanel.add(new JLabel(card.getName()));
 		cardSlots--;
-		availableGold -= cardPrice;
 		setStartGold(getStartGold() - cardPrice);
-		treasury = Math.min(availableGold, treasury);
-		pettyCash = availableGold - treasury;
+		setAvailableGold(availableGold - cardPrice);
 		nrOfCardsPerType.put(card.getType(), nrOfCardsPerType.get(card.getType()) - 2);
 		addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0);
-		updateGoldValue();
 		updateSummaryPanel();
 		showAddCardButton();
 	}
 
 	public DialogId getId() {
 		return DialogId.BUY_CARDS_AND_INDUCEMENTS;
-	}
-
-	public void actionPerformed(ActionEvent pActionEvent) {
-
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {
@@ -296,6 +294,19 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	public void keyTyped(KeyEvent pKeyEvent) {
+	}
+
+	@Override
+	public int getAvailableGold() {
+		return availableGold;
+	}
+
+	@Override
+	public void setAvailableGold(int availableGold) {
+		this.availableGold = availableGold;
+		treasury = Math.min(availableGold, treasury);
+		pettyCash = availableGold - treasury;
+		updateGoldValue();
 	}
 
 	@Override

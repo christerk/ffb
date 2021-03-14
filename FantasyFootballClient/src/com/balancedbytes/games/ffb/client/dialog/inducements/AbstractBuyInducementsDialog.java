@@ -33,6 +33,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -53,12 +54,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	private final String fTeamId;
 	private final Roster fRoster;
 	private final Team fTeam;
-	private int fAvailableGold;
 	private int fStartGold;
 
 	public AbstractBuyInducementsDialog(FantasyFootballClient client, String title, String teamId, int availableGold, boolean closeable) {
 		super(client, title, closeable);
-		fStartGold = fAvailableGold = availableGold;
+		fStartGold = availableGold;
+		setAvailableGold(fStartGold);
 		fTeamId = teamId;
 		if (client.getGame().getTeamHome().getId().equals(fTeamId)) {
 			fRoster = client.getGame().getTeamHome().getRoster();
@@ -279,7 +280,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 				}
 			}
 		}
-		fAvailableGold = fStartGold - cost;
+		setAvailableGold(fStartGold - cost);
 		for (DropDownPanel pan1 : fPanels) {
 			pan1.availableGoldChanged(getAvailableGold());
 		}
@@ -293,7 +294,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			fTableModelMercenaries.setValueAt(false, i, 0);
 		}
-		fAvailableGold = fStartGold;
+		setAvailableGold(fStartGold);
 		for (DropDownPanel pan : fPanels) {
 			pan.reset(getStartGold());
 		}
@@ -308,9 +309,10 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		this.fStartGold = startGold;
 	}
 
-	protected int getAvailableGold() {
-		return fAvailableGold;
-	}
+	protected abstract int getAvailableGold();
+
+	protected abstract void setAvailableGold(int availableGold);
+
 
 	public String[] getSelectedStarPlayerIds() {
 		List<String> starPlayerPositionIds = new ArrayList<>();
@@ -388,4 +390,17 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	public Roster getRoster() {
 		return fRoster;
 	}
+
+	public void actionPerformed(ActionEvent pActionEvent) {
+		if ((pActionEvent.getSource() == okButton)) {
+			if (getCloseListener() != null) {
+				getCloseListener().dialogClosed(this);
+			}
+		} else if (pActionEvent.getSource() == resetButton) {
+			resetPanels();
+		} else {
+			recalculateGold();
+		}
+	}
+
 }

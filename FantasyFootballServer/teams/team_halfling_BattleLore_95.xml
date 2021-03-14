@@ -12,6 +12,7 @@
 	<teamRating>100</teamRating>
 	<teamStrength>88</teamStrength>
 	<division>[X]</division>
+	<treasury>500000</treasury>
 
 	<player nr="1" id="teamHalflingBattleLore1">
 		<name>Treeman1</name>
