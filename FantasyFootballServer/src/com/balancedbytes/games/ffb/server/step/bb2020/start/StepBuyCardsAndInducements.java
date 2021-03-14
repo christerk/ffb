@@ -77,7 +77,7 @@ import java.util.stream.Stream;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-public final class StepBuyCards extends AbstractStep {
+public final class StepBuyCardsAndInducements extends AbstractStep {
 
 	private Integer availableInducementGoldHome;
 	private Integer availableInducementGoldAway;
@@ -86,8 +86,6 @@ public final class StepBuyCards extends AbstractStep {
 
 	private boolean fCardsSelectedHome;
 	private boolean fCardsSelectedAway;
-	private boolean fInducementsSelectedHome;
-	private boolean fInducementsSelectedAway;
 
 	private boolean fReportedHome;
 	private boolean fReportedAway;
@@ -97,18 +95,14 @@ public final class StepBuyCards extends AbstractStep {
 	private Phase phase = Phase.INIT;
 
 	private final transient Map<CardType, CardDeck> fDeckByType;
-	private transient CardType fBuyCardHome;
-	private transient CardType fBuyCardAway;
 
-	public StepBuyCards(GameState pGameState) {
+	public StepBuyCardsAndInducements(GameState pGameState) {
 		super(pGameState);
 		fDeckByType = new HashMap<>();
-		fBuyCardHome = null;
-		fBuyCardAway = null;
 	}
 
 	public StepId getId() {
-		return StepId.BUY_CARDS;
+		return StepId.BUY_CARDS_AND_INDUCEMENTS;
 	}
 
 	@Override
@@ -322,16 +316,6 @@ public final class StepBuyCards extends AbstractStep {
 		return drawn;
 	}
 
-	private int calculateTotalCost(Card[] pCards) {
-		int totalCost = 0;
-		if (ArrayTool.isProvided(pCards)) {
-			for (Card card : pCards) {
-				//totalCost += cardPrices.getOrDefault(card.getType(), 0);
-			}
-		}
-		return totalCost;
-	}
-
 	private void buildDecks() {
 		Game game = getGameState().getGame();
 		fDeckByType.clear();
@@ -473,7 +457,6 @@ public final class StepBuyCards extends AbstractStep {
 			if (addedPlayerList.size() > 0) {
 				RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
 				UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
-				// TODO: update persistence?
 			}
 
 		}
@@ -583,7 +566,7 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	@Override
-	public StepBuyCards initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public StepBuyCardsAndInducements initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		availableInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(game, jsonObject);
