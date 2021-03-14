@@ -229,8 +229,8 @@ public final class StepBuyCards extends AbstractStep {
 			int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
 				+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
 
-			availableInducementGoldHome = freeCash + game.getTeamHome().getTreasury() + game.getGameResult().getTeamResultHome().getPettyCashTransferred();
-			availableInducementGoldAway = freeCash + game.getTeamAway().getTreasury() + game.getGameResult().getTeamResultAway().getPettyCashTransferred();
+			availableInducementGoldHome = freeCash + game.getTeamHome().getTreasury() + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff();
+			availableInducementGoldAway = freeCash + game.getTeamAway().getTreasury() + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff();
 			phase = Phase.HOME;
 
 			int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
@@ -522,8 +522,12 @@ public final class StepBuyCards extends AbstractStep {
 		((RiotousRookies) factory.forName(SequenceGenerator.Type.RiotousRookies.name()))
 			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 		Game game = getGameState().getGame();
-		//game.getGameResult().getTeamResultHome().setPettyCashUsed(usedInducementGoldHome - game.getTeamHome().getTreasury());
-		//game.getGameResult().getTeamResultAway().setPettyCashUsed(usedInducementGoldAway - game.getTeamAway().getTreasury());
+		int unspentMoneyHome = availableInducementGoldHome - usedInducementGoldHome;
+		int spentTreasuryHome = Math.max(0, game.getTeamHome().getTreasury() - unspentMoneyHome);
+		game.getGameResult().getTeamResultHome().setTreasurySpentOnInducements(spentTreasuryHome);
+		int unspentMoneyAway = availableInducementGoldAway - usedInducementGoldAway;
+		int spentTreasuryAway = Math.max(0, game.getTeamAway().getTreasury() - unspentMoneyAway);
+		game.getGameResult().getTeamResultAway().setTreasurySpentOnInducements(spentTreasuryAway);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

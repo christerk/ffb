@@ -36,12 +36,14 @@ public class TeamResult implements IJsonSerializable {
 	private int fPettyCashTransferred;
 	private int fPettyCashUsed;
 	private int fTeamValue;
+	private int pettyCashFromTvDiff;
+	private int treasurySpentOnInducements;
 
-	private Map<String, PlayerResult> fPlayerResultByPlayerId;
+	private final Map<String, PlayerResult> fPlayerResultByPlayerId;
 
-	private transient GameResult fGameResult;
+	private final transient GameResult fGameResult;
 	private transient Team fTeam;
-	private transient boolean fHomeData;
+	private final transient boolean fHomeData;
 
 	public TeamResult(GameResult pGameResult, boolean pHomeData) {
 		fGameResult = pGameResult;
@@ -248,6 +250,22 @@ public class TeamResult implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TEAM_RESULT_SET_TEAM_VALUE, fTeamValue);
 	}
 
+	public int getPettyCashFromTvDiff() {
+		return pettyCashFromTvDiff;
+	}
+
+	public void setPettyCashFromTvDiff(int pettyCashFromTvDiff) {
+		this.pettyCashFromTvDiff = pettyCashFromTvDiff;
+	}
+
+	public int getTreasurySpentOnInducements() {
+		return treasurySpentOnInducements;
+	}
+
+	public void setTreasurySpentOnInducements(int treasurySpentOnInducements) {
+		this.treasurySpentOnInducements = treasurySpentOnInducements;
+	}
+
 	public int totalCompletions() {
 		int completions = 0;
 		for (Player<?> player : getTeam().getPlayers()) {
@@ -397,9 +415,11 @@ public class TeamResult implements IJsonSerializable {
 			}
 			IJsonOption.PLAYER_RESULTS.addTo(jsonObject, playerResultArray);
 		}
+		IJsonOption.PETTY_CASH_FROM_TV_DIFF.addTo(jsonObject, pettyCashFromTvDiff);
 		IJsonOption.PETTY_CASH_TRANSFERRED.addTo(jsonObject, fPettyCashTransferred);
 		IJsonOption.PETTY_CASH_USED.addTo(jsonObject, fPettyCashUsed);
 		IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
+		IJsonOption.TREASURY_USED_ON_INDUCEMENTS.addTo(jsonObject, treasurySpentOnInducements);
 		return jsonObject;
 	}
 
@@ -425,9 +445,11 @@ public class TeamResult implements IJsonSerializable {
 				fPlayerResultByPlayerId.put(playerResult.getPlayer().getId(), playerResult);
 			}
 		}
+		pettyCashFromTvDiff = IJsonOption.PETTY_CASH_FROM_TV_DIFF.getFrom(source, jsonObject);
 		fPettyCashTransferred = IJsonOption.PETTY_CASH_TRANSFERRED.getFrom(source, jsonObject);
 		fPettyCashUsed = IJsonOption.PETTY_CASH_USED.getFrom(source, jsonObject);
 		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
+		treasurySpentOnInducements = IJsonOption.TREASURY_USED_ON_INDUCEMENTS.getFrom(source, jsonObject);
 		return this;
 	}
 

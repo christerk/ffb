@@ -42,9 +42,9 @@ public final class StepPettyCash extends AbstractStep {
 		if (availablePettyCash != 0 ) {
 			TeamResult underdogResult = availablePettyCash < 0 ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
 
-			underdogResult.setPettyCashTransferred(Math.abs(availablePettyCash));
+			underdogResult.setPettyCashFromTvDiff(Math.abs(availablePettyCash));
 			getResult().addReport(
-				new ReportFreePettyCash(underdogResult.getTeam().getId(), underdogResult.getPettyCashTransferred()));
+				new ReportFreePettyCash(underdogResult.getTeam().getId(), underdogResult.getPettyCashFromTvDiff()));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 

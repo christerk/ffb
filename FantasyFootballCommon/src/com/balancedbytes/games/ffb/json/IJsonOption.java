@@ -249,6 +249,7 @@ public interface IJsonOption {
 	JsonStringOption PASSWORD = new JsonStringOption("password");
 	JsonIntOption PASSING = new JsonIntOption("passing");
 	JsonIntOption PETTY_CASH = new JsonIntOption("pettyCash");
+	JsonIntOption PETTY_CASH_FROM_TV_DIFF = new JsonIntOption("pettyCashFromTvDiff");
 	JsonIntOption PETTY_CASH_TRANSFERRED = new JsonIntOption("pettyCashTransferred");
 	JsonIntOption PETTY_CASH_USED = new JsonIntOption("pettyCashUsed");
 	JsonObjectOption PLAYER = new JsonObjectOption("player");
@@ -419,6 +420,7 @@ public interface IJsonOption {
 	JsonIntOption TOUCHDOWNS = new JsonIntOption("touchdowns");
 	JsonArrayOption TRACK_NUMBER_ARRAY = new JsonArrayOption("trackNumberArray");
 	JsonIntOption TREASURY = new JsonIntOption("treasury");
+	JsonIntOption TREASURY_USED_ON_INDUCEMENTS = new JsonIntOption("treasuryUsedOnInducements");
 	JsonObjectOption TURN_DATA_AWAY = new JsonObjectOption("turnDataAway");
 	JsonObjectOption TURN_DATA_HOME = new JsonObjectOption("turnDataHome");
 	JsonEnumWithNameOption TURN_MODE = new JsonEnumWithNameOption("turnMode", Factory.TURN_MODE);
