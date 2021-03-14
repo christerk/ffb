@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
-import com.balancedbytes.games.ffb.inducement.CardChoice;
+import com.balancedbytes.games.ffb.inducement.CardChoices;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -22,21 +22,20 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 	private String fTeamId;
 	private int treasury, availableGold, cardSlots, cardPrice;
 	private final Map<CardType, Integer> fNrOfCardsPerType;
-	private CardChoice initialChoice, rerolledChoice;
+	private CardChoices cardChoices;
 	private boolean canBuyCards;
 
 	public DialogBuyCardsAndInducementsParameter() {
 		fNrOfCardsPerType = new HashMap<>();
 	}
 
-	public DialogBuyCardsAndInducementsParameter(String teamId, boolean canBuyCards, int cardSlots, int treasury, int availableGold, CardChoice initialChoice, CardChoice rerolledChoice, int cardPrice) {
+	public DialogBuyCardsAndInducementsParameter(String teamId, boolean canBuyCards, int cardSlots, int treasury, int availableGold, CardChoices cardChoices, int cardPrice) {
 		this();
 		fTeamId = teamId;
 		this.cardSlots = cardSlots;
 		this.treasury = treasury;
 		this.availableGold = availableGold;
-		this.initialChoice = initialChoice;
-		this.rerolledChoice = rerolledChoice;
+		this.cardChoices = cardChoices;
 		this.cardPrice = cardPrice;
 		this.canBuyCards = canBuyCards;
 	}
@@ -73,23 +72,22 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		return fNrOfCardsPerType;
 	}
 
-	public CardChoice getInitialChoice() {
-		return initialChoice;
-	}
-
-	public CardChoice getRerolledChoice() {
-		return rerolledChoice;
-	}
-
 	public boolean isCanBuyCards() {
 		return canBuyCards;
 	}
 
-	// transformation
+	public CardChoices getCardChoices() {
+		return cardChoices;
+	}
+
+	public void setCardChoices(CardChoices cardChoices) {
+		this.cardChoices = cardChoices;
+	}
+// transformation
 
 	public IDialogParameter transform() {
 		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), canBuyCards, getCardSlots(),
-			treasury, availableGold, initialChoice, rerolledChoice, cardPrice);
+			treasury, availableGold, cardChoices, cardPrice);
 		fNrOfCardsPerType.forEach(dialogParameter::put);
 		return dialogParameter;
 	}
@@ -113,14 +111,10 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		}
 		IJsonOption.NR_OF_CARDS_PER_TYPE.addTo(jsonObject, nrOfCardsPerType);
 
-		if (initialChoice != null) {
-			IJsonOption.CARD_CHOICE_INITIAL.addTo(jsonObject, initialChoice.toJsonValue());
-		}
-		if (rerolledChoice != null) {
-			IJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
-		}
+		IJsonOption.CARD_CHOICES.addTo(jsonObject, cardChoices.toJsonValue());
 
 		IJsonOption.CARDS_PRICE.addTo(jsonObject, cardPrice);
+		IJsonOption.CAN_BUY_CARDS.addTo(jsonObject, canBuyCards);
 		return jsonObject;
 	}
 
@@ -139,17 +133,14 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(game, nrOfCardsForThisType);
 			put(cardType, nrOfCards);
 		}
-		JsonObject choiceObject = IJsonOption.CARD_CHOICE_INITIAL.getFrom(game, jsonObject);
-		if (choiceObject != null) {
-			initialChoice = new CardChoice().initFrom(game, choiceObject);
-		}
 
-		choiceObject = IJsonOption.CARD_CHOICE_REROLLED.getFrom(game, jsonObject);
+		JsonObject choiceObject = IJsonOption.CARD_CHOICES.getFrom(game, jsonObject);
 		if (choiceObject != null) {
-			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
+			cardChoices = new CardChoices().initFrom(game, choiceObject);
 		}
 
 		cardPrice = IJsonOption.CARDS_PRICE.getFrom(game, jsonObject);
+		canBuyCards = IJsonOption.CAN_BUY_CARDS.getFrom(game, jsonObject);
 		return this;
 	}
 

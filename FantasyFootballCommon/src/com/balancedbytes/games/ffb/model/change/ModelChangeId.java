@@ -84,6 +84,7 @@ public enum ModelChangeId implements INamedObject {
 	INDUCEMENT_SET_ACTIVATE_CARD("inducementSetActivateCard", ModelChangeDataType.CARD),
 	INDUCEMENT_SET_ADD_AVAILABLE_CARD("inducementSetAddAvailableCard", ModelChangeDataType.CARD),
 	INDUCEMENT_SET_ADD_INDUCEMENT("inducementSetAddInducement", ModelChangeDataType.INDUCEMENT),
+	INDUCEMENT_SET_CARD_CHOICES("inducementSetCardChoices", ModelChangeDataType.CARD_CHOICES),
 	INDUCEMENT_SET_DEACTIVATE_CARD("inducementSetDeactivateCard", ModelChangeDataType.CARD),
 	INDUCEMENT_SET_REMOVE_AVAILABLE_CARD("inducementSetRemoveAvailableCard", ModelChangeDataType.CARD),
 	INDUCEMENT_SET_REMOVE_INDUCEMENT("inducementSetRemoveInducement", ModelChangeDataType.INDUCEMENT),

@@ -1,13 +1,11 @@
 package com.balancedbytes.games.ffb.model.change;
 
 import com.balancedbytes.games.ffb.BloodSpot;
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -20,6 +18,10 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.dialog.DialogBuyCardsAndInducementsParameter;
+import com.balancedbytes.games.ffb.inducement.Card;
+import com.balancedbytes.games.ffb.inducement.CardChoices;
+import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -260,6 +262,12 @@ public class ModelChangeProcessor {
 				return true;
 			case INDUCEMENT_SET_ADD_INDUCEMENT:
 				getInducementSet(pGame, isHomeData(pModelChange)).addInducement((Inducement) pModelChange.getValue());
+				return true;
+			case INDUCEMENT_SET_CARD_CHOICES:
+				IDialogParameter dialogParameter = pGame.getDialogParameter();
+				if (dialogParameter instanceof DialogBuyCardsAndInducementsParameter) {
+					((DialogBuyCardsAndInducementsParameter)dialogParameter).setCardChoices((CardChoices) pModelChange.getValue());
+				}
 				return true;
 			case INDUCEMENT_SET_DEACTIVATE_CARD:
 				getInducementSet(pGame, isHomeData(pModelChange)).deactivateCard((Card) pModelChange.getValue());

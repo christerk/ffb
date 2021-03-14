@@ -58,6 +58,7 @@ public interface IJsonOption {
 	JsonStringArrayOption CARD_EFFECTS = new JsonStringArrayOption("cardEffects");
 	JsonStringArrayOption CARDS_ACTIVE = new JsonStringArrayOption("cardsActive");
 	JsonStringArrayOption CARDS_AVAILABLE = new JsonStringArrayOption("cardsAvailable");
+	JsonObjectOption CARD_CHOICES = new JsonObjectOption("cardChoices");
 	JsonObjectOption CARD_CHOICE_INITIAL = new JsonObjectOption("cardChoiceFirst");
 	JsonObjectOption CARD_CHOICE_REROLLED = new JsonObjectOption("cardChoiceRerolled");
 	JsonEnumWithNameOption CARD_CHOICE_ONE = new JsonEnumWithNameOption("cardChoice1", Factory.CARD);

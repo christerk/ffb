@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardChoice;
+import com.balancedbytes.games.ffb.inducement.CardChoices;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -23,6 +24,8 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.balancedbytes.games.ffb.option.GameOptionId;
@@ -76,7 +79,7 @@ public final class StepBuyCards extends AbstractStep {
 
 	private boolean fReportedHome;
 	private boolean fReportedAway;
-	private CardChoice initialChoice, rerolledChoice;
+	private CardChoices cardChoices = new CardChoices();
 	private List<Card> usedCards = new ArrayList<>();
 	private ClientCommandSelectCardToBuy.Selection currentSelection;
 	private Phase phase = Phase.INIT;
@@ -241,11 +244,16 @@ public final class StepBuyCards extends AbstractStep {
 
 	private void handleCard() {
 		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
-		CardChoice choice = currentSelection.isInitialDeckChoice() ? initialChoice : rerolledChoice;
+		CardChoice choice = currentSelection.isInitialDeckChoice() ? cardChoices.getInitial() : cardChoices.getRerolled();
 		usedCards.add(choice.getChoiceOne());
 		usedCards.add(choice.getChoiceTwo());
-		Card chosenCard = currentSelection.isFirstCardChoice() ? choice.getChoiceTwo() : choice.getChoiceOne();
+		Card chosenCard = currentSelection.isFirstCardChoice() ? choice.getChoiceOne() : choice.getChoiceTwo();
+		updateChoices();
+		String changeKey = phase == Phase.HOME ? ModelChange.HOME : ModelChange.AWAY;
+		getGameState().getGame().notifyObservers(new ModelChange(ModelChangeId.INDUCEMENT_SET_CARD_CHOICES, changeKey, cardChoices));
 
+		// we have to update the card choices on client side first before adding the card as that will trigger the redraw
+		// otherwise the model change for card choices might arrive after the coach clicked "Buy Card" again and thus the old choices could be displayed
 		if (phase == Phase.HOME) {
 			fInducementGoldHome -= cardPrice;
 			getGameState().getGame().getTurnDataHome().getInducementSet().addAvailableCard(chosenCard);
@@ -253,14 +261,12 @@ public final class StepBuyCards extends AbstractStep {
 			fInducementGoldAway -= cardPrice;
 			getGameState().getGame().getTurnDataAway().getInducementSet().addAvailableCard(chosenCard);
 		}
-		updateChoices();
 	}
 
 	private void updateChoices() {
 		currentSelection = null;
 		List<CardType> types = fDeckByType.entrySet().stream().filter(entry -> entry.getValue().size() > 1).map(Map.Entry::getKey).collect(Collectors.toList());
-		initialChoice = createChoice(drawRandom(types));
-		rerolledChoice = createChoice(drawRandom(types));
+		cardChoices = new CardChoices(createChoice(drawRandom(types)), createChoice(drawRandom(types)));
 	}
 
 	private CardChoice createChoice(CardType type) {
@@ -305,7 +311,7 @@ public final class StepBuyCards extends AbstractStep {
 
 		updateChoices();
 		DialogBuyCardsAndInducementsParameter dialogParameter =
-			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlots, treasury, availableGold, initialChoice, rerolledChoice, cardPrice);
+			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlots, treasury, availableGold, cardChoices, cardPrice);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
 			dialogParameter.put(type, deck.size());
@@ -442,12 +448,7 @@ public final class StepBuyCards extends AbstractStep {
 			IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
 		}
 
-		if (initialChoice != null) {
-			IServerJsonOption.CARD_CHOICE_INITIAL.addTo(jsonObject, initialChoice.toJsonValue());
-		}
-		if (rerolledChoice != null) {
-			IServerJsonOption.CARD_CHOICE_REROLLED.addTo(jsonObject, rerolledChoice.toJsonValue());
-		}
+		IServerJsonOption.CARD_CHOICES.addTo(jsonObject, cardChoices.toJsonValue());
 
 		IServerJsonOption.CARDS_USED.addTo(jsonObject, usedCards.stream().map(Card::getName).collect(Collectors.toList()));
 
@@ -475,14 +476,10 @@ public final class StepBuyCards extends AbstractStep {
 		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(game, jsonObject);
 		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(game, jsonObject);
 		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
-		JsonObject choiceObject = IServerJsonOption.CARD_CHOICE_INITIAL.getFrom(game, jsonObject);
-		if (choiceObject != null) {
-			initialChoice = new CardChoice().initFrom(game, choiceObject);
-		}
 
-		choiceObject = IServerJsonOption.CARD_CHOICE_REROLLED.getFrom(game, jsonObject);
+		JsonObject choiceObject = IServerJsonOption.CARD_CHOICES.getFrom(game, jsonObject);
 		if (choiceObject != null) {
-			rerolledChoice = new CardChoice().initFrom(game, choiceObject);
+			cardChoices = new CardChoices().initFrom(game, jsonObject);
 		}
 
 		CardFactory cardFactory = game.getFactory(FactoryType.Factory.CARD);

@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardChoice;
+import com.balancedbytes.games.ffb.inducement.CardChoices;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
@@ -32,23 +33,28 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), labelTreasury = new JLabel(), typeLabel = new JLabel();
-	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel, cardsSummaryPanel = new JPanel();
-	private final JButton addCardButton = new JButton(), rerollChoiceButton= new JButton(), selectChoiceButton = new JButton(), choiceOneButton = new JButton(), choiceTwoButton = new JButton();
+	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), labelTreasury = new JLabel(),
+		typeLabel = new JLabel();
+	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel,
+		cardsListPanel = new JPanel(), cardsSummaryPanel = new JPanel();
+	private final JButton addCardButton = new JButton(), rerollChoiceButton= new JButton(), selectChoiceButton = new JButton(),
+		choiceOneButton = new JButton(), choiceTwoButton = new JButton();
 	private final Map<CardType, Integer> nrOfCardsPerType;
-	private final int availableGold, pettyCash, treasury;
-	private final CardChoice initialChoice, rerolledChoice;
+	private final int cardPrice;
+	private int availableGold, cardSlots, pettyCash, treasury;
+	private CardChoices cardChoices;
 	private CardChoice currentChoice;
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
 		super(pClient, "Buy Cards And Inducements", pParameter.getTeamId(), pParameter.getAvailableGold(), false);
-		this.initialChoice = pParameter.getInitialChoice();
-		this.rerolledChoice = pParameter.getRerolledChoice();
+		this.cardChoices = pParameter.getCardChoices();
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
 		nrOfCardsPerType = pParameter.getNrOfCardsPerType();
 
+		cardSlots = pParameter.getCardSlots();
+		cardPrice = pParameter.getCardPrice();
 		treasury = pParameter.getTreasury();
 		availableGold = pParameter.getAvailableGold();
 		pettyCash =  availableGold - treasury;
@@ -66,6 +72,14 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		setLocationToCenter();
 
+	}
+
+	public void setCardChoices(CardChoices cardChoices) {
+		this.cardChoices = cardChoices;
+	}
+
+	public CardChoices getCardChoices() {
+		return cardChoices;
 	}
 
 	private JPanel buildCardPanel() {
@@ -87,19 +101,29 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private JPanel buildCardInfoPanel(){
 		cardsSummaryPanel.setLayout(new BoxLayout(cardsSummaryPanel, BoxLayout.Y_AXIS));
 		cardsSummaryPanel.setAlignmentX(CENTER_ALIGNMENT);
+		updateSummaryPanel();
+		cardsListPanel.setLayout(new BoxLayout(cardsListPanel, BoxLayout.Y_AXIS));
+		cardsListPanel.add(Box.createVerticalStrut(5));
+		cardsListPanel.setAlignmentX(CENTER_ALIGNMENT);
+		cardsListPanel.add(label("Selected Cards:", BOLD_FONT));
+
+		JPanel wrapperPanel = new JPanel();
+		wrapperPanel.setLayout(new BoxLayout(wrapperPanel, BoxLayout.Y_AXIS));
+		wrapperPanel.add(cardsSummaryPanel);
+		wrapperPanel.add(cardsListPanel);
+		return wrapperPanel;
+	}
+
+	private void updateSummaryPanel() {
+		cardsSummaryPanel.removeAll();
+		cardsSummaryPanel.add(Box.createVerticalStrut(5));
+		cardsSummaryPanel.add(label("Available Card Slots: " + cardSlots, BOLD_FONT));
 		cardsSummaryPanel.add(Box.createVerticalStrut(5));
 		cardsSummaryPanel.add(label("Available Cards:", BOLD_FONT));
 		nrOfCardsPerType.forEach((key, value) -> {
 			cardsSummaryPanel.add(Box.createVerticalStrut(3));
 			cardsSummaryPanel.add(label(key.getDeckName() + ": " + value, REGULAR_FONT));
 		});
-		cardsSummaryPanel.add(Box.createVerticalStrut(5));
-		cardsSummaryPanel.add(label("Selected Cards:", BOLD_FONT));
-
-		JPanel wrapperPanel = new JPanel();
-		wrapperPanel.setLayout(new BoxLayout(wrapperPanel, BoxLayout.X_AXIS));
-		wrapperPanel.add(cardsSummaryPanel);
-		return wrapperPanel;
 	}
 
 	private JLabel label(String text, Font font) {
@@ -153,7 +177,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private void showDeckChoice() {
 		dynamicPanel.removeAll();
-		selectChoiceButton.setText("Use " + initialChoice.getType().getDeckName());
+		selectChoiceButton.setText("Use " + cardChoices.getInitial().getType().getDeckName());
 		dynamicPanel.add(deckChoicePanel);
 		getContentPane().validate();
 		pack();
@@ -193,16 +217,14 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		selectChoiceButton.addActionListener(e -> showCardChoice(initialChoice));
+		selectChoiceButton.addActionListener(e -> showCardChoice(cardChoices.getInitial()));
 		selectChoiceButton.setAlignmentX(CENTER_ALIGNMENT);
 		panel.add(selectChoiceButton);
 
 		panel.add(Box.createVerticalStrut(2));
 
 		rerollChoiceButton.setText("Reroll to get a different deck");
-		rerollChoiceButton.addActionListener(e -> {
-			showCardChoice(rerolledChoice);
-		});
+		rerollChoiceButton.addActionListener(e -> showCardChoice(cardChoices.getRerolled()));
 		rerollChoiceButton.setAlignmentX(CENTER_ALIGNMENT);
 		panel.add(rerollChoiceButton);
 
@@ -213,6 +235,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		typeLabel.setAlignmentX(CENTER_ALIGNMENT);
+		typeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(typeLabel);
 		panel.add(Box.createVerticalStrut(3));
 
@@ -229,15 +252,9 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		return panel;
 	}
 
-	private void addCard(Card card) {
-		cardsSummaryPanel.add(Box.createVerticalStrut(3));
-		cardsSummaryPanel.add(new JLabel(card.getName()));
-		showAddCardButton();
-	}
-
 	private void sendCommand(boolean firstCardChoice) {
 		ClientCommandSelectCardToBuy.Selection selection =
-			ClientCommandSelectCardToBuy.Selection.valueOf(currentChoice == initialChoice, firstCardChoice);
+			ClientCommandSelectCardToBuy.Selection.valueOf(currentChoice == cardChoices.getInitial(), firstCardChoice);
 		getClient().getCommunication().sendCardSelection(selection);
 	}
 
@@ -247,6 +264,21 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		labelPettyCash.setText("Petty Cash (free): " + StringTool.formatThousands(pettyCash) + " gp");
 
 		labelTreasury.setText("Team Treasury: " + StringTool.formatThousands(treasury) + " gp");
+	}
+
+	public void addCard(Card card) {
+		cardsListPanel.add(Box.createVerticalStrut(3));
+		cardsListPanel.add(new JLabel(card.getName()));
+		cardSlots--;
+		availableGold -= cardPrice;
+		setStartGold(getStartGold() - cardPrice);
+		treasury = Math.min(availableGold, treasury);
+		pettyCash = availableGold - treasury;
+		nrOfCardsPerType.put(card.getType(), nrOfCardsPerType.get(card.getType()) - 2);
+		addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0);
+		updateGoldValue();
+		updateSummaryPanel();
+		showAddCardButton();
 	}
 
 	public DialogId getId() {

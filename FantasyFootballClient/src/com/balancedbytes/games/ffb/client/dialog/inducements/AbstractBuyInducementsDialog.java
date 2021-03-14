@@ -49,10 +49,10 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	private StarPlayerTableModel fTableModelStarPlayers;
 	private JTable fTableMercenaries;
 	private MercenaryTableModel fTableModelMercenaries;
-	private Set<DropDownPanel> fPanels = new HashSet<>();
-	private String fTeamId = null;
-	private Roster fRoster = null;
-	private Team fTeam;
+	private final Set<DropDownPanel> fPanels = new HashSet<>();
+	private final String fTeamId;
+	private final Roster fRoster;
+	private final Team fTeam;
 	private int fAvailableGold;
 	private int fStartGold;
 
@@ -300,10 +300,13 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	}
 
 
-	private int getStartGold() {
+	protected int getStartGold() {
 		return fStartGold;
 	}
 
+	public void setStartGold(int startGold) {
+		this.fStartGold = startGold;
+	}
 
 	protected int getAvailableGold() {
 		return fAvailableGold;
