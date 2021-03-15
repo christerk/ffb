@@ -51,6 +51,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.common.Kickoff;
 import com.balancedbytes.games.ffb.server.step.generator.common.RiotousRookies;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.skill.Loner;
@@ -489,6 +490,10 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		getResult().addReport(generateReport(getGameState().getGame().getTeamAway(), usedInducementGoldAway, newTvAway));
 
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+
+		((Kickoff)factory.forName(SequenceGenerator.Type.Kickoff.name()))
+				.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
+
 		com.balancedbytes.games.ffb.server.step.generator.common.Inducement generator =
 			((com.balancedbytes.games.ffb.server.step.generator.common.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()));
 		if (newTvHome > newTvAway) {

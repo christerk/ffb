@@ -56,9 +56,6 @@ public final class StepSpectators extends AbstractStep {
 
 	private void executeStep() {
 		rollSpectators();
-		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		((Kickoff)factory.forName(SequenceGenerator.Type.Kickoff.name()))
-			.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
 		GameCache gameCache = getGameState().getServer().getGameCache();
 		gameCache.queueDbUpdate(getGameState(), true);
 		getResult().setNextAction(StepAction.NEXT_STEP);
