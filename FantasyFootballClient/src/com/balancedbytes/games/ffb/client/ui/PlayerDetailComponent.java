@@ -480,7 +480,7 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
-			Color statColor = pStatIsRed ? Color.RED : Color.BLACK;
+			Color statColor = pStatIsRed ? (modifier.isImpairment() ? Color.cyan : Color.RED) : Color.BLACK;
 			String statText = pValue == 0 ? "-" : pValue + suffix;
 			if (pValue == 0) {
 				// Move the dash more central
