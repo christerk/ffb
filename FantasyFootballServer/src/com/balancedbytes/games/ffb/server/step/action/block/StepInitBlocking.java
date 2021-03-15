@@ -147,7 +147,7 @@ public class StepInitBlocking extends AbstractStep {
 		} else if (fEndPlayerAction) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-		} else if (actingPlayer.isSufferingBloodLust() && (actingPlayer.getPlayerAction() == PlayerAction.MOVE)) {
+		} else if (actingPlayer.isSufferingBloodLust() && (actingPlayer.getPlayerAction() == PlayerAction.MOVE || actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 		} else {
 			Player<?> defender = game.getPlayerById(fBlockDefenderId);

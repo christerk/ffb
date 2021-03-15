@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
@@ -82,7 +83,7 @@ public enum NetCommandId implements INamedObject {
 	SERVER_GAME_STATE("serverGameState"), SERVER_TEAM_LIST("serverTeamList"), SERVER_STATUS("serverStatus"),
 	SERVER_JOIN("serverJoin"), SERVER_LEAVE("serverLeave"), SERVER_TALK("serverTalk"),
 	CLIENT_SETUP_PLAYER("clientSetupPlayer"), CLIENT_START_GAME("clientStartGame"),
-	CLIENT_ACTING_PLAYER("clientActingPlayer"), CLIENT_MOVE("clientMove"), CLIENT_USE_RE_ROLL("clientUseReRoll"),
+	CLIENT_ACTING_PLAYER("clientActingPlayer"), CLIENT_MOVE("clientMove"), CLIENT_BLITZ_MOVE("clientBlitzMove"), CLIENT_USE_RE_ROLL("clientUseReRoll"),
 	SERVER_SOUND("serverSound"), CLIENT_COIN_CHOICE("clientCoinChoice"), CLIENT_RECEIVE_CHOICE("clientReceiveChoice"),
 	CLIENT_END_TURN("clientEndTurn"), CLIENT_KICKOFF("clientKickoff"), CLIENT_TOUCHBACK("clientTouchback"),
 	CLIENT_HAND_OVER("clientHandOver"), CLIENT_PASS("clientPass"), CLIENT_BLOCK("clientBlock"),
@@ -153,6 +154,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandActingPlayer();
 			case CLIENT_MOVE:
 				return new ClientCommandMove();
+			case CLIENT_BLITZ_MOVE:
+				return new ClientCommandBlitzMove();
 			case CLIENT_USE_RE_ROLL:
 				return new ClientCommandUseReRoll();
 			case SERVER_SOUND:

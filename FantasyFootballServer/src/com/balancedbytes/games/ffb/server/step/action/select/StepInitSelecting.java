@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFoul;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandGaze;
@@ -128,6 +129,16 @@ public final class StepInitSelecting extends AbstractStep {
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 				break;
+				case CLIENT_BLITZ_MOVE:
+					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
+							&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homeCommand)) {
+						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
+								UtilServerPlayerMove.fetchMoveStack(getGameState(), blitzMoveCommand, homeCommand)));
+						fDispatchPlayerAction = PlayerAction.BLITZ_MOVE;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
 			case CLIENT_FOUL:
 				ClientCommandFoul foulCommand = (ClientCommandFoul) pReceivedCommand.getCommand();
 				if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), foulCommand)

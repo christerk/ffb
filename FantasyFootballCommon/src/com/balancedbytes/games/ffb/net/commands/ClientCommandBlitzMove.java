@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -12,21 +9,24 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
  */
-public class ClientCommandMove extends ClientCommand implements ICommandWithActingPlayer {
+public class ClientCommandBlitzMove extends ClientCommand implements ICommandWithActingPlayer {
 
 	private String fActingPlayerId;
 	private FieldCoordinate fCoordinateFrom;
 	private final List<FieldCoordinate> fCoordinatesTo;
 
-	public ClientCommandMove() {
+	public ClientCommandBlitzMove() {
 		fCoordinatesTo = new ArrayList<>();
 	}
 
-	public ClientCommandMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom, FieldCoordinate[] pCoordinatesTo) {
+	public ClientCommandBlitzMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom, FieldCoordinate[] pCoordinatesTo) {
 		this();
 		fActingPlayerId = pActingPlayerId;
 		fCoordinateFrom = pCoordinateFrom;
@@ -34,7 +34,7 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 	}
 
 	public NetCommandId getId() {
-		return NetCommandId.CLIENT_MOVE;
+		return NetCommandId.CLIENT_BLITZ_MOVE;
 	}
 
 	public String getActingPlayerId() {
@@ -73,7 +73,7 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 		return jsonObject;
 	}
 
-	public ClientCommandMove initFrom(IFactorySource game, JsonValue jsonValue) {
+	public ClientCommandBlitzMove initFrom(IFactorySource game, JsonValue jsonValue) {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);

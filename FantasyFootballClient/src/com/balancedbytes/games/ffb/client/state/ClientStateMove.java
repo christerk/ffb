@@ -344,6 +344,10 @@ public class ClientStateMove extends ClientState {
 		}
 		getClient().getGame().getFieldModel().clearMoveSquares();
 		getClient().getUserInterface().getFieldComponent().refresh();
+		sendCommand(actingPlayer, coordinateFrom, pCoordinates);
+	}
+
+	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates){
 		getClient().getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
 	}
 

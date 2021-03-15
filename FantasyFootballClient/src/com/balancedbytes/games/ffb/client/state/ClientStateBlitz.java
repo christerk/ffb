@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.client.state;
 
 import com.balancedbytes.games.ffb.ClientStateId;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -100,7 +101,7 @@ public class ClientStateBlitz extends ClientStateMove {
 				break;
 			case IPlayerPopupMenuKeys.KEY_MOVE:
 				if (actingPlayer.isSufferingBloodLust()) {
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isLeaping());
+					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());
 				}
 				break;
 			default:
@@ -110,4 +111,7 @@ public class ClientStateBlitz extends ClientStateMove {
 		}
 	}
 
+	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates){
+		getClient().getCommunication().sendPlayerBlitzMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
+	}
 }
