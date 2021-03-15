@@ -43,6 +43,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_TREASURY = "treasury";
 	private static final String _XML_TAG_BASE_ICON_PATH = "baseIconPath";
 	private static final String _XML_TAG_LOGO_URL = "logo";
+	private static final String _XML_TAG_DEDICATED_FANS = "dedicatedFans";
 
 	private String fId;
 	private String fName;
@@ -58,14 +59,15 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	private int fTreasury;
 	private String fBaseIconPath;
 	private String fLogoUrl;
+	private int dedicatedFans;
 
 	private String fRosterId;
 	private Roster fRoster;
 
 	private InducementSet fInducementSet;
 
-	private transient Map<String, Player<?>> fPlayerById;
-	private transient Map<Integer, Player<?>> fPlayerByNr;
+	private final transient Map<String, Player<?>> fPlayerById;
+	private final transient Map<Integer, Player<?>> fPlayerByNr;
 
 	private static class PlayerComparatorByNr implements Comparator<Player<?>> {
 		public int compare(Player<?> pPlayer1, Player<?> pPlayer2) {
@@ -105,6 +107,14 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 
 	public void setFanFactor(int fanFactor) {
 		fFanFactor = fanFactor;
+	}
+
+	public int getDedicatedFans() {
+		return dedicatedFans;
+	}
+
+	public void setDedicatedFans(int dedicatedFans) {
+		this.dedicatedFans = dedicatedFans;
 	}
 
 	public String getId() {
@@ -318,6 +328,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		UtilXml.addValueElement(pHandler, _XML_TAG_TREASURY, getTreasury());
 		UtilXml.addValueElement(pHandler, _XML_TAG_BASE_ICON_PATH, getBaseIconPath());
 		UtilXml.addValueElement(pHandler, _XML_TAG_LOGO_URL, getLogoUrl());
+		UtilXml.addValueElement(pHandler, _XML_TAG_DEDICATED_FANS, getDedicatedFans());
 
 		for (Player<?> player : getPlayers()) {
 			player.addToXml(pHandler);
@@ -403,6 +414,9 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 			if (_XML_TAG_LOGO_URL.equals(pXmlTag)) {
 				setLogoUrl(pValue);
 			}
+			if (_XML_TAG_DEDICATED_FANS.equals(pXmlTag)) {
+				setDedicatedFans(Integer.parseInt(pValue));
+			}
 		}
 		return complete;
 	}
@@ -426,6 +440,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.TREASURY.addTo(jsonObject, fTreasury);
 		IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
 		IJsonOption.LOGO_URL.addTo(jsonObject, fLogoUrl);
+		IJsonOption.DEDICATED_FANS.addTo(jsonObject, dedicatedFans);
 
 		JsonArray playerArray = new JsonArray();
 		for (Player<?> player : getPlayers()) {
@@ -458,6 +473,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		fTreasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
 		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(game, jsonObject);
 		fLogoUrl = IJsonOption.LOGO_URL.getFrom(game, jsonObject);
+		dedicatedFans = IJsonOption.DEDICATED_FANS.getFrom(game, jsonObject);
 
 		fPlayerById.clear();
 		fPlayerByNr.clear();

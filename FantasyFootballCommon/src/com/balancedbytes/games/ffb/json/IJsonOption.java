@@ -99,6 +99,7 @@ public interface IJsonOption {
 	JsonIntOption COST = new JsonIntOption("cost");
 	JsonIntOption CURRENT_MOVE = new JsonIntOption("currentMove");
 	JsonIntOption CURRENT_SPPS = new JsonIntOption("currentSpps");
+	JsonIntOption DEDICATED_FANS = new JsonIntOption("dedicatedFans");
 	JsonBooleanOption DEFECTING = new JsonBooleanOption("defecting");
 	JsonBooleanArrayOption DEFECTING_ARRAY = new JsonBooleanArrayOption("defectingArray");
 	JsonEnumWithNameOption DEFENDER_ACTION = new JsonEnumWithNameOption("defenderAction", Factory.PLAYER_ACTION);
