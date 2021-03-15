@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
-import com.balancedbytes.games.ffb.report.ReportFanFactorRoll;
+import com.balancedbytes.games.ffb.report.ReportFanFactorRollPostMatch;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in end game sequence to handle fan factor changes.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
@@ -42,7 +42,7 @@ public final class StepFanFactor extends AbstractStep {
 		int[] fanFactorRollHome = null;
 		int fanFactorModifierHome = -1;
 		if (!gameResult.getTeamResultHome().hasConceded()) {
-			fanFactorRollHome = getGameState().getDiceRoller().rollFanFactor(scoreDiffHome > 0);
+			fanFactorRollHome = getGameState().getDiceRoller().rollFanFactorPostMatch(scoreDiffHome > 0);
 			fanFactorModifierHome = DiceInterpreter.getInstance().interpretFanFactorRoll(fanFactorRollHome,
 					game.getTeamHome().getFanFactor(), scoreDiffHome);
 		}
@@ -50,13 +50,13 @@ public final class StepFanFactor extends AbstractStep {
 		int[] fanFactorRollAway = null;
 		int fanFactorModifierAway = -1;
 		if (!gameResult.getTeamResultAway().hasConceded()) {
-			fanFactorRollAway = getGameState().getDiceRoller().rollFanFactor(scoreDiffHome < 0);
+			fanFactorRollAway = getGameState().getDiceRoller().rollFanFactorPostMatch(scoreDiffHome < 0);
 			fanFactorModifierAway = DiceInterpreter.getInstance().interpretFanFactorRoll(fanFactorRollAway,
 					game.getTeamAway().getFanFactor(), -scoreDiffHome);
 		}
 		gameResult.getTeamResultAway().setFanFactorModifier(fanFactorModifierAway);
 		getResult().addReport(
-				new ReportFanFactorRoll(fanFactorRollHome, fanFactorModifierHome, fanFactorRollAway, fanFactorModifierAway));
+				new ReportFanFactorRollPostMatch(fanFactorRollHome, fanFactorModifierHome, fanFactorRollAway, fanFactorModifierAway));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

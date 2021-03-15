@@ -61,7 +61,7 @@ import com.balancedbytes.games.ffb.report.ReportConfusionRoll;
 import com.balancedbytes.games.ffb.report.ReportDauntlessRoll;
 import com.balancedbytes.games.ffb.report.ReportDefectingPlayers;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
-import com.balancedbytes.games.ffb.report.ReportFanFactorRoll;
+import com.balancedbytes.games.ffb.report.ReportFanFactorRollPostMatch;
 import com.balancedbytes.games.ffb.report.ReportFoul;
 import com.balancedbytes.games.ffb.report.ReportFreePettyCash;
 import com.balancedbytes.games.ffb.report.ReportFumbblResultUpload;
@@ -2225,7 +2225,7 @@ public class StatusReport {
 
 	}
 
-	public void reportFanFactorRoll(ReportFanFactorRoll pReport) {
+	public void reportFanFactorRoll(ReportFanFactorRollPostMatch pReport) {
 
 		Game game = getClient().getGame();
 
@@ -3015,8 +3015,8 @@ public class StatusReport {
 				case WINNINGS_ROLL:
 					reportWinningsRoll((ReportWinningsRoll) report);
 					break;
-				case FAN_FACTOR_ROLL:
-					reportFanFactorRoll((ReportFanFactorRoll) report);
+				case FAN_FACTOR_ROLL_POST_MATCH:
+					reportFanFactorRoll((ReportFanFactorRollPostMatch) report);
 					break;
 				case MOST_VALUABLE_PLAYERS:
 					reportMostValuablePlayers((ReportMostValuablePlayers) report);

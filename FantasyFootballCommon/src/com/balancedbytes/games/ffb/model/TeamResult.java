@@ -38,6 +38,7 @@ public class TeamResult implements IJsonSerializable {
 	private int fTeamValue;
 	private int pettyCashFromTvDiff;
 	private int treasurySpentOnInducements;
+	private int fanFactor;
 
 	private final Map<String, PlayerResult> fPlayerResultByPlayerId;
 
@@ -266,6 +267,14 @@ public class TeamResult implements IJsonSerializable {
 		this.treasurySpentOnInducements = treasurySpentOnInducements;
 	}
 
+	public int getFanFactor() {
+		return fanFactor;
+	}
+
+	public void setFanFactor(int fanFactor) {
+		this.fanFactor = fanFactor;
+	}
+
 	public int totalCompletions() {
 		int completions = 0;
 		for (Player<?> player : getTeam().getPlayers()) {
@@ -373,6 +382,9 @@ public class TeamResult implements IJsonSerializable {
 			fPettyCashTransferred = pTeamResult.getPettyCashTransferred();
 			fPettyCashUsed = pTeamResult.getPettyCashUsed();
 			fTeamValue = pTeamResult.getTeamValue();
+			fanFactor = pTeamResult.getFanFactor();
+			pettyCashFromTvDiff = pTeamResult.getPettyCashFromTvDiff();
+			treasurySpentOnInducements = pTeamResult.getTreasurySpentOnInducements();
 			for (Player<?> player : fTeam.getPlayers()) {
 				PlayerResult oldPlayerResult = pTeamResult.getPlayerResult(player);
 				PlayerResult newPlayerResult = new PlayerResult(this);
@@ -420,6 +432,7 @@ public class TeamResult implements IJsonSerializable {
 		IJsonOption.PETTY_CASH_USED.addTo(jsonObject, fPettyCashUsed);
 		IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
 		IJsonOption.TREASURY_USED_ON_INDUCEMENTS.addTo(jsonObject, treasurySpentOnInducements);
+		IJsonOption.FAN_FACTOR.addTo(jsonObject, fanFactor);
 		return jsonObject;
 	}
 
@@ -450,6 +463,7 @@ public class TeamResult implements IJsonSerializable {
 		fPettyCashUsed = IJsonOption.PETTY_CASH_USED.getFrom(source, jsonObject);
 		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
 		treasurySpentOnInducements = IJsonOption.TREASURY_USED_ON_INDUCEMENTS.getFrom(source, jsonObject);
+		fanFactor = IJsonOption.FAN_FACTOR.getFrom(source, jsonObject);
 		return this;
 	}
 

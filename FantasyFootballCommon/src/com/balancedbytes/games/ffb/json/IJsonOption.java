@@ -100,6 +100,7 @@ public interface IJsonOption {
 	JsonIntOption CURRENT_MOVE = new JsonIntOption("currentMove");
 	JsonIntOption CURRENT_SPPS = new JsonIntOption("currentSpps");
 	JsonIntOption DEDICATED_FANS = new JsonIntOption("dedicatedFans");
+	JsonIntOption DEDICATED_FANS_ROLL = new JsonIntOption("dedicatedFansRoll");
 	JsonBooleanOption DEFECTING = new JsonBooleanOption("defecting");
 	JsonBooleanArrayOption DEFECTING_ARRAY = new JsonBooleanArrayOption("defectingArray");
 	JsonEnumWithNameOption DEFENDER_ACTION = new JsonEnumWithNameOption("defenderAction", Factory.PLAYER_ACTION);
@@ -120,7 +121,6 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
-	JsonIntOption FAME = new JsonIntOption("fame");
 	JsonIntOption FAME_AWAY = new JsonIntOption("fameAway");
 	JsonIntOption FAME_HOME = new JsonIntOption("fameHome");
 	JsonIntOption FAN_FACTOR = new JsonIntOption("fanFactor");

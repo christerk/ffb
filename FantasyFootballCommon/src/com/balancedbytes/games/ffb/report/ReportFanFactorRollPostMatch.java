@@ -7,22 +7,22 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
-public class ReportFanFactorRoll implements IReport {
+public class ReportFanFactorRollPostMatch implements IReport {
 
 	private int[] fFanFactorRollHome;
 	private int fFanFactorModifierHome;
 	private int[] fFanFactorRollAway;
 	private int fFanFactorModifierAway;
 
-	public ReportFanFactorRoll() {
+	public ReportFanFactorRollPostMatch() {
 		super();
 	}
 
-	public ReportFanFactorRoll(int[] pFanFactorRollHome, int pFanFactorModifierHome, int[] pFanFactorRollAway,
-			int pFanFactorModifierAway) {
+	public ReportFanFactorRollPostMatch(int[] pFanFactorRollHome, int pFanFactorModifierHome, int[] pFanFactorRollAway,
+	                                    int pFanFactorModifierAway) {
 		fFanFactorRollHome = pFanFactorRollHome;
 		fFanFactorModifierHome = pFanFactorModifierHome;
 		fFanFactorRollAway = pFanFactorRollAway;
@@ -30,7 +30,7 @@ public class ReportFanFactorRoll implements IReport {
 	}
 
 	public ReportId getId() {
-		return ReportId.FAN_FACTOR_ROLL;
+		return ReportId.FAN_FACTOR_ROLL_POST_MATCH;
 	}
 
 	public int[] getFanFactorRollHome() {
@@ -52,7 +52,7 @@ public class ReportFanFactorRoll implements IReport {
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportFanFactorRoll(getFanFactorRollAway(), getFanFactorModifierAway(), getFanFactorRollHome(),
+		return new ReportFanFactorRollPostMatch(getFanFactorRollAway(), getFanFactorModifierAway(), getFanFactorRollHome(),
 				getFanFactorModifierHome());
 	}
 
@@ -68,7 +68,7 @@ public class ReportFanFactorRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportFanFactorRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public ReportFanFactorRollPostMatch initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fFanFactorRollHome = IJsonOption.FAN_FACTOR_ROLL_HOME.getFrom(game, jsonObject);

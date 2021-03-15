@@ -45,6 +45,10 @@ public class DiceRoller {
 		return result;
 	}
 
+	public int rollFanFactor() {
+		return rollDice(3);
+	}
+
 	public int[] rollWeather() {
 		return rollDice(2, 6);
 	}
@@ -73,7 +77,7 @@ public class DiceRoller {
 		return rollDice(6);
 	}
 
-	public int[] rollFanFactor(boolean pWinningTeam) {
+	public int[] rollFanFactorPostMatch(boolean pWinningTeam) {
 		if (pWinningTeam) {
 			return rollDice(3, 6);
 		} else {

@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.game.start;
+package com.balancedbytes.games.ffb.server.step.bb2020.start;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.TeamResult;
+import com.balancedbytes.games.ffb.report.ReportFanFactor;
 import com.balancedbytes.games.ffb.report.ReportSpectators;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -15,19 +16,19 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.generator.common.Kickoff;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.common.Kickoff;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in start game sequence to roll spectators.
- * 
+ *
  * Updates persistence. Pushes kickoffSequence on stack when finishing.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepSpectators extends AbstractStep {
 
 	public StepSpectators(GameState pGameState) {
@@ -54,7 +55,7 @@ public final class StepSpectators extends AbstractStep {
 	}
 
 	private void executeStep() {
-		getResult().addReport(rollSpectators());
+		rollSpectators();
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		((Kickoff)factory.forName(SequenceGenerator.Type.Kickoff.name()))
 			.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
@@ -63,31 +64,20 @@ public final class StepSpectators extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-	private ReportSpectators rollSpectators() {
+	private void rollSpectators() {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		TeamResult teamResultHome = gameResult.getTeamResultHome();
 		TeamResult teamResultAway = gameResult.getTeamResultAway();
-		int[] fanRollHome = getGameState().getDiceRoller().rollSpectators();
-		teamResultHome.setSpectators((fanRollHome[0] + fanRollHome[1] + game.getTeamHome().getFanFactor()) * 1000);
-		int[] fanRollAway = getGameState().getDiceRoller().rollSpectators();
-		teamResultAway.setSpectators((fanRollAway[0] + fanRollAway[1] + game.getTeamAway().getFanFactor()) * 1000);
-		if (teamResultHome.getSpectators() >= (2 * teamResultAway.getSpectators())) {
-			teamResultHome.setFame(2);
-		} else if (teamResultHome.getSpectators() > teamResultAway.getSpectators()) {
-			teamResultHome.setFame(1);
-		} else {
-			teamResultHome.setFame(0);
-		}
-		if (teamResultAway.getSpectators() >= (2 * teamResultHome.getSpectators())) {
-			teamResultAway.setFame(2);
-		} else if (teamResultAway.getSpectators() > teamResultHome.getSpectators()) {
-			teamResultAway.setFame(1);
-		} else {
-			teamResultAway.setFame(0);
-		}
-		return new ReportSpectators(fanRollHome, teamResultHome.getSpectators(), teamResultHome.getFame(), fanRollAway,
-				teamResultAway.getSpectators(), teamResultAway.getFame());
+
+		int fanRollHome = getGameState().getDiceRoller().rollFanFactor();
+		teamResultHome.setFanFactor(game.getTeamHome().getDedicatedFans() + fanRollHome);
+
+		int fanRollAway = getGameState().getDiceRoller().rollFanFactor();
+		teamResultAway.setFanFactor(game.getTeamAway().getDedicatedFans() + fanRollAway);
+
+		getResult().addReport(new ReportFanFactor(game.getTeamHome().getId(), fanRollHome, game.getTeamHome().getDedicatedFans()));
+		getResult().addReport(new ReportFanFactor(game.getTeamAway().getId(), fanRollAway, game.getTeamAway().getDedicatedFans()));
 	}
 
 	// JSON serialization
