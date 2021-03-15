@@ -17,6 +17,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.BlitzBlock;
+import com.balancedbytes.games.ffb.server.step.generator.BlitzMove;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
 import com.balancedbytes.games.ffb.server.step.generator.common.Block;
 import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
@@ -32,7 +34,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Last step in select sequence. Consumes all expected stepParameters.
- * 
+ * <p>
  * Expects stepParameter BLOCK_DEFENDER_ID to be set by a preceding step.
  * Expects stepParameter DISPATCH_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
@@ -44,7 +46,7 @@ import com.eclipsesource.json.JsonValue;
  * TARGET_COORDINATE to be set by a preceding step. Expects stepParameter
  * THROWN_PLAYER_ID to be set by a preceding step. Expects stepParameter
  * USING_STAB to be set by a preceding step.
- * 
+ * <p>
  * Will push a new sequence on the stack.
  *
  * @author Kalimar
@@ -88,60 +90,60 @@ public final class StepEndSelecting extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case BLOCK_DEFENDER_ID:
-				fBlockDefenderId = (String) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case DISPATCH_PLAYER_ACTION:
-				fDispatchPlayerAction = (PlayerAction) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case END_PLAYER_ACTION:
-				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case FOUL_DEFENDER_ID:
-				fFoulDefenderId = (String) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case GAZE_VICTIM_ID:
-				fGazeVictimId = (String) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case HAIL_MARY_PASS:
-				fHailMaryPass = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case MOVE_STACK:
-				fMoveStack = (FieldCoordinate[]) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case TARGET_COORDINATE:
-				fTargetCoordinate = (FieldCoordinate) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case THROWN_PLAYER_ID:
-				fThrownPlayerId = (String) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case KICKED_PLAYER_ID:
-				fKickedPlayerId = (String) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case NR_OF_DICE:
-				fNumDice = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
-				consume(pParameter);
-				return true;
-			case USING_STAB:
-				fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			default:
-				break;
+				case BLOCK_DEFENDER_ID:
+					fBlockDefenderId = (String) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case DISPATCH_PLAYER_ACTION:
+					fDispatchPlayerAction = (PlayerAction) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case END_PLAYER_ACTION:
+					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case END_TURN:
+					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case FOUL_DEFENDER_ID:
+					fFoulDefenderId = (String) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case GAZE_VICTIM_ID:
+					fGazeVictimId = (String) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case HAIL_MARY_PASS:
+					fHailMaryPass = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case MOVE_STACK:
+					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case TARGET_COORDINATE:
+					fTargetCoordinate = (FieldCoordinate) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case THROWN_PLAYER_ID:
+					fThrownPlayerId = (String) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case KICKED_PLAYER_ID:
+					fKickedPlayerId = (String) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case NR_OF_DICE:
+					fNumDice = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+					consume(pParameter);
+					return true;
+				case USING_STAB:
+					fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -153,8 +155,8 @@ public final class StepEndSelecting extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (fEndTurn || fEndPlayerAction) {
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-			((EndPlayerAction)factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
-			.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
+					.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else if (actingPlayer.isSufferingBloodLust()) {
 			if (fDispatchPlayerAction != null) {
 				if (!fDispatchPlayerAction.isMoving()) {
@@ -181,93 +183,107 @@ public final class StepEndSelecting extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 		if (pPlayerAction == null) {
-			((Select)factory.forName(SequenceGenerator.Type.Select.name()))
-				.pushSequence(new Select.SequenceParams(getGameState(), false));
+			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
+					.pushSequence(new Select.SequenceParams(getGameState(), false));
 			return;
 		}
-		com.balancedbytes.games.ffb.server.step.generator.Pass passGenerator = (com.balancedbytes.games.ffb.server.step.generator.Pass)factory.forName(SequenceGenerator.Type.Pass.name());
+		Pass passGenerator = (Pass) factory.forName(SequenceGenerator.Type.Pass.name());
 		ThrowTeamMate ttmGenerator = (ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name());
 		KickTeamMate ktmGenerator = (KickTeamMate) factory.forName(SequenceGenerator.Type.KickTeamMate.name());
-		Block blockGenerator = (Block)factory.forName(SequenceGenerator.Type.Block.name());
-		Foul foulGenerator = (Foul)factory.forName(SequenceGenerator.Type.Foul.name());
-		Move moveGenerator = (Move)factory.forName(SequenceGenerator.Type.Move.name());
-		EndPlayerAction endGenerator = (EndPlayerAction)factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
+		Block blockGenerator = (Block) factory.forName(SequenceGenerator.Type.Block.name());
+		Foul foulGenerator = (Foul) factory.forName(SequenceGenerator.Type.Foul.name());
+		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
+		EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
 		EndPlayerAction.SequenceParams endParams = new EndPlayerAction.SequenceParams(getGameState(), true, true, false);
+		BlitzMove blitzMoveGenerator = (BlitzMove) factory.forName(SequenceGenerator.Type.BlitzMove.name());
+		BlitzBlock blitzBlockGenerator = (BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name());
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pPlayerAction) {
-		case PASS:
-		case HAIL_MARY_PASS:
-		case THROW_BOMB:
-		case HAIL_MARY_BOMB:
-		case HAND_OVER:
-			if (pWithParameter) {
-				passGenerator.pushSequence(new com.balancedbytes.games.ffb.server.step.generator.Pass.SequenceParams(getGameState(), fTargetCoordinate));
-			} else {
-				passGenerator.pushSequence(new Pass.SequenceParams(getGameState()));
-			}
-			break;
-		case THROW_TEAM_MATE:
-			if (pWithParameter) {
-				ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), fThrownPlayerId, fTargetCoordinate));
-			} else {
-				ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState()));
-			}
-			break;
-		case KICK_TEAM_MATE:
-			if (pWithParameter) {
-				ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState(), fNumDice, fKickedPlayerId));
-			} else {
-				ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState()));
-			}
-			break;
-		case BLITZ:
-		case BLOCK:
-		case MULTIPLE_BLOCK:
-			if (pWithParameter) {
-				blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, null));
-			} else {
-				blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
-			}
-			break;
-		case FOUL:
-			if (pWithParameter) {
-				foulGenerator.pushSequence(new Foul.SequenceParams(getGameState(), fFoulDefenderId));
-			} else {
-				foulGenerator.pushSequence(new Foul.SequenceParams(getGameState()));
-			}
-			break;
-		case MOVE:
-		case FOUL_MOVE:
-		case PASS_MOVE:
-		case THROW_TEAM_MATE_MOVE:
-		case KICK_TEAM_MATE_MOVE:
-		case HAND_OVER_MOVE:
-		case GAZE:
-		case BLITZ_MOVE:
-			if (pWithParameter) {
-				moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
-			} else {
-				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-			}
-			break;
-		case REMOVE_CONFUSION:
-			actingPlayer.setHasMoved(true);
-			endGenerator.pushSequence(endParams);
-			break;
-		case STAND_UP:
-			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.inflictsConfusion)) {
-				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-			} else {
+			case PASS:
+			case HAIL_MARY_PASS:
+			case THROW_BOMB:
+			case HAIL_MARY_BOMB:
+			case HAND_OVER:
+				if (pWithParameter) {
+					passGenerator.pushSequence(new Pass.SequenceParams(getGameState(), fTargetCoordinate));
+				} else {
+					passGenerator.pushSequence(new Pass.SequenceParams(getGameState()));
+				}
+				break;
+			case THROW_TEAM_MATE:
+				if (pWithParameter) {
+					ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), fThrownPlayerId, fTargetCoordinate));
+				} else {
+					ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState()));
+				}
+				break;
+			case KICK_TEAM_MATE:
+				if (pWithParameter) {
+					ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState(), fNumDice, fKickedPlayerId));
+				} else {
+					ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState()));
+				}
+				break;
+			case BLITZ:
+				if (pWithParameter) {
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, null));
+				} else {
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState()));
+				}
+				break;
+			case BLOCK:
+			case MULTIPLE_BLOCK:
+				if (pWithParameter) {
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, null));
+				} else {
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
+				}
+				break;
+			case FOUL:
+				if (pWithParameter) {
+					foulGenerator.pushSequence(new Foul.SequenceParams(getGameState(), fFoulDefenderId));
+				} else {
+					foulGenerator.pushSequence(new Foul.SequenceParams(getGameState()));
+				}
+				break;
+			case MOVE:
+			case FOUL_MOVE:
+			case PASS_MOVE:
+			case THROW_TEAM_MATE_MOVE:
+			case KICK_TEAM_MATE_MOVE:
+			case HAND_OVER_MOVE:
+			case GAZE:
+				if (pWithParameter) {
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
+				} else {
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+				}
+				break;
+			case BLITZ_MOVE:
+				if (pWithParameter) {
+					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
+				} else {
+					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
+				}
+				break;
+			case REMOVE_CONFUSION:
+				actingPlayer.setHasMoved(true);
 				endGenerator.pushSequence(endParams);
-			}
-			break;
-		case STAND_UP_BLITZ:
-			game.getTurnData().setBlitzUsed(true);
-			endGenerator.pushSequence(endParams);
-			break;
-		default:
-			throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
+				break;
+			case STAND_UP:
+				if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.inflictsConfusion)) {
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+				} else {
+					endGenerator.pushSequence(endParams);
+				}
+				break;
+			case STAND_UP_BLITZ:
+				game.getTurnData().setBlitzUsed(true);
+				endGenerator.pushSequence(endParams);
+				break;
+			default:
+				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
 		}
 	}
 

@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.BlitzBlock;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
 import com.balancedbytes.games.ffb.server.step.generator.common.Block;
 import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
@@ -202,10 +203,13 @@ public class StepEndMoving extends AbstractStep {
 		if (pPlayerAction != null) {
 			switch (pPlayerAction) {
 				case BLOCK:
+					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
+							.pushSequence(new Block.SequenceParams(getGameState()));
+					return true;
 				case BLITZ:
 				case BLITZ_MOVE:
-					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-						.pushSequence(new Block.SequenceParams(getGameState()));
+					((BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name()))
+							.pushSequence(new BlitzBlock.SequenceParams(getGameState()));
 					return true;
 				case FOUL:
 				case FOUL_MOVE:
