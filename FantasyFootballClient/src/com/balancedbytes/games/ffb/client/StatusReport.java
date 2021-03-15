@@ -61,6 +61,7 @@ import com.balancedbytes.games.ffb.report.ReportConfusionRoll;
 import com.balancedbytes.games.ffb.report.ReportDauntlessRoll;
 import com.balancedbytes.games.ffb.report.ReportDefectingPlayers;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
+import com.balancedbytes.games.ffb.report.ReportFanFactor;
 import com.balancedbytes.games.ffb.report.ReportFanFactorRollPostMatch;
 import com.balancedbytes.games.ffb.report.ReportFoul;
 import com.balancedbytes.games.ffb.report.ReportFreePettyCash;
@@ -138,7 +139,7 @@ public class StatusReport {
 
 	private boolean fPettyCashReportReceived;
 	private boolean fCardsBoughtReportReceived;
-	private boolean fInducmentsBoughtReportReceived;
+	private boolean inducementsBoughtReportReceived;
 
 	public StatusReport(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -159,25 +160,15 @@ public class StatusReport {
 	}
 
 	public void reportVersion() {
-		StringBuilder status = new StringBuilder();
-		status.append("FantasyFootballClient Version ").append(FantasyFootballConstants.CLIENT_VERSION);
-		println(0, status.toString());
-		// status = new StringBuilder();
-		// status.append("FantasyFootball Version expected
-		// ").append(FantasyFootballClient.SERVER_VERSION);
-		// println(0, status.toString());
+		println(0, "FantasyFootballClient Version " + FantasyFootballConstants.CLIENT_VERSION);
 	}
 
 	public void reportConnecting(InetAddress pInetAddress, int pPort) {
-		StringBuilder status = new StringBuilder();
-		status.append("Connecting to ").append(pInetAddress).append(":").append(pPort).append(" ...");
-		println(0, status.toString());
+		println(0, "Connecting to " + pInetAddress + ":" + pPort + " ...");
 	}
 
 	public void reportIconLoadFailure(URL pIconUrl) {
-		StringBuilder status = new StringBuilder();
-		status.append("Unable to load icon from URL ").append(pIconUrl).append(".");
-		println(0, status.toString());
+		println(0, "Unable to load icon from URL " + pIconUrl + ".");
 	}
 
 	public void reportRetrying() {
@@ -202,9 +193,7 @@ public class StatusReport {
 
 	public void reportGameName(String pGameName) {
 		if (StringTool.isProvided(pGameName)) {
-			StringBuilder status = new StringBuilder();
-			status.append("You have started a new game named \"").append(pGameName).append("\".");
-			println(0, status.toString());
+			println(0, "You have started a new game named \"" + pGameName + "\".");
 		}
 	}
 
@@ -586,8 +575,8 @@ public class StatusReport {
 
 	public void reportCardsAndInducementsBought(ReportCardsAndInducementsBought pReport) {
 		Game game = getClient().getGame();
-		if (!fInducmentsBoughtReportReceived) {
-			fInducmentsBoughtReportReceived = true;
+		if (!inducementsBoughtReportReceived) {
+			inducementsBoughtReportReceived = true;
 			println(getIndent(), TextStyle.BOLD, "Buy Inducements");
 		}
 		print(getIndent() + 1, "Team ");
@@ -641,8 +630,8 @@ public class StatusReport {
 
 	public void reportInducementsBought(ReportInducementsBought pReport) {
 		Game game = getClient().getGame();
-		if (!fInducmentsBoughtReportReceived) {
-			fInducmentsBoughtReportReceived = true;
+		if (!inducementsBoughtReportReceived) {
+			inducementsBoughtReportReceived = true;
 			println(getIndent(), TextStyle.BOLD, "Buy Inducements");
 		}
 		print(getIndent() + 1, "Team ");
@@ -709,6 +698,29 @@ public class StatusReport {
 			status.append(" for ").append(StringTool.formatThousands(pReport.getGold())).append(" gold total.");
 		}
 		println(getIndent() + 1, status.toString());
+	}
+
+	private void reportFanFactor(ReportFanFactor report) {
+		Game game = getClient().getGame();
+
+		println(getIndent(), TextStyle.ROLL, "Fan Factor Roll [" + report.getRoll() + "]");
+
+		print(getIndent() + 1, "Team ");
+		if (game.getTeamHome().getId().equals(report.getTeamId())) {
+			print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+		} else {
+			print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
+		}
+
+		String status = " has " +
+				report.getResult() +
+				"k fans behind them (" +
+				report.getDedicatedFans() +
+				"k Dedicated Fans and " +
+				report.getRoll() +
+				"k fair-weather fans)";
+
+		println(getIndent() + 1, status);
 	}
 
 	public void reportKickoffExtraReRoll(ReportKickoffExtraReRoll pReport) {
@@ -2225,7 +2237,7 @@ public class StatusReport {
 
 	}
 
-	public void reportFanFactorRoll(ReportFanFactorRollPostMatch pReport) {
+	public void reportFanFactorRollPostMatch(ReportFanFactorRollPostMatch pReport) {
 
 		Game game = getClient().getGame();
 
@@ -3016,7 +3028,7 @@ public class StatusReport {
 					reportWinningsRoll((ReportWinningsRoll) report);
 					break;
 				case FAN_FACTOR_ROLL_POST_MATCH:
-					reportFanFactorRoll((ReportFanFactorRollPostMatch) report);
+					reportFanFactorRollPostMatch((ReportFanFactorRollPostMatch) report);
 					break;
 				case MOST_VALUABLE_PLAYERS:
 					reportMostValuablePlayers((ReportMostValuablePlayers) report);
@@ -3140,6 +3152,9 @@ public class StatusReport {
 					break;
 				case CLOUD_BURSTER:
 					reportCloudBurster((ReportCloudBurster) report);
+					break;
+				case FAN_FACTOR:
+					reportFanFactor((ReportFanFactor) report);
 					break;
 				default:
 					throw new IllegalStateException("Unhandled report id " + report.getId().getName() + ".");

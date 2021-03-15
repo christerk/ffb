@@ -39,7 +39,7 @@ public enum ReportId implements INamedObject {
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)
 
-	private String fName;
+	private final String fName;
 
 	ReportId(String pName) {
 		fName = pName;
@@ -232,6 +232,8 @@ public enum ReportId implements INamedObject {
 				return new ReportPassDeviate();
 			case CARDS_AND_INDUCEMENTS_BOUGHT:
 				return new ReportCardsAndInducementsBought();
+			case FAN_FACTOR:
+				return new ReportFanFactor();
 			default:
 				throw new IllegalStateException("Unhandled report id " + getName() + ".");
 		}
