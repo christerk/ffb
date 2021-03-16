@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogCoinChoice extends Dialog implements ActionListener, KeyListener {
 
 	private JButton fButtonHeads;

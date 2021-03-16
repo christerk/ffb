@@ -35,7 +35,6 @@ import com.balancedbytes.games.ffb.client.util.UtilClientReflection;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.util.StringTool;
 
-@SuppressWarnings("serial")
 public class DialogTeamChoice extends Dialog {
 
 	private TeamList fTeamList;

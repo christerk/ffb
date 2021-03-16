@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogUseIgor extends DialogYesOrNoQuestion {
 
 	private DialogUseIgorParameter fDialogParameter;

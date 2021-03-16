@@ -18,7 +18,6 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.StringTool;
 
-@SuppressWarnings("serial")
 public class DialogGameStatistics extends Dialog {
 
 	private static final String _FONT_BOLD_OPEN = "<font face=\"Sans Serif\" size=\"-1\"><b>";

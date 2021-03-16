@@ -30,7 +30,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogJourneymen extends Dialog implements ActionListener, KeyListener {
 
 	private int fSlotsAvailable;

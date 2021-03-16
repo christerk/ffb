@@ -29,7 +29,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogLogin extends Dialog {
 
 	public static final int FIELD_GAME = 1;

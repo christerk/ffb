@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.client.TextStyle;
 /**
  * DefaultDocument subclass that supports batching inserts.
  */
-@SuppressWarnings("serial")
 public class ChatLogDocument extends DefaultStyledDocument {
 
 	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");

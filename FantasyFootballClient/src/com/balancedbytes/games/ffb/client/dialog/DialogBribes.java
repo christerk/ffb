@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.model.Player;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogBribes extends DialogYesOrNoQuestion {
 
 	public DialogBribes(FantasyFootballClient pClient, Player<?> pPlayer) {

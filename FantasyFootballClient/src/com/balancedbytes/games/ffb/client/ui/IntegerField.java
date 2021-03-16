@@ -14,7 +14,6 @@ import javax.swing.text.PlainDocument;
  *
  * @author <A HREF="mailto:colbell@users.sourceforge.net">Colin Bell</A>
  */
-@SuppressWarnings("serial")
 public class IntegerField extends JTextField {
 	/**
 	 * Default ctor.

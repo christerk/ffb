@@ -49,7 +49,6 @@ import java.util.Set;
 /**
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class PlayerDetailComponent extends JPanel {
 
 	public static final int WIDTH = 145;

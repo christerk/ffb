@@ -17,7 +17,6 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
-@SuppressWarnings("serial")
 public class DialogAbout extends Dialog {
 
 	private static final String[] _PLAYTESTERS = {

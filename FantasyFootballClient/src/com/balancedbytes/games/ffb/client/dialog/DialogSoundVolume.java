@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.client.sound.SoundEngine;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.util.StringTool;
 
-@SuppressWarnings("serial")
 public class DialogSoundVolume extends Dialog implements ChangeListener, ActionListener {
 
 	private JSlider fSlider;

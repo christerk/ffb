@@ -4,7 +4,6 @@ package com.balancedbytes.games.ffb.json;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class MissingKeyException extends RuntimeException {
 
 	public MissingKeyException(String pMessage) {

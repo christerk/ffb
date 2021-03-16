@@ -9,7 +9,6 @@ import javax.swing.KeyStroke;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ActionKeyAction extends AbstractAction {
 
 	private FantasyFootballClient fClient;

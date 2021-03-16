@@ -33,7 +33,6 @@ import com.fumbbl.rng.MouseEntropySource;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class UserInterface extends JFrame implements WindowListener, IDialogCloseListener {
 
 	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");

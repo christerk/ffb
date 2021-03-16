@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.client.dialog.inducements;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-@SuppressWarnings("serial")
 public class StarPlayerTable extends JTable {
 
 	public StarPlayerTable(StarPlayerTableModel ab) {

@@ -52,7 +52,6 @@ import java.io.Writer;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-@SuppressWarnings("serial") // use default serial UID
 public abstract class JsonValue implements Serializable {
 
 	/**

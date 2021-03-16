@@ -30,7 +30,6 @@ import com.balancedbytes.games.ffb.model.FieldModel;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class BoxButtonComponent extends JPanel implements MouseListener, MouseMotionListener {
 
 	public static final int WIDTH = 145;

@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogStartGame extends DialogYesOrNoQuestion {
 
 	public DialogStartGame(FantasyFootballClient pClient) {

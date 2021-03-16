@@ -1,23 +1,18 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.start;
 
-import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.report.ReportFanFactor;
-import com.balancedbytes.games.ffb.report.ReportSpectators;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.common.Kickoff;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 

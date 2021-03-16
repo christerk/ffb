@@ -13,7 +13,6 @@ import javax.swing.ScrollPaneLayout;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ChatLogScrollPane extends JScrollPane implements AdjustmentListener, ComponentListener {
 
 	private int fOldVisibleMaximum;

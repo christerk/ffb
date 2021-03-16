@@ -6,7 +6,6 @@ import java.util.EventObject;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class FieldModelChangeEvent extends EventObject {
 
 	public static final int TYPE_BLOODSPOT = 1;

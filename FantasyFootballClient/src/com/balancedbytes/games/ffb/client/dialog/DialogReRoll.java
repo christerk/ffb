@@ -30,7 +30,6 @@ import java.awt.image.BufferedImage;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogReRoll extends Dialog implements ActionListener, KeyListener {
 
 	private JButton fButtonTeamReRoll;

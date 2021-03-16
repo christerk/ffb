@@ -154,6 +154,9 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
+					default:
+						// Ignore other commands. This removes warnings.
+						break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -183,6 +186,9 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 					phase = Phase.DONE;
 				}
 				break;
+		default:
+			// Removes warning.
+			break;
 		}
 
 		if (phase == Phase.DONE) {

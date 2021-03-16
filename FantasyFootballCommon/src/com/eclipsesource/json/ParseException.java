@@ -14,7 +14,6 @@ package com.eclipsesource.json;
  * An unchecked exception to indicate that an input does not qualify as valid
  * JSON.
  */
-@SuppressWarnings("serial") // use default serial UID
 public class ParseException extends RuntimeException {
 
 	private final int offset;

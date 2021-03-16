@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  */
 @FactoryType(FactoryType.Factory.INJURY_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class InjuryModifierFactory implements INamedObjectFactory {
+public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier> {
 
 	private ModifierAggregator modifierAggregator;
 

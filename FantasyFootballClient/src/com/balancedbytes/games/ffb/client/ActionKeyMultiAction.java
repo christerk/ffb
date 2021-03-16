@@ -11,7 +11,6 @@ import javax.swing.AbstractAction;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ActionKeyMultiAction extends AbstractAction {
 
 	private ActionKey fActionKey;

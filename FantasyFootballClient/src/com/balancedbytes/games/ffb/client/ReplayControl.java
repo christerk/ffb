@@ -21,7 +21,6 @@ import com.balancedbytes.games.ffb.client.ui.ChatComponent;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ReplayControl extends JPanel implements MouseInputListener {
 
 	public static final int HEIGHT = 26;

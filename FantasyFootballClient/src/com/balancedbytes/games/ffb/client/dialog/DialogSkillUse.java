@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.model.Skill;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogSkillUse extends DialogYesOrNoQuestion {
 
 	private DialogSkillUseParameter fDialogParameter;

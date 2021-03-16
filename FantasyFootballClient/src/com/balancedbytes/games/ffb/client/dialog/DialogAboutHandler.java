@@ -21,7 +21,6 @@ public class DialogAboutHandler extends DialogHandler {
 
 	// used only when showing the AboutDialog on client startup
 
-	@SuppressWarnings("serial")
 	private class MyGlassPane extends JPanel implements KeyListener, MouseListener {
 		public MyGlassPane() {
 			setOpaque(false);

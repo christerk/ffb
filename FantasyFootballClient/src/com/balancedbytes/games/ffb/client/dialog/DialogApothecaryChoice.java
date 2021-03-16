@@ -20,7 +20,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogApothecaryChoice extends Dialog implements ActionListener {
 
 	private JButton fButtonInjuryOld;

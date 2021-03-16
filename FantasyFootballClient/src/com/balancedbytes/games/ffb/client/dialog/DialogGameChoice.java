@@ -37,7 +37,6 @@ import com.balancedbytes.games.ffb.client.util.UtilClientJTable;
 import com.balancedbytes.games.ffb.client.util.UtilClientReflection;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
-@SuppressWarnings("serial")
 public class DialogGameChoice extends Dialog {
 
 	private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss"); // 2001-07-04

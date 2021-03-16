@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.model.Player;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogPilingOn extends DialogYesOrNoQuestion {
 
 	public DialogPilingOn(FantasyFootballClient pClient, DialogPilingOnParameter pDialogParameter) {

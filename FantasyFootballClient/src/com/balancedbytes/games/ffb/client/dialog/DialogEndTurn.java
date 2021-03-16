@@ -20,7 +20,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogEndTurn extends Dialog implements ActionListener, KeyListener {
 
 	public static int YES = 1;

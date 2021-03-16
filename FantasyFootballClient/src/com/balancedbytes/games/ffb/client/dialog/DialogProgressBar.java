@@ -21,7 +21,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogProgressBar extends Dialog implements ActionListener {
 
 	private JButton fButton;

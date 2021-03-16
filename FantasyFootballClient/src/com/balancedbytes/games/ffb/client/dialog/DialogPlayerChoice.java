@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Player;
 
-@SuppressWarnings("serial")
 public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 	private PlayerCheckList fList;

@@ -47,7 +47,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class TurnDiceStatusComponent extends JPanel
 		implements MouseListener, MouseMotionListener, IDialogCloseListener {
 

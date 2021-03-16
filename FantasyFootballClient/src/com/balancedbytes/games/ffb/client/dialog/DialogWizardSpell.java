@@ -21,7 +21,6 @@ import java.awt.event.KeyListener;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogWizardSpell extends Dialog implements ActionListener, KeyListener {
 
 	private JButton fButtonLightning;

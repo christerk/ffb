@@ -33,7 +33,6 @@ import com.balancedbytes.games.ffb.model.Game;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogBlockRoll extends Dialog implements ActionListener, KeyListener {
 
 	private static final Color _COLOR_BLUE = new Color(12, 20, 136);

@@ -28,7 +28,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	public static final int WIDTH = 782;

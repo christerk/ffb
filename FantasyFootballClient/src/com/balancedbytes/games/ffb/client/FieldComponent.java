@@ -44,7 +44,6 @@ import com.balancedbytes.games.ffb.model.change.ModelChange;
  * @author j129340
  *
  */
-@SuppressWarnings("serial")
 public class FieldComponent extends JPanel implements IModelChangeObserver, MouseInputListener {
 
 	private FantasyFootballClient fClient;

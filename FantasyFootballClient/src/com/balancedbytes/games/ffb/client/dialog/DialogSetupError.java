@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
-@SuppressWarnings("serial")
 public class DialogSetupError extends DialogInformation {
 
 	public DialogSetupError(FantasyFootballClient pClient, String[] pSetupErrors) {

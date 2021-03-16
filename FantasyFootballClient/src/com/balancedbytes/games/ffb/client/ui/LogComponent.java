@@ -20,7 +20,6 @@ import com.balancedbytes.games.ffb.client.TextStyle;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class LogComponent extends JPanel implements MouseMotionListener, IReplayMouseListener {
 
 	public static final int WIDTH = 389;

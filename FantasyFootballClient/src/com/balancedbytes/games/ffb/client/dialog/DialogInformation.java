@@ -20,7 +20,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogInformation extends Dialog implements ActionListener {
 
 	public static final int OK_DIALOG = 1;

@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogLeaveGame extends DialogYesOrNoQuestion {
 
 	public DialogLeaveGame(FantasyFootballClient pClient) {

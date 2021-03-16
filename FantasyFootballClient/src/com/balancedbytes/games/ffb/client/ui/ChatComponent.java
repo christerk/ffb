@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.client.TextStyle;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	public static final int WIDTH = 389;

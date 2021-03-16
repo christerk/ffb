@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.model.Player;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogArgueTheCall extends DialogYesOrNoQuestion {
 
 	public DialogArgueTheCall(FantasyFootballClient pClient, Player<?> pPlayer) {

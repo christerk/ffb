@@ -28,7 +28,6 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogTeamSetup extends Dialog implements ActionListener, ListSelectionListener {
 
 	public static final int CHOICE_LOAD = 1;

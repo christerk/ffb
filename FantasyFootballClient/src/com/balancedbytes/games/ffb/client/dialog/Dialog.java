@@ -17,7 +17,6 @@ import com.balancedbytes.games.ffb.client.layer.FieldLayer;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public abstract class Dialog extends JInternalFrame implements IDialog, MouseListener, InternalFrameListener {
 
 	private IDialogCloseListener fCloseListener;

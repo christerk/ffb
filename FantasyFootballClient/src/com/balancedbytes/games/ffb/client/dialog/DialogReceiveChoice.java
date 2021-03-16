@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogReceiveChoice extends DialogYesOrNoQuestion {
 
 	public DialogReceiveChoice(FantasyFootballClient pClient) {

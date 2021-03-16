@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  */
 @FactoryType(FactoryType.Factory.ARMOUR_MODIFIER)
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ArmorModifierFactory implements INamedObjectFactory {
+public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> {
 
 	private ModifierAggregator modifierAggregator;
 

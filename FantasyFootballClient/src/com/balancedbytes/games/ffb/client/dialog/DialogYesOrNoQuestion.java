@@ -23,7 +23,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public abstract class DialogYesOrNoQuestion extends Dialog implements ActionListener, KeyListener {
 
 	private JButton fButtonYes;

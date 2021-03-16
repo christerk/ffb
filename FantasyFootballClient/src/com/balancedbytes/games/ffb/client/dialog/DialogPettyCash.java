@@ -28,7 +28,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogPettyCash extends Dialog implements ActionListener, KeyListener {
 
 	private IntegerField fIntegerFieldPettyCash;

@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogConcedeGame extends DialogYesOrNoQuestion implements ActionListener {
 
 	public DialogConcedeGame(FantasyFootballClient pClient, boolean pLegalConcession) {

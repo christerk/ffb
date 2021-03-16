@@ -65,7 +65,6 @@ import java.util.stream.Collectors;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener {
 
 	private static final String[] _SAVED_USER_SETTINGS = { IClientProperty.SETTING_SOUND_MODE,

@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -28,7 +27,6 @@ public class CatchBehaviour extends SkillBehaviour<Catch> {
 
 			@Override
 			public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
-				Game game = step.getGameState().getGame();
 				if (UtilCards.hasSkill(state.catcher, skill)) {
 					step.setReRolledAction(ReRolledActions.CATCH);
 					step.setReRollSource(skill.getRerollSource(ReRolledActions.CATCH));

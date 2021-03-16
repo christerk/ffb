@@ -23,7 +23,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
-@SuppressWarnings("serial")
 public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
 	// Handles rendering cells in the list using a check box

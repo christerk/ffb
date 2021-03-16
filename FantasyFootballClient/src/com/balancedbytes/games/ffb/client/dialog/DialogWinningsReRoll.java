@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogWinningsReRoll extends DialogYesOrNoQuestion implements ActionListener {
 
 	public DialogWinningsReRoll(FantasyFootballClient pClient, int pOldRoll) {

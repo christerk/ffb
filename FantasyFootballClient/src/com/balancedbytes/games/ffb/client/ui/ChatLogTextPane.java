@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.client.TextStyle;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class ChatLogTextPane extends JTextPane {
 
 	private ChatLogDocument fChatLogDocument;

@@ -12,7 +12,6 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
 
-@SuppressWarnings("serial")
 public class DialogChatCommands extends Dialog {
 
 	private static final String _FONT_BOLD_OPEN = "<font face=\"Sans Serif\" size=\"-1\"><b>";

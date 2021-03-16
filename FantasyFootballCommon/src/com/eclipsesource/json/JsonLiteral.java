@@ -12,7 +12,6 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 
-@SuppressWarnings("serial") // use default serial UID
 class JsonLiteral extends JsonValue {
 
 	private final String value;

@@ -12,7 +12,6 @@ import com.balancedbytes.games.ffb.model.Game;
  * 
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class DialogInterception extends DialogYesOrNoQuestion {
 
 	public DialogInterception(FantasyFootballClient pClient) {

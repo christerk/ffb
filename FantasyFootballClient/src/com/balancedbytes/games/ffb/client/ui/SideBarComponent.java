@@ -16,7 +16,6 @@ import com.balancedbytes.games.ffb.model.Player;
  *
  * @author Kalimar
  */
-@SuppressWarnings("serial")
 public class SideBarComponent extends JPanel implements MouseMotionListener {
 
 	public static final int WIDTH = 145;
