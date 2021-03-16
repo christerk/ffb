@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStateFactory {
@@ -56,6 +55,7 @@ public class ClientStateFactory {
 		register(new ClientStatePassBlock(pClient));
 		register(new ClientStateBomb(pClient));
 		register(new ClientStateIllegalSubstitution(pClient));
+		register(new ClientStateSelectBlitzTarget(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -100,169 +100,171 @@ public class ClientStateFactory {
 //      }
 		} else {
 			switch (game.getTurnMode()) {
-			case BLITZ:
-			case REGULAR:
-				if (game.isHomePlaying()) {
-					if (actingPlayer.getPlayer() == null) {
-						clientStateId = ClientStateId.SELECT_PLAYER;
-					} else if (ArrayTool.isProvided(game.getFieldModel().getPushbackSquares())) {
-						clientStateId = ClientStateId.PUSHBACK;
-					} else {
-						switch (actingPlayer.getPlayerAction()) {
-						case MOVE:
-						case STAND_UP:
-						case STAND_UP_BLITZ:
-							clientStateId = ClientStateId.MOVE;
-							break;
-						case BLITZ_MOVE:
-							clientStateId = ClientStateId.BLITZ;
-							break;
-						case BLITZ:
-						case BLOCK:
-						case MULTIPLE_BLOCK:
-							clientStateId = ClientStateId.BLOCK;
-							break;
-						case FOUL:
-						case FOUL_MOVE:
-							clientStateId = ClientStateId.FOUL;
-							break;
-						case HAND_OVER:
-						case HAND_OVER_MOVE:
-							clientStateId = ClientStateId.HAND_OVER;
-							break;
-						case PASS:
-						case PASS_MOVE:
-						case HAIL_MARY_PASS:
-							clientStateId = ClientStateId.PASS;
-							break;
-						case THROW_TEAM_MATE:
-						case THROW_TEAM_MATE_MOVE:
-							clientStateId = ClientStateId.THROW_TEAM_MATE;
-							break;
-						case KICK_TEAM_MATE:
-						case KICK_TEAM_MATE_MOVE:
-							clientStateId = ClientStateId.KICK_TEAM_MATE;
-							break;
-						case SWOOP:
-							clientStateId = ClientStateId.SWOOP;
-							break;
-						case GAZE:
-							clientStateId = ClientStateId.GAZE;
-							break;
-						case THROW_BOMB:
-						case HAIL_MARY_BOMB:
-							clientStateId = ClientStateId.BOMB;
-							break;
-						default:
-							break;
+				case SELECT_BLITZ_TARGET:
+					clientStateId = ClientStateId.SELECT_BLITZ_TARGET;
+				case BLITZ:
+				case REGULAR:
+					if (game.isHomePlaying()) {
+						if (actingPlayer.getPlayer() == null) {
+							clientStateId = ClientStateId.SELECT_PLAYER;
+						} else if (ArrayTool.isProvided(game.getFieldModel().getPushbackSquares())) {
+							clientStateId = ClientStateId.PUSHBACK;
+						} else {
+							switch (actingPlayer.getPlayerAction()) {
+								case MOVE:
+								case STAND_UP:
+								case STAND_UP_BLITZ:
+									clientStateId = ClientStateId.MOVE;
+									break;
+								case BLITZ_MOVE:
+									clientStateId = ClientStateId.BLITZ;
+									break;
+								case BLITZ:
+								case BLOCK:
+								case MULTIPLE_BLOCK:
+									clientStateId = ClientStateId.BLOCK;
+									break;
+								case FOUL:
+								case FOUL_MOVE:
+									clientStateId = ClientStateId.FOUL;
+									break;
+								case HAND_OVER:
+								case HAND_OVER_MOVE:
+									clientStateId = ClientStateId.HAND_OVER;
+									break;
+								case PASS:
+								case PASS_MOVE:
+								case HAIL_MARY_PASS:
+									clientStateId = ClientStateId.PASS;
+									break;
+								case THROW_TEAM_MATE:
+								case THROW_TEAM_MATE_MOVE:
+									clientStateId = ClientStateId.THROW_TEAM_MATE;
+									break;
+								case KICK_TEAM_MATE:
+								case KICK_TEAM_MATE_MOVE:
+									clientStateId = ClientStateId.KICK_TEAM_MATE;
+									break;
+								case SWOOP:
+									clientStateId = ClientStateId.SWOOP;
+									break;
+								case GAZE:
+									clientStateId = ClientStateId.GAZE;
+									break;
+								case THROW_BOMB:
+								case HAIL_MARY_BOMB:
+									clientStateId = ClientStateId.BOMB;
+									break;
+								default:
+									break;
+							}
 						}
+					} else {
+						clientStateId = findPassiveState();
 					}
-				} else {
-					clientStateId = findPassiveState();
-				}
-				break;
-			case KICKOFF:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.KICKOFF;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case KICKOFF_RETURN:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.KICKOFF_RETURN;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case SWARMING:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.SWARMING;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case PASS_BLOCK:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.PASS_BLOCK;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case START_GAME:
-				clientStateId = ClientStateId.START_GAME;
-				break;
-			case SETUP:
-			case PERFECT_DEFENCE:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.SETUP;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_SETUP;
-				}
-				break;
-			case HIGH_KICK:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.HIGH_KICK;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case QUICK_SNAP:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.QUICK_SNAP;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case ILLEGAL_SUBSTITUTION:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.ILLEGAL_SUBSTITUTION;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case TOUCHBACK:
-				if (!game.isHomePlaying()) {
-					clientStateId = ClientStateId.TOUCHBACK;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case INTERCEPTION:
+					break;
+				case KICKOFF:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.KICKOFF;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case KICKOFF_RETURN:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.KICKOFF_RETURN;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case SWARMING:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.SWARMING;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case PASS_BLOCK:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.PASS_BLOCK;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case START_GAME:
+					clientStateId = ClientStateId.START_GAME;
+					break;
+				case SETUP:
+				case PERFECT_DEFENCE:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.SETUP;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_SETUP;
+					}
+					break;
+				case HIGH_KICK:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.HIGH_KICK;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case QUICK_SNAP:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.QUICK_SNAP;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case ILLEGAL_SUBSTITUTION:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.ILLEGAL_SUBSTITUTION;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case TOUCHBACK:
+					if (!game.isHomePlaying()) {
+						clientStateId = ClientStateId.TOUCHBACK;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case INTERCEPTION:
 //        if (!game.isHomePlaying() && !StringTool.isProvided(game.getDefenderId())) {
-				if ((!game.isHomePlaying() && (game.getThrowerAction() != PlayerAction.DUMP_OFF))
-						|| (game.isHomePlaying() && (game.getThrowerAction() == PlayerAction.DUMP_OFF))) {
-					clientStateId = ClientStateId.INTERCEPTION;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case DUMP_OFF:
-				if (!game.isHomePlaying()) {
-					clientStateId = ClientStateId.DUMP_OFF;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case WIZARD:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.WIZARD;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			case BOMB_HOME:
-			case BOMB_HOME_BLITZ:
-			case BOMB_AWAY:
-			case BOMB_AWAY_BLITZ:
-				if (game.isHomePlaying()) {
-					clientStateId = ClientStateId.BOMB;
-				} else {
-					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
-				}
-				break;
-			default:
-				break;
+					if ((!game.isHomePlaying() && (game.getThrowerAction() != PlayerAction.DUMP_OFF))
+							|| (game.isHomePlaying() && (game.getThrowerAction() == PlayerAction.DUMP_OFF))) {
+						clientStateId = ClientStateId.INTERCEPTION;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case DUMP_OFF:
+					if (!game.isHomePlaying()) {
+						clientStateId = ClientStateId.DUMP_OFF;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case WIZARD:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.WIZARD;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case BOMB_HOME:
+				case BOMB_HOME_BLITZ:
+				case BOMB_AWAY:
+				case BOMB_AWAY_BLITZ:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.BOMB;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		return getStateForId(clientStateId);
