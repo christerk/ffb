@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.client.state;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -12,14 +9,17 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Kalimar
  */
 public class ClientStateFactory {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
-	private Map<ClientStateId, ClientState> fClientStateById;
+	private final Map<ClientStateId, ClientState> fClientStateById;
 
 	public ClientStateFactory(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -271,7 +271,7 @@ public class ClientStateFactory {
 	}
 
 	private ClientStateId findPassiveState() {
-		ClientStateId clientStateId = null;
+		ClientStateId clientStateId;
 		Game game = getClient().getGame();
 		if (ArrayTool.isProvided(game.getFieldModel().getPushbackSquares()) && game.isWaitingForOpponent()) {
 			clientStateId = ClientStateId.PUSHBACK;

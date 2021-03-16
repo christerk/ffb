@@ -114,6 +114,15 @@ public final class StepInitSelecting extends AbstractStep {
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
 					UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+					if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
+						ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
+						if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
+							&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homeCommand)) {
+							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
+								UtilServerPlayerMove.fetchMoveStack(getGameState(), blitzMoveCommand, homeCommand)));
+							fDispatchPlayerAction = PlayerAction.BLITZ_MOVE;
+						}
+					}
 				} else {
 					fEndPlayerAction = true;
 				}

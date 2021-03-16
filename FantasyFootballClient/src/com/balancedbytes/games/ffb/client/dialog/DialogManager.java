@@ -144,6 +144,9 @@ public class DialogManager {
 					case SWARMING_ERROR:
 						setDialogHandler(new DialogSwarmingErrorParameterHandler(getClient()));
 						break;
+					case SELECT_BLITZ_TARGET:
+						setDialogHandler(new DialogSelectBlitzTargetHandler(getClient()));
+						break;
 					default:
 						break;
 				}
