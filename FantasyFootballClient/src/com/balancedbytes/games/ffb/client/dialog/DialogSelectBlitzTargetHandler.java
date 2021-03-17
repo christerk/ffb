@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.IIconProperty;
-import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.model.Game;
 
@@ -22,12 +21,10 @@ public class DialogSelectBlitzTargetHandler extends DialogHandler {
 
 		if ((ClientMode.PLAYER == getClient().getMode()) && game.isHomePlaying()) {
 			setDialog(new DialogInformation(getClient(), "Select Blitz target",
-					new String[] { "Select the player you intend to blitz or active player to reset." },
+					new String[] { "Select the player you intend to blitz or active player again to cancel." },
 					DialogInformation.OK_DIALOG, IIconProperty.ACTION_BLITZ));
 			getDialog().showDialog(this);
 
-		} else {
-			showStatus("Blitz Action", "Waiting for coach to select target.", StatusType.WAITING);
 		}
 	}
 

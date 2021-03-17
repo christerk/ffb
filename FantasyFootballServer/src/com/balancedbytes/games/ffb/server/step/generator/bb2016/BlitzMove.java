@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.generator.bb2016;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.step.IStepLabel;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
@@ -20,8 +19,6 @@ public class BlitzMove extends com.balancedbytes.games.ffb.server.step.generator
 	@Override
 	public void pushSequence(BlitzMove.SequenceParams params) {
 		GameState gameState = params.getGameState();
-
-		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(), "push moveSequence onto stack");
 
 		Sequence sequence = new Sequence(gameState);
 

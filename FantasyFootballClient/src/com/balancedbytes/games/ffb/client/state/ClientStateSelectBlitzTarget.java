@@ -35,7 +35,7 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && UtilPlayer.isBlockable(game, pPlayer))) {
+		if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && UtilPlayer.isValidBlitzTarget(game, pPlayer))) {
 			getClient().getCommunication().sendBlitzTargetSelected(pPlayer.getId());
 		}
 	}
@@ -44,7 +44,7 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		super.mouseOverPlayer(pPlayer);
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (!actingPlayer.hasBlocked() && UtilPlayer.isBlockable(game, pPlayer)) {
+		if (!actingPlayer.hasBlocked() && UtilPlayer.isValidBlitzTarget(game, pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
 		} else {
 			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
@@ -92,5 +92,10 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		} else {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
 		}
+	}
+
+	@Override
+	protected void clickOnField(FieldCoordinate pCoordinate) {
+		// clicks on fields are ignored
 	}
 }

@@ -102,6 +102,7 @@ public class ClientStateFactory {
 			switch (game.getTurnMode()) {
 				case SELECT_BLITZ_TARGET:
 					clientStateId = ClientStateId.SELECT_BLITZ_TARGET;
+					break;
 				case BLITZ:
 				case REGULAR:
 					if (game.isHomePlaying()) {

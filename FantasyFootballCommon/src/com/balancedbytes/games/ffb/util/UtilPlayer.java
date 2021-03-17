@@ -376,13 +376,17 @@ public class UtilPlayer {
 
 	public static boolean isBlockable(Game pGame, Player<?> pPlayer) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
+		FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
+		FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		return isValidBlitzTarget(pGame, pPlayer) && defenderCoordinate.isAdjacent(attackerCoordinate)
+			&& (pGame.getFieldModel().getDiceDecoration(defenderCoordinate) != null);
+	}
+
+	public static boolean isValidBlitzTarget(Game pGame, Player<?> pPlayer) {
 		if (pPlayer != null) {
 			PlayerState defenderState = pGame.getFieldModel().getPlayerState(pPlayer);
 			FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-			FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
-					&& defenderCoordinate.isAdjacent(attackerCoordinate)
-					&& (pGame.getFieldModel().getDiceDecoration(defenderCoordinate) != null));
+			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null));
 		}
 		return false;
 	}

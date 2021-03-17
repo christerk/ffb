@@ -7,8 +7,6 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import java.util.Optional;
-
 public class ClientCommandBlitzTargetSelected extends ClientCommand {
 
 	private String targetPlayerId;
@@ -25,8 +23,8 @@ public class ClientCommandBlitzTargetSelected extends ClientCommand {
 		return NetCommandId.CLIENT_BLITZ_TARGET_SELECTED;
 	}
 
-	public Optional<String> getTargetPlayerId() {
-		return Optional.ofNullable(targetPlayerId);
+	public String getTargetPlayerId() {
+		return targetPlayerId;
 	}
 
 	@Override

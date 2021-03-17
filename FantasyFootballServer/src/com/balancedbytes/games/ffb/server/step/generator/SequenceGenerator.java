@@ -20,7 +20,7 @@ public abstract class SequenceGenerator<T extends SequenceGenerator.SequencePara
 
 	public enum Type {
 		BlitzBlock, BlitzMove, Block, Bomb, Card, EndGame, EndPlayerAction, EndTurn, Foul, Inducement, KickTeamMate, Kickoff,
-		Move, Pass, RiotousRookies, ScatterPlayer, Select,
+		Move, Pass, RiotousRookies, ScatterPlayer, Select, SelectBlitzTarget,
 		SpecialEffect, SpikedBallApo, StartGame, ThrowTeamMate, Wizard
 	}
 

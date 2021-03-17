@@ -1,18 +1,29 @@
 package com.balancedbytes.games.ffb.server.step.bb2020;
 
+import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogSelectBlitzTargetParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.net.NetCommandId;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
+import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.common.Select;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.util.UtilActingPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -48,6 +59,21 @@ public class StepSelectBlitzTarget extends AbstractStep {
 	}
 
 	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus status = super.handleCommand(pReceivedCommand);
+		if (status == StepCommandStatus.UNHANDLED_COMMAND) {
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_BLITZ_TARGET_SELECTED) {
+				selectedPlayerId = ((ClientCommandBlitzTargetSelected) pReceivedCommand.getCommand()).getTargetPlayerId();
+				status = StepCommandStatus.EXECUTE_STEP;
+			}
+		}
+		if (status == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return status;
+	}
+
+	@Override
 	public void start() {
 		super.start();
 		executeStep();
@@ -55,10 +81,20 @@ public class StepSelectBlitzTarget extends AbstractStep {
 
 	private void executeStep() {
 		if (selectedPlayerId == null) {
-			UtilServerDialog.showDialog(getGameState(), new DialogSelectBlitzTargetParameter(), true);
-		} else if (selectedPlayerId.equals(getGameState().getGame().getActingPlayer().getPlayerId())) {
-			
+			getGameState().getGame().setTurnMode(TurnMode.SELECT_BLITZ_TARGET);
+			UtilServerDialog.showDialog(getGameState(), new DialogSelectBlitzTargetParameter(), false);
+			getResult().setNextAction(StepAction.CONTINUE);
 		} else {
+			getGameState().getGame().setTurnMode(getGameState().getGame().getLastTurnMode());
+			if (selectedPlayerId.equals(getGameState().getGame().getActingPlayer().getPlayerId())) {
+				UtilActingPlayer.changeActingPlayer(getGameState().getGame(), null, null, false);
+			} else if (!getGameState().getGame().getActingTeam().hasPlayer(getGameState().getGame().getPlayerById(selectedPlayerId))) {
+				getGameState().getGame().getActingPlayer().setPlayerAction(PlayerAction.BLITZ_MOVE);
+			}
+			SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			((Select)factory.forName(SequenceGenerator.Type.Select.name()))
+				.pushSequence(new Select.SequenceParams(getGameState(), false));
+			getResult().setNextAction(StepAction.NEXT_STEP);
 
 		}
 	}

@@ -3,12 +3,10 @@ package com.balancedbytes.games.ffb.server.step.generator.bb2020;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.step.IStepLabel;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.generator.Sequence;
-import zmq.io.coder.IDecoder;
 
 import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 
@@ -22,11 +20,8 @@ public class BlitzMove extends com.balancedbytes.games.ffb.server.step.generator
 	public void pushSequence(SequenceParams params) {
 		GameState gameState = params.getGameState();
 
-		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(), "push moveSequence onto stack");
-
 		Sequence sequence = new Sequence(gameState);
 
-		sequence.add(StepId.SELECT_BLITZ_TARGET, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING));
 		sequence.add(StepId.INIT_MOVING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
 				from(StepParameterKey.MOVE_STACK, params.getMoveStack()), from(StepParameterKey.GAZE_VICTIM_ID, params.getGazeVictimId()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));

@@ -8,6 +8,6 @@ import java.util.EventListener;
  */
 public interface IDialogCloseListener extends EventListener {
 
-	public void dialogClosed(IDialog pDialog);
+	void dialogClosed(IDialog pDialog);
 
 }

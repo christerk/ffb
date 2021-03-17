@@ -7,7 +7,7 @@ package com.balancedbytes.games.ffb;
 public enum PlayerAction implements INamedObject {
 
 	MOVE("move", 1, "starts a Move Action"), BLOCK("block", 2, "starts a Block Action"), BLITZ("blitz", 3, null),
-	BLITZ_MOVE("blitzMove", 3, "starts a Blitz Action"), HAND_OVER("handOver", 5, null),
+	BLITZ_MOVE("blitzMove", 3, "starts a Blitz Action"), BLITZ_SELECT("blitzSelect", 3, null), HAND_OVER("handOver", 5, null),
 	HAND_OVER_MOVE("handOverMove", 5, "starts a Hand Over Action"), PASS("pass", 7, null),
 	PASS_MOVE("passMove", 7, "starts a Pass Action"), FOUL("foul", 9, null),
 	FOUL_MOVE("foulMove", 9, "starts a Foul Action"), STAND_UP("standUp", 11, "stands up"),
