@@ -96,8 +96,9 @@ public class StepSelectBlitzTarget extends AbstractStep {
 			} else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
-				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).changeSelectedBlitzTarget(true);
+				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
+				getGameState().setBlitzState(new BlitzState(selectedPlayerId));
 				getResult().setSound(SoundId.CLICK);
 			}
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);

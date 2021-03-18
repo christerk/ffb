@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
+import com.balancedbytes.games.ffb.server.step.bb2020.BlitzState;
 import com.balancedbytes.games.ffb.server.step.bb2020.pass.state.PassState;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -56,7 +57,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private final transient Map<String, Long> fSpectatorCooldownTime;
 	private StepFactory stepFactory;
 	private PassState passState;
-
+	private BlitzState blitzState;
 	
 	private enum StepExecutionMode {
 		Start, HandleCommand
@@ -102,6 +103,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void setPassState(PassState passState) {
 		this.passState = passState;
+	}
+
+	public BlitzState getBlitzState() {
+		return blitzState;
+	}
+
+	public void setBlitzState(BlitzState blitzState) {
+		this.blitzState = blitzState;
 	}
 
 	public long getId() {
@@ -321,6 +330,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (passState != null) {
 			IServerJsonOption.PASS_STATE.addTo(jsonObject, passState.toJsonValue());
 		}
+		if (blitzState != null) {
+			IServerJsonOption.BLITZ_STATE.addTo(jsonObject, blitzState.toJsonValue());
+		}
 		return jsonObject;
 	}
 
@@ -360,6 +372,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		JsonObject passStateObject = IServerJsonOption.PASS_STATE.getFrom(source, jsonObject);
 		if (passStateObject != null) {
 			passState = new PassState().initFrom(source, passStateObject);
+		}
+		JsonObject blitzStateObject = IServerJsonOption.BLITZ_STATE.getFrom(source, jsonObject);
+		if (blitzStateObject != null) {
+			blitzState = new BlitzState().initFrom(source, blitzStateObject);
 		}
 		return this;
 	}

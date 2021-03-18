@@ -218,7 +218,7 @@ public class PlayerIconFactory {
 		if (playerState.isRooted()) {
 			decorationProperty1 = IIconProperty.DECORATION_ROOTED;
 		}
-		if (playerState.isSelectedBlitzTarget() && !(playerState.isProne() || playerState.isStunned())) {
+		if (playerState.isSelectedBlitzTarget()) {
 			decorationProperty2 = IIconProperty.DECORATION_BLITZ_TARGET_SELECTED;
 		}
 		ActingPlayer actingPlayer = game.getActingPlayer();

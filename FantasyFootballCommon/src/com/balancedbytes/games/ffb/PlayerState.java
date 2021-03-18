@@ -79,9 +79,20 @@ public class PlayerState {
 		return hasBit(_BIT_SELECTED_BLITZ_TARGET);
 	}
 
-	public PlayerState changeSelectedBlitzTarget(boolean isSelected) {
-		return changeBit(_BIT_SELECTED_BLITZ_TARGET, isSelected);
+	public PlayerState addSelectedBlitzTarget() {
+		if (!hasBit(_BIT_SELECTED_BLITZ_TARGET)) {
+			return changeBit(_BIT_SELECTED_BLITZ_TARGET, true);
+		}
+		return this;
 	}
+
+	public PlayerState removeSelectedBlitzTarget() {
+		if (hasBit(_BIT_SELECTED_BLITZ_TARGET)) {
+			return changeBit(_BIT_SELECTED_BLITZ_TARGET, false);
+		}
+		return this;
+	}
+
 
 	public boolean isActive() {
 		return hasBit(_BIT_ACTIVE);
