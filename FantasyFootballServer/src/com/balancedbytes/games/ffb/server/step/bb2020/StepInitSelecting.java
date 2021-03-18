@@ -66,6 +66,7 @@ public final class StepInitSelecting extends AbstractStep {
 	private PlayerAction fDispatchPlayerAction;
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
+	private boolean forceGotoOnDispatch;
 
 	private transient boolean fUpdatePersistence;
 
@@ -116,6 +117,7 @@ public final class StepInitSelecting extends AbstractStep {
 						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+							forceGotoOnDispatch = true;
 						} else {
 							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
@@ -282,7 +284,7 @@ public final class StepInitSelecting extends AbstractStep {
 		} else if (fDispatchPlayerAction != null) {
 			if (StringTool.isProvided(actingPlayer.getPlayerId()) && (actingPlayer.getPlayerAction() != null)) {
 				publishParameter(new StepParameter(StepParameterKey.DISPATCH_PLAYER_ACTION, fDispatchPlayerAction));
-				if (actingPlayer.isStandingUp()) {
+				if (actingPlayer.isStandingUp() && !forceGotoOnDispatch) {
 					prepareStandingUp();
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
@@ -331,6 +333,7 @@ public final class StepInitSelecting extends AbstractStep {
 		IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, fDispatchPlayerAction);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.FORCE_GOTO_ON_DISPATCH.addTo(jsonObject, forceGotoOnDispatch);
 		return jsonObject;
 	}
 
@@ -342,6 +345,7 @@ public final class StepInitSelecting extends AbstractStep {
 		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		forceGotoOnDispatch = IServerJsonOption.FORCE_GOTO_ON_DISPATCH.getFrom(game, jsonObject);
 		return this;
 	}
 

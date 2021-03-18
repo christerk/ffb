@@ -72,7 +72,7 @@ public class UtilServerInjury {
 			injuryContext.setArmorBroken(true);
 		}
 
-		InjuryContext oldInjuryContext = null;
+		InjuryContext oldInjuryContext;
 		if (pOldInjuryResult != null) {
 			oldInjuryContext = pOldInjuryResult.injuryContext();
 		} else {

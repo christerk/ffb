@@ -53,6 +53,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption END_TURN = new JsonBooleanOption("endTurn");
 	JsonBooleanOption FEED_ON_PLAYER_CHOICE = new JsonBooleanOption("feedOnPlayerChoice");
 	JsonBooleanOption FEEDING_ALLOWED = new JsonBooleanOption("feedingAllowed");
+	JsonBooleanOption FORCE_GOTO_ON_DISPATCH = new JsonBooleanOption("forceGotoOnDispatch");
 	JsonBooleanOption FOLLOWUP_CHOICE = new JsonBooleanOption("followupChoice");
 	JsonStringOption FOUL_DEFENDER_ID = new JsonStringOption("foulDefenderId");
 	JsonBooleanOption FOULER_HAS_BALL = new JsonBooleanOption("foulerHasBall");

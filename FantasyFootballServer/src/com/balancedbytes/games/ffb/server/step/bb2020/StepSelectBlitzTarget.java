@@ -28,7 +28,6 @@ import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Select;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.util.UtilActingPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -93,7 +92,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		} else {
 			game.setTurnMode(game.getLastTurnMode());
 			if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
-				UtilActingPlayer.changeActingPlayer(game, null, null, false);
+				UtilServerSteps.changePlayerAction(this, null, null, false);
 			} else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
