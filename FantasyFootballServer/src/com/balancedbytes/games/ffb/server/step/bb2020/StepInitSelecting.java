@@ -34,6 +34,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -112,10 +113,12 @@ public final class StepInitSelecting extends AbstractStep {
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
-						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
 						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
+							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+						} else {
+							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
+								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
 						}
 					} else {
 						fEndPlayerAction = true;
