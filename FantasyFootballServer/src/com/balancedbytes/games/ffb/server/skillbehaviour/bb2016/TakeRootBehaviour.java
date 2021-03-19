@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
@@ -14,13 +14,12 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
-import com.balancedbytes.games.ffb.server.step.action.common.StepTakeRoot;
-import com.balancedbytes.games.ffb.server.step.action.common.StepTakeRoot.StepState;
+import com.balancedbytes.games.ffb.server.skillbehaviour.bb2016.StepTakeRoot.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.TakeRoot;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 	public TakeRootBehaviour() {
 		super();

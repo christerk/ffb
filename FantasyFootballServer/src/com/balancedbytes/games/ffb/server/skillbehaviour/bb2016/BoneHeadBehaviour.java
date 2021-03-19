@@ -1,6 +1,5 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
-import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -19,29 +18,27 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.common.StepWildAnimal;
-import com.balancedbytes.games.ffb.server.step.action.common.StepWildAnimal.StepState;
+import com.balancedbytes.games.ffb.server.step.action.common.StepBoneHead;
+import com.balancedbytes.games.ffb.server.step.action.common.StepBoneHead.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.skill.WildAnimal;
+import com.balancedbytes.games.ffb.skill.BoneHead;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
-public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
-	public WildAnimalBehaviour() {
+@RulesCollection(Rules.BB2016)
+public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
+	public BoneHeadBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepWildAnimal, StepWildAnimal.StepState>() {
+		registerModifier(new StepModifier<StepBoneHead, StepBoneHead.StepState>() {
 
 			@Override
-			public StepCommandStatus handleCommandHook(StepWildAnimal step, StepState state,
+			public StepCommandStatus handleCommandHook(StepBoneHead step, StepState state,
 					ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
-			public boolean handleExecuteStepHook(StepWildAnimal step,
-					com.balancedbytes.games.ffb.server.step.action.common.StepWildAnimal.StepState state) {
-
+			public boolean handleExecuteStepHook(StepBoneHead step, StepState state) {
 				ActionStatus status = ActionStatus.SUCCESS;
 				Game game = step.getGameState().getGame();
 				if (!game.getTurnMode().checkNegatraits()) {
@@ -71,12 +68,7 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 					}
 					if (doRoll) {
 						int roll = step.getGameState().getDiceRoller().rollSkill();
-						boolean goodConditions = ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
-								|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
-								|| (actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
-								|| (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
-								|| (actingPlayer.getPlayerAction() == PlayerAction.STAND_UP_BLITZ));
-						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
+						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
 						if (!successful) {
@@ -103,13 +95,14 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 					}
 				}
-
 				return false;
 			}
 		});
+
 	}
 
-	private void cancelPlayerAction(StepWildAnimal step) {
+	// TODO: see what needs to be done about TAKE_ROOT (change nextStateId)
+	private void cancelPlayerAction(StepBoneHead step) {
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
@@ -142,14 +135,9 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 					playerState.changeBase(PlayerState.PRONE).changeActive(false));
 		} else {
 			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-					playerState.changeBase(PlayerState.STANDING).changeActive(false));
+					playerState.changeConfused(true).changeActive(false));
 		}
 		game.setPassCoordinate(null);
-		step.getResult().setSound(SoundId.ROAR);
+		step.getResult().setSound(SoundId.DUH);
 	}
-
-	public int getByteArraySerializationVersion() {
-		return 1;
-	}
-
 }

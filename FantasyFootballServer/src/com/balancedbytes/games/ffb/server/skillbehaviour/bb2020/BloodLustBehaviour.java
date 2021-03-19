@@ -1,9 +1,10 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -23,12 +24,12 @@ import com.balancedbytes.games.ffb.skill.BloodLust;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class BloodLustBehaviour extends SkillBehaviour<BloodLust> {
 	public BloodLustBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepBloodLust, StepBloodLust.StepState>() {
+		registerModifier(new StepModifier<StepBloodLust, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepBloodLust step, StepState state,
@@ -79,6 +80,10 @@ public class BloodLustBehaviour extends SkillBehaviour<BloodLust> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}
 				if (status == ActionStatus.FAILURE) {
+					BlitzState blitzState = game.getFieldModel().getBlitzState();
+					if (blitzState != null) {
+						blitzState.failed();
+					}
 					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
 					if (StringTool.isProvided(state.goToLabelOnFailure)) {
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);

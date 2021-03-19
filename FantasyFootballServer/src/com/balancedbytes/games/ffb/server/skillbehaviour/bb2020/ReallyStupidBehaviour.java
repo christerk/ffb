@@ -1,5 +1,7 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
+import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -7,7 +9,9 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.factory.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportConfusionRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -18,27 +22,28 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.common.StepBoneHead;
-import com.balancedbytes.games.ffb.server.step.action.common.StepBoneHead.StepState;
+import com.balancedbytes.games.ffb.server.step.action.common.StepReallyStupid;
+import com.balancedbytes.games.ffb.server.step.action.common.StepReallyStupid.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.skill.BoneHead;
+import com.balancedbytes.games.ffb.skill.ReallyStupid;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-@RulesCollection(Rules.COMMON)
-public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
-	public BoneHeadBehaviour() {
+@RulesCollection(Rules.BB2020)
+public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
+	public ReallyStupidBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepBoneHead, StepBoneHead.StepState>() {
+		registerModifier(new StepModifier<StepReallyStupid, StepState>() {
 
 			@Override
-			public StepCommandStatus handleCommandHook(StepBoneHead step, StepState state,
+			public StepCommandStatus handleCommandHook(StepReallyStupid step, StepState state,
 					ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
-			public boolean handleExecuteStepHook(StepBoneHead step, StepState state) {
+			public boolean handleExecuteStepHook(StepReallyStupid step, StepState state) {
 				ActionStatus status = ActionStatus.SUCCESS;
 				Game game = step.getGameState().getGame();
 				if (!game.getTurnMode().checkNegatraits()) {
@@ -68,7 +73,21 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 					}
 					if (doRoll) {
 						int roll = step.getGameState().getDiceRoller().rollSkill();
-						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
+						boolean goodConditions = true;
+						if (actingPlayer.getPlayerAction() != PlayerAction.THROW_TEAM_MATE
+								&& actingPlayer.getPlayerAction() != PlayerAction.KICK_TEAM_MATE) {
+							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+							Player<?>[] teamMates = UtilPlayer.findAdjacentBlockablePlayers(game, actingPlayer.getPlayer().getTeam(),
+									playerCoordinate);
+							goodConditions = false;
+							for (Player<?> teamMate : teamMates) {
+								if (!UtilCards.hasSkill(teamMate, skill)) {
+									goodConditions = true;
+									break;
+								}
+							}
+						}
+						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
 						if (!successful) {
@@ -91,6 +110,10 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (status == ActionStatus.FAILURE) {
+						BlitzState blitzState = game.getFieldModel().getBlitzState();
+						if (blitzState != null) {
+							blitzState.failed();
+						}
 						step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 					}
@@ -101,8 +124,7 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 
 	}
 
-	// TODO: see what needs to be done about TAKE_ROOT (change nextStateId)
-	private void cancelPlayerAction(StepBoneHead step) {
+	private void cancelPlayerAction(StepReallyStupid step) {
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {

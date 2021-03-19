@@ -43,6 +43,11 @@ public class BlitzState implements IJsonSerializable {
 		return this;
 	}
 
+	public BlitzState failed() {
+		status = Status.FAILED;
+		return this;
+	}
+
 	public boolean isCanceled() {
 		return status == Status.CANCELED;
 	}
@@ -54,6 +59,8 @@ public class BlitzState implements IJsonSerializable {
 	public boolean isSkipped() {
 		return status == Status.SKIPPED;
 	}
+
+	public boolean isFailed() { return status == Status.FAILED; }
 
 	@Override
 	public int hashCode() {
@@ -91,6 +98,6 @@ public class BlitzState implements IJsonSerializable {
 	}
 
 	public enum Status {
-		STARTED, CANCELED, SELECTED, SKIPPED
+		STARTED, CANCELED, SELECTED, SKIPPED, FAILED
 	}
 }

@@ -23,7 +23,7 @@ public class SelectBlitzTarget extends com.balancedbytes.games.ffb.server.step.g
 		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
 		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
 		sequence.add(StepId.SELECT_BLITZ_TARGET_END, IStepLabel.END_BLITZING);
-
+		// might add END_MOVING here
 		gameState.getStepStack().push(sequence.getSequence());
 	}
 }
