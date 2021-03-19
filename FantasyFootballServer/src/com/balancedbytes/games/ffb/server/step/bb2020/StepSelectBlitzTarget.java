@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.bb2020;
 
-import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
@@ -18,7 +16,6 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -27,9 +24,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.common.Select;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -96,28 +90,21 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				UtilServerDialog.showDialog(getGameState(), new DialogSelectBlitzTargetParameter(), false);
 				getResult().setSound(SoundId.CLICK);
 			} else {
-				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
-				getResult().setSound(SoundId.CLICK);
-				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-					.pushSequence(new Select.SequenceParams(getGameState(), false));
+				game.getFieldModel().setBlitzState(new BlitzState().skip());
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
 			game.setTurnMode(game.getLastTurnMode());
 			if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
-				UtilServerSteps.changePlayerAction(this, null, null, false);
+				game.getFieldModel().setBlitzState(new BlitzState().cancel());
+				getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
 			} else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
-				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
 				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
-				game.getFieldModel().setBlitzState(new BlitzState(selectedPlayerId));
+				game.getFieldModel().setBlitzState(new BlitzState(selectedPlayerId).select());
 				getResult().setSound(SoundId.CLICK);
 			}
-			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-				.pushSequence(new Select.SequenceParams(getGameState(), false));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 
 		}
@@ -146,4 +133,5 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		selectedPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
+
 }

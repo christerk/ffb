@@ -39,12 +39,12 @@ public abstract class AbstractStep implements IStep {
 	private StepResult fStepResult;
 	private String fLabel;
 
-	protected AbstractStep(GameState pGameState) {
+	public AbstractStep(GameState pGameState) {
 		fGameState = pGameState;
 		setStepResult(new StepResult());
 	}
 
-	protected AbstractStep(GameState pGameState, StepAction defaultStepResult) {
+	public AbstractStep(GameState pGameState, StepAction defaultStepResult) {
 		this(pGameState);
 		fStepResult.setNextAction(defaultStepResult);
 	}

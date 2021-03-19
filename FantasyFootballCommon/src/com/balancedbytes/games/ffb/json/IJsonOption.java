@@ -39,6 +39,7 @@ public interface IJsonOption {
 	JsonBooleanArrayOption BAN_ARRAY = new JsonBooleanArrayOption("banArray");
 	JsonStringOption BASE_ICON_PATH = new JsonStringOption("baseIconPath");
 	JsonObjectOption BLITZ_STATE = new JsonObjectOption("blitzState");
+	JsonStringOption BLITZ_STATUS = new JsonStringOption("blitzStatus");
 	JsonBooleanOption BLITZ_USED = new JsonBooleanOption("blitzUsed");
 	JsonEnumWithNameOption BLOCK_RESULT = new JsonEnumWithNameOption("blockResult", Factory.BLOCK_RESULT);
 	JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");

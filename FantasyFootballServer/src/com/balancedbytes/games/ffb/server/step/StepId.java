@@ -113,6 +113,7 @@ public enum StepId implements INamedObject {
 	RIOTOUS_ROOKIES("riotousRookies"),
 	SAFE_THROW("safeThrow"), // action.pass
 	SELECT_BLITZ_TARGET("selectBlitzTarget"),
+	SELECT_BLITZ_TARGET_END("selectBlitzTargetEnd"),
 	SETUP("setup"), // phase.kickoff
 	SHADOWING("shadowing"), // action.common
 	SPECTATORS("spectators"), // game.start

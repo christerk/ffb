@@ -148,7 +148,7 @@ public class FieldModel implements IJsonSerializable {
 		if (this.blitzState == null && blitzState == null) {
 			return;
 		}
-		if (this.blitzState != null && blitzState != null && this.blitzState.getSelectedPlayerId().equals(blitzState.getSelectedPlayerId())) {
+		if (this.blitzState != null && this.blitzState.equals(blitzState)) {
 			return;
 		}
 
