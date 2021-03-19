@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -28,10 +29,10 @@ public class StepRemoveBlitzState extends AbstractStep {
 	}
 
 	private void executeStep() {
-		BlitzState blitzState = getGameState().getBlitzState();
+		Game game = getGameState().getGame();
+		BlitzState blitzState = game.getFieldModel().getBlitzState();
 		if (blitzState != null) {
-			getGameState().setBlitzState(null);
-			Game game = getGameState().getGame();
+			game.getFieldModel().setBlitzState(null);
 			String playerId = blitzState.getSelectedPlayerId();
 			if (playerId != null) {
 				Player<?> player = game.getPlayerById(playerId);

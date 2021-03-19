@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardChoices;
 import com.balancedbytes.games.ffb.inducement.Inducement;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -161,6 +162,9 @@ public class ModelChangeProcessor {
 				return true;
 			case FIELD_MODEL_SET_BALL_MOVING:
 				pGame.getFieldModel().setBallMoving((Boolean) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_SET_BLITZ_STATE:
+				pGame.getFieldModel().setBlitzState((BlitzState) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_BOMB_COORDINATE:
 				pGame.getFieldModel().setBombCoordinate((FieldCoordinate) pModelChange.getValue());

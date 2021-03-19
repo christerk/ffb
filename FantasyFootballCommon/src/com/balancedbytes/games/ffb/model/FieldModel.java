@@ -30,6 +30,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,19 +53,20 @@ public class FieldModel implements IJsonSerializable {
 
 	private Weather fWeather;
 	private RangeRuler fRangeRuler;
-	private Map<String, FieldCoordinate> fCoordinateByPlayerId;
-	private Map<String, PlayerState> fStateByPlayerId;
-	private List<BloodSpot> fBloodspots;
-	private Set<PushbackSquare> fPushbackSquares;
-	private Set<MoveSquare> fMoveSquares;
-	private Set<TrackNumber> fTrackNumbers;
-	private Set<DiceDecoration> fDiceDecorations;
-	private Set<FieldMarker> fFieldMarkers;
-	private Set<PlayerMarker> fPlayerMarkers;
-	private Map<String, Set<Card>> fCardsByPlayerId;
-	private Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
+	private final Map<String, FieldCoordinate> fCoordinateByPlayerId;
+	private final Map<String, PlayerState> fStateByPlayerId;
+	private final List<BloodSpot> fBloodspots;
+	private final Set<PushbackSquare> fPushbackSquares;
+	private final Set<MoveSquare> fMoveSquares;
+	private final Set<TrackNumber> fTrackNumbers;
+	private final Set<DiceDecoration> fDiceDecorations;
+	private final Set<FieldMarker> fFieldMarkers;
+	private final Set<PlayerMarker> fPlayerMarkers;
+	private final Map<String, Set<Card>> fCardsByPlayerId;
+	private final Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
+	private BlitzState blitzState;
 
-	private transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
+	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
 																																							// reconstructed
 
 	private transient Game fGame;
@@ -136,6 +138,22 @@ public class FieldModel implements IJsonSerializable {
 				fStateByPlayerId.remove(player.getId());
 			}
 		}
+	}
+
+	public BlitzState getBlitzState() {
+		return blitzState;
+	}
+
+	public void setBlitzState(BlitzState blitzState) {
+		if (this.blitzState == null && blitzState == null) {
+			return;
+		}
+		if (this.blitzState != null && blitzState != null && this.blitzState.getSelectedPlayerId().equals(blitzState.getSelectedPlayerId())) {
+			return;
+		}
+
+		this.blitzState = blitzState;
+		notifyObservers(ModelChangeId.FIELD_MODEL_SET_BLITZ_STATE, null, blitzState);
 	}
 
 	public FieldCoordinate getPlayerCoordinate(Player<?> pPlayer) {
@@ -267,11 +285,7 @@ public class FieldModel implements IJsonSerializable {
 		if ((pPlayer == null) || (pCardEffect == null)) {
 			return;
 		}
-		Set<CardEffect> cardEffects = fCardEffectsByPlayerId.get(pPlayer.getId());
-		if (cardEffects == null) {
-			cardEffects = new HashSet<>();
-			fCardEffectsByPlayerId.put(pPlayer.getId(), cardEffects);
-		}
+		Set<CardEffect> cardEffects = fCardEffectsByPlayerId.computeIfAbsent(pPlayer.getId(), k -> new HashSet<>());
 		cardEffects.add(pCardEffect);
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
 		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(factory::forClass).collect(Collectors.toSet()));
@@ -302,7 +316,7 @@ public class FieldModel implements IJsonSerializable {
 		if (cardEffects == null) {
 			return new CardEffect[0];
 		}
-		return cardEffects.toArray(new CardEffect[cardEffects.size()]);
+		return cardEffects.toArray(new CardEffect[0]);
 	}
 
 	public boolean hasCardEffect(Player<?> pPlayer, CardEffect pCardEffect) {
@@ -326,7 +340,7 @@ public class FieldModel implements IJsonSerializable {
 				}
 			}
 		}
-		return players.toArray(new Player[players.size()]);
+		return players.toArray(new Player[0]);
 	}
 
 	public FieldCoordinate getBallCoordinate() {
@@ -368,7 +382,7 @@ public class FieldModel implements IJsonSerializable {
 				}
 			}
 		}
-		return adjacentCoordinates.toArray(new FieldCoordinate[adjacentCoordinates.size()]);
+		return adjacentCoordinates.toArray(new FieldCoordinate[0]);
 	}
 
 	public void setBallMoving(boolean pBallMoving) {
@@ -416,7 +430,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public BloodSpot[] getBloodSpots() {
-		return fBloodspots.toArray(new BloodSpot[fBloodspots.size()]);
+		return fBloodspots.toArray(new BloodSpot[0]);
 	}
 
 	public void add(TrackNumber pTrackNumber) {
@@ -442,7 +456,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public TrackNumber[] getTrackNumbers() {
-		return fTrackNumbers.toArray(new TrackNumber[fTrackNumbers.size()]);
+		return fTrackNumbers.toArray(new TrackNumber[0]);
 	}
 
 	public TrackNumber getTrackNumber(FieldCoordinate pCoordinate) {
@@ -456,9 +470,7 @@ public class FieldModel implements IJsonSerializable {
 
 	public void add(PushbackSquare[] pPushbackSquares) {
 		if (ArrayTool.isProvided(pPushbackSquares)) {
-			for (int i = 0; i < pPushbackSquares.length; i++) {
-				add(pPushbackSquares[i]);
-			}
+			Arrays.stream(pPushbackSquares).forEach(this::add);
 		}
 	}
 
@@ -485,7 +497,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public PushbackSquare[] getPushbackSquares() {
-		return fPushbackSquares.toArray(new PushbackSquare[fPushbackSquares.size()]);
+		return fPushbackSquares.toArray(new PushbackSquare[0]);
 	}
 
 	public void add(MoveSquare pMoveSquare) {
@@ -519,7 +531,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public MoveSquare[] getMoveSquares() {
-		return fMoveSquares.toArray(new MoveSquare[fMoveSquares.size()]);
+		return fMoveSquares.toArray(new MoveSquare[0]);
 	}
 
 	public MoveSquare getMoveSquare(FieldCoordinate pCoordinate) {
@@ -554,7 +566,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public DiceDecoration[] getDiceDecorations() {
-		return fDiceDecorations.toArray(new DiceDecoration[fDiceDecorations.size()]);
+		return fDiceDecorations.toArray(new DiceDecoration[0]);
 	}
 
 	public DiceDecoration getDiceDecoration(FieldCoordinate pCoordinate) {
@@ -583,14 +595,8 @@ public class FieldModel implements IJsonSerializable {
 		return false;
 	}
 
-	public void clearFieldMarkers() {
-		for (FieldMarker fieldMarker : getFieldMarkers()) {
-			remove(fieldMarker);
-		}
-	}
-
 	public FieldMarker[] getFieldMarkers() {
-		return fFieldMarkers.toArray(new FieldMarker[fFieldMarkers.size()]);
+		return fFieldMarkers.toArray(new FieldMarker[0]);
 	}
 
 	public FieldMarker getFieldMarker(FieldCoordinate pCoordinate) {
@@ -619,14 +625,8 @@ public class FieldModel implements IJsonSerializable {
 		return false;
 	}
 
-	public void clearPlayerMarkers() {
-		for (PlayerMarker playerMarker : getPlayerMarkers()) {
-			remove(playerMarker);
-		}
-	}
-
 	public PlayerMarker[] getPlayerMarkers() {
-		return fPlayerMarkers.toArray(new PlayerMarker[fPlayerMarkers.size()]);
+		return fPlayerMarkers.toArray(new PlayerMarker[0]);
 	}
 
 	public PlayerMarker getPlayerMarker(String pPlayerId) {
@@ -833,6 +833,10 @@ public class FieldModel implements IJsonSerializable {
 		}
 		IJsonOption.PLAYER_DATA_ARRAY.addTo(jsonObject, playerDataArray);
 
+		if (blitzState != null) {
+			IJsonOption.BLITZ_STATE.addTo(jsonObject, blitzState.toJsonValue());
+		}
+
 		return jsonObject;
 
 	}
@@ -895,8 +899,8 @@ public class FieldModel implements IJsonSerializable {
 		fStateByPlayerId.clear();
 		fCardsByPlayerId.clear();
 
-		CardFactory cardFactory = source.<CardFactory>getFactory(Factory.CARD);
-		CardEffectFactory cardEffectFactory = source.<CardEffectFactory>getFactory(Factory.CARD_EFFECT);
+		CardFactory cardFactory = source.getFactory(Factory.CARD);
+		CardEffectFactory cardEffectFactory = source.getFactory(Factory.CARD_EFFECT);
 
 		JsonArray playerDataArray = IJsonOption.PLAYER_DATA_ARRAY.getFrom(source, jsonObject);
 		for (int i = 0; i < playerDataArray.size(); i++) {
@@ -914,18 +918,19 @@ public class FieldModel implements IJsonSerializable {
 
 			String[] cards = IJsonOption.CARDS.getFrom(source, playerDataObject);
 			if (ArrayTool.isProvided(cards)) {
-				for (int j = 0; j < cards.length; j++) {
-					addCard(player, cardFactory.forName(cards[j]));
-				}
+				for (String card : cards) addCard(player, cardFactory.forName(card));
 			}
 
 			String[] cardEffects = IJsonOption.CARD_EFFECTS.getFrom(source, playerDataObject);
 			if (ArrayTool.isProvided(cardEffects)) {
-				for (int j = 0; j < cardEffects.length; j++) {
-					addCardEffect(player, cardEffectFactory.forName(cardEffects[j]));
-				}
+				Arrays.stream(cardEffects).forEach(cardEffect -> addCardEffect(player, cardEffectFactory.forName(cardEffect)));
 			}
 
+		}
+
+		JsonObject blitzStateObject = IJsonOption.BLITZ_STATE.getFrom(source, jsonObject);
+		if (blitzStateObject != null) {
+			blitzState = new BlitzState().initFrom(source, blitzStateObject);
 		}
 
 		return this;

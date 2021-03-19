@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogSelectBlitzTargetParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
@@ -111,7 +112,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
 				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
-				getGameState().setBlitzState(new BlitzState(selectedPlayerId));
+				game.getFieldModel().setBlitzState(new BlitzState(selectedPlayerId));
 				getResult().setSound(SoundId.CLICK);
 			}
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);

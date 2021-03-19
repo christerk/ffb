@@ -25,7 +25,6 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
 	JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
 	JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
-	JsonObjectOption BLITZ_STATE = new JsonObjectOption("blitzState");
 	JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
 	JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
 	JsonBooleanOption BRIBES_CHOICE = new JsonBooleanOption("bribesChoice");

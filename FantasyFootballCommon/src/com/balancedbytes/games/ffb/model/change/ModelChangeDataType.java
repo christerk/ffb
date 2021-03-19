@@ -38,6 +38,7 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardChoices;
 import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.eclipsesource.json.JsonValue;
@@ -56,11 +57,11 @@ public enum ModelChangeDataType implements INamedObject {
 	PUSHBACK_SQUARE("pushbackSquare"), MOVE_SQUARE("moveSquare"), WEATHER("weather"), RANGE_RULER("rangeRuler"),
 	DICE_DECORATION("diceDecoration"), INDUCEMENT("inducement"), FIELD_MARKER("fieldMarker"),
 	PLAYER_MARKER("playerMarker"), GAME_OPTION("gameOption"), CARD("card"), LEADER_STATE("leaderState"),
-	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices");
+	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices"), BLITZ_STATE("blitzState");
 
-	private String fName;
+	private final String fName;
 
-	private ModelChangeDataType(String pName) {
+	ModelChangeDataType(String pName) {
 		fName = pName;
 	}
 
@@ -75,6 +76,8 @@ public enum ModelChangeDataType implements INamedObject {
 			return JsonValue.NULL;
 		}
 		switch (this) {
+			case BLITZ_STATE:
+				return ((BlitzState) pValue).toJsonValue();
 			case BLOOD_SPOT:
 				return ((BloodSpot) pValue).toJsonValue();
 			case BOOLEAN:
@@ -149,6 +152,8 @@ public enum ModelChangeDataType implements INamedObject {
 			return null;
 		}
 		switch (this) {
+			case BLITZ_STATE:
+				return new BlitzState().initFrom(source, pJsonValue);
 			case BLOOD_SPOT:
 				return new BloodSpot().initFrom(source, pJsonValue);
 			case BOOLEAN:

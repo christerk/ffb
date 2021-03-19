@@ -1,9 +1,9 @@
-package com.balancedbytes.games.ffb.server.step.bb2020;
+package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -24,14 +24,14 @@ public class BlitzState implements IJsonSerializable {
 	@Override
 	public BlitzState initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		selectedPlayerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		selectedPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
-		IServerJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
+		IJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
 		return jsonObject;
 	}
 }

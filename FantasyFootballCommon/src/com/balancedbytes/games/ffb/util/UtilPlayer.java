@@ -384,9 +384,11 @@ public class UtilPlayer {
 
 	public static boolean isValidBlitzTarget(Game pGame, Player<?> pPlayer) {
 		if (pPlayer != null) {
-			PlayerState defenderState = pGame.getFieldModel().getPlayerState(pPlayer);
-			FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null));
+			FieldModel fieldModel = pGame.getFieldModel();
+			PlayerState defenderState = fieldModel.getPlayerState(pPlayer);
+			FieldCoordinate defenderCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
+			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
+				&& (fieldModel.getBlitzState() == null || pPlayer.getId().equals(fieldModel.getBlitzState().getSelectedPlayerId())));
 		}
 		return false;
 	}
