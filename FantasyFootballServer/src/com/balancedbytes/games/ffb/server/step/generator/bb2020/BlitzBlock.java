@@ -55,6 +55,7 @@ public class BlitzBlock extends com.balancedbytes.games.ffb.server.step.generato
 
 		// on blockChoice = POW or PUSHBACK
 		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
+		sequence.add(StepId.REMOVE_BLITZ_STATE);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
 		sequence.add(StepId.FOLLOWUP);
 		sequence.add(StepId.SHADOWING);
