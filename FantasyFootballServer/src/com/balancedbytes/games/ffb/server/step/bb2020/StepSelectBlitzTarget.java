@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzTargetSelected;
+import com.balancedbytes.games.ffb.report.ReportSelectBlitzTarget;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -104,6 +105,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
 				game.getFieldModel().setBlitzState(new BlitzState(selectedPlayerId).select());
 				getResult().setSound(SoundId.CLICK);
+				getResult().addReport(new ReportSelectBlitzTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
 				getResult().setNextAction(StepAction.NEXT_STEP);

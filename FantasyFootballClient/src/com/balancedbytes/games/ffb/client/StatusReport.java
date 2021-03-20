@@ -100,6 +100,7 @@ import com.balancedbytes.games.ffb.report.ReportRiotousRookies;
 import com.balancedbytes.games.ffb.report.ReportScatterBall;
 import com.balancedbytes.games.ffb.report.ReportScatterPlayer;
 import com.balancedbytes.games.ffb.report.ReportSecretWeaponBan;
+import com.balancedbytes.games.ffb.report.ReportSelectBlitzTarget;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
@@ -169,10 +170,6 @@ public class StatusReport {
 
 	public void reportIconLoadFailure(URL pIconUrl) {
 		println(0, "Unable to load icon from URL " + pIconUrl + ".");
-	}
-
-	public void reportRetrying() {
-		println(0, "Retrying ...");
 	}
 
 	public void reportTimeout() {
@@ -413,10 +410,23 @@ public class StatusReport {
 	}
 
 	public void reportDoubleHiredStarPlayer(ReportDoubleHiredStarPlayer pReport) {
-		StringBuilder status = new StringBuilder();
-		status.append("Star Player ").append(pReport.getStarPlayerName());
-		status.append(" takes money from both teams and plays for neither.");
-		println(getIndent(), TextStyle.BOLD, status.toString());
+		String status = "Star Player " + pReport.getStarPlayerName() +
+			" takes money from both teams and plays for neither.";
+		println(getIndent(), TextStyle.BOLD, status);
+	}
+
+	public void reportSelectBlitzTarget(ReportSelectBlitzTarget report) {
+		Player<?> attacker = getClient().getGame().getPlayerById(report.getAttacker());
+		Player<?> defender = getClient().getGame().getPlayerById(report.getDefender());
+
+		print(getIndent() + 1, teamStyleForPlayer(attacker), attacker.getName());
+		print(getIndent() + 1, TextStyle.NONE, " targets ");
+		print(getIndent() + 1, teamStyleForPlayer(defender), defender.getName());
+		println(getIndent() + 1, TextStyle.NONE, ".");
+	}
+
+	private TextStyle teamStyleForPlayer(Player<?> player) {
+		return getClient().getGame().getTeamHome().hasPlayer(player) ? TextStyle.HOME : TextStyle.AWAY;
 	}
 
 	public void reportGoingForIt(ReportSkillRoll pReport) {
@@ -3155,6 +3165,9 @@ public class StatusReport {
 					break;
 				case FAN_FACTOR:
 					reportFanFactor((ReportFanFactor) report);
+					break;
+				case SELECT_BLITZ_TARGET:
+					reportSelectBlitzTarget((ReportSelectBlitzTarget) report);
 					break;
 				default:
 					throw new IllegalStateException("Unhandled report id " + report.getId().getName() + ".");
