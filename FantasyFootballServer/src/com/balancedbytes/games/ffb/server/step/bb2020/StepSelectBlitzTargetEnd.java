@@ -50,6 +50,8 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
+				game.getTurnData().setBlitzUsed(true);
+				game.getActingPlayer().setHasMoved(true);
 			} else if (blitzState.isSkipped()) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
