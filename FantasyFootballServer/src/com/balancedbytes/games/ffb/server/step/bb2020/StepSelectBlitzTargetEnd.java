@@ -11,6 +11,8 @@ import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.Sequence;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
@@ -56,7 +58,7 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 				getResult().setSound(SoundId.CLICK);
 			} else if (blitzState.isFailed()) {
 				Sequence sequence = new Sequence(getGameState());
-				sequence.add(StepId.END_MOVING);
+				sequence.add(StepId.END_MOVING, StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				getGameState().getStepStack().push(sequence.getSequence());
 			}
 		}

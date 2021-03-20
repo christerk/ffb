@@ -104,8 +104,10 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
 				game.getFieldModel().setBlitzState(new BlitzState(selectedPlayerId).select());
 				getResult().setSound(SoundId.CLICK);
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else {
+				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
-			getResult().setNextAction(StepAction.NEXT_STEP);
 
 		}
 	}

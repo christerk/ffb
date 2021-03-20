@@ -1,11 +1,13 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -21,12 +23,12 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.FoulAppearance;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 	public FoulAppearanceBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepFoulAppearance, StepFoulAppearance.StepState>() {
+		registerModifier(new StepModifier<StepFoulAppearance, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepFoulAppearance step, StepState state,
@@ -38,16 +40,21 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			public boolean handleExecuteStepHook(StepFoulAppearance step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				if ((game.getDefender() != null) && UtilCards.hasSkill(game.getDefender(), skill)
+				Player<?> defender;
+				if (game.getFieldModel().getBlitzState() != null) {
+					defender = game.getPlayerById(game.getFieldModel().getBlitzState().getSelectedPlayerId());
+				} else {
+					defender = game.getDefender();
+				}
+
+				if (UtilCards.hasSkill(defender, skill)
 						&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
 					boolean doRoll = true;
 					if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)
 								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doRoll = false;
-							actingPlayer.setHasBlocked(true);
-							game.getTurnData().setTurnStarted(true);
-							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+							handleFailure(step, state, game, actingPlayer);
 						}
 					}
 					if (doRoll) {
@@ -63,9 +70,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						} else {
 							if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 									ReRolledActions.FOUL_APPEARANCE, minimumRoll, false)) {
-								actingPlayer.setHasBlocked(true);
-								game.getTurnData().setTurnStarted(true);
-								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+								handleFailure(step, state, game, actingPlayer);
 							}
 						}
 						if (!mayBlock && !reRolled) {
@@ -78,6 +83,16 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				return false;
 			}
 
+			private void handleFailure(StepFoulAppearance step, StepState state, Game game, ActingPlayer actingPlayer) {
+				actingPlayer.setHasBlocked(true);
+				game.getTurnData().setTurnStarted(true);
+				step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+				BlitzState blitzState = game.getFieldModel().getBlitzState();
+				if (blitzState != null) {
+					blitzState.failed();
+					game.getTurnData().setBlitzUsed(true);
+				}
+			}
 		});
 	}
 }
