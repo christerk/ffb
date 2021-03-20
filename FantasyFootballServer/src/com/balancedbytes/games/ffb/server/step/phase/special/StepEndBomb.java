@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
-import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;

@@ -13,14 +13,14 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandMove extends ClientCommand implements ICommandWithActingPlayer {
 
 	private String fActingPlayerId;
 	private FieldCoordinate fCoordinateFrom;
-	private List<FieldCoordinate> fCoordinatesTo;
+	private final List<FieldCoordinate> fCoordinatesTo;
 
 	public ClientCommandMove() {
 		fCoordinatesTo = new ArrayList<>();

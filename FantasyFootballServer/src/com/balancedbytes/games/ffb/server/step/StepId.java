@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server.step;
 import com.balancedbytes.games.ffb.INamedObject;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public enum StepId implements INamedObject {
@@ -107,10 +107,13 @@ public enum StepId implements INamedObject {
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start
 	REFEREE("referee"), // action.foul
+	REMOVE_BLITZ_STATE("removeBlitzState"), // action.blitz
 	RESOLVE_PASS("resovlePass"),
 	RIGHT_STUFF("rightStuff"), // action.ttm
 	RIOTOUS_ROOKIES("riotousRookies"),
 	SAFE_THROW("safeThrow"), // action.pass
+	SELECT_BLITZ_TARGET("selectBlitzTarget"),
+	SELECT_BLITZ_TARGET_END("selectBlitzTargetEnd"),
 	SETUP("setup"), // phase.kickoff
 	SHADOWING("shadowing"), // action.common
 	SPECTATORS("spectators"), // game.start

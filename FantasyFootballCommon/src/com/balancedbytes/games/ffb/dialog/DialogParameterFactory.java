@@ -89,6 +89,8 @@ public class DialogParameterFactory {
 				return new DialogSwarmingErrorParameter();
 			case BUY_CARDS_AND_INDUCEMENTS:
 				return new DialogBuyCardsAndInducementsParameter();
+			case SELECT_BLITZ_TARGET:
+				return new DialogSelectBlitzTargetParameter();
 			default:
 				return null;
 		}

@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public enum ClientStateId implements INamedObject {
@@ -12,7 +12,8 @@ public enum ClientStateId implements INamedObject {
 	QUICK_SNAP("quickSnap"), TOUCHBACK("touchback"), WAIT_FOR_OPPONENT("waitForOpponent"), REPLAY("replay"),
 	THROW_TEAM_MATE("throwTeamMate"), KICK_TEAM_MATE("kickTeamMate"), SWOOP("swoop"), DUMP_OFF("dumpOff"),
 	WAIT_FOR_SETUP("waitForSetup"), GAZE("gaze"), KICKOFF_RETURN("kickoffReturn"), SWARMING("swarming"), WIZARD("wizard"),
-	PASS_BLOCK("passBlock"), BOMB("bomb"), ILLEGAL_SUBSTITUTION("illegalSubstitution");
+	PASS_BLOCK("passBlock"), BOMB("bomb"), ILLEGAL_SUBSTITUTION("illegalSubstitution"),
+	SELECT_BLITZ_TARGET("selectBlitzTarget");
 
 	private String fName;
 

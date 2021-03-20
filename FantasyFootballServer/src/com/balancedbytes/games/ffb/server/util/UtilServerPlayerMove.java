@@ -21,6 +21,7 @@ import com.balancedbytes.games.ffb.modifiers.GoForItContext;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
 import com.balancedbytes.games.ffb.modifiers.LeapContext;
 import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -46,6 +47,20 @@ public class UtilServerPlayerMove {
 		}
 		FieldCoordinate coordinateFrom = pHomeCommand ? pMoveCommand.getCoordinateFrom()
 				: pMoveCommand.getCoordinateFrom().transform();
+		return isValidMove(pGameState, coordinateFrom, pHomeCommand);
+	}
+
+	public static boolean isValidMove(GameState pGameState, ClientCommandBlitzMove pMoveCommand, boolean pHomeCommand) {
+		if ((pMoveCommand == null) || (pMoveCommand.getCoordinateFrom() == null)
+				|| !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
+			return false;
+		}
+		FieldCoordinate coordinateFrom = pHomeCommand ? pMoveCommand.getCoordinateFrom()
+				: pMoveCommand.getCoordinateFrom().transform();
+		return isValidMove(pGameState, coordinateFrom, pHomeCommand);
+	}
+
+	private static boolean isValidMove(GameState pGameState, FieldCoordinate coordinateFrom, boolean pHomeCommand) {
 		Game game = pGameState.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
@@ -156,6 +171,19 @@ public class UtilServerPlayerMove {
 			return new FieldCoordinate[0];
 		}
 		FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
+		return fetchMoveStack(coordinatesTo, pHomeCommand);
+	}
+
+	public static FieldCoordinate[] fetchMoveStack(GameState pGameState, ClientCommandBlitzMove pMoveCommand,
+	                                               boolean pHomeCommand) {
+		if ((pGameState == null) || (pMoveCommand == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
+			return new FieldCoordinate[0];
+		}
+		FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
+		return fetchMoveStack(coordinatesTo, pHomeCommand);
+	}
+
+	private static FieldCoordinate[] fetchMoveStack(FieldCoordinate[] coordinatesTo, boolean pHomeCommand) {
 		FieldCoordinate[] moveStack = new FieldCoordinate[coordinatesTo.length];
 		if (pHomeCommand) {
 			System.arraycopy(coordinatesTo, 0, moveStack, 0, moveStack.length);

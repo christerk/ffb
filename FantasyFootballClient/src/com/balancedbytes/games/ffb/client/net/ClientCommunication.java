@@ -27,6 +27,8 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzMove;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
@@ -210,6 +212,15 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	public void sendPlayerMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
 			FieldCoordinate[] pCoordinatesTo) {
 		send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
+	}
+
+	public void sendPlayerBlitzMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
+	                           FieldCoordinate[] pCoordinatesTo) {
+		send(new ClientCommandBlitzMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
+	}
+
+	public void sendBlitzTargetSelected(String selectedPlayerId) {
+		send(new ClientCommandBlitzTargetSelected(selectedPlayerId));
 	}
 
 	public void sendStartGame() {

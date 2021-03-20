@@ -49,6 +49,7 @@ public enum ModelChangeId implements INamedObject {
 	FIELD_MODEL_SET_BALL_COORDINATE("fieldModelSetBallCoordinate", ModelChangeDataType.FIELD_COORDINATE),
 	FIELD_MODEL_SET_BALL_IN_PLAY("fieldModelSetBallInPlay", ModelChangeDataType.BOOLEAN),
 	FIELD_MODEL_SET_BALL_MOVING("fieldModelSetBallMoving", ModelChangeDataType.BOOLEAN),
+	FIELD_MODEL_SET_BLITZ_STATE("fieldModelSetBlitzState", ModelChangeDataType.BLITZ_STATE),
 	FIELD_MODEL_SET_BOMB_COORDINATE("fieldModelSetBombCoordinate", ModelChangeDataType.FIELD_COORDINATE),
 	FIELD_MODEL_SET_BOMB_MOVING("fieldModelSetBombMoving", ModelChangeDataType.BOOLEAN),
 	FIELD_MODEL_SET_PLAYER_COORDINATE("fieldModelSetPlayerCoordinate", ModelChangeDataType.FIELD_COORDINATE),

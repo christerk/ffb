@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.pass;
+package com.balancedbytes.games.ffb.server.step.bb2020.pass;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
@@ -47,7 +48,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepInitPassing extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -82,8 +83,10 @@ public final class StepInitPassing extends AbstractStep {
 						Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
 						fCatcherId = ((catcher != null) ? catcher.getId() : null);
 						if (game.getThrower() == null) {
-							if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
-								game.setThrowerId(game.getDefenderId());
+							BlitzState blitzState = game.getFieldModel().getBlitzState();
+							String defenderId = blitzState != null ? blitzState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
+							if ((defenderId != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
+								game.setThrowerId(defenderId);
 								game.setThrowerAction(game.getDefenderAction());
 							} else {
 								game.setThrowerId(actingPlayer.getPlayerId());
@@ -128,8 +131,10 @@ public final class StepInitPassing extends AbstractStep {
 					}
 					Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
 					fCatcherId = ((catcher != null) ? catcher.getId() : null);
-					if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
-						game.setThrowerId(game.getDefenderId());
+					BlitzState blitzState = game.getFieldModel().getBlitzState();
+					String defenderId = blitzState != null ? blitzState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
+					if ((defenderId != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
+						game.setThrowerId(defenderId);
 						game.setThrowerAction(game.getDefenderAction());
 					} else {
 						game.setThrowerId(actingPlayer.getPlayerId());

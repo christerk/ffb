@@ -376,13 +376,19 @@ public class UtilPlayer {
 
 	public static boolean isBlockable(Game pGame, Player<?> pPlayer) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
+		FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
+		FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		return isValidBlitzTarget(pGame, pPlayer) && defenderCoordinate.isAdjacent(attackerCoordinate)
+			&& (pGame.getFieldModel().getDiceDecoration(defenderCoordinate) != null);
+	}
+
+	public static boolean isValidBlitzTarget(Game pGame, Player<?> pPlayer) {
 		if (pPlayer != null) {
-			PlayerState defenderState = pGame.getFieldModel().getPlayerState(pPlayer);
-			FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-			FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			FieldModel fieldModel = pGame.getFieldModel();
+			PlayerState defenderState = fieldModel.getPlayerState(pPlayer);
+			FieldCoordinate defenderCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
 			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
-					&& defenderCoordinate.isAdjacent(attackerCoordinate)
-					&& (pGame.getFieldModel().getDiceDecoration(defenderCoordinate) != null));
+				&& (fieldModel.getBlitzState() == null || pPlayer.getId().equals(fieldModel.getBlitzState().getSelectedPlayerId())));
 		}
 		return false;
 	}

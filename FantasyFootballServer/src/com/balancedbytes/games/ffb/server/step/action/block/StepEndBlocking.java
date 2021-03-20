@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.common.Block;
-import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.common.Move;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;

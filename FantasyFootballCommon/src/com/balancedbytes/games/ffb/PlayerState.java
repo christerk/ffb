@@ -30,8 +30,9 @@ public class PlayerState {
 	private static final int _BIT_HYPNOTIZED = 0x0800;
 	private static final int _BIT_BLOODLUST = 0x1000;
 	private static final int _BIT_USED_PRO = 0x2000;
+	private static final int _BIT_SELECTED_BLITZ_TARGET = 0x4000;
 
-	private static int[] _BASE_MASK = new int[] { 0x0000, // UNKNOWN
+	private static final int[] _BASE_MASK = new int[] { 0x0000, // UNKNOWN
 			0xff00, // STANDING
 			0xff00, // MOVING
 			0xff00, // PRONE
@@ -50,7 +51,7 @@ public class PlayerState {
 			0xff00, // PICKED_UP
 	};
 
-	private int fId;
+	private final int fId;
 
 	public PlayerState(int pId) {
 		fId = pId;
@@ -72,6 +73,26 @@ public class PlayerState {
 		int baseMask = ((pBase > 0) && (pBase < _BASE_MASK.length)) ? _BASE_MASK[pBase] : 0x0000;
 		return new PlayerState((getId() & baseMask) | pBase);
 	}
+
+
+	public boolean isSelectedBlitzTarget() {
+		return hasBit(_BIT_SELECTED_BLITZ_TARGET);
+	}
+
+	public PlayerState addSelectedBlitzTarget() {
+		if (!hasBit(_BIT_SELECTED_BLITZ_TARGET)) {
+			return changeBit(_BIT_SELECTED_BLITZ_TARGET, true);
+		}
+		return this;
+	}
+
+	public PlayerState removeSelectedBlitzTarget() {
+		if (hasBit(_BIT_SELECTED_BLITZ_TARGET)) {
+			return changeBit(_BIT_SELECTED_BLITZ_TARGET, false);
+		}
+		return this;
+	}
+
 
 	public boolean isActive() {
 		return hasBit(_BIT_ACTIVE);
@@ -270,9 +291,7 @@ public class PlayerState {
 		if (getClass() != obj.getClass())
 			return false;
 		PlayerState other = (PlayerState) obj;
-		if (fId != other.fId)
-			return false;
-		return true;
+		return fId == other.fId;
 	}
 
 }

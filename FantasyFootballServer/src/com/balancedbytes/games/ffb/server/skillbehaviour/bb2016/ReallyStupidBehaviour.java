@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.skill.ReallyStupid;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
 	public ReallyStupidBehaviour() {
 		super();

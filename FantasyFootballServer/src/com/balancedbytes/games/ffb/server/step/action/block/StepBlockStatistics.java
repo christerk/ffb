@@ -56,6 +56,10 @@ public class StepBlockStatistics extends AbstractStep {
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(actingPlayer.getPlayer());
 			playerResult.setBlocks(playerResult.getBlocks() + 1);
 		}
+	/*	PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
+		if (defenderState != null) {
+			game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeSelectedBlitzTarget());
+		}*/
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

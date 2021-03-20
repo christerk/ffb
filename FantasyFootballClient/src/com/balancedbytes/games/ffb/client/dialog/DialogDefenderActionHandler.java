@@ -1,14 +1,16 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -34,12 +36,19 @@ public class DialogDefenderActionHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 
-		Team team = game.getTeamHome().hasPlayer(game.getDefender()) ? game.getTeamHome() : game.getTeamAway();
+		Player<?> defender;
+		BlitzState blitzState = game.getFieldModel().getBlitzState();
+		if (blitzState == null) {
+			defender = game.getDefender();
+		} else {
+			defender = game.getPlayerById(blitzState.getSelectedPlayerId());
+		}
+
+		Team team = game.getTeamHome().hasPlayer(defender) ? game.getTeamHome() : game.getTeamAway();
 		if ((ClientMode.PLAYER != getClient().getMode()) || (team != game.getTeamHome())) {
-			StringBuilder message = new StringBuilder();
-			message.append("Waiting for coach to ");
-			message.append(sDescriptionByAction.get(game.getDefenderAction())).append(".");
-			showStatus(sTitleByAction.get(game.getDefenderAction()), message.toString(), StatusType.WAITING);
+			String message = "Waiting for coach to " +
+				sDescriptionByAction.get(game.getDefenderAction()) + ".";
+			showStatus(sTitleByAction.get(game.getDefenderAction()), message, StatusType.WAITING);
 		}
 
 	}

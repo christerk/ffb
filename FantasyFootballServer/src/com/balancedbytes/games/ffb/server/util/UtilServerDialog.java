@@ -16,7 +16,6 @@ public class UtilServerDialog {
 		if (stopTurnTimer) {
 			game.setWaitingForOpponent(true);
 			UtilServerTimer.stopTurnTimer(gameState, System.currentTimeMillis());
-			;
 		}
 	}
 

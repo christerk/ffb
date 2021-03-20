@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.common;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -33,7 +33,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepTakeRoot extends AbstractStepWithReRoll {
 
 	public class StepState {

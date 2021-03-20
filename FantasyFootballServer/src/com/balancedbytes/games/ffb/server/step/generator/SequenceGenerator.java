@@ -19,8 +19,8 @@ public abstract class SequenceGenerator<T extends SequenceGenerator.SequencePara
 	public abstract void pushSequence(T params);
 
 	public enum Type {
-		Block, Bomb, Card, EndGame, EndPlayerAction, EndTurn, Foul, Inducement, KickTeamMate, Kickoff,
-		Move, Pass, RiotousRookies, ScatterPlayer, Select,
+		BlitzBlock, BlitzMove, Block, Bomb, Card, EndGame, EndPlayerAction, EndTurn, Foul, Inducement, KickTeamMate, Kickoff,
+		Move, Pass, RiotousRookies, ScatterPlayer, Select, SelectBlitzTarget,
 		SpecialEffect, SpikedBallApo, StartGame, ThrowTeamMate, Wizard
 	}
 

@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.server.step.bb2020.pass.state.PassState;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Bomb;
-import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;

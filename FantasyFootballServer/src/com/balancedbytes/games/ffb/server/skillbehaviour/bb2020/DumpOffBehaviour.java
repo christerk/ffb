@@ -1,13 +1,16 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogDefenderActionParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
@@ -23,12 +26,12 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.skill.DumpOff;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 	public DumpOffBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepDumpOff, StepDumpOff.StepState>() {
+		registerModifier(new StepModifier<StepDumpOff, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepDumpOff step, StepState state,
@@ -47,13 +50,23 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 				} else if (state.usingDumpOff == null) {
-					if (UtilCards.hasSkill(game.getDefender(), skill) && (state.defenderPosition != null)
-							&& state.defenderPosition.equals(game.getFieldModel().getBallCoordinate())
+					Player<?> defender;
+					BlitzState blitzState = game.getFieldModel().getBlitzState();
+					FieldCoordinate defenderPosition;
+					if (blitzState == null) {
+						defender = game.getDefender();
+						defenderPosition = state.defenderPosition;
+					} else {
+						defender = game.getPlayerById(blitzState.getSelectedPlayerId());
+						defenderPosition = game.getFieldModel().getPlayerCoordinate(defender);
+					}
+					if (UtilCards.hasSkill(defender, skill) && (defenderPosition != null)
+							&& defenderPosition.equals(game.getFieldModel().getBallCoordinate())
 							&& !game.getFieldModel().isBallMoving()
-							&& !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused()
-									|| game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
+							&& !(game.getFieldModel().getPlayerState(defender).isConfused()
+									|| game.getFieldModel().getPlayerState(defender).isHypnotized())) {
 						UtilServerDialog.showDialog(step.getGameState(),
-								new DialogSkillUseParameter(game.getDefenderId(), skill, 0), true);
+								new DialogSkillUseParameter(defender.getId(), skill, 0), true);
 						step.getResult().setNextAction(StepAction.CONTINUE);
 					} else {
 						state.usingDumpOff = false;
@@ -61,20 +74,24 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					}
 
 				} else if (state.usingDumpOff) {
+					BlitzState blitzState = game.getFieldModel().getBlitzState();
+					String defenderId = blitzState == null ? game.getDefenderId() : blitzState.getSelectedPlayerId();
 					state.oldTurnMode = game.getTurnMode();
 					game.setTurnMode(TurnMode.DUMP_OFF);
-					game.setThrowerId(game.getDefenderId());
+					game.setThrowerId(defenderId);
 					game.setThrowerAction(PlayerAction.DUMP_OFF);
 					game.setDefenderAction(PlayerAction.DUMP_OFF);
 					UtilServerDialog.showDialog(step.getGameState(), new DialogDefenderActionParameter(), true);
 					step.getGameState().pushCurrentStepOnStack();
 					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-					((com.balancedbytes.games.ffb.server.step.generator.Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
+					((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
 						.pushSequence(new Pass.SequenceParams(step.getGameState()));
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 				} else {
-					step.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skill, false, null));
+					BlitzState blitzState = game.getFieldModel().getBlitzState();
+					String defenderId = blitzState == null ? game.getDefenderId() : blitzState.getSelectedPlayerId();
+					step.getResult().addReport(new ReportSkillUse(defenderId, skill, false, null));
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}
 

@@ -24,6 +24,7 @@ public interface IIconProperty {
 	String DECORATION_BLOOD_LUST = "decoration.bloodlust";
 	String DECORATION_BOMB = "decoration.bomb";
 	String DECORATION_BOMB_SELECTED = "decoration.bomb.selected";
+	String DECORATION_BLITZ_TARGET_SELECTED = "decoration.selected.blitz.target";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";

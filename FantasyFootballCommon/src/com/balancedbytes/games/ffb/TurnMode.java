@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public enum TurnMode implements INamedObject {
@@ -15,12 +15,13 @@ public enum TurnMode implements INamedObject {
 																																																				// game.getLastTurnMode()
 																																																				// for this
 	BOMB_AWAY_BLITZ("bombAwayBlitz", false), // TODO: use game.getLastTurnMode() for this
-	ILLEGAL_SUBSTITUTION("illegalSubstitution", true);
+	ILLEGAL_SUBSTITUTION("illegalSubstitution", true),
+	SELECT_BLITZ_TARGET("selectBlitzTarget", true);
 
-	private String fName;
+	private final String fName;
 	private boolean fStoreLast;
 
-	private TurnMode(String pName, boolean storeLast) {
+	TurnMode(String pName, boolean storeLast) {
 		fName = pName;
 	}
 

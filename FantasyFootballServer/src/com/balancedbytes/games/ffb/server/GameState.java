@@ -57,7 +57,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private StepFactory stepFactory;
 	private PassState passState;
 
-	
 	private enum StepExecutionMode {
 		Start, HandleCommand
 	}
@@ -361,6 +360,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (passStateObject != null) {
 			passState = new PassState().initFrom(source, passStateObject);
 		}
+
 		return this;
 	}
 
