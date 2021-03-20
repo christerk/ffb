@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -72,7 +73,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		showAddCardButton();
 
 		setLocationToCenter();
-
+		Point p = getLocation();
+		setLocation(p.x, 10);
 	}
 
 	public void setCardChoices(CardChoices cardChoices) {
