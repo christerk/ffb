@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.mechanics;
 
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -30,7 +30,7 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract int minimumRollInterception(Player<?> pPlayer, Set<InterceptionModifier> pInterceptionModifiers);
 
-	public abstract int minimumRollLeap(Player<?> pPlayer, Set<LeapModifier> pLeapModifiers);
+	public abstract int minimumRollJump(Player<?> pPlayer, Set<JumpModifier> pJumpModifiers);
 
 	public abstract int minimumRollHypnoticGaze(Player<?> pPlayer, Set<GazeModifier> pGazeModifiers);
 
@@ -42,7 +42,7 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract String formatDodgeResult(ReportSkillRoll report, ActingPlayer player);
 
-	public abstract String formatLeapResult(ReportSkillRoll report, Player<?> player);
+	public abstract String formatJumpResult(ReportSkillRoll report, Player<?> player);
 
 	public abstract String formatJumpUpResult(ReportSkillRoll report, Player<?> player);
 

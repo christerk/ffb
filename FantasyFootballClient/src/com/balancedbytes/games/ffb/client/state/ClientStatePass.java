@@ -214,18 +214,18 @@ public class ClientStatePass extends ClientStateMove {
 
 		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
 				&& UtilPlayer.isNextMovePossible(game, false)) {
-			if (actingPlayer.isLeaping()) {
-				JMenuItem leapAction = new JMenuItem("Don't Leap",
+			if (actingPlayer.isJumping()) {
+				JMenuItem jumpAction = new JMenuItem("Don't Jump",
 						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
-				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
-				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
-				menuItemList.add(leapAction);
+				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
+				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
+				menuItemList.add(jumpAction);
 			} else {
-				JMenuItem leapAction = new JMenuItem("Leap",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LEAP)));
-				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
-				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
-				menuItemList.add(leapAction);
+				JMenuItem jumpAction = new JMenuItem("Jump",
+						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
+				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
+				menuItemList.add(jumpAction);
 			}
 		}
 
@@ -265,10 +265,10 @@ public class ClientStatePass extends ClientStateMove {
 		} else if (pMenuKey == IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS) {
 			if (game.getActingPlayer().getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)) {
 				if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isJumping());
 					fShowRangeRuler = true;
 				} else {
-					communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_PASS, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_PASS, actingPlayer.isJumping());
 					fShowRangeRuler = false;
 				}
 				if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {

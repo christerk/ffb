@@ -112,7 +112,7 @@ public final class StepInitKickTeamMate extends AbstractStep {
 				ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 				if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
 					UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 				} else {
 					fEndPlayerAction = true;
 				}

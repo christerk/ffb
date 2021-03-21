@@ -81,7 +81,7 @@ public class StepDropDivingTackler extends AbstractStep {
 		if (fUsingDivingTackle && StringTool.isProvided(game.getDefenderId())) {
 			game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), fCoordinateFrom);
 			publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
-			UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isLeaping());
+			UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
 		}
 		// reset DivingTackle & Shadowing attributes
 		game.setDefenderId(null);

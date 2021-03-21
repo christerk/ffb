@@ -219,7 +219,7 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 					} else {
 						fEndPlayerAction = true;
 					}
@@ -277,7 +277,7 @@ public class StepInitMoving extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, coordinateFrom));
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinateTo));
 					MoveSquare moveSquare = game.getFieldModel().getMoveSquare(coordinateTo);
-					actingPlayer.setDodging((moveSquare != null) && moveSquare.isDodging() && !actingPlayer.isLeaping());
+					actingPlayer.setDodging((moveSquare != null) && moveSquare.isDodging() && !actingPlayer.isJumping());
 					actingPlayer.setGoingForIt((moveSquare != null) && moveSquare.isGoingForIt());
 					actingPlayer.setHasMoved(true);
 					game.getTurnData().setTurnStarted(true);

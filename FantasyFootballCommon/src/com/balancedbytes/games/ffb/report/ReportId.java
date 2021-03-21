@@ -10,7 +10,7 @@ public enum ReportId implements INamedObject {
 	ALWAYS_HUNGRY_ROLL("alwaysHungryRoll"), ARGUE_THE_CALL("argueTheCall"), CATCH_ROLL("catchRoll"), CLOUD_BURSTER("cloudBurster"),
 	CONFUSION_ROLL("confusionRoll"), DAUNTLESS_ROLL("dauntlessRoll"), DODGE_ROLL("dodgeRoll"), ESCAPE_ROLL("escapeRoll"),
 	FOUL_APPEARANCE_ROLL("foulAppearanceRoll"), GO_FOR_IT_ROLL("goForItRoll"), INTERCEPTION_ROLL("interceptionRoll"),
-	LEAP_ROLL("leapRoll"), PASS_ROLL("passRoll"), PICK_UP_ROLL("pickUpRoll"), RIGHT_STUFF_ROLL("rightStuffRoll"),
+	JUMP_ROLL("leapRoll"), PASS_ROLL("passRoll"), PICK_UP_ROLL("pickUpRoll"), RIGHT_STUFF_ROLL("rightStuffRoll"),
 	REGENERATION_ROLL("regenerationRoll"), SAFE_THROW_ROLL("safeThrowRoll"),
 	TENTACLES_SHADOWING_ROLL("tentaclesShadowingRoll"), SKILL_USE("skillUse"), RE_ROLL("reRoll"), TURN_END("turnEnd"),
 	PLAYER_ACTION("playerAction"), FOUL("foul"), HAND_OVER("handOver"), INJURY("injury"),
@@ -87,8 +87,8 @@ public enum ReportId implements INamedObject {
 				return new ReportInjury();
 			case INTERCEPTION_ROLL:
 				return new ReportInterceptionRoll();
-			case LEAP_ROLL:
-				return new ReportSkillRoll(LEAP_ROLL);
+			case JUMP_ROLL:
+				return new ReportSkillRoll(JUMP_ROLL);
 			case MOST_VALUABLE_PLAYERS:
 				return new ReportMostValuablePlayers();
 			case PASS_ROLL:

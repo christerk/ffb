@@ -48,7 +48,7 @@ public class ClientStateBlock extends ClientState {
 				createAndShowPopupMenuForBlockingPlayer();
 			} else if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 				getClient().getCommunication().sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.BLITZ_MOVE,
-						actingPlayer.isLeaping());
+						actingPlayer.isJumping());
 			} else {
 				createAndShowPopupMenuForBlockingPlayer();
 //        getClient().getCommunication().sendActingPlayer(null, null, false);
@@ -116,7 +116,7 @@ public class ClientStateBlock extends ClientState {
 				getClient().getCommunication().sendActingPlayer(null, null, false);
 				break;
 			case IPlayerPopupMenuKeys.KEY_MOVE:
-				getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isLeaping());
+				getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
 				break;
 			default:
 				UtilClientStateBlocking.menuItemSelected(this, pPlayer, pMenuKey);

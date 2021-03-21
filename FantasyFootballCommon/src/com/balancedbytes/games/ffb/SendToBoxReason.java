@@ -10,7 +10,7 @@ public enum SendToBoxReason implements INamedObject {
 	SECRET_WEAPON_BAN("secretWeaponBan", "was banned for using a Secret Weapon"), FOULED("fouled", "was fouled"),
 	BLOCKED("blocked", "was blocked"), CROWD_PUSHED("crowdPushed", "got pushed into the crowd"),
 	CROWD_KICKED("crowdKicked", "got kicked into the crowd"), DODGE_FAIL("dodgeFail", "failed a dodge"),
-	GFI_FAIL("gfiFail", "failed to go for it"), KICKED("kicked", "got kicked"), LEAP_FAIL("leapFail", "failed a leap"),
+	GFI_FAIL("gfiFail", "failed to go for it"), KICKED("kicked", "got kicked"), JUMP_FAIL("leapFail", "failed a leap"),
 	STABBED("stabbed", "has been stabbed"), HIT_BY_ROCK("hitByRock", "has been hit by a rock"),
 	EATEN("eaten", "has been eaten"), HIT_BY_THROWN_PLAYER("hitByThrownPlayer", "has been hit by a thrown player"),
 	LANDING_FAIL("landingFail", "failed to land after being thrown"), PILED_ON("piledOn", "was piled upon"),

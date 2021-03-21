@@ -83,11 +83,11 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 	private void setCustomCursor(MoveSquare pMoveSquare) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pMoveSquare.isGoingForIt() && (pMoveSquare.isDodging() && !actingPlayer.isLeaping())) {
+		if (pMoveSquare.isGoingForIt() && (pMoveSquare.isDodging() && !actingPlayer.isJumping())) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI_DODGE);
 		} else if (pMoveSquare.isGoingForIt()) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI);
-		} else if (pMoveSquare.isDodging() && !actingPlayer.isLeaping()) {
+		} else if (pMoveSquare.isDodging() && !actingPlayer.isJumping()) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_DODGE);
 		} else {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);

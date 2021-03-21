@@ -1,21 +1,13 @@
 package com.balancedbytes.games.ffb.client.state;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.dialog.DialogInformation;
@@ -31,6 +23,13 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -70,11 +69,11 @@ public class ClientStatePassBlock extends ClientStateMove {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_LEAP:
+			case IPlayerPopupMenuKeys.KEY_JUMP:
 				if ((actingPlayer.getPlayer() != null)
 						&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
 						&& UtilPlayer.isNextMovePossible(game, false)) {
-					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_MOVE:
@@ -103,18 +102,18 @@ public class ClientStatePassBlock extends ClientStateMove {
 		if ((actingPlayer.getPlayer() != null)
 				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
 				&& UtilPlayer.isNextMovePossible(game, false)) {
-			if (actingPlayer.isLeaping()) {
-				JMenuItem leapAction = new JMenuItem("Don't Leap",
+			if (actingPlayer.isJumping()) {
+				JMenuItem jumpAction = new JMenuItem("Don't Jump",
 						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
-				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
-				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
-				menuItemList.add(leapAction);
+				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
+				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
+				menuItemList.add(jumpAction);
 			} else {
-				JMenuItem leapAction = new JMenuItem("Leap",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LEAP)));
-				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
-				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
-				menuItemList.add(leapAction);
+				JMenuItem jumpAction = new JMenuItem("Jump",
+						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
+				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
+				menuItemList.add(jumpAction);
 			}
 		}
 		if (game.getActingPlayer().getPlayer() == pPlayer) {
@@ -176,8 +175,8 @@ public class ClientStatePassBlock extends ClientStateMove {
 		case PLAYER_ACTION_MOVE:
 			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
 			break;
-		case PLAYER_ACTION_LEAP:
-			menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LEAP);
+		case PLAYER_ACTION_JUMP:
+			menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_JUMP);
 			break;
 		default:
 			actionHandled = false;

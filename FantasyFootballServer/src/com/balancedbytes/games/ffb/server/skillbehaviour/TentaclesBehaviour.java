@@ -45,7 +45,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				UtilServerDialog.hideDialog(step.getGameState());
 				if (state.usingTentacles == null) {
-					if (actingPlayer.isDodging() || actingPlayer.isLeaping()) {
+					if (actingPlayer.isDodging() || actingPlayer.isJumping()) {
 						Player<?>[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill,
 								false);
 						if (ArrayTool.isProvided(playerArray)) {

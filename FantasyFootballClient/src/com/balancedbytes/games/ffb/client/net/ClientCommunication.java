@@ -267,9 +267,9 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPettyCash(pPettyCash));
 	}
 
-	public void sendActingPlayer(Player<?> pPlayer, PlayerAction pPlayerAction, boolean pLeaping) {
+	public void sendActingPlayer(Player<?> pPlayer, PlayerAction pPlayerAction, boolean jumping) {
 		String playerId = (pPlayer != null) ? pPlayer.getId() : null;
-		send(new ClientCommandActingPlayer(playerId, pPlayerAction, pLeaping));
+		send(new ClientCommandActingPlayer(playerId, pPlayerAction, jumping));
 	}
 
 	public void sendUseReRoll(ReRolledAction pReRolledAction, ReRollSource pReRollSource) {

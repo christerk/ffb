@@ -1,17 +1,16 @@
 package com.balancedbytes.games.ffb.client;
 
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 import javax.swing.Action;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-
-import com.balancedbytes.games.ffb.util.StringTool;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -144,10 +143,10 @@ public class ActionKeyBindings {
 			playerActions
 					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionPass), ActionKey.PLAYER_ACTION_PASS));
 		}
-		String actionLeap = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_LEAP);
-		if (StringTool.isProvided(actionLeap)) {
+		String actionJump = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_JUMP);
+		if (StringTool.isProvided(actionJump)) {
 			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionLeap), ActionKey.PLAYER_ACTION_LEAP));
+					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionJump), ActionKey.PLAYER_ACTION_JUMP));
 		}
 		String actionEndMove = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_END_MOVE);
 		if (StringTool.isProvided(actionEndMove)) {

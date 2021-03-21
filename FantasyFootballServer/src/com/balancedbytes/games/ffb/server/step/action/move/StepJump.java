@@ -17,7 +17,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * Step in move sequence to handle skill LEAP.
+ * Step in move sequence to handle jumps.
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
  * 
@@ -26,7 +26,7 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class StepLeap extends AbstractStepWithReRoll {
+public class StepJump extends AbstractStepWithReRoll {
 
 	public class StepState {
 		public String goToLabelOnFailure;
@@ -34,14 +34,14 @@ public class StepLeap extends AbstractStepWithReRoll {
 
 	private StepState state;
 
-	public StepLeap(GameState pGameState) {
+	public StepJump(GameState pGameState) {
 		super(pGameState);
 
 		state = new StepState();
 	}
 
 	public StepId getId() {
-		return StepId.LEAP;
+		return StepId.JUMP;
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class StepLeap extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepLeap initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public StepJump initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);

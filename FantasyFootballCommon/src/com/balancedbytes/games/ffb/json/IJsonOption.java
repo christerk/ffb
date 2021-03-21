@@ -202,7 +202,7 @@ public interface IJsonOption {
 	JsonArrayOption LASTING_INJURIES = new JsonArrayOption("lastingInjuries");
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);
-	JsonBooleanOption LEAPING = new JsonBooleanOption("leaping");
+	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
 	JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");

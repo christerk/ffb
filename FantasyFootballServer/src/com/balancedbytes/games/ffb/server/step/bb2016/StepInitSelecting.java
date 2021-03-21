@@ -113,7 +113,7 @@ public final class StepInitSelecting extends AbstractStep {
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 					} else {
 						fEndPlayerAction = true;
 					}
@@ -311,7 +311,7 @@ public final class StepInitSelecting extends AbstractStep {
 					actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 					// go-for-it
 				}
-				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 			}
 		}
 	}

@@ -116,16 +116,16 @@ public class ClientStateFoul extends ClientStateMove {
 			case IPlayerPopupMenuKeys.KEY_END_MOVE:
 				getClient().getCommunication().sendActingPlayer(null, null, false);
 				break;
-			case IPlayerPopupMenuKeys.KEY_LEAP:
+			case IPlayerPopupMenuKeys.KEY_JUMP:
 				if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
 						&& UtilPlayer.isNextMovePossible(game, false)) {
 					getClient().getCommunication().sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(),
-							!actingPlayer.isLeaping());
+							!actingPlayer.isJumping());
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_MOVE:
 				if (actingPlayer.isSufferingBloodLust()) {
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isLeaping());
+					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
 				}
 				break;
 			}

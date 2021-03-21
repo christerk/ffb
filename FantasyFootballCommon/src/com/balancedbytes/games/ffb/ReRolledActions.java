@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.skill.AlwaysHungry;
 import com.balancedbytes.games.ffb.skill.Animosity;
 import com.balancedbytes.games.ffb.skill.BloodLust;
@@ -14,7 +10,6 @@ import com.balancedbytes.games.ffb.skill.FoulAppearance;
 import com.balancedbytes.games.ffb.skill.HypnoticGaze;
 import com.balancedbytes.games.ffb.skill.JumpUp;
 import com.balancedbytes.games.ffb.skill.KickTeamMate;
-import com.balancedbytes.games.ffb.skill.Leap;
 import com.balancedbytes.games.ffb.skill.Pass;
 import com.balancedbytes.games.ffb.skill.ReallyStupid;
 import com.balancedbytes.games.ffb.skill.RightStuff;
@@ -22,6 +17,10 @@ import com.balancedbytes.games.ffb.skill.SafeThrow;
 import com.balancedbytes.games.ffb.skill.TakeRoot;
 import com.balancedbytes.games.ffb.skill.ThrowTeamMate;
 import com.balancedbytes.games.ffb.skill.WildAnimal;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReRolledActions {
 
@@ -31,7 +30,7 @@ public class ReRolledActions {
 	public static final ReRolledAction PICK_UP = new ReRolledAction("Pick Up");
 	public static final ReRolledAction PASS = new ReRolledAction(Pass.class);
 	public static final ReRolledAction DAUNTLESS = new ReRolledAction(Dauntless.class);
-	public static final ReRolledAction LEAP = new ReRolledAction(Leap.class);
+	public static final ReRolledAction JUMP = new ReRolledAction("Jump");
 	public static final ReRolledAction FOUL_APPEARANCE = new ReRolledAction(FoulAppearance.class);
 	public static final ReRolledAction BLOCK = new ReRolledAction("Block");
 	public static final ReRolledAction REALLY_STUPID = new ReRolledAction(ReallyStupid.class);

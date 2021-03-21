@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 /**
@@ -26,7 +26,7 @@ public class VeryLongLegs extends Skill {
 	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(NamedProperties.canCancelInterceptions));
 
-		registerModifier(new LeapModifier("Very Long Legs", -1, ModifierType.REGULAR));
+		registerModifier(new JumpModifier("Very Long Legs", -1, ModifierType.REGULAR));
 		registerModifier(new InterceptionModifier("Very Long Legs", -1, ModifierType.REGULAR));
 	}
 

@@ -26,7 +26,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private int fCurrentMove;
 	private boolean fGoingForIt;
 	private boolean fDodging;
-	private boolean fLeaping;
+	private boolean jumping;
 	private boolean fHasBlocked;
 	private boolean fHasFouled;
 	private boolean fHasPassed;
@@ -63,7 +63,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fHasPassed = false;
 		fHasMoved = false;
 		fHasFed = false;
-		fLeaping = false;
+		jumping = false;
 		fPlayerAction = null;
 		fStandingUp = false;
 		fSufferingBloodLust = false;
@@ -205,16 +205,16 @@ public class ActingPlayer implements IJsonSerializable {
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_MOVED, fHasMoved);
 	}
 
-	public boolean isLeaping() {
-		return fLeaping;
+	public boolean isJumping() {
+		return jumping;
 	}
 
-	public void setLeaping(boolean pLeaping) {
-		if (pLeaping == fLeaping) {
+	public void setJumping(boolean jumping) {
+		if (jumping == this.jumping) {
 			return;
 		}
-		fLeaping = pLeaping;
-		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_LEAPING, fLeaping);
+		this.jumping = jumping;
+		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_JUMPING, this.jumping);
 	}
 
 	public void setStandingUp(boolean pStandingUp) {

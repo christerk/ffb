@@ -197,10 +197,10 @@ public class ClientStateBomb extends ClientState {
 		case IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB:
 			if (isHailMaryPassActionAvailable()) {
 				if (PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, actingPlayer.isJumping());
 					fShowRangeRuler = true;
 				} else {
-					communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_BOMB, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_BOMB, actingPlayer.isJumping());
 					fShowRangeRuler = false;
 				}
 				if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {

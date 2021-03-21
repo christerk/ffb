@@ -145,7 +145,7 @@ public interface IIconProperty {
 	String ACTION_PASS = "action.pass";
 	String ACTION_STAND_UP = "action.standup";
 	String ACTION_END_MOVE = "action.end";
-	String ACTION_LEAP = "action.leap";
+	String ACTION_JUMP = "action.jump";
 	String ACTION_STAB = "action.stab";
 	String ACTION_GAZE = "action.gaze";
 	String ACTION_TOGGLE_RANGE_GRID = "action.toggle.rangeGrid";

@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  *
  * @author Kalimar
  */
-public class LeapModifier extends RollModifier<LeapContext> {
+public class JumpModifier extends RollModifier<JumpContext> {
 
 	// TODO: create factory for this
 
@@ -14,7 +14,7 @@ public class LeapModifier extends RollModifier<LeapContext> {
 	private final int fModifier;
 	private final ModifierType type;
 
-	public LeapModifier(String pName, int pModifier, ModifierType type) {
+	public JumpModifier(String pName, int pModifier, ModifierType type) {
 		fName = pName;
 		fModifier = pModifier;
 		this.type = type;
@@ -42,7 +42,7 @@ public class LeapModifier extends RollModifier<LeapContext> {
 		return getName();
 	}
 
-	public boolean appliesToContext(Skill skill, LeapContext context) {
+	public boolean appliesToContext(Skill skill, JumpContext context) {
 		return true;
 	}
 }

@@ -166,7 +166,7 @@ public final class StepEndSelecting extends AbstractStep {
 			} else {
 				if ((actingPlayer.getPlayerAction() != null) && !actingPlayer.getPlayerAction().isMoving()) {
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE,
-							actingPlayer.isLeaping());
+							actingPlayer.isJumping());
 				}
 				dispatchPlayerAction(actingPlayer.getPlayerAction(), false);
 			}

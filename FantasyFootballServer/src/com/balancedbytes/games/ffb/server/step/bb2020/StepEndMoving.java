@@ -191,7 +191,7 @@ public class StepEndMoving extends AbstractStep {
 			&& UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
 			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
-			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 			moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 		} else {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
@@ -202,7 +202,7 @@ public class StepEndMoving extends AbstractStep {
 	private StepCommandStatus dispatchPlayerAction(PlayerAction pPlayerAction) {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), pPlayerAction, actingPlayer.isLeaping());
+		UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), pPlayerAction, actingPlayer.isJumping());
 		if (pushSequenceForPlayerAction(pPlayerAction)) {
 			getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
 		}

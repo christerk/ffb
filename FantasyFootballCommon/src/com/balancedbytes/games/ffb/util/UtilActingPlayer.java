@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 public class UtilActingPlayer {
 
 	public static boolean changeActingPlayer(Game pGame, String pActingPlayerId, PlayerAction pPlayerAction,
-			boolean pLeaping) {
+			boolean jumping) {
 
 		boolean changed = false;
 
@@ -55,7 +55,7 @@ public class UtilActingPlayer {
 				fieldModel.setPlayerState(newPlayer, oldState.changeBase(PlayerState.MOVING));
 			}
 			actingPlayer.setPlayerAction(pPlayerAction);
-			actingPlayer.setLeaping(pLeaping);
+			actingPlayer.setJumping(jumping);
 		}
 
 		if (changed) {

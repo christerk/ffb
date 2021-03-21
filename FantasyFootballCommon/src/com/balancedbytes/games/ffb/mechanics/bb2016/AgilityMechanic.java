@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
@@ -59,10 +59,10 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	}
 
 	@Override
-	public int minimumRollLeap(Player<?> pPlayer, Set<LeapModifier> pLeapModifiers) {
+	public int minimumRollJump(Player<?> pPlayer, Set<JumpModifier> pJumpModifiers) {
 		int modifierTotal = 0;
-		for (LeapModifier leapModifier : pLeapModifiers) {
-			modifierTotal += leapModifier.getModifier();
+		for (JumpModifier jumpModifier : pJumpModifiers) {
+			modifierTotal += jumpModifier.getModifier();
 		}
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + modifierTotal);
 	}
@@ -116,7 +116,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	}
 
 	@Override
-	public String formatLeapResult(ReportSkillRoll report, Player<?> player) {
+	public String formatJumpResult(ReportSkillRoll report, Player<?> player) {
 		return " (AG " + Math.min(6, player.getAgilityWithModifiers()) +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}

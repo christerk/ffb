@@ -93,15 +93,15 @@ public class ClientStateBlitz extends ClientStateMove {
 			case IPlayerPopupMenuKeys.KEY_END_MOVE:
 				communication.sendActingPlayer(null, null, false);
 				break;
-			case IPlayerPopupMenuKeys.KEY_LEAP:
+			case IPlayerPopupMenuKeys.KEY_JUMP:
 				if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
 						&& UtilPlayer.isNextMovePossible(game, false)) {
-					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_MOVE:
 				if (actingPlayer.isSufferingBloodLust()) {
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());
+					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
 				}
 				break;
 			default:

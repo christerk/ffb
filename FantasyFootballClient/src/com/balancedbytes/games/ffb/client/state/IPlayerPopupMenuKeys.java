@@ -21,7 +21,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_PASS = KeyEvent.VK_P;
 	int KEY_THROW_TEAM_MATE = KeyEvent.VK_T;
 	int KEY_KICK_TEAM_MATE = KeyEvent.VK_K;
-	int KEY_LEAP = KeyEvent.VK_L;
+	int KEY_JUMP = KeyEvent.VK_J;
 	int KEY_FOUL = KeyEvent.VK_F;
 	int KEY_DESELECT = KeyEvent.VK_ESCAPE;
 	int KEY_RECOVER = KeyEvent.VK_R;

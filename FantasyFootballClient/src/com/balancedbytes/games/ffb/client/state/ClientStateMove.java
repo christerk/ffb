@@ -77,11 +77,11 @@ public class ClientStateMove extends ClientState {
 	private void setCustomCursor(MoveSquare pMoveSquare) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pMoveSquare.isGoingForIt() && (pMoveSquare.isDodging() && !actingPlayer.isLeaping())) {
+		if (pMoveSquare.isGoingForIt() && (pMoveSquare.isDodging() && !actingPlayer.isJumping())) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI_DODGE);
 		} else if (pMoveSquare.isGoingForIt()) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI);
-		} else if (pMoveSquare.isDodging() && !actingPlayer.isLeaping()) {
+		} else if (pMoveSquare.isDodging() && !actingPlayer.isJumping()) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_DODGE);
 		} else {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
@@ -157,49 +157,49 @@ public class ClientStateMove extends ClientState {
 					communication.sendActingPlayer(null, null, false);
 				}
 				break;
-			case IPlayerPopupMenuKeys.KEY_LEAP:
+			case IPlayerPopupMenuKeys.KEY_JUMP:
 				if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
 						&& UtilPlayer.isNextMovePossible(game, false)) {
-					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_HAND_OVER:
 				if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
 					if (PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER, actingPlayer.isLeaping());
+						communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER, actingPlayer.isJumping());
 					} else if (PlayerAction.HAND_OVER == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER_MOVE, actingPlayer.isLeaping());
+						communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER_MOVE, actingPlayer.isJumping());
 					}
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_PASS:
 				if (PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()
 						&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isJumping());
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE, actingPlayer.isLeaping());
+				communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE, actingPlayer.isJumping());
 				break;
 			case IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE, actingPlayer.isLeaping());
+				communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE, actingPlayer.isJumping());
 				break;
 			case IPlayerPopupMenuKeys.KEY_MOVE:
 				if (PlayerAction.GAZE == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
 				}
 				if (PlayerAction.PASS == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, actingPlayer.isJumping());
 				}
 				if (PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, actingPlayer.isJumping());
 				}
 				if (PlayerAction.KICK_TEAM_MATE == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE_MOVE, actingPlayer.isLeaping());
+					communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE_MOVE, actingPlayer.isJumping());
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_GAZE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, actingPlayer.isLeaping());
+				communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, actingPlayer.isJumping());
 				break;
 			}
 		}
@@ -239,18 +239,18 @@ public class ClientStateMove extends ClientState {
 		}
 		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
 				&& UtilPlayer.isNextMovePossible(game, true)) {
-			if (actingPlayer.isLeaping()) {
-				JMenuItem leapAction = new JMenuItem("Don't Leap",
+			if (actingPlayer.isJumping()) {
+				JMenuItem jumpAction = new JMenuItem("Don't Jump",
 						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
-				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
-				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
-				menuItemList.add(leapAction);
+				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
+				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
+				menuItemList.add(jumpAction);
 			} else {
-				JMenuItem leapAction = new JMenuItem("Leap",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LEAP)));
-				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
-				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
-				menuItemList.add(leapAction);
+				JMenuItem jumpAction = new JMenuItem("Jump",
+						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
+				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
+				menuItemList.add(jumpAction);
 			}
 		}
 		if (isHypnoticGazeActionAvailable()) {
@@ -297,8 +297,8 @@ public class ClientStateMove extends ClientState {
 			case PLAYER_ACTION_PASS:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_PASS);
 				break;
-			case PLAYER_ACTION_LEAP:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LEAP);
+			case PLAYER_ACTION_JUMP:
+				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_JUMP);
 				break;
 			case PLAYER_ACTION_END_MOVE:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);

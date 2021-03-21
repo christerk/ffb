@@ -136,23 +136,23 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 			break;
 		case PASS_MOVE:
 			UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.PASS,
-					actingPlayer.isLeaping());
+					actingPlayer.isJumping());
 			break;
 		case THROW_TEAM_MATE_MOVE:
 			UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.THROW_TEAM_MATE,
-					actingPlayer.isLeaping());
+					actingPlayer.isJumping());
 			break;
 		case KICK_TEAM_MATE_MOVE:
 			UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.KICK_TEAM_MATE,
-					actingPlayer.isLeaping());
+					actingPlayer.isJumping());
 			break;
 		case HAND_OVER_MOVE:
 			UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.HAND_OVER,
-					actingPlayer.isLeaping());
+					actingPlayer.isJumping());
 			break;
 		case FOUL_MOVE:
 			UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.FOUL,
-					actingPlayer.isLeaping());
+					actingPlayer.isJumping());
 			break;
 		case PASS:
 		case THROW_TEAM_MATE:

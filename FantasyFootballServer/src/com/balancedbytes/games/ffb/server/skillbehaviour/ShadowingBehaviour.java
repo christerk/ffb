@@ -116,7 +116,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 					}
 					if (doNextStep && state.usingShadowing) {
 						game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), state.coordinateFrom);
-						UtilServerPlayerMove.updateMoveSquares(step.getGameState(), actingPlayer.isLeaping());
+						UtilServerPlayerMove.updateMoveSquares(step.getGameState(), actingPlayer.isJumping());
 						ServerUtilBlock.updateDiceDecorations(game);
 					}
 				}

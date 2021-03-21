@@ -139,7 +139,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private void succeedGfi() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.isLeaping()
+		if (actingPlayer.isJumping()
 				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)
 				&& !fSecondGoForIt) {
 			fSecondGoForIt = true;

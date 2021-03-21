@@ -73,8 +73,8 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_SET_HAS_PASSED:
 				pGame.getActingPlayer().setHasPassed((Boolean) pModelChange.getValue());
 				return true;
-			case ACTING_PLAYER_SET_LEAPING:
-				pGame.getActingPlayer().setLeaping((Boolean) pModelChange.getValue());
+			case ACTING_PLAYER_SET_JUMPING:
+				pGame.getActingPlayer().setJumping((Boolean) pModelChange.getValue());
 				return true;
 			case ACTING_PLAYER_SET_PLAYER_ACTION:
 				pGame.getActingPlayer().setPlayerAction((PlayerAction) pModelChange.getValue());

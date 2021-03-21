@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.injury.Chainsaw;
 import com.balancedbytes.games.ffb.injury.CrowdPush;
 import com.balancedbytes.games.ffb.injury.DropDodge;
 import com.balancedbytes.games.ffb.injury.DropGFI;
-import com.balancedbytes.games.ffb.injury.DropLeap;
+import com.balancedbytes.games.ffb.injury.DropJump;
 import com.balancedbytes.games.ffb.injury.EatPlayer;
 import com.balancedbytes.games.ffb.injury.Fireball;
 import com.balancedbytes.games.ffb.injury.Foul;
@@ -37,7 +37,7 @@ public class InjuryTypeConstants {
 	public static final InjuryType CROWD_PUSH = new CrowdPush();
 	public static final InjuryType DROP_DODGE = new DropDodge();
 	public static final InjuryType DROP_GFI = new DropGFI();
-	public static final InjuryType DROP_LEAP = new DropLeap();
+	public static final InjuryType DROP_JUMP = new DropJump();
 	public static final InjuryType EAT_PLAYER = new EatPlayer();
 	public static final InjuryType FIREBALL = new Fireball();
 	public static final InjuryType FOUL = new Foul();

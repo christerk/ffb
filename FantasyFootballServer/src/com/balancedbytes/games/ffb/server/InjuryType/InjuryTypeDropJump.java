@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
-import com.balancedbytes.games.ffb.injury.DropLeap;
+import com.balancedbytes.games.ffb.injury.DropJump;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
@@ -17,9 +17,9 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 
 import java.util.Optional;
 
-public class InjuryTypeDropLeap extends InjuryTypeServer<DropLeap> {
-	public InjuryTypeDropLeap() {
-		super(new DropLeap());
+public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
+	public InjuryTypeDropJump() {
+		super(new DropJump());
 	}
 
 	@Override

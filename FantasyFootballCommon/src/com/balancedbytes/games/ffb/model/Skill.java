@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
@@ -32,7 +32,7 @@ public abstract class Skill implements INamedObject {
 	private final List<PassModifier> passModifiers = new ArrayList<>();
 	private final List<PickupModifier> pickupModifiers = new ArrayList<>();
 	private final List<DodgeModifier> dodgeModifiers = new ArrayList<>();
-	private final List<LeapModifier> leapModifiers = new ArrayList<>();
+	private final List<JumpModifier> jumpModifiers = new ArrayList<>();
 	private final List<InterceptionModifier> interceptionModifiers = new ArrayList<>();
 	private final List<InjuryModifier> injuryModifiers = new ArrayList<>();
 	private final List<ArmorModifier> armorModifiers = new ArrayList<>();
@@ -68,8 +68,8 @@ public abstract class Skill implements INamedObject {
 		return Comparator.comparing(Skill::getName);
 	}
 
-	protected void registerModifier(LeapModifier modifier) {
-		leapModifiers.add(modifier);
+	protected void registerModifier(JumpModifier modifier) {
+		jumpModifiers.add(modifier);
 	}
 
 	protected void registerModifier(PassModifier modifier) {
@@ -140,8 +140,8 @@ public abstract class Skill implements INamedObject {
 		return dodgeModifiers;
 	}
 
-	public List<LeapModifier> getLeapModifiers() {
-		return leapModifiers;
+	public List<JumpModifier> getJumpModifiers() {
+		return jumpModifiers;
 	}
 
 	public List<InterceptionModifier> getInterceptionModifiers() {

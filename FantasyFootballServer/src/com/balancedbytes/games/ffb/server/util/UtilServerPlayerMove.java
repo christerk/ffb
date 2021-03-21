@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
-import com.balancedbytes.games.ffb.factory.LeapModifierFactory;
+import com.balancedbytes.games.ffb.factory.JumpModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -19,8 +19,8 @@ import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.GoForItContext;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapContext;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.JumpContext;
+import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.server.DebugLog;
@@ -73,30 +73,30 @@ public class UtilServerPlayerMove {
 		return false;
 	}
 
-	public static void updateMoveSquares(GameState pGameState, boolean pLeaping) {
+	public static void updateMoveSquares(GameState pGameState, boolean jumping) {
 		Game game = pGameState.getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer() != null) {
 			fieldModel.clearMoveSquares();
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
-			if (actingPlayer.getPlayerAction().isMoving() && UtilPlayer.isNextMovePossible(game, pLeaping)
+			if (actingPlayer.getPlayerAction().isMoving() && UtilPlayer.isNextMovePossible(game, jumping)
 					&& FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
 				if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.movesRandomly)) {
 					for (int x = -1; x < 2; x += 2) {
 						FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
 						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
-							addMoveSquare(pGameState, pLeaping, moveCoordinate);
+							addMoveSquare(pGameState, jumping, moveCoordinate);
 						}
 					}
 					for (int y = -1; y < 2; y += 2) {
 						FieldCoordinate moveCoordinate = playerCoordinate.add(0, y);
 						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
-							addMoveSquare(pGameState, pLeaping, moveCoordinate);
+							addMoveSquare(pGameState, jumping, moveCoordinate);
 						}
 					}
 				} else {
-					int steps = pLeaping ? 2 : 1;
+					int steps = jumping ? 2 : 1;
 					Set<FieldCoordinate> validPassBlockCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
 					FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(playerCoordinate,
 							FieldCoordinateBounds.FIELD, steps, false);
@@ -108,16 +108,16 @@ public class UtilServerPlayerMove {
 										|| ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game,
 												actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(),
 												UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)))) {
-									addMoveSquare(pGameState, pLeaping, coordinate);
+									addMoveSquare(pGameState, jumping, coordinate);
 								}
 							} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
 								FieldCoordinateBounds bounds = game.isHomePlaying() ? FieldCoordinateBounds.HALF_HOME
 										: FieldCoordinateBounds.HALF_AWAY;
 								if (bounds.isInBounds(coordinate)) {
-									addMoveSquare(pGameState, pLeaping, coordinate);
+									addMoveSquare(pGameState, jumping, coordinate);
 								}
 							} else {
-								addMoveSquare(pGameState, pLeaping, coordinate);
+								addMoveSquare(pGameState, jumping, coordinate);
 							}
 						}
 					}
@@ -126,7 +126,7 @@ public class UtilServerPlayerMove {
 		}
 	}
 
-	private static void addMoveSquare(GameState pGameState, boolean pLeaping, FieldCoordinate pCoordinate) {
+	private static void addMoveSquare(GameState pGameState, boolean jumping, FieldCoordinate pCoordinate) {
 		Game game = pGameState.getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -136,10 +136,10 @@ public class UtilServerPlayerMove {
 		boolean dodging = !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenMoving)
 				&& (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-		if (pLeaping) {
-			LeapModifierFactory modifierFactory = new LeapModifierFactory();
-			Set<LeapModifier> leapModifiers = modifierFactory.findModifiers(new LeapContext(game, actingPlayer.getPlayer()));
-			minimumRollDodge = mechanic.minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
+		if (jumping) {
+			JumpModifierFactory modifierFactory = new JumpModifierFactory();
+			Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer()));
+			minimumRollDodge = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 			if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
 					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
 				goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > actingPlayer.getPlayer().getMovementWithModifiers());

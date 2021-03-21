@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.IRollModifierFactory;
 import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
-import com.balancedbytes.games.ffb.factory.LeapModifierFactory;
+import com.balancedbytes.games.ffb.factory.JumpModifierFactory;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.factory.PickupModifierFactory;
 import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
@@ -168,8 +168,8 @@ public class ReportSkillRoll implements IReport {
 			return source.<GoForItModifierFactory>getFactory(Factory.GO_FOR_IT_MODIFIER);
 		case INTERCEPTION_ROLL:
 			return source.<InterceptionModifierFactory>getFactory(Factory.INTERCEPTION_MODIFIER);
-		case LEAP_ROLL:
-			return source.<LeapModifierFactory>getFactory(Factory.LEAP_MODIFIER);
+		case JUMP_ROLL:
+			return source.<JumpModifierFactory>getFactory(Factory.JUMP_MODIFIER);
 		case PASS_ROLL:
 		case THROW_TEAM_MATE_ROLL:
 			return source.<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);

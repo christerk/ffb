@@ -62,11 +62,11 @@ public class UtilServerSteps {
 				&& pActingPlayerCommand.getActingPlayerId().equals(actingPlayer.getPlayerId()));
 	}
 
-	public static void changePlayerAction(IStep pStep, String pPlayerId, PlayerAction pPlayerAction, boolean pLeaping) {
+	public static void changePlayerAction(IStep pStep, String pPlayerId, PlayerAction pPlayerAction, boolean jumping) {
 		ActingPlayer actingPlayer = pStep.getGameState().getGame().getActingPlayer();
-		UtilServerGame.changeActingPlayer(pStep, pPlayerId, pPlayerAction, pLeaping);
+		UtilServerGame.changeActingPlayer(pStep, pPlayerId, pPlayerAction, jumping);
 		if (StringTool.isProvided(pPlayerId)) {
-			UtilServerPlayerMove.updateMoveSquares(pStep.getGameState(), actingPlayer.isLeaping());
+			UtilServerPlayerMove.updateMoveSquares(pStep.getGameState(), actingPlayer.isJumping());
 			ServerUtilBlock.updateDiceDecorations(pStep.getGameState().getGame());
 		}
 	}

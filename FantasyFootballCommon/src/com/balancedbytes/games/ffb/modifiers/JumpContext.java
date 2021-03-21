@@ -3,11 +3,11 @@ package com.balancedbytes.games.ffb.modifiers;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
-public class LeapContext implements ModifierContext {
+public class JumpContext implements ModifierContext {
 	private final Game game;
 	private final Player<?> player;
 
-	public LeapContext(Game game, Player<?> player) {
+	public JumpContext(Game game, Player<?> player) {
 		this.game = game;
 		this.player = player;
 	}

@@ -430,7 +430,7 @@ public class UtilPlayer {
 					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
 				nextMoveGoingForIt = (3 >= player.getMovementWithModifiers());
 			} else {
-				if (actingPlayer.isLeaping()) {
+				if (actingPlayer.isJumping()) {
 					nextMoveGoingForIt = ((actingPlayer.getCurrentMove() + 1) >= player.getMovementWithModifiers());
 				} else {
 					nextMoveGoingForIt = (actingPlayer.getCurrentMove() >= player.getMovementWithModifiers());
@@ -453,19 +453,19 @@ public class UtilPlayer {
 		return nextMoveDodge;
 	}
 
-	public static boolean isNextMovePossible(Game pGame, boolean pLeaping) {
+	public static boolean isNextMovePossible(Game pGame, boolean jumping) {
 		boolean movePossible = false;
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if ((playerState != null) && playerState.isAbleToMove()) {
 			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
-				movePossible = pLeaping ? (actingPlayer.getCurrentMove() < 2) : (actingPlayer.getCurrentMove() < 3);
+				movePossible = jumping ? (actingPlayer.getCurrentMove() < 2) : (actingPlayer.getCurrentMove() < 3);
 			} else {
 				int extraMove = 0;
 				if (actingPlayer.isGoingForIt()) {
 					boolean canMakeAnExtraGfi = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi);
 					extraMove = canMakeAnExtraGfi ? 3 : 2;
-					if (pLeaping) {
+					if (jumping) {
 						extraMove--;
 					}
 				}

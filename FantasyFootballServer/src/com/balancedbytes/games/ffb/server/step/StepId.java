@@ -89,7 +89,7 @@ public enum StepId implements INamedObject {
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff
 	KICKOFF_RETURN("kickoffReturn"), // phase.kickoff
 	KICKOFF_SCATTER_ROLL("kickoffScatterRoll"), // phase.kickoff
-	LEAP("leap"), // action.move
+	JUMP("leap"), // action.move
 	MISSED_PASS("missedPass"), // action.pass
 	MOVE("move"), // action.move
 	MOVE_BALL_AND_CHAIN("moveBallAndChain"), // action.move

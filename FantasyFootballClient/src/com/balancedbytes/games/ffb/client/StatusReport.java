@@ -1464,30 +1464,30 @@ public class StatusReport {
 		println(getIndent() + 1, TextStyle.NONE, status.toString());
 	}
 
-	public void reportLeap(ReportSkillRoll pReport) {
+	public void reportJump(ReportSkillRoll pReport) {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
 		Player<?> player = game.getActingPlayer().getPlayer();
-		status.append("Leap Roll [ ").append(pReport.getRoll()).append(" ]");
+		status.append("Jump Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		print(getIndent() + 1, false, player);
 		if (pReport.isSuccessful()) {
 			status = new StringBuilder();
-			status.append(" leaps over ").append(player.getPlayerGender().getGenitive()).append(" opponents.");
+			status.append(" jumps over ").append(player.getPlayerGender().getGenitive()).append(" opponents.");
 			println(getIndent() + 1, status.toString());
 			if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
 				neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
 			}
 		} else {
-			println(getIndent() + 1, " trips while leaping.");
+			println(getIndent() + 1, " trips while jumping.");
 			if (!pReport.isReRolled() && fShowModifiersOnFailure) {
 				neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
 			}
 		}
 		if (neededRoll != null) {
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-			neededRoll.append(mechanic.formatLeapResult(pReport, player));
+			neededRoll.append(mechanic.formatJumpResult(pReport, player));
 			println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -2923,8 +2923,8 @@ public class StatusReport {
 				case INTERCEPTION_ROLL:
 					reportInterception((ReportInterceptionRoll) report);
 					break;
-				case LEAP_ROLL:
-					reportLeap((ReportSkillRoll) report);
+				case JUMP_ROLL:
+					reportJump((ReportSkillRoll) report);
 					break;
 				case PASS_ROLL:
 					reportPass((ReportPassRoll) report);

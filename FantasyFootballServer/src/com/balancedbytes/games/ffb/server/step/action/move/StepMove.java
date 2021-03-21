@@ -90,7 +90,7 @@ public class StepMove extends AbstractStep {
 		PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
 		if (!playerState.isRooted()) {
 			TrackNumber trackNumber = new TrackNumber(fCoordinateFrom, actingPlayer.getCurrentMove());
-			actingPlayer.setCurrentMove(game.getActingPlayer().getCurrentMove() + (actingPlayer.isLeaping() ? 2 : 1));
+			actingPlayer.setCurrentMove(game.getActingPlayer().getCurrentMove() + (actingPlayer.isJumping() ? 2 : 1));
 			game.getFieldModel().add(trackNumber);
 			boolean ballPositionUpdated = game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(),
 					fCoordinateTo);

@@ -69,13 +69,13 @@ public class ModifierAggregator {
 			.collect(Collectors.toSet());
 	}
 
-	public Set<LeapModifier> getLeapModifiers() {
+	public Set<JumpModifier> getJumpModifiers() {
 		return Stream.concat(
-				skillFactory.getSkills().stream().flatMap(skill -> skill.getLeapModifiers().stream()),
+				skillFactory.getSkills().stream().flatMap(skill -> skill.getJumpModifiers().stream()),
 				Arrays.stream(UtilCards.findAllActiveCards(game))
 						.flatMap(card -> card.rollModifiers().stream())
-						.filter(modifier -> modifier instanceof LeapModifier)
-						.map(modifier -> (LeapModifier)modifier))
+						.filter(modifier -> modifier instanceof JumpModifier)
+						.map(modifier -> (JumpModifier)modifier))
 				.collect(Collectors.toSet());
 	}
 

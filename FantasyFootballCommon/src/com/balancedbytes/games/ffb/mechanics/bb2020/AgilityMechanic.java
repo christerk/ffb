@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.mechanics.bb2020;
 
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.mechanics.Wording;
@@ -42,8 +42,8 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	}
 
 	@Override
-	public int minimumRollLeap(Player<?> pPlayer, Set<LeapModifier> pLeapModifiers) {
-		return minimumRoll(pPlayer.getAgilityWithModifiers(), pLeapModifiers);
+	public int minimumRollJump(Player<?> pPlayer, Set<JumpModifier> pJumpModifiers) {
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pJumpModifiers);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	}
 
 	@Override
-	public String formatLeapResult(ReportSkillRoll report, Player<?> player) {
+	public String formatJumpResult(ReportSkillRoll report, Player<?> player) {
 		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 

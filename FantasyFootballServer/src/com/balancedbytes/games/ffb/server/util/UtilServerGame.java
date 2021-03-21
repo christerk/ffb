@@ -68,10 +68,10 @@ public class UtilServerGame {
 	}
 
 	public static void changeActingPlayer(IStep pStep, String pActingPlayerId, PlayerAction pPlayerAction,
-	                                      boolean pLeaping) {
+	                                      boolean jumping) {
 		Game game = pStep.getGameState().getGame();
 		PlayerAction oldPlayerAction = game.getActingPlayer().getPlayerAction();
-		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, pPlayerAction, pLeaping) && (pPlayerAction != null)
+		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, pPlayerAction, jumping) && (pPlayerAction != null)
 			&& ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
 			if (oldPlayerAction == null) {
 				pStep.getResult().setSound(SoundId.CLICK);

@@ -163,14 +163,14 @@ public class StepEndBlocking extends AbstractStep {
 						&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)
 						&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
-					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());
-					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 					// this may happen for ball and chain
 				} else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
 						&& UtilPlayer.isNextMovePossible(game, false)) {
-					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 					// this may happen on a failed bloodlust roll

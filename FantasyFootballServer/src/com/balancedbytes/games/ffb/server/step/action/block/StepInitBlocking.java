@@ -122,7 +122,7 @@ public class StepInitBlocking extends AbstractStep {
 				ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 				if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
 					UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 				} else {
 					fEndPlayerAction = true;
 				}
@@ -162,7 +162,7 @@ public class StepInitBlocking extends AbstractStep {
 				game.getFieldModel().setPlayerState(defender, oldDefenderState.changeBase(PlayerState.BLOCKED));
 				if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.BLITZ,
-							actingPlayer.isLeaping());
+							actingPlayer.isJumping());
 				}
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}

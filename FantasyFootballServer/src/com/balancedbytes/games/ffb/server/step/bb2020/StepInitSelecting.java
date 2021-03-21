@@ -116,11 +116,11 @@ public final class StepInitSelecting extends AbstractStep {
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
 						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
-							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
 						} else {
 							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 						}
 					} else {
 						fEndPlayerAction = true;
@@ -319,7 +319,7 @@ public final class StepInitSelecting extends AbstractStep {
 					actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 					// go-for-it
 				}
-				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 			}
 		}
 	}

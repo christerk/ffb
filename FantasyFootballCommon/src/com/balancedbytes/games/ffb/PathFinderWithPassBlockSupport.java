@@ -22,13 +22,13 @@ public class PathFinderWithPassBlockSupport {
 
 	private static class PathFindContext {
 		public boolean blockTacklezones = true;
-		public boolean allowLeap = false;
+		public boolean allowJump = false;
 		public boolean allowExitEndzoneWithBall = false;
 	}
 
 	private static PathFindState globalState;
 	private static PathFindState normalState;
-	private static PathFindState leapState;
+	private static PathFindState jumpState;
 
 	private static PathFindContext normalMoveContext;
 	private static PathFindContext passBlockContext;
@@ -36,17 +36,17 @@ public class PathFinderWithPassBlockSupport {
 	static {
 		passBlockContext = new PathFindContext();
 		passBlockContext.blockTacklezones = false;
-		passBlockContext.allowLeap = true;
+		passBlockContext.allowJump = true;
 		passBlockContext.allowExitEndzoneWithBall = true;
 
 		normalMoveContext = new PathFindContext();
 		normalMoveContext.blockTacklezones = true;
-		normalMoveContext.allowLeap = false;
+		normalMoveContext.allowJump = false;
 		normalMoveContext.allowExitEndzoneWithBall = false;
 
 		globalState = new PathFindState();
 		normalState = new PathFindState();
-		leapState = new PathFindState();
+		jumpState = new PathFindState();
 	}
 
 	private static class PathFindNode implements Comparable<PathFindNode> {
@@ -138,7 +138,7 @@ public class PathFinderWithPassBlockSupport {
 		public PathFindData() {
 			nodes = new Hashtable<PathFindState, PathFinderWithPassBlockSupport.PathFindNode[][]>();
 			nodes.put(normalState, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
-			nodes.put(leapState, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
+			nodes.put(jumpState, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
 		}
 
 		public PathFindNode blockNode(FieldCoordinate coordinate) {
@@ -216,7 +216,7 @@ public class PathFinderWithPassBlockSupport {
 	 * @return Shortest path to target squares.
 	 */
 	private static FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate start, Set<FieldCoordinate> pEndCoords,
-			int maxDistance, Team movingTeam, PathFindContext context, boolean canLeap) {
+			int maxDistance, Team movingTeam, PathFindContext context, boolean canJump) {
 
 		// Sanity check
 		if (pGame == null) {
@@ -313,7 +313,7 @@ public class PathFinderWithPassBlockSupport {
 			boolean isInEndzone = endzoneBounds.isInBounds(current.coord);
 
 			// For each neighbour of the square we're processing...
-			int searchDistance = canLeap && current.state != leapState && context.allowLeap
+			int searchDistance = canJump && current.state != jumpState && context.allowJump
 					&& maxDistance - current.distance > 1 ? 2 : 1;
 			FieldCoordinate[] neighbours = fieldModel.findAdjacentCoordinates(current.coord, FieldCoordinateBounds.FIELD,
 					searchDistance, false);
@@ -321,14 +321,14 @@ public class PathFinderWithPassBlockSupport {
 
 				int distance = current.coord.distanceInSteps(neighbourCoord);
 
-				// Don't allow a leap if the context explicitly disallows it, if the path
-				// already has lept before or if the player can't leap
-				if (distance > 1 && (maxDistance - current.distance - distance < 0 || current.state == leapState
-						|| !context.allowLeap || !canLeap))
+				// Don't allow a jump if the context explicitly disallows it, if the path
+				// already has jumped before or if the player can't jump
+				if (distance > 1 && (maxDistance - current.distance - distance < 0 || current.state == jumpState
+						|| !context.allowJump || !canJump))
 					continue;
 
 				// Get the state of the next coordinate.
-				PathFindState neighbourState = distance == 1 ? current.state : leapState;
+				PathFindState neighbourState = distance == 1 ? current.state : jumpState;
 
 				// Get the neighbour node from the cache if it exists
 				neighbour = data.getNeighbour(neighbourState, neighbourCoord);
@@ -376,7 +376,7 @@ public class PathFinderWithPassBlockSupport {
 	}
 
 	public static FieldCoordinate[] allowPassBlockMove(Game pGame, Player<?> passBlocker, FieldCoordinate startPosition,
-			int distance, boolean canLeap) {
+			int distance, boolean canJump) {
 		// Skip if the player doesn't have pass block
 
 		if (!passBlocker.hasSkillProperty(NamedProperties.canMoveWhenOpponentPasses)) {
@@ -388,7 +388,7 @@ public class PathFinderWithPassBlockSupport {
 
 		// Pathfind to the interception coordinates
 		FieldCoordinate[] path = getShortestPath(pGame, startPosition, validEndCoordinates, distance, passBlocker.getTeam(),
-				passBlockContext, canLeap);
+				passBlockContext, canJump);
 
 		// If we have a path, the player can intercept.
 		return path;
