@@ -2,18 +2,16 @@ package com.balancedbytes.games.ffb.client.state;
 
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.client.util.UtilClientStateBlocking;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -94,8 +92,7 @@ public class ClientStateBlitz extends ClientStateMove {
 				communication.sendActingPlayer(null, null, false);
 				break;
 			case IPlayerPopupMenuKeys.KEY_JUMP:
-				if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-						&& UtilPlayer.isNextMovePossible(game, false)) {
+				if (isJumpAvailableAsNextMove(game, actingPlayer,false)) {
 					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 				}
 				break;

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.client.state;
 
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RangeRuler;
@@ -9,7 +10,6 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
@@ -19,7 +19,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
@@ -212,8 +211,7 @@ public class ClientStatePass extends ClientStateMove {
 			menuItemList.add(hailMaryPassAction);
 		}
 
-		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-				&& UtilPlayer.isNextMovePossible(game, false)) {
+		if (isJumpAvailableAsNextMove(game, actingPlayer,false)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem("Don't Jump",
 						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));

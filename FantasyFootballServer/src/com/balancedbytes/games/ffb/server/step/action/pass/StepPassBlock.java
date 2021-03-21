@@ -10,6 +10,8 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPassBlockParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.JumpMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -288,13 +290,13 @@ public class StepPassBlock extends AbstractStep {
 		Set<Player<?>> passBlockers = new HashSet<>();
 		Game game = getGameState().getGame();
 		Player<?>[] players = pTeam.getPlayers();
+		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 		for (Player<?> player : players) {
 			if (player.hasSkillProperty(NamedProperties.canMoveWhenOpponentPasses)) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
 				if (!pCheckCanReach || (playerState.hasTacklezones()
-						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player, startPosition, 3,
-								player.hasSkillProperty(NamedProperties.canLeap))))) {
+						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player, startPosition, 3, mechanic.canJump(player))))) {
 					passBlockers.add(player);
 				}
 			}

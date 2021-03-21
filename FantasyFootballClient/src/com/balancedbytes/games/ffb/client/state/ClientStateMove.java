@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.client.state;
 
 import com.balancedbytes.games.ffb.ClientStateId;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.MoveSquare;
@@ -18,12 +19,13 @@ import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
 import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
+import com.balancedbytes.games.ffb.mechanics.JumpMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -44,6 +46,11 @@ public class ClientStateMove extends ClientState {
 
 	public ClientStateId getId() {
 		return ClientStateId.MOVE;
+	}
+
+	protected boolean isJumpAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {
+		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+		return mechanic.isAvailableAsNextMove(game, actingPlayer, jumping);
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
@@ -125,7 +132,8 @@ public class ClientStateMove extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
-			if (actingPlayer.hasActed() || pPlayer.hasSkillProperty(NamedProperties.canLeap)
+			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+			if (actingPlayer.hasActed() || mechanic.canJump(pPlayer)
 					|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
 					|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 					|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -158,8 +166,7 @@ public class ClientStateMove extends ClientState {
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_JUMP:
-				if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-						&& UtilPlayer.isNextMovePossible(game, false)) {
+				if (isJumpAvailableAsNextMove(game, actingPlayer,false)) {
 					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 				}
 				break;
@@ -237,8 +244,7 @@ public class ClientStateMove extends ClientState {
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
 		}
-		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-				&& UtilPlayer.isNextMovePossible(game, true)) {
+		if (isJumpAvailableAsNextMove(game, actingPlayer,true)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem("Don't Jump",
 						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));

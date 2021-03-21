@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.factory.JumpModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.JumpMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
@@ -28,7 +29,6 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -100,6 +100,8 @@ public class UtilServerPlayerMove {
 					Set<FieldCoordinate> validPassBlockCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
 					FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(playerCoordinate,
 							FieldCoordinateBounds.FIELD, steps, false);
+					JumpMechanic mechanic = (JumpMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+					boolean canStillJump = mechanic.canStillJump(actingPlayer);
 					for (FieldCoordinate coordinate : adjacentCoordinates) {
 						if (fieldModel.getPlayer(coordinate) == null) {
 							if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
@@ -107,7 +109,7 @@ public class UtilServerPlayerMove {
 								if (validPassBlockCoordinates.contains(coordinate)
 										|| ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game,
 												actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(),
-												UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)))) {
+												canStillJump))) {
 									addMoveSquare(pGameState, jumping, coordinate);
 								}
 							} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {

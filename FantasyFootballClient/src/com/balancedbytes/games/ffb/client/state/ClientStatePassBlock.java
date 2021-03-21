@@ -19,10 +19,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
-import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -71,8 +68,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 			switch (pMenuKey) {
 			case IPlayerPopupMenuKeys.KEY_JUMP:
 				if ((actingPlayer.getPlayer() != null)
-						&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-						&& UtilPlayer.isNextMovePossible(game, false)) {
+						&& isJumpAvailableAsNextMove(game, actingPlayer,false)) {
 					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 				}
 				break;
@@ -100,8 +96,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 			menuItemList.add(moveAction);
 		}
 		if ((actingPlayer.getPlayer() != null)
-				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-				&& UtilPlayer.isNextMovePossible(game, false)) {
+				&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem("Don't Jump",
 						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
