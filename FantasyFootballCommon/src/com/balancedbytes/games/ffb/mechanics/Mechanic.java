@@ -12,6 +12,6 @@ public interface Mechanic extends INamedObject {
 	}
 
 	enum Type {
-		AGILITY, GAME, STAT, PASS;
+		AGILITY, GAME, JUMP, STAT, PASS;
 	}
 }
