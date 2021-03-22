@@ -296,7 +296,7 @@ public class StepPassBlock extends AbstractStep {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
 				if (!pCheckCanReach || (playerState.hasTacklezones()
-						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player, startPosition, 3, mechanic.canJump(player))))) {
+						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player, startPosition, 3, mechanic.canJump(game, player, startPosition))))) {
 					passBlockers.add(player);
 				}
 			}

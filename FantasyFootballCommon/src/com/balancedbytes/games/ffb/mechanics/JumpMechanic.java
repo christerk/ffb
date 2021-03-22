@@ -13,9 +13,9 @@ public abstract class JumpMechanic implements Mechanic {
 
 	public abstract boolean isAvailableAsNextMove(Game game, ActingPlayer player, boolean jumping);
 
-	public abstract boolean canStillJump(ActingPlayer actingPlayer);
+	public abstract boolean canStillJump(Game game, ActingPlayer actingPlayer);
 
-	public abstract boolean canJump(Player<?> player);
+	public abstract boolean canJump(Game game, Player<?> player, FieldCoordinate coordinate);
 
 	public abstract boolean isValidJump(Game game, FieldCoordinate from, FieldCoordinate to);
 }

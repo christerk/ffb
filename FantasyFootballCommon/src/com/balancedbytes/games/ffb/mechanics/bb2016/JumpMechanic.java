@@ -13,16 +13,16 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 public class JumpMechanic extends com.balancedbytes.games.ffb.mechanics.JumpMechanic {
 	@Override
 	public boolean isAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {
-		return canStillJump(actingPlayer) && UtilPlayer.isNextMovePossible(game, jumping);
+		return canStillJump(game, actingPlayer) && UtilPlayer.isNextMovePossible(game, jumping);
 	}
 
 	@Override
-	public boolean canStillJump(ActingPlayer actingPlayer) {
+	public boolean canStillJump(Game game, ActingPlayer actingPlayer) {
 		return UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap);
 	}
 
 	@Override
-	public boolean canJump(Player<?> player) {
+	public boolean canJump(Game game, Player<?> player, FieldCoordinate coordinate) {
 		return player.hasSkillProperty(NamedProperties.canLeap);
 	}
 

@@ -101,7 +101,7 @@ public class UtilServerPlayerMove {
 					FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(playerCoordinate,
 							FieldCoordinateBounds.FIELD, steps, false);
 					JumpMechanic mechanic = (JumpMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-					boolean canStillJump = mechanic.canStillJump(actingPlayer);
+					boolean canStillJump = mechanic.canStillJump(game, actingPlayer);
 					for (FieldCoordinate coordinate : adjacentCoordinates) {
 						if (fieldModel.getPlayer(coordinate) == null) {
 							if (game.getTurnMode() == TurnMode.PASS_BLOCK) {

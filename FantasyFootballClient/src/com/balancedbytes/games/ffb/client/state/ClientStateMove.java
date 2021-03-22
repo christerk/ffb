@@ -131,9 +131,10 @@ public class ClientStateMove extends ClientState {
 	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate position = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		if (pPlayer == actingPlayer.getPlayer()) {
 			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-			if (actingPlayer.hasActed() || mechanic.canJump(pPlayer)
+			if (actingPlayer.hasActed() || mechanic.canJump(game, pPlayer, position)
 					|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
 					|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 					|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
