@@ -133,6 +133,12 @@ public class UtilServerPlayerMove {
 		FieldModel fieldModel = game.getFieldModel();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
+
+		JumpMechanic jumpMechanic = (JumpMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+		if (jumping && !jumpMechanic.isValidJump(game, playerCoordinate, pCoordinate)) {
+			return;
+		}
+
 		boolean goForIt;
 		int minimumRollDodge = 0;
 		boolean dodging = !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenMoving)

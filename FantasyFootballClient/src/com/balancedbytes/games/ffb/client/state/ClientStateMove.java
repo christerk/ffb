@@ -274,7 +274,7 @@ public class ClientStateMove extends ClientState {
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 			menuItemList.add(endMoveAction);
 		}
-		createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
 

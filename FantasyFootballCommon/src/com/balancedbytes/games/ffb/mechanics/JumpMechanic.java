@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.mechanics;
 
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -15,4 +16,6 @@ public abstract class JumpMechanic implements Mechanic {
 	public abstract boolean canStillJump(ActingPlayer actingPlayer);
 
 	public abstract boolean canJump(Player<?> player);
+
+	public abstract boolean isValidJump(Game game, FieldCoordinate from, FieldCoordinate to);
 }
