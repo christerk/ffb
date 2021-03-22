@@ -1,13 +1,8 @@
 package com.balancedbytes.games.ffb.client.handler;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.SwingUtilities;
-
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
@@ -24,6 +19,10 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandGameState;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.StringTool;
+
+import javax.swing.SwingUtilities;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -113,7 +112,6 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 			});
 		}
 
-		game.initializeRules();
 		return true;
 
 	}
