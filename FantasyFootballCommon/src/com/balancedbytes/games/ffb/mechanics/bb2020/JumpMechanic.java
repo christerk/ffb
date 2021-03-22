@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.mechanics.bb2016;
+package com.balancedbytes.games.ffb.mechanics.bb2020;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class JumpMechanic extends com.balancedbytes.games.ffb.mechanics.JumpMechanic {
 	@Override
 	public boolean isAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {
