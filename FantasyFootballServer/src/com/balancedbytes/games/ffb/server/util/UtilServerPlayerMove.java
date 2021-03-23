@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.util;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
@@ -145,7 +146,7 @@ public class UtilServerPlayerMove {
 				&& (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		if (jumping) {
-			JumpModifierFactory modifierFactory = new JumpModifierFactory();
+			JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
 			Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer()));
 			minimumRollDodge = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 			if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()

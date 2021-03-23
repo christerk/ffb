@@ -1,5 +1,11 @@
 package com.balancedbytes.games.ffb.util;
 
+import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.IKeyedItem;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.model.GameOptions;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -10,12 +16,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.IKeyedItem;
-import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.GameOptions;
 
 public class Scanner<T extends IKeyedItem> {
 	private final RawScanner<T> rawScanner;
@@ -31,13 +31,13 @@ public class Scanner<T extends IKeyedItem> {
 		return filterClasses(options, classes);
 	}
 
-	public Collection<T> getClassesImplementing(GameOptions options) {
+	public Collection<T> getInstancesImplementing(GameOptions options) {
 		Set<Class<T>> classes = rawScanner.getClassesImplementing();
 
 		return filterClasses(options, classes);
 	}
 
-	public Collection<Class<T>> getClassObjectsImplementing(GameOptions options) {
+	public Collection<Class<T>> getClassesImplementing(GameOptions options) {
 		return rawScanner.getClassesImplementing().stream().filter(cls ->
 			Arrays.stream(cls.getAnnotations()).anyMatch(annotation ->
 				annotation instanceof RulesCollection

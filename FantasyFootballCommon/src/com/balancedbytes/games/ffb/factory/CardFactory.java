@@ -43,7 +43,7 @@ public class CardFactory implements INamedObjectFactory<Card> {
 
 	@Override
 	public void initialize(Game game) {
-		new Scanner<>(Cards.class).getClassesImplementing(game.getOptions()).stream().findFirst()
+		new Scanner<>(Cards.class).getInstancesImplementing(game.getOptions()).stream().findFirst()
 			.ifPresent(instance -> this.cards = instance);
 	}
 

@@ -33,7 +33,7 @@ public class CardTypeFactory implements INamedObjectFactory<CardType> {
 	@Override
 	public void initialize(Game game) {
 		new Scanner<>(com.balancedbytes.games.ffb.inducement.CardType.class)
-			.getClassObjectsImplementing(game.getOptions()).stream().findFirst()
+			.getClassesImplementing(game.getOptions()).stream().findFirst()
 			.ifPresent(cls -> cardTypes.addAll(Arrays.asList(cls.getEnumConstants())));
 	}
 

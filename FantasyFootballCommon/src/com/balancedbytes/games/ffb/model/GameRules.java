@@ -1,13 +1,13 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.FactoryManager;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
+
+import java.util.Map;
 
 public class GameRules implements IFactorySource {
 
@@ -18,10 +18,10 @@ public class GameRules implements IFactorySource {
 	public GameRules(IFactorySource applicationSource, FactoryManager manager) {
 		this.manager = manager;
 		this.applicationSource = applicationSource;
-		factories = manager.getFactoriesForContext(getContext());
 	}
 	
 	public void initialize(Game game) {
+		factories = manager.getFactoriesForContext(getContext(), game.getOptions());
 		for (INamedObjectFactory factory : factories.values()) {
 			factory.initialize(game);
 		}

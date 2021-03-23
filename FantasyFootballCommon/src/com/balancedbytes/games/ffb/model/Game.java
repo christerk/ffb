@@ -107,8 +107,9 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	}
 
 	public void initializeRules() {
-		modifierAggregator = new ModifierAggregator(this);
+		modifierAggregator = new ModifierAggregator();
 		rules.initialize(this);
+		modifierAggregator.init(this);
 	}
 
 	public ModifierAggregator getModifierAggregator() {

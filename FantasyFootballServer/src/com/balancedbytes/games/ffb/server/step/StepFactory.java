@@ -92,7 +92,7 @@ public class StepFactory {
 
 	private void initialize() {
 
-		new Scanner<>(IStep.class).getClassObjectsImplementing(fGameState.getGame().getOptions())
+		new Scanner<>(IStep.class).getClassesImplementing(fGameState.getGame().getOptions())
 			.forEach(stepClass -> {
 
 				try {

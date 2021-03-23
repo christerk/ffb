@@ -11,12 +11,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModifierAggregator {
-	private final SkillFactory skillFactory;
-	private final Game game;
+	private SkillFactory skillFactory;
+	private Game game;
 
-	public ModifierAggregator(Game game) {
+	public void init(Game game) {
 		this.game = game;
 		this.skillFactory = game.getFactory(FactoryType.Factory.SKILL);
+
 	}
 
 	public Set<CatchModifier> getCatchModifiers() {

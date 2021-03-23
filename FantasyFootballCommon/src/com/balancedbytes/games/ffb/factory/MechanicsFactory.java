@@ -31,7 +31,7 @@ public class MechanicsFactory implements INamedObjectFactory<Mechanic> {
 	public void initialize(Game game) {
 		Scanner<Mechanic> scanner = new Scanner<>(Mechanic.class);
 
-		scanner.getClassesImplementing(game.getOptions())
+		scanner.getInstancesImplementing(game.getOptions())
 				.forEach(mechanic -> mechanics.put(mechanic.getType(), mechanic));
 
 		 String missingTypes = Arrays.stream(Mechanic.Type.values())
