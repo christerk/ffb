@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.JumpModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.JumpMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -23,14 +24,13 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.move.StepJump;
+import com.balancedbytes.games.ffb.server.step.bb2016.StepJump;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.skill.Leap;
-import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.skill.bb2016.Leap;
 
 import java.util.Set;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class LeapBehaviour extends SkillBehaviour<Leap> {
 	public LeapBehaviour() {
 		super();
@@ -49,7 +49,8 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 			                                     StepJump.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				boolean doLeap = (actingPlayer.isJumping() && UtilCards.hasUnusedSkill(actingPlayer, skill));
+				JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+				boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
 				if (doLeap) {
 					if (ReRolledActions.JUMP == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)

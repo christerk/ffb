@@ -67,6 +67,9 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_SET_HAS_FOULED:
 				pGame.getActingPlayer().setHasFouled((Boolean) pModelChange.getValue());
 				return true;
+			case ACTING_PLAYER_SET_HAS_JUMPED:
+				pGame.getActingPlayer().setHasJumped((Boolean) pModelChange.getValue());
+				return true;
 			case ACTING_PLAYER_SET_HAS_MOVED:
 				pGame.getActingPlayer().setHasMoved((Boolean) pModelChange.getValue());
 				return true;

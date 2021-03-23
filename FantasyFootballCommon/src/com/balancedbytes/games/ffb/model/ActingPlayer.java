@@ -32,6 +32,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean fHasPassed;
 	private boolean fHasMoved;
 	private boolean fHasFed;
+	private boolean hasJumped;
 	private PlayerAction fPlayerAction;
 	private Set<Skill> fUsedSkills;
 	private boolean fStandingUp;
@@ -68,6 +69,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fStandingUp = false;
 		fSufferingBloodLust = false;
 		fSufferingAnimosity = false;
+		hasJumped = false;
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, fPlayerId);
@@ -142,7 +144,7 @@ public class ActingPlayer implements IJsonSerializable {
 	}
 
 	public Skill[] getUsedSkills() {
-		return (Skill[]) fUsedSkills.toArray(new Skill[fUsedSkills.size()]);
+		return fUsedSkills.toArray(new Skill[0]);
 	}
 
 	public boolean hasBlocked() {
@@ -155,6 +157,18 @@ public class ActingPlayer implements IJsonSerializable {
 		}
 		fHasBlocked = pHasBlocked;
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_BLOCKED, fHasBlocked);
+	}
+
+	public boolean hasJumped() {
+		return hasJumped;
+	}
+
+	public void setHasJumped(boolean hasJumped) {
+		if (this.hasJumped == hasJumped) {
+			return;
+		}
+		this.hasJumped = hasJumped;
+		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_JUMPED, hasJumped);
 	}
 
 	public boolean hasPassed() {
