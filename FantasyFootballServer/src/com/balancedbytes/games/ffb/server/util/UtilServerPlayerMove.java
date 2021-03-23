@@ -135,7 +135,7 @@ public class UtilServerPlayerMove {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 
 		JumpMechanic jumpMechanic = (JumpMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		if (jumping && !jumpMechanic.isValidJump(game, playerCoordinate, pCoordinate)) {
+		if (jumping && !jumpMechanic.isValidJump(game, actingPlayer.getPlayer(), playerCoordinate, pCoordinate)) {
 			return;
 		}
 

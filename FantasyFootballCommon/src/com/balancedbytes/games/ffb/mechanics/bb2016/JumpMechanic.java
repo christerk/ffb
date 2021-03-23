@@ -27,7 +27,7 @@ public class JumpMechanic extends com.balancedbytes.games.ffb.mechanics.JumpMech
 	}
 
 	@Override
-	public boolean isValidJump(Game game, FieldCoordinate from, FieldCoordinate to) {
+	public boolean isValidJump(Game game, Player<?> player, FieldCoordinate from, FieldCoordinate to) {
 		return !to.equals(from) && to.distanceInSteps(from) < 3;
 
 	}
