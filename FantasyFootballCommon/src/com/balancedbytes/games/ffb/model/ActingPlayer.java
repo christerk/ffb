@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -133,6 +134,11 @@ public class ActingPlayer implements IJsonSerializable {
 		}
 		fUsedSkills.add(pSkill);
 		notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, pSkill);
+	}
+
+	public void markSkillUsed(ISkillProperty property) {
+		Skill skill = getPlayer().getSkillWithProperty(property);
+		markSkillUsed(skill);
 	}
 
 	public String getRace() {

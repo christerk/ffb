@@ -28,7 +28,7 @@ public class JumpMechanic extends com.balancedbytes.games.ffb.mechanics.JumpMech
 	@Override
 	public boolean canStillJump(Game game, ActingPlayer actingPlayer) {
 		return UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-			|| hasProneOrStunnedPlayersAdjacent(game, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
+			|| (!actingPlayer.hasJumped() && hasProneOrStunnedPlayersAdjacent(game, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
 	}
 
 	@Override

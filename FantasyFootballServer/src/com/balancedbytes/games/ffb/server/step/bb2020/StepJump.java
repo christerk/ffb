@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.mechanics.JumpMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.JumpContext;
 import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -116,11 +117,13 @@ public class StepJump extends AbstractStepWithReRoll {
 					case SUCCESS:
 						actingPlayer.setJumping(false);
 						actingPlayer.setHasJumped(true);
+						actingPlayer.markSkillUsed(NamedProperties.canLeap);
 						getResult().setNextAction(StepAction.NEXT_STEP);
 						break;
 					case FAILURE:
 						actingPlayer.setJumping(false);
 						actingPlayer.setHasJumped(true);
+						actingPlayer.markSkillUsed(NamedProperties.canLeap);
 						publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
 						getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 						break;
