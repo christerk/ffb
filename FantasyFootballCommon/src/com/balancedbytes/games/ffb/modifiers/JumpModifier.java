@@ -34,7 +34,7 @@ public class JumpModifier extends RollModifier<JumpContext> {
 	}
 
 	public boolean isModifierIncluded() {
-		return false;
+		return type == ModifierType.TACKLEZONE;
 	}
 
 	@Override
