@@ -51,12 +51,12 @@ public abstract class GenerifiedModifierFactory<
 			.findFirst();
 	}
 
-	protected int numberOfTacklzones(C context) {
+	protected int numberOfTacklezones(C context) {
 		return UtilPlayer.findTacklezones(context.getGame(), context.getPlayer());
 	}
 
-	private Optional<V> getTacklezoneModifier(C context) {
-		int tacklezones = numberOfTacklzones(context);
+	protected Optional<V> getTacklezoneModifier(C context) {
+		int tacklezones = numberOfTacklezones(context);
 		return getModifierCollection().getModifiers(ModifierType.TACKLEZONE).stream()
 			.filter(modifier -> modifier.getMultiplier() == tacklezones)
 			.findFirst();

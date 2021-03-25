@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -38,26 +39,22 @@ import java.util.Set;
 
 /**
  * Step in move sequence to handle jumps.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ * <p>
  * Sets stepParameter INJURY_TYPE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepJump extends AbstractStepWithReRoll {
 
-	public class StepState {
-		public String goToLabelOnFailure;
-	}
-
-	private StepState state;
+	private String goToLabelOnFailure;
+	private FieldCoordinate[] moveStack;
 
 	public StepJump(GameState pGameState) {
 		super(pGameState);
 
-		state = new StepState();
 	}
 
 	public StepId getId() {
@@ -69,16 +66,19 @@ public class StepJump extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
-					state.goToLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_FAILURE:
+						goToLabelOnFailure = (String) parameter.getValue();
+						break;
+					case MOVE_STACK:
+						moveStack = (FieldCoordinate[]) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
-		if (state.goToLabelOnFailure == null) {
+		if (goToLabelOnFailure == null) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
 		}
 	}
@@ -108,7 +108,7 @@ public class StepJump extends AbstractStepWithReRoll {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
-					getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+					getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 					doLeap = false;
 				}
 			}
@@ -125,7 +125,7 @@ public class StepJump extends AbstractStepWithReRoll {
 						actingPlayer.setHasJumped(true);
 						actingPlayer.markSkillUsed(NamedProperties.canLeap);
 						publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
-						getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+						getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 						break;
 					default:
 						break;
@@ -142,8 +142,9 @@ public class StepJump extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
+		FieldCoordinate from = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
-		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer()));
+		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer(), from, moveStack[0]));
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 		int roll = getGameState().getDiceRoller().rollSkill();
@@ -170,7 +171,8 @@ public class StepJump extends AbstractStepWithReRoll {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
+		IServerJsonOption.MOVE_STACK.addTo(jsonObject, moveStack);
 		return jsonObject;
 	}
 
@@ -178,7 +180,8 @@ public class StepJump extends AbstractStepWithReRoll {
 	public StepJump initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		moveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
 		return this;
 	}
 

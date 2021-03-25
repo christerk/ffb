@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.JumpContext;
 import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
@@ -23,7 +24,12 @@ public class Leap extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canLeap);
-		registerModifier(new JumpModifier("Leap", 1, ModifierType.REGULAR)); //TODO only apply if marked by more than one
+		registerModifier(new JumpModifier("Leap", 1, ModifierType.REGULAR) {
+			@Override
+			public boolean appliesToContext(Skill skill, JumpContext context) {
+				return context.getTacklezones() > 1;
+			}
+		});
 	}
 
 }

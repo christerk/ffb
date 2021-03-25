@@ -116,7 +116,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 	}
 
 	@Override
-	protected int numberOfTacklzones(DodgeContext context) {
+	protected int numberOfTacklezones(DodgeContext context) {
 		Team team = UtilPlayer.findOtherTeam(context.getGame(), context.getActingPlayer().getPlayer());
 		return UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), team, context.getTargetCoordinate(), false).length;
 	}

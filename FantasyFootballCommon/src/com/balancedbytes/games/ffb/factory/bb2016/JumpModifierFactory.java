@@ -20,9 +20,9 @@ import java.util.stream.Stream;
  */
 @FactoryType(FactoryType.Factory.JUMP_MODIFIER)
 @RulesCollection(Rules.BB2016)
-public class JumpModifierFactory extends com.balancedbytes.games.ffb.factory.JumpModifierFactory {
+public class JumpModifierFactory extends com.balancedbytes.games.ffb.factory.JumpModifierFactory<JumpModifierCollection> {
 
-	private JumpModifierCollection jumpModifierCollection = new JumpModifierCollection();
+	private JumpModifierCollection jumpModifierCollection = new Jum;
 
 	public JumpModifier forName(String name) {
 		return Stream.concat(
