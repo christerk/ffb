@@ -24,7 +24,7 @@ public class Leap extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canLeap);
-		registerModifier(new JumpModifier("Leap", 1, ModifierType.REGULAR) {
+		registerModifier(new JumpModifier("Leap", -1, ModifierType.REGULAR) {
 			@Override
 			public boolean appliesToContext(Skill skill, JumpContext context) {
 				return context.getTacklezones() > 1;

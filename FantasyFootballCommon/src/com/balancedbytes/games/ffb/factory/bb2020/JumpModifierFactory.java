@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.modifiers.JumpContext;
 import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.RollModifier;
-import com.balancedbytes.games.ffb.modifiers.bb2020.JumpModifierCollection;
+import com.balancedbytes.games.ffb.modifiers.JumpModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -24,9 +24,9 @@ import java.util.stream.Stream;
  */
 @FactoryType(FactoryType.Factory.JUMP_MODIFIER)
 @RulesCollection(Rules.BB2020)
-public class JumpModifierFactory extends com.balancedbytes.games.ffb.factory.JumpModifierFactory<JumpModifierCollection> {
+public class JumpModifierFactory extends com.balancedbytes.games.ffb.factory.JumpModifierFactory {
 
-	private JumpModifierCollection jumpModifierCollection = new JumpModifierCollection();
+	private JumpModifierCollection jumpModifierCollection;
 
 	public JumpModifier forName(String name) {
 		return Stream.concat(
