@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2020;
+package com.balancedbytes.games.ffb.server.step.bb2020.move;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -50,7 +50,7 @@ import java.util.Set;
 public class StepJump extends AbstractStepWithReRoll {
 
 	private String goToLabelOnFailure;
-	private FieldCoordinate[] moveStack;
+	private FieldCoordinate moveStart;
 
 	public StepJump(GameState pGameState) {
 		super(pGameState);
@@ -70,8 +70,8 @@ public class StepJump extends AbstractStepWithReRoll {
 					case GOTO_LABEL_ON_FAILURE:
 						goToLabelOnFailure = (String) parameter.getValue();
 						break;
-					case MOVE_STACK:
-						moveStack = (FieldCoordinate[]) parameter.getValue();
+					case MOVE_START:
+						moveStart = (FieldCoordinate) parameter.getValue();
 						break;
 					default:
 						break;
@@ -96,6 +96,15 @@ public class StepJump extends AbstractStepWithReRoll {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.MOVE_START) {
+			moveStart = (FieldCoordinate) parameter.getValue();
+			return true;
+		}
+		return false;
 	}
 
 	private void executeStep() {
@@ -142,9 +151,9 @@ public class StepJump extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
-		FieldCoordinate from = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		FieldCoordinate to = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
-		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer(), from, moveStack[0]));
+		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer(), moveStart, to));
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 		int roll = getGameState().getDiceRoller().rollSkill();
@@ -172,7 +181,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
-		IServerJsonOption.MOVE_STACK.addTo(jsonObject, moveStack);
+		IServerJsonOption.MOVE_START.addTo(jsonObject, moveStart);
 		return jsonObject;
 	}
 
@@ -181,7 +190,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		moveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
+		moveStart = IServerJsonOption.MOVE_START.getFrom(game, jsonObject);
 		return this;
 	}
 

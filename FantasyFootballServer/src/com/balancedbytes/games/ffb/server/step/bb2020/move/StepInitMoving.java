@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.move;
+package com.balancedbytes.games.ffb.server.step.bb2020.move;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -33,8 +33,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -62,7 +62,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepInitMoving extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -140,10 +140,12 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
 					boolean homePlayerBlitz = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
-							&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)
-							&& !ArrayTool.isProvided(fMoveStack)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(getGameState(), blitzMoveCommand, homePlayerBlitz)));
+							&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)) {
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homePlayerBlitz)));
+						if (!ArrayTool.isProvided(fMoveStack)) {
+							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
+								UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homePlayerBlitz)));
+						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -151,10 +153,12 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
 					boolean homePlayer = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
-							&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)
-							&& !ArrayTool.isProvided(fMoveStack)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(getGameState(), moveCommand, homePlayer)));
+							&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)) {
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homePlayer)));
+						if (!ArrayTool.isProvided(fMoveStack)) {
+							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
+								UtilServerPlayerMove.fetchMoveStack(moveCommand, homePlayer)));
+						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;

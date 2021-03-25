@@ -73,6 +73,7 @@ public enum StepParameterKey {
 	KICKOFF_START_COORDINATE, // FieldCoordinate
 	KTM_MODIFIER, // Integer
 	MOVE_STACK, // FieldCoordinate[]
+	MOVE_START, // FieldCoordinate
 	MULTI_BLOCK_DEFENDER_ID, // String
 	NR_OF_DICE, // Integer
 	OLD_DEFENDER_STATE, // PlayerState

@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2016;
+package com.balancedbytes.games.ffb.server.step.bb2020.move;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -19,10 +19,11 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.BlitzBlock;
 import com.balancedbytes.games.ffb.server.step.generator.BlitzMove;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.SelectBlitzTarget;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Block;
-import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.common.Foul;
 import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
 import com.balancedbytes.games.ffb.server.step.generator.common.Move;
@@ -51,7 +52,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepEndSelecting extends AbstractStep {
 
 	private boolean fEndTurn;
@@ -59,6 +60,7 @@ public final class StepEndSelecting extends AbstractStep {
 	private PlayerAction fDispatchPlayerAction;
 	// moveSequence
 	private FieldCoordinate[] fMoveStack;
+	private FieldCoordinate moveStart;
 	private String fGazeVictimId;
 	// blockSequence
 	private String fBlockDefenderId;
@@ -118,6 +120,10 @@ public final class StepEndSelecting extends AbstractStep {
 					fHailMaryPass = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 					consume(pParameter);
 					return true;
+				case MOVE_START:
+					moveStart = (FieldCoordinate) pParameter.getValue();
+					consume(pParameter);
+					return true;
 				case MOVE_STACK:
 					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
 					consume(pParameter);
@@ -156,7 +162,7 @@ public final class StepEndSelecting extends AbstractStep {
 		if (fEndTurn || fEndPlayerAction) {
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
-					.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else if (actingPlayer.isSufferingBloodLust()) {
 			if (fDispatchPlayerAction != null) {
 				if (!fDispatchPlayerAction.isMoving()) {
@@ -166,7 +172,7 @@ public final class StepEndSelecting extends AbstractStep {
 			} else {
 				if ((actingPlayer.getPlayerAction() != null) && !actingPlayer.getPlayerAction().isMoving()) {
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE,
-							actingPlayer.isJumping());
+						actingPlayer.isJumping());
 				}
 				dispatchPlayerAction(actingPlayer.getPlayerAction(), false);
 			}
@@ -184,7 +190,7 @@ public final class StepEndSelecting extends AbstractStep {
 
 		if (pPlayerAction == null) {
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-					.pushSequence(new Select.SequenceParams(getGameState(), false));
+				.pushSequence(new Select.SequenceParams(getGameState(), false));
 			return;
 		}
 		Pass passGenerator = (Pass) factory.forName(SequenceGenerator.Type.Pass.name());
@@ -197,9 +203,13 @@ public final class StepEndSelecting extends AbstractStep {
 		EndPlayerAction.SequenceParams endParams = new EndPlayerAction.SequenceParams(getGameState(), true, true, false);
 		BlitzMove blitzMoveGenerator = (BlitzMove) factory.forName(SequenceGenerator.Type.BlitzMove.name());
 		BlitzBlock blitzBlockGenerator = (BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name());
+		SelectBlitzTarget selectBlitzTarget = (SelectBlitzTarget) factory.forName(SequenceGenerator.Type.SelectBlitzTarget.name());
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pPlayerAction) {
+			case BLITZ_SELECT:
+				selectBlitzTarget.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+				break;
 			case PASS:
 			case HAIL_MARY_PASS:
 			case THROW_BOMB:
@@ -255,14 +265,14 @@ public final class StepEndSelecting extends AbstractStep {
 			case HAND_OVER_MOVE:
 			case GAZE:
 				if (pWithParameter) {
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, moveStart));
 				} else {
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				}
 				break;
 			case BLITZ_MOVE:
 				if (pWithParameter) {
-					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
+					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, moveStart));
 				} else {
 					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
 				}

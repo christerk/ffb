@@ -45,7 +45,7 @@ public class Move extends SequenceGenerator<Move.SequenceParams> {
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN),
 			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
 		sequence.add(StepId.TENTACLES, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_MOVING));
-		sequence.add(StepId.JUMP, from(StepParameterKey.MOVE_STACK, params.pMoveStack), from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
+		sequence.add(StepId.JUMP, from(StepParameterKey.MOVE_START, params.moveStart), from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.MOVE_DODGE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.DIVING_TACKLE, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.RETRY_DODGE));
 		sequence.jump(IStepLabel.SHADOWING);
@@ -70,15 +70,17 @@ public class Move extends SequenceGenerator<Move.SequenceParams> {
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final FieldCoordinate[] pMoveStack;
 		private final String pGazeVictimId;
+		private final FieldCoordinate moveStart;
 
-		public SequenceParams(GameState gameState, FieldCoordinate[] pMoveStack, String pGazeVictimId) {
+		public SequenceParams(GameState gameState, FieldCoordinate[] pMoveStack, String pGazeVictimId, FieldCoordinate moveStart) {
 			super(gameState);
 			this.pMoveStack = pMoveStack;
 			this.pGazeVictimId = pGazeVictimId;
+			this.moveStart = moveStart;
 		}
 
 		public SequenceParams(GameState gameState) {
-			this(gameState, null, null);
+			this(gameState, null, null, null);
 		}
 	}
 }

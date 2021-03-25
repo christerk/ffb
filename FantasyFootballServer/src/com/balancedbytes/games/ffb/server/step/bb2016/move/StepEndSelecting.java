@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2020;
+package com.balancedbytes.games.ffb.server.step.bb2016.move;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -20,7 +20,6 @@ import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.BlitzBlock;
 import com.balancedbytes.games.ffb.server.step.generator.BlitzMove;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
-import com.balancedbytes.games.ffb.server.step.generator.SelectBlitzTarget;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Block;
 import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
@@ -52,7 +51,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepEndSelecting extends AbstractStep {
 
 	private boolean fEndTurn;
@@ -198,13 +197,9 @@ public final class StepEndSelecting extends AbstractStep {
 		EndPlayerAction.SequenceParams endParams = new EndPlayerAction.SequenceParams(getGameState(), true, true, false);
 		BlitzMove blitzMoveGenerator = (BlitzMove) factory.forName(SequenceGenerator.Type.BlitzMove.name());
 		BlitzBlock blitzBlockGenerator = (BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name());
-		SelectBlitzTarget selectBlitzTarget = (SelectBlitzTarget) factory.forName(SequenceGenerator.Type.SelectBlitzTarget.name());
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pPlayerAction) {
-			case BLITZ_SELECT:
-				selectBlitzTarget.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
-				break;
 			case PASS:
 			case HAIL_MARY_PASS:
 			case THROW_BOMB:
@@ -260,14 +255,14 @@ public final class StepEndSelecting extends AbstractStep {
 			case HAND_OVER_MOVE:
 			case GAZE:
 				if (pWithParameter) {
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, null));
 				} else {
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				}
 				break;
 			case BLITZ_MOVE:
 				if (pWithParameter) {
-					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
+					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, null));
 				} else {
 					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
 				}

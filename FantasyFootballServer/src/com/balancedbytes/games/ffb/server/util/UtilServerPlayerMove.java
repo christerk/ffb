@@ -174,18 +174,18 @@ public class UtilServerPlayerMove {
 		fieldModel.add(moveSquare);
 	}
 
-	public static FieldCoordinate[] fetchMoveStack(GameState pGameState, ClientCommandMove pMoveCommand,
-			boolean pHomeCommand) {
-		if ((pGameState == null) || (pMoveCommand == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
+	public static FieldCoordinate[] fetchMoveStack(ClientCommandMove pMoveCommand,
+	                                               boolean pHomeCommand) {
+		if ((pMoveCommand == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
 			return new FieldCoordinate[0];
 		}
 		FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
 		return fetchMoveStack(coordinatesTo, pHomeCommand);
 	}
 
-	public static FieldCoordinate[] fetchMoveStack(GameState pGameState, ClientCommandBlitzMove pMoveCommand,
+	public static FieldCoordinate[] fetchMoveStack(ClientCommandBlitzMove pMoveCommand,
 	                                               boolean pHomeCommand) {
-		if ((pGameState == null) || (pMoveCommand == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
+		if ((pMoveCommand == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
 			return new FieldCoordinate[0];
 		}
 		FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
@@ -204,4 +204,17 @@ public class UtilServerPlayerMove {
 		return moveStack;
 	}
 
+	public static FieldCoordinate fetchFromSquare(ClientCommandMove moveCommand,
+	                                              boolean homeCommand)  {
+		return fetchFromSquare(moveCommand.getCoordinateFrom(), homeCommand);
+	}
+
+	public static FieldCoordinate fetchFromSquare(ClientCommandBlitzMove moveCommand,
+	                                              boolean homeCommand)  {
+		return fetchFromSquare(moveCommand.getCoordinateFrom(), homeCommand);
+	}
+
+	private static FieldCoordinate fetchFromSquare(FieldCoordinate from, boolean homeCommand) {
+		return homeCommand ? from : from.transform();
+	}
 }

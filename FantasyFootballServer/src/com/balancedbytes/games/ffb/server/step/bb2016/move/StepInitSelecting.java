@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2016;
+package com.balancedbytes.games.ffb.server.step.bb2016.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -124,7 +124,7 @@ public final class StepInitSelecting extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homeCommand)) {
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(getGameState(), moveCommand, homeCommand)));
+							UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand)));
 						fDispatchPlayerAction = PlayerAction.MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -134,7 +134,7 @@ public final class StepInitSelecting extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homeCommand)) {
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(getGameState(), blitzMoveCommand, homeCommand)));
+							UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homeCommand)));
 						fDispatchPlayerAction = PlayerAction.BLITZ_MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

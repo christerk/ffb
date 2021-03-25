@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2016;
+package com.balancedbytes.games.ffb.server.step.bb2020.move;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.BlitzBlock;
 import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
@@ -35,6 +36,8 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.Arrays;
+
 /**
  * Last step in move sequence. Consumes all expected stepParameters.
  * <p>
@@ -49,13 +52,14 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepEndMoving extends AbstractStep {
 
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private Boolean fFeedingAllowed;
 	private FieldCoordinate[] fMoveStack;
+	private FieldCoordinate moveStart;
 	private PlayerAction fDispatchPlayerAction;
 	private String fBlockDefenderId;
 
@@ -65,6 +69,14 @@ public class StepEndMoving extends AbstractStep {
 
 	public StepId getId() {
 		return StepId.END_MOVING;
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		super.init(pParameterSet);
+		if (pParameterSet != null) {
+			Arrays.stream(pParameterSet.values()).forEach(this::setParameter);
+		}
 	}
 
 	@Override
@@ -89,6 +101,10 @@ public class StepEndMoving extends AbstractStep {
 					return true;
 				case FEEDING_ALLOWED:
 					fFeedingAllowed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case MOVE_START:
+					moveStart = (FieldCoordinate) pParameter.getValue();
 					consume(pParameter);
 					return true;
 				case MOVE_STACK:
@@ -167,7 +183,7 @@ public class StepEndMoving extends AbstractStep {
 			&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
 			pushSequenceForPlayerAction(actingPlayer.getPlayerAction());
 		} else if (ArrayTool.isProvided(fMoveStack)) {
-			moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null));
+			moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart));
 		} else if (UtilPlayer.isNextMovePossible(game, false)
 			|| ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
@@ -222,7 +238,7 @@ public class StepEndMoving extends AbstractStep {
 				case PASS_MOVE:
 				case HAIL_MARY_PASS:
 					((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
-						.pushSequence(new com.balancedbytes.games.ffb.server.step.generator.Pass.SequenceParams(getGameState()));
+						.pushSequence(new Pass.SequenceParams(getGameState()));
 					return true;
 				case THROW_TEAM_MATE:
 				case THROW_TEAM_MATE_MOVE:

@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -11,6 +8,9 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -56,7 +56,7 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 	}
 
 	public FieldCoordinate[] getCoordinatesTo() {
-		return fCoordinatesTo.toArray(new FieldCoordinate[fCoordinatesTo.size()]);
+		return fCoordinatesTo.toArray(new FieldCoordinate[0]);
 	}
 
 	public FieldCoordinate getCoordinateFrom() {

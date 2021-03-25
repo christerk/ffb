@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2016;
+package com.balancedbytes.games.ffb.server.step.bb2016.move;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;

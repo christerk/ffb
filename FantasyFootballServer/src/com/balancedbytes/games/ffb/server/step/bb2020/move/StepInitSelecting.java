@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2020;
+package com.balancedbytes.games.ffb.server.step.bb2020.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -114,7 +114,7 @@ public final class StepInitSelecting extends AbstractStep {
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
-						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
+						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE && game.getFieldModel().getBlitzState() == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
@@ -131,8 +131,9 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homeCommand)) {
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homeCommand)));
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(getGameState(), moveCommand, homeCommand)));
+							UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand)));
 						fDispatchPlayerAction = PlayerAction.MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -141,8 +142,9 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homeCommand)) {
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homeCommand)));
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(getGameState(), blitzMoveCommand, homeCommand)));
+							UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homeCommand)));
 						fDispatchPlayerAction = PlayerAction.BLITZ_MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

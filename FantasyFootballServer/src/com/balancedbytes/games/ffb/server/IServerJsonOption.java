@@ -96,6 +96,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonObjectOption KICKOFF_BOUNDS = new JsonObjectOption("kickoffBounds");
 	JsonFieldCoordinateOption KICKOFF_START_COORDINATE = new JsonFieldCoordinateOption("kickoffStartCoordinate");
 	JsonStringOption LABEL = new JsonStringOption("label");
+	JsonFieldCoordinateOption MOVE_START = new JsonFieldCoordinateOption("moveStart");
 	JsonFieldCoordinateArrayOption MOVE_STACK = new JsonFieldCoordinateArrayOption("moveStack");
 	JsonIntOption MOVE_STACK_SIZE = new JsonIntOption("moveStackSize");
 	JsonStringOption MULTI_BLOCK_DEFENDER_ID = new JsonStringOption("multiBlockDefenderId");
