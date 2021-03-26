@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  * having an Agility of 4 when making a Dodge roll. This skill may only be used
  * once per turn.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class BreakTackle extends Skill {
 
 	public BreakTackle() {
