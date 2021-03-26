@@ -15,17 +15,19 @@ public class ReportArgueTheCallRoll implements IReport {
 	private String fPlayerId;
 	private boolean fSuccessful;
 	private boolean fCoachBanned;
+	private boolean staysOnPitch;
 	private int fRoll;
 
 	public ReportArgueTheCallRoll() {
 		super();
 	}
 
-	public ReportArgueTheCallRoll(String playerId, boolean successful, boolean coachBanned, int roll) {
+	public ReportArgueTheCallRoll(String playerId, boolean successful, boolean coachBanned, int roll, boolean staysOnPitch) {
 		fPlayerId = playerId;
 		fSuccessful = successful;
 		fCoachBanned = coachBanned;
 		fRoll = roll;
+		this.staysOnPitch = staysOnPitch;
 	}
 
 	public ReportId getId() {
@@ -48,10 +50,13 @@ public class ReportArgueTheCallRoll implements IReport {
 		return fRoll;
 	}
 
-	// transformation
+	public boolean isStaysOnPitch() {
+		return staysOnPitch;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportArgueTheCallRoll(getPlayerId(), isSuccessful(), isCoachBanned(), getRoll());
+		return new ReportArgueTheCallRoll(getPlayerId(), isSuccessful(), isCoachBanned(), getRoll(), staysOnPitch);
 	}
 
 	// JSON serialization
@@ -63,6 +68,7 @@ public class ReportArgueTheCallRoll implements IReport {
 		IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
 		IJsonOption.COACH_BANNED.addTo(jsonObject, fCoachBanned);
 		IJsonOption.ROLL.addTo(jsonObject, fRoll);
+		IJsonOption.STAYS_ON_PITCH.addTo(jsonObject, staysOnPitch);
 		return jsonObject;
 	}
 
@@ -73,6 +79,7 @@ public class ReportArgueTheCallRoll implements IReport {
 		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
 		fCoachBanned = IJsonOption.COACH_BANNED.getFrom(game, jsonObject);
 		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
+		staysOnPitch = IJsonOption.STAYS_ON_PITCH.getFrom(game, jsonObject);
 		return this;
 	}
 

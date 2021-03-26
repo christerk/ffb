@@ -378,6 +378,7 @@ public interface IJsonOption {
 	JsonStringArrayOption STAR_PLAYER_POSTION_IDS = new JsonStringArrayOption("starPlayerPositionIds");
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
+	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");
 	JsonBooleanOption SUCCESSFUL = new JsonBooleanOption("successful");
 	JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");

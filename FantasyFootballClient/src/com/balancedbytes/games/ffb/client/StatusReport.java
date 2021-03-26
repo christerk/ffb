@@ -1409,8 +1409,12 @@ public class StatusReport {
 			print(getIndent() + 1, TextStyle.NONE, "The ref refrains from banning ");
 			print(getIndent() + 1, false, player);
 			status = new StringBuilder();
-			status.append(" and ").append(player.getPlayerGender().getNominative())
-				.append(" is sent to the reserve instead.");
+			status.append(" and ").append(player.getPlayerGender().getNominative());
+			if (report.isStaysOnPitch()) {
+				status.append(" stays on the pitch.");
+			} else {
+				status.append(" is sent to the reserve instead.");
+			}
 			println(getIndent() + 1, TextStyle.NONE, status.toString());
 		} else {
 			print(getIndent() + 1, TextStyle.NONE, "The ref bans ");

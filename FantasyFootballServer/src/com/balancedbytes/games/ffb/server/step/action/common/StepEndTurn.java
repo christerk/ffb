@@ -530,7 +530,7 @@ public class StepEndTurn extends AbstractStep {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
 					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
-					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll));
+					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false));
 					if (successful) {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);

@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -24,12 +24,12 @@ import com.balancedbytes.games.ffb.server.step.action.foul.StepReferee;
 import com.balancedbytes.games.ffb.skill.SneakyGit;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 	public SneakyGitBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepEjectPlayer, StepEjectPlayer.StepState>() {
+		registerModifier(new StepModifier<StepEjectPlayer, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepEjectPlayer step, StepState state,
@@ -45,16 +45,14 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
 
-				if ((state.argueTheCallSuccessful != null) && state.argueTheCallSuccessful) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-				} else if (UtilCards.hasSkill(actingPlayer, skill)
+				if (UtilCards.hasSkill(actingPlayer, skill)
 						&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
 							playerState.changeBase(PlayerState.KNOCKED_OUT));
 					attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
 					attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
 					attackerResult.setSendToBoxHalf(game.getHalf());
-				} else {
+				} else if (state.argueTheCallSuccessful == null || !state.argueTheCallSuccessful) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
 					attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
 					attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
@@ -69,14 +67,14 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepReferee step,
-					com.balancedbytes.games.ffb.server.step.action.foul.StepReferee.StepState state,
+					StepReferee.StepState state,
 					ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
 			public boolean handleExecuteStepHook(StepReferee step,
-					com.balancedbytes.games.ffb.server.step.action.foul.StepReferee.StepState state) {
+					StepReferee.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean refereeSpotsFoul = false;
