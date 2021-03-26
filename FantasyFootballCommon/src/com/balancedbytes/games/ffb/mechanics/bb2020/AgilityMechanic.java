@@ -117,7 +117,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	}
 
 	private int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {
-		return agility + modifiers.stream().mapToInt(RollModifier::getModifier).sum();
+		return Math.max(2, agility + modifiers.stream().mapToInt(RollModifier::getModifier).sum());
 	}
 
 	private String formatResult(int agility, RollModifier<?>[] modifiers) {
