@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
@@ -27,8 +27,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.move.StepDivingTackle;
-import com.balancedbytes.games.ffb.server.step.action.move.StepDivingTackle.StepState;
+import com.balancedbytes.games.ffb.server.step.bb2016.move.StepDivingTackle;
+import com.balancedbytes.games.ffb.server.step.bb2016.move.StepDivingTackle.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.skill.DivingTackle;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -37,7 +37,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 import java.util.Optional;
 import java.util.Set;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 	public DivingTackleBehaviour() {
 		super();

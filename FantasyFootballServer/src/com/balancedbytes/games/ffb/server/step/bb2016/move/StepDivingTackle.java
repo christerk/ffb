@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.move;
+package com.balancedbytes.games.ffb.server.step.bb2016.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
@@ -33,7 +33,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepDivingTackle extends AbstractStep {
 
 	public class StepState {
