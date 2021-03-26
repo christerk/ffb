@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.bb2016.move;
+package com.balancedbytes.games.ffb.server.step.action.move;
 
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -67,7 +67,7 @@ import java.util.Set;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepMoveDodge extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
