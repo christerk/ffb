@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.action.foul.StepEjectPlayer;
 import com.balancedbytes.games.ffb.server.step.action.foul.StepEjectPlayer.StepState;
 import com.balancedbytes.games.ffb.server.step.action.foul.StepReferee;
-import com.balancedbytes.games.ffb.skill.SneakyGit;
+import com.balancedbytes.games.ffb.skill.bb2016.SneakyGit;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)
