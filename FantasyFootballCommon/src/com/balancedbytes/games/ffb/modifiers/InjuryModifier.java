@@ -1,35 +1,15 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-/**
- * 
- * @author Kalimar
- */
-public class InjuryModifier extends RegistrationAwareModifier {
+import com.balancedbytes.games.ffb.INamedObject;
 
-	private final String fName;
-	private final int fModifier;
-	private final boolean fNigglingInjuryModifier;
+public interface InjuryModifier extends INamedObject, IRegistrationAwareModifier {
 
-	public InjuryModifier(String pName, int pModifier, boolean pNigglingInjuryModifier) {
-		fName = pName;
-		fModifier = pModifier;
-		fNigglingInjuryModifier = pNigglingInjuryModifier;
-	}
+	int getModifier();
 
-	public int getModifier() {
-		return fModifier;
-	}
+	String getName();
 
-	public String getName() {
-		return fName;
-	}
+	boolean isNigglingInjuryModifier();
 
-	public boolean isNigglingInjuryModifier() {
-		return fNigglingInjuryModifier;
-	}
-
-	public boolean appliesToContext(InjuryModifierContext context) {
-		return true;
-	}
+	boolean appliesToContext(InjuryModifierContext context);
 
 }

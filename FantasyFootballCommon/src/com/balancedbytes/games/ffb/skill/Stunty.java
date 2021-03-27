@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifier;
 
 /**
  * The player is so small that they are very difficult to tackle because they
@@ -35,7 +36,7 @@ public class Stunty extends Skill {
 	@Override
 	public void postConstruct() {
 		registerModifier(new PassModifier("Stunty", 1, ModifierType.REGULAR));
-		registerModifier(new InjuryModifier("Stunty", 0, false) {
+		registerModifier(new StaticInjuryModifier("Stunty", 0, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				boolean applies = false;

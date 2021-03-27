@@ -40,7 +40,7 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 		add(new FoulAssistArmorModifier("3 Defensive Assists", -3, true));
 		add(new FoulAssistArmorModifier("4 Defensive Assists", -4, true));
 		add(new FoulAssistArmorModifier("5 Defensive Assists", -5, true));
-		add(new ArmorModifier("Foul", 1, false) {
+		add(new StaticArmourModifier("Foul", 1, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
 				Game game = context.getGame();
@@ -103,7 +103,7 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 			.collect(Collectors.toSet());
 	}
 
-	private static class FoulAssistArmorModifier extends ArmorModifier {
+	private static class FoulAssistArmorModifier extends StaticArmourModifier {
 
 		public FoulAssistArmorModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
 			super(pName, pModifier, pFoulAssistModifier);

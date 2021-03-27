@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
+import com.balancedbytes.games.ffb.modifiers.StaticArmourModifier;
 
 /**
  * A player with this skill is blessed with a huge crab like claw or razor sharp
@@ -23,7 +23,7 @@ public class Claw extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new ArmorModifier("Claws", 0, false) {
+		registerModifier(new StaticArmourModifier("Claws", 0, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
 				if (context.isStab() || context.isFoul() || context.getAttacker().hasSkillProperty(NamedProperties.blocksLikeChainsaw)) {

@@ -1,35 +1,15 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-/**
- * 
- * @author Kalimar
- */
-public class ArmorModifier extends RegistrationAwareModifier {
+import com.balancedbytes.games.ffb.INamedObject;
 
-	private final String fName;
-	private final int fModifier;
-	private final boolean fFoulAssistModifier;
+public interface ArmorModifier extends INamedObject, IRegistrationAwareModifier {
 
-	public ArmorModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
-		fName = pName;
-		fModifier = pModifier;
-		fFoulAssistModifier = pFoulAssistModifier;
-	}
+	int getModifier();
 
-	public int getModifier() {
-		return fModifier;
-	}
+	String getName();
 
-	public String getName() {
-		return fName;
-	}
+	boolean isFoulAssistModifier();
 
-	public boolean isFoulAssistModifier() {
-		return fFoulAssistModifier;
-	}
-
-	public boolean appliesToContext(ArmorModifierContext context) {
-		return true;
-	}
+	boolean appliesToContext(ArmorModifierContext context);
 
 }

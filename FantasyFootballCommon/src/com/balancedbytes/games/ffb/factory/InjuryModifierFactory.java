@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
+import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifier;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Arrays;
@@ -29,11 +30,11 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 	private ModifierAggregator modifierAggregator;
 
 	private final Set<InjuryModifier> niggleModifiers = new HashSet<InjuryModifier>() {{
-		add(new InjuryModifier("1 Niggling Injury", 1, true));
-		add(new InjuryModifier("2 Niggling Injuries", 2, true));
-		add(new InjuryModifier("3 Niggling Injuries", 3, true));
-		add(new InjuryModifier("4 Niggling Injuries", 4, true));
-		add(new InjuryModifier("5 Niggling Injuries", 5, true));
+		add(new StaticInjuryModifier("1 Niggling Injury", 1, true));
+		add(new StaticInjuryModifier("2 Niggling Injuries", 2, true));
+		add(new StaticInjuryModifier("3 Niggling Injuries", 3, true));
+		add(new StaticInjuryModifier("4 Niggling Injuries", 4, true));
+		add(new StaticInjuryModifier("5 Niggling Injuries", 5, true));
 	}};
 
 	public InjuryModifier forName(String name) {

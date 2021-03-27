@@ -5,8 +5,8 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
+import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifier;
 
 /**
  * This player treats a roll of 8 on the Injury table, after any modifiers have
@@ -23,7 +23,7 @@ public class ThickSkull extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.convertKOToStunOn8);
-		registerModifier(new InjuryModifier("Thick Skull", 0, false) {
+		registerModifier(new StaticInjuryModifier("Thick Skull", 0, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return false;

@@ -5,10 +5,10 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
+import com.balancedbytes.games.ffb.modifiers.StaticArmourModifier;
 
 import java.util.Arrays;
 
@@ -28,7 +28,7 @@ public class DirtyPlayer extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new ArmorModifier("Dirty Player", 1, false) {
+		registerModifier(new StaticArmourModifier("Dirty Player", 1, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
 				return context.isFoul();

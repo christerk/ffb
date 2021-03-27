@@ -5,9 +5,9 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
+import com.balancedbytes.games.ffb.modifiers.StaticArmourModifier;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class MightyBlow extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new ArmorModifier("Mighty Blow", 1, false));
+		registerModifier(new StaticArmourModifier("Mighty Blow", 1, false));
 		registerModifier(new InjuryModifierAttacker("Mighty Blow", 1, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
