@@ -113,8 +113,13 @@ public class ZappedPosition implements Position {
 	}
 
 	@Override
-	public int getSkillValue(Skill pSkill) {
-		return 0;
+	public String getSkillValue(Skill pSkill) {
+		return null;
+	}
+
+	@Override
+	public int getSkillIntValue(Skill skill) {
+		return skill.getDefaultSkillValue();
 	}
 
 	@Override

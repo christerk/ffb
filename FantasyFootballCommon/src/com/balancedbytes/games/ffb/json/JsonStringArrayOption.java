@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.json;
 
-import java.util.Collection;
-
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.Collection;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class JsonStringArrayOption extends JsonAbstractOption {
 		}
 	}
 
-	private String[] toStringArray(JsonArray pJsonArray) {
+	protected String[] toStringArray(JsonArray pJsonArray) {
 		if (pJsonArray == null) {
 			return null;
 		}

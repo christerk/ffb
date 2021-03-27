@@ -994,12 +994,11 @@ public class StatusReport {
 						print(getIndent(), false, player);
 						println(getIndent(), " using a Secret Weapon.");
 					}
-					Integer secretWeaponValue = player.getPosition().getSkillValue(player.getSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive));
-					if ((rolls[i] > 0) && (secretWeaponValue != null)) {
-						StringBuilder penalty = new StringBuilder();
-						penalty.append("Penalty roll was ").append(rolls[i]);
-						penalty.append(", banned on a ").append(secretWeaponValue).append("+");
-						println(getIndent() + 1, TextStyle.NEEDED_ROLL, penalty.toString());
+					int secretWeaponValue = player.getSkillIntValue(player.getSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive));
+					if (rolls[i] > 0) {
+						String penalty = "Penalty roll was " + rolls[i] +
+							", banned on a " + secretWeaponValue + "+";
+						println(getIndent() + 1, TextStyle.NEEDED_ROLL, penalty);
 					}
 				}
 			}

@@ -1,17 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -30,6 +18,16 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -98,14 +96,14 @@ public class RosterPosition implements Position {
 	private int fCurrentIconSetIndex;
 	private String nameGenerator;
 
-	private Map<Skill, Integer> fSkillValues;
-	private Set<SkillCategory> fSkillCategoriesOnNormalRoll;
-	private Set<SkillCategory> fSkillCategoriesOnDoubleRoll;
+	private final Map<Skill, String> fSkillValues;
+	private final Set<SkillCategory> fSkillCategoriesOnNormalRoll;
+	private final Set<SkillCategory> fSkillCategoriesOnDoubleRoll;
 
 	// attributes used for parsing
 	private transient boolean fInsideSkillListTag;
 	private transient boolean fInsideSkillCategoryListTag;
-	private transient Integer fCurrentSkillValue;
+	private transient String fCurrentSkillValue;
 
 	public RosterPosition() {
 		this(null);
@@ -206,9 +204,17 @@ public class RosterPosition implements Position {
 	}
 
 	@Override
-	public int getSkillValue(Skill pSkill) {
-		Integer value = fSkillValues.get(pSkill);
-		return (value != null) ? value : 0;
+	public String getSkillValue(Skill pSkill) {
+		return fSkillValues.get(pSkill);
+	}
+
+	@Override
+	public int getSkillIntValue(Skill skill) {
+		String skillValue = getSkillValue(skill);
+		if (StringTool.isProvided(skillValue) && StringTool.isNumber(skillValue)) {
+			return Integer.parseInt(skillValue);
+		}
+		return skill.getDefaultSkillValue();
 	}
 
 	@Override
@@ -404,7 +410,7 @@ public class RosterPosition implements Position {
 
 		for (Skill skill : getSkills()) {
 			attributes = new AttributesImpl();
-			if (getSkillValue(skill) > 0) {
+			if (StringTool.isProvided(getSkillValue(skill))) {
 				UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSkillValue(skill));
 			}
 			UtilXml.startElement(pHandler, _XML_TAG_SKILL, attributes);
@@ -427,7 +433,7 @@ public class RosterPosition implements Position {
 			if (_XML_TAG_SKILL.equals(pXmlTag)) {
 				String skillValue = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_VALUE);
 				if (StringTool.isProvided(skillValue)) {
-					fCurrentSkillValue = Integer.parseInt(skillValue);
+					fCurrentSkillValue = skillValue;
 				} else {
 					fCurrentSkillValue = null;
 				}
@@ -589,10 +595,10 @@ public class RosterPosition implements Position {
 		IJsonOption.SKILL_CATEGORIES_DOUBLE.addTo(jsonObject, skillCategoriesDouble);
 
 		JsonArray skillArray = new JsonArray();
-		List<Integer> skillValues = new ArrayList<>();
+		List<String> skillValues = new ArrayList<>();
 		for (Skill skill : getSkills()) {
 			skillArray.add(UtilJson.toJsonValue(skill));
-			skillValues.add(getSkillValue(skill));
+			skillValues.add(fSkillValues.get(skill));
 		}
 		if (skillArray.size() > 0) {
 			IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
@@ -649,9 +655,9 @@ public class RosterPosition implements Position {
 
 		fSkillValues.clear();
 		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
-		int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(source, jsonObject);
+		String[] skillValues = IJsonOption.SKILL_VALUES.getFrom(source, jsonObject);
 		if ((skillArray != null) && (skillArray.size() > 0) && ArrayTool.isProvided(skillValues)) {
-			SkillFactory skillFactory = source.<SkillFactory>getFactory(Factory.SKILL);
+			SkillFactory skillFactory = source.getFactory(Factory.SKILL);
 			for (int i = 0; i < skillArray.size(); i++) {
 				Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
 				fSkillValues.put(skill, skillValues[i]);

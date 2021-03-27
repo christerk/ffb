@@ -43,10 +43,16 @@ public abstract class Skill implements INamedObject {
 	private ISkillBehaviour<? extends Skill> behaviour;
 	private final List<ISkillProperty> skillProperties = new ArrayList<>();
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
+	private final int defaultSkillValue;
 
 	public Skill(String name, SkillCategory category) {
+		this(name, category, 0);
+	}
+
+	public Skill(String name, SkillCategory category, int defaultSkillValue) {
 		this.name = name;
 		this.category = category;
+		this.defaultSkillValue = defaultSkillValue;
 	}
 
 	public void postConstruct() {}
@@ -219,5 +225,9 @@ public abstract class Skill implements INamedObject {
 
 	public List<ISkillProperty> getSkillProperties() {
 		return skillProperties;
+	}
+
+	public int getDefaultSkillValue() {
+		return defaultSkillValue;
 	}
 }

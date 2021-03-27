@@ -11,10 +11,16 @@ public class StringTool {
 
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
-	private static Pattern _PATTERN_PARAMETER = Pattern.compile("[$]([0-9]+)");
+	private static final Pattern _PATTERN_PARAMETER = Pattern.compile("[$]([0-9]+)");
+
+	private static final Pattern IS_NUMBER = Pattern.compile("\\d+");
 
 	public static boolean isProvided(Object pObject) {
 		return ((pObject != null) && (pObject.toString().length() > 0));
+	}
+
+	public static boolean isNumber(String string) {
+		return IS_NUMBER.matcher(string).matches();
 	}
 
 	public static String print(String pString) {
@@ -50,14 +56,14 @@ public class StringTool {
 			int startPos = 0;
 			Matcher matcherParameter = _PATTERN_PARAMETER.matcher(pTemplate);
 			while (matcherParameter.find()) {
-				result.append(pTemplate.substring(startPos, matcherParameter.start()));
+				result.append(pTemplate, startPos, matcherParameter.start());
 				startPos = matcherParameter.end();
 				int index = Integer.parseInt(matcherParameter.group(1)) - 1;
 				if (index < pParameters.length) {
 					result.append(pParameters[index]);
 				}
 			}
-			result.append(pTemplate.substring(startPos, pTemplate.length()));
+			result.append(pTemplate.substring(startPos));
 		}
 		return result.toString();
 	}

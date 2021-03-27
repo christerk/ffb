@@ -101,6 +101,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract Skill[] getSkills();
 
+ 	public abstract String getSkillValue(Skill pSkill);
+
+	public abstract int getSkillIntValue(Skill skill);
+
 	public abstract String getUrlPortrait();
 
 	abstract void setUrlPortrait(String pUrlPortrait);
