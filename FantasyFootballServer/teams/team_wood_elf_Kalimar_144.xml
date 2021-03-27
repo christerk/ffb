@@ -81,14 +81,14 @@
     <name>Thrower1</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList></skillList>
+  	<skillList><skill value="3">Mighty Blow</skill></skillList>
   </player>
 	
   <player nr="6" id="teamWoodElfKalimar6">
     <name>Thrower2</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList></skillList>
+  	<skillList><skill value="3">Loner</skill></skillList>
   </player>
 
   <player nr="7" id="teamWoodElfKalimar7">

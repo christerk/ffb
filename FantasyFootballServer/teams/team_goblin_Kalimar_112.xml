@@ -74,14 +74,14 @@
 		<name>Goblin3</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill value="2">Dirty Player</skill></skillList>
 	</player>
 
 	<player nr="10" id="teamGoblinKalimar10">
 		<name>Goblin4</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill>Dirty Player</skill></skillList>
 	</player>
 
 	<player nr="11" id="teamGoblinKalimar11">

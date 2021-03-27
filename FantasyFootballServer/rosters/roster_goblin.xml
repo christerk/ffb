@@ -50,7 +50,7 @@
 		<skillList>
 			<skill>Always Hungry</skill>
 			<skill>Loner</skill>
-			<skill>Mighty Blow</skill>
+			<skill value="2">Mighty Blow</skill>
 			<skill>Really Stupid</skill>
 			<skill>Regeneration</skill>
 			<skill>Throw Team-Mate</skill>
@@ -79,7 +79,7 @@
 		<skillList>
 			<skill>Bombardier</skill>
 			<skill>Dodge</skill>
-			<skill>Secret Weapon</skill>
+			<skill value="5">Secret Weapon</skill>
 			<skill>Stunty</skill>
 		</skillList>
 		<skillCategoryList>
