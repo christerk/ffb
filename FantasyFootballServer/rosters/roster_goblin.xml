@@ -50,7 +50,7 @@
 		<skillList>
 			<skill>Always Hungry</skill>
 			<skill>Loner</skill>
-			<skill>Mighty Blow</skill>
+			<skill value="2">Mighty Blow</skill>
 			<skill>Really Stupid</skill>
 			<skill>Regeneration</skill>
 			<skill>Throw Team-Mate</skill>
