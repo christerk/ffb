@@ -81,7 +81,7 @@
     <name>Thrower1</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList><skill value="3">Mighty Blow</skill></skillList>
+  	<skillList></skillList>
   </player>
 	
   <player nr="6" id="teamWoodElfKalimar6">
