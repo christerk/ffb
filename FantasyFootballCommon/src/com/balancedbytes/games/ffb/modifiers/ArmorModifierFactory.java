@@ -111,7 +111,7 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 
 		@Override
 		public boolean appliesToContext(ArmorModifierContext context) {
-			return context.isFoul() && context.getFoulAssists() == getModifier();
+			return context.isFoul() && context.getFoulAssists() == getModifier(context.getAttacker());
 		}
 	}
 }

@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-public class InjuryModifierAttacker extends StaticInjuryModifier {
-	public InjuryModifierAttacker(String pName, int pModifier, boolean pNigglingInjuryModifier) {
+public class StaticInjuryModifierAttacker extends StaticInjuryModifier {
+	public StaticInjuryModifierAttacker(String pName, int pModifier, boolean pNigglingInjuryModifier) {
 		super(pName, pModifier, pNigglingInjuryModifier);
 	}
 

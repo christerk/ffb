@@ -74,7 +74,7 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 			// do not use injuryModifiers on blocking own team-mate with b&c
 			if (pAttacker.getTeam() != pDefender.getTeam()) {
-				Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
+				InjuryModifierFactory.ModifiersWithContext armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 						pDefender, isStab(), isFoul());
 				injuryContext.addInjuryModifiers(armorModifiers);
 			}

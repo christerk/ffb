@@ -373,7 +373,7 @@ public class DiceInterpreter {
 				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue))) {
 			armour = 7;
 		}
-		return mechanic.armourIsBroken(armour, armourRoll, pInjuryContext);
+		return mechanic.armourIsBroken(armour, armourRoll, pInjuryContext, pGameState.getGame());
 	}
 
 	public boolean isBribesSuccessful(int roll) {

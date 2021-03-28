@@ -2544,15 +2544,15 @@ public class StatusReport {
 			boolean usingClaws = Arrays.stream(pReport.getArmorModifiers())
 				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue));
 			for (ArmorModifier armorModifier : pReport.getArmorModifiers()) {
-				if (armorModifier.getModifier() != 0) {
-					armorModifierTotal += armorModifier.getModifier();
-					if (armorModifier.getModifier() > 0) {
+				if (armorModifier.getModifier(attacker) != 0) {
+					armorModifierTotal += armorModifier.getModifier(attacker);
+					if (armorModifier.getModifier(attacker) > 0) {
 						status.append(" + ");
 					} else {
 						status.append(" - ");
 					}
 					if (!armorModifier.isFoulAssistModifier()) {
-						status.append(Math.abs(armorModifier.getModifier())).append(" ");
+						status.append(Math.abs(armorModifier.getModifier(attacker))).append(" ");
 					}
 					status.append(armorModifier.getName());
 				}

@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.INamedObject;
 
 public interface InjuryModifier extends INamedObject, IRegistrationAwareModifier {
 
-	int getModifier();
+	int getModifier(InjuryModifierContext context);
 
 	String getName();
 

@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
-import com.balancedbytes.games.ffb.modifiers.InjuryModifierAttacker;
+import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.StaticArmourModifier;
 
@@ -19,7 +19,7 @@ import java.util.Arrays;
  * only modify one of the dice rolls, so if you decide to use Dirty Player to
  * modify the Armour roll, you may not modify the Injury roll as well.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class DirtyPlayer extends Skill {
 
 	public DirtyPlayer() {
@@ -34,7 +34,7 @@ public class DirtyPlayer extends Skill {
 				return context.isFoul();
 			}
 		});
-		registerModifier(new InjuryModifierAttacker("Dirty Player", 1, false) {
+		registerModifier(new StaticInjuryModifierAttacker("Dirty Player", 1, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)

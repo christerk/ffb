@@ -1,13 +1,13 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.InjuryModifierAttacker;
+import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
-import com.balancedbytes.games.ffb.modifiers.StaticArmourModifier;
+import com.balancedbytes.games.ffb.modifiers.VariableArmourModifier;
 
 import java.util.Arrays;
 
@@ -18,7 +18,7 @@ import java.util.Arrays;
  * the Armour roll, you may not modify the Injury roll as well. Mighty Blow
  * cannot be used with the Stab or Chainsaw skills.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class MightyBlow extends Skill {
 
 	public MightyBlow() {
@@ -27,8 +27,8 @@ public class MightyBlow extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new StaticArmourModifier("Mighty Blow", 1, false));
-		registerModifier(new InjuryModifierAttacker("Mighty Blow", 1, false) {
+		registerModifier(new VariableArmourModifier("Mighty Blow",false));
+		registerModifier(new StaticInjuryModifierAttacker("Mighty Blow", 1, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)

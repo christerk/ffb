@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -81,10 +83,10 @@ public class InjuryContext {
 		return fArmorModifiers.contains(pArmorModifier);
 	}
 
-	public int getArmorModifierTotal() {
+	public int getArmorModifierTotal(Game game) {
 		int totalModifiers = 0;
 		for (ArmorModifier armorModifier : fArmorModifiers) {
-			totalModifiers += armorModifier.getModifier();
+			totalModifiers += armorModifier.getModifier(game.getPlayerById(fAttackerId));
 		}
 		return totalModifiers;
 	}
@@ -111,10 +113,12 @@ public class InjuryContext {
 		return fInjuryModifiers.contains(pInjuryModifier);
 	}
 
-	public int getInjuryModifierTotal() {
+	public int getInjuryModifierTotal(InjuryModifierContext context) {
+		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
+
 		int totalModifiers = 0;
 		for (InjuryModifier injuryModifier : fInjuryModifiers) {
-			totalModifiers += injuryModifier.getModifier();
+			totalModifiers += injuryModifier.getModifier(context);
 		}
 		return totalModifiers;
 	}

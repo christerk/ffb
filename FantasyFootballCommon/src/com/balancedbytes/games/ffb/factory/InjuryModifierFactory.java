@@ -29,7 +29,7 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 
 	private ModifierAggregator modifierAggregator;
 
-	private final Set<InjuryModifier> niggleModifiers = new HashSet<InjuryModifier>() {{
+	private final Set<StaticInjuryModifier> niggleModifiers = new HashSet<StaticInjuryModifier>() {{
 		add(new StaticInjuryModifier("1 Niggling Injury", 1, true));
 		add(new StaticInjuryModifier("2 Niggling Injuries", 2, true));
 		add(new StaticInjuryModifier("3 Niggling Injuries", 3, true));
@@ -43,20 +43,20 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 			.findFirst()
 			.orElse(null);	}
 
-	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
+	public ModifiersWithContext findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
 			Player<?> defender, boolean isStab, boolean isFoul) {
 
 		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
 
-		return getInjuryModifiers(context);
+		return new ModifiersWithContext(getInjuryModifiers(context), context);
 	}
 
 	public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {
 		if (pPlayer != null) {
 			long nigglingInjuries = Arrays.stream(pPlayer.getLastingInjuries()).filter(seriousInjury -> seriousInjury.getInjuryAttribute() == InjuryAttribute.NI).count();
 
-			for (InjuryModifier modifier : niggleModifiers) {
-				if (modifier.isNigglingInjuryModifier() && (modifier.getModifier() == nigglingInjuries)) {
+			for (StaticInjuryModifier modifier : niggleModifiers) {
+				if (modifier.isNigglingInjuryModifier() && (modifier.getModifier(null) == nigglingInjuries)) {
 					return modifier;
 				}
 			}
@@ -79,4 +79,21 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 		this.modifierAggregator = game.getModifierAggregator();
 	}
 
+	public static class ModifiersWithContext {
+		private final Set<InjuryModifier> modifiers;
+		private final InjuryModifierContext context;
+
+		public ModifiersWithContext(Set<InjuryModifier> modifiers, InjuryModifierContext context) {
+			this.modifiers = modifiers;
+			this.context = context;
+		}
+
+		public Set<InjuryModifier> getModifiers() {
+			return modifiers;
+		}
+
+		public InjuryModifierContext getContext() {
+			return context;
+		}
+	}
 }
