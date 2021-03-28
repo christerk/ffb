@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.model.property;
 
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 import java.util.Objects;
 

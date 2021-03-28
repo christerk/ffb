@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.modifiers.PassContext;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 import java.util.HashSet;
 import java.util.Set;

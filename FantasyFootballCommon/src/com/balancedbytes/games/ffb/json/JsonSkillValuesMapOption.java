@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.json;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 

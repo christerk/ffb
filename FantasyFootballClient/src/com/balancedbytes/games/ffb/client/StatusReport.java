@@ -29,7 +29,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
@@ -2596,16 +2596,17 @@ public class StatusReport {
 					status.append("Rolled Total of ").append(rolledTotal);
 					int injuryModifierTotal = 0;
 					for (InjuryModifier injuryModifier : pReport.getInjuryModifiers()) {
-						injuryModifierTotal += injuryModifier.getModifier();
-						if (injuryModifier.getModifier() == 0) {
+						int modifierValue = injuryModifier.getModifier(attacker, defender);
+						injuryModifierTotal += modifierValue;
+						if (modifierValue == 0) {
 							thickSkullUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
 							stuntyUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
 						} else if (injuryModifier.isNigglingInjuryModifier()) {
 							status.append(" +").append(injuryModifier.getName());
-						} else if (injuryModifier.getModifier() > 0) {
-							status.append(" +").append(injuryModifier.getModifier()).append(" ").append(injuryModifier.getName());
+						} else if (modifierValue > 0) {
+							status.append(" +").append(modifierValue).append(" ").append(injuryModifier.getName());
 						} else {
-							status.append(" ").append(injuryModifier.getModifier()).append(" ").append(injuryModifier.getName());
+							status.append(" ").append(modifierValue).append(" ").append(injuryModifier.getName());
 						}
 					}
 					if (injuryModifierTotal != 0) {

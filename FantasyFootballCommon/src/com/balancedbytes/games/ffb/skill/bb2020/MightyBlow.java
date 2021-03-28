@@ -3,8 +3,9 @@ package com.balancedbytes.games.ffb.skill.bb2020;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.SkillValueEvaluator;
 import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.VariableArmourModifier;
@@ -40,4 +41,8 @@ public class MightyBlow extends Skill {
 		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock);
 	}
 
+	@Override
+	public SkillValueEvaluator evaluator() {
+		return SkillValueEvaluator.MODIFIER;
+	}
 }

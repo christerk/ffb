@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 public class PassModifierCollection extends ModifierCollection<PassContext, PassModifier> {
 

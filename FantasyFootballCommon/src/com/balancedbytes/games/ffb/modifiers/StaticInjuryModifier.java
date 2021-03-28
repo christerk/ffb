@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.INamedObject;
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 
@@ -18,7 +19,7 @@ public class StaticInjuryModifier extends RegistrationAwareModifier implements I
 		fNigglingInjuryModifier = pNigglingInjuryModifier;
 	}
 
-	public int getModifier(InjuryModifierContext context) {
+	public int getModifier(Player<?> attacker, Player<?> defender) {
 		return fModifier;
 	}
 

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 
 public abstract class RegistrationAwareModifier implements IRegistrationAwareModifier {

@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;

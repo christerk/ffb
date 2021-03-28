@@ -39,7 +39,7 @@ import com.balancedbytes.games.ffb.inducement.CardChoices;
 import com.balancedbytes.games.ffb.inducement.Inducement;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.BlitzState;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.eclipsesource.json.JsonValue;
 

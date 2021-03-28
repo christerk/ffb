@@ -43,12 +43,12 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 			.findFirst()
 			.orElse(null);	}
 
-	public ModifiersWithContext findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
+	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
 			Player<?> defender, boolean isStab, boolean isFoul) {
 
 		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
 
-		return new ModifiersWithContext(getInjuryModifiers(context), context);
+		return getInjuryModifiers(context);
 	}
 
 	public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {
@@ -56,7 +56,7 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 			long nigglingInjuries = Arrays.stream(pPlayer.getLastingInjuries()).filter(seriousInjury -> seriousInjury.getInjuryAttribute() == InjuryAttribute.NI).count();
 
 			for (StaticInjuryModifier modifier : niggleModifiers) {
-				if (modifier.isNigglingInjuryModifier() && (modifier.getModifier(null) == nigglingInjuries)) {
+				if (modifier.isNigglingInjuryModifier() && (modifier.getModifier(null, null) == nigglingInjuries)) {
 					return modifier;
 				}
 			}
@@ -79,21 +79,4 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 		this.modifierAggregator = game.getModifierAggregator();
 	}
 
-	public static class ModifiersWithContext {
-		private final Set<InjuryModifier> modifiers;
-		private final InjuryModifierContext context;
-
-		public ModifiersWithContext(Set<InjuryModifier> modifiers, InjuryModifierContext context) {
-			this.modifiers = modifiers;
-			this.context = context;
-		}
-
-		public Set<InjuryModifier> getModifiers() {
-			return modifiers;
-		}
-
-		public InjuryModifierContext getContext() {
-			return context;
-		}
-	}
 }

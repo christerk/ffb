@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.IKeyedItem;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 import java.util.List;
 

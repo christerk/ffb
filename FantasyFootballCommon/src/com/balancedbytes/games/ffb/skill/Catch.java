@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * A player who has the Catch skill is allowed to re-roll the D6 if he fails a

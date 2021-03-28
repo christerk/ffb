@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.factory;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.GazeModifierCollection;
 import com.balancedbytes.games.ffb.modifiers.GazeModifierContext;

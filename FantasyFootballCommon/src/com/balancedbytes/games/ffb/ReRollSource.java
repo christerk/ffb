@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * 

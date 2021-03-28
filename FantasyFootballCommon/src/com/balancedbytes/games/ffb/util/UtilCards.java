@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 

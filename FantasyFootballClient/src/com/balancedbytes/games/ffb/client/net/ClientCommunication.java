@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommand;

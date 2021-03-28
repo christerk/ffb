@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.dialog.DialogKickSkillParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 
 /**

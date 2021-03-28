@@ -13,6 +13,8 @@ import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.model.skill.SkillWithValue;
 import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -69,7 +71,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private transient RosterPosition fPosition;
 	private transient int fCurrentSpps;
 	private Map<String, Set<TemporaryStatModifier>> temporaryModifiers = new HashMap<>();
-	private Map<String, Set<Skill>> temporarySkills = new HashMap<>();
+	private Map<String, Set<SkillWithValue>> temporarySkills = new HashMap<>();
 	private Map<String, Set<ISkillProperty>> temporaryProperties = new HashMap<>();
 	private Map<Skill, String> skillValues;
 
@@ -190,19 +192,17 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public String getSkillValue(Skill skill) {
+	public String getSkillValueExcludingTemporaryOnes(Skill skill) {
 		return Optional.ofNullable(skillValues.get(skill)).orElse(getPosition().getSkillValue(skill));
 	}
 
 	@Override
 	public int getSkillIntValue(Skill skill) {
-		String skillValue = getSkillValue(skill);
-		if (StringTool.isProvided(skillValue) && StringTool.isNumber(skillValue)) {
-			return Integer.parseInt(skillValue);
-		}
-		return skill.getDefaultSkillValue();
+		List<String> values = tempValues(skill);
+		values.add(getSkillValueExcludingTemporaryOnes(skill));
+		Integer intValue = skill.evaluator().intValue(values);
+		return intValue != null ? intValue : skill.getDefaultSkillValue();
 	}
-
 
 	@Override
 	public String getUrlPortrait() {
@@ -427,8 +427,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 		if (fSkills.size() > 0) {
 			for (Skill skill : fSkills) {
 				attributes = new AttributesImpl();
-				if (StringTool.isProvided(getSkillValue(skill))) {
-					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSkillValue(skill));
+				if (StringTool.isProvided(getSkillValueExcludingTemporaryOnes(skill))) {
+					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSkillValueExcludingTemporaryOnes(skill));
 				}
 				UtilXml.startElement(pHandler, _XML_TAG_SKILL, attributes);
 				UtilXml.addCharacters(pHandler, skill.getName());
@@ -719,12 +719,12 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	protected Map<String, Set<Skill>> getTemporarySkills() {
+	protected Map<String, Set<SkillWithValue>> getTemporarySkills() {
 		return temporarySkills;
 	}
 
 	@Override
-	public void addTemporarySkills(String source, Set<Skill> skills) {
+	public void addTemporarySkills(String source, Set<SkillWithValue> skills) {
 		temporarySkills.put(source, skills);
 	}
 

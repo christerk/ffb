@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;

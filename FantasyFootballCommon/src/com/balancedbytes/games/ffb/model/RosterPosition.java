@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.factory.SkillCategoryFactory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;

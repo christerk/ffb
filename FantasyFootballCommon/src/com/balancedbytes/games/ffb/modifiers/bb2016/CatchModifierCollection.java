@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.modifiers.bb2016;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;

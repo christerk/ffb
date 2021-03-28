@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.skill;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * This skill allows the player to make a Quick Pass when an opponent declares

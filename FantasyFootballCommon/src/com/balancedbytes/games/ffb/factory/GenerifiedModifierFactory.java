@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.factory;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.modifiers.ModifierCollection;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;

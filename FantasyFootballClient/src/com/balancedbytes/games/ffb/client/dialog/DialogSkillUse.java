@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.client.dialog;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * 

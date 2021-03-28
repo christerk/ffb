@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;

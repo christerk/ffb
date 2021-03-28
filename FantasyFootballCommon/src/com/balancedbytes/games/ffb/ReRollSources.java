@@ -7,7 +7,7 @@ import java.util.Map;
 import com.balancedbytes.games.ffb.skill.Catch;
 import com.balancedbytes.games.ffb.skill.Dodge;
 import com.balancedbytes.games.ffb.skill.Leader;
-import com.balancedbytes.games.ffb.skill.Loner;
+import com.balancedbytes.games.ffb.skill.bb2016.Loner;
 import com.balancedbytes.games.ffb.skill.MonstrousMouth;
 import com.balancedbytes.games.ffb.skill.Pass;
 import com.balancedbytes.games.ffb.skill.Pro;

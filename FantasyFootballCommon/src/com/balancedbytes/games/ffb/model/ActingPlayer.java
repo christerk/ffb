@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;

@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepId;
 

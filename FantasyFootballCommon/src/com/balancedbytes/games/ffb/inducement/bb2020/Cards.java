@@ -7,7 +7,8 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.inducement.CardReport;
 import com.balancedbytes.games.ffb.inducement.InducementDuration;
 import com.balancedbytes.games.ffb.inducement.InducementPhase;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.model.skill.SkillClassWithValue;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
@@ -23,12 +24,10 @@ import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.skill.Bombardier;
 import com.balancedbytes.games.ffb.skill.BoneHead;
 import com.balancedbytes.games.ffb.skill.Catch;
-import com.balancedbytes.games.ffb.skill.bb2016.DirtyPlayer;
 import com.balancedbytes.games.ffb.skill.DisturbingPresence;
 import com.balancedbytes.games.ffb.skill.Fend;
 import com.balancedbytes.games.ffb.skill.HypnoticGaze;
 import com.balancedbytes.games.ffb.skill.Kick;
-import com.balancedbytes.games.ffb.skill.bb2016.MightyBlow;
 import com.balancedbytes.games.ffb.skill.NoHands;
 import com.balancedbytes.games.ffb.skill.Pass;
 import com.balancedbytes.games.ffb.skill.PassBlock;
@@ -37,6 +36,8 @@ import com.balancedbytes.games.ffb.skill.SecretWeapon;
 import com.balancedbytes.games.ffb.skill.Shadowing;
 import com.balancedbytes.games.ffb.skill.SideStep;
 import com.balancedbytes.games.ffb.skill.SureHands;
+import com.balancedbytes.games.ffb.skill.bb2016.DirtyPlayer;
+import com.balancedbytes.games.ffb.skill.bb2016.MightyBlow;
 import com.balancedbytes.games.ffb.skill.bb2020.Accurate;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
@@ -67,10 +68,10 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement().withSkills(
-					new HashSet<Class<? extends Skill>>() {{
-						add(BoneHead.class);
-						add(HypnoticGaze.class);
-						add(SideStep.class);
+					new HashSet<SkillClassWithValue>() {{
+						add(new SkillClassWithValue(BoneHead.class));
+						add(new SkillClassWithValue(HypnoticGaze.class));
+						add(new SkillClassWithValue(SideStep.class));
 					}}
 				);
 			}
@@ -125,9 +126,9 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement().withSkills(
-					new HashSet<Class<? extends Skill>>() {{
-						add(Pass.class);
-						add(Accurate.class);
+					new HashSet<SkillClassWithValue>() {{
+						add(new SkillClassWithValue(Pass.class));
+						add(new SkillClassWithValue(Accurate.class));
 					}}
 				);
 			}
@@ -149,9 +150,9 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement().withSkills(
-					new HashSet<Class<? extends Skill>>() {{
-						add(Fend.class);
-						add(SureHands.class);
+					new HashSet<SkillClassWithValue>() {{
+						add(new SkillClassWithValue(Fend.class));
+						add(new SkillClassWithValue(SureHands.class));
 					}});
 			}
 		});
@@ -199,9 +200,9 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement()
 					.withSkills(
-						new HashSet<Class<? extends Skill>>() {{
-							add(Catch.class);
-							add(SureHands.class);
+						new HashSet<SkillClassWithValue>() {{
+							add(new SkillClassWithValue(Catch.class));
+							add(new SkillClassWithValue(SureHands.class));
 						}}
 					)
 					.withProperties(
@@ -279,7 +280,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(PassBlock.class));
+				return super.activationEnhancement().withSkills(Collections.singleton(new SkillClassWithValue(PassBlock.class)));
 			}
 
 		});
@@ -321,7 +322,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			"Player gets Pro (not playable on a Loner)", CardHandlerKey.RABBITS_FOOT) {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(Pro.class));
+				return super.activationEnhancement().withSkills(Collections.singleton(new SkillClassWithValue(Pro.class)));
 			}
 
 		});
@@ -341,7 +342,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement()
-					.withSkills(Collections.singleton(MightyBlow.class))
+					.withSkills(Collections.singleton(new SkillClassWithValue(MightyBlow.class, "1")))
 					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStat.ST)));
 			}
 		});
@@ -418,7 +419,7 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			"Player gets Disturbing Presence & opponents in 3 squares get Bone-head", CardHandlerKey.DISTRACT) {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(DisturbingPresence.class));
+				return super.activationEnhancement().withSkills(Collections.singleton(new SkillClassWithValue(DisturbingPresence.class)));
 			}
 		});
 
@@ -466,10 +467,10 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement().withSkills(
-					new HashSet<Class<? extends Skill>>() {{
-						add(NoHands.class);
-						add(Bombardier.class);
-						add(SecretWeapon.class);
+					new HashSet<SkillClassWithValue>() {{
+						add(new SkillClassWithValue(NoHands.class));
+						add(new SkillClassWithValue(Bombardier.class));
+						add(new SkillClassWithValue(SecretWeapon.class));
 					}});
 			}
 		});
@@ -502,9 +503,9 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement()
 					.withSkills(
-						new HashSet<Class<? extends Skill>>() {{
-							add(Kick.class);
-							add(DirtyPlayer.class);
+						new HashSet<SkillClassWithValue>() {{
+							add(new SkillClassWithValue(Kick.class));
+							add(new SkillClassWithValue(DirtyPlayer.class, "1"));
 						}})
 					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStat.MA)));
 			}
@@ -557,9 +558,9 @@ public class Cards implements com.balancedbytes.games.ffb.inducement.Cards {
 			@Override
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement().withSkills(
-					new HashSet<Class<? extends Skill>>() {{
-						add(PassBlock.class);
-						add(Shadowing.class);
+					new HashSet<SkillClassWithValue>() {{
+						add(new SkillClassWithValue(PassBlock.class));
+						add(new SkillClassWithValue(Shadowing.class));
 					}});
 			}
 		});

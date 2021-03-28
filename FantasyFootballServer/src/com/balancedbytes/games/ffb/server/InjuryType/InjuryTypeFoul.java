@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Foul;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;

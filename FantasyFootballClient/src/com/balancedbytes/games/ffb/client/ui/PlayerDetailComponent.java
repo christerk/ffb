@@ -1,18 +1,18 @@
 package com.balancedbytes.games.ffb.client.ui;
 
-import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.InjuryAttribute;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.client.ClientData;
-import com.balancedbytes.games.ffb.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
+import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.mechanics.StatsDrawingModifier;
 import com.balancedbytes.games.ffb.mechanics.StatsMechanic;
@@ -21,11 +21,11 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Position;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.model.skill.SkillDisplayInfo;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -372,30 +372,30 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			PlayerState playerState = game.getFieldModel().getPlayerState(getPlayer());
-			Skill[] skills = UtilCards.findAllSkills(getPlayer());
 			List<String> cardSkills = new ArrayList<>();
 			List<String> acquiredSkills = new ArrayList<>();
 			List<String> rosterSkills = new ArrayList<>();
 			List<String> cardEffects = new ArrayList<>();
 			Set<String> usedSkills = new HashSet<>();
-			for (Skill skill : skills) {
-				if (getPlayer().getPosition().hasSkill(skill)) {
-					if ((SkillCategory.STAT_INCREASE != skill.getCategory())
-						&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
-						rosterSkills.add(skill.getName());
+			for (SkillDisplayInfo skillInfo : getPlayer().skillInfos()) {
+				if ((SkillCategory.STAT_INCREASE != skillInfo.getSkill().getCategory())
+					&& (SkillCategory.STAT_DECREASE != skillInfo.getSkill().getCategory())) {
+					switch (skillInfo.getCategory()) {
+						case PLAYER:
+							acquiredSkills.add(skillInfo.getInfo());
+							break;
+						case ROSTER:
+							rosterSkills.add(skillInfo.getInfo());
+							break;
+						case TEMPORARY:
+							cardSkills.add(skillInfo.getInfo());
+							break;
 					}
-				} else if (getPlayer().hasSkillExcludingTemporaryOnes(skill)) {
-					if ((SkillCategory.STAT_INCREASE != skill.getCategory())
-						&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
-						acquiredSkills.add(skill.getName());
-					}
-				} else {
-					cardSkills.add(skill.getName());
 				}
 				Skill unusedProSkill = getPlayer().getSkillWithProperty(NamedProperties.canRerollOncePerTurn);
-				if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skill))
-					|| ((skill == unusedProSkill) && playerState.hasUsedPro())) {
-					usedSkills.add(skill.getName());
+				if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skillInfo.getSkill()))
+					|| ((skillInfo.getSkill() == unusedProSkill) && playerState.hasUsedPro())) {
+					usedSkills.add(skillInfo.getInfo());
 				}
 			}
 			for (Card card : game.getFieldModel().getCards(getPlayer())) {

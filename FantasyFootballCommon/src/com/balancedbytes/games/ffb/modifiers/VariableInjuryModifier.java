@@ -17,10 +17,10 @@ public abstract class VariableInjuryModifier extends RegistrationAwareModifier i
 		fNigglingInjuryModifier = pNigglingInjuryModifier;
 	}
 
-	protected abstract Player<?> relevantPlayer(InjuryModifierContext context);
+	protected abstract Player<?> relevantPlayer(Player<?> attacker, Player<?> defender);
 
-	public int getModifier(InjuryModifierContext context) {
-		return relevantPlayer(context).getSkillIntValue(registeredTo);
+	public int getModifier(Player<?> attacker, Player<?> defender) {
+		return relevantPlayer(attacker, defender).getSkillIntValue(registeredTo);
 	}
 
 	public String getName() {

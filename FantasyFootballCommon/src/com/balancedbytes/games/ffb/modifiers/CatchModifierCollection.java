@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 public abstract class CatchModifierCollection extends ModifierCollection<CatchContext, CatchModifier> {
 

@@ -26,7 +26,7 @@ import com.balancedbytes.games.ffb.model.BlitzState;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.option.IGameOption;

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.skill.BoneHead;
 import com.balancedbytes.games.ffb.skill.JumpUp;
 import com.balancedbytes.games.ffb.skill.NoHands;

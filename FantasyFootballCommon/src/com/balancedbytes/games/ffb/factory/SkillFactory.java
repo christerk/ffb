@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.util.Scanner;
 
 import java.util.Collection;

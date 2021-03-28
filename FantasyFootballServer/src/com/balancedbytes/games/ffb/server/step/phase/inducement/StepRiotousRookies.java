@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
-import com.balancedbytes.games.ffb.skill.Loner;
+import com.balancedbytes.games.ffb.skill.bb2016.Loner;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 

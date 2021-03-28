@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * The player may add 1 to the D6 roll when he passes.

@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;

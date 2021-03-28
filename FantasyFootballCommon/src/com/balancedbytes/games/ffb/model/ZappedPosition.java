@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.skill.Dodge;
 import com.balancedbytes.games.ffb.skill.bb2016.Leap;
 import com.balancedbytes.games.ffb.skill.NoHands;

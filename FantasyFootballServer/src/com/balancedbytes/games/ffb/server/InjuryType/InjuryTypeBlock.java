@@ -4,16 +4,16 @@ import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Block;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -74,7 +74,7 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 			// do not use injuryModifiers on blocking own team-mate with b&c
 			if (pAttacker.getTeam() != pDefender.getTeam()) {
-				InjuryModifierFactory.ModifiersWithContext armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
+				Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 						pDefender, isStab(), isFoul());
 				injuryContext.addInjuryModifiers(armorModifiers);
 			}

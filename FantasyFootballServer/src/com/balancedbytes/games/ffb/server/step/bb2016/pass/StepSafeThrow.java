@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;

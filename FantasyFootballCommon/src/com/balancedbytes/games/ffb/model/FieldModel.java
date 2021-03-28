@@ -24,6 +24,7 @@ import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
+import com.balancedbytes.games.ffb.model.skill.SkillWithValue;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -288,7 +289,7 @@ public class FieldModel implements IJsonSerializable {
 		Set<CardEffect> cardEffects = fCardEffectsByPlayerId.computeIfAbsent(pPlayer.getId(), k -> new HashSet<>());
 		cardEffects.add(pCardEffect);
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
-		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(factory::forClass).collect(Collectors.toSet()));
+		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
 	}
 

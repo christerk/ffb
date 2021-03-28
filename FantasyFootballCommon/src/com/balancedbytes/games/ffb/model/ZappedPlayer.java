@@ -6,6 +6,8 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.model.skill.SkillWithValue;
 import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -126,7 +128,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public String getSkillValue(Skill pSkill) {
+	public String getSkillValueExcludingTemporaryOnes(Skill pSkill) {
 		return null;
 	}
 
@@ -296,12 +298,12 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	protected Map<String, Set<Skill>> getTemporarySkills() {
+	protected Map<String, Set<SkillWithValue>> getTemporarySkills() {
 		return originalPlayer.getTemporarySkills();
 	}
 
 	@Override
-	public void addTemporarySkills(String source, Set<Skill> skills) {
+	public void addTemporarySkills(String source, Set<SkillWithValue> skills) {
 		originalPlayer.addTemporarySkills(source, skills);
 	}
 

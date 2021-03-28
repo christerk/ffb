@@ -1,5 +1,9 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.skill;
 
+import com.balancedbytes.games.ffb.model.ISkillBehaviour;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.PlayerModifier;
+import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.INamedObject;
@@ -229,5 +233,9 @@ public abstract class Skill implements INamedObject {
 
 	public int getDefaultSkillValue() {
 		return defaultSkillValue;
+	}
+
+	public SkillValueEvaluator evaluator() {
+		return SkillValueEvaluator.DEFAULT;
 	}
 }

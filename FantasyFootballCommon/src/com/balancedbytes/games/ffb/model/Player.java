@@ -9,6 +9,9 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.model.skill.SkillDisplayInfo;
+import com.balancedbytes.games.ffb.model.skill.SkillWithValue;
 import com.balancedbytes.games.ffb.modifiers.TemporaryEnhancements;
 import com.balancedbytes.games.ffb.modifiers.TemporaryStatModifier;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -17,13 +20,14 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 
  * @author Kalimar
  */
 public abstract class Player<T extends Position> implements IXmlSerializable, IJsonSerializable {
@@ -101,7 +105,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract Skill[] getSkills();
 
- 	public abstract String getSkillValue(Skill pSkill);
+	public abstract String getSkillValueExcludingTemporaryOnes(Skill pSkill);
 
 	public abstract int getSkillIntValue(Skill skill);
 
@@ -169,12 +173,12 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	private static Player<?> createPlayer(IFactorySource source, JsonValue jsonValue) {
 		if (jsonValue instanceof JsonObject
-				&& ZappedPlayer.KIND.equals(IJsonOption.PLAYER_KIND.getFrom(source, (JsonObject) jsonValue))) {
+			&& ZappedPlayer.KIND.equals(IJsonOption.PLAYER_KIND.getFrom(source, (JsonObject) jsonValue))) {
 			return new ZappedPlayer();
 		}
 		return new RosterPlayer();
 	}
-	
+
 	public Skill getSkillWithProperty(ISkillProperty property) {
 		for (Skill playerSkill : getSkillsIncludingTemporaryOnes()) {
 			if (playerSkill.hasSkillProperty(property)) {
@@ -212,18 +216,20 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	protected abstract Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers();
 
 	public abstract void addTemporaryModifiers(String source, Set<TemporaryStatModifier> modifiers);
+
 	public abstract void removeTemporaryModifiers(String source);
 
 	public Set<Skill> getSkillsIncludingTemporaryOnes() {
 		return Stream.concat(
-			getTemporarySkills().values().stream().flatMap(Collection::stream),
+			getTemporarySkills().values().stream().flatMap(Collection::stream).map(SkillWithValue::getSkill),
 			Arrays.stream(getSkills())
 		).collect(Collectors.toSet());
 	}
 
-	protected abstract Map<String, Set<Skill>> getTemporarySkills();
+	protected abstract Map<String, Set<SkillWithValue>> getTemporarySkills();
 
-	public abstract void addTemporarySkills(String source, Set<Skill> skills);
+	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
+
 	public abstract void removeTemporarySkills(String source);
 
 	public boolean hasSkillProperty(ISkillProperty property) {
@@ -236,6 +242,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	protected abstract Map<String, Set<ISkillProperty>> getTemporaryProperties();
 
 	public abstract void addTemporaryProperties(String source, Set<ISkillProperty> properties);
+
 	public abstract void removeTemporaryProperties(String source);
 
 	public void removeEnhancements(Card card) {
@@ -255,11 +262,26 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public void addEnhancement(String name, TemporaryEnhancements enhancements, SkillFactory factory) {
 		addTemporaryModifiers(name, enhancements.getModifiers());
 		addTemporaryProperties(name, enhancements.getProperties());
-		addTemporarySkills(name, enhancements.getSkills().stream().map(factory::forClass).collect(Collectors.toSet()));
+		addTemporarySkills(name, enhancements.getSkills().stream().map(scwv -> new SkillWithValue(factory.forClass(scwv.getSkill()), scwv.getValue().orElse(null))).collect(Collectors.toSet()));
 
 	}
 
 	public String getSource(ISkillProperty property) {
 		return getTemporaryProperties().entrySet().stream().filter(entry -> entry.getValue().contains(property)).map(Map.Entry::getKey).findFirst().orElse(null);
+	}
+
+	public Set<SkillDisplayInfo> skillInfos() {
+		return getSkillsIncludingTemporaryOnes().stream()
+			.map(this::skillInfo).collect(Collectors.toSet());
+	}
+
+	private SkillDisplayInfo skillInfo(Skill skill) {
+		return skill.evaluator().info(skill, this);
+	}
+
+	public List<String> tempValues(Skill skill) {
+		return getTemporarySkills().values().stream().flatMap(Collection::stream)
+			.filter(swv -> swv.getSkill() == skill)
+			.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 }

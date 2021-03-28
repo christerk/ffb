@@ -9,8 +9,8 @@ public class VariableInjuryModifierDefender extends VariableInjuryModifier {
 	}
 
 	@Override
-	protected Player<?> relevantPlayer(InjuryModifierContext context) {
-		return context.getDefender();
+	protected Player<?> relevantPlayer(Player<?> attacker, Player<?> defender) {
+		return defender;
 	}
 
 	@Override

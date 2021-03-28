@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;

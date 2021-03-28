@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
