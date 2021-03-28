@@ -133,11 +133,6 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public int getSkillIntValue(Skill skill) {
-		return skill.getDefaultSkillValue();
-	}
-
-	@Override
 	public String getUrlPortrait() {
 		return originalPlayer.getUrlPortrait();
 	}

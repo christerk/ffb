@@ -61,15 +61,10 @@ public interface SkillValueEvaluator {
 	abstract class IntegerEvaluator implements SkillValueEvaluator {
 		@Override
 		public SkillDisplayInfo info(Skill skill, Player<?> player) {
-			List<String> values = player.tempValues(skill);
-			values.add(player.getSkillValueExcludingTemporaryOnes(skill));
-			Integer intValue = skill.evaluator().intValue(values);
-
-			if (intValue == null) {
-				return DEFAULT.info(skill, player);
-			}
+			int intValue = player.getSkillIntValue(skill);
+			
 			SkillDisplayInfo.Category category;
-			if (map(player.getSkillValueExcludingTemporaryOnes(skill)).contains(intValue)) {
+			if (map(player.getSkillValueExcludingTemporaryOnes(skill)).contains(intValue) || intValue == skill.getDefaultSkillValue()) {
 				category = player.getPosition().hasSkill(skill) ? SkillDisplayInfo.Category.ROSTER : SkillDisplayInfo.Category.PLAYER;
 			} else {
 				category = SkillDisplayInfo.Category.TEMPORARY;

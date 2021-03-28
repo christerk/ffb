@@ -8,8 +8,8 @@ import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.skill.SkillValueEvaluator;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
-import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.VariableArmourModifier;
+import com.balancedbytes.games.ffb.modifiers.VariableInjuryModifierAttacker;
 
 import java.util.Arrays;
 
@@ -24,7 +24,7 @@ import java.util.Arrays;
 public class DirtyPlayer extends Skill {
 
 	public DirtyPlayer() {
-		super("Dirty Player", SkillCategory.GENERAL);
+		super("Dirty Player", SkillCategory.GENERAL, 1);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class DirtyPlayer extends Skill {
 				return context.isFoul();
 			}
 		});
-		registerModifier(new StaticInjuryModifierAttacker("Dirty Player", 1, false) {
+		registerModifier(new VariableInjuryModifierAttacker("Dirty Player",false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)

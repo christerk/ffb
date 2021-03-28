@@ -3,12 +3,12 @@ package com.balancedbytes.games.ffb.skill.bb2020;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.skill.SkillValueEvaluator;
-import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifierAttacker;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.VariableArmourModifier;
+import com.balancedbytes.games.ffb.modifiers.VariableInjuryModifierAttacker;
 
 import java.util.Arrays;
 
@@ -23,13 +23,13 @@ import java.util.Arrays;
 public class MightyBlow extends Skill {
 
 	public MightyBlow() {
-		super("Mighty Blow", SkillCategory.STRENGTH);
+		super("Mighty Blow", SkillCategory.STRENGTH, 1);
 	}
 
 	@Override
 	public void postConstruct() {
 		registerModifier(new VariableArmourModifier("Mighty Blow",false));
-		registerModifier(new StaticInjuryModifierAttacker("Mighty Blow", 1, false) {
+		registerModifier(new VariableInjuryModifierAttacker("Mighty Blow",false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)

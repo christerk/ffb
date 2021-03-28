@@ -197,14 +197,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public int getSkillIntValue(Skill skill) {
-		List<String> values = tempValues(skill);
-		values.add(getSkillValueExcludingTemporaryOnes(skill));
-		Integer intValue = skill.evaluator().intValue(values);
-		return intValue != null ? intValue : skill.getDefaultSkillValue();
-	}
-
-	@Override
 	public String getUrlPortrait() {
 		return fUrlPortrait;
 	}

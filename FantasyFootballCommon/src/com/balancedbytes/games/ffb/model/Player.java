@@ -20,6 +20,7 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -107,7 +108,12 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract String getSkillValueExcludingTemporaryOnes(Skill pSkill);
 
-	public abstract int getSkillIntValue(Skill skill);
+	public int getSkillIntValue(Skill skill) {
+		List<String> values = tempValues(skill);
+		values.add(getSkillValueExcludingTemporaryOnes(skill));
+		Integer intValue = skill.evaluator().intValue(values);
+		return intValue != null ? intValue : skill.getDefaultSkillValue();
+	}
 
 	public abstract String getUrlPortrait();
 
@@ -270,16 +276,18 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return getTemporaryProperties().entrySet().stream().filter(entry -> entry.getValue().contains(property)).map(Map.Entry::getKey).findFirst().orElse(null);
 	}
 
-	public Set<SkillDisplayInfo> skillInfos() {
+	public List<SkillDisplayInfo> skillInfos() {
 		return getSkillsIncludingTemporaryOnes().stream()
-			.map(this::skillInfo).collect(Collectors.toSet());
+			.map(this::skillInfo)
+			.sorted(Comparator.comparing(s -> s.getSkill().getName()))
+			.collect(Collectors.toList());
 	}
 
 	private SkillDisplayInfo skillInfo(Skill skill) {
 		return skill.evaluator().info(skill, this);
 	}
 
-	public List<String> tempValues(Skill skill) {
+	private List<String> tempValues(Skill skill) {
 		return getTemporarySkills().values().stream().flatMap(Collection::stream)
 			.filter(swv -> swv.getSkill() == skill)
 			.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());
