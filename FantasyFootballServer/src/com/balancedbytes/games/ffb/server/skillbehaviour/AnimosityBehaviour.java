@@ -32,8 +32,8 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.COMMON)
-public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
-	public AniomosityBehaviour() {
+public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
+	public AnimosityBehaviour() {
 		super();
 
 		registerModifier(new StepModifier<StepAnimosity, StepAnimosity.StepState>() {
