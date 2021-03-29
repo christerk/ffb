@@ -142,7 +142,7 @@ public class UtilServerGame {
 		updateLeaderReRollsForTeam(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel(), pStep);
 	}
 
-	protected static void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
+	private static void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
 	                                                 IStep pStep) {
 		if (!LeaderState.USED.equals(pTurnData.getLeaderState())) {
 			if (teamHasLeaderOnField(pTeam, pFieldModel)) {

@@ -43,21 +43,21 @@ public class UtilServerReRoll {
 				((GameMechanic)game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name()))
 					.updateTurnDataAfterReRollUsage(turnData);
 
+				if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
+					turnData.setLeaderState(LeaderState.USED);
+				} else {
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.TEAM_RE_ROLL, successful, 0));
+				}
 
 				if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 					int roll = gameState.getDiceRoller().rollSkill();
 					successful = DiceInterpreter.getInstance().isLonerSuccessful(roll);
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
-					// TODO: add a message for Leader reroll being used with Loner?
 				} else {
 					successful = true;
-					if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
-						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
-						turnData.setLeaderState(LeaderState.USED);
-					} else {
-						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.TEAM_RE_ROLL, successful, 0));
-					}
 				}
+
 			}
 			if (pReRollSource.getSkill(game) != null) {
 				if (ReRollSources.PRO == pReRollSource) {

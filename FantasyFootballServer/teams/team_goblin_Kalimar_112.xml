@@ -88,7 +88,7 @@
 		<name>Goblin5</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill>Leader</skill></skillList>
 	</player>
 
 	<player nr="12" id="teamGoblinKalimar12">

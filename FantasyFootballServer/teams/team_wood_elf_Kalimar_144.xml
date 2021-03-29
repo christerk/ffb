@@ -88,7 +88,10 @@
     <name>Thrower2</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList><skill value="3">Loner</skill></skillList>
+  	<skillList>
+        <skill value="3">Loner</skill>
+        <skill>Leader</skill>
+    </skillList>
   </player>
 
   <player nr="7" id="teamWoodElfKalimar7">
