@@ -52,7 +52,8 @@ public class UtilServerReRoll {
 
 				if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 					int roll = gameState.getDiceRoller().rollSkill();
-					successful = DiceInterpreter.getInstance().isLonerSuccessful(roll);
+					int minimumRoll = ((GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name())).minimumLonerRoll(pPlayer);
+					successful = DiceInterpreter.getInstance().isLonerSuccessful(roll, minimumRoll);
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
 				} else {
 					successful = true;

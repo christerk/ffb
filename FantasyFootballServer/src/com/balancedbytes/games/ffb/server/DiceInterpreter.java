@@ -124,8 +124,8 @@ public class DiceInterpreter {
 		return (roll >= 4);
 	}
 
-	public boolean isLonerSuccessful(int roll) {
-		return (roll >= 4);
+	public boolean isLonerSuccessful(int roll, int minimumRoll) {
+		return roll >= minimumRoll;
 	}
 
 	public boolean isProSuccessful(int roll) {

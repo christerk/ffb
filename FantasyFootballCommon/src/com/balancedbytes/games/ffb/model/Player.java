@@ -115,6 +115,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return intValue != null ? intValue : skill.getDefaultSkillValue();
 	}
 
+	public int getSkillIntValue(ISkillProperty property) {
+		return getSkillIntValue(getSkillWithProperty(property));
+	}
+
 	public abstract String getUrlPortrait();
 
 	abstract void setUrlPortrait(String pUrlPortrait);
