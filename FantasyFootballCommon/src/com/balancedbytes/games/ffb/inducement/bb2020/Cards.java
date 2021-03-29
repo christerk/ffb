@@ -36,8 +36,8 @@ import com.balancedbytes.games.ffb.skill.SecretWeapon;
 import com.balancedbytes.games.ffb.skill.Shadowing;
 import com.balancedbytes.games.ffb.skill.SideStep;
 import com.balancedbytes.games.ffb.skill.SureHands;
-import com.balancedbytes.games.ffb.skill.bb2016.DirtyPlayer;
-import com.balancedbytes.games.ffb.skill.bb2016.MightyBlow;
+import com.balancedbytes.games.ffb.skill.bb2020.DirtyPlayer;
+import com.balancedbytes.games.ffb.skill.bb2020.MightyBlow;
 import com.balancedbytes.games.ffb.skill.bb2020.Accurate;
 import com.balancedbytes.games.ffb.util.UtilCards;
 

@@ -62,7 +62,7 @@ public interface SkillValueEvaluator {
 		@Override
 		public SkillDisplayInfo info(Skill skill, Player<?> player) {
 			int intValue = player.getSkillIntValue(skill);
-			
+
 			SkillDisplayInfo.Category category;
 			if (map(player.getSkillValueExcludingTemporaryOnes(skill)).contains(intValue) || intValue == skill.getDefaultSkillValue()) {
 				category = player.getPosition().hasSkill(skill) ? SkillDisplayInfo.Category.ROSTER : SkillDisplayInfo.Category.PLAYER;

@@ -19,7 +19,6 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
-import com.balancedbytes.games.ffb.skill.bb2016.Loner;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 
@@ -70,7 +69,7 @@ public class StepRiotousRookies extends AbstractStep {
 		riotousPlayer.setNr(team.getMaxPlayerNr() + 1);
 		riotousPlayer.setGender(gender);
 		riotousPlayer.setType(PlayerType.RIOTOUS_ROOKIE);
-		riotousPlayer.addSkill(factory.forClass(Loner.class));
+		riotousPlayer.addSkill(factory.forName("Loner"));
 		team.addPlayer(riotousPlayer);
 		game.getFieldModel().setPlayerState(riotousPlayer, new PlayerState(PlayerState.RESERVE));
 		UtilBox.putPlayerIntoBox(game, riotousPlayer);

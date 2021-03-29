@@ -1,18 +1,17 @@
 package com.balancedbytes.games.ffb;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.skill.Catch;
 import com.balancedbytes.games.ffb.skill.Dodge;
 import com.balancedbytes.games.ffb.skill.Leader;
-import com.balancedbytes.games.ffb.skill.bb2016.Loner;
 import com.balancedbytes.games.ffb.skill.MonstrousMouth;
 import com.balancedbytes.games.ffb.skill.Pass;
 import com.balancedbytes.games.ffb.skill.Pro;
 import com.balancedbytes.games.ffb.skill.SureFeet;
 import com.balancedbytes.games.ffb.skill.SureHands;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReRollSources {
 
@@ -24,7 +23,7 @@ public class ReRollSources {
 	public static final ReRollSource CATCH = new ReRollSource(Catch.class);
 	public static final ReRollSource PASS = new ReRollSource(Pass.class);
 	public static final ReRollSource WINNINGS = new ReRollSource("Winnings");
-	public static final ReRollSource LONER = new ReRollSource(Loner.class);
+	public static final ReRollSource LONER = new ReRollSource("Loner");
 	public static final ReRollSource LEADER = new ReRollSource(Leader.class);
 	public static final ReRollSource MONSTROUS_MOUTH = new ReRollSource(MonstrousMouth.class);
 

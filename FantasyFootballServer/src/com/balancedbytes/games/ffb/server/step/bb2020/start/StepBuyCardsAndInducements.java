@@ -54,7 +54,7 @@ import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Kickoff;
 import com.balancedbytes.games.ffb.server.step.generator.common.RiotousRookies;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.skill.bb2016.Loner;
+import com.balancedbytes.games.ffb.skill.bb2020.Loner;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.eclipsesource.json.JsonObject;
