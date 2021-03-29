@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.model.skill.SkillValueEvaluator;
 public class Loner extends Skill {
 
 	public Loner() {
-		super("Loner", SkillCategory.EXTRAORDINARY);
+		super("Loner", SkillCategory.EXTRAORDINARY, 4);
 	}
 
 	@Override

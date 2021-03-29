@@ -64,7 +64,10 @@ public interface SkillValueEvaluator {
 			int intValue = player.getSkillIntValue(skill);
 
 			SkillDisplayInfo.Category category;
-			if (map(player.getSkillValueExcludingTemporaryOnes(skill)).contains(intValue) || player.hasSkillExcludingTemporaryOnes(skill)) {
+
+			Set<Integer> skillValues = map(player.getSkillValueExcludingTemporaryOnes(skill));
+			if (player.hasSkillExcludingTemporaryOnes(skill) &&
+				((skillValues.isEmpty() && intValue == skill.getDefaultSkillValue()) || skillValues.contains(intValue))) {
 				category = player.getPosition().hasSkill(skill) ? SkillDisplayInfo.Category.ROSTER : SkillDisplayInfo.Category.PLAYER;
 			} else {
 				category = SkillDisplayInfo.Category.TEMPORARY;

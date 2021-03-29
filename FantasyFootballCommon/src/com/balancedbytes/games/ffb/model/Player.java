@@ -287,7 +287,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return skill.evaluator().info(skill, this);
 	}
 
-	private List<String> tempValues(Skill skill) {
+	public List<String> tempValues(Skill skill) {
 		return getTemporarySkills().values().stream().flatMap(Collection::stream)
 			.filter(swv -> swv.getSkill() == skill)
 			.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());

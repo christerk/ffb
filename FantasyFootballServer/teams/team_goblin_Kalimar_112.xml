@@ -67,7 +67,7 @@
 		<name>Goblin2</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill value="4">Mighty Blow</skill></skillList>
 	</player>
 
 	<player nr="9" id="teamGoblinKalimar9">
