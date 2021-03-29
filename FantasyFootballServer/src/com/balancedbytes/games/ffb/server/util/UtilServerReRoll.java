@@ -97,7 +97,7 @@ public class UtilServerReRoll {
 			reRollAvailable = (teamReRollOption || proOption);
 			if (reRollAvailable) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-				String playerId = (player != null) ? player.getId() : null;
+				String playerId = player.getId();
 				UtilServerDialog.showDialog(gameState,
 						new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble),
 						!actingTeam.hasPlayer(player));
@@ -109,9 +109,8 @@ public class UtilServerReRoll {
 	public static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {
 		Game game = pGameState.getGame();
 		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-		// TODO: no team re-rolls on dump-off
 		return (actingTeam.hasPlayer(pPlayer) && !game.getTurnData().isReRollUsed() && (game.getTurnData().getReRolls() > 0)
-				&& game.getTurnMode() != TurnMode.KICKOFF && (game.getTurnMode() != TurnMode.PASS_BLOCK)
+				&& game.getTurnMode() != TurnMode.KICKOFF && (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.DUMP_OFF)
 				&& ((game.getTurnMode() != TurnMode.BOMB_HOME) || game.getTeamHome().hasPlayer(pPlayer))
 				&& ((game.getTurnMode() != TurnMode.BOMB_HOME_BLITZ) || game.getTeamHome().hasPlayer(pPlayer))
 				&& ((game.getTurnMode() != TurnMode.BOMB_AWAY) || game.getTeamAway().hasPlayer(pPlayer))

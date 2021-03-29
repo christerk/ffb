@@ -99,7 +99,7 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							if ((ReRolledActions.ANIMOSITY == step.getReRolledAction())
-									|| !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+									|| !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), thrower,
 											ReRolledActions.ANIMOSITY, minimumRoll, false)) {
 								actingPlayer.setSufferingAnimosity(true);
 							}
