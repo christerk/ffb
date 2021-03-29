@@ -98,7 +98,7 @@
     <name>Lineman1</name>
   	<gender>male</gender>
   	<positionId>woodelf.lineman</positionId>
-  	<skillList></skillList>
+  	<skillList><skill>Pro</skill></skillList>
   </player>
 
   <player nr="8" id="teamWoodElfKalimar8">

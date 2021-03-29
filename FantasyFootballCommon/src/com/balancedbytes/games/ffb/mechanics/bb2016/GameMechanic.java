@@ -17,4 +17,9 @@ public class GameMechanic extends com.balancedbytes.games.ffb.mechanics.GameMech
 		return 4;
 	}
 
+	@Override
+	public int minimumProRoll() {
+		return 4;
+	}
+
 }

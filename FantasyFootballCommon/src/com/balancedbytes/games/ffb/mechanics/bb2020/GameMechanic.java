@@ -16,4 +16,9 @@ public class GameMechanic extends com.balancedbytes.games.ffb.mechanics.GameMech
 	public int minimumLonerRoll(Player<?> player) {
 		return player.getSkillIntValue(NamedProperties.hasToRollToUseTeamReroll);
 	}
+
+	@Override
+	public int minimumProRoll() {
+		return 3;
+	}
 }

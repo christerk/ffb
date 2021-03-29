@@ -12,4 +12,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract void updateTurnDataAfterReRollUsage(TurnData turnData);
 
 	public abstract int minimumLonerRoll(Player<?> player);
+
+	public abstract int minimumProRoll();
 }
