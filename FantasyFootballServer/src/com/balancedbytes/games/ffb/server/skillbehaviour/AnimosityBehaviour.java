@@ -108,6 +108,8 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 								&& (step.getReRollSource() != null));
 						step.getResult().addReport(new ReportSkillRoll(ReportId.ANIMOSITY_ROLL, actingPlayer.getPlayerId(),
 								successful, roll, minimumRoll, reRolled));
+					} else {
+						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 					if (actingPlayer.isSufferingAnimosity()) {
 						boolean animosityPassPossible = false;
