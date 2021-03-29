@@ -124,10 +124,6 @@ public class DiceInterpreter {
 		return (roll >= 4);
 	}
 
-	public boolean isRollSuccessful(int roll, int minimumRoll) {
-		return roll >= minimumRoll;
-	}
-
 	public boolean isAffectedByPitchInvasion(int roll, int pFameOtherTeam) {
 		return ((roll > 1) && (roll + pFameOtherTeam >= 6));
 	}
