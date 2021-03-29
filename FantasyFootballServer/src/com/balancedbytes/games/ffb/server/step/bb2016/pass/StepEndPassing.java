@@ -186,7 +186,7 @@ public final class StepEndPassing extends AbstractStep {
 			}
 			if (game.getThrower() == actingPlayer.getPlayer()) {
 				fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
-						|| ((catcher == null) && !actingPlayer.isSufferingAnimosity())
+						|| (catcher == null)
 						|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
 						|| (fPassFumble && !dontDropFumble));
 				endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
