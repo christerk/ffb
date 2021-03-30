@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.balancedbytes.games.ffb.model.skill.SkillValueEvaluator.ANIMOSITY_TO_ALL;
+
 /**
  * @author Kalimar
  */
@@ -306,11 +308,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		}
 
 		Set<String> pattern = new HashSet<String>() {{
-			add("all");
+			add(ANIMOSITY_TO_ALL);
 			add(player.getPositionId().toLowerCase());
 			add(player.getRace());
 		}};
-		
+
 		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
 	}
 }

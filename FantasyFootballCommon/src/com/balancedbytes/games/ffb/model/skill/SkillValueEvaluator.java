@@ -67,12 +67,13 @@ public interface SkillValueEvaluator {
 		}
 	};
 
+	String ANIMOSITY_TO_ALL = "all";
 	SkillValueEvaluator ANIMOSITY = new SkillValueEvaluator() {
 
 		@Override
 		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
 			Roster roster = player.getPosition().getRoster();
-			Set<String> skillValues = split(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse("all"));
+			Set<String> skillValues = split(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse(ANIMOSITY_TO_ALL));
 			Set<String> tempSkillValues = split(player.temporarySkillValues(skill).toArray(new String[0]));
 			tempSkillValues.removeAll(skillValues);
 			return Stream.concat(
@@ -89,7 +90,7 @@ public interface SkillValueEvaluator {
 		@Override
 		public Set<String> values(Skill skill, Player<?> player) {
 			Set<String> values = player.temporarySkillValues(skill);
-			values.add(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse("all"));
+			values.add(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse(ANIMOSITY_TO_ALL));
 			return split(values.toArray(new String[0]));
 		}
 
@@ -98,7 +99,7 @@ public interface SkillValueEvaluator {
 		}
 
 		private String map(String key, Roster roster) {
-			if (key.equalsIgnoreCase("all")) {
+			if (key.equalsIgnoreCase(ANIMOSITY_TO_ALL)) {
 				return "all team-mates";
 			}
 
