@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
+import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll2020;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -84,32 +84,32 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 					doNextStep = true;
 					if (state.usingShadowing && (game.getDefender() != null)) {
 						boolean rollShadowing = true;
-						if (ReRolledActions.SHADOWING_ESCAPE == step.getReRolledAction()) {
+						if (ReRolledActions.SHADOWING == step.getReRolledAction()) {
 							if ((step.getReRollSource() == null)
-									|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+									|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), game.getDefender())) {
 								rollShadowing = false;
+								state.usingShadowing = false;
 							}
 						}
 						if (rollShadowing) {
-							int[] rollEscape = step.getGameState().getDiceRoller().rollShadowingEscape();
-							boolean successful = DiceInterpreter.getInstance().isShadowingEscapeSuccessful(rollEscape,
-									game.getDefender().getMovementWithModifiers(),
-									actingPlayer.getPlayer().getMovementWithModifiers());
-							int minimumRoll = DiceInterpreter.getInstance().minimumRollShadowingEscape(
-									game.getDefender().getMovementWithModifiers(),
-									actingPlayer.getPlayer().getMovementWithModifiers());
-							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.SHADOWING_ESCAPE)
+							int roll = step.getGameState().getDiceRoller().rollSkill();
+							int moveDifference = game.getDefender().getMovementWithModifiers() - actingPlayer.getPlayer().getMovementWithModifiers();
+							int minimumRoll = Math.max(6 - moveDifference, 2);
+							boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.SHADOWING)
 									&& (step.getReRollSource() != null));
-							step.getResult().addReport(new ReportTentaclesShadowingRoll(skill, game.getDefenderId(), rollEscape,
+							step.getResult().addReport(new ReportTentaclesShadowingRoll2020(skill, game.getDefenderId(), roll,
 									successful, minimumRoll, reRolled));
-							if (successful) {
-								state.usingShadowing = false;
-							} else {
-								if (step.getReRolledAction() != ReRolledActions.SHADOWING_ESCAPE) {
-									if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-											ReRolledActions.SHADOWING_ESCAPE, minimumRoll, false)) {
+							if (!successful) {
+								if (step.getReRolledAction() != ReRolledActions.SHADOWING) {
+									if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getDefender(),
+										ReRolledActions.SHADOWING, minimumRoll, false)) {
 										doNextStep = false;
+									} else {
+										state.usingShadowing = false;
 									}
+								} else {
+									state.usingShadowing = false;
 								}
 							}
 						}

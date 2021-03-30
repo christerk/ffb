@@ -11,7 +11,7 @@ public enum ReportId implements INamedObject {
 	CONFUSION_ROLL("confusionRoll"), DAUNTLESS_ROLL("dauntlessRoll"), DODGE_ROLL("dodgeRoll"), ESCAPE_ROLL("escapeRoll"),
 	FOUL_APPEARANCE_ROLL("foulAppearanceRoll"), GO_FOR_IT_ROLL("goForItRoll"), INTERCEPTION_ROLL("interceptionRoll"),
 	JUMP_ROLL("leapRoll"), PASS_ROLL("passRoll"), PICK_UP_ROLL("pickUpRoll"), RIGHT_STUFF_ROLL("rightStuffRoll"),
-	REGENERATION_ROLL("regenerationRoll"), SAFE_THROW_ROLL("safeThrowRoll"),
+	REGENERATION_ROLL("regenerationRoll"), SAFE_THROW_ROLL("safeThrowRoll"), TENTACLES_SHADOWING_ROLL_2020("tentaclesShadowingRoll2020"),
 	TENTACLES_SHADOWING_ROLL("tentaclesShadowingRoll"), SKILL_USE("skillUse"), RE_ROLL("reRoll"), TURN_END("turnEnd"),
 	PLAYER_ACTION("playerAction"), FOUL("foul"), HAND_OVER("handOver"), INJURY("injury"),
 	APOTHECARY_ROLL("apothecaryRoll"), APOTHECARY_CHOICE("apothecaryChoice"), THROW_IN("throwIn"),
@@ -109,6 +109,8 @@ public enum ReportId implements INamedObject {
 				return new ReportSkillUse();
 			case TENTACLES_SHADOWING_ROLL:
 				return new ReportTentaclesShadowingRoll();
+			case TENTACLES_SHADOWING_ROLL_2020:
+				return new ReportTentaclesShadowingRoll2020();
 			case TURN_END:
 				return new ReportTurnEnd();
 

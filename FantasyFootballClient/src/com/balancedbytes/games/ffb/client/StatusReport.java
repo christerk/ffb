@@ -29,10 +29,10 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
@@ -110,6 +110,7 @@ import com.balancedbytes.games.ffb.report.ReportStartHalf;
 import com.balancedbytes.games.ffb.report.ReportSwarmingRoll;
 import com.balancedbytes.games.ffb.report.ReportSwoopPlayer;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
+import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll2020;
 import com.balancedbytes.games.ffb.report.ReportThrowIn;
 import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.report.ReportTimeoutEnforced;
@@ -1880,7 +1881,7 @@ public class StatusReport {
 	}
 
 	public void reportTentaclesShadowingRoll(ReportTentaclesShadowingRoll pReport) {
-		StringBuilder status = null;
+		StringBuilder status;
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -1966,6 +1967,89 @@ public class StatusReport {
 				neededRoll.append(" (ST ").append(actingPlayer.getStrength());
 				neededRoll.append(" - ST ").append(defender.getStrengthWithModifiers());
 				neededRoll.append(" + Roll > 5).");
+				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
+			}
+		}
+	}
+
+	public void reportTentaclesShadowingRoll2020(ReportTentaclesShadowingRoll2020 pReport) {
+		StringBuilder status;
+		StringBuilder neededRoll = null;
+		Game game = getClient().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
+		if (!pReport.isReRolled()) {
+			if (pReport.getSkill().hasSkillProperty(NamedProperties.canFollowPlayerLeavingTacklezones)) {
+				print(getIndent(), true, defender);
+				print(getIndent(), TextStyle.BOLD, " tries to shadow ");
+				print(getIndent(), true, actingPlayer.getPlayer());
+				println(getIndent(), TextStyle.BOLD, ":");
+			}
+			if (pReport.getSkill().hasSkillProperty(NamedProperties.canHoldPlayersLeavingTacklezones)) {
+				status = new StringBuilder();
+				print(getIndent(), true, defender);
+				print(getIndent(), TextStyle.BOLD, " tries to hold ");
+				print(getIndent(), true, actingPlayer.getPlayer());
+				status.append(" with ").append(defender.getPlayerGender().getGenitive()).append(" tentacles:");
+				println(getIndent(), TextStyle.BOLD, status.toString());
+			}
+		}
+		if (pReport.getSkill().hasSkillProperty(NamedProperties.canFollowPlayerLeavingTacklezones)) {
+			status = new StringBuilder();
+			status.append("Shadowing Roll [ ").append(pReport.getRoll()).append(" ]");
+			println(getIndent() + 1, TextStyle.ROLL, status.toString());
+			status = new StringBuilder();
+			if (pReport.isSuccessful()) {
+				print(getIndent() + 2, false, defender);
+				status.append(" shadows ").append(defender.getPlayerGender().getGenitive()).append(" opponent successfully.");
+				println(getIndent() + 2, status.toString());
+				if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
+					neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll())
+						.append("+");
+				}
+			} else {
+				print(getIndent() + 2, false, defender);
+				status.append(" fails to shadow ").append(defender.getPlayerGender().getGenitive())
+					.append(" opponent.");
+				println(getIndent() + 2, status.toString());
+
+				if (!pReport.isReRolled() && fShowModifiersOnFailure) {
+					neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
+				}
+			}
+			if (neededRoll != null) {
+				neededRoll.append(" (Roll + MA ").append(defender.getMovementWithModifiers());
+				neededRoll.append(" - MA ").append(actingPlayer.getPlayer().getMovementWithModifiers());
+				neededRoll.append(" >= 6).");
+				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
+			}
+		}
+		if (pReport.getSkill().hasSkillProperty(NamedProperties.canHoldPlayersLeavingTacklezones)) {
+			status = new StringBuilder();
+			status.append("Tentacles Escape Roll [ ").append(pReport.getRoll()).append(" ]");
+			println(getIndent() + 1, TextStyle.ROLL, status.toString());
+			status = new StringBuilder();
+			if (pReport.isSuccessful()) {
+				print(getIndent() + 2, false, actingPlayer.getPlayer());
+				status.append(" escapes ").append(actingPlayer.getPlayer().getPlayerGender().getGenitive())
+					.append(" opponent.");
+				println(getIndent() + 2, status.toString());
+				if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
+					neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll())
+						.append("+");
+				}
+			} else {
+				print(getIndent() + 2, false, defender);
+				status.append(" holds ").append(defender.getPlayerGender().getGenitive()).append(" opponent successfully.");
+				println(getIndent() + 2, status.toString());
+				if (!pReport.isReRolled() && fShowModifiersOnFailure) {
+					neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
+				}
+			}
+			if (neededRoll != null) {
+				neededRoll.append(" (ST ").append(actingPlayer.getStrength());
+				neededRoll.append(" - ST ").append(defender.getStrengthWithModifiers());
+				neededRoll.append(" + Roll >= 6).");
 				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 			}
 		}
@@ -2947,6 +3031,9 @@ public class StatusReport {
 					break;
 				case TENTACLES_SHADOWING_ROLL:
 					reportTentaclesShadowingRoll((ReportTentaclesShadowingRoll) report);
+					break;
+				case TENTACLES_SHADOWING_ROLL_2020:
+					reportTentaclesShadowingRoll2020((ReportTentaclesShadowingRoll2020) report);
 					break;
 				case RE_ROLL:
 					reportReRoll((ReportReRoll) report);
