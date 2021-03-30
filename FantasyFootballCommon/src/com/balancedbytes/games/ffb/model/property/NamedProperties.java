@@ -88,6 +88,7 @@ public class NamedProperties {
 			"Grants Team Reroll When On Pitch");
 	public static final ISkillProperty hasNoTacklezone = new NamedProperty("Has No Tacklezone");
 	public static final ISkillProperty hasNurglesRot = new NamedProperty("Has Nurgles Rot");
+	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
 	public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty(
 			"Ignore Defender Stumbles Result");

@@ -1,21 +1,25 @@
 package com.balancedbytes.games.ffb.model.skill;
 
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Position;
+import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface SkillValueEvaluator {
-	SkillDisplayInfo info(Skill skill, Player<?> player);
-	Integer intValue(List<String> tempValues);
+	Set<SkillDisplayInfo> info(Skill skill, Player<?> player);
+	Integer intValue(Set<String> tempValues);
+	Set<String> values(Skill skill, Player<?> player);
 
 	SkillValueEvaluator DEFAULT = new SkillValueEvaluator() {
 		@Override
-		public SkillDisplayInfo info(Skill skill, Player<?> player) {
+		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
 			SkillDisplayInfo.Category category;
 			if (player.getPosition().hasSkill(skill)) {
 				category = SkillDisplayInfo.Category.ROSTER;
@@ -25,12 +29,17 @@ public interface SkillValueEvaluator {
 				category = SkillDisplayInfo.Category.TEMPORARY;
 			}
 
-			return new SkillDisplayInfo(skill.getName(), category, skill);
+			return Collections.singleton(new SkillDisplayInfo(skill.getName(), category, skill));
 		}
 
 		@Override
-		public Integer intValue(List<String> tempValues) {
+		public Integer intValue(Set<String> tempValues) {
 			return null;
+		}
+
+		@Override
+		public Set<String> values(Skill skill, Player<?> player) {
+			return Collections.emptySet();
 		}
 	};
 
@@ -58,9 +67,58 @@ public interface SkillValueEvaluator {
 		}
 	};
 
+	SkillValueEvaluator ANIMOSITY = new SkillValueEvaluator() {
+
+		@Override
+		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
+			Roster roster = player.getPosition().getRoster();
+			Set<String> skillValues = split(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse("all"));
+			Set<String> tempSkillValues = split(player.temporarySkillValues(skill).toArray(new String[0]));
+			tempSkillValues.removeAll(skillValues);
+			return Stream.concat(
+				skillValues.stream().map(value -> new SkillDisplayInfo(format(value, roster), SkillDisplayInfo.Category.ROSTER, skill)),
+				tempSkillValues.stream().map(value -> new SkillDisplayInfo(format(value, roster), SkillDisplayInfo.Category.TEMPORARY, skill))
+			).collect(Collectors.toSet());
+		}
+
+		@Override
+		public Integer intValue(Set<String> tempValues) {
+			return null;
+		}
+
+		@Override
+		public Set<String> values(Skill skill, Player<?> player) {
+			Set<String> values = player.temporarySkillValues(skill);
+			values.add(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse("all"));
+			return split(values.toArray(new String[0]));
+		}
+
+		private String format(String value, Roster roster) {
+			return "Animosity (" + map(value, roster) + ")";
+		}
+
+		private String map(String key, Roster roster) {
+			if (key.equalsIgnoreCase("all")) {
+				return "all team-mates";
+			}
+
+			Optional<? extends Position> position = Arrays.stream(roster.getPositions())
+				.filter(pos -> pos.getId().equalsIgnoreCase(key)).findFirst();
+			if (position.isPresent()) {
+				return position.get().getDisplayName();
+			}
+
+			return key;
+		}
+
+		private Set<String> split(String... values) {
+			return Arrays.stream(values).flatMap(value -> Arrays.stream(value.split(";"))).collect(Collectors.toSet());
+		}
+	};
+
 	abstract class IntegerEvaluator implements SkillValueEvaluator {
 		@Override
-		public SkillDisplayInfo info(Skill skill, Player<?> player) {
+		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
 			int intValue = player.getSkillIntValue(skill);
 
 			SkillDisplayInfo.Category category;
@@ -73,12 +131,17 @@ public interface SkillValueEvaluator {
 				category = SkillDisplayInfo.Category.TEMPORARY;
 			}
 
-			return new SkillDisplayInfo(format(skill, intValue), category, skill);
+			return Collections.singleton(new SkillDisplayInfo(format(skill, intValue), category, skill));
 		}
 
 		@Override
-		public Integer intValue(List<String> values) {
+		public Integer intValue(Set<String> values) {
 			return getRelevantValue(map(values.toArray(new String[0]))).orElse(null);
+		}
+
+		@Override
+		public Set<String> values(Skill skill, Player<?> player) {
+			return Collections.emptySet();
 		}
 
 		private Set<Integer> map(String... values) {

@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.property.ISkillProperty;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.skill.SkillDisplayInfo;
 import com.balancedbytes.games.ffb.model.skill.SkillWithValue;
@@ -21,6 +22,7 @@ import com.eclipsesource.json.JsonValue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -109,7 +111,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract String getSkillValueExcludingTemporaryOnes(Skill pSkill);
 
 	public int getSkillIntValue(Skill skill) {
-		List<String> values = tempValues(skill);
+		Set<String> values = temporarySkillValues(skill);
 		values.add(getSkillValueExcludingTemporaryOnes(skill));
 		Integer intValue = skill.evaluator().intValue(values);
 		return intValue != null ? intValue : skill.getDefaultSkillValue();
@@ -282,18 +284,33 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public List<SkillDisplayInfo> skillInfos() {
 		return getSkillsIncludingTemporaryOnes().stream()
-			.map(this::skillInfo)
+			.flatMap(s -> skillInfo(s).stream())
 			.sorted(Comparator.comparing(s -> s.getSkill().getName()))
 			.collect(Collectors.toList());
 	}
 
-	private SkillDisplayInfo skillInfo(Skill skill) {
+	private Set<SkillDisplayInfo> skillInfo(Skill skill) {
 		return skill.evaluator().info(skill, this);
 	}
 
-	public List<String> tempValues(Skill skill) {
+	public Set<String> temporarySkillValues(Skill skill) {
 		return getTemporarySkills().values().stream().flatMap(Collection::stream)
 			.filter(swv -> swv.getSkill() == skill)
-			.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());
+			.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toSet());
+	}
+
+	public boolean hasAnimosityTowards(Player<?> player) {
+		Skill animosity = getSkillWithProperty(NamedProperties.hasToRollToPassBallOn);
+		if (animosity == null) {
+			return false;
+		}
+
+		Set<String> pattern = new HashSet<String>() {{
+			add("all");
+			add(player.getPositionId().toLowerCase());
+			add(player.getRace());
+		}};
+		
+		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
 	}
 }
