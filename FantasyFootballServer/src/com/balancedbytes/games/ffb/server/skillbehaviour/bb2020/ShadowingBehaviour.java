@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -27,12 +27,12 @@ import com.balancedbytes.games.ffb.skill.Shadowing;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 	public ShadowingBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepShadowing, StepShadowing.StepState>() {
+		registerModifier(new StepModifier<StepShadowing, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepShadowing step, StepState state,
