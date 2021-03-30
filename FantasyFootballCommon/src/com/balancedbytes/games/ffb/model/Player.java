@@ -287,7 +287,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public List<SkillDisplayInfo> skillInfos() {
 		return getSkillsIncludingTemporaryOnes().stream()
 			.flatMap(s -> skillInfo(s).stream())
-			.sorted(Comparator.comparing(s -> s.getSkill().getName()))
+			.sorted(Comparator.comparing(SkillDisplayInfo::getInfo))
 			.collect(Collectors.toList());
 	}
 
@@ -309,9 +309,9 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 		Set<String> pattern = new HashSet<String>() {{
 			add(ANIMOSITY_TO_ALL);
-			add(player.getPositionId().toLowerCase());
+			add(player.getPositionId());
 			add(player.getRace());
-		}};
+		}}.stream().filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
 
 		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
 	}

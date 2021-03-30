@@ -434,16 +434,37 @@ public class PlayerDetailComponent extends JPanel {
 					pG2d.setFont(_SKILL_FONT);
 				}
 				FontMetrics metrics = pG2d.getFontMetrics();
-				height += metrics.getHeight();
-				if (yPos > pY) {
-					yPos += metrics.getHeight();
-				} else {
-					yPos += metrics.getAscent();
+				for (String part: splitSkill(skill)) {
+					height += metrics.getHeight();
+					if (yPos > pY) {
+						yPos += metrics.getHeight();
+					} else {
+						yPos += metrics.getAscent();
+					}
+					pG2d.drawString(part, pX, yPos);
 				}
-				pG2d.drawString(skill, pX, yPos);
 			}
 		}
 		return height;
+	}
+
+	private List<String> splitSkill(String skill) {
+		List<String> parts = new ArrayList<>();
+		boolean isLong = StringTool.isProvided(skill) && skill.length() > 20;
+		if (!isLong) {
+			parts.add(skill);
+			return parts;
+		}
+
+		int index = skill.indexOf("(");
+		if (index < 0) {
+			parts.add(skill);
+			return parts;
+		}
+
+		parts.add(skill.substring(0, index));
+		parts.add("  " + skill.substring(index));
+		return parts;
 	}
 
 	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier) {

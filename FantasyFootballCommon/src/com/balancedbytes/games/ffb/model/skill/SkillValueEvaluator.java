@@ -106,7 +106,7 @@ public interface SkillValueEvaluator {
 			Optional<? extends Position> position = Arrays.stream(roster.getPositions())
 				.filter(pos -> pos.getId().equalsIgnoreCase(key)).findFirst();
 			if (position.isPresent()) {
-				return position.get().getDisplayName();
+				return StringTool.isProvided(position.get().getDisplayName()) ? position.get().getDisplayName() : position.get().getName();
 			}
 
 			return key;

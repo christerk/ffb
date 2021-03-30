@@ -26,6 +26,7 @@
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
 			<skill>Stunty</skill>
+			<skill value="Skaven">Animosity</skill>
 		</skillList>
 		<skillCategoryList>
 			<normal>Agility</normal>
@@ -51,7 +52,7 @@
 		<portrait>portraits/underworld_skavenlineman.png</portrait>
 		<iconSet size="3">iconsets/underworld_skavenlineman.png</iconSet>
 		<skillList>
-			<skill>Animosity</skill>
+			<skill value="underworld.skaven.thrower;underworld.troll.warpstone">Animosity</skill>
 		</skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -77,7 +78,7 @@
 		<portrait>portraits/underworld_skaventhrower.png</portrait>
 		<iconSet size="1">iconsets/underworld_skaventhrower.png</iconSet>
 		<skillList>
-			<skill>Animosity</skill>
+			<skill value="All">Animosity</skill>
 			<skill>Pass</skill>
 			<skill>Sure Hands</skill>
 		</skillList>
