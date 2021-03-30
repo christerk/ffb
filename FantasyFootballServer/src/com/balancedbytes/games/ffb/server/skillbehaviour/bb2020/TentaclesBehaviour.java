@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll2020;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -16,11 +17,10 @@ import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.move.StepTentacles;
 import com.balancedbytes.games.ffb.server.step.action.move.StepTentacles.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Tentacles;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -113,13 +113,14 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 					}
 					if (doNextStep) {
 						if (state.usingTentacles) {
+							actingPlayer.setGoingForIt(true);
+							actingPlayer.setDodging(false);
+							boolean canSprint = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi);
+							actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovementWithModifiers() + (canSprint ? 3 : 2));
+							UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 							game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), state.coordinateFrom);
-							step.publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-							step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
-						} else {
-							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						}
+						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 				}
 				return false;
