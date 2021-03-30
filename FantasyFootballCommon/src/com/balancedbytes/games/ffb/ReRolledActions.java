@@ -44,6 +44,7 @@ public class ReRolledActions {
 	public static final ReRolledAction RIGHT_STUFF = new ReRolledAction(RightStuff.class);
 	public static final ReRolledAction SHADOWING = new ReRolledAction("Shadowing");
 	public static final ReRolledAction SHADOWING_ESCAPE = new ReRolledAction("Shadowing Escape");
+	public static final ReRolledAction TENTACLES = new ReRolledAction("Tentacles");
 	public static final ReRolledAction TENTACLES_ESCAPE = new ReRolledAction("Tentacles Escape");
 	public static final ReRolledAction ESCAPE = new ReRolledAction("Escape");
 	public static final ReRolledAction SAFE_THROW = new ReRolledAction(SafeThrow.class);

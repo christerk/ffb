@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
+import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll2020;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -26,12 +26,12 @@ import com.balancedbytes.games.ffb.skill.Tentacles;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 	public TentaclesBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepTentacles, StepTentacles.StepState>() {
+		registerModifier(new StepModifier<StepTentacles, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepTentacles step, StepState state,
@@ -80,30 +80,33 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 					boolean doNextStep = true;
 					if (state.usingTentacles && (game.getDefender() != null)) {
 						boolean rollTentacles = true;
-						if (ReRolledActions.TENTACLES_ESCAPE == step.getReRolledAction()) {
+						if (ReRolledActions.TENTACLES == step.getReRolledAction()) {
 							if ((step.getReRollSource() == null)
-									|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+									|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), game.getDefender())) {
 								rollTentacles = false;
+								state.usingTentacles = false;
 							}
 						}
 						if (rollTentacles) {
-							int[] rollEscape = step.getGameState().getDiceRoller().rollTentaclesEscape();
-							boolean successful = DiceInterpreter.getInstance().isTentaclesEscapeSuccessful(rollEscape,
-								game.getDefender().getStrengthWithModifiers(), actingPlayer.getStrength());
-							int minimumRoll = DiceInterpreter.getInstance().minimumRollTentaclesEscape(
-								game.getDefender().getStrengthWithModifiers(), actingPlayer.getStrength());
-							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.TENTACLES_ESCAPE)
+							int roll = step.getGameState().getDiceRoller().rollSkill();
+							int stDifference = game.getDefender().getStrengthWithModifiers() - actingPlayer.getPlayer().getStrengthWithModifiers();
+							int minimumRoll = Math.max(6 - stDifference, 2);
+							boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+
+							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.TENTACLES)
 									&& (step.getReRollSource() != null));
-							step.getResult().addReport(new ReportTentaclesShadowingRoll(skill, game.getDefenderId(), rollEscape,
+							step.getResult().addReport(new ReportTentaclesShadowingRoll2020(skill, game.getDefenderId(), roll,
 									successful, minimumRoll, reRolled));
-							if (successful) {
-								state.usingTentacles = false;
-							} else {
-								if (step.getReRolledAction() != ReRolledActions.TENTACLES_ESCAPE) {
-									if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-											ReRolledActions.TENTACLES_ESCAPE, minimumRoll, false)) {
+							if (!successful) {
+								if (step.getReRolledAction() != ReRolledActions.TENTACLES) {
+									if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getDefender(),
+											ReRolledActions.TENTACLES, minimumRoll, false)) {
 										doNextStep = false;
+									} else {
+										state.usingTentacles = false;
 									}
+								} else {
+									state.usingTentacles = false;
 								}
 							}
 						}

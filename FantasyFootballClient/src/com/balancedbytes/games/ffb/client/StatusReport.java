@@ -2026,13 +2026,12 @@ public class StatusReport {
 		}
 		if (pReport.getSkill().hasSkillProperty(NamedProperties.canHoldPlayersLeavingTacklezones)) {
 			status = new StringBuilder();
-			status.append("Tentacles Escape Roll [ ").append(pReport.getRoll()).append(" ]");
+			status.append("Tentacles Roll [ ").append(pReport.getRoll()).append(" ]");
 			println(getIndent() + 1, TextStyle.ROLL, status.toString());
 			status = new StringBuilder();
 			if (pReport.isSuccessful()) {
-				print(getIndent() + 2, false, actingPlayer.getPlayer());
-				status.append(" escapes ").append(actingPlayer.getPlayer().getPlayerGender().getGenitive())
-					.append(" opponent.");
+				print(getIndent() + 2, false, defender);
+				status.append(" holds ").append(defender.getPlayerGender().getGenitive()).append(" opponent successfully.");
 				println(getIndent() + 2, status.toString());
 				if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
 					neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll())
@@ -2040,16 +2039,17 @@ public class StatusReport {
 				}
 			} else {
 				print(getIndent() + 2, false, defender);
-				status.append(" holds ").append(defender.getPlayerGender().getGenitive()).append(" opponent successfully.");
+				status.append(" failed to hold ").append(defender.getPlayerGender().getGenitive())
+					.append(" opponent.");
 				println(getIndent() + 2, status.toString());
 				if (!pReport.isReRolled() && fShowModifiersOnFailure) {
 					neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
 				}
 			}
 			if (neededRoll != null) {
-				neededRoll.append(" (ST ").append(actingPlayer.getStrength());
-				neededRoll.append(" - ST ").append(defender.getStrengthWithModifiers());
-				neededRoll.append(" + Roll >= 6).");
+				neededRoll.append(" (Roll + ST ").append(defender.getStrengthWithModifiers());
+				neededRoll.append(" - ST ").append(actingPlayer.getPlayer().getStrengthWithModifiers());
+				neededRoll.append(" >= 6).");
 				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 			}
 		}
