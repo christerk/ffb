@@ -15,6 +15,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JsonSkillWithValuesMapOption extends JsonAbstractOption {
+
+	public static final String SEPARATOR = "_";
+
 	public JsonSkillWithValuesMapOption(String pKey) {
 		super(pKey);
 	}
@@ -33,7 +36,7 @@ public class JsonSkillWithValuesMapOption extends JsonAbstractOption {
 						JsonArray array = (JsonArray) arrayValue;
 						Set<SkillWithValue> skills = array.values().stream()
 							.map(value -> {
-									String[] parts = value.asString().split("_");
+									String[] parts = value.asString().split(SEPARATOR);
 
 									Skill skill = factory.forName(parts[0]);
 									if (parts.length > 1) {
