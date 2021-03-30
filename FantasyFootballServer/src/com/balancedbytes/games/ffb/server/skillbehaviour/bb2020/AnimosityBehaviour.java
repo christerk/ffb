@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -31,18 +31,17 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 	public AnimosityBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepAnimosity, StepAnimosity.StepState>() {
+		registerModifier(new StepModifier<StepAnimosity, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepAnimosity step, StepState state,
 			                                           ClientCommandUseSkill useSkillCommand) {
-				// TODO Auto-generated method stub
-				return null;
+				return StepCommandStatus.UNHANDLED_COMMAND;
 			}
 
 			@Override
