@@ -40,7 +40,7 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepAnimosity step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -57,7 +57,7 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 					if ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)) {
 						boolean targetAvailable = false;
 						Player<?>[] targets = UtilPlayer.findAdjacentBlockablePlayers(game, UtilPlayer.findOtherTeam(game, thrower),
-								throwerCoordinate);
+							throwerCoordinate);
 						for (Player<?> target : targets) {
 							targetAvailable |= thrower.getRace().equalsIgnoreCase(target.getRace());
 						}
@@ -78,7 +78,7 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 				} else {
 					if (ReRolledActions.ANIMOSITY == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)
-								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), thrower)) {
+							|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), thrower)) {
 							actingPlayer.setSufferingAnimosity(true);
 						} else {
 							state.doRoll = true;
@@ -86,7 +86,9 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 					} else {
 						if ((catcher != null) && (catcher.getRace() != null) && (thrower != null) && (thrower.getRace() != null)) {
 							state.doRoll = (UtilCards.hasSkill(thrower, skill)
-									&& !(thrower.getRace().equalsIgnoreCase(catcher.getRace())));
+								&& !(thrower.getRace().equalsIgnoreCase(catcher.getRace()))
+								&& thrower.getTeam().getId().equals(catcher.getTeam().getId())
+							);
 						}
 					}
 					if (state.doRoll) {
@@ -99,32 +101,32 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							if ((ReRolledActions.ANIMOSITY == step.getReRolledAction())
-									|| !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), thrower,
-											ReRolledActions.ANIMOSITY, minimumRoll, false)) {
+								|| !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), thrower,
+								ReRolledActions.ANIMOSITY, minimumRoll, false)) {
 								actingPlayer.setSufferingAnimosity(true);
 							}
 						}
 						boolean reRolled = ((ReRolledActions.ANIMOSITY == step.getReRolledAction())
-								&& (step.getReRollSource() != null));
+							&& (step.getReRollSource() != null));
 						step.getResult().addReport(new ReportSkillRoll(ReportId.ANIMOSITY_ROLL, actingPlayer.getPlayerId(),
-								successful, roll, minimumRoll, reRolled));
+							successful, roll, minimumRoll, reRolled));
 					} else {
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 					if (actingPlayer.isSufferingAnimosity()) {
 						boolean animosityPassPossible = false;
 						Team team = game.getTeamHome().hasPlayer(actingPlayer.getPlayer()) ? game.getTeamHome()
-								: game.getTeamAway();
+							: game.getTeamAway();
 						for (Player<?> player : team.getPlayers()) {
 							PlayerState playerState = game.getFieldModel().getPlayerState(player);
 							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 							if ((playerState != null) && playerState.hasTacklezones()
-									&& StringTool.isEqual(actingPlayer.getRace(), player.getRace())) {
+								&& StringTool.isEqual(actingPlayer.getRace(), player.getRace())) {
 								PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 								if (((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)
-										&& playerCoordinate.isAdjacent(throwerCoordinate))
-										|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS)
-												&& mechanic.findPassingDistance(game, throwerCoordinate, playerCoordinate, false) != null)) {
+									&& playerCoordinate.isAdjacent(throwerCoordinate))
+									|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS)
+									&& mechanic.findPassingDistance(game, throwerCoordinate, playerCoordinate, false) != null)) {
 									animosityPassPossible = true;
 									break;
 								}

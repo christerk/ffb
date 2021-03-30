@@ -303,7 +303,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public boolean hasAnimosityTowards(Player<?> player) {
 		Skill animosity = getSkillWithProperty(NamedProperties.hasToRollToPassBallOn);
-		if (animosity == null) {
+		if (animosity == null || !getTeam().getId().equals(player.getTeam().getId())) {
 			return false;
 		}
 
