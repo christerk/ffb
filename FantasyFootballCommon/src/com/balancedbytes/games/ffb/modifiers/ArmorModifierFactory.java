@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -27,7 +28,7 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 
 	private ModifierAggregator modifierAggregator;
 
-	private final Set<ArmorModifier> foulAssists = new HashSet<ArmorModifier>() {{
+	private final Set<ArmorModifier> armorModifiers = new HashSet<ArmorModifier>() {{
 		add(new FoulAssistArmorModifier("1 Offensive Assist", 1, true));
 		add(new FoulAssistArmorModifier("2 Offensive Assists", 2, true));
 		add(new FoulAssistArmorModifier("3 Offensive Assists", 3, true));
@@ -51,10 +52,13 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 						&& (UtilPlayer.findTacklezones(game, context.getAttacker()) < 1)));
 			}
 		});
+		add(new SpecialEffectArmourModifier("Bomb", 1 , false, SpecialEffect.BOMB));
+		add(new SpecialEffectArmourModifier("Fireball", 1 , false, SpecialEffect.FIREBALL));
+		add(new SpecialEffectArmourModifier("Lightning", 1 , false, SpecialEffect.LIGHTNING));
 	}};
 
 	public ArmorModifier forName(String name) {
-		return Stream.concat(foulAssists.stream(), modifierAggregator.getArmourModifiers().stream())
+		return Stream.concat(armorModifiers.stream(), modifierAggregator.getArmourModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
 			.orElse(null);
@@ -77,8 +81,15 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 		return armorModifiers;
 	}
 
+	public Set<SpecialEffectArmourModifier> specialEffectArmourModifiers(SpecialEffect specialEffect) {
+		return armorModifiers.stream().filter(modifier -> modifier instanceof SpecialEffectArmourModifier)
+			.map(modifier -> (SpecialEffectArmourModifier) modifier)
+			.filter(modifier -> modifier.getEffect() == specialEffect)
+			.collect(Collectors.toSet());
+	}
+
 	public Set<ArmorModifier> getFoulAssist(ArmorModifierContext context) {
-		return foulAssists.stream().filter(modifier -> modifier.appliesToContext(context)).collect(Collectors.toSet());
+		return armorModifiers.stream().filter(modifier -> modifier.appliesToContext(context)).collect(Collectors.toSet());
 	}
 
 	public ArmorModifier[] toArray(Set<ArmorModifier> pArmorModifiers) {

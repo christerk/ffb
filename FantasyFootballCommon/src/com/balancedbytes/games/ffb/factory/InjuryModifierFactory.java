@@ -5,11 +5,13 @@ import com.balancedbytes.games.ffb.InjuryAttribute;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
+import com.balancedbytes.games.ffb.modifiers.SpecialEffectInjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifier;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
@@ -29,16 +31,19 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 
 	private ModifierAggregator modifierAggregator;
 
-	private final Set<StaticInjuryModifier> niggleModifiers = new HashSet<StaticInjuryModifier>() {{
+	private final Set<StaticInjuryModifier> injuryModifiers = new HashSet<StaticInjuryModifier>() {{
 		add(new StaticInjuryModifier("1 Niggling Injury", 1, true));
 		add(new StaticInjuryModifier("2 Niggling Injuries", 2, true));
 		add(new StaticInjuryModifier("3 Niggling Injuries", 3, true));
 		add(new StaticInjuryModifier("4 Niggling Injuries", 4, true));
 		add(new StaticInjuryModifier("5 Niggling Injuries", 5, true));
+		add(new SpecialEffectInjuryModifier("Bomb", 1, false, SpecialEffect.BOMB));
+		add(new SpecialEffectInjuryModifier("Fireball", 1, false, SpecialEffect.FIREBALL));
+		add(new SpecialEffectInjuryModifier("Lightning", 1, false, SpecialEffect.LIGHTNING));
 	}};
 
 	public InjuryModifier forName(String name) {
-		return Stream.concat(niggleModifiers.stream(), modifierAggregator.getInjuryModifiers().stream())
+		return Stream.concat(injuryModifiers.stream(), modifierAggregator.getInjuryModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
 			.orElse(null);	}
@@ -55,7 +60,7 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 		if (pPlayer != null) {
 			long nigglingInjuries = Arrays.stream(pPlayer.getLastingInjuries()).filter(seriousInjury -> seriousInjury.getInjuryAttribute() == InjuryAttribute.NI).count();
 
-			for (StaticInjuryModifier modifier : niggleModifiers) {
+			for (StaticInjuryModifier modifier : injuryModifiers) {
 				if (modifier.isNigglingInjuryModifier() && (modifier.getModifier(null, null) == nigglingInjuries)) {
 					return modifier;
 				}
@@ -64,6 +69,12 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 		return null;
 	}
 
+	public Set<SpecialEffectInjuryModifier> specialEffectInjuryModifiers(SpecialEffect specialEffect) {
+		return injuryModifiers.stream().filter(modifier -> modifier instanceof SpecialEffectInjuryModifier)
+			.map(modifier -> (SpecialEffectInjuryModifier) modifier)
+			.filter(modifier -> modifier.getEffect() == specialEffect)
+			.collect(Collectors.toSet());
+	}
 
 	public Set<InjuryModifier> getInjuryModifiers(InjuryModifierContext context) {
 		return Stream.concat(

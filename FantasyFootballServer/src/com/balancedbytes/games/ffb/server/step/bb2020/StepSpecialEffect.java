@@ -1,8 +1,9 @@
-package com.balancedbytes.games.ffb.server.step.phase.special;
+package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -17,7 +18,7 @@ import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBomb;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBombWithModifier;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeFireball;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeLightning;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -44,7 +45,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepSpecialEffect extends AbstractStep {
 
 	private String fGotoLabelOnFailure;
@@ -110,6 +111,9 @@ public final class StepSpecialEffect extends AbstractStep {
 		Player<?> player = game.getPlayerById(fPlayerId);
 		if (player != null) {
 
+			PlayerState state = game.getFieldModel().getPlayerState(player);
+			boolean isStanding = !state.isProne() && !state.isStunned();
+
 			boolean successful = true;
 
 			if (fRollForEffect) {
@@ -148,20 +152,22 @@ public final class StepSpecialEffect extends AbstractStep {
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
-							new InjuryTypeBomb(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+							new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 
 				// check end turn
-				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-				if ((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode())) {
-					actingTeam = game.getTeamHome();
-				}
-				if ((TurnMode.BOMB_AWAY == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
-					actingTeam = game.getTeamAway();
-				}
-				if (actingTeam.hasPlayer(player) && (fSpecialEffect != SpecialEffect.FIREBALL)) {
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				if (isStanding) {
+					Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+					if ((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode())) {
+						actingTeam = game.getTeamHome();
+					}
+					if ((TurnMode.BOMB_AWAY == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
+						actingTeam = game.getTeamAway();
+					}
+					if (actingTeam.hasPlayer(player) && (fSpecialEffect != SpecialEffect.FIREBALL)) {
+						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+					}
 				}
 
 				getResult().setNextAction(StepAction.NEXT_STEP);
