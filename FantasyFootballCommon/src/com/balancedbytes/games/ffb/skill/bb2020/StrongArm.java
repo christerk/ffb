@@ -1,19 +1,17 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2020;
 
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
-import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.modifiers.PassContext;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 
 /**
- * The player may add 1 to the D6 when he passes to Short, Long or Long Bomb
- * range.
+ * The player may add 1 to the D6 when attempting a TTM action.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class StrongArm extends Skill {
 
 	public StrongArm() {
@@ -25,7 +23,7 @@ public class StrongArm extends Skill {
 		registerModifier(new PassModifier("Strong Arm", -1, ModifierType.REGULAR) {
 			@Override
 			public boolean appliesToContext(Skill skill, PassContext context) {
-				return context.getDistance() != PassingDistance.QUICK_PASS;
+				return context.isDuringThrowTeamMate();
 			}
 		});
 	}
