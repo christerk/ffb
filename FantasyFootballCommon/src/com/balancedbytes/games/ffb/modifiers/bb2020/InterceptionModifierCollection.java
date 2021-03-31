@@ -30,13 +30,13 @@ public class InterceptionModifierCollection extends com.balancedbytes.games.ffb.
 				return super.appliesToContext(skill, context) && context.getPassResult() == PassResult.WILDLY_INACCURATE;
 			}
 		});
-		add(new InterceptionModifier("1 Tacklezone", "1 for 1+ Tacklezones", 1, 1, ModifierType.TACKLEZONE));
-		add(new InterceptionModifier("2 Tacklezone", "1 for 1+ Tacklezones", 1, 2, ModifierType.TACKLEZONE));
-		add(new InterceptionModifier("3 Tacklezone", "1 for 1+ Tacklezones", 1, 3, ModifierType.TACKLEZONE));
-		add(new InterceptionModifier("4 Tacklezone", "1 for 1+ Tacklezones", 1, 4, ModifierType.TACKLEZONE));
-		add(new InterceptionModifier("5 Tacklezone", "1 for 1+ Tacklezones", 1, 5, ModifierType.TACKLEZONE));
-		add(new InterceptionModifier("6 Tacklezone", "1 for 1+ Tacklezones", 1, 6, ModifierType.TACKLEZONE));
-		add(new InterceptionModifier("7 Tacklezone", "1 for 1+ Tacklezones", 1, 7, ModifierType.TACKLEZONE));
-		add(new InterceptionModifier("8 Tacklezone", "1 for 1+ Tacklezones", 1, 8, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("1 Tacklezone", "1 for being marked", 1, 1, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("2 Tacklezone", "1 for being marked", 1, 2, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("3 Tacklezone", "1 for being marked", 1, 3, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("4 Tacklezone", "1 for being marked", 1, 4, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("5 Tacklezone", "1 for being marked", 1, 5, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("6 Tacklezone", "1 for being marked", 1, 6, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("7 Tacklezone", "1 for being marked", 1, 7, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("8 Tacklezone", "1 for being marked", 1, 8, ModifierType.TACKLEZONE));
 	}
 }

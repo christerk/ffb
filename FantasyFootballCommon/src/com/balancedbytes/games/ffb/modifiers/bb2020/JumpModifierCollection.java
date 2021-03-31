@@ -15,5 +15,13 @@ public class JumpModifierCollection extends com.balancedbytes.games.ffb.modifier
 		add(new JumpModifier("6 Tacklezones", 6, ModifierType.TACKLEZONE));
 		add(new JumpModifier("7 Tacklezones", 7, ModifierType.TACKLEZONE));
 		add(new JumpModifier("8 Tacklezones", 8, ModifierType.TACKLEZONE));
+		add(new JumpModifier("1 Prehensile Tail", "1 for being marked with Prehensile Tail", 1, 1, ModifierType.PREHENSILE_TAIL));
+		add(new JumpModifier("2 Prehensile Tails", "1 for being marked with Prehensile Tail", 1, 2, ModifierType.PREHENSILE_TAIL));
+		add(new JumpModifier("3 Prehensile Tails", "1 for being marked with Prehensile Tail", 1, 3, ModifierType.PREHENSILE_TAIL));
+		add(new JumpModifier("4 Prehensile Tails", "1 for being marked with Prehensile Tail", 1, 4, ModifierType.PREHENSILE_TAIL));
+		add(new JumpModifier("5 Prehensile Tails", "1 for being marked with Prehensile Tail", 1, 5, ModifierType.PREHENSILE_TAIL));
+		add(new JumpModifier("6 Prehensile Tails", "1 for being marked with Prehensile Tail", 1, 6, ModifierType.PREHENSILE_TAIL));
+		add(new JumpModifier("7 Prehensile Tails", "1 for being marked with Prehensile Tail", 1, 7, ModifierType.PREHENSILE_TAIL));
+		add(new JumpModifier("8 Prehensile Tails", "1 for being marked with Prehensile Tail", 1, 8, ModifierType.PREHENSILE_TAIL));
 	}
 }

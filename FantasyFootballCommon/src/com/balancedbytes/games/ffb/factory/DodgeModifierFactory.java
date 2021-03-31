@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 @RulesCollection(Rules.COMMON)
 public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext, DodgeModifier, DodgeModifierCollection> {
 
-	private DodgeModifierCollection dodgeModifierCollection = new DodgeModifierCollection();
+	private DodgeModifierCollection dodgeModifierCollection;
 
 	public DodgeModifier forName(String name) {
 		return Stream.concat(
@@ -55,7 +55,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 	public Set<DodgeModifier> findModifiers(DodgeContext context) {
 		Set<DodgeModifier> dodgeModifiers = super.findModifiers(context);
 
-		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getTargetCoordinate()))
+		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getSourceCoordinate()))
 			.ifPresent(dodgeModifiers::add);
 
 		return dodgeModifiers;
@@ -76,7 +76,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 
 	private Optional<DodgeModifier> prehensileTailModifier(int number) {
 		return dodgeModifierCollection.getModifiers(ModifierType.PREHENSILE_TAIL).stream()
-			.filter(modifier -> modifier.getModifier() == number)
+			.filter(modifier -> modifier.getMultiplier() == number)
 			.findFirst();
 	}
 

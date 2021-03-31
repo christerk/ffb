@@ -10,18 +10,28 @@ public class JumpModifier extends RollModifier<JumpContext> {
 
 	// TODO: create factory for this
 
-	private final String fName;
-	private final int fModifier;
+	private final String fName, reportString;
+	private final int fModifier, multiplier;
 	private final ModifierType type;
 
 	public JumpModifier(String pName, int pModifier, ModifierType type) {
+		this(pName, pName, pModifier, pModifier, type);
+	}
+	public JumpModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type) {
 		fName = pName;
 		fModifier = pModifier;
 		this.type = type;
+		this.reportString = reportString;
+		this.multiplier = multiplier;
 	}
 
 	public int getModifier() {
 		return fModifier;
+	}
+
+	@Override
+	public int getMultiplier() {
+		return multiplier;
 	}
 
 	public String getName() {
@@ -39,7 +49,7 @@ public class JumpModifier extends RollModifier<JumpContext> {
 
 	@Override
 	public String getReportString() {
-		return getName();
+		return reportString;
 	}
 
 	public boolean appliesToContext(Skill skill, JumpContext context) {

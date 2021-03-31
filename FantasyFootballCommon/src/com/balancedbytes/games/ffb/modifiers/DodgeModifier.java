@@ -7,7 +7,7 @@ package com.balancedbytes.games.ffb.modifiers;
 public class DodgeModifier extends RollModifier<DodgeContext> {
 
 	private final String fName, reportString;
-	private final int fModifier;
+	private final int fModifier, multiplier;
 	private final ModifierType type;
 	private final boolean useStrength;
 
@@ -20,11 +20,16 @@ public class DodgeModifier extends RollModifier<DodgeContext> {
 	}
 
 	public DodgeModifier(String pName, String reportString, int pModifier, ModifierType type, boolean useStrength) {
+		this(pName, reportString, pModifier, pModifier, type, useStrength);
+	}
+
+	public DodgeModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type, boolean useStrength) {
 		fName = pName;
 		this.reportString = reportString;
 		fModifier = pModifier;
 		this.type = type;
 		this.useStrength = useStrength;
+		this.multiplier = multiplier;
 	}
 
 	@Override
@@ -34,6 +39,11 @@ public class DodgeModifier extends RollModifier<DodgeContext> {
 
 	public int getModifier() {
 		return fModifier;
+	}
+
+	@Override
+	public int getMultiplier() {
+		return multiplier;
 	}
 
 	public String getName() {

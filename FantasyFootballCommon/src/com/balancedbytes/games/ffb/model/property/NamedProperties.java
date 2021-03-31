@@ -108,6 +108,7 @@ public class NamedProperties {
 	public static final ISkillProperty inflictsDisturbingPresence = new NamedProperty("Inflicts Disturbing Presence");
 	public static final ISkillProperty isHurtMoreEasily = new NamedProperty("Is Hurt More Easily");
 	public static final ISkillProperty makesDodgingHarder = new NamedProperty("Makes Dodging Harder");
+	public static final ISkillProperty makesJumpingHarder = new NamedProperty("Makes Jumping Harder");
 	public static final ISkillProperty mightEatPlayerToThrow = new NamedProperty("Might Eat Player To Throw");
 	public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
 	public static final ISkillProperty needsToRollForActionButKeepsTacklezone = new NamedProperty("Needs To Roll For Action But Keeps Tacklezone");

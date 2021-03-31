@@ -1,15 +1,22 @@
 package com.balancedbytes.games.ffb.factory.bb2020;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.modifiers.JumpContext;
 import com.balancedbytes.games.ffb.modifiers.JumpModifier;
-import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.JumpModifierCollection;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.util.Scanner;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import java.util.Collection;
@@ -80,8 +87,31 @@ public class JumpModifierFactory extends com.balancedbytes.games.ffb.factory.Jum
 			context.setTacklezones(modifier.getModifier());
 			modifiers.add(modifier);
 		});
+
+		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getFrom()))
+			.ifPresent(modifiers::add);
+
 		modifiers.addAll(super.findModifiers(context));
 		return modifiers;
+	}
+
+	private int findNumberOfPrehensileTails(Game pGame, FieldCoordinate pCoordinateFrom) {
+		ActingPlayer actingPlayer = pGame.getActingPlayer();
+		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
+		int nrOfPrehensileTails = 0;
+		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
+		for (Player<?> opponent : opponents) {
+			if (UtilCards.hasSkillWithProperty(opponent, NamedProperties.makesJumpingHarder)) {
+				nrOfPrehensileTails++;
+			}
+		}
+		return nrOfPrehensileTails;
+	}
+
+	private Optional<JumpModifier> prehensileTailModifier(int number) {
+		return jumpModifierCollection.getModifiers(ModifierType.PREHENSILE_TAIL).stream()
+			.filter(modifier -> modifier.getMultiplier() == number)
+			.findFirst();
 	}
 
 	@Override

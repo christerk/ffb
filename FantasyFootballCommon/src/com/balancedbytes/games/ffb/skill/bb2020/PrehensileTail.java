@@ -1,8 +1,9 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
@@ -10,10 +11,16 @@ import com.balancedbytes.games.ffb.model.skill.Skill;
  * players. To represent this, opposing players must subtract 1 from the D6 roll
  * if they attempt to dodge out of any of the player's tackle zones.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class PrehensileTail extends Skill {
 
 	public PrehensileTail() {
 		super("Prehensile Tail", SkillCategory.MUTATION);
+	}
+
+	@Override
+	public void postConstruct() {
+		registerProperty(NamedProperties.makesDodgingHarder);
+		registerProperty(NamedProperties.makesJumpingHarder);
 	}
 }
