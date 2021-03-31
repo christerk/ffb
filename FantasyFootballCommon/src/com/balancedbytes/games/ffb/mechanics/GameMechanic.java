@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.mechanics;
 
+import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.TurnData;
 
@@ -14,4 +15,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract int minimumLonerRoll(Player<?> player);
 
 	public abstract int minimumProRoll();
+
+	public abstract boolean eligibleForPro(ActingPlayer actingPlayer, Player<?> player);
 }

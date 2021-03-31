@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.mechanics.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
@@ -20,5 +21,10 @@ public class GameMechanic extends com.balancedbytes.games.ffb.mechanics.GameMech
 	@Override
 	public int minimumProRoll() {
 		return 3;
+	}
+
+	@Override
+	public boolean eligibleForPro(ActingPlayer actingPlayer, Player<?> player) {
+		return actingPlayer.getPlayer() == player;
 	}
 }
