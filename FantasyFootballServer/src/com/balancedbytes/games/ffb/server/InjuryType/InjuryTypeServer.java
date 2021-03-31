@@ -1,12 +1,15 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
+import com.balancedbytes.games.ffb.mechanics.GameMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
@@ -66,7 +69,7 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 		injuryContext
-				.setInjury(interpretInjury(diceInterpreter, gameState, injuryContext, pDefender instanceof ZappedPlayer));
+				.setInjury(interpretInjury(gameState, pDefender instanceof ZappedPlayer));
 
 		if (injuryContext.getPlayerState() == null) {
 			injuryContext.setCasualtyRoll(diceRoller.rollCasualty());
@@ -78,12 +81,14 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		}
 	}
 
-	PlayerState interpretInjury(DiceInterpreter diceInterpreter, GameState gameState, InjuryContext injuryResult,
-			boolean isZapped) {
+	PlayerState interpretInjury(GameState gameState, boolean isZapped) {
 		if (isZapped) {
 			return new PlayerState(PlayerState.BADLY_HURT);
 		}
-		return diceInterpreter.interpretRollInjury(gameState, injuryContext);
+
+		GameMechanic gameMechanic = (GameMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
+		return gameMechanic.interpretRollInjury(gameState.getGame(), injuryContext);
 	}
 
 }

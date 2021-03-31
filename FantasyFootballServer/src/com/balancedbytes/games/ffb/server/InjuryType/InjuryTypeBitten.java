@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.injury.Bitten;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
@@ -25,8 +24,6 @@ public class InjuryTypeBitten extends InjuryTypeServer<Bitten> {
 			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
 			ApothecaryMode pApothecaryMode) {
 
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorBroken(true);
 		}
@@ -36,7 +33,7 @@ public class InjuryTypeBitten extends InjuryTypeServer<Bitten> {
 			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
 
 			injuryContext
-					.setInjury(interpretInjury(diceInterpreter, gameState, injuryContext, pDefender instanceof ZappedPlayer));
+					.setInjury(interpretInjury(gameState, pDefender instanceof ZappedPlayer));
 
 			if (injuryContext.getPlayerState() == null) {
 				injuryContext.setInjury(new PlayerState(PlayerState.BADLY_HURT));
