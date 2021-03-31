@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.modifiers.ModifierType;
  * intercept or uses the Leap skill. In addition, the Safe Throw skill may not
  * be used to affect any Interception rolls made by this player.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class VeryLongLegs extends Skill {
 
 	public VeryLongLegs() {

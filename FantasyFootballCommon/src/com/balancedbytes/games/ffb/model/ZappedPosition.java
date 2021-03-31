@@ -10,11 +10,10 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.skill.Dodge;
-import com.balancedbytes.games.ffb.skill.bb2016.Leap;
 import com.balancedbytes.games.ffb.skill.NoHands;
 import com.balancedbytes.games.ffb.skill.Stunty;
 import com.balancedbytes.games.ffb.skill.Titchy;
-import com.balancedbytes.games.ffb.skill.VeryLongLegs;
+import com.balancedbytes.games.ffb.skill.bb2016.Leap;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
@@ -49,7 +48,7 @@ public class ZappedPosition implements Position {
 		skills.add(factory.forClass(NoHands.class));
 		skills.add(factory.forClass(Titchy.class));
 		skills.add(factory.forClass(Stunty.class));
-		skills.add(factory.forClass(VeryLongLegs.class));
+		skills.add(factory.forName("Very Long Legs"));
 		skills.add(factory.forClass(Leap.class));
 	}
 

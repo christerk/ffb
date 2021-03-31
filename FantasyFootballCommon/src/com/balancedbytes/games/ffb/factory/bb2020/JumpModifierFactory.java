@@ -83,15 +83,21 @@ public class JumpModifierFactory extends com.balancedbytes.games.ffb.factory.Jum
 	public Set<JumpModifier> findModifiers(JumpContext context) {
 		Set<JumpModifier> modifiers = new HashSet<>();
 		Optional<JumpModifier> tacklezoneModifier = getTacklezoneModifier(context);
-		tacklezoneModifier.ifPresent(modifier -> {
-			context.setTacklezones(modifier.getModifier());
-			modifiers.add(modifier);
-		});
+		tacklezoneModifier.ifPresent(modifiers::add);
 
 		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getFrom()))
 			.ifPresent(modifiers::add);
 
 		modifiers.addAll(super.findModifiers(context));
+
+		int sum = modifiers.stream().mapToInt(JumpModifier::getModifier).sum();
+		context.setAccumulatedModifiers(sum);
+		for (Skill skill: context.getPlayer().getSkills()) {
+			skill.getJumpModifiers().stream()
+				.filter(modifier -> modifier.getType() == ModifierType.DEPENDS_ON_SUM_OF_OTHERS
+					&& modifier.appliesToContext(skill, context))
+				.forEach(modifiers::add);
+		}
 		return modifiers;
 	}
 

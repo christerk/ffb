@@ -67,7 +67,7 @@ public abstract class GenerifiedModifierFactory<
 
 		for (Skill skill : context.getPlayer().getSkillsIncludingTemporaryOnes()) {
 			for (V modifier : getModifier(skill)) {
-				if (modifier.appliesToContext(skill, context)) {
+				if (modifier.getType() != ModifierType.DEPENDS_ON_SUM_OF_OTHERS && modifier.appliesToContext(skill, context)) {
 					result.add(modifier);
 				}
 			}

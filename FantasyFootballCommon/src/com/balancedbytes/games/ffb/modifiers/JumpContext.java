@@ -8,7 +8,7 @@ public class JumpContext implements ModifierContext {
 	private final Game game;
 	private final Player<?> player;
 	private final FieldCoordinate from, to;
-	private int tacklezones;
+	private int accumulatedModifiers;
 
 	public JumpContext(Game game, Player<?> player, FieldCoordinate from, FieldCoordinate to) {
 		this.game = game;
@@ -35,11 +35,15 @@ public class JumpContext implements ModifierContext {
 		return to;
 	}
 
-	public int getTacklezones() {
-		return tacklezones;
+	public int getAccumulatedModifiers() {
+		return accumulatedModifiers;
 	}
 
-	public void setTacklezones(int tacklezones) {
-		this.tacklezones = tacklezones;
+	public void setAccumulatedModifiers(int accumulatedModifiers) {
+		this.accumulatedModifiers = accumulatedModifiers;
+	}
+
+	public void addModififerValue(int value) {
+		accumulatedModifiers += value;
 	}
 }
