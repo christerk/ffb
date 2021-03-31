@@ -1,7 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.phase.special;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.FactoryType;
@@ -16,13 +13,13 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.report.ReportBombExplodesAfterCatch;
 import com.balancedbytes.games.ffb.report.ReportBombOutOfBounds;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect.SequenceParams;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -31,10 +28,14 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect.SequenceParams;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Initialization step of the pass sequence. May push SpecialEffect sequences
@@ -51,7 +52,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepInitBomb extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -137,6 +138,16 @@ public final class StepInitBomb extends AbstractStep {
 		if (fBombOutOfBounds) {
 			fCatcherId = null;
 		}
+
+		if (fCatcherId != null) {
+			int roll = getGameState().getDiceRoller().rollDice(6);
+			boolean explodes = roll >= 4;
+			getResult().addReport(new ReportBombExplodesAfterCatch(fCatcherId, explodes, roll));
+			if (explodes) {
+				fCatcherId = null;
+			}
+		}
+
 		if (fCatcherId == null) {
 			fBombCoordinate = game.getFieldModel().getBombCoordinate();
 			if (fBombCoordinate == null) {
@@ -162,7 +173,7 @@ public final class StepInitBomb extends AbstractStep {
 
 					affectedPlayers.stream().map(player -> {
 						boolean rollForEffect = !fBombCoordinate.equals(game.getFieldModel().getPlayerCoordinate(player));
-						return new SequenceParams(getGameState(),SpecialEffect.BOMB,
+						return new SequenceParams(getGameState(), SpecialEffect.BOMB,
 							player.getId(), rollForEffect);
 					}).forEach(generator::pushSequence);
 				}

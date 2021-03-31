@@ -124,6 +124,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
+	JsonBooleanOption EXPLODES = new JsonBooleanOption("explodes");
 	JsonIntOption FAME = new JsonIntOption("fame");
 	JsonIntOption FAME_AWAY = new JsonIntOption("fameAway");
 	JsonIntOption FAME_HOME = new JsonIntOption("fameHome");

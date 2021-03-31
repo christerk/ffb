@@ -34,7 +34,7 @@ public enum ReportId implements INamedObject {
 	INDUCEMENTS_BOUGHT("inducementsBought"), CARDS_BOUGHT("cardsBought"), CARD_EFFECT_ROLL("cardEffectRoll"),
 	WEEPING_DAGGER_ROLL("weepingDaggerRoll"), KICK_TEAM_MATE_ROLL("kickTeamMateRoll"), RIOTOUS_ROOKIES("riotousRookies"),
 	SWARMING_PLAYERS_ROLL("swarmingPlayersRoll"), PASS_DEVIATE("passDeviate"), CARDS_AND_INDUCEMENTS_BOUGHT("cardsAndInducementsBought"),
-	FAN_FACTOR("fanFactor"), SELECT_BLITZ_TARGET("selectBlitzTarget");
+	FAN_FACTOR("fanFactor"), SELECT_BLITZ_TARGET("selectBlitzTarget"), BOMB_EXPLODES_AFTER_CATCH("bombExplodesAfterCatch");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)
@@ -238,6 +238,8 @@ public enum ReportId implements INamedObject {
 				return new ReportFanFactor();
 			case SELECT_BLITZ_TARGET:
 				return new ReportSelectBlitzTarget();
+			case BOMB_EXPLODES_AFTER_CATCH:
+				return new ReportBombExplodesAfterCatch();
 			default:
 				throw new IllegalStateException("Unhandled report id " + getName() + ".");
 		}

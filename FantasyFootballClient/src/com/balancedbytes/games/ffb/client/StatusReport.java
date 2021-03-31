@@ -48,6 +48,7 @@ import com.balancedbytes.games.ffb.report.ReportBiteSpectator;
 import com.balancedbytes.games.ffb.report.ReportBlock;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportBlockRoll;
+import com.balancedbytes.games.ffb.report.ReportBombExplodesAfterCatch;
 import com.balancedbytes.games.ffb.report.ReportBombOutOfBounds;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
@@ -2978,6 +2979,20 @@ public class StatusReport {
 		println(2, TextStyle.NONE, " has to reroll " + genitiv + " successful interception.");
 	}
 
+	private void reportBombExplodesAfterCatch(ReportBombExplodesAfterCatch report) {
+		Game game = getClient().getGame();
+		println(getIndent() + 1, TextStyle.ROLL, "Bomb Roll [" + report.getRoll() + "]");
+		Player<?> catcher = game.getPlayerById(report.getCatcherId());
+		TextStyle teamStyle = game.getTeamHome().hasPlayer(catcher) ? TextStyle.HOME : TextStyle.AWAY;
+		print(getIndent() + 2 , teamStyle, catcher.getName());
+		print(getIndent() + 2, " caught the bomb" );
+		if (report.explodes()) {
+			println(getIndent() + 2, " but it explodes in " + catcher.getPlayerGender().getGenitive() + " hands.");
+		} else {
+			println(getIndent() + 2, " and it does not explode");
+		}
+	}
+
 	public void report(ReportList pReportList) {
 		for (IReport report : pReportList.getReports()) {
 			switch (report.getId()) {
@@ -3259,6 +3274,9 @@ public class StatusReport {
 					break;
 				case SELECT_BLITZ_TARGET:
 					reportSelectBlitzTarget((ReportSelectBlitzTarget) report);
+					break;
+				case BOMB_EXPLODES_AFTER_CATCH:
+					reportBombExplodesAfterCatch((ReportBombExplodesAfterCatch) report);
 					break;
 				default:
 					throw new IllegalStateException("Unhandled report id " + report.getId().getName() + ".");
