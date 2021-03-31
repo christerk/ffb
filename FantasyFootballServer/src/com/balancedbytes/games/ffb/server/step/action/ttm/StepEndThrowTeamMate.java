@@ -119,6 +119,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		Game game = getGameState().getGame();
 		game.setPassCoordinate(null);
 		game.getFieldModel().setRangeRuler(null);
+		game.setDefenderId(null);
 		// reset thrown player (e.g. failed confusion roll, successful escape roll)
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null) && (fThrownPlayerState != null)
