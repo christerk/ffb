@@ -49,14 +49,21 @@ public class GameMechanic extends com.balancedbytes.games.ffb.mechanics.GameMech
 			} else {
 				boolean isStunty = Arrays.stream(pInjuryContext.getInjuryModifiers()).anyMatch(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily));
 				int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal(game);
-				if ((total == 8) && (defender != null)
-					&& defender.hasSkillProperty(NamedProperties.convertKOToStunOn8)) {
+				boolean hasThickSkull = defender != null && defender.hasSkillProperty(NamedProperties.convertKOToStunOn8);
+
+				if (total == 7 && isStunty) {
+					if (hasThickSkull) {
+						playerState = new PlayerState(PlayerState.STUNNED);
+						defender.getSkillWithProperty(NamedProperties.convertKOToStunOn8).getInjuryModifiers()
+							.forEach(pInjuryContext::addInjuryModifier);
+					} else {
+						playerState = new PlayerState(PlayerState.KNOCKED_OUT);
+					}
+				} else if ((total == 8) && hasThickSkull && !isStunty) {
 					playerState = new PlayerState(PlayerState.STUNNED);
 					defender.getSkillWithProperty(NamedProperties.convertKOToStunOn8).getInjuryModifiers()
 						.forEach(pInjuryContext::addInjuryModifier);
-				} else if ((total == 7) && isStunty) {
-					playerState = new PlayerState(PlayerState.KNOCKED_OUT);
-				} else if ((total == 9) && (defender != null) && isStunty) {
+				}  else if ((total == 9) && isStunty) {
 					playerState = new PlayerState(PlayerState.BADLY_HURT);
 				} else if (total > 9) {
 					playerState = null;
