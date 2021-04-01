@@ -7,6 +7,12 @@ import com.balancedbytes.games.ffb.INamedObject;
  */
 public enum ReportId implements INamedObject {
 
+	NONE("none"),
+	
+	// Internal reports
+	NERVES_OF_STEEL("nervesOfSteel"),
+	
+	// On-wire reports
 	ALWAYS_HUNGRY_ROLL("alwaysHungryRoll"), ARGUE_THE_CALL("argueTheCall"), CATCH_ROLL("catchRoll"), CLOUD_BURSTER("cloudBurster"),
 	CONFUSION_ROLL("confusionRoll"), DAUNTLESS_ROLL("dauntlessRoll"), DODGE_ROLL("dodgeRoll"), ESCAPE_ROLL("escapeRoll"),
 	FOUL_APPEARANCE_ROLL("foulAppearanceRoll"), GO_FOR_IT_ROLL("goForItRoll"), INTERCEPTION_ROLL("interceptionRoll"),

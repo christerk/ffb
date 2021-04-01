@@ -80,15 +80,16 @@ public class Scanner<T extends IKeyedItem> {
 		return result.values();
 	}
 
+	public Set<Class<T>> getSubclasses() {
+		return rawScanner.getSubclasses();
+	}
+	
 	public Set<Class<T>> getClassesImplementing() {
 		Set<Class<T>> result = new HashSet<>();
 		for (Class<T> cls : rawScanner.getClassesImplementing()) {
 			for (Annotation a : cls.getAnnotations()) {
 				if (a instanceof RulesCollection) {
-					Rules rule = ((RulesCollection) a).value();
-					if (rule.matches(rule)) {
-						result.add(cls);
-					}
+					result.add(cls);
 				}
 			}
 		}

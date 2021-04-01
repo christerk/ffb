@@ -12,7 +12,6 @@ public class ScannerSingleton {
 				.enableClassInfo()
 				.acceptPackages("com.balancedbytes.games.ffb")
 				.enableRemoteJarScanning()
-				.verbose()
 				.scan();
 	}
 	public static ScannerSingleton getInstance() {
