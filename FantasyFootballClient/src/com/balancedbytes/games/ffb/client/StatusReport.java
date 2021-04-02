@@ -1,13 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -27,9 +19,14 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.StringTool;
 
-/**
- * @author Kalimar
- */
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class StatusReport {
 
 	private final FantasyFootballClient fClient;
@@ -38,15 +35,16 @@ public class StatusReport {
 	public boolean fCardsBoughtReportReceived;
 	public boolean inducementsBoughtReportReceived;
 
-	private Map<RulesCollection.Rules, Map<ReportId, ReportMessageBase>> messageRenderers;
+	private final Map<RulesCollection.Rules, Map<ReportId, ReportMessageBase<? extends IReport>>> messageRenderers;
 	
+	@SuppressWarnings("rawtypes")
 	public StatusReport(FantasyFootballClient pClient) {
 		fClient = pClient;
-		Set<Class<ReportMessageBase>> renderers = new Scanner<ReportMessageBase>(ReportMessageBase.class).getSubclasses();
-		messageRenderers = new HashMap<RulesCollection.Rules, Map<ReportId,ReportMessageBase>>();
+		Set<Class<ReportMessageBase>> renderers = new Scanner<>(ReportMessageBase.class).getSubclasses();
+		messageRenderers = new HashMap<>();
 		
 		// Ensure there's a COMMON set to avoid needing to test this.
-		messageRenderers.put(Rules.COMMON, new HashMap<ReportId, ReportMessageBase>());
+		messageRenderers.put(Rules.COMMON, new HashMap<>());
 		
 		for (Class<ReportMessageBase> renderer : renderers) {
 			try {
@@ -54,32 +52,31 @@ public class StatusReport {
 				ReportId reportId = renderer.getAnnotation(ReportMessageType.class).value();
 				
 				if (!messageRenderers.containsKey(rule)) {
-					messageRenderers.put(rule, new HashMap<ReportId, ReportMessageBase>());
+					messageRenderers.put(rule, new HashMap<>());
 				}
 				
-				Constructor ctr;
-				ctr = renderer.getConstructor(StatusReport.class);
-				ReportMessageBase instance = (ReportMessageBase) ctr.newInstance(this);
+				Constructor<?> ctr = renderer.getConstructor(StatusReport.class);
+				ReportMessageBase<? extends IReport> instance = (ReportMessageBase<? extends IReport>) ctr.newInstance(this);
 				
 				messageRenderers.get(rule).put(reportId, instance);
 			} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				System.err.println(e.toString());
 			} catch (NullPointerException npe) {
-				System.err.println("Error processing "+renderer.getName());
+				System.err.println("Error processing " + renderer.getName());
 			}
 		}
 	}
 
-	private ReportMessageBase getMessageRenderer(ReportId reportId) {
+	private ReportMessageBase<? extends IReport> getMessageRenderer(ReportId reportId) {
 		RulesCollection.Rules version = Rules.COMMON;
-		ReportMessageBase renderer = null;
+		ReportMessageBase<? extends IReport> renderer = null;
 		
 		Game game = fClient.getGame();
 		if (game != null && game.getOptions() != null) {
 			version = game.getOptions().getRulesVersion();
 		}
 		if (messageRenderers.containsKey(version)) {
-			Map<ReportId, ReportMessageBase> renderers = messageRenderers.get(version);
+			Map<ReportId, ReportMessageBase<? extends IReport>> renderers = messageRenderers.get(version);
 			renderer = renderers.get(reportId);
 		}
 		
@@ -142,13 +139,7 @@ public class StatusReport {
 	public void reportJoin(ServerCommandJoin pJoinCommand) {
 		Game game = getClient().getGame();
 		if (ClientMode.PLAYER == pJoinCommand.getClientMode()) {
-			print(0, TextStyle.BOLD, "Player ");
-			if (game.getTeamHome() != null && StringTool.isProvided(game.getTeamHome().getCoach())
-				&& game.getTeamHome().getCoach().equals(pJoinCommand.getCoach())) {
-				print(0, TextStyle.HOME_BOLD, pJoinCommand.getCoach());
-			} else {
-				print(0, TextStyle.AWAY_BOLD, pJoinCommand.getCoach());
-			}
+			printCoachName(game, pJoinCommand.getCoach());
 			println(0, TextStyle.BOLD, " joins the game.");
 		} else if (ClientMode.SPECTATOR == pJoinCommand.getClientMode()) {
 			print(0, "Spectator ");
@@ -160,13 +151,7 @@ public class StatusReport {
 	public void reportLeave(ServerCommandLeave pLeaveCommand) {
 		Game game = getClient().getGame();
 		if (ClientMode.PLAYER == pLeaveCommand.getClientMode()) {
-			print(0, TextStyle.BOLD, "Player ");
-			if (game.getTeamHome() != null && StringTool.isProvided(game.getTeamHome().getCoach())
-				&& game.getTeamHome().getCoach().equals(pLeaveCommand.getCoach())) {
-				print(0, TextStyle.HOME_BOLD, pLeaveCommand.getCoach());
-			} else {
-				print(0, TextStyle.AWAY_BOLD, pLeaveCommand.getCoach());
-			}
+			printCoachName(game, pLeaveCommand.getCoach());
 			println(0, TextStyle.BOLD, " leaves the game.");
 		} else if (ClientMode.SPECTATOR == pLeaveCommand.getClientMode()) {
 			print(0, "Spectator ");
@@ -175,10 +160,20 @@ public class StatusReport {
 		}
 	}
 
-	public String formatRollModifiers(RollModifier[] pRollModifiers) {
+	private void printCoachName(Game game, String coach) {
+		print(0, TextStyle.BOLD, "Player ");
+		if (game.getTeamHome() != null && StringTool.isProvided(game.getTeamHome().getCoach())
+			&& game.getTeamHome().getCoach().equals(coach)) {
+			print(0, TextStyle.HOME_BOLD, coach);
+		} else {
+			print(0, TextStyle.AWAY_BOLD, coach);
+		}
+	}
+
+	public String formatRollModifiers(RollModifier<?>[] pRollModifiers) {
 		StringBuilder modifiers = new StringBuilder();
 		if (ArrayTool.isProvided(pRollModifiers)) {
-			for (RollModifier rollModifier : pRollModifiers) {
+			for (RollModifier<?> rollModifier : pRollModifiers) {
 				if (rollModifier.getModifier() > 0) {
 					modifiers.append(" - ");
 				} else {
@@ -193,24 +188,14 @@ public class StatusReport {
 		return modifiers.toString();
 	}
 
-	public void reportServerUnreachable() {
-		println();
-		println(0, TextStyle.BOLD, "Server unreachable - Communication stopped.");
-		println();
-	}
-
 	public void reportStatus(ServerStatus status) {
 		println();
 		println(0, TextStyle.BOLD, status.getMessage());
 		println();
 	}
 
-	public void reportServerMessage(ServerStatus pServerStatus) {
-		println(getIndent(), TextStyle.NONE, pServerStatus.getMessage());
-	}
-
 	public void report(IReport report) {
-		ReportMessageBase renderer = getMessageRenderer(report.getId());
+		ReportMessageBase<? extends IReport> renderer = getMessageRenderer(report.getId());
 		if (renderer != null) {
 			renderer.renderMessage(fClient.getGame(), report);
 		} else {
