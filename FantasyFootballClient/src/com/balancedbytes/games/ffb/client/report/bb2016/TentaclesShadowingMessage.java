@@ -15,9 +15,9 @@ import com.balancedbytes.games.ffb.report.ReportId;
 
 @ReportMessageType(ReportId.TENTACLES_SHADOWING_ROLL)
 @RulesCollection(Rules.BB2016)
-public class FumbblResultUploadMessage extends ReportMessageBase<ReportTentaclesShadowingRoll> {
+public class TentaclesShadowingMessage extends ReportMessageBase<ReportTentaclesShadowingRoll> {
 
-    public FumbblResultUploadMessage(StatusReport statusReport) {
+    public TentaclesShadowingMessage(StatusReport statusReport) {
         super(statusReport);
     }
 
