@@ -1,8 +1,10 @@
-package com.balancedbytes.games.ffb.client.report;
+package com.balancedbytes.games.ffb.client.report.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.client.TextStyle;
+import com.balancedbytes.games.ffb.client.report.ReportMessageBase;
+import com.balancedbytes.games.ffb.client.report.ReportMessageType;
 import com.balancedbytes.games.ffb.report.bb2020.ReportFanFactor;
 import com.balancedbytes.games.ffb.report.ReportId;
 
