@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -13,6 +14,7 @@ import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
@@ -24,10 +26,10 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.report.ReportApothecaryChoice;
 import com.balancedbytes.games.ffb.report.ReportApothecaryRoll;
 import com.balancedbytes.games.ffb.report.ReportInducement;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.mechanic.RollMechanic;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -276,13 +278,14 @@ public class StepApothecary extends AbstractStep {
 		boolean apothecaryChoice = ((fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT)
 			&& (fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.KNOCKED_OUT));
 		if (apothecaryChoice) {
+			RollMechanic rollMechanic = ((RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 			InjuryResult newInjuryResult = new InjuryResult();
 			newInjuryResult.injuryContext().setDefenderId(fInjuryResult.injuryContext().getDefenderId());
-			newInjuryResult.injuryContext().setCasualtyRoll(getGameState().getDiceRoller().rollCasualty());
+			newInjuryResult.injuryContext().setCasualtyRoll(rollMechanic.rollCasualty(getGameState().getDiceRoller()));
 			newInjuryResult.injuryContext().setInjury(
-				DiceInterpreter.getInstance().interpretRollCasualty(newInjuryResult.injuryContext().getCasualtyRoll()));
+				rollMechanic.interpretCasualtyRoll(newInjuryResult.injuryContext().getCasualtyRoll(), game.getPlayerById(fInjuryResult.injuryContext().getDefenderId())));
 			newInjuryResult.injuryContext().setSeriousInjury(
-				DiceInterpreter.getInstance().interpretRollSeriousInjury(newInjuryResult.injuryContext().getCasualtyRoll()));
+				rollMechanic.interpretSeriousInjuryRoll(newInjuryResult.injuryContext().getCasualtyRoll()));
 			apothecaryChoice = (newInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT);
 			getResult()
 				.addReport(new ReportApothecaryRoll(defender.getId(), newInjuryResult.injuryContext().getCasualtyRoll(),

@@ -161,7 +161,7 @@ public class DiceRoller {
 		return rollDice(6);
 	}
 
-	public int[] rollCasualty() {
+	public int[] rollCasualtyRenamed() {
 		return new int[] { rollDice(6), rollDice(8) };
 	}
 

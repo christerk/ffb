@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -30,6 +31,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBallAndChain;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeServer;
+import com.balancedbytes.games.ffb.server.mechanic.RollMechanic;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
@@ -92,11 +94,12 @@ public class UtilServerInjury {
 		}
 
 		if (injuryContext.isSeriousInjury()) {
+			RollMechanic rollMechanic = ((RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 			injuryContext
-					.setSeriousInjury(DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRoll()));
+					.setSeriousInjury(rollMechanic.interpretSeriousInjuryRoll(injuryContext.getCasualtyRoll()));
 			if (pDefender.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryContext.setSeriousInjuryDecay(
-						DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRollDecay()));
+					rollMechanic.interpretSeriousInjuryRoll(injuryContext.getCasualtyRollDecay()));
 			}
 		}
 

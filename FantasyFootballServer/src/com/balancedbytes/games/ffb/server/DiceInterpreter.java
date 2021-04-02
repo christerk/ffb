@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.DirectionFactory;
@@ -213,105 +212,6 @@ public class DiceInterpreter {
 			}
 		}
 		return reRollsStolen;
-	}
-
-	public PlayerState interpretRollCasualty(int[] pCasualtyRoll) {
-		if (ArrayTool.isProvided(pCasualtyRoll)) {
-			switch (pCasualtyRoll[0]) {
-			case 6:
-				return new PlayerState(PlayerState.RIP);
-			case 5:
-			case 4:
-				return new PlayerState(PlayerState.SERIOUS_INJURY);
-			default: // 1 - 3
-				return new PlayerState(PlayerState.BADLY_HURT);
-			}
-		} else {
-			return null;
-		}
-	}
-
-	public SeriousInjury interpretRollSeriousInjury(int[] pCasualtyRoll) {
-
-		// 11-38 Badly Hurt No long term effect
-		// 41 Broken Ribs Miss next game
-		// 42 Groin Strain Miss next game
-		// 43 Gouged Eye Miss next game
-		// 44 Broken Jaw Miss next game
-		// 45 Fractured Arm Miss next game
-		// 46 Fractured Leg Miss next game
-		// 47 Smashed Hand Miss next game
-		// 48 Pinched Nerve Miss next game
-		// 51 Damaged Back Niggling Injury
-		// 52 Smashed Knee Niggling Injury
-		// 53 Smashed Hip -1 MA
-		// 54 Smashed Ankle -1 MA
-		// 55 Serious Concussion -1 AV
-		// 56 Fractured Skull -1 AV
-		// 57 Broken Neck -1 AG
-		// 58 Smashed Collar Bone -1 ST
-		// 61-68 DEAD Dead!
-
-		SeriousInjury seriousInjury = null;
-		switch (pCasualtyRoll[0]) {
-		case 4:
-			switch (pCasualtyRoll[1]) {
-			case 1:
-				seriousInjury = SeriousInjury.BROKEN_RIBS;
-				break;
-			case 2:
-				seriousInjury = SeriousInjury.GROIN_STRAIN;
-				break;
-			case 3:
-				seriousInjury = SeriousInjury.GOUGED_EYE;
-				break;
-			case 4:
-				seriousInjury = SeriousInjury.BROKEN_JAW;
-				break;
-			case 5:
-				seriousInjury = SeriousInjury.FRACTURED_ARM;
-				break;
-			case 6:
-				seriousInjury = SeriousInjury.FRACTURED_LEG;
-				break;
-			case 7:
-				seriousInjury = SeriousInjury.SMASHED_HAND;
-				break;
-			case 8:
-				seriousInjury = SeriousInjury.PINCHED_NERVE;
-				break;
-			}
-			break;
-		case 5:
-			switch (pCasualtyRoll[1]) {
-			case 1:
-				seriousInjury = SeriousInjury.DAMAGED_BACK;
-				break;
-			case 2:
-				seriousInjury = SeriousInjury.SMASHED_KNEE;
-				break;
-			case 3:
-				seriousInjury = SeriousInjury.SMASHED_HIP;
-				break;
-			case 4:
-				seriousInjury = SeriousInjury.SMASHED_ANKLE;
-				break;
-			case 5:
-				seriousInjury = SeriousInjury.SERIOUS_CONCUSSION;
-				break;
-			case 6:
-				seriousInjury = SeriousInjury.FRACTURED_SKULL;
-				break;
-			case 7:
-				seriousInjury = SeriousInjury.BROKEN_NECK;
-				break;
-			case 8:
-				seriousInjury = SeriousInjury.SMASHED_COLLAR_BONE;
-				break;
-			}
-			break;
-		}
-		return seriousInjury;
 	}
 
 	public boolean isArmourBroken(GameState pGameState, InjuryContext pInjuryContext) {

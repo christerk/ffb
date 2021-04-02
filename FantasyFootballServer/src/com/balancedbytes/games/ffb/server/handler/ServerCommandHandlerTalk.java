@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.server.handler;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.InjuryAttribute;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SoundId;
@@ -10,26 +12,28 @@ import com.balancedbytes.games.ffb.factory.AnimationTypeFactory;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;
 import com.balancedbytes.games.ffb.factory.GameOptionIdFactory;
+import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.factory.SoundIdFactory;
 import com.balancedbytes.games.ffb.factory.WeatherFactory;
 import com.balancedbytes.games.ffb.inducement.Card;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.IGameOption;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.mechanic.RollMechanic;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
@@ -404,6 +408,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 				: game.getTeamAway();
+		RollMechanic mechanic = ((RollMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 		for (Player<?> player : findPlayersInCommand(team, commands, 2)) {
 			if ("rsv".equalsIgnoreCase(commands[1])) {
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);
@@ -412,13 +417,12 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 			} else if ("bh".equalsIgnoreCase(commands[1])) {
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.BADLY_HURT), "Badly Hurt", null);
 			} else if ("si".equalsIgnoreCase(commands[1])) {
-				int[] roll = { gameState.getServer().getFortuna().getDieRoll(6),
-						gameState.getServer().getFortuna().getDieRoll(6) };
-				SeriousInjury seriousInjury = DiceInterpreter.getInstance().interpretRollSeriousInjury(roll);
+				int[] roll = mechanic.rollCasualty(gameState.getDiceRoller());
+				SeriousInjury seriousInjury = mechanic.interpretSeriousInjuryRoll(roll);
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.SERIOUS_INJURY), "Serious Injury",
 						seriousInjury);
 			} else if ("rip".equalsIgnoreCase(commands[1])) {
-				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.RIP), "RIP", SeriousInjury.DEAD);
+				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.RIP), "RIP", ((SeriousInjuryFactory) game.getFactory(FactoryType.Factory.SERIOUS_INJURY)).dead());
 			} else if ("ban".equalsIgnoreCase(commands[1])) {
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.BANNED), "Banned", null);
 			} else {
@@ -603,21 +607,21 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 				: game.getTeamAway();
+		SeriousInjuryFactory factory = game.getFactory(Factory.SERIOUS_INJURY);
 		for (Player<?> player : findPlayersInCommand(team, commands, 2)) {
 			SeriousInjury lastingInjury;
 			if ("ni".equalsIgnoreCase(commands[1])) {
-				lastingInjury = (gameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.DAMAGED_BACK
-						: SeriousInjury.SMASHED_KNEE;
+				lastingInjury = factory.forAttribute(InjuryAttribute.NI);
 			} else if ("-ma".equalsIgnoreCase(commands[1])) {
-				lastingInjury = (gameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.SMASHED_HIP
-						: SeriousInjury.SMASHED_ANKLE;
+				lastingInjury = factory.forAttribute(InjuryAttribute.MA);
 			} else if ("-av".equalsIgnoreCase(commands[1])) {
-				lastingInjury = (gameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.SERIOUS_CONCUSSION
-						: SeriousInjury.FRACTURED_SKULL;
+				lastingInjury = factory.forAttribute(InjuryAttribute.AV);
 			} else if ("-ag".equalsIgnoreCase(commands[1])) {
-				lastingInjury = SeriousInjury.BROKEN_NECK;
+				lastingInjury = factory.forAttribute(InjuryAttribute.AG);
 			} else if ("-st".equalsIgnoreCase(commands[1])) {
-				lastingInjury = SeriousInjury.SMASHED_COLLAR_BONE;
+				lastingInjury = factory.forAttribute(InjuryAttribute.ST);
+			} else if ("-pa".equalsIgnoreCase(commands[1])) {
+				lastingInjury = factory.forAttribute(InjuryAttribute.PA);
 			} else {
 				lastingInjury = null;
 			}

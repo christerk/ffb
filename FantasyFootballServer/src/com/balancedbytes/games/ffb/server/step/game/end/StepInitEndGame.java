@@ -1,10 +1,11 @@
 package com.balancedbytes.games.ffb.server.step.game.end;
 
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -104,11 +105,12 @@ public final class StepInitEndGame extends AbstractStep {
 
 	private void handlePoisonedPlayers() {
 		Game game = getGameState().getGame();
+		SeriousInjuryFactory factory = game.getFactory(FactoryType.Factory.SERIOUS_INJURY);
 		for (Player<?> player : game.getPlayers()) {
 			if (game.getFieldModel().hasCardEffect(player, CardEffect.POISONED)) {
 				PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 				if (playerResult.getSeriousInjury() == null) {
-					playerResult.setSeriousInjury(SeriousInjury.POISONED);
+					playerResult.setSeriousInjury(factory.poison());
 				}
 				game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
 			}

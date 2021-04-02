@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryContext;
+import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -84,7 +85,7 @@ public class InjuryResult implements IJsonSerializable {
 		}
 		// death is also a serious injury
 		if ((injuryContext.getPlayerState() != null) && (injuryContext.getPlayerState().getBase() == PlayerState.RIP)) {
-			playerResult.setSeriousInjury(SeriousInjury.DEAD);
+			playerResult.setSeriousInjury(((SeriousInjuryFactory) game.getFactory(FactoryType.Factory.SERIOUS_INJURY)).dead());
 			playerResult.setSeriousInjuryDecay(null);
 		} else {
 			playerResult.setSeriousInjury(injuryContext.getSeriousInjury());
@@ -124,11 +125,7 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 	public void report(IStep pStep) {
-		pStep.getResult().addReport(new ReportInjury(injuryContext.getDefenderId(), injuryContext.getInjuryType(),
-				injuryContext.isArmorBroken(), injuryContext.getArmorModifiers(), injuryContext.getArmorRoll(),
-				injuryContext.getInjuryModifiers(), injuryContext.getInjuryRoll(), injuryContext.getCasualtyRoll(),
-				injuryContext.getSeriousInjury(), injuryContext.getCasualtyRollDecay(), injuryContext.getSeriousInjuryDecay(),
-				injuryContext.getInjury(), injuryContext.getInjuryDecay(), injuryContext.getAttackerId()));
+		pStep.getResult().addReport(new ReportInjury(injuryContext));
 		pStep.getResult().setSound(injuryContext.getSound());
 	}
 

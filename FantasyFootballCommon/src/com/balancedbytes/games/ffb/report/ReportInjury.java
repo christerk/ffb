@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -47,7 +48,15 @@ public class ReportInjury implements IReport {
 		fInjuryModifiers = new ArrayList<>();
 	}
 
-	public ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
+	public ReportInjury(InjuryContext injuryContext) {
+		this(injuryContext.getDefenderId(), injuryContext.getInjuryType(),
+			injuryContext.isArmorBroken(), injuryContext.getArmorModifiers(), injuryContext.getArmorRoll(),
+			injuryContext.getInjuryModifiers(), injuryContext.getInjuryRoll(), injuryContext.getCasualtyRoll(),
+			injuryContext.getSeriousInjury(), injuryContext.getCasualtyRollDecay(), injuryContext.getSeriousInjuryDecay(),
+			injuryContext.getInjury(), injuryContext.getInjuryDecay(), injuryContext.getAttackerId());
+	}
+
+	private ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
 			int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
 			SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
 			PlayerState pInjuryDecay, String pAttackerId) {

@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.util;
 
+import io.github.classgraph.ClassInfo;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import io.github.classgraph.ClassInfo;
 
 public class RawScanner<T2> {
 
@@ -37,7 +37,6 @@ public class RawScanner<T2> {
 				try {
 					result.add((Class<T2>) Class.forName(classInfo.getName()));
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

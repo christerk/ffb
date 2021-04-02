@@ -8,15 +8,14 @@ import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
-import com.balancedbytes.games.ffb.mechanics.GameMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.mechanic.RollMechanic;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
 public abstract class InjuryTypeServer<T extends InjuryType> implements INamedObject {
@@ -67,16 +66,16 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 			ApothecaryMode pApothecaryMode);
 
 	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+		RollMechanic mechanic = ((RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 		injuryContext
 				.setInjury(interpretInjury(gameState, pDefender instanceof ZappedPlayer));
 
 		if (injuryContext.getPlayerState() == null) {
-			injuryContext.setCasualtyRoll(diceRoller.rollCasualty());
-			injuryContext.setInjury(diceInterpreter.interpretRollCasualty(injuryContext.getCasualtyRoll()));
+			injuryContext.setCasualtyRoll(mechanic.rollCasualty(diceRoller));
+			injuryContext.setInjury(mechanic.interpretCasualtyRoll(injuryContext.getCasualtyRoll(), pDefender));
 			if (pDefender.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
-				injuryContext.setCasualtyRollDecay(diceRoller.rollCasualty());
-				injuryContext.setInjuryDecay(diceInterpreter.interpretRollCasualty(injuryContext.getCasualtyRollDecay()));
+				injuryContext.setCasualtyRollDecay(mechanic.rollCasualty(diceRoller));
+				injuryContext.setInjuryDecay(mechanic.interpretCasualtyRoll(injuryContext.getCasualtyRollDecay(), pDefender));
 			}
 		}
 	}
@@ -86,9 +85,9 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 			return new PlayerState(PlayerState.BADLY_HURT);
 		}
 
-		GameMechanic gameMechanic = (GameMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		RollMechanic rollMechanic = (RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
 
-		return gameMechanic.interpretRollInjury(gameState.getGame(), injuryContext);
+		return rollMechanic.interpretInjuryRoll(gameState.getGame(), injuryContext);
 	}
 
 }

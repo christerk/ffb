@@ -30,7 +30,6 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.LeaderStateFactory;
 import com.balancedbytes.games.ffb.factory.PlayerActionFactory;
 import com.balancedbytes.games.ffb.factory.SendToBoxReasonFactory;
-import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.factory.TurnModeFactory;
 import com.balancedbytes.games.ffb.factory.WeatherFactory;
@@ -203,7 +202,7 @@ public enum ModelChangeDataType implements INamedObject {
 			case SEND_TO_BOX_REASON:
 				return UtilJson.toEnumWithName(new SendToBoxReasonFactory(), pJsonValue);
 			case SERIOUS_INJURY:
-				return UtilJson.toEnumWithName(new SeriousInjuryFactory(), pJsonValue);
+				return UtilJson.toEnumWithName(source.getFactory(Factory.SERIOUS_INJURY), pJsonValue);
 			case SKILL:
 				return UtilJson.toEnumWithName(source.<SkillFactory>getFactory(Factory.SKILL), pJsonValue);
 			case STRING:

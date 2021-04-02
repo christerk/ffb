@@ -267,31 +267,35 @@ public class RosterPlayer extends Player<RosterPosition> {
 			int oldArmour = getArmour();
 			int oldAgility = getAgility();
 			int oldStrength = getStrength();
+			int oldPassing = getPassing();
 			for (SeriousInjury injury : getLastingInjuries()) {
-				switch (injury) {
-				case SMASHED_HIP:
-				case SMASHED_ANKLE:
+				switch (injury.getInjuryAttribute()) {
+				case MA:
 					if ((fMovement > 1) && ((oldMovement - fMovement) < 2)) {
 						fMovement--;
 					}
 					break;
-				case SERIOUS_CONCUSSION:
-				case FRACTURED_SKULL:
+				case AV:
 					if ((fArmour > 1) && ((oldArmour - fArmour) < 2)) {
 						fArmour--;
 					}
 					break;
-				case BROKEN_NECK:
+				case AG:
 					if ((fAgility > 1) && ((oldAgility - fAgility) < 2)) {
 						fAgility--;
 					}
 					break;
-				case SMASHED_COLLAR_BONE:
+				case ST:
 					if ((fStrength > 1) && ((oldStrength - fStrength) < 2)) {
 						fStrength--;
 					}
 					break;
-				default:
+					case PA:
+						if ((fPassing > 1) && ((oldPassing - fPassing) < 2)) {
+							fPassing--;
+						}
+						break;
+					default:
 					break;
 				}
 			}
@@ -501,7 +505,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					fInsideInjuryList = false;
 				}
 				if (_XML_TAG_INJURY.equals(pXmlTag)) {
-					SeriousInjury injury = new SeriousInjuryFactory().forName(pValue);
+					SeriousInjury injury = ((SeriousInjuryFactory) game.getFactory(Factory.SERIOUS_INJURY)).forName(pValue);
 					if (injury != null) {
 						fLastingInjuries.add(injury);
 						if (fInjuryCurrent) {
@@ -663,7 +667,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fPassing= IJsonOption.PASSING.getFrom(source, jsonObject);
 		fArmour = IJsonOption.ARMOUR.getFrom(source, jsonObject);
 
-		SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
+		SeriousInjuryFactory seriousInjuryFactory = source.getFactory(Factory.SERIOUS_INJURY);
 
 		fLastingInjuries.clear();
 		JsonArray lastingInjuries = IJsonOption.LASTING_INJURIES.getFrom(source, jsonObject);
