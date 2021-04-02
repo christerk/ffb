@@ -1,9 +1,10 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -11,19 +12,25 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportCatchRoll extends ReportSkillRoll {
 
 	private boolean fBomb;
 
 	public ReportCatchRoll() {
-		super(ReportId.CATCH_ROLL);
 	}
 
 	public ReportCatchRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled,
 			CatchModifier[] pRollModifiers, boolean pBomb) {
-		super(ReportId.CATCH_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
+		super(pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
 		fBomb = pBomb;
 	}
+
+	@Override
+	public ReportId getId() {
+		return ReportId.CATCH_ROLL;
+	}
+
 
 	public boolean isBomb() {
 		return fBomb;

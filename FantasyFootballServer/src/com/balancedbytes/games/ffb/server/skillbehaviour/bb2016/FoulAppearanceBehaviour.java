@@ -8,8 +8,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportFoulAppearanceRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -56,8 +55,8 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
 						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE)
 								&& (step.getReRollSource() != null));
-						step.getResult().addReport(new ReportSkillRoll(ReportId.FOUL_APPEARANCE_ROLL, actingPlayer.getPlayerId(),
-								mayBlock, foulAppearanceRoll, minimumRoll, reRolled));
+						step.getResult().addReport(new ReportFoulAppearanceRoll(actingPlayer.getPlayerId(),
+								mayBlock, foulAppearanceRoll, minimumRoll, reRolled, null));
 						if (mayBlock) {
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {

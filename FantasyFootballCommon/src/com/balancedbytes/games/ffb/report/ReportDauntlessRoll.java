@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -10,17 +11,17 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportDauntlessRoll extends ReportSkillRoll {
 
 	private int fStrength;
 
 	public ReportDauntlessRoll() {
-		super(ReportId.DAUNTLESS_ROLL);
 	}
 
 	public ReportDauntlessRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled,
 			int pStrength) {
-		super(ReportId.DAUNTLESS_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled);
+		super(pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, null);
 		fStrength = pStrength;
 	}
 

@@ -1,8 +1,12 @@
-package com.balancedbytes.games.ffb.report;
+package com.balancedbytes.games.ffb.report.bb2020;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.report.IReport;
+import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.UtilReport;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -10,6 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportCardsAndInducementsBought implements IReport {
 
 	private String teamId;

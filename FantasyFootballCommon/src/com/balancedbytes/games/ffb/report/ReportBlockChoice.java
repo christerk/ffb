@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.BlockResult;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -11,6 +12,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportBlockChoice implements IReport {
 
 	private int fNrOfDice;

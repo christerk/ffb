@@ -22,9 +22,8 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportRaiseDead;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportRegenerationRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -179,7 +178,7 @@ public class UtilServerInjury {
 					UtilServerGame.updateLeaderReRolls(pStep);
 				}
 				pStep.getResult()
-						.addReport(new ReportSkillRoll(ReportId.REGENERATION_ROLL, pPlayer.getId(), successful, roll, 4, false));
+						.addReport(new ReportRegenerationRoll(pPlayer.getId(), successful, roll, 4, false, null));
 			}
 		}
 		return successful;

@@ -17,8 +17,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.PickupContext;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportPickupRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -150,7 +149,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
-			getResult().addReport(new ReportSkillRoll(ReportId.PICK_UP_ROLL, actingPlayer.getPlayerId(), successful, roll,
+			getResult().addReport(new ReportPickupRoll(actingPlayer.getPlayerId(), successful, roll,
 					minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0])));
 			if (successful) {
 				return ActionStatus.SUCCESS;

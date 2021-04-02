@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.TeamResult;
-import com.balancedbytes.games.ffb.report.ReportFanFactor;
+import com.balancedbytes.games.ffb.report.bb2020.ReportFanFactor;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;

@@ -1,17 +1,19 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportPassRoll extends ReportSkillRoll {
 
 	private PassingDistance fPassingDistance;
@@ -20,7 +22,6 @@ public class ReportPassRoll extends ReportSkillRoll {
 	private PassResult result;
 
 	public ReportPassRoll() {
-		super(ReportId.PASS_ROLL);
 	}
 
 	public ReportPassRoll(String pPlayerId, int pRoll, boolean pReRolled, boolean pBomb, PassResult result) {
@@ -31,7 +32,7 @@ public class ReportPassRoll extends ReportSkillRoll {
 	public ReportPassRoll(String pPlayerId, int pRoll, int pMinimumRoll, boolean pReRolled,
 	                      PassModifier[] pRollModifiers, PassingDistance pPassingDistance,
 	                      boolean pBomb, PassResult result) {
-		super(ReportId.PASS_ROLL, pPlayerId, PassResult.ACCURATE == result, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
+		super(pPlayerId, PassResult.ACCURATE == result, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
 		this.result = result;
 		fPassingDistance = pPassingDistance;
 		fBomb = pBomb;

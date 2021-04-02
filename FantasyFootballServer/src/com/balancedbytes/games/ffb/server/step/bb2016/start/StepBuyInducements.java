@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
-import com.balancedbytes.games.ffb.report.ReportInducementsBought;
+import com.balancedbytes.games.ffb.report.bb2016.ReportInducementsBought;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;

@@ -6,8 +6,7 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportBloodLustRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
@@ -72,8 +71,8 @@ public class BloodLustBehaviour extends SkillBehaviour<BloodLust> {
 					}
 					boolean reRolled = ((ReRolledActions.BLOOD_LUST == step.getReRolledAction())
 							&& (step.getReRollSource() != null));
-					step.getResult().addReport(new ReportSkillRoll(ReportId.BLOOD_LUST_ROLL, actingPlayer.getPlayerId(),
-							successful, roll, minimumRoll, reRolled));
+					step.getResult().addReport(new ReportBloodLustRoll(actingPlayer.getPlayerId(),
+							successful, roll, minimumRoll, reRolled, null));
 				}
 				if (status == ActionStatus.SUCCESS) {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);

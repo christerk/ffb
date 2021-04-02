@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.client.TextStyle;
-import com.balancedbytes.games.ffb.report.ReportCardsAndInducementsBought;
+import com.balancedbytes.games.ffb.report.bb2020.ReportCardsAndInducementsBought;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.util.StringTool;
 

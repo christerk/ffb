@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportInducementsBought;
+import com.balancedbytes.games.ffb.report.bb2016.ReportInducementsBought;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 import java.util.ArrayList;

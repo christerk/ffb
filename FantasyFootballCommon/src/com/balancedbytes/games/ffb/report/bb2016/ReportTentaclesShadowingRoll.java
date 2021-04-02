@@ -1,9 +1,13 @@
-package com.balancedbytes.games.ffb.report;
+package com.balancedbytes.games.ffb.report.bb2016;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.report.IReport;
+import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.UtilReport;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -11,21 +15,22 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ReportTentaclesShadowingRoll2020 implements IReport {
+@RulesCollection(RulesCollection.Rules.BB2016)
+public class ReportTentaclesShadowingRoll implements IReport {
 
 	private Skill fSkill;
 	private String fDefenderId;
-	private int fRoll;
+	private int[] fRoll;
 	private boolean fSuccessful;
 	private int fMinimumRoll;
 	private boolean fReRolled;
 
-	public ReportTentaclesShadowingRoll2020() {
+	public ReportTentaclesShadowingRoll() {
 		super();
 	}
 
-	public ReportTentaclesShadowingRoll2020(Skill pSkill, String pDefenderId, int pRoll, boolean pSuccessful,
-	                                        int pMinimumRoll, boolean pReRolled) {
+	public ReportTentaclesShadowingRoll(Skill pSkill, String pDefenderId, int[] pRoll, boolean pSuccessful,
+			int pMinimumRoll, boolean pReRolled) {
 		fSkill = pSkill;
 		fDefenderId = pDefenderId;
 		fRoll = pRoll;
@@ -35,7 +40,7 @@ public class ReportTentaclesShadowingRoll2020 implements IReport {
 	}
 
 	public ReportId getId() {
-		return ReportId.TENTACLES_SHADOWING_ROLL_2020;
+		return ReportId.TENTACLES_SHADOWING_ROLL;
 	}
 
 	public Skill getSkill() {
@@ -46,7 +51,7 @@ public class ReportTentaclesShadowingRoll2020 implements IReport {
 		return fDefenderId;
 	}
 
-	public int getRoll() {
+	public int[] getRoll() {
 		return fRoll;
 	}
 
@@ -65,7 +70,7 @@ public class ReportTentaclesShadowingRoll2020 implements IReport {
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportTentaclesShadowingRoll2020(getSkill(), getDefenderId(), getRoll(), isSuccessful(), getMinimumRoll(),
+		return new ReportTentaclesShadowingRoll(getSkill(), getDefenderId(), getRoll(), isSuccessful(), getMinimumRoll(),
 				isReRolled());
 	}
 
@@ -76,19 +81,19 @@ public class ReportTentaclesShadowingRoll2020 implements IReport {
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.SKILL.addTo(jsonObject, fSkill);
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
-		IJsonOption.ROLL.addTo(jsonObject, fRoll);
+		IJsonOption.TENTACLE_ROLL.addTo(jsonObject, fRoll);
 		IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
 		return jsonObject;
 	}
 
-	public ReportTentaclesShadowingRoll2020 initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public ReportTentaclesShadowingRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
+		fRoll = IJsonOption.TENTACLE_ROLL.getFrom(game, jsonObject);
 		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
 		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);

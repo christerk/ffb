@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
+import com.balancedbytes.games.ffb.report.bb2016.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 @ReportMessageType(ReportId.TENTACLES_SHADOWING_ROLL)

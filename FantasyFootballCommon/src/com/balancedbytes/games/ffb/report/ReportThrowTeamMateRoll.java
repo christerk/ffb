@@ -1,10 +1,11 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -12,18 +13,18 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 
 	private String fThrownPlayerId;
 	private PassingDistance fPassingDistance;
 
 	public ReportThrowTeamMateRoll() {
-		super(ReportId.THROW_TEAM_MATE_ROLL);
 	}
 
 	public ReportThrowTeamMateRoll(String pThrowerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled,
 			PassModifier[] pPassModifiers, PassingDistance pPassingDistance, String pThrownPlayerId) {
-		super(ReportId.THROW_TEAM_MATE_ROLL, pThrowerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pPassModifiers);
+		super(pThrowerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pPassModifiers);
 		fThrownPlayerId = pThrownPlayerId;
 		fPassingDistance = pPassingDistance;
 	}
@@ -34,6 +35,11 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 
 	public PassingDistance getPassingDistance() {
 		return fPassingDistance;
+	}
+
+	@Override
+	public ReportId getId() {
+		return ReportId.THROW_TEAM_MATE_ROLL;
 	}
 
 	@Override

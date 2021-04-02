@@ -15,8 +15,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.JumpContext;
 import com.balancedbytes.games.ffb.modifiers.JumpModifier;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportJumpRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -159,7 +158,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		int roll = getGameState().getDiceRoller().rollSkill();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.JUMP) && (getReRollSource() != null));
-		getResult().addReport(new ReportSkillRoll(ReportId.JUMP_ROLL, actingPlayer.getPlayerId(), successful, roll,
+		getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll,
 			minimumRoll, reRolled, jumpModifiers.toArray(new JumpModifier[0])));
 		if (successful) {
 			status = ActionStatus.SUCCESS;

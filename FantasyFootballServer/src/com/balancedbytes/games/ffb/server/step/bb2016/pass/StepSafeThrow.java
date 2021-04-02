@@ -13,10 +13,9 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.report.ReportSafeThrowRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -128,8 +127,8 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 				int minimumRoll = mechanic.minimumRollSafeThrow(game.getThrower());
 				safeThrowSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 				boolean reRolled = ((getReRolledAction() == ReRolledActions.SAFE_THROW) && (getReRollSource() != null));
-				getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), safeThrowSuccessful,
-						roll, minimumRoll, reRolled));
+				getResult().addReport(new ReportSafeThrowRoll(game.getThrowerId(), safeThrowSuccessful,
+						roll, minimumRoll, reRolled, null));
 				if (!safeThrowSuccessful && (getReRolledAction() != ReRolledActions.SAFE_THROW)
 						&& UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.SAFE_THROW,
 								minimumRoll, false)) {

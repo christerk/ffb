@@ -28,29 +28,20 @@ import java.util.List;
  * 
  * @author Kalimar
  */
-public class ReportSkillRoll implements IReport {
+public abstract class ReportSkillRoll implements IReport {
 
-	private final ReportId fId;
 	private String fPlayerId;
 	private boolean fSuccessful;
 	private int fRoll;
 	private int fMinimumRoll;
 	private boolean fReRolled;
-	private List<RollModifier<?>> fRollModifierList;
+	private List<RollModifier<?>> fRollModifierList = new ArrayList<>();
 
-	public ReportSkillRoll(ReportId pId) {
-		fId = pId;
-		initRollModifiers(null);
+	public ReportSkillRoll() {
 	}
 
-	public ReportSkillRoll(ReportId pId, String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll,
-			boolean pReRolled) {
-		this(pId, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, null);
-	}
-
-	public ReportSkillRoll(ReportId pId, String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll,
+	public ReportSkillRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll,
 			boolean pReRolled, RollModifier<?>[] pRollModifiers) {
-		fId = pId;
 		fPlayerId = pPlayerId;
 		fSuccessful = pSuccessful;
 		fRoll = pRoll;
@@ -65,8 +56,8 @@ public class ReportSkillRoll implements IReport {
 			for (RollModifier<?> rollModifier : pRollModifiers) {
 				addRollModifier(rollModifier);
 			}
+			fRollModifierList.sort(Comparator.comparing(RollModifier::getName));
 		}
-		fRollModifierList.sort(Comparator.comparing(RollModifier::getName));
 	}
 
 	public void addRollModifier(RollModifier<?> pRollModifier) {
@@ -85,10 +76,6 @@ public class ReportSkillRoll implements IReport {
 
 	protected List<RollModifier<?>> getRollModifierList() {
 		return fRollModifierList;
-	}
-
-	public ReportId getId() {
-		return fId;
 	}
 
 	public String getPlayerId() {
@@ -111,18 +98,11 @@ public class ReportSkillRoll implements IReport {
 		return fReRolled;
 	}
 
-	// transformation
-
-	public IReport transform(IFactorySource source) {
-		return new ReportSkillRoll(getId(), getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
-				getRollModifiers());
-	}
-
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
-		IJsonOption.REPORT_ID.addTo(jsonObject, fId);
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
 		IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
 		IJsonOption.ROLL.addTo(jsonObject, fRoll);

@@ -13,12 +13,11 @@ import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.GazeModifierContext;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportHypnoticGazeRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -122,7 +121,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 			if (!reRolled) {
 				getResult().setSound(SoundId.HYPNO);
 			}
-			getResult().addReport(new ReportSkillRoll(ReportId.HYPNOTIC_GAZE_ROLL, actingPlayer.getPlayerId(), successful,
+			getResult().addReport(new ReportHypnoticGazeRoll(actingPlayer.getPlayerId(), successful,
 					roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0])));
 			if (successful) {
 				PlayerState oldVictimState = game.getFieldModel().getPlayerState(game.getDefender());

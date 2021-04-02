@@ -17,8 +17,7 @@ import com.balancedbytes.games.ffb.model.KickTeamMateRange;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.modifiers.RightStuffContext;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportRightStuffRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -139,7 +138,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
-			getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll,
+			getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
 					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			if (successful) {
 				if (fThrownPlayerHasBall) {

@@ -7,8 +7,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportAnimosityRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -68,8 +67,8 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 					}
 					boolean reRolled = ((ReRolledActions.ANIMOSITY == step.getReRolledAction())
 						&& (step.getReRollSource() != null));
-					step.getResult().addReport(new ReportSkillRoll(ReportId.ANIMOSITY_ROLL, actingPlayer.getPlayerId(),
-						successful, roll, minimumRoll, reRolled));
+					step.getResult().addReport(new ReportAnimosityRoll(actingPlayer.getPlayerId(),
+						successful, roll, minimumRoll, reRolled, null));
 				} else {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}

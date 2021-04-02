@@ -1,9 +1,13 @@
-package com.balancedbytes.games.ffb.report;
+package com.balancedbytes.games.ffb.report.bb2020;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.report.IReport;
+import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.UtilReport;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -11,11 +15,12 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportTentaclesShadowingRoll implements IReport {
 
 	private Skill fSkill;
 	private String fDefenderId;
-	private int[] fRoll;
+	private int fRoll;
 	private boolean fSuccessful;
 	private int fMinimumRoll;
 	private boolean fReRolled;
@@ -24,8 +29,8 @@ public class ReportTentaclesShadowingRoll implements IReport {
 		super();
 	}
 
-	public ReportTentaclesShadowingRoll(Skill pSkill, String pDefenderId, int[] pRoll, boolean pSuccessful,
-			int pMinimumRoll, boolean pReRolled) {
+	public ReportTentaclesShadowingRoll(Skill pSkill, String pDefenderId, int pRoll, boolean pSuccessful,
+	                                    int pMinimumRoll, boolean pReRolled) {
 		fSkill = pSkill;
 		fDefenderId = pDefenderId;
 		fRoll = pRoll;
@@ -46,7 +51,7 @@ public class ReportTentaclesShadowingRoll implements IReport {
 		return fDefenderId;
 	}
 
-	public int[] getRoll() {
+	public int getRoll() {
 		return fRoll;
 	}
 
@@ -76,7 +81,7 @@ public class ReportTentaclesShadowingRoll implements IReport {
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.SKILL.addTo(jsonObject, fSkill);
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
-		IJsonOption.TENTACLE_ROLL.addTo(jsonObject, fRoll);
+		IJsonOption.ROLL.addTo(jsonObject, fRoll);
 		IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
@@ -88,7 +93,7 @@ public class ReportTentaclesShadowingRoll implements IReport {
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		fRoll = IJsonOption.TENTACLE_ROLL.getFrom(game, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
 		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
 		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);

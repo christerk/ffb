@@ -36,7 +36,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
-import com.balancedbytes.games.ffb.report.ReportCardsAndInducementsBought;
+import com.balancedbytes.games.ffb.report.bb2020.ReportCardsAndInducementsBought;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
 import com.balancedbytes.games.ffb.server.CardDeck;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;

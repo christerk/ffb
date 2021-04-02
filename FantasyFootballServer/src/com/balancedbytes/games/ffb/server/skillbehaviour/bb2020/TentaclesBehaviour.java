@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll2020;
+import com.balancedbytes.games.ffb.report.bb2020.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -95,7 +95,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 
 							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.TENTACLES)
 									&& (step.getReRollSource() != null));
-							step.getResult().addReport(new ReportTentaclesShadowingRoll2020(skill, game.getDefenderId(), roll,
+							step.getResult().addReport(new ReportTentaclesShadowingRoll(skill, game.getDefenderId(), roll,
 									successful, minimumRoll, reRolled));
 							if (!successful) {
 								if (step.getReRolledAction() != ReRolledActions.TENTACLES) {

@@ -13,8 +13,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.modifiers.JumpContext;
 import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportJumpRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeDropJump;
@@ -99,7 +98,7 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 		int roll = step.getGameState().getDiceRoller().rollSkill();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((step.getReRolledAction() == ReRolledActions.JUMP) && (step.getReRollSource() != null));
-		step.getResult().addReport(new ReportSkillRoll(ReportId.JUMP_ROLL, actingPlayer.getPlayerId(), successful, roll,
+		step.getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll,
 				minimumRoll, reRolled, jumpModifiers.toArray(new JumpModifier[0])));
 		if (successful) {
 			status = ActionStatus.SUCCESS;

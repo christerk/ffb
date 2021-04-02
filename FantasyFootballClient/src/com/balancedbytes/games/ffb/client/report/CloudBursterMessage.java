@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.report.ReportCloudBurster;
+import com.balancedbytes.games.ffb.report.bb2020.ReportCloudBurster;
 import com.balancedbytes.games.ffb.report.ReportId;
 
 @ReportMessageType(ReportId.CLOUD_BURSTER)

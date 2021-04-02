@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.PassContext;
-import com.balancedbytes.games.ffb.report.ReportCloudBurster;
+import com.balancedbytes.games.ffb.report.bb2020.ReportCloudBurster;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;

@@ -10,8 +10,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportChainsawRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -107,8 +106,8 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 				int roll = getGameState().getDiceRoller().rollChainsaw();
 				int minimumRoll = DiceInterpreter.getInstance().minimumRollChainsaw();
 				boolean successful = (roll >= minimumRoll);
-				getResult().addReport(new ReportSkillRoll(ReportId.CHAINSAW_ROLL, actingPlayer.getPlayerId(), successful, roll,
-						minimumRoll, reRolled));
+				getResult().addReport(new ReportChainsawRoll(actingPlayer.getPlayerId(), successful, roll,
+						minimumRoll, reRolled, null));
 				if (successful) {
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {

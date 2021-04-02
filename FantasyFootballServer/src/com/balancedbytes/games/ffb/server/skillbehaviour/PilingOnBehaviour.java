@@ -15,9 +15,8 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
-import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportPilingOn;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportWeepingDaggerRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBlock;
@@ -191,7 +190,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 			game.getFieldModel().addCardEffect(target, CardEffect.POISONED);
 		}
 		step.getResult().addReport(
-				new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL, source.getId(), successful, roll, minimumRoll, false));
+				new ReportWeepingDaggerRoll(source.getId(), successful, roll, minimumRoll, false, null));
 		return successful;
 	}
 }

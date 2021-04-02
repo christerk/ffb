@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.GoForItContext;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
+import com.balancedbytes.games.ffb.report.ReportGoForItRoll;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -164,7 +165,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		int roll = getGameState().getDiceRoller().rollGoingForIt();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.GO_FOR_IT) && (getReRollSource() != null));
-		getResult().addReport(new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll,
+		getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
 				minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
 		if (successful) {
 			return ActionStatus.SUCCESS;

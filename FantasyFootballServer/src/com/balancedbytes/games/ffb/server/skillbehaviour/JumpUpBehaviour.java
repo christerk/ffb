@@ -11,8 +11,7 @@ import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportJumpUpRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -68,8 +67,8 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.JUMP_UP)
 								&& (step.getReRollSource() != null));
-						step.getResult().addReport(new ReportSkillRoll(ReportId.JUMP_UP_ROLL, actingPlayer.getPlayerId(),
-								successful, roll, minimumRoll, reRolled));
+						step.getResult().addReport(new ReportJumpUpRoll(actingPlayer.getPlayerId(),
+								successful, roll, minimumRoll, reRolled, null));
 						if (successful) {
 							actingPlayer.setStandingUp(false);
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
