@@ -1,13 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -30,6 +22,13 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.util.UtilBox;
+
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -280,8 +279,9 @@ public class ClientReplayer implements ActionListener {
 			start = fLastReplayPosition;
 		}
 		if (start == 0) {
-			getClient().setGame(createGame());
-			getClient().getUserInterface().init();
+			Game game = createGame();
+			getClient().setGame(game);
+			getClient().getUserInterface().init(game.getOptions());
 		}
 		ServerCommand serverCommand = null;
 		for (int i = start; i < pReplayPosition; i++) {

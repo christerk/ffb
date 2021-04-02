@@ -3,17 +3,12 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportLeader;
 
 @ReportMessageType(ReportId.LEADER)
 @RulesCollection(Rules.COMMON)
 public class LeaderMessage extends ReportMessageBase<ReportLeader> {
-
-    public LeaderMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportLeader report) {

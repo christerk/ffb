@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
@@ -14,10 +13,6 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 @ReportMessageType(ReportId.SECRET_WEAPON_BAN)
 @RulesCollection(Rules.COMMON)
 public class SecretWeaponBanMessage extends ReportMessageBase<ReportSecretWeaponBan> {
-
-    public SecretWeaponBanMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportSecretWeaponBan report) {

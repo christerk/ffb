@@ -103,7 +103,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
 			SwingUtilities.invokeLater(() -> {
 				UserInterface userInterface = getClient().getUserInterface();
-				userInterface.init();
+				userInterface.init(game.getOptions());
 				getClient().updateClientState();
 				userInterface.getDialogManager().updateDialog();
 				userInterface.getGameMenuBar().updateMissingPlayers();

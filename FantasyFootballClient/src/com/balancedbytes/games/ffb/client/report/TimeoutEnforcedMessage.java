@@ -3,18 +3,13 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.client.ParagraphStyle;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
-import com.balancedbytes.games.ffb.report.ReportTimeoutEnforced;
 import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.ReportTimeoutEnforced;
 
 @ReportMessageType(ReportId.TIMEOUT_ENFORCED)
 @RulesCollection(Rules.COMMON)
 public class TimeoutEnforcedMessage extends ReportMessageBase<ReportTimeoutEnforced> {
-
-    public TimeoutEnforcedMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportTimeoutEnforced report) {

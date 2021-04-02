@@ -3,18 +3,13 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
-import com.balancedbytes.games.ffb.report.ReportThrowIn;
 import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.ReportThrowIn;
 
 @ReportMessageType(ReportId.THROW_IN)
 @RulesCollection(Rules.COMMON)
 public class ThrowInMessage extends ReportMessageBase<ReportThrowIn> {
-
-    public ThrowInMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportThrowIn report) {

@@ -1,9 +1,8 @@
 package com.balancedbytes.games.ffb.client.report;
 
-import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
@@ -17,10 +16,6 @@ import com.balancedbytes.games.ffb.report.ReportPassRoll;
 @ReportMessageType(ReportId.PASS_ROLL)
 @RulesCollection(Rules.COMMON)
 public class PassRollMessage extends ReportMessageBase<ReportPassRoll> {
-
-    public PassRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportPassRoll report) {

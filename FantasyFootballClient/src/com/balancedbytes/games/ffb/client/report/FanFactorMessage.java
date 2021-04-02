@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportFanFactor;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -10,10 +9,6 @@ import com.balancedbytes.games.ffb.report.ReportId;
 @ReportMessageType(ReportId.FAN_FACTOR)
 @RulesCollection(Rules.COMMON)
 public class FanFactorMessage extends ReportMessageBase<ReportFanFactor> {
-
-    public FanFactorMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportFanFactor report) {

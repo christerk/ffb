@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportHandOver;
@@ -11,10 +10,6 @@ import com.balancedbytes.games.ffb.report.ReportId;
 @ReportMessageType(ReportId.HAND_OVER)
 @RulesCollection(Rules.COMMON)
 public class HandOverMessage extends ReportMessageBase<ReportHandOver> {
-
-    public HandOverMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportHandOver report) {

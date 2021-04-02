@@ -15,10 +15,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 @RulesCollection(Rules.COMMON)
 public class KickoffExtraRerollMessage extends ReportMessageBase<ReportKickoffExtraReRoll> {
 
-    public KickoffExtraRerollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
-
     @Override
     protected void render(ReportKickoffExtraReRoll report) {
   		GameResult gameResult = game.getGameResult();

@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportCardsBought;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -11,10 +10,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
 @ReportMessageType(ReportId.CARDS_BOUGHT)
 @RulesCollection(Rules.COMMON)
 public class CardsBoughtMessage extends ReportMessageBase<ReportCardsBought> {
-
-    public CardsBoughtMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportCardsBought report) {

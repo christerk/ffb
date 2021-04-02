@@ -1,11 +1,8 @@
 package com.balancedbytes.games.ffb.client.report;
 
-import java.util.Arrays;
-
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
@@ -16,13 +13,11 @@ import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+import java.util.Arrays;
+
 @ReportMessageType(ReportId.DODGE_ROLL)
 @RulesCollection(Rules.COMMON)
 public class DodgeRollMessage extends ReportMessageBase<ReportSkillRoll> {
-
-    public DodgeRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportSkillRoll report) {

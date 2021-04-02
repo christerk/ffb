@@ -1,12 +1,9 @@
 package com.balancedbytes.games.ffb.client.report;
 
-import java.util.Arrays;
-
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
+import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
@@ -17,13 +14,11 @@ import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
+import java.util.Arrays;
+
 @ReportMessageType(ReportId.INJURY)
 @RulesCollection(Rules.COMMON)
 public class InjuryMessage extends ReportMessageBase<ReportInjury> {
-
-    public InjuryMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportInjury report) {

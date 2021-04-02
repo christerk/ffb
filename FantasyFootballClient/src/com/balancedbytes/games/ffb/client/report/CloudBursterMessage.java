@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportCloudBurster;
@@ -11,10 +10,6 @@ import com.balancedbytes.games.ffb.report.ReportId;
 @ReportMessageType(ReportId.CLOUD_BURSTER)
 @RulesCollection(Rules.COMMON)
 public class CloudBursterMessage extends ReportMessageBase<ReportCloudBurster> {
-
-    public CloudBursterMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportCloudBurster report) {

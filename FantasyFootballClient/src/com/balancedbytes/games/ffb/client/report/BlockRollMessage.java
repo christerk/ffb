@@ -1,10 +1,9 @@
 package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.BlockResult;
-import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
 import com.balancedbytes.games.ffb.report.ReportBlockRoll;
@@ -14,10 +13,6 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 @ReportMessageType(ReportId.BLOCK_ROLL)
 @RulesCollection(Rules.COMMON)
 public class BlockRollMessage extends ReportMessageBase<ReportBlockRoll> {
-
-    public BlockRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportBlockRoll report) {

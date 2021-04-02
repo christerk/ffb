@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -13,10 +12,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
 @ReportMessageType(ReportId.PLAYER_ACTION)
 @RulesCollection(Rules.COMMON)
 public class PlayerActionMessage extends ReportMessageBase<ReportPlayerAction> {
-
-    public PlayerActionMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportPlayerAction report) {

@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -14,10 +13,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 @ReportMessageType(ReportId.KICKOFF_THROW_A_ROCK)
 @RulesCollection(Rules.COMMON)
 public class KickoffThrowARockMessage extends ReportMessageBase<ReportKickoffThrowARock> {
-
-    public KickoffThrowARockMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportKickoffThrowARock report) {

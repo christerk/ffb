@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.client.ParagraphStyle;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportNoPlayersToField;
@@ -12,10 +11,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
 @ReportMessageType(ReportId.NO_PLAYERS_TO_FIELD)
 @RulesCollection(Rules.COMMON)
 public class NoPlayersToFieldMessage extends ReportMessageBase<ReportNoPlayersToField> {
-
-    public NoPlayersToFieldMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportNoPlayersToField report) {

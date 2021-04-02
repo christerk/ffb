@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.PushbackMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -12,10 +11,6 @@ import com.balancedbytes.games.ffb.report.ReportPushback;
 @ReportMessageType(ReportId.PUSHBACK)
 @RulesCollection(Rules.COMMON)
 public class PushbackMessage extends ReportMessageBase<ReportPushback> {
-
-    public PushbackMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportPushback report) {

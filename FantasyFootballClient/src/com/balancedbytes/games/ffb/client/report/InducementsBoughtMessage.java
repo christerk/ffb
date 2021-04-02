@@ -1,23 +1,18 @@
 package com.balancedbytes.games.ffb.client.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportInducementsBought;
 import com.balancedbytes.games.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ReportMessageType(ReportId.INDUCEMENTS_BOUGHT)
 @RulesCollection(Rules.COMMON)
 public class InducementsBoughtMessage extends ReportMessageBase<ReportInducementsBought> {
-
-    public InducementsBoughtMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportInducementsBought report) {

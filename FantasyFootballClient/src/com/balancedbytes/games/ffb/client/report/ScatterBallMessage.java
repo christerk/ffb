@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportScatterBall;
@@ -12,10 +11,6 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 @ReportMessageType(ReportId.SCATTER_BALL)
 @RulesCollection(Rules.COMMON)
 public class ScatterBallMessage extends ReportMessageBase<ReportScatterBall> {
-
-    public ScatterBallMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportScatterBall report) {

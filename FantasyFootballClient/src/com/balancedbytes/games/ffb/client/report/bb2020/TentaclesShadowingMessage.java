@@ -16,10 +16,6 @@ import com.balancedbytes.games.ffb.report.ReportId;
 @RulesCollection(Rules.BB2020)
 public class TentaclesShadowingMessage extends ReportMessageBase<ReportTentaclesShadowingRoll2020> {
 
-    public TentaclesShadowingMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
-
     @Override
     protected void render(ReportTentaclesShadowingRoll2020 report) {
   		StringBuilder status;

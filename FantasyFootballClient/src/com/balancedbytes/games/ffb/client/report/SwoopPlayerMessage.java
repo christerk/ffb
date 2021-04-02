@@ -3,19 +3,14 @@ package com.balancedbytes.games.ffb.client.report;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
+import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSwoopPlayer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.report.ReportId;
 
 @ReportMessageType(ReportId.SWOOP_PLAYER)
 @RulesCollection(Rules.COMMON)
 public class SwoopPlayerMessage extends ReportMessageBase<ReportSwoopPlayer> {
-
-    public SwoopPlayerMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportSwoopPlayer report) {

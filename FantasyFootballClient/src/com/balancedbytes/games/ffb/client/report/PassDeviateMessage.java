@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportPassDeviate;
@@ -10,10 +9,6 @@ import com.balancedbytes.games.ffb.report.ReportPassDeviate;
 @ReportMessageType(ReportId.PASS_DEVIATE)
 @RulesCollection(Rules.COMMON)
 public class PassDeviateMessage extends ReportMessageBase<ReportPassDeviate> {
-
-    public PassDeviateMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportPassDeviate report) {

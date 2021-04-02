@@ -660,13 +660,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		getClient().getCommunication().sendUserSettings(_SAVED_USER_SETTINGS, settingValues);
 		getClient().getClientState().refreshSettings();
 		if (pUserinterfaceInit) {
-			getClient().getUserInterface().init();
+			getClient().getUserInterface().init(getClient().getGame().getOptions());
 		}
 	}
 
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
-		if ((pDialog != null) && (pDialog.getId() == DialogId.SOUND_VOLUME)) {
+		if (pDialog.getId() == DialogId.SOUND_VOLUME) {
 			DialogSoundVolume volumeDialog = (DialogSoundVolume) pDialog;
 			getClient().setProperty(IClientProperty.SETTING_SOUND_VOLUME, Integer.toString(volumeDialog.getVolume()));
 			saveUserSettings(true);

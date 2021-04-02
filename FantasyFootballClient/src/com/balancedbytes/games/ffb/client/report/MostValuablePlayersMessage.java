@@ -14,10 +14,6 @@ import com.balancedbytes.games.ffb.report.ReportMostValuablePlayers;
 @RulesCollection(Rules.COMMON)
 public class MostValuablePlayersMessage extends ReportMessageBase<ReportMostValuablePlayers> {
 
-    public MostValuablePlayersMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
-
     @Override
     protected void render(ReportMostValuablePlayers report) {
   		reportGameEnd();

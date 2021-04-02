@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.report.ReportFanFactorRollPostMatch;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -11,10 +10,6 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 @ReportMessageType(ReportId.FAN_FACTOR_ROLL_POST_MATCH)
 @RulesCollection(Rules.COMMON)
 public class FanFactorRollPostMatchMessage extends ReportMessageBase<ReportFanFactorRollPostMatch> {
-
-    public FanFactorRollPostMatchMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportFanFactorRollPostMatch report) {

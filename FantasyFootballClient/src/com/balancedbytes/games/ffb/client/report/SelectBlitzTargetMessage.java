@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -11,10 +10,6 @@ import com.balancedbytes.games.ffb.report.ReportSelectBlitzTarget;
 @ReportMessageType(ReportId.SELECT_BLITZ_TARGET)
 @RulesCollection(Rules.COMMON)
 public class SelectBlitzTargetMessage extends ReportMessageBase<ReportSelectBlitzTarget> {
-
-    public SelectBlitzTargetMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportSelectBlitzTarget report) {

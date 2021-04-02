@@ -15,10 +15,6 @@ import com.balancedbytes.games.ffb.report.ReportId;
 @RulesCollection(Rules.COMMON)
 public class RightStuffRollMessage extends ReportMessageBase<ReportSkillRoll> {
 
-    public RightStuffRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
-
     @Override
     protected void render(ReportSkillRoll report) {
   		StringBuilder status = new StringBuilder();

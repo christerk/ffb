@@ -2,24 +2,19 @@ package com.balancedbytes.games.ffb.client.report.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.client.report.ReportMessageBase;
 import com.balancedbytes.games.ffb.client.report.ReportMessageType;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.report.ReportId;
 
 @ReportMessageType(ReportId.TENTACLES_SHADOWING_ROLL)
 @RulesCollection(Rules.BB2016)
 public class TentaclesShadowingMessage extends ReportMessageBase<ReportTentaclesShadowingRoll> {
-
-    public TentaclesShadowingMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportTentaclesShadowingRoll report) {

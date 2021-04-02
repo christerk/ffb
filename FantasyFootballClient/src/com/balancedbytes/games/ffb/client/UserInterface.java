@@ -1,18 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-import java.awt.BorderLayout;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.client.dialog.DialogLeaveGame;
 import com.balancedbytes.games.ffb.client.dialog.DialogManager;
@@ -26,8 +13,21 @@ import com.balancedbytes.games.ffb.client.ui.ScoreBarComponent;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.fumbbl.rng.MouseEntropySource;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 
@@ -35,23 +35,21 @@ import com.fumbbl.rng.MouseEntropySource;
  */
 public class UserInterface extends JFrame implements WindowListener, IDialogCloseListener {
 
-	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
-
-	private FantasyFootballClient fClient;
-	private FieldComponent fFieldComponent;
-	private StatusReport fStatusReport;
-	private SideBarComponent fSideBarHome;
-	private SideBarComponent fSideBarAway;
-	private IconCache fIconCache;
-	private SoundEngine fSoundEngine;
-	private ScoreBarComponent fScoreBar;
-	private LogComponent fLog;
-	private ChatComponent fChat;
-	private DialogManager fDialogManager;
-	private JDesktopPane fDesktop;
+	private final FantasyFootballClient fClient;
+	private final FieldComponent fFieldComponent;
+	private final StatusReport fStatusReport;
+	private final SideBarComponent fSideBarHome;
+	private final SideBarComponent fSideBarAway;
+	private final IconCache fIconCache;
+	private final SoundEngine fSoundEngine;
+	private final ScoreBarComponent fScoreBar;
+	private final LogComponent fLog;
+	private final ChatComponent fChat;
+	private final DialogManager fDialogManager;
+	private final JDesktopPane fDesktop;
 	private GameTitle fGameTitle;
-	private PlayerIconFactory fPlayerIconFactory;
-	private MouseEntropySource fMouseEntropySource;
+	private final PlayerIconFactory fPlayerIconFactory;
+	private final MouseEntropySource fMouseEntropySource;
 
 	public UserInterface(FantasyFootballClient pClient) {
 
@@ -191,8 +189,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		getGameMenuBar().refresh();
 	}
 
-	public void init() {
+	public void init(GameOptions gameOptions) {
 
+		getStatusReport().init(gameOptions);
 		getSideBarHome().init();
 		getSideBarAway().init();
 		getScoreBar().init();
@@ -241,9 +240,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	public void invokeAndWait(Runnable pRunnable) {
 		try {
 			SwingUtilities.invokeAndWait(pRunnable);
-		} catch (InterruptedException e) {
-			throw new FantasyFootballException(e);
-		} catch (InvocationTargetException e) {
+		} catch (InterruptedException | InvocationTargetException e) {
 			throw new FantasyFootballException(e);
 		}
 	}

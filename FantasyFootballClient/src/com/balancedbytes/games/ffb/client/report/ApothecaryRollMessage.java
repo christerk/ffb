@@ -2,9 +2,8 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
+import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportApothecaryRoll;
@@ -14,10 +13,6 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 @ReportMessageType(ReportId.APOTHECARY_ROLL)
 @RulesCollection(Rules.COMMON)
 public class ApothecaryRollMessage extends ReportMessageBase<ReportApothecaryRoll> {
-
-    public ApothecaryRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportApothecaryRoll report) {

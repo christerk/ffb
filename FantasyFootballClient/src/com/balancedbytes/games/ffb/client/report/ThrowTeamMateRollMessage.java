@@ -1,24 +1,19 @@
 package com.balancedbytes.games.ffb.client.report;
 
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportNervesOfSteel;
+import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 
 @ReportMessageType(ReportId.THROW_TEAM_MATE_ROLL)
 @RulesCollection(Rules.COMMON)
 public class ThrowTeamMateRollMessage extends ReportMessageBase<ReportThrowTeamMateRoll> {
-
-    public ThrowTeamMateRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportThrowTeamMateRoll report) {

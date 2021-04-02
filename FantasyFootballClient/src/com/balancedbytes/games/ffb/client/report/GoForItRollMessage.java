@@ -2,19 +2,14 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 
 @ReportMessageType(ReportId.GO_FOR_IT_ROLL)
 @RulesCollection(Rules.COMMON)
 public class GoForItRollMessage extends ReportMessageBase<ReportSkillRoll> {
-
-    public GoForItRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportSkillRoll report) {

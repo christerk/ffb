@@ -14,10 +14,10 @@ public abstract class ReportMessageBase<T extends IReport> implements IKeyedItem
 	protected StatusReport statusReport;
 	protected Game game;
 
-	public ReportMessageBase(StatusReport statusReport) {
+	public void setStatusReport(StatusReport statusReport) {
 		this.statusReport = statusReport;
 	}
-	
+
 	@Override
 	public String getKey() {
 		ReportId reportId = this.getClass().getAnnotation(ReportMessageType.class).value();

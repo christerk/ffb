@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportNervesOfSteel;
@@ -10,10 +9,6 @@ import com.balancedbytes.games.ffb.report.ReportNervesOfSteel;
 @ReportMessageType(ReportId.NERVES_OF_STEEL)
 @RulesCollection(Rules.COMMON)
 public class NervesOfSteelMessage extends ReportMessageBase<ReportNervesOfSteel> {
-
-    public NervesOfSteelMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportNervesOfSteel report) {

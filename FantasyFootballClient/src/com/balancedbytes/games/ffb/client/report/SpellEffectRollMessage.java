@@ -1,20 +1,15 @@
 package com.balancedbytes.games.ffb.client.report;
 
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.client.StatusReport;
+import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.client.TextStyle;
-import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 
 @ReportMessageType(ReportId.SPELL_EFFECT_ROLL)
 @RulesCollection(Rules.COMMON)
 public class SpellEffectRollMessage extends ReportMessageBase<ReportSpecialEffectRoll> {
-
-    public SpellEffectRollMessage(StatusReport statusReport) {
-        super(statusReport);
-    }
 
     @Override
     protected void render(ReportSpecialEffectRoll report) {
