@@ -5,8 +5,6 @@ import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
-import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
@@ -14,6 +12,8 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
+import com.balancedbytes.games.ffb.factory.ReportFactory;
+import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -23,6 +23,10 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifier;
+import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifierFactory;
+import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
@@ -125,7 +129,9 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 	public void report(IStep pStep) {
-		pStep.getResult().addReport(new ReportInjury(injuryContext));
+		ReportFactory factory = pStep.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
+		ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
+		pStep.getResult().addReport(reportInjury.init(injuryContext));
 		pStep.getResult().setSound(injuryContext.getSound());
 	}
 
@@ -166,6 +172,10 @@ public class InjuryResult implements IJsonSerializable {
 			injuryModifiers.add(UtilJson.toJsonValue(injuryModifier));
 		}
 		IServerJsonOption.INJURY_MODIFIERS.addTo(jsonObject, injuryModifiers);
+
+		JsonArray casualtyModifiers = new JsonArray();
+		injuryContext.getCasualtyModifiers().forEach(modifier ->  casualtyModifiers.add(UtilJson.toJsonValue(modifier)));
+		IServerJsonOption.CASUALTY_MODIFIERS.addTo(jsonObject, casualtyModifiers);
 
 		return jsonObject;
 
@@ -211,6 +221,11 @@ public class InjuryResult implements IJsonSerializable {
 					.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));
 		}
 
+		injuryContext.casualtyModifiers.clear();
+		CasualtyModifierFactory casualtyModifierFactory = source.getFactory(FactoryType.Factory.CASUALTY_MODIFIER);
+		JsonArray casualtyModifiers = IServerJsonOption.CASUALTY_MODIFIERS.getFrom(source, jsonObject);
+		casualtyModifiers.values().forEach(jsonValue -> injuryContext.casualtyModifiers
+			.add((CasualtyModifier) UtilJson.toEnumWithName(casualtyModifierFactory, jsonValue)));
 		return this;
 
 	}

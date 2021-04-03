@@ -1,23 +1,25 @@
-package com.balancedbytes.games.ffb.client.report;
+package com.balancedbytes.games.ffb.client.report.bb2016;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.client.TextStyle;
+import com.balancedbytes.games.ffb.client.report.ReportMessageBase;
+import com.balancedbytes.games.ffb.client.report.ReportMessageType;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportInjury;
+import com.balancedbytes.games.ffb.report.bb2016.ReportInjury;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 import java.util.Arrays;
 
 @ReportMessageType(ReportId.INJURY)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 
     @Override

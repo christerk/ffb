@@ -70,6 +70,7 @@ public interface IJsonOption {
 	JsonStringOption CARD_SELECTION = new JsonStringOption("cardSelection");
 	JsonEnumWithNameOption CARD_TYPE = new JsonEnumWithNameOption("cardType", Factory.CARD_TYPE);
 	JsonIntOption CASUALTIES = new JsonIntOption("casualties");
+	JsonArrayOption CASUALTY_MODIFIERS = new JsonArrayOption("casualtyModifiers");
 	JsonIntArrayOption CASUALTY_ROLL = new JsonIntArrayOption("casualtyRoll");
 	JsonIntArrayOption CASUALTY_ROLL_DECAY = new JsonIntArrayOption("casualtyRollDecay");
 	JsonStringOption CATCHER_ID = new JsonStringOption("catcherId");

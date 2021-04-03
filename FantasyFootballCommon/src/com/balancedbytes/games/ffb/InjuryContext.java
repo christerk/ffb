@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifier;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,7 @@ public class InjuryContext {
 	public PlayerState fSufferedInjury;
 	public ApothecaryMode fApothecaryMode;
 	public ApothecaryStatus fApothecaryStatus;
+	public Set<CasualtyModifier> casualtyModifiers;
 
 	public InjuryContext() {
 		fArmorModifiers = new HashSet<>();
@@ -288,4 +290,11 @@ public class InjuryContext {
 		return fSufferedInjury;
 	}
 
+	public Set<CasualtyModifier> getCasualtyModifiers() {
+		return casualtyModifiers;
+	}
+
+	public void setCasualtyModifiers(Set<CasualtyModifier> casualtyModifiers) {
+		this.casualtyModifiers = casualtyModifiers;
+	}
 }
