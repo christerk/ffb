@@ -8,8 +8,9 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @FactoryType(FactoryType.Factory.SERIOUS_INJURY)
 @RulesCollection(Rules.COMMON)
@@ -29,7 +30,9 @@ public class SeriousInjuryFactory implements INamedObjectFactory<SeriousInjury> 
 
 	@Override
 	public void initialize(Game game) {
-		values = new HashSet<>(new Scanner<>(SeriousInjury.class).getInstancesImplementing(game.getOptions()));
+		values = new Scanner<>(SeriousInjury.class).getClassesImplementing(game.getOptions()).stream()
+			.flatMap(cls -> Arrays.stream(cls.getEnumConstants())).collect(Collectors.toSet());
+
 		values.forEach(value -> {
 			if (value.isDead()) {
 				dead = value;

@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.bb2020;
 
 import com.balancedbytes.games.ffb.InjuryAttribute;
+import com.balancedbytes.games.ffb.RulesCollection;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public enum SeriousInjury implements com.balancedbytes.games.ffb.SeriousInjury {
 
 	SERIOUSLY_HURT("Seriously Hurt (MNG)", "Seriously Hurt (Miss next game)", "is seriously hurt (Miss next game)",

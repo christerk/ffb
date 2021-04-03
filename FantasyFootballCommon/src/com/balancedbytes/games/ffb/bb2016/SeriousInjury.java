@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.bb2016;
 
 import com.balancedbytes.games.ffb.InjuryAttribute;
+import com.balancedbytes.games.ffb.RulesCollection;
 
+@RulesCollection(RulesCollection.Rules.BB2016)
 public enum SeriousInjury implements com.balancedbytes.games.ffb.SeriousInjury {
 
 	BROKEN_RIBS("Broken Ribs (MNG)", "Broken Ribs (Miss next game)", "has broken some ribs (Miss next game)",

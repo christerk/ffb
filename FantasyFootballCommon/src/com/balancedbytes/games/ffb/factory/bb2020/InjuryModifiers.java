@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
-@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class InjuryModifiers implements com.balancedbytes.games.ffb.factory.InjuryModifiers {
 
 	private final Set<? extends InjuryModifier> injuryModifiers = new HashSet<InjuryModifier>() {{
