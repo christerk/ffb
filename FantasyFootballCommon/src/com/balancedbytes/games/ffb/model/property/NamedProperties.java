@@ -97,6 +97,7 @@ public class NamedProperties {
 	public static final ISkillProperty ignoreTacklezonesWhenCatching = new NamedProperty(
 			"Ignore Tacklezones when Catching");
 	public static final ISkillProperty ignoreTacklezonesWhenDodging = new NamedProperty("Ignore Tacklezones When Dodging");
+	public static final ISkillProperty ignoreTacklezonesWhenJumping = new NamedProperty("Ignore Tacklezones When Jumping");
 	public static final ISkillProperty ignoreTacklezonesWhenMoving = new NamedProperty("Ignore Tacklezones When Moving");
 	public static final ISkillProperty ignoreTacklezonesWhenPassing = new NamedProperty(
 			"Ignore Tacklezones when Passing");
