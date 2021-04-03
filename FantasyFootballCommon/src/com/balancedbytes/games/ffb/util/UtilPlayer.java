@@ -7,12 +7,12 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.property.ISkillProperty;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  * @author Kristian Widén
  */
@@ -34,7 +33,7 @@ public class UtilPlayer {
 		List<Player<?>> result = new ArrayList<>();
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (UtilCards.hasSkill(player, pSkill)
-					&& FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
+				&& FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
 				result.add(player);
 			}
 		}
@@ -45,7 +44,7 @@ public class UtilPlayer {
 		List<Player<?>> result = new ArrayList<>();
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (player.hasSkillProperty(property)
-					&& FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
+				&& FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
 				result.add(player);
 			}
 		}
@@ -53,7 +52,7 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate,
-			Skill pSkill, boolean pCheckAbleToMove) {
+	                                                               Skill pSkill, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
@@ -61,7 +60,7 @@ public class UtilPlayer {
 		for (Player<?> opponent : opponents) {
 			PlayerState opponentState = pGame.getFieldModel().getPlayerState(opponent);
 			if ((opponentState != null) && opponentState.hasTacklezones() && UtilCards.hasSkill(opponent, pSkill)
-					&& (!pCheckAbleToMove || opponentState.isAbleToMove())) {
+				&& (!pCheckAbleToMove || opponentState.isAbleToMove())) {
 				shadowingPlayers.add(opponent);
 			}
 		}
@@ -71,7 +70,7 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, FieldCoordinate pCenterCoordinate,
-			ISkillProperty pProperty, boolean pCheckAbleToMove) {
+	                                                                  ISkillProperty pProperty, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
@@ -79,8 +78,8 @@ public class UtilPlayer {
 		for (Player<?> opponent : opponents) {
 			PlayerState opponentState = pGame.getFieldModel().getPlayerState(opponent);
 			if ((opponentState != null) && opponentState.hasTacklezones()
-					&& opponent.hasSkillProperty(pProperty)
-					&& (!pCheckAbleToMove || opponentState.isAbleToMove())) {
+				&& opponent.hasSkillProperty(pProperty)
+				&& (!pCheckAbleToMove || opponentState.isAbleToMove())) {
 				shadowingPlayers.add(opponent);
 			}
 		}
@@ -93,7 +92,7 @@ public class UtilPlayer {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-				1, false);
+			1, false);
 		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
 			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
 			if ((player != null) && (player.getTeam() == pTeam)) {
@@ -110,7 +109,7 @@ public class UtilPlayer {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-				1, false);
+			1, false);
 		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
 			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
 			if ((player != null) && (player.getTeam() == pTeam)) {
@@ -127,7 +126,7 @@ public class UtilPlayer {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-				1, false);
+			1, false);
 		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
 			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
 			if ((player != null) && (player.getTeam() == pTeam)) {
@@ -141,11 +140,11 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentPlayersWithTacklezones(Game pGame, Team pTeam, FieldCoordinate pCoordinate,
-			boolean pWithStartCoordinate) {
+	                                                             boolean pWithStartCoordinate) {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-				1, pWithStartCoordinate);
+			1, pWithStartCoordinate);
 		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
 			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
 			if ((player != null) && (player.getTeam() == pTeam)) {
@@ -162,7 +161,7 @@ public class UtilPlayer {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-				1, false);
+			1, false);
 		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
 			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
 			if ((player != null) && (player.getTeam() == pTeam) && (player instanceof RosterPlayer)
@@ -201,19 +200,20 @@ public class UtilPlayer {
 		int foulAssists = 0;
 		FieldCoordinate coordinateDefender = pGame.getFieldModel().getPlayerCoordinate(pDefender);
 		for (Player<?> offensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateDefender,
-				false)) {
+			false)) {
 			if (offensiveAssist != pAttacker) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
 				if ((findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false).length < 1)
-						|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD)
-								&& offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFouls))) {
+					|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD)
+					&& offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFouls))
+					|| offensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones)) {
 					foulAssists++;
 				}
 			}
 		}
 		FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(pAttacker);
 		for (Player<?> defensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAttacker,
-				false)) {
+			false)) {
 			if (defensiveAssist != pDefender) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(defensiveAssist);
 				if (findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
@@ -229,7 +229,7 @@ public class UtilPlayer {
 		Team opposingTeam = findOtherTeam(pGame, timmmberPlayer);
 		FieldCoordinate coordinatePlayer = pGame.getFieldModel().getPlayerCoordinate(timmmberPlayer);
 		for (Player<?> assist : findAdjacentPlayersWithTacklezones(pGame, timmmberPlayer.getTeam(), coordinatePlayer,
-				false)) {
+			false)) {
 			FieldCoordinate assistCoordinate = pGame.getFieldModel().getPlayerCoordinate(assist);
 			Player<?>[] opponents = findAdjacentPlayersWithTacklezones(pGame, opposingTeam, assistCoordinate, false);
 			if (opponents.length == 0) {
@@ -295,8 +295,8 @@ public class UtilPlayer {
 		FieldCoordinate throwerCoordinate = fieldModel.getPlayerCoordinate(pThrower);
 		Team throwerTeam = pGame.getTeamHome().hasPlayer(pThrower) ? pGame.getTeamHome() : pGame.getTeamAway();
 		return (throwerCoordinate.equals(fieldModel.getBallCoordinate()) && !fieldModel.isBallMoving()
-		// && !pGame.getTurnData().isHandOverUsed()
-				&& (UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, throwerTeam, throwerCoordinate, false).length > 0));
+			// && !pGame.getTurnData().isHandOverUsed()
+			&& (UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, throwerTeam, throwerCoordinate, false).length > 0));
 	}
 
 	public static boolean canGaze(Game pGame, Player<?> pPlayer) {
@@ -318,20 +318,20 @@ public class UtilPlayer {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		return (
-		// !pGame.getTurnData().isFoulUsed()&&
-		(UtilPlayer.findAdjacentPronePlayers(pGame, otherTeam, playerCoordinate).length > 0));
+			// !pGame.getTurnData().isFoulUsed()&&
+			(UtilPlayer.findAdjacentPronePlayers(pGame, otherTeam, playerCoordinate).length > 0));
 	}
 
 	public static boolean isBallAvailable(Game pGame, Player<?> pPlayer) {
 		return ((pPlayer != null) && (pGame != null) && pGame.getFieldModel().isBallInPlay()
-				&& (pGame.getFieldModel().isBallMoving()
-						|| pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer))));
+			&& (pGame.getFieldModel().isBallMoving()
+			|| pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer))));
 	}
 
 	public static boolean hasBall(Game pGame, Player<?> pPlayer) {
 		return ((pPlayer != null) && (pGame != null) && pGame.getFieldModel().isBallInPlay()
-				&& !pGame.getFieldModel().isBallMoving()
-				&& pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer)));
+			&& !pGame.getFieldModel().isBallMoving()
+			&& pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer)));
 	}
 
 	public static Player<?>[] findThrowableTeamMates(Game pGame, Player<?> pThrower) {
@@ -339,7 +339,7 @@ public class UtilPlayer {
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate throwerCoordinate = fieldModel.getPlayerCoordinate(pThrower);
 		Player<?>[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pThrower.getTeam(), throwerCoordinate,
-				false);
+			false);
 		for (Player<?> adjacentPlayer : adjacentPlayers) {
 
 			if (adjacentPlayer.canBeThrown()) {
@@ -364,14 +364,14 @@ public class UtilPlayer {
 
 	public static boolean canThrowTeamMate(Game pGame, Player<?> pThrower, boolean pCheckPassUsed) {
 		return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed())
-				&& pThrower.hasSkillProperty(NamedProperties.canThrowTeamMates)
-				&& (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
+			&& pThrower.hasSkillProperty(NamedProperties.canThrowTeamMates)
+			&& (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
 	}
 
 	public static boolean canKickTeamMate(Game pGame, Player<?> pKicker, boolean pCheckBlitzUsed) {
 		return ((pKicker != null) && (!pCheckBlitzUsed || !pGame.getTurnData().isBlitzUsed())
-				&& pKicker.hasSkillProperty(NamedProperties.canKickTeamMates)
-				&& (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
+			&& pKicker.hasSkillProperty(NamedProperties.canKickTeamMates)
+			&& (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
 	}
 
 	public static boolean isBlockable(Game pGame, Player<?> pPlayer) {
@@ -401,9 +401,9 @@ public class UtilPlayer {
 			FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
 			FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			foulable = (((defenderState.getBase() == PlayerState.PRONE) || (defenderState.getBase() == PlayerState.STUNNED))
-					&& pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
-					&& defenderCoordinate.isAdjacent(attackerCoordinate)
-					&& !pPlayer.hasSkillProperty(NamedProperties.preventBeingFouled));
+				&& pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
+				&& defenderCoordinate.isAdjacent(attackerCoordinate)
+				&& !pPlayer.hasSkillProperty(NamedProperties.preventBeingFouled));
 		}
 		return foulable;
 	}
@@ -412,7 +412,7 @@ public class UtilPlayer {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		return (pGame.getFieldModel().isBallInPlay() && pGame.getFieldModel().isBallMoving()
-				&& playerCoordinate.equals(pGame.getFieldModel().getBallCoordinate()));
+			&& playerCoordinate.equals(pGame.getFieldModel().getBallCoordinate()));
 	}
 
 	public static void sortByPlayerNr(Player<?>[] pPlayerArray) {
@@ -427,7 +427,7 @@ public class UtilPlayer {
 			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
 				return false;
 			} else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
-					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
+				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
 				nextMoveGoingForIt = (3 >= player.getMovementWithModifiers());
 			} else {
 				if (actingPlayer.isJumping()) {
@@ -470,7 +470,7 @@ public class UtilPlayer {
 					}
 				}
 				movePossible = (actingPlayer
-						.getCurrentMove() < (actingPlayer.getPlayer().getMovementWithModifiers() + extraMove));
+					.getCurrentMove() < (actingPlayer.getPlayer().getMovementWithModifiers() + extraMove));
 			}
 		}
 		return movePossible;
@@ -487,7 +487,7 @@ public class UtilPlayer {
 			FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
 			PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
 			if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate() && (playerState != null)
-					&& playerState.isActive()) {
+				&& playerState.isActive()) {
 				return true;
 			}
 		}

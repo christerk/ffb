@@ -36,7 +36,7 @@ public class ServerUtilPlayer {
 						defendingPlayersOtherThanBlocker++;
 				}
 
-				if (offensiveAssists[i].hasSkillProperty(NamedProperties.assistInTacklezones)
+				if (offensiveAssists[i].hasSkillProperty(NamedProperties.assistsBlocksInTacklezones)
 						|| (defendingPlayersOtherThanBlocker == 0)) {
 					// System.out.println(offensiveAssists[i].getName() + " assists " +
 					// pAttacker.getName());
