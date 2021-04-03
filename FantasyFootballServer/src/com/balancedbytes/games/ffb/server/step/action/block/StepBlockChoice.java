@@ -164,11 +164,11 @@ public class StepBlockChoice extends AbstractStep {
 						&& (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer)
 								|| actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
 
-					Skill playerCanBeThrownSkill = game.getDefender().getSkillWithProperty(NamedProperties.canBeThrown);
+					Skill ignoreTackleSkill = game.getDefender().getSkillWithProperty(NamedProperties.ignoreTackleWhenBlocked);
 					if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
-							&& playerCanBeThrownSkill != null) {
+							&& ignoreTackleSkill != null) {
 						getResult().addReport(
-								new ReportSkillUse(game.getDefenderId(), playerCanBeThrownSkill, true, SkillUse.CANCEL_TACKLE));
+								new ReportSkillUse(game.getDefenderId(), ignoreTackleSkill, true, SkillUse.CANCEL_TACKLE));
 						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
 					} else {
 						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), attackerCanCancelDodgeSkill, true,
