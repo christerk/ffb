@@ -71,10 +71,10 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 
 		if (injuryContext.getPlayerState() == null) {
 			injuryContext.setCasualtyRoll(mechanic.rollCasualty(diceRoller));
-			injuryContext.setInjury(mechanic.interpretCasualtyRoll(gameState.getGame(), injuryContext.getCasualtyRoll(), pDefender));
+			injuryContext.setInjury(mechanic.interpretCasualtyRollAndAddModifiers(gameState.getGame(), injuryContext, pDefender));
 			if (pDefender.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryContext.setCasualtyRollDecay(mechanic.rollCasualty(diceRoller));
-				injuryContext.setInjuryDecay(mechanic.interpretCasualtyRoll(gameState.getGame(), injuryContext.getCasualtyRollDecay(), pDefender));
+				injuryContext.setInjuryDecay(mechanic.interpretCasualtyRollAndAddModifiers(gameState.getGame(), injuryContext, pDefender));
 			}
 		}
 	}

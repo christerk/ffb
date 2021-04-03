@@ -17,7 +17,10 @@ import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.bb2020.ReportInjury;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 @ReportMessageType(ReportId.INJURY)
 @RulesCollection(Rules.BB2020)
@@ -135,21 +138,23 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 	          } else {
 		          int[] casualtyRoll = report.getCasualtyRoll();
 		          status = new StringBuilder();
-		          status.append("Casualty Roll [ ").append(casualtyRoll[0]);
-		          if (casualtyRoll.length > 1) {
-			          status.append(" ][ ").append(casualtyRoll[1]);
-		          }
-		          status.append(" ]");
+		          status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ][ ").append(casualtyRoll[1]).append(" ]");
 		          println(getIndent(), TextStyle.ROLL, status.toString());
 		          if (!report.getCasualtyModifiers().isEmpty()) {
 		          	int modifiers = 0;
 			          status = new StringBuilder("Rolled ").append(casualtyRoll[0]);
+			          List<String> reportStrings = new ArrayList<>();
 			          for (CasualtyModifier modifier: report.getCasualtyModifiers()) {
-			          	status.append(" + ");
-			          	status.append(modifier.reportString());
+			          	reportStrings.add(modifier.reportString());
 			          	modifiers += modifier.getModifier();
 			          }
+			          reportStrings.sort(Comparator.naturalOrder());
+			          for (String reportString: reportStrings) {
+				          status.append(" + ");
+				          status.append(reportString);
+			          }
 			          status.append(" = ").append(casualtyRoll[0] + modifiers);
+			          println(getIndent() + 1, TextStyle.NONE, status.toString());
 		          }
 		          reportInjury(defender, report.getInjury(), report.getSeriousInjury());
 	          }

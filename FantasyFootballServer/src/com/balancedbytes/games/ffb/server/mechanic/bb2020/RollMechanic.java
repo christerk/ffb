@@ -14,16 +14,13 @@ import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifierFactory;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 
 import java.util.Arrays;
+import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.RollMechanic {
 	@Override
 	public int[] rollCasualty(DiceRoller diceRoller) {
-		int casRoll = diceRoller.rollDice(16);
-		if (isSI(casRoll)) {
-			return new int[] { casRoll, diceRoller.rollDice(6) };
-		}
-		return new int[] { casRoll };
+		return new int[] { diceRoller.rollDice(16), diceRoller.rollDice(6) };
 	}
 
 	@Override
@@ -71,19 +68,35 @@ public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.Ro
 	}
 
 	@Override
-	public PlayerState interpretCasualtyRoll(Game game, int[] roll, Player<?> player) {
+	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player) {
 		if (player instanceof ZappedPlayer) {
 			return new PlayerState(PlayerState.BADLY_HURT);
 		}
+		int[] roll = injuryContext.getCasualtyRoll();
 		CasualtyModifierFactory factory = game.getFactory(FactoryType.Factory.CASUALTY_MODIFIER);
-		int modifierSum = factory.findModifiers(player).stream().mapToInt(CasualtyModifier::getModifier).sum();
+		Set<CasualtyModifier> casualtyModifiers = factory.findModifiers(player);
+		injuryContext.setCasualtyModifiers(casualtyModifiers);
+		int modifierSum = casualtyModifiers.stream().mapToInt(CasualtyModifier::getModifier).sum();
 		return new PlayerState(mapCasualtyRoll(roll[0] + modifierSum));
 	}
 
 	@Override
+	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext, boolean useDecay) {
+		return interpretSeriousInjuryRoll(injuryContext);
+	}
+
+	@Override
+	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext) {
+		int casModifier = injuryContext.casualtyModifiers.stream().mapToInt(CasualtyModifier::getModifier).sum();
+		return interpretSeriousInjuryRoll(injuryContext.getCasualtyRoll()[0] + casModifier, injuryContext.getCasualtyRoll()[1]);
+	}
+
+	@Override
 	public SeriousInjury interpretSeriousInjuryRoll(int[] roll) {
-		int casRoll = roll[0];
-		int siRoll = roll[1];
+		return interpretSeriousInjuryRoll(roll[0], roll[1]);
+	}
+
+	private SeriousInjury interpretSeriousInjuryRoll(int casRoll, int siRoll) {
 		if (isSI(casRoll)) {
 			return mapSIRoll(siRoll);
 		}

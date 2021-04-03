@@ -146,7 +146,8 @@ public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.Ro
 	}
 
 	@Override
-	public PlayerState interpretCasualtyRoll(Game game, int[] roll, Player<?> player) {
+	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player) {
+		int[] roll = injuryContext.getCasualtyRoll();
 		if (ArrayTool.isProvided(roll)) {
 			switch (roll[0]) {
 				case 6:
@@ -159,6 +160,20 @@ public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.Ro
 			}
 		} else {
 			return null;
+		}
+	}
+
+	@Override
+	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext) {
+		return interpretSeriousInjuryRoll(injuryContext, false);
+	}
+
+	@Override
+	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext, boolean useDecay) {
+		if (useDecay) {
+			return interpretSeriousInjuryRoll(injuryContext.getCasualtyRollDecay());
+		} else {
+			return interpretSeriousInjuryRoll(injuryContext.getCasualtyRoll());
 		}
 	}
 }

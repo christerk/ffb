@@ -94,6 +94,7 @@ public class ReportInjury implements com.balancedbytes.games.ffb.report.ReportIn
 		fInjury = pInjury;
 		fInjuryDecay = pInjuryDecay;
 		fAttackerId = pAttackerId;
+		add(casualtyModifiers);
 	}
 
 	public ReportId getId() {
@@ -127,6 +128,12 @@ public class ReportInjury implements com.balancedbytes.games.ffb.report.ReportIn
 			for (ArmorModifier armorModifier : pArmorModifiers) {
 				add(armorModifier);
 			}
+		}
+	}
+
+	private void add(Set<CasualtyModifier> casualtyModifiers) {
+		if (casualtyModifiers != null) {
+			this.casualtyModifiers.addAll(casualtyModifiers);
 		}
 	}
 

@@ -26,6 +26,6 @@ public class CasualtyModifier implements INamedObject {
 	}
 
 	public String reportString() {
-		return modifier + " " + modifier;
+		return modifier + " " + name;
 	}
 }
