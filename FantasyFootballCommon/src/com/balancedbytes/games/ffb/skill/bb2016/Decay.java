@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
  * player will only ever miss one future match as a result of his injuries, even
  * if he suffers two results with this effect.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class Decay extends Skill {
 
 	public Decay() {

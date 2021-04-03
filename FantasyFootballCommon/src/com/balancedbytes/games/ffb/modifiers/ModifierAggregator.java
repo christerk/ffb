@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.modifiers;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifier;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Arrays;
@@ -123,6 +124,14 @@ public class ModifierAggregator {
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getInjuryModifiers().stream()),
 			Arrays.stream(UtilCards.findAllActiveCards(game))
 				.flatMap(card -> card.injuryModifiers().stream()))
+			.collect(Collectors.toSet());
+	}
+
+	public Set<CasualtyModifier> getCasualtyModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getCasualtyModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.casualtyModifiers().stream()))
 			.collect(Collectors.toSet());
 	}
 }

@@ -283,7 +283,7 @@ public class StepApothecary extends AbstractStep {
 			newInjuryResult.injuryContext().setDefenderId(fInjuryResult.injuryContext().getDefenderId());
 			newInjuryResult.injuryContext().setCasualtyRoll(rollMechanic.rollCasualty(getGameState().getDiceRoller()));
 			newInjuryResult.injuryContext().setInjury(
-				rollMechanic.interpretCasualtyRoll(newInjuryResult.injuryContext().getCasualtyRoll(), game.getPlayerById(fInjuryResult.injuryContext().getDefenderId())));
+				rollMechanic.interpretCasualtyRoll(game, newInjuryResult.injuryContext().getCasualtyRoll(), game.getPlayerById(fInjuryResult.injuryContext().getDefenderId())));
 			newInjuryResult.injuryContext().setSeriousInjury(
 				rollMechanic.interpretSeriousInjuryRoll(newInjuryResult.injuryContext().getCasualtyRoll()));
 			apothecaryChoice = (newInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT);

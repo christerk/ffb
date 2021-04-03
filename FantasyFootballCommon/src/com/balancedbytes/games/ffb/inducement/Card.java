@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.TemporaryEnhancements;
+import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifier;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -102,6 +103,10 @@ public class Card implements INamedObject {
 	}
 
 	public Set<InjuryModifier> injuryModifiers() {
+		return Collections.emptySet();
+	}
+
+	public Set<CasualtyModifier> casualtyModifiers() {
 		return Collections.emptySet();
 	}
 

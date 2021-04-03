@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Bitten;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
@@ -33,7 +32,7 @@ public class InjuryTypeBitten extends InjuryTypeServer<Bitten> {
 			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
 
 			injuryContext
-					.setInjury(interpretInjury(gameState, pDefender instanceof ZappedPlayer));
+					.setInjury(interpretInjury(gameState));
 
 			if (injuryContext.getPlayerState() == null) {
 				injuryContext.setInjury(new PlayerState(PlayerState.BADLY_HURT));

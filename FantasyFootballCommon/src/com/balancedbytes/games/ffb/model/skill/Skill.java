@@ -21,6 +21,7 @@ import com.balancedbytes.games.ffb.modifiers.JumpModifier;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
+import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifier;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -44,6 +45,7 @@ public abstract class Skill implements INamedObject {
 	private final List<GazeModifier> gazeModifiers = new ArrayList<>();
 	private final List<GoForItModifier> goForItModifiers = new ArrayList<>();
 	private final List<RightStuffModifier> rightStuffModifiers = new ArrayList<>();
+	private final List<CasualtyModifier> casualtyModifiers = new ArrayList<>();
 	private ISkillBehaviour<? extends Skill> behaviour;
 	private final List<ISkillProperty> skillProperties = new ArrayList<>();
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
@@ -122,6 +124,8 @@ public abstract class Skill implements INamedObject {
 
 	protected void registerModifier(RightStuffModifier modifier) { rightStuffModifiers.add(modifier); }
 
+	protected void registerModifier(CasualtyModifier modifier) { casualtyModifiers.add(modifier); }
+
 	protected void registerProperty(ISkillProperty property) {
 		skillProperties.add(property);
 	}
@@ -180,6 +184,10 @@ public abstract class Skill implements INamedObject {
 
 	public List<RightStuffModifier> getRightStuffModifiers() {
 		return rightStuffModifiers;
+	}
+
+	public List<CasualtyModifier> getCasualtyModifiers() {
+		return casualtyModifiers;
 	}
 
 	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {

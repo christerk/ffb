@@ -11,7 +11,6 @@ import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -68,22 +67,19 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
 		RollMechanic mechanic = ((RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 		injuryContext
-				.setInjury(interpretInjury(gameState, pDefender instanceof ZappedPlayer));
+				.setInjury(interpretInjury(gameState));
 
 		if (injuryContext.getPlayerState() == null) {
 			injuryContext.setCasualtyRoll(mechanic.rollCasualty(diceRoller));
-			injuryContext.setInjury(mechanic.interpretCasualtyRoll(injuryContext.getCasualtyRoll(), pDefender));
+			injuryContext.setInjury(mechanic.interpretCasualtyRoll(gameState.getGame(), injuryContext.getCasualtyRoll(), pDefender));
 			if (pDefender.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryContext.setCasualtyRollDecay(mechanic.rollCasualty(diceRoller));
-				injuryContext.setInjuryDecay(mechanic.interpretCasualtyRoll(injuryContext.getCasualtyRollDecay(), pDefender));
+				injuryContext.setInjuryDecay(mechanic.interpretCasualtyRoll(gameState.getGame(), injuryContext.getCasualtyRollDecay(), pDefender));
 			}
 		}
 	}
 
-	PlayerState interpretInjury(GameState gameState, boolean isZapped) {
-		if (isZapped) {
-			return new PlayerState(PlayerState.BADLY_HURT);
-		}
+	PlayerState interpretInjury(GameState gameState) {
 
 		RollMechanic rollMechanic = (RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
 

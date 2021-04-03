@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.bb2016.SeriousInjury;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -25,6 +26,10 @@ public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.Ro
 		if ((game != null) && (pInjuryContext != null)) {
 			int[] injuryRoll = pInjuryContext.getInjuryRoll();
 			Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
+			if (defender instanceof ZappedPlayer) {
+				return new PlayerState(PlayerState.BADLY_HURT);
+			}
+
 			if ((defender != null) && defender.hasSkillProperty(NamedProperties.preventDamagingInjuryModifications)) {
 				pInjuryContext.clearInjuryModifiers();
 			}
@@ -141,7 +146,7 @@ public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.Ro
 	}
 
 	@Override
-	public PlayerState interpretCasualtyRoll(int[] roll, Player<?> player) {
+	public PlayerState interpretCasualtyRoll(Game game, int[] roll, Player<?> player) {
 		if (ArrayTool.isProvided(roll)) {
 			switch (roll[0]) {
 				case 6:
