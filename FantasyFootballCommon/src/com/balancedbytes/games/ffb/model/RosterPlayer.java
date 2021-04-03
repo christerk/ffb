@@ -269,34 +269,36 @@ public class RosterPlayer extends Player<RosterPosition> {
 			int oldStrength = getStrength();
 			int oldPassing = getPassing();
 			for (SeriousInjury injury : getLastingInjuries()) {
-				switch (injury.getInjuryAttribute()) {
-				case MA:
-					if ((fMovement > 1) && ((oldMovement - fMovement) < 2)) {
-						fMovement--;
+				if (injury.getInjuryAttribute() != null) {
+					switch (injury.getInjuryAttribute()) {
+						case MA:
+							if ((fMovement > 1) && ((oldMovement - fMovement) < 2)) {
+								fMovement--;
+							}
+							break;
+						case AV:
+							if ((fArmour > 1) && ((oldArmour - fArmour) < 2)) {
+								fArmour--;
+							}
+							break;
+						case AG:
+							if ((fAgility > 1) && ((oldAgility - fAgility) < 2)) {
+								fAgility--;
+							}
+							break;
+						case ST:
+							if ((fStrength > 1) && ((oldStrength - fStrength) < 2)) {
+								fStrength--;
+							}
+							break;
+						case PA:
+							if ((fPassing > 1) && ((oldPassing - fPassing) < 2)) {
+								fPassing--;
+							}
+							break;
+						default:
+							break;
 					}
-					break;
-				case AV:
-					if ((fArmour > 1) && ((oldArmour - fArmour) < 2)) {
-						fArmour--;
-					}
-					break;
-				case AG:
-					if ((fAgility > 1) && ((oldAgility - fAgility) < 2)) {
-						fAgility--;
-					}
-					break;
-				case ST:
-					if ((fStrength > 1) && ((oldStrength - fStrength) < 2)) {
-						fStrength--;
-					}
-					break;
-					case PA:
-						if ((fPassing > 1) && ((oldPassing - fPassing) < 2)) {
-							fPassing--;
-						}
-						break;
-					default:
-					break;
 				}
 			}
 		}
