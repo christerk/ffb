@@ -111,7 +111,7 @@ public class UtilServerInjury {
 		if (injuryContext.getPlayerState() != null) {
 			if (injuryContext.isCasualty() || injuryContext.isKnockedOut()) {
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
-				if (pInjuryType.canUseApo() || (injuryContext.isKnockedOut()
+				if (!pInjuryType.canUseApo() || (injuryContext.isKnockedOut()
 						&& pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 				} else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0)
