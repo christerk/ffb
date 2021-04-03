@@ -115,6 +115,7 @@ public class NamedProperties {
 	public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
 	public static final ISkillProperty needsToRollForActionButKeepsTacklezone = new NamedProperty("Needs To Roll For Action But Keeps Tacklezone");
 	public static final ISkillProperty needsToRollHighToAvoidConfusion = new NamedProperty("Need To Roll High To Avoid Confusion");
+	public static final ISkillProperty passesAreInterceptedEasier = new NamedProperty("Passes Are Intercepted Easier");
 	public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Causes Injury Roll");
 	public static final ISkillProperty preventArmourModifications = new NamedProperty("Prevent Armour Modifications");
 	public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");

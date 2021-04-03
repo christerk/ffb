@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.modifiers.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
@@ -38,5 +39,11 @@ public class InterceptionModifierCollection extends com.balancedbytes.games.ffb.
 		add(new InterceptionModifier("6 Tacklezone", "1 for being marked", 1, 6, ModifierType.TACKLEZONE));
 		add(new InterceptionModifier("7 Tacklezone", "1 for being marked", 1, 7, ModifierType.TACKLEZONE));
 		add(new InterceptionModifier("8 Tacklezone", "1 for being marked", 1, 8, ModifierType.TACKLEZONE));
+		add(new InterceptionModifier("Thrower has Stunty", -1, ModifierType.REGULAR) {
+			@Override
+			public boolean appliesToContext(Skill skill, InterceptionContext context) {
+				return context.getGame().getThrower().hasSkillProperty(NamedProperties.passesAreInterceptedEasier);
+			}
+		});
 	}
 }

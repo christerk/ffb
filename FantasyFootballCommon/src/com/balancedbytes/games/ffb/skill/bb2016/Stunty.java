@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.modifiers.StaticInjuryModifier;
  * are not allowed to ignore enemy tackle zones, but still suffer the other
  * penalties.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class Stunty extends Skill {
 
 	public Stunty() {
