@@ -138,7 +138,7 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 	          } else {
 		          int[] casualtyRoll = report.getCasualtyRoll();
 		          status = new StringBuilder();
-		          status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ][ ").append(casualtyRoll[1]).append(" ]");
+		          status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ]");
 		          println(getIndent(), TextStyle.ROLL, status.toString());
 		          if (!report.getCasualtyModifiers().isEmpty()) {
 		          	int modifiers = 0;
@@ -156,21 +156,26 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 			          status.append(" = ").append(casualtyRoll[0] + modifiers);
 			          println(getIndent() + 1, TextStyle.NONE, status.toString());
 		          }
-		          reportInjury(defender, report.getInjury(), report.getSeriousInjury());
+		          reportInjury(defender, report.getInjury(), report.getSeriousInjury(), casualtyRoll[1]);
 	          }
           } else {
-            reportInjury(defender, report.getInjury(), report.getSeriousInjury());
+            reportInjury(defender, report.getInjury(), null, 0);
           }
   			}
   		}
     }
     
-  	private void reportInjury(Player<?> pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury) {
+  	private void reportInjury(Player<?> pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury, int siRoll) {
   		StringBuilder status = new StringBuilder();
   		print(getIndent() + 1, false, pDefender);
   		status.append(" ").append(pInjury.getDescription()).append(".");
   		println(getIndent() + 1, status.toString());
   		if (pSeriousInjury != null) {
+  			if (pSeriousInjury.showSiRoll()) {
+				  status = new StringBuilder();
+				  status.append("Lasting Injury Roll [ ").append(siRoll).append(" ]");
+				  println(getIndent(), TextStyle.ROLL, status.toString());
+			  }
   			print(getIndent() + 1, false, pDefender);
   			status = new StringBuilder();
   			status.append(" ").append(pSeriousInjury.getDescription()).append(".");

@@ -94,4 +94,9 @@ public enum SeriousInjury implements com.balancedbytes.games.ffb.SeriousInjury {
 		return this == POISONED;
 	}
 
+	@Override
+	public boolean showSiRoll() {
+		return false;
+	}
+
 }

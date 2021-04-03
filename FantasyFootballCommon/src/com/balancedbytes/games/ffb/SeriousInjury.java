@@ -18,4 +18,5 @@ public interface SeriousInjury extends INamedObject {
 
 	boolean isPoison();
 
+	boolean showSiRoll();
 }
