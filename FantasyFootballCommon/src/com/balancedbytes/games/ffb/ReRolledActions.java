@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.skill.JumpUp;
 import com.balancedbytes.games.ffb.skill.KickTeamMate;
 import com.balancedbytes.games.ffb.skill.Pass;
 import com.balancedbytes.games.ffb.skill.ReallyStupid;
-import com.balancedbytes.games.ffb.skill.RightStuff;
+import com.balancedbytes.games.ffb.skill.bb2016.RightStuff;
 import com.balancedbytes.games.ffb.skill.SafeThrow;
 import com.balancedbytes.games.ffb.skill.TakeRoot;
 import com.balancedbytes.games.ffb.skill.ThrowTeamMate;

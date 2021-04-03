@@ -342,7 +342,7 @@ public class UtilPlayer {
 				false);
 		for (Player<?> adjacentPlayer : adjacentPlayers) {
 
-			if (adjacentPlayer.hasSkillProperty(NamedProperties.canBeThrown)) {
+			if (adjacentPlayer.canBeThrown()) {
 				throwablePlayers.add(adjacentPlayer);
 			}
 		}

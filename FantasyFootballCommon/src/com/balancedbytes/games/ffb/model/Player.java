@@ -315,4 +315,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
 	}
+
+	public boolean canBeThrown(){
+		return hasSkillProperty(NamedProperties.canBeThrown) || (hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs1or2) && getStrengthWithModifiers() < 3);
+	}
 }

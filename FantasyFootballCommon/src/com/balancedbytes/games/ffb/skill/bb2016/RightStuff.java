@@ -1,12 +1,10 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
-import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * A player with the Right Stuff skill can be thrown by another player from his
@@ -22,7 +20,7 @@ import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
  * turn if he has not already done so. A failed landing roll or landing in the
  * crowd does not cause a turnover, unless he was holding the ball.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class RightStuff extends Skill {
 
 	public RightStuff() {

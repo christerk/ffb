@@ -383,7 +383,7 @@ public class ClientStateSelect extends ClientState {
 		Player<?>[] teamPlayers = pPlayer.getTeam().getPlayers();
 		for (int i = 0; i < teamPlayers.length; i++) {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
-			if (teamPlayers[i].hasSkillProperty(NamedProperties.canBeThrown)
+			if (teamPlayers[i].canBeThrown()
 					&& !playerCoordinate.isBoxCoordinate()) {
 				rightStuffAvailable = true;
 				break;
@@ -395,7 +395,7 @@ public class ClientStateSelect extends ClientState {
 		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
 				playerCoordinate, false);
 		for (int i = 0; i < adjacentTeamPlayers.length; i++) {
-			if (adjacentTeamPlayers[i].hasSkillProperty(NamedProperties.canBeThrown)) {
+			if (adjacentTeamPlayers[i].canBeThrown()) {
 				rightStuffAdjacent = true;
 				break;
 			}
