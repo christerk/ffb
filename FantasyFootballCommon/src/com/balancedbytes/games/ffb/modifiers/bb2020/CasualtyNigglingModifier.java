@@ -16,4 +16,9 @@ public class CasualtyNigglingModifier extends CasualtyModifier {
 		int nigglings =  (int) Arrays.stream(player.getLastingInjuries()).filter(injury -> injury.getInjuryAttribute() == InjuryAttribute.NI).count();
 		return nigglings == getModifier();
 	}
+
+	@Override
+	public String reportString() {
+		return getName();
+	}
 }

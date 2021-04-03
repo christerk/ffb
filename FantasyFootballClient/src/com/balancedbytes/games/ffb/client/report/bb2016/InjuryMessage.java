@@ -107,9 +107,9 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
   							thickSkullUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
   							stuntyUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
   						} else if (injuryModifier.isNigglingInjuryModifier()) {
-  							status.append(" +").append(injuryModifier.getName());
+  							status.append(" + ").append(injuryModifier.getName());
   						} else if (modifierValue > 0) {
-  							status.append(" +").append(modifierValue).append(" ").append(injuryModifier.getName());
+  							status.append(" + ").append(modifierValue).append(" ").append(injuryModifier.getName());
   						} else {
   							status.append(" ").append(modifierValue).append(" ").append(injuryModifier.getName());
   						}

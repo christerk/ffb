@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.bb2020.CasualtyModifier;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.bb2020.ReportInjury;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -93,7 +94,7 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
   				println(getIndent(), TextStyle.ROLL, status.toString());
   				status = new StringBuilder();
           int rolledTotal = injuryRoll[0] + injuryRoll[1];
-          status.append("Rolled Total of ").append(rolledTotal);
+          status.append("Rolled Total of ").append(rolledTotal).append(" ");
           int injuryModifierTotal = 0;
           for (InjuryModifier injuryModifier : report.getInjuryModifiers()) {
             int modifierValue = injuryModifier.getModifier(attacker, defender);
@@ -101,10 +102,8 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
             if (modifierValue == 0) {
               thickSkullUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
               stuntyUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
-            } else if (injuryModifier.isNigglingInjuryModifier()) {
-              status.append(" +").append(injuryModifier.getName());
             } else if (modifierValue > 0) {
-              status.append(" +").append(modifierValue).append(" ").append(injuryModifier.getName());
+              status.append(" + ").append(modifierValue).append(" ").append(injuryModifier.getName());
             } else {
               status.append(" ").append(modifierValue).append(" ").append(injuryModifier.getName());
             }
@@ -142,6 +141,16 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 		          }
 		          status.append(" ]");
 		          println(getIndent(), TextStyle.ROLL, status.toString());
+		          if (!report.getCasualtyModifiers().isEmpty()) {
+		          	int modifiers = 0;
+			          status = new StringBuilder("Rolled ").append(casualtyRoll[0]);
+			          for (CasualtyModifier modifier: report.getCasualtyModifiers()) {
+			          	status.append(" + ");
+			          	status.append(modifier.reportString());
+			          	modifiers += modifier.getModifier();
+			          }
+			          status.append(" = ").append(casualtyRoll[0] + modifiers);
+		          }
 		          reportInjury(defender, report.getInjury(), report.getSeriousInjury());
 	          }
           } else {

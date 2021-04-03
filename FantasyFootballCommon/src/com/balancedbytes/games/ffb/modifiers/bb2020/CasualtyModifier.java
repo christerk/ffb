@@ -24,4 +24,8 @@ public class CasualtyModifier implements INamedObject {
 	public boolean appliesToContext(Player<?> player) {
 		return true;
 	}
+
+	public String reportString() {
+		return modifier + " " + modifier;
+	}
 }
