@@ -3,9 +3,11 @@ package com.balancedbytes.games.ffb.skill;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 
 /**
  * This player is equipped with a rudimentary set of wings, either natural or
@@ -34,6 +36,7 @@ public class Swoop extends Skill {
 		registerProperty(NamedProperties.preventStuntyDodgeModifier);
 		registerProperty(NamedProperties.ttmScattersInSingleDirection);
 		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
+		registerModifier(new RightStuffModifier("Swoop", -1, ModifierType.REGULAR));
 	}
 
 }
