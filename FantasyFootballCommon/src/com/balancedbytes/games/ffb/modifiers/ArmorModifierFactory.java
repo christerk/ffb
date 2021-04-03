@@ -89,7 +89,7 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 	}
 
 	public Set<ArmorModifier> getFoulAssist(ArmorModifierContext context) {
-		return armorModifiers.stream().filter(modifier -> modifier.appliesToContext(context)).collect(Collectors.toSet());
+		return armorModifiers.stream().filter(modifier -> !(modifier instanceof SpecialEffectArmourModifier) && modifier.appliesToContext(context)).collect(Collectors.toSet());
 	}
 
 	public ArmorModifier[] toArray(Set<ArmorModifier> pArmorModifiers) {
