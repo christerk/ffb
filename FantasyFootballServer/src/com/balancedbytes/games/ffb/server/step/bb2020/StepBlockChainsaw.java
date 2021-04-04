@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.block;
+package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -28,6 +28,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -43,7 +44,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBlockChainsaw extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnSuccess;
@@ -139,7 +140,9 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 						actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
 				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
 					publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+					if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+					}
 				}
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
