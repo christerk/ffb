@@ -39,11 +39,11 @@ public class Foul extends SequenceGenerator<Foul.SequenceParams> {
 		sequence.add(StepId.REFEREE, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
 		sequence.add(StepId.BRIBES, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
 		sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.jump(IStepLabel.END_FOULING);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
-		sequence.add(StepId.END_FOULING, IStepLabel.END_FOULING);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.END_FOULING);
+		sequence.add(StepId.END_FOULING);
 
 		gameState.getStepStack().push(sequence.getSequence());
 	}
