@@ -12,6 +12,7 @@ public enum StepParameterKey {
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
 	BLOCK_DEFENDER_ID, // String
+	BLOCK_TARGETS, // List<Target>
 	BLOCK_RESULT, // BlockResult
 	BLOCK_ROLL, // int[]
 	BOMB_EXPLODED, // Boolean

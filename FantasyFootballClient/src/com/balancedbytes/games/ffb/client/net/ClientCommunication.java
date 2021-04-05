@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.InducementType;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Target;
 import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -435,7 +436,7 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUnsetBlockTargetSelection(playerId));
 	}
 
-	public void sendBlockTargets(List<ClientCommandSynchronousMultiBlock.Target> targets) {
+	public void sendBlockTargets(List<Target> targets) {
 		send(new ClientCommandSynchronousMultiBlock(targets));
 	}
 

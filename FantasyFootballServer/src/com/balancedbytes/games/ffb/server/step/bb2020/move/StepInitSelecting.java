@@ -21,6 +21,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandKickTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetBlockTargetSelection;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.balancedbytes.games.ffb.server.GameCache;
@@ -264,6 +265,12 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_UNSET_BLOCK_TARGET_SELECTION:
 					handleUnsetBlockTarget(getGameState().getGame(), (ClientCommandUnsetBlockTargetSelection) pReceivedCommand.getCommand());
+					break;
+				case CLIENT_SYNCHRONOUS_MULTI_BLOCK:
+					publishParameter(new StepParameter(StepParameterKey.BLOCK_TARGETS,
+						((ClientCommandSynchronousMultiBlock) pReceivedCommand.getCommand()).getSelectedTargets()));
+					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MULTIPLE_BLOCK, false);
+					fDispatchPlayerAction = PlayerAction.MULTIPLE_BLOCK;
 					break;
 				default:
 					break;
