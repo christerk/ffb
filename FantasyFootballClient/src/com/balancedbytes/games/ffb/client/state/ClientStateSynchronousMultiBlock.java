@@ -47,12 +47,16 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		if (actingPlayer.getPlayer() == player) {
 			createAndShowPopupMenuForBlockingPlayer();
 		} else {
-			if (selectedPlayers.containsKey(player.getId())) {
-				selectedPlayers.remove(player.getId());
-				getClient().getCommunication().sendUnsetBlockTarget(player.getId());
-			} else {
-				showPopupOrBlockPlayer(player);
-			}
+			handlePlayerSelection(player);
+		}
+	}
+
+	private void handlePlayerSelection(Player<?> player) {
+		if (selectedPlayers.containsKey(player.getId())) {
+			selectedPlayers.remove(player.getId());
+			getClient().getCommunication().sendUnsetBlockTarget(player.getId());
+		} else {
+			showPopupOrBlockPlayer(player);
 		}
 	}
 
@@ -73,15 +77,19 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	}
 
 	private void selectPlayerForBlock(Player<?> player) {
-		selectedPlayers.put(player.getId(), false);
-		getClient().getCommunication().sendSetBlockTarget(player.getId(), false);
-		sendIfSelectionComplete();
+		if (selectedPlayers.size() < 2) {
+			selectedPlayers.put(player.getId(), false);
+			getClient().getCommunication().sendSetBlockTarget(player.getId(), false);
+			sendIfSelectionComplete();
+		}
 	}
 
 	private void selectPlayerForStab(Player<?> player) {
-		selectedPlayers.put(player.getId(), true);
-		getClient().getCommunication().sendSetBlockTarget(player.getId(), true);
-		sendIfSelectionComplete();
+		if (selectedPlayers.size() < 2) {
+			selectedPlayers.put(player.getId(), true);
+			getClient().getCommunication().sendSetBlockTarget(player.getId(), true);
+			sendIfSelectionComplete();
+		}
 	}
 
 	private void sendIfSelectionComplete() {
@@ -137,7 +145,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition,
 						pActionKey);
 					Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
-					showPopupOrBlockPlayer(defender);
+					if (defender != null) {
+						handlePlayerSelection(defender);
+					}
 					break;
 			}
 			return true;
@@ -157,6 +167,8 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		if (player != null) {
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
+					selectedPlayers.keySet().forEach(id -> getClient().getCommunication().sendUnsetBlockTarget(id));
+					selectedPlayers.clear();
 					getClient().getCommunication().sendActingPlayer(null, null, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_BLOCK:
@@ -166,7 +178,6 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					selectPlayerForStab(player);
 					break;
 				default:
-					UtilClientStateBlocking.menuItemSelected(this, player, pMenuKey);
 					break;
 			}
 		}
