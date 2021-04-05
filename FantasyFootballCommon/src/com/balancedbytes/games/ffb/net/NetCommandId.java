@@ -37,6 +37,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReplay;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandRequestVersion;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandStartGame;
@@ -47,6 +48,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupSave;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
@@ -116,7 +118,8 @@ public enum NetCommandId implements INamedObject {
 	INTERNAL_SERVER_DELETE_GAME("internalServerDeleteGame"), INTERNAL_SERVER_UPLOAD_GAME("internalServerUploadGame"),
 	INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"), INTERNAL_SERVER_CLEAR_CACHE("internalServerClearCache"),
 	CLIENT_CLOSE_SESSION("clientCloseSession"), CLIENT_ARGUE_THE_CALL("clientArgueTheCall"),
-	SERVER_GAME_TIME("serverGameTime"), CLIENT_PING("clientPing"), SERVER_PONG("serverPong");
+	SERVER_GAME_TIME("serverGameTime"), CLIENT_PING("clientPing"), SERVER_PONG("serverPong"),
+	CLIENT_SET_BLOCK_TARGET_SELECTION("setBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("unsetBlockTargetSelection");
 
 	private String fName;
 
@@ -276,6 +279,10 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandPing();
 			case SERVER_PONG:
 				return new ServerCommandPong();
+			case CLIENT_SET_BLOCK_TARGET_SELECTION:
+				return new ClientCommandSetBlockTargetSelection();
+			case CLIENT_UNSET_BLOCK_TARGET_SELECTION:
+				return new ClientCommandUnsetBlockTargetSelection();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

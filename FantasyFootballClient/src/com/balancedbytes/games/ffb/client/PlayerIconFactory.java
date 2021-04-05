@@ -31,7 +31,7 @@ import java.awt.image.BufferedImage;
  */
 public class PlayerIconFactory {
 
-	private static Color _MARK_COLOR = new Color(1.0f, 1.0f, 0.0f, 1.0f);
+	private static final Color _MARK_COLOR = new Color(1.0f, 1.0f, 0.0f, 1.0f);
 
 	public static final int MAX_ICON_WIDTH = 40;
 	public static final int MAX_ICON_HEIGHT = 40;
@@ -71,7 +71,7 @@ public class PlayerIconFactory {
 			if (iconSet != null) {
 				int iconSize = iconSet.getWidth() / 4;
 				int y = pPlayer.getIconSetIndex() * iconSize;
-				int x = 0;
+				int x;
 				if (pHomePlayer) {
 					x = (pMoving ? 1 : 0) * iconSize;
 				} else {
@@ -85,10 +85,10 @@ public class PlayerIconFactory {
 		}
 
 		if ((icon == null) || IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(settingIcons)) {
-			int fontSize = 0;
+			int fontSize;
 			Color fontColor = Color.WHITE;
 			Color shadowColor = Color.BLACK;
-			BufferedImage playerIcon = null;
+			BufferedImage playerIcon;
 			if ((pPlayer.getPosition() != null) && (PlayerType.BIG_GUY == pPlayer.getPosition().getType())) {
 				fontSize = 17;
 				if (pHomePlayer) {
@@ -182,7 +182,7 @@ public class PlayerIconFactory {
 		String decorationProperty1 = null;
 		String decorationProperty2 = null;
 
-		if ((playerState != null) && (icon != null)) {
+		if (icon != null) {
 			switch (playerState.getBase()) {
 			case PlayerState.BEING_DRAGGED:
 				fadeIcon = true;
@@ -220,6 +220,12 @@ public class PlayerIconFactory {
 		}
 		if (playerState.isSelectedBlitzTarget()) {
 			decorationProperty2 = IIconProperty.DECORATION_BLITZ_TARGET_SELECTED;
+		}
+		if (playerState.isSelectedBlockTarget()) {
+			decorationProperty2 = IIconProperty.DECORATION_BLOCK_TARGET_SELECTED;
+		}
+		if (playerState.isSelectedStabTarget()) {
+			decorationProperty2 = IIconProperty.DECORATION_STAB_TARGET_SELECTED;
 		}
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((actingPlayer.getPlayer() == pPlayer) && actingPlayer.isSufferingBloodLust()) {

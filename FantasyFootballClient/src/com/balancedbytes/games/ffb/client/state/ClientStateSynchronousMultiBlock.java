@@ -49,6 +49,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		} else {
 			if (selectedPlayers.containsKey(player.getId())) {
 				selectedPlayers.remove(player.getId());
+				getClient().getCommunication().sendUnsetBlockTarget(player.getId());
 			} else {
 				showPopupOrBlockPlayer(player);
 			}
@@ -73,11 +74,13 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 
 	private void selectPlayerForBlock(Player<?> player) {
 		selectedPlayers.put(player.getId(), false);
+		getClient().getCommunication().sendSetBlockTarget(player.getId(), false);
 		sendIfSelectionComplete();
 	}
 
 	private void selectPlayerForStab(Player<?> player) {
 		selectedPlayers.put(player.getId(), true);
+		getClient().getCommunication().sendSetBlockTarget(player.getId(), true);
 		sendIfSelectionComplete();
 	}
 

@@ -28,9 +28,10 @@ public class PlayerState {
 	private static final int _BIT_CONFUSED = 0x0200;
 	private static final int _BIT_ROOTED = 0x0400;
 	private static final int _BIT_HYPNOTIZED = 0x0800;
-	private static final int _BIT_BLOODLUST = 0x1000;
+	private static final int _BIT_SELECTED_STAB_TARGET = 0x1000;
 	private static final int _BIT_USED_PRO = 0x2000;
 	private static final int _BIT_SELECTED_BLITZ_TARGET = 0x4000;
+	private static final int _BIT_SELECTED_BLOCK_TARGET = 0x8000;
 
 	private static final int[] _BASE_MASK = new int[] { 0x0000, // UNKNOWN
 			0xff00, // STANDING
@@ -126,12 +127,20 @@ public class PlayerState {
 		return changeBit(_BIT_HYPNOTIZED, pHypnotized);
 	}
 
-	public boolean hasBloodlust() {
-		return hasBit(_BIT_BLOODLUST);
+	public boolean isSelectedStabTarget() {
+		return hasBit(_BIT_SELECTED_STAB_TARGET);
 	}
 
-	public PlayerState changeBloodlust(boolean pBloodlust) {
-		return changeBit(_BIT_BLOODLUST, pBloodlust);
+	public PlayerState changeSelectedStabTarget(boolean isSelectedStabTarget) {
+		return changeBit(_BIT_SELECTED_STAB_TARGET, isSelectedStabTarget);
+	}
+
+	public boolean isSelectedBlockTarget() {
+		return hasBit(_BIT_SELECTED_BLOCK_TARGET);
+	}
+
+	public PlayerState changeSelectedBlockTarget(boolean isSelectedBlockTarget) {
+		return changeBit(_BIT_SELECTED_BLOCK_TARGET, isSelectedBlockTarget);
 	}
 
 	public boolean hasUsedPro() {

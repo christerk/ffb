@@ -60,6 +60,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReplay;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandRequestVersion;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSelectCardToBuy;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandStartGame;
@@ -70,6 +71,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupSave;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
@@ -87,7 +89,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
-public class ClientCommunication implements Runnable, INetCommandHandler {
+public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	private boolean fStopped;
 	private List<NetCommand> fCommandQueue;
@@ -422,6 +424,14 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendCardSelection(ClientCommandSelectCardToBuy.Selection selection){
 		send(new ClientCommandSelectCardToBuy(selection));
+	}
+
+	public void sendSetBlockTarget(String playerId, boolean useStab) {
+		send(new ClientCommandSetBlockTargetSelection(playerId, useStab));
+	}
+
+	public void sendUnsetBlockTarget(String playerId) {
+		send(new ClientCommandUnsetBlockTargetSelection(playerId));
 	}
 
 	public FantasyFootballClient getClient() {

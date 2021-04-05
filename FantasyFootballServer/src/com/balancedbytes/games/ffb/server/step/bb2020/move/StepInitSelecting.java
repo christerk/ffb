@@ -2,10 +2,12 @@ package com.balancedbytes.games.ffb.server.step.bb2020.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
@@ -18,7 +20,9 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandHandOver;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandKickTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerConstant;
@@ -255,6 +259,12 @@ public final class StepInitSelecting extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
+				case CLIENT_SET_BLOCK_TARGET_SELECTION:
+					handleSetBlockTarget(getGameState().getGame(), (ClientCommandSetBlockTargetSelection) pReceivedCommand.getCommand());
+					break;
+				case CLIENT_UNSET_BLOCK_TARGET_SELECTION:
+					handleUnsetBlockTarget(getGameState().getGame(), (ClientCommandUnsetBlockTargetSelection) pReceivedCommand.getCommand());
+					break;
 				default:
 					break;
 			}
@@ -324,6 +334,25 @@ public final class StepInitSelecting extends AbstractStep {
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 			}
 		}
+	}
+
+	private void handleSetBlockTarget(Game game, ClientCommandSetBlockTargetSelection command) {
+		Player<?> player = game.getPlayerById(command.getPlayerId());
+		FieldModel fieldModel = game.getFieldModel();
+		PlayerState playerState;
+		if (command.isUseStab()) {
+			playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(true);
+		} else {
+			playerState = fieldModel.getPlayerState(player).changeSelectedBlockTarget(true);
+		}
+		fieldModel.setPlayerState(player, playerState);
+	}
+
+	private void handleUnsetBlockTarget(Game game, ClientCommandUnsetBlockTargetSelection command) {
+		Player<?> player = game.getPlayerById(command.getPlayerId());
+		FieldModel fieldModel = game.getFieldModel();
+		PlayerState playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false);
+		fieldModel.setPlayerState(player, playerState);
 	}
 
 	// JSON serialization
