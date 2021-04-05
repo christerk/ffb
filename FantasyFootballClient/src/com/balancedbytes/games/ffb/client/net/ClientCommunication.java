@@ -65,6 +65,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandStartGame;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSwoop;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
@@ -432,6 +433,10 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUnsetBlockTarget(String playerId) {
 		send(new ClientCommandUnsetBlockTargetSelection(playerId));
+	}
+
+	public void sendBlockTargets(List<ClientCommandSynchronousMultiBlock.Target> targets) {
+		send(new ClientCommandSynchronousMultiBlock(targets));
 	}
 
 	public FantasyFootballClient getClient() {

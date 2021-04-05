@@ -14,15 +14,18 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ClientStateSynchronousMultiBlock extends ClientState {
 
@@ -93,7 +96,13 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	}
 
 	private void sendIfSelectionComplete() {
-		//TODO
+		if (selectedPlayers.size() == 2) {
+			List<ClientCommandSynchronousMultiBlock.Target> targets = selectedPlayers.entrySet().stream()
+				.map(entry -> new ClientCommandSynchronousMultiBlock.Target(entry.getKey(), entry.getValue()))
+				.sorted(Comparator.comparing(ClientCommandSynchronousMultiBlock.Target::getPlayerId))
+				.collect(Collectors.toList());
+			getClient().getCommunication().sendBlockTargets(targets);
+		}
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
@@ -153,7 +162,6 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 			return true;
 		}
 	}
-
 
 	@Override
 	public void endTurn() {

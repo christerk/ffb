@@ -119,9 +119,10 @@ public enum NetCommandId implements INamedObject {
 	INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"), INTERNAL_SERVER_CLEAR_CACHE("internalServerClearCache"),
 	CLIENT_CLOSE_SESSION("clientCloseSession"), CLIENT_ARGUE_THE_CALL("clientArgueTheCall"),
 	SERVER_GAME_TIME("serverGameTime"), CLIENT_PING("clientPing"), SERVER_PONG("serverPong"),
-	CLIENT_SET_BLOCK_TARGET_SELECTION("setBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("unsetBlockTargetSelection");
+	CLIENT_SET_BLOCK_TARGET_SELECTION("setBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("unsetBlockTargetSelection"),
+	CLIENT_SYNCHRONOUS_MULTI_BLOCK("synchronousMultiBlock");
 
-	private String fName;
+	private final String fName;
 
 	NetCommandId(String pName) {
 		fName = pName;
