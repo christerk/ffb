@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -56,6 +57,7 @@ public class ClientStateFactory {
 		register(new ClientStateBomb(pClient));
 		register(new ClientStateIllegalSubstitution(pClient));
 		register(new ClientStateSelectBlitzTarget(pClient));
+		register(new ClientStateSynchronousMultiBlock(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -122,8 +124,11 @@ public class ClientStateFactory {
 									break;
 								case BLITZ:
 								case BLOCK:
-								case MULTIPLE_BLOCK:
 									clientStateId = ClientStateId.BLOCK;
+									break;
+								case MULTIPLE_BLOCK:
+									clientStateId = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockTwoAtOnce)
+										? ClientStateId.SYNCHRONOUS_MULTI_BLOCK : ClientStateId.BLOCK;
 									break;
 								case FOUL:
 								case FOUL_MOVE:

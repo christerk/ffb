@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStateSelect extends ClientState {
@@ -45,7 +44,7 @@ public class ClientStateSelect extends ClientState {
 		return ClientStateId.SELECT_PLAYER;
 	}
 
-	public void clickOnPlayer(Player<?>pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if (game.getTeamHome().hasPlayer(pPlayer) && playerState.isActive()) {
@@ -57,151 +56,151 @@ public class ClientStateSelect extends ClientState {
 		if (pPlayer != null) {
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_BLOCK:
-				communication.sendActingPlayer(pPlayer, PlayerAction.BLOCK, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_BLITZ:
-				communication.sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_FOUL:
-				communication.sendActingPlayer(pPlayer, PlayerAction.FOUL_MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_MOVE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_STAND_UP:
-				communication.sendActingPlayer(pPlayer, PlayerAction.STAND_UP, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ:
-				communication.sendActingPlayer(pPlayer, PlayerAction.STAND_UP_BLITZ, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_HAND_OVER:
-				communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER_MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_PASS:
-				communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE_MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_RECOVER:
-				communication.sendActingPlayer(pPlayer, PlayerAction.REMOVE_CONFUSION, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK:
-				getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_BOMB:
-				if (isThrowBombActionAvailable(pPlayer)) {
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
-				}
-				break;
+				case IPlayerPopupMenuKeys.KEY_BLOCK:
+					communication.sendActingPlayer(pPlayer, PlayerAction.BLOCK, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_BLITZ:
+					communication.sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_FOUL:
+					communication.sendActingPlayer(pPlayer, PlayerAction.FOUL_MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_MOVE:
+					communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_STAND_UP:
+					communication.sendActingPlayer(pPlayer, PlayerAction.STAND_UP, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ:
+					communication.sendActingPlayer(pPlayer, PlayerAction.STAND_UP_BLITZ, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_HAND_OVER:
+					communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER_MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_PASS:
+					communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE:
+					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE:
+					communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE_MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_RECOVER:
+					communication.sendActingPlayer(pPlayer, PlayerAction.REMOVE_CONFUSION, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK:
+					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_BOMB:
+					if (isThrowBombActionAvailable(pPlayer)) {
+						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
+					}
+					break;
 			}
 		}
 	}
 
-	private void createAndShowPopupMenuForPlayer(Player<?>pPlayer) {
+	private void createAndShowPopupMenuForPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		if (isBlockActionAvailable(pPlayer)) {
 			JMenuItem blockAction = new JMenuItem("Block Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
 			blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
 			blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));
 			menuItemList.add(blockAction);
 		}
 		if (isMultiBlockActionAvailable(pPlayer)) {
 			JMenuItem multiBlockAction = new JMenuItem("Multiple Block",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MUTIPLE_BLOCK)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MUTIPLE_BLOCK)));
 			multiBlockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
 			multiBlockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK, 0));
 			menuItemList.add(multiBlockAction);
 		}
 		if (isThrowBombActionAvailable(pPlayer)) {
 			JMenuItem moveAction = new JMenuItem("Throw Bomb Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BOMB)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BOMB)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOMB);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOMB, 0));
 			menuItemList.add(moveAction);
 		}
 		if (isMoveActionAvailable(pPlayer)) {
 			JMenuItem moveAction = new JMenuItem("Move Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
 		}
 		if (isBlitzActionAvailable(pPlayer)) {
 			JMenuItem blitzAction = new JMenuItem("Blitz Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
 			blitzAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLITZ);
 			blitzAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLITZ, 0));
 			menuItemList.add(blitzAction);
 		}
 		if (isFoulActionAvailable(pPlayer)) {
 			JMenuItem foulAction = new JMenuItem("Foul Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_FOUL)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_FOUL)));
 			foulAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FOUL);
 			foulAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FOUL, 0));
 			menuItemList.add(foulAction);
 		}
 		if (isPassActionAvailable(pPlayer)) {
 			JMenuItem passAction = new JMenuItem("Pass Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
 		}
 		if (isHandOverActionAvailable(pPlayer)) {
 			JMenuItem handOverAction = new JMenuItem("Hand Over Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HAND_OVER)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HAND_OVER)));
 			handOverAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
 			handOverAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
 			menuItemList.add(handOverAction);
 		}
 		if (isThrowTeamMateActionAvailable(pPlayer)) {
 			JMenuItem throwTeamMateAction = new JMenuItem("Throw Team-Mate Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
 			throwTeamMateAction.setMnemonic(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE);
 			throwTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE, 0));
 			menuItemList.add(throwTeamMateAction);
 		}
 		if (isKickTeamMateActionAvailable(pPlayer)) {
 			JMenuItem kickTeamMateAction = new JMenuItem("Kick Team-Mate Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
 			kickTeamMateAction.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE);
 			kickTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE, 0));
 			menuItemList.add(kickTeamMateAction);
 		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem("Recover from Confusion & End Move",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
 			confusionAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RECOVER);
 			confusionAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RECOVER, 0));
 			menuItemList.add(confusionAction);
 		}
 		if (isRecoverFromGazeActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem("Recover from Gaze & End Move",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
 			confusionAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RECOVER);
 			confusionAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RECOVER, 0));
 			menuItemList.add(confusionAction);
 		}
 		if (isStandUpActionAvailable(pPlayer)
-				&& pPlayer.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
-				&& !game.getTurnData().isBlitzUsed()) {
+			&& pPlayer.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
+			&& !game.getTurnData().isBlitzUsed()) {
 			JMenuItem standUpAction = new JMenuItem("Stand Up & End Move (using Blitz)",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
 			standUpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ);
 			standUpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ, 0));
 			menuItemList.add(standUpAction);
 		}
 		if (isStandUpActionAvailable(pPlayer)) {
 			JMenuItem standUpAction = new JMenuItem("Stand Up & End Move",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
 			standUpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAND_UP);
 			standUpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAND_UP, 0));
 			menuItemList.add(standUpAction);
@@ -218,58 +217,58 @@ public class ClientStateSelect extends ClientState {
 		UserInterface userInterface = getClient().getUserInterface();
 		Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
 		switch (pActionKey) {
-		case PLAYER_SELECT:
-			if (selectedPlayer != null) {
-				createAndShowPopupMenuForPlayer(selectedPlayer);
-			}
-			break;
-		case PLAYER_CYCLE_RIGHT:
-			selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, true);
-			if (selectedPlayer != null) {
-				hideSelectSquare();
-				FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
-				showSelectSquare(selectedCoordinate);
-				getClient().getClientData().setSelectedPlayer(selectedPlayer);
-				userInterface.refreshSideBars();
-			}
-			break;
-		case PLAYER_CYCLE_LEFT:
-			selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, false);
-			if (selectedPlayer != null) {
-				hideSelectSquare();
-				FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
-				showSelectSquare(selectedCoordinate);
-				getClient().getClientData().setSelectedPlayer(selectedPlayer);
-				userInterface.refreshSideBars();
-			}
-			break;
-		case PLAYER_ACTION_BLOCK:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLOCK);
-			break;
-		case PLAYER_ACTION_MOVE:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
-			break;
-		case PLAYER_ACTION_BLITZ:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
-			break;
-		case PLAYER_ACTION_FOUL:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
-			break;
-		case PLAYER_ACTION_STAND_UP:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_STAND_UP);
-			break;
-		case PLAYER_ACTION_HAND_OVER:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_HAND_OVER);
-			break;
-		case PLAYER_ACTION_PASS:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PASS);
-			break;
-		case PLAYER_ACTION_MULTIPLE_BLOCK:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
-			break;
-		default:
-			actionHandled = false;
-			break;
+			case PLAYER_SELECT:
+				if (selectedPlayer != null) {
+					createAndShowPopupMenuForPlayer(selectedPlayer);
+				}
+				break;
+			case PLAYER_CYCLE_RIGHT:
+				selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, true);
+				if (selectedPlayer != null) {
+					hideSelectSquare();
+					FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
+					showSelectSquare(selectedCoordinate);
+					getClient().getClientData().setSelectedPlayer(selectedPlayer);
+					userInterface.refreshSideBars();
+				}
+				break;
+			case PLAYER_CYCLE_LEFT:
+				selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, false);
+				if (selectedPlayer != null) {
+					hideSelectSquare();
+					FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
+					showSelectSquare(selectedCoordinate);
+					getClient().getClientData().setSelectedPlayer(selectedPlayer);
+					userInterface.refreshSideBars();
+				}
+				break;
+			case PLAYER_ACTION_BLOCK:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLOCK);
+				break;
+			case PLAYER_ACTION_MOVE:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
+				break;
+			case PLAYER_ACTION_BLITZ:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
+				break;
+			case PLAYER_ACTION_FOUL:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
+				break;
+			case PLAYER_ACTION_STAND_UP:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_STAND_UP);
+				break;
+			case PLAYER_ACTION_HAND_OVER:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_HAND_OVER);
+				break;
+			case PLAYER_ACTION_PASS:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PASS);
+				break;
+			case PLAYER_ACTION_MULTIPLE_BLOCK:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
+				break;
+			default:
+				actionHandled = false;
+				break;
 		}
 		return actionHandled;
 	}
@@ -286,9 +285,9 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& playerState.isActive() && !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlockAction)
-				&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
-						&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
+			&& playerState.isActive() && !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlockAction)
+			&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
+			&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
 			return (blockablePlayers > 0);
@@ -300,10 +299,13 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& playerState.isActive() && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
-				&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
-				&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
-						&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
+			&& playerState.isActive()
+			&& ((UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
+			&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockMoreThanOnce))
+			|| (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockTwoAtOnce)
+			&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockTwoAtOnce)))
+			&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
+			&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
 			return (blockablePlayers > 1);
@@ -330,17 +332,17 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return (!game.getTurnData().isBlitzUsed()
-				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED) && (playerState != null)
-				&& playerState.isActive() && playerState.isAbleToMove()
-				&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlitzAction));
+			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED) && (playerState != null)
+			&& playerState.isActive() && playerState.isAbleToMove()
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlitzAction));
 	}
 
 	private boolean isFoulActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& playerState.isActive() && !game.getTurnData().isFoulUsed()
-				&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
+			&& playerState.isActive() && !game.getTurnData().isFoulUsed()
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
 				PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
 				if (opponentState.canBeFouled()) {
@@ -365,13 +367,13 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return (!game.getTurnData().isHandOverUsed()
-				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
-				&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
-				&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularHandOverAction));
+			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
+			&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularHandOverAction));
 	}
 
-	private boolean isThrowTeamMateActionAvailable(Player<?>pPlayer) {
+	private boolean isThrowTeamMateActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventThrowTeamMateAction)) {
@@ -384,7 +386,7 @@ public class ClientStateSelect extends ClientState {
 		for (int i = 0; i < teamPlayers.length; i++) {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
 			if (teamPlayers[i].canBeThrown()
-					&& !playerCoordinate.isBoxCoordinate()) {
+				&& !playerCoordinate.isBoxCoordinate()) {
 				rightStuffAvailable = true;
 				break;
 			}
@@ -393,7 +395,7 @@ public class ClientStateSelect extends ClientState {
 		boolean rightStuffAdjacent = false;
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
-				playerCoordinate, false);
+			playerCoordinate, false);
 		for (int i = 0; i < adjacentTeamPlayers.length; i++) {
 			if (adjacentTeamPlayers[i].canBeThrown()) {
 				rightStuffAdjacent = true;
@@ -402,12 +404,12 @@ public class ClientStateSelect extends ClientState {
 		}
 
 		return (!game.getTurnData().isPassUsed()
-				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& pPlayer.hasSkillProperty(NamedProperties.canThrowTeamMates) && rightStuffAvailable
-				&& (playerState.isAbleToMove() || rightStuffAdjacent));
+			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& pPlayer.hasSkillProperty(NamedProperties.canThrowTeamMates) && rightStuffAvailable
+			&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 
-	private boolean isKickTeamMateActionAvailable(Player<?>pPlayer) {
+	private boolean isKickTeamMateActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventKickTeamMateAction)) {
@@ -420,7 +422,7 @@ public class ClientStateSelect extends ClientState {
 		for (int i = 0; i < teamPlayers.length; i++) {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
 			if (teamPlayers[i].hasSkillProperty(NamedProperties.canBeKicked)
-					&& !playerCoordinate.isBoxCoordinate()) {
+				&& !playerCoordinate.isBoxCoordinate()) {
 				rightStuffAvailable = true;
 				break;
 			}
@@ -429,7 +431,7 @@ public class ClientStateSelect extends ClientState {
 		boolean rightStuffAdjacent = false;
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
-				playerCoordinate, false);
+			playerCoordinate, false);
 		for (int i = 0; i < adjacentTeamPlayers.length; i++) {
 			if (adjacentTeamPlayers[i].hasSkillProperty(NamedProperties.canBeKicked)) {
 				rightStuffAdjacent = true;
@@ -438,31 +440,31 @@ public class ClientStateSelect extends ClientState {
 		}
 
 		return (!game.getTurnData().isBlitzUsed()
-				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& pPlayer.hasSkillProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
-				&& (playerState.isAbleToMove() || rightStuffAdjacent));
+			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& pPlayer.hasSkillProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
+			&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 
-	private boolean isStandUpActionAvailable(Player<?>pPlayer) {
+	private boolean isStandUpActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null) && (playerState.getBase() == PlayerState.PRONE) && playerState.isActive()
-				&& !pPlayer.hasSkillProperty(NamedProperties.preventStandUpAction));
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventStandUpAction));
 	}
 
-	private boolean isRecoverFromConfusionActionAvailable(Player<?>pPlayer) {
+	private boolean isRecoverFromConfusionActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null) && playerState.isConfused() && playerState.isActive()
-				&& (playerState.getBase() != PlayerState.PRONE)
-				&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromConcusionAction));
+			&& (playerState.getBase() != PlayerState.PRONE)
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromConcusionAction));
 	}
 
-	private boolean isRecoverFromGazeActionAvailable(Player<?>pPlayer) {
+	private boolean isRecoverFromGazeActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null) && playerState.isHypnotized() && (playerState.getBase() != PlayerState.PRONE)
-				&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromGazeAction));
+			&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromGazeAction));
 	}
 
 }

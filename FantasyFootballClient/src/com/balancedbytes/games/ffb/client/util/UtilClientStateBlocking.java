@@ -1,15 +1,8 @@
 package com.balancedbytes.games.ffb.client.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.IIconProperty;
+import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.state.ClientState;
 import com.balancedbytes.games.ffb.client.state.IPlayerPopupMenuKeys;
@@ -19,6 +12,12 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
@@ -26,7 +25,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 public class UtilClientStateBlocking {
 
 	public static boolean actionKeyPressed(ClientState pClientState, ActionKey pActionKey, boolean pDoBlitz) {
-		boolean actionHandled = false;
+		boolean actionHandled;
 		Game game = pClientState.getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pActionKey) {
@@ -89,7 +88,7 @@ public class UtilClientStateBlocking {
 		return handled;
 	}
 
-	private static void createAndShowStabPopupMenu(ClientState pClientState, Player<?> pPlayer) {
+	public static void createAndShowStabPopupMenu(ClientState pClientState, Player<?> pPlayer) {
 		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		JMenuItem stabAction = new JMenuItem("Stab Opponent",
@@ -102,7 +101,7 @@ public class UtilClientStateBlocking {
 		blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
 		blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));
 		menuItemList.add(blockAction);
-		pClientState.createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+		pClientState.createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		pClientState.showPopupMenuForPlayer(pPlayer);
 	}
 

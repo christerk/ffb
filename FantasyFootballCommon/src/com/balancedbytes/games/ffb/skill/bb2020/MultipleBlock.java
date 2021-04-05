@@ -1,10 +1,10 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * At the start of a Block Action a player who is adjacent to at least two
@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
  * have the option to throw the second block the player must still be on his
  * feet after the first block.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class MultipleBlock extends Skill {
 
 	public MultipleBlock() {
@@ -24,8 +24,7 @@ public class MultipleBlock extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canBlockMoreThanOnce);
-
+		registerProperty(NamedProperties.canBlockTwoAtOnce);
 	}
 
 }
