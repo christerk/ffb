@@ -1,8 +1,10 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.dialog.DialogReRollForTargetsParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.model.Game;
@@ -19,12 +21,14 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.bb2020.multiblock.StepFoulAppearanceMultiple;
 import com.balancedbytes.games.ffb.server.step.bb2020.multiblock.StepFoulAppearanceMultiple.StepState;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.FoulAppearance;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RulesCollection(Rules.BB2020)
 public class FoulAppearanceMultipleBehaviour extends SkillBehaviour<FoulAppearance> {
@@ -79,7 +83,7 @@ public class FoulAppearanceMultipleBehaviour extends SkillBehaviour<FoulAppearan
 							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 						}
 					} else {
-						//TODO send dialog
+						UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(game.getActingPlayer().getPlayer(), state), false);
 					}
 				}
 			}
@@ -96,6 +100,12 @@ public class FoulAppearanceMultipleBehaviour extends SkillBehaviour<FoulAppearan
 				} else if (!reRolling) {
 					step.getResult().setSound(SoundId.EW);
 				}
+			}
+
+			private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, StepState state) {
+				return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets.stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()),
+					ReRolledActions.FOUL_APPEARANCE, state.blockTargets.stream().map(t -> 2).collect(Collectors.toList()),
+				state.teamReRollAvailable, state.proReRollAvailable);
 			}
 		});
 	}
