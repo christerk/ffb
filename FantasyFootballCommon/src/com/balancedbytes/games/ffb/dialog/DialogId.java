@@ -9,7 +9,8 @@ import com.balancedbytes.games.ffb.INamedObject;
 public enum DialogId implements INamedObject {
 
 	INFORMATION("information"), YES_OR_NO_QUESTION("yesOrNoQuestion"), GAME_COACH_PASSWORD("gameCoachPassword"),
-	TEAM_CHOICE("teamChoice"), COIN_CHOICE("coinChoice"), RE_ROLL("reRoll"), SKILL_USE("skillUse"),
+	TEAM_CHOICE("teamChoice"), COIN_CHOICE("coinChoice"), RE_ROLL("reRoll"),
+	RE_ROLL_FOR_TARGETS("reRollForTargets"), SKILL_USE("skillUse"),
 	PROGRESS_BAR("progressBar"), TEAM_SETUP("teamSetup"), USE_APOTHECARY("useApothecary"),
 	RECEIVE_CHOICE("receiveChoice"), FOLLOWUP_CHOICE("followupChoice"), START_GAME("startGame"),
 	APOTHECARY_CHOICE("apothecaryChoice"), TOUCHBACK("touchback"), INTERCEPTION("interception"),
@@ -23,9 +24,9 @@ public enum DialogId implements INamedObject {
 	WIZARD_SPELL("wizardSpell"), USE_INDUCEMENT("useInducement"), PASS_BLOCK("passBlock"), BUY_CARDS("buyCards"),
 	BUY_CARDS_AND_INDUCEMENTS("buyCardsAndInducements"), ARGUE_THE_CALL("argueTheCall"), SELECT_BLITZ_TARGET("selectBlitzTarget");
 
-	private String fName;
+	private final String fName;
 
-	private DialogId(String pName) {
+	DialogId(String pName) {
 		fName = pName;
 	}
 
