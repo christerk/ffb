@@ -91,10 +91,7 @@ public class UtilServerReRoll {
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {
 			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
-			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-			boolean proOption = (mechanic.eligibleForPro(game.getActingPlayer(), player) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
-					&& !playerState.hasUsedPro());
+			boolean proOption = isProReRollAvailable(player, game);
 			reRollAvailable = (teamReRollOption || proOption);
 			if (reRollAvailable) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
@@ -105,6 +102,13 @@ public class UtilServerReRoll {
 			}
 		}
 		return reRollAvailable;
+	}
+
+	public static boolean isProReRollAvailable(Player<?> player, Game game) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		return (mechanic.eligibleForPro(game.getActingPlayer(), player) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
+				&& !playerState.hasUsedPro());
 	}
 
 	public static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {

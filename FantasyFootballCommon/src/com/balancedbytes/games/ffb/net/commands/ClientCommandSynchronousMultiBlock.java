@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Target;
+import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -14,17 +14,17 @@ import java.util.List;
 
 public class ClientCommandSynchronousMultiBlock extends ClientCommand {
 
-	private List<Target> selectedTargets = new ArrayList<>();
+	private List<BlockTarget> selectedBlockTargets = new ArrayList<>();
 
 	public ClientCommandSynchronousMultiBlock() {
 	}
 
-	public ClientCommandSynchronousMultiBlock(List<Target> selectedTargets) {
-		this.selectedTargets = selectedTargets;
+	public ClientCommandSynchronousMultiBlock(List<BlockTarget> selectedBlockTargets) {
+		this.selectedBlockTargets = selectedBlockTargets;
 	}
 
-	public List<Target> getSelectedTargets() {
-		return selectedTargets;
+	public List<BlockTarget> getSelectedTargets() {
+		return selectedBlockTargets;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ClientCommandSynchronousMultiBlock extends ClientCommand {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		JsonArray jsonArray = new JsonArray();
-		selectedTargets.stream().map(Target::toJsonValue).forEach(jsonArray::add);
+		selectedBlockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
 		return jsonObject;
 	}
@@ -47,9 +47,9 @@ public class ClientCommandSynchronousMultiBlock extends ClientCommand {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
 		jsonArray.values().stream()
-			.map(value -> new Target().initFrom(game, value))
+			.map(value -> new BlockTarget().initFrom(game, value))
 			.limit(2)
-			.forEach(value -> selectedTargets.add(value));
+			.forEach(value -> selectedBlockTargets.add(value));
 		return this;
 	}
 

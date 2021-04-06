@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Target;
+import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -81,7 +81,7 @@ public final class StepEndSelecting extends AbstractStep {
 	private String fThrownPlayerId;
 	private String fKickedPlayerId;
 	private int fNumDice;
-	private List<Target> targets = new ArrayList<>();
+	private List<BlockTarget> blockTargets = new ArrayList<>();
 
 	public StepEndSelecting(GameState pGameState) {
 		super(pGameState);
@@ -159,7 +159,7 @@ public final class StepEndSelecting extends AbstractStep {
 					return true;
 				case BLOCK_TARGETS:
 					//noinspection unchecked
-					targets = (List<Target>) pParameter.getValue();
+					blockTargets = (List<BlockTarget>) pParameter.getValue();
 					consume(pParameter);
 					return true;
 				default:
@@ -266,7 +266,7 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case MULTIPLE_BLOCK:
 				if (pWithParameter) {
-					multiBlock.pushSequence(new MultiBlock.SequenceParams(getGameState(), targets));
+					multiBlock.pushSequence(new MultiBlock.SequenceParams(getGameState(), blockTargets));
 				} else {
 					multiBlock.pushSequence(new MultiBlock.SequenceParams(getGameState(), Collections.emptyList()));
 				}
@@ -337,7 +337,7 @@ public final class StepEndSelecting extends AbstractStep {
 		IServerJsonOption.KICKED_PLAYER_ID.addTo(jsonObject, fKickedPlayerId);
 		IServerJsonOption.NR_OF_DICE.addTo(jsonObject, fNumDice);
 		JsonArray jsonArray = new JsonArray();
-		targets.stream().map(Target::toJsonValue).forEach(jsonArray::add);
+		blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
 		return jsonObject;
 	}
@@ -361,9 +361,9 @@ public final class StepEndSelecting extends AbstractStep {
 		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
 		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
 		jsonArray.values().stream()
-			.map(value -> new Target().initFrom(game, value))
+			.map(value -> new BlockTarget().initFrom(game, value))
 			.limit(2)
-			.forEach(value -> targets.add(value));
+			.forEach(value -> blockTargets.add(value));
 
 		return this;
 	}

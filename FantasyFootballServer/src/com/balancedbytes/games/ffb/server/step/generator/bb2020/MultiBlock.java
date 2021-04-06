@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.generator.bb2020;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.model.Target;
+import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.step.IStepLabel;
@@ -33,7 +33,7 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
-		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.FOUL_APPEARANCE_MULTIPLE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
 		sequence.add(StepId.DUMP_OFF);
@@ -80,15 +80,15 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final List<Target> targets;
+		private final List<BlockTarget> blockTargets;
 
-		public SequenceParams(GameState gameState, List<Target> targets) {
+		public SequenceParams(GameState gameState, List<BlockTarget> blockTargets) {
 			super(gameState);
-			this.targets = targets;
+			this.blockTargets = blockTargets;
 		}
 
-		public List<Target> getTargets() {
-			return targets;
+		public List<BlockTarget> getTargets() {
+			return blockTargets;
 		}
 	}
 }

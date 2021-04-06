@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientStateBlocking;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Target;
+import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -97,11 +97,11 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 
 	private void sendIfSelectionComplete() {
 		if (selectedPlayers.size() == 2) {
-			List<Target> targets = selectedPlayers.entrySet().stream()
-				.map(entry -> new Target(entry.getKey(), entry.getValue()))
-				.sorted(Comparator.comparing(Target::getPlayerId))
+			List<BlockTarget> blockTargets = selectedPlayers.entrySet().stream()
+				.map(entry -> new BlockTarget(entry.getKey(), entry.getValue()))
+				.sorted(Comparator.comparing(BlockTarget::getPlayerId))
 				.collect(Collectors.toList());
-			getClient().getCommunication().sendBlockTargets(targets);
+			getClient().getCommunication().sendBlockTargets(blockTargets);
 		}
 	}
 
