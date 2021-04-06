@@ -1,11 +1,14 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
 import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.BlockTarget;
+import com.balancedbytes.games.ffb.net.NetCommandId;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -64,6 +67,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 					case BLOCK_TARGETS:
 						//noinspection unchecked
 						state.blockTargets.addAll((List<BlockTarget>) parameter.getValue());
+						break;
 					default:
 						break;
 				}
@@ -83,6 +87,16 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_RE_ROLL_FOR_TARGET) {
+				ClientCommandUseReRollForTarget command = (ClientCommandUseReRollForTarget) pReceivedCommand.getCommand();
+				if (command.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE) {
+					state.reRollSource = command.getReRollSource();
+					state.reRollTarget = command.getTargetId();
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				}
+			}
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}

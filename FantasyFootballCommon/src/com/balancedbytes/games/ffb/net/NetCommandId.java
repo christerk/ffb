@@ -42,6 +42,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandStartGame;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSwoop;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
@@ -52,6 +53,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSel
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUserSettings;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
@@ -87,7 +89,7 @@ public enum NetCommandId implements INamedObject {
 	SERVER_JOIN("serverJoin"), SERVER_LEAVE("serverLeave"), SERVER_TALK("serverTalk"),
 	CLIENT_SETUP_PLAYER("clientSetupPlayer"), CLIENT_START_GAME("clientStartGame"),
 	CLIENT_ACTING_PLAYER("clientActingPlayer"), CLIENT_MOVE("clientMove"), CLIENT_BLITZ_MOVE("clientBlitzMove"),
-	CLIENT_BLITZ_TARGET_SELECTED("blitzTargetSelected"), CLIENT_USE_RE_ROLL("clientUseReRoll"),
+	CLIENT_BLITZ_TARGET_SELECTED("blitzTargetSelected"), CLIENT_USE_RE_ROLL("clientUseReRoll"), CLIENT_USE_RE_ROLL_FOR_TARGET("clientUseReRollForTarget"),
 	SERVER_SOUND("serverSound"), CLIENT_COIN_CHOICE("clientCoinChoice"), CLIENT_RECEIVE_CHOICE("clientReceiveChoice"),
 	CLIENT_END_TURN("clientEndTurn"), CLIENT_KICKOFF("clientKickoff"), CLIENT_TOUCHBACK("clientTouchback"),
 	CLIENT_HAND_OVER("clientHandOver"), CLIENT_PASS("clientPass"), CLIENT_BLOCK("clientBlock"),
@@ -284,6 +286,10 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandSetBlockTargetSelection();
 			case CLIENT_UNSET_BLOCK_TARGET_SELECTION:
 				return new ClientCommandUnsetBlockTargetSelection();
+			case CLIENT_SYNCHRONOUS_MULTI_BLOCK:
+				return new ClientCommandSynchronousMultiBlock();
+			case CLIENT_USE_RE_ROLL_FOR_TARGET:
+				return new ClientCommandUseReRollForTarget(); 
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}
