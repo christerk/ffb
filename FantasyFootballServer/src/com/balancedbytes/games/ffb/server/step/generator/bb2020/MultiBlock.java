@@ -33,7 +33,8 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
-		sequence.add(StepId.FOUL_APPEARANCE_MULTIPLE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.FOUL_APPEARANCE_MULTIPLE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING),
+			from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
 		sequence.add(StepId.DUMP_OFF);
@@ -85,10 +86,6 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		public SequenceParams(GameState gameState, List<BlockTarget> blockTargets) {
 			super(gameState);
 			this.blockTargets = blockTargets;
-		}
-
-		public List<BlockTarget> getTargets() {
-			return blockTargets;
 		}
 	}
 }
