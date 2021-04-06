@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
 import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
@@ -37,6 +38,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,8 +47,9 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 
 	public static class StepState {
 		public String goToLabelOnFailure;
+		public List<String> teamReRollAvailableAgainst = new ArrayList<>();
 		public List<BlockTarget> blockTargets = new ArrayList<>();
-		public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
+		public boolean firstRun = true, proReRollAvailable;
 		public ReRollSource reRollSource;
 		public String reRollTarget;
 	}
@@ -73,6 +76,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 					case BLOCK_TARGETS:
 						//noinspection unchecked
 						state.blockTargets.addAll((List<BlockTarget>) parameter.getValue());
+						state.teamReRollAvailableAgainst.addAll(state.blockTargets.stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()));
 						break;
 					default:
 						break;
@@ -113,22 +117,34 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
+		if (UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
+			getResult().setNextAction(StepAction.NEXT_STEP);
+			return;
+		}
+
 		if (state.firstRun) {
 			state.firstRun = false;
-			for (BlockTarget target : state.blockTargets) {
-				Player<?> player = game.getPlayerById(target.getPlayerId());
-				if (UtilCards.hasSkillWithProperty(player, NamedProperties.forceRollBeforeBeingBlocked)
-					&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
-					roll(actingPlayer, state.blockTargets, target.getPlayerId(), false);
-				}
+			List<String> targetIds = state.teamReRollAvailableAgainst.stream().map(game::getPlayerById)
+				.filter(player -> UtilCards.hasSkillWithProperty(player, NamedProperties.forceRollBeforeBeingBlocked))
+				.map(Player::getId).collect(Collectors.toList());
+
+			state.blockTargets = state.blockTargets.stream().filter(target -> targetIds.contains(target.getPlayerId())).collect(Collectors.toList());
+
+			for (String targetId: targetIds) {
+				roll(actingPlayer, state.blockTargets, targetId, false);
 			}
 			decideNextStep(game, state);
 
 		} else {
-			if (!StringTool.isProvided(state.reRollTarget) || state.reRollSource == null || !UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
+			if (!StringTool.isProvided(state.reRollTarget) || state.reRollSource == null) {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
-				roll(actingPlayer, state.blockTargets, state.reRollTarget, true);
+				if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
+					roll(actingPlayer, state.blockTargets, state.reRollTarget, true);
+				}
+				if (state.reRollSource == ReRollSources.TEAM_RE_ROLL) {
+					state.teamReRollAvailableAgainst.remove(state.reRollTarget);
+				}
 				decideNextStep(game, state);
 			}
 		}
@@ -138,9 +154,11 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		if (state.blockTargets.isEmpty()) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
-			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
+			if (!UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer())) {
+				state.teamReRollAvailableAgainst.clear();
+			}
 			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
-			if (!state.teamReRollAvailable && !state.proReRollAvailable) {
+			if (state.teamReRollAvailableAgainst.isEmpty() && !state.proReRollAvailable) {
 				if (state.blockTargets.size() == 1) {
 					publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, state.blockTargets.get(0)));
 				} else {
@@ -169,7 +187,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, StepState state) {
 		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets.stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()),
 			ReRolledActions.FOUL_APPEARANCE, state.blockTargets.stream().map(t -> 2).collect(Collectors.toList()),
-			state.teamReRollAvailable, state.proReRollAvailable);
+			state.teamReRollAvailableAgainst, state.proReRollAvailable);
 	}
 
 	// JSON serialization
@@ -184,7 +202,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, state.reRollTarget);
 		IJsonOption.FIRST_RUN.addTo(jsonObject, state.firstRun);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, state.proReRollAvailable);
-		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, state.teamReRollAvailable);
+		IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, state.teamReRollAvailableAgainst);
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, state.reRollSource);
 		return jsonObject;
 	}
@@ -202,7 +220,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		state.reRollTarget = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		state.firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
 		state.proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		state.teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		state.teamReRollAvailableAgainst = Arrays.asList(IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 		state.reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		return this;
 	}

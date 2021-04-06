@@ -75,30 +75,31 @@ public class DialogReRollForTargets extends Dialog {
 		}
 
 		for (int index = 0; index < parameter.getTargetIds().size(); index++) {
-			mainMessagePanel.add(Box.createVerticalStrut(5));
-			Player<?> player = game.getPlayerById(parameter.getTargetIds().get(index));
-			String detailMessage;
-			if (parameter.getMinimumRolls().size() > index) {
-				detailMessage = "<html>The roll against " + player.getName() + "failed.<br/>" +
-					"You will need a roll of " + parameter.getMinimumRolls().get(0) + "+ to succeed.</html>";
-			} else {
-				detailMessage = "<html>The roll against " + player.getName() + "was:";
-			}
-			JLabel detailLabel = new JLabel(detailMessage);
-			detailLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			mainMessagePanel.add(detailLabel);
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 			String target = parameter.getTargetIds().get(index);
-			if (dialogParameter.isTeamReRollAvailable()) {
-				buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'E'));
-				buttonPanel.add(Box.createHorizontalStrut(5));
+			boolean teamReRollAvailable = parameter.getTeamReRollAvailableAgainst().contains(target);
+			if (teamReRollAvailable || parameter.isProReRollAvailable()) {
+				mainMessagePanel.add(Box.createVerticalStrut(5));
+				Player<?> player = game.getPlayerById(parameter.getTargetIds().get(index));
+				String detailMessage;
+				if (parameter.getMinimumRolls().size() > index) {
+					detailMessage = "<html>The roll against " + player.getName() + " failed.<br/>" +
+						"You will need a roll of " + parameter.getMinimumRolls().get(0) + "+ to succeed.</html>";
+					JLabel detailLabel = new JLabel(detailMessage);
+					detailLabel.setHorizontalAlignment(SwingConstants.CENTER);
+					mainMessagePanel.add(detailLabel);
+				}
+				JPanel buttonPanel = new JPanel();
+				buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+				if (teamReRollAvailable) {
+					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'E'));
+					buttonPanel.add(Box.createHorizontalStrut(5));
+				}
+				if (parameter.isProReRollAvailable()) {
+					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'O'));
+					buttonPanel.add(Box.createHorizontalStrut(5));
+				}
+				mainMessagePanel.add(buttonPanel);
 			}
-			if (dialogParameter.isProReRollAvailable()) {
-				buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'O'));
-				buttonPanel.add(Box.createHorizontalStrut(5));
-			}
-			mainMessagePanel.add(buttonPanel);
 		}
 
 		mainMessagePanel.add(fButtonNoReRoll);

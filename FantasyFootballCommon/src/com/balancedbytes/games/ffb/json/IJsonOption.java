@@ -408,6 +408,7 @@ public interface IJsonOption {
 	JsonArrayOption TEAM_LIST_ENTRIES = new JsonArrayOption("teamListEntries");
 	JsonStringOption TEAM_NAME = new JsonStringOption("teamName");
 	JsonBooleanOption TEAM_RE_ROLL_OPTION = new JsonBooleanOption("teamReRollOption");
+	JsonStringArrayOption TEAM_RE_ROLL_AVAILABLE_AGAINST = new JsonStringArrayOption("teamReRollAvailableFOr");
 	JsonObjectOption TEAM_RESULT_AWAY = new JsonObjectOption("teamResultAway");
 	JsonObjectOption TEAM_RESULT_HOME = new JsonObjectOption("teamResultHome");
 	JsonEnumWithNameOption TEAM_STATUS = new JsonEnumWithNameOption("teamStatus", Factory.TEAM_STATUS);
