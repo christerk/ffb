@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.generator.bb2020;
 
-import com.balancedbytes.games.ffb.ApothecaryMode;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
@@ -14,8 +14,9 @@ import java.util.List;
 
 import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
-	protected MultiBlock() {
+	public MultiBlock() {
 		super(Type.MultiBlock);
 	}
 
@@ -35,7 +36,7 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.FOUL_APPEARANCE_MULTIPLE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
-		sequence.add(StepId.BLOCK_STATISTICS);
+		/*sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
 		sequence.add(StepId.DUMP_OFF);
 		sequence.add(StepId.STAB, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.APOTHECARY_DEFENDER));
@@ -72,7 +73,7 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);*/
 		sequence.add(StepId.END_BLOCKING, IStepLabel.END_BLOCKING);
 		// may insert endTurn sequence add this point
 

@@ -38,16 +38,12 @@ public class DialogReRollForTargets extends Dialog {
 
 		JButton fButtonNoReRoll = new JButton("No Re-Roll");
 		fButtonNoReRoll.addActionListener(e -> {
-			if (getCloseListener() != null) {
-				getCloseListener().dialogClosed(this);
-			}
+			close();
 		});
 		fButtonNoReRoll.addKeyListener(new PressedKeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (getCloseListener() != null) {
-					getCloseListener().dialogClosed(DialogReRollForTargets.this);
-				}
+				close();
 			}
 		});
 		fButtonNoReRoll.setMnemonic((int) 'N');
@@ -127,21 +123,28 @@ public class DialogReRollForTargets extends Dialog {
 	private JButton createButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
 		JButton button = new JButton(buttonName);
 		button.addActionListener(e -> {
-			this.reRollSource = reRollSource;
-			selectedTarget = target;
+			handleUserInteraction(target, reRollSource);
 		});
 		button.addKeyListener(new PressedKeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				DialogReRollForTargets.this.reRollSource = reRollSource;
-				selectedTarget = target;
-				if (getCloseListener() != null) {
-					getCloseListener().dialogClosed(DialogReRollForTargets.this);
-				}
+				handleUserInteraction(target, reRollSource);
 			}
 		});
 		button.setMnemonic((int) mnemonic);
 		return button;
+	}
+
+	private void handleUserInteraction(String target, ReRollSource reRollSource) {
+		this.reRollSource = reRollSource;
+		selectedTarget = target;
+		close();
+	}
+
+	private void close() {
+		if (getCloseListener() != null) {
+			getCloseListener().dialogClosed(DialogReRollForTargets.this);
+		}
 	}
 
 	public DialogId getId() {

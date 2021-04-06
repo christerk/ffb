@@ -267,10 +267,13 @@ public final class StepInitSelecting extends AbstractStep {
 					handleUnsetBlockTarget(getGameState().getGame(), (ClientCommandUnsetBlockTargetSelection) pReceivedCommand.getCommand());
 					break;
 				case CLIENT_SYNCHRONOUS_MULTI_BLOCK:
-					publishParameter(new StepParameter(StepParameterKey.BLOCK_TARGETS,
-						((ClientCommandSynchronousMultiBlock) pReceivedCommand.getCommand()).getSelectedTargets()));
-					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MULTIPLE_BLOCK, false);
-					fDispatchPlayerAction = PlayerAction.MULTIPLE_BLOCK;
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						publishParameter(new StepParameter(StepParameterKey.BLOCK_TARGETS,
+							((ClientCommandSynchronousMultiBlock) pReceivedCommand.getCommand()).getSelectedTargets()));
+						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MULTIPLE_BLOCK, false);
+						fDispatchPlayerAction = PlayerAction.MULTIPLE_BLOCK;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
 					break;
 				default:
 					break;

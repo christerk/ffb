@@ -147,6 +147,9 @@ public class DialogManager {
 					case SELECT_BLITZ_TARGET:
 						setDialogHandler(new DialogSelectBlitzTargetHandler(getClient()));
 						break;
+					case RE_ROLL_FOR_TARGETS:
+						setDialogHandler(new DialogReRollForTargetsHandler(getClient()));
+						break;
 					default:
 						break;
 				}
