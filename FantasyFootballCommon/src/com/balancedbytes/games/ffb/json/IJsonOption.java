@@ -142,6 +142,7 @@ public interface IJsonOption {
 	JsonArrayOption FIELD_MARKER_ARRAY = new JsonArrayOption("fieldMarkerArray");
 	JsonObjectOption FIELD_MODEL = new JsonObjectOption("fieldModel");
 	JsonDateOption FINISHED = new JsonDateOption("finished");
+	JsonBooleanOption FIRST_RUN = new JsonBooleanOption("firstRun");
 	JsonBooleanOption FIRST_TURN_AFTER_KICKOFF = new JsonBooleanOption("firstTurnAfterKickoff");
 	JsonBooleanOption FOUL_USED = new JsonBooleanOption("foulUsed");
 	JsonBooleanOption FOULING_PLAYER_BANNED = new JsonBooleanOption("foulingPlayerBanned");
@@ -172,7 +173,6 @@ public interface IJsonOption {
 	JsonBooleanOption HAS_PASSED = new JsonBooleanOption("hasPassed");
 	JsonBooleanOption HAS_USED_SECRET_WEAPON = new JsonBooleanOption("hasUsedSecretWeapon");
 	JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray");
-	JsonArrayOption UNZAP_ARRAY = new JsonArrayOption("unzapArray");
 	JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
 	JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
 	JsonBooleanOption HOME_FIRST_OFFENSE = new JsonBooleanOption("homeFirstOffense");
@@ -441,6 +441,7 @@ public interface IJsonOption {
 	JsonLongOption TURN_TIME = new JsonLongOption("turnTime");
 	JsonIntOption TURNS_PLAYED = new JsonIntOption("turnsPlayed");
 	JsonBooleanOption UNDEAD = new JsonBooleanOption("undead");
+	JsonArrayOption UNZAP_ARRAY = new JsonArrayOption("unzapArray");
 	JsonStringOption UPLOAD_STATUS = new JsonStringOption("uploadStatus");
 	JsonStringOption URL_ICON_SET = new JsonStringOption("urlIconSet");
 	JsonStringOption URL_PORTRAIT = new JsonStringOption("urlPortrait");

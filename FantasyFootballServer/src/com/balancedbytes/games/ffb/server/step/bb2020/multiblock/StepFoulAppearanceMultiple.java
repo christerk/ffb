@@ -39,7 +39,6 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 	public static class StepState {
 		public String goToLabelOnFailure;
 		public List<BlockTarget> blockTargets = new ArrayList<>();
-		//TODO serializing
 		public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
 		public ReRollSource reRollSource;
 		public String reRollTarget;
@@ -116,6 +115,11 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		JsonArray jsonArray = new JsonArray();
 		state.blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
+		IJsonOption.PLAYER_ID.addTo(jsonObject, state.reRollTarget);
+		IJsonOption.FIRST_RUN.addTo(jsonObject, state.firstRun);
+		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, state.proReRollAvailable);
+		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, state.teamReRollAvailable);
+		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, state.reRollSource);
 		return jsonObject;
 	}
 
@@ -129,6 +133,11 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 			.map(value -> new BlockTarget().initFrom(game, value))
 			.limit(2)
 			.forEach(value -> state.blockTargets.add(value));
+		state.reRollTarget = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		state.firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
+		state.proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		state.teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		state.reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		return this;
 	}
 
