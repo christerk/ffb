@@ -82,6 +82,7 @@ public enum StepParameterKey {
 	PASS_DEVIATES, // Boolean
 	PASS_FUMBLE, // Boolean
 	PLAYER_ID, // String
+	PLAYER_ID_TO_REMOVE, // String
 	ATTACKER_POISONED, // Boolean
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean

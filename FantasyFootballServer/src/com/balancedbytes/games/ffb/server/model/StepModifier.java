@@ -1,14 +1,14 @@
 package com.balancedbytes.games.ffb.server.model;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.Comparator;
-
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Comparator;
+
 public abstract class StepModifier<T extends IStep, V> {
-	private Class<?> modifierType;
+	private final Class<?> modifierType;
 	private int priority = 0;
 
 	protected StepModifier() {
@@ -50,10 +50,5 @@ public abstract class StepModifier<T extends IStep, V> {
 
 	abstract public boolean handleExecuteStepHook(T step, V state);
 
-	public static final Comparator<StepModifier> Comparator = new Comparator<StepModifier>() {
-		@Override
-		public int compare(StepModifier a, StepModifier b) {
-			return Integer.compare(a.getPriority(), b.getPriority());
-		}
-	};
+	public static final Comparator<StepModifier<? extends IStep, ?>> Comparator = java.util.Comparator.comparingInt(StepModifier::getPriority);
 }

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
+import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -35,6 +36,10 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 	public static class StepState {
 		public String goToLabelOnFailure;
 		public List<BlockTarget> blockTargets = new ArrayList<>();
+		//TODO serializing
+		public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
+		public ReRollSource reRollSource;
+		public String reRollTarget;
 	}
 
 	private final StepState state;
