@@ -220,6 +220,7 @@ public interface IJsonOption {
 	JsonIntOption MINIMUM_ROLL = new JsonIntOption("minimumRoll");
 	JsonIntOption MINIMUM_ROLL_DODGE = new JsonIntOption("minimumRollDodge");
 	JsonIntOption MINIMUM_ROLL_GFI = new JsonIntOption("minimumRollGfi");
+	JsonIntArrayOption MINIMUM_ROLLS = new JsonIntArrayOption("minimumRolls");
 	JsonArrayOption MODEL_CHANGE_ARRAY = new JsonArrayOption("modelChangeArray");
 	JsonEnumWithNameOption MODEL_CHANGE_ID = new JsonEnumWithNameOption("modelChangeId", Factory.MODEL_CHANGE_ID);
 	JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");

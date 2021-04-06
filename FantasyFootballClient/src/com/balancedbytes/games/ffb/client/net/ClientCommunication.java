@@ -77,6 +77,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSel
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUserSettings;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
@@ -438,6 +439,10 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendBlockTargets(List<BlockTarget> blockTargets) {
 		send(new ClientCommandSynchronousMultiBlock(blockTargets));
+	}
+
+	public void sendUseReRollForTarget(ReRolledAction reRolledAction, ReRollSource reRollSource, String targetId) {
+		send(new ClientCommandUseReRollForTarget(reRolledAction, reRollSource, targetId));
 	}
 
 	public FantasyFootballClient getClient() {
