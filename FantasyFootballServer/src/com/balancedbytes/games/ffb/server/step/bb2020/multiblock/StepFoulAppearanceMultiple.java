@@ -24,7 +24,9 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -37,6 +39,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
 		public ReRollSource reRollSource;
 		public String reRollTarget;
+		public Map<String, Integer> minimumRolls = new HashMap<>();
 	}
 
 	private final StepState state;
@@ -114,6 +117,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, state.teamReRollAvailable);
 		IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, state.reRollAvailableAgainst);
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, state.reRollSource);
+		IJsonOption.MINIMUM_ROLLS.addTo(jsonObject, state.minimumRolls);
 		return jsonObject;
 	}
 
@@ -129,6 +133,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		state.teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		state.reRollAvailableAgainst = Arrays.asList(IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 		state.reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
+		state.minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
 		return this;
 	}
 

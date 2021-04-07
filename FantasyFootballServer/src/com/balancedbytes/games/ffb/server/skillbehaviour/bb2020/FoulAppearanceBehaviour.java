@@ -30,6 +30,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RulesCollection(Rules.BB2020)
@@ -129,7 +130,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						.map(Player::getId).collect(Collectors.toList());
 
 					for (String targetId: new ArrayList<>(state.blockTargets)) {
-						roll(step, actingPlayer, state.blockTargets, targetId, false);
+						roll(step, actingPlayer, state.blockTargets, targetId, false, state.minimumRolls);
 					}
 					state.reRollAvailableAgainst.addAll(state.blockTargets);
 					decideNextStep(game, step, state);
@@ -139,7 +140,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					} else {
 						if (UtilServerReRoll.useReRoll(step, state.reRollSource, actingPlayer.getPlayer())) {
-							roll(step, actingPlayer, state.blockTargets, state.reRollTarget, true);
+							roll(step, actingPlayer, state.blockTargets, state.reRollTarget, true, state.minimumRolls);
 						}
 						state.reRollAvailableAgainst.remove(state.reRollTarget);
 						decideNextStep(game, step, state);
@@ -167,10 +168,11 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				}
 			}
 
-			private void roll(StepFoulAppearanceMultiple step, ActingPlayer actingPlayer, List<String> targets, String currentTargetId, boolean reRolling) {
+			private void roll(StepFoulAppearanceMultiple step, ActingPlayer actingPlayer, List<String> targets, String currentTargetId, boolean reRolling, Map<String, Integer> minimumRolls) {
 				int foulAppearanceRoll = step.getGameState().getDiceRoller().rollSkill();
 				int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
 				boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
+				minimumRolls.put(currentTargetId, minimumRoll);
 				step.getResult().addReport(new ReportFoulAppearanceRoll(actingPlayer.getPlayerId(),
 					mayBlock, foulAppearanceRoll, minimumRoll, reRolling, null, currentTargetId));
 				if (mayBlock) {
@@ -182,7 +184,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 
 			private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, StepFoulAppearanceMultiple.StepState state) {
 				return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets,
-					ReRolledActions.FOUL_APPEARANCE, state.blockTargets.stream().map(t -> 2).collect(Collectors.toList()),
+					ReRolledActions.FOUL_APPEARANCE, state.minimumRolls,
 					state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable);
 			}
 		});

@@ -62,7 +62,7 @@ public class DialogReRollForTargets extends Dialog {
 			mainMessage.append("<html>Do you want to re-roll the ").append(action).append("?</html>");
 		} else {
 			mainMessage.append("<html>Do you want to re-roll the failed ").append(action);
-			if (dialogParameter.getMinimumRolls().size() > 1) {
+			if (dialogParameter.getTargetIds().size() > 1) {
 				mainMessage.append(" rolls");
 			}
 			mainMessage.append("?</html>");
@@ -105,9 +105,9 @@ public class DialogReRollForTargets extends Dialog {
 					JPanel textPanel = new JPanel();
 					textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 					textPanel.setAlignmentX(CENTER_ALIGNMENT);
-					textPanel.setBackground(Color.lightGray);
+					textPanel.setBackground(HIGHLIGHT);
 					Arrays.stream(new String[] { "<html>The roll against " + player.getName() + " failed</html>",
-						"<html>You will need a roll of " + parameter.getMinimumRolls().get(0) + "+ to succeed.</html>" })
+						"<html>You will need a roll of " + parameter.getMinimumRolls().get(target) + "+ to succeed.</html>" })
 					.map(JLabel::new).forEach(label -> {
 						label.setHorizontalAlignment(SwingConstants.CENTER);
 						textPanel.add(label);
@@ -122,18 +122,18 @@ public class DialogReRollForTargets extends Dialog {
 				buttonPanel.setBackground(HIGHLIGHT);
 
 				if (parameter.isTeamReRollAvailable()) {
-					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'E'));
+					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'e'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (parameter.isProReRollAvailable()) {
-					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'O'));
+					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'o'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-				targetPanel.setBackground(Color.lightGray);
+				targetPanel.setBackground(HIGHLIGHT);
 				detailPanel.add(targetPanel);
 				detailPanel.add(Box.createVerticalStrut(5));
 			}

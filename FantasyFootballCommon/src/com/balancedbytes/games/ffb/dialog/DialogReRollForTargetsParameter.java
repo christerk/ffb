@@ -10,14 +10,15 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class DialogReRollForTargetsParameter implements IDialogParameter {
 
 	private String playerId;
 	private List<String> targetIds = new ArrayList<>();
-	private List<Integer> minimumRolls = new ArrayList<>();
+	private Map<String, Integer> minimumRolls = new HashMap<>();
 	private ReRolledAction reRolledAction;
 	private List<String> teamReRollAvailableAgainst = new ArrayList<>();
 	private boolean proReRollAvailable, teamReRollAvailable;
@@ -26,7 +27,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		super();
 	}
 
-	public DialogReRollForTargetsParameter(String playerId, List<String> targetIds, ReRolledAction reRolledAction, List<Integer> minimumRolls,
+	public DialogReRollForTargetsParameter(String playerId, List<String> targetIds, ReRolledAction reRolledAction, Map<String, Integer> minimumRolls,
 	                                       List<String> teamReRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable) {
 		this.targetIds = targetIds;
 		this.reRolledAction = reRolledAction;
@@ -57,7 +58,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		return reRolledAction;
 	}
 
-	public List<Integer> getMinimumRolls() {
+	public Map<String, Integer> getMinimumRolls() {
 		return minimumRolls;
 	}
 
@@ -98,7 +99,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		teamReRollAvailableAgainst = Arrays.asList(IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 		proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		minimumRolls = Arrays.stream(IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject)).boxed().collect(Collectors.toList());
+		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
