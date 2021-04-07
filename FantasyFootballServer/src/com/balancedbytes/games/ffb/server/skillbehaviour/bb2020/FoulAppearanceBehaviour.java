@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
-import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -8,7 +7,6 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollForTargetsParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.BlitzState;
-import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
@@ -30,6 +28,7 @@ import com.balancedbytes.games.ffb.skill.FoulAppearance;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,15 +123,15 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 
 				if (state.firstRun) {
 					state.firstRun = false;
-					List<String> targetIds = state.teamReRollAvailableAgainst.stream().map(game::getPlayerById)
+
+					state.blockTargets = state.blockTargets.stream().map(game::getPlayerById)
 						.filter(player -> UtilCards.hasSkillWithProperty(player, NamedProperties.forceRollBeforeBeingBlocked))
 						.map(Player::getId).collect(Collectors.toList());
 
-					state.blockTargets = state.blockTargets.stream().filter(target -> targetIds.contains(target.getPlayerId())).collect(Collectors.toList());
-
-					for (String targetId: targetIds) {
+					for (String targetId: new ArrayList<>(state.blockTargets)) {
 						roll(step, actingPlayer, state.blockTargets, targetId, false);
 					}
+					state.reRollAvailableAgainst.addAll(state.blockTargets);
 					decideNextStep(game, step, state);
 
 				} else {
@@ -142,9 +141,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						if (UtilServerReRoll.useReRoll(step, state.reRollSource, actingPlayer.getPlayer())) {
 							roll(step, actingPlayer, state.blockTargets, state.reRollTarget, true);
 						}
-						if (state.reRollSource == ReRollSources.TEAM_RE_ROLL) {
-							state.teamReRollAvailableAgainst.remove(state.reRollTarget);
-						}
+						state.reRollAvailableAgainst.remove(state.reRollTarget);
 						decideNextStep(game, step, state);
 					}
 				}
@@ -155,13 +152,12 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				if (state.blockTargets.isEmpty()) {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
-					if (!UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), game.getActingPlayer().getPlayer())) {
-						state.teamReRollAvailableAgainst.clear();
-					}
+					state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), game.getActingPlayer().getPlayer());
 					state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
-					if (state.teamReRollAvailableAgainst.isEmpty() && !state.proReRollAvailable) {
+					if (state.reRollAvailableAgainst.isEmpty() || (!state.teamReRollAvailable && !state.proReRollAvailable)) {
 						if (state.blockTargets.size() == 1) {
 							step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, state.blockTargets.get(0)));
+							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 						}
@@ -171,24 +167,23 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				}
 			}
 
-			private void roll(StepFoulAppearanceMultiple step, ActingPlayer actingPlayer, List<BlockTarget> targets, String currentTargetId, boolean reRolling) {
+			private void roll(StepFoulAppearanceMultiple step, ActingPlayer actingPlayer, List<String> targets, String currentTargetId, boolean reRolling) {
 				int foulAppearanceRoll = step.getGameState().getDiceRoller().rollSkill();
 				int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
 				boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
 				step.getResult().addReport(new ReportFoulAppearanceRoll(actingPlayer.getPlayerId(),
 					mayBlock, foulAppearanceRoll, minimumRoll, reRolling, null));
 				if (mayBlock) {
-					targets.stream().filter(target -> target.getPlayerId().equals(currentTargetId))
-						.findFirst().ifPresent(targets::remove);
+					targets.remove(currentTargetId);
 				} else if (!reRolling) {
 					step.getResult().setSound(SoundId.EW);
 				}
 			}
 
 			private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, StepFoulAppearanceMultiple.StepState state) {
-				return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets.stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()),
+				return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets,
 					ReRolledActions.FOUL_APPEARANCE, state.blockTargets.stream().map(t -> 2).collect(Collectors.toList()),
-					state.teamReRollAvailableAgainst, state.proReRollAvailable);
+					state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable);
 			}
 		});
 	}

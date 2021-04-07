@@ -99,8 +99,7 @@ public class DialogReRollForTargets extends Dialog {
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
 
 			String target = parameter.getTargetIds().get(index);
-			boolean teamReRollAvailable = parameter.getTeamReRollAvailableAgainst().contains(target);
-			if (teamReRollAvailable || parameter.isProReRollAvailable()) {
+			if (parameter.getTeamReRollAvailableAgainst().contains(target)) {
 				Player<?> player = game.getPlayerById(parameter.getTargetIds().get(index));
 				if (parameter.getMinimumRolls().size() > index) {
 					JPanel textPanel = new JPanel();
@@ -122,7 +121,7 @@ public class DialogReRollForTargets extends Dialog {
 				buttonPanel.add(Box.createHorizontalGlue());
 				buttonPanel.setBackground(HIGHLIGHT);
 
-				if (teamReRollAvailable) {
+				if (parameter.isTeamReRollAvailable()) {
 					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'E'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}

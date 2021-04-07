@@ -19,7 +19,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -33,9 +32,9 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 
 	public static class StepState {
 		public String goToLabelOnFailure;
-		public List<String> teamReRollAvailableAgainst = new ArrayList<>();
-		public List<BlockTarget> blockTargets = new ArrayList<>();
-		public boolean firstRun = true, proReRollAvailable;
+		public List<String> reRollAvailableAgainst = new ArrayList<>();
+		public List<String> blockTargets = new ArrayList<>();
+		public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
 		public ReRollSource reRollSource;
 		public String reRollTarget;
 	}
@@ -61,8 +60,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 						break;
 					case BLOCK_TARGETS:
 						//noinspection unchecked
-						state.blockTargets.addAll((List<BlockTarget>) parameter.getValue());
-						state.teamReRollAvailableAgainst.addAll(state.blockTargets.stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()));
+						state.blockTargets.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()));
 						break;
 					default:
 						break;
@@ -109,13 +107,12 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
-		JsonArray jsonArray = new JsonArray();
-		state.blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
-		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
+		IJsonOption.PLAYER_IDS.addTo(jsonObject, state.blockTargets);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, state.reRollTarget);
 		IJsonOption.FIRST_RUN.addTo(jsonObject, state.firstRun);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, state.proReRollAvailable);
-		IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, state.teamReRollAvailableAgainst);
+		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, state.teamReRollAvailable);
+		IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, state.reRollAvailableAgainst);
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, state.reRollSource);
 		return jsonObject;
 	}
@@ -125,15 +122,12 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
-		jsonArray.values().stream()
-			.map(value -> new BlockTarget().initFrom(game, value))
-			.limit(2)
-			.forEach(value -> state.blockTargets.add(value));
+		state.blockTargets = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		state.reRollTarget = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		state.firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
 		state.proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		state.teamReRollAvailableAgainst = Arrays.asList(IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
+		state.teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		state.reRollAvailableAgainst = Arrays.asList(IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 		state.reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		return this;
 	}
