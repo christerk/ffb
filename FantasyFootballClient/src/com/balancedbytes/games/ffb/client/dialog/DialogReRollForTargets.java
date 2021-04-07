@@ -20,12 +20,18 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DialogReRollForTargets extends Dialog {
 
+	public static final Color HIGHLIGHT = Color.lightGray;
 	private final DialogReRollForTargetsParameter dialogParameter;
 	private ReRollSource reRollSource;
 	private String selectedTarget;
@@ -53,67 +59,106 @@ public class DialogReRollForTargets extends Dialog {
 		String action = dialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
 
 		if (dialogParameter.getMinimumRolls().isEmpty()) {
-			mainMessage.append("Do you want to re-roll the ").append(action).append("?");
+			mainMessage.append("<html>Do you want to re-roll the ").append(action).append("?</html>");
 		} else {
-			mainMessage.append("Do you want to re-roll the failed ").append(action);
+			mainMessage.append("<html>Do you want to re-roll the failed ").append(action);
 			if (dialogParameter.getMinimumRolls().size() > 1) {
 				mainMessage.append(" rolls");
 			}
-			mainMessage.append("?");
+			mainMessage.append("?</html>");
 		}
 
-		JPanel mainMessagePanel = new JPanel();
-		mainMessagePanel.setLayout(new BoxLayout(mainMessagePanel, BoxLayout.Y_AXIS));
-		mainMessagePanel.add(new JLabel(mainMessage.toString()));
+		List<String> mainMessages = new ArrayList<>();
+		mainMessages.add(mainMessage.toString());
 
 		Game game = getClient().getGame();
 		Player<?> reRollingPlayer = game.getPlayerById(parameter.getPlayerId());
 		if ((reRollingPlayer != null)
 			&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
-			mainMessagePanel.add(Box.createVerticalStrut(5));
-			mainMessagePanel.add(new JLabel("Player is a LONER - the Re-Roll is not guaranteed to help."));
+			mainMessages.add("<html>Player is a LONER - the Re-Roll is not guaranteed to help.</html>");
 		}
 
+		JPanel mainMessagePanel = new JPanel();
+		mainMessagePanel.setLayout(new BoxLayout(mainMessagePanel, BoxLayout.Y_AXIS));
+		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
+		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+
+		mainMessages.stream().map(JLabel::new).forEach(label -> {
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			mainMessagePanel.add(label);
+			mainMessagePanel.add(Box.createVerticalStrut(5));
+		});
+
+		JPanel detailPanel = new JPanel();
+		detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));
+		detailPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int index = 0; index < parameter.getTargetIds().size(); index++) {
+
+			JPanel targetPanel = new JPanel();
+			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
+			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
+
 			String target = parameter.getTargetIds().get(index);
 			boolean teamReRollAvailable = parameter.getTeamReRollAvailableAgainst().contains(target);
 			if (teamReRollAvailable || parameter.isProReRollAvailable()) {
-				mainMessagePanel.add(Box.createVerticalStrut(5));
 				Player<?> player = game.getPlayerById(parameter.getTargetIds().get(index));
-				String detailMessage;
 				if (parameter.getMinimumRolls().size() > index) {
-					detailMessage = "<html>The roll against " + player.getName() + " failed.<br/>" +
-						"You will need a roll of " + parameter.getMinimumRolls().get(0) + "+ to succeed.</html>";
-					JLabel detailLabel = new JLabel(detailMessage);
-					detailLabel.setHorizontalAlignment(SwingConstants.CENTER);
-					mainMessagePanel.add(detailLabel);
+					JPanel textPanel = new JPanel();
+					textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+					textPanel.setAlignmentX(CENTER_ALIGNMENT);
+					textPanel.setBackground(Color.lightGray);
+					Arrays.stream(new String[] { "<html>The roll against " + player.getName() + " failed</html>",
+						"<html>You will need a roll of " + parameter.getMinimumRolls().get(0) + "+ to succeed.</html>" })
+					.map(JLabel::new).forEach(label -> {
+						label.setHorizontalAlignment(SwingConstants.CENTER);
+						textPanel.add(label);
+					});
+					targetPanel.add(textPanel);
 				}
+
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+				buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+				buttonPanel.add(Box.createHorizontalGlue());
+				buttonPanel.setBackground(HIGHLIGHT);
+
 				if (teamReRollAvailable) {
 					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'E'));
-					buttonPanel.add(Box.createHorizontalStrut(5));
+					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (parameter.isProReRollAvailable()) {
 					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'O'));
-					buttonPanel.add(Box.createHorizontalStrut(5));
+					buttonPanel.add(Box.createHorizontalGlue());
 				}
-				mainMessagePanel.add(buttonPanel);
+				targetPanel.add(Box.createVerticalStrut(3));
+				targetPanel.add(buttonPanel);
+				targetPanel.add(Box.createVerticalStrut(3));
+				targetPanel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+				targetPanel.setBackground(Color.lightGray);
+				detailPanel.add(targetPanel);
+				detailPanel.add(Box.createVerticalStrut(5));
 			}
 		}
 
-		mainMessagePanel.add(fButtonNoReRoll);
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setAlignmentX(CENTER_ALIGNMENT);
+		bottomPanel.add(fButtonNoReRoll);
+		detailPanel.add(bottomPanel);
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
-		infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		infoPanel.setAlignmentX(CENTER_ALIGNMENT);
+		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL);
-		infoPanel.add(new JLabel(new ImageIcon(icon)));
+		JLabel iconLabel = new JLabel(new ImageIcon(icon));
+		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		infoPanel.add(iconLabel);
 		infoPanel.add(Box.createHorizontalStrut(5));
-		infoPanel.add(mainMessagePanel);
+		infoPanel.add(detailPanel);
 		infoPanel.add(Box.createHorizontalGlue());
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		getContentPane().add(mainMessagePanel);
 		getContentPane().add(infoPanel);
 
 		pack();
