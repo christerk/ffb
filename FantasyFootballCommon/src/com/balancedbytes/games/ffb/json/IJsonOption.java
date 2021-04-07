@@ -385,6 +385,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
+	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");
 	JsonBooleanOption SUCCESSFUL = new JsonBooleanOption("successful");
 	JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");
