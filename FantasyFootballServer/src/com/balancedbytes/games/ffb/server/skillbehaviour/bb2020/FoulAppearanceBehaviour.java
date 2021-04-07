@@ -97,7 +97,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			}
 		});
 
-		registerModifier(new AbstractStepModifierMultipleRolls<StepFoulAppearanceMultiple, StepStateMultipleRolls>() {
+		registerModifier(new AbstractStepModifierMultipleBlock<StepFoulAppearanceMultiple, StepStateMultipleRolls>() {
 
 			@Override
 			protected boolean requiresRoll(Player<?> opponentPlayer) {

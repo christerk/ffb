@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -11,6 +13,9 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,8 +28,31 @@ import com.eclipsesource.json.JsonValue;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepBlockStatistics extends AbstractStep {
 
+	private int increment = 1;
+
 	public StepBlockStatistics(GameState pGameState) {
 		super(pGameState);
+	}
+
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.PLAYER_ID_TO_REMOVE) {
+			increment--;
+			return true;
+		}
+
+		return super.setParameter(parameter);
+	}
+
+	@Override
+	public void init(StepParameterSet parameterSet) {
+		if (parameterSet != null) {
+			for (StepParameter parameter: parameterSet.values()) {
+				if (parameter.getKey() == StepParameterKey.INCREMENT) {
+					increment = (int) parameter.getValue();
+				}
+			}
+		}
 	}
 
 	public StepId getId() {
@@ -54,12 +82,8 @@ public class StepBlockStatistics extends AbstractStep {
 			game.getTurnData().setTurnStarted(true);
 			game.setConcessionPossible(false);
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(actingPlayer.getPlayer());
-			playerResult.setBlocks(playerResult.getBlocks() + 1);
+			playerResult.setBlocks(playerResult.getBlocks() + increment);
 		}
-	/*	PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-		if (defenderState != null) {
-			game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeSelectedBlitzTarget());
-		}*/
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
@@ -73,12 +97,15 @@ public class StepBlockStatistics extends AbstractStep {
 
 	@Override
 	public JsonObject toJsonValue() {
-		return super.toJsonValue();
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.NUMBER.addTo(jsonObject, increment);
+		return jsonObject;
 	}
 
 	@Override
 	public StepBlockStatistics initFrom(IFactorySource source, JsonValue pJsonValue) {
 		super.initFrom(source, pJsonValue);
+		increment = IJsonOption.NUMBER.getFrom(source, UtilJson.toJsonObject(toJsonValue()));
 		return this;
 	}
 

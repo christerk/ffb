@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class AbstractStepModifierMultipleRolls<T extends IStep, V extends StepStateMultipleRolls> extends StepModifier<T, V> {
+public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V extends StepStateMultipleRolls> extends StepModifier<T, V> {
 
 	@Override
 	public StepCommandStatus handleCommandHook(T step, V state, ClientCommandUseSkill useSkillCommand) {
@@ -35,10 +35,10 @@ public abstract class AbstractStepModifierMultipleRolls<T extends IStep, V exten
 	public boolean handleExecuteStepHook(T step, V state) {
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		actingPlayer.setHasBlocked(true);
 
 		if (canBeSkipped(actingPlayer.getPlayer())) {
-			step.getResult().setNextAction(StepAction.NEXT_STEP);
+			state.blockTargets.clear();
+			nextStep(step, state);
 			return false;
 		}
 
@@ -57,7 +57,7 @@ public abstract class AbstractStepModifierMultipleRolls<T extends IStep, V exten
 
 		} else {
 			if (!StringTool.isProvided(state.reRollTarget) || state.reRollSource == null) {
-				step.getResult().setNextAction(StepAction.NEXT_STEP);
+				nextStep(step, state);
 			} else {
 				if (UtilServerReRoll.useReRoll(step, state.reRollSource, actingPlayer.getPlayer())) {
 					roll(step, actingPlayer, state.blockTargets, state.reRollTarget, true, state.minimumRolls);
@@ -81,16 +81,20 @@ public abstract class AbstractStepModifierMultipleRolls<T extends IStep, V exten
 
 	protected abstract IReport report(String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId);
 
+	private void nextStep(T step, V state) {
+		step.getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
 	private void decideNextStep(Game game, T step, V state) {
 		if (state.blockTargets.isEmpty()) {
-			step.getResult().setNextAction(StepAction.NEXT_STEP);
+			nextStep(step, state);
 		} else {
 			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), game.getActingPlayer().getPlayer());
 			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
 			if (state.reRollAvailableAgainst.isEmpty() || (!state.teamReRollAvailable && !state.proReRollAvailable)) {
 				if (state.blockTargets.size() == 1) {
 					step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, state.blockTargets.get(0)));
-					step.getResult().setNextAction(StepAction.NEXT_STEP);
+					nextStep(step, state);
 				} else {
 					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 				}
