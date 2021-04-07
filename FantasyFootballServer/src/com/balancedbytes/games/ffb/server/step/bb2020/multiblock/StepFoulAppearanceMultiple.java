@@ -116,6 +116,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		actingPlayer.setHasBlocked(true);
 
 		if (UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
