@@ -1,38 +1,24 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.dialog.DialogReRollForTargetsParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.BlockTarget;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRollForTarget;
-import com.balancedbytes.games.ffb.report.ReportFoulAppearanceRoll;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -114,81 +100,7 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 	}
 
 	private void executeStep() {
-		Game game = getGameState().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		actingPlayer.setHasBlocked(true);
-
-		if (UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
-			getResult().setNextAction(StepAction.NEXT_STEP);
-			return;
-		}
-
-		if (state.firstRun) {
-			state.firstRun = false;
-			List<String> targetIds = state.teamReRollAvailableAgainst.stream().map(game::getPlayerById)
-				.filter(player -> UtilCards.hasSkillWithProperty(player, NamedProperties.forceRollBeforeBeingBlocked))
-				.map(Player::getId).collect(Collectors.toList());
-
-			state.blockTargets = state.blockTargets.stream().filter(target -> targetIds.contains(target.getPlayerId())).collect(Collectors.toList());
-
-			for (String targetId: targetIds) {
-				roll(actingPlayer, state.blockTargets, targetId, false);
-			}
-			decideNextStep(game, state);
-
-		} else {
-			if (!StringTool.isProvided(state.reRollTarget) || state.reRollSource == null) {
-				getResult().setNextAction(StepAction.NEXT_STEP);
-			} else {
-				if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
-					roll(actingPlayer, state.blockTargets, state.reRollTarget, true);
-				}
-				if (state.reRollSource == ReRollSources.TEAM_RE_ROLL) {
-					state.teamReRollAvailableAgainst.remove(state.reRollTarget);
-				}
-				decideNextStep(game, state);
-			}
-		}
-	}
-
-	private void decideNextStep(Game game, StepState state) {
-		if (state.blockTargets.isEmpty()) {
-			getResult().setNextAction(StepAction.NEXT_STEP);
-		} else {
-			if (!UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer())) {
-				state.teamReRollAvailableAgainst.clear();
-			}
-			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
-			if (state.teamReRollAvailableAgainst.isEmpty() && !state.proReRollAvailable) {
-				if (state.blockTargets.size() == 1) {
-					publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, state.blockTargets.get(0)));
-				} else {
-					getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-				}
-			} else {
-				UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getActingPlayer().getPlayer(), state), false);
-			}
-		}
-	}
-
-	private void roll(ActingPlayer actingPlayer, List<BlockTarget> targets, String currentTargetId, boolean reRolling) {
-		int foulAppearanceRoll = getGameState().getDiceRoller().rollSkill();
-		int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
-		boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
-		getResult().addReport(new ReportFoulAppearanceRoll(actingPlayer.getPlayerId(),
-			mayBlock, foulAppearanceRoll, minimumRoll, reRolling, null));
-		if (mayBlock) {
-			targets.stream().filter(target -> target.getPlayerId().equals(currentTargetId))
-				.findFirst().ifPresent(targets::remove);
-		} else if (!reRolling) {
-			getResult().setSound(SoundId.EW);
-		}
-	}
-
-	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, StepState state) {
-		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets.stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()),
-			ReRolledActions.FOUL_APPEARANCE, state.blockTargets.stream().map(t -> 2).collect(Collectors.toList()),
-			state.teamReRollAvailableAgainst, state.proReRollAvailable);
+		getGameState().executeStepHooks(this, state);
 	}
 
 	// JSON serialization
