@@ -172,7 +172,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
 				boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
 				step.getResult().addReport(new ReportFoulAppearanceRoll(actingPlayer.getPlayerId(),
-					mayBlock, foulAppearanceRoll, minimumRoll, reRolling, null));
+					mayBlock, foulAppearanceRoll, minimumRoll, reRolling, null, currentTargetId));
 				if (mayBlock) {
 					targets.remove(currentTargetId);
 				} else if (!reRolling) {
