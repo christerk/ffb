@@ -37,14 +37,13 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		if (canBeSkipped(actingPlayer.getPlayer())) {
-			state.blockTargets.clear();
-			nextStep(step, state);
+			step.getResult().setNextAction(StepAction.NEXT_STEP);
 			return false;
 		}
 
 		if (state.firstRun) {
 			state.firstRun = false;
-
+			state.initialCount = state.blockTargets.size();
 			state.blockTargets = state.blockTargets.stream().map(game::getPlayerById)
 				.filter(this::requiresRoll)
 				.map(Player::getId).collect(Collectors.toList());
@@ -82,22 +81,22 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 	protected abstract IReport report(String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId);
 
 	private void nextStep(T step, V state) {
-		step.getResult().setNextAction(StepAction.NEXT_STEP);
+		if (state.blockTargets.size() == state.initialCount) {
+			step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+		} else {
+			state.blockTargets.forEach(target -> step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, target)));
+			step.getResult().setNextAction(StepAction.NEXT_STEP);
+		}
 	}
 
 	private void decideNextStep(Game game, T step, V state) {
 		if (state.blockTargets.isEmpty()) {
-			nextStep(step, state);
+			step.getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), game.getActingPlayer().getPlayer());
 			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
 			if (state.reRollAvailableAgainst.isEmpty() || (!state.teamReRollAvailable && !state.proReRollAvailable)) {
-				if (state.blockTargets.size() == 1) {
-					step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, state.blockTargets.get(0)));
-					nextStep(step, state);
-				} else {
-					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-				}
+				nextStep(step, state);
 			} else {
 				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(game.getActingPlayer().getPlayer(), state), false);
 			}

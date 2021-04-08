@@ -23,6 +23,7 @@ public class StepStateMultipleRolls implements IJsonSerializable {
 		public ReRollSource reRollSource;
 		public String reRollTarget;
 		public Map<String, Integer> minimumRolls = new HashMap<>();
+		public int initialCount;
 
 	@Override
 	public JsonObject toJsonValue() {
@@ -36,6 +37,7 @@ public class StepStateMultipleRolls implements IJsonSerializable {
 		IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, reRollAvailableAgainst);
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, reRollSource);
 		IJsonOption.MINIMUM_ROLLS.addTo(jsonObject, minimumRolls);
+		IJsonOption.NUMBER.addTo(jsonObject, initialCount);
 		return jsonObject;
 	}
 
@@ -51,6 +53,7 @@ public class StepStateMultipleRolls implements IJsonSerializable {
 		reRollAvailableAgainst = Arrays.asList(IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
+		initialCount = IJsonOption.NUMBER.getFrom(game, jsonObject);
 		return this;
 	}
 }
