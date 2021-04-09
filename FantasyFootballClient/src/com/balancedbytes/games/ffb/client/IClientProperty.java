@@ -49,6 +49,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_JUMP = "key.player.action.jump";
 	String KEY_PLAYER_ACTION_END_MOVE = "key.player.action.endMove";
 	String KEY_PLAYER_ACTION_STAB = "key.player.action.stab";
+	String KEY_PLAYER_ACTION_CHAINSAW = "key.player.action.chainsaw";
 	String KEY_PLAYER_ACTION_GAZE = "key.player.action.gaze";
 	String KEY_PLAYER_ACTION_RANGE_GRID = "key.player.action.rangeGrid";
 	String KEY_PLAYER_ACTION_HAIL_MARY_PASS = "key.player.action.hailMaryPass";

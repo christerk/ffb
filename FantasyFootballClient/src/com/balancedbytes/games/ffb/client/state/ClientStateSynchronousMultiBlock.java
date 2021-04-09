@@ -63,18 +63,18 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		}
 	}
 
-	private void showPopupOrBlockPlayer(Player<?> player) {
-		if (player == null) {
+	private void showPopupOrBlockPlayer(Player<?> defender) {
+		if (defender == null) {
 			return;
 		}
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (UtilPlayer.isBlockable(game, player)) {
-			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
-				UtilClientStateBlocking.createAndShowStabPopupMenu(this, player);
+		if (UtilPlayer.isBlockable(game, defender)) {
+			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(defender);
+			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative)) {
+				UtilClientStateBlocking.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), defender);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
-				selectPlayerForBlock(player);
+				selectPlayerForBlock(defender);
 			}
 		}
 	}
@@ -148,6 +148,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					break;
 				case PLAYER_ACTION_STAB:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_STAB);
+					break;
+				case PLAYER_ACTION_CHAINSAW:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_CHAINSAW);
 					break;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());

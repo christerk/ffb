@@ -25,8 +25,9 @@ public interface IIconProperty {
 	String DECORATION_BOMB = "decoration.bomb";
 	String DECORATION_BOMB_SELECTED = "decoration.bomb.selected";
 	String DECORATION_BLITZ_TARGET_SELECTED = "decoration.selected.blitz.target";
-	String DECORATION_BLOCK_TARGET_SELECTED = "decoration.selected.block.target";
-	String DECORATION_STAB_TARGET_SELECTED = "decoration.selected.stab.target";
+	String DECORATION_BLOCK_TARGET = "decoration.block.target";
+	String DECORATION_STAB_TARGET = "decoration.stab.target";
+	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
@@ -154,6 +155,7 @@ public interface IIconProperty {
 	String ACTION_TOGGLE_HAIL_MARY_PASS = "action.toggle.hailMaryPass";
 	String ACTION_BOMB = "action.bomb";
 	String ACTION_TOGGLE_HAIL_MARY_BOMB = "action.toggle.hailMaryBomb";
+	String ACTION_CHAINSAW = "action.chainsaw";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

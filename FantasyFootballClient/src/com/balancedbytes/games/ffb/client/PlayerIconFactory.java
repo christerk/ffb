@@ -222,10 +222,10 @@ public class PlayerIconFactory {
 			decorationProperty2 = IIconProperty.DECORATION_BLITZ_TARGET_SELECTED;
 		}
 		if (playerState.isSelectedBlockTarget()) {
-			decorationProperty2 = IIconProperty.DECORATION_BLOCK_TARGET_SELECTED;
+			decorationProperty2 = IIconProperty.DECORATION_BLOCK_TARGET;
 		}
 		if (playerState.isSelectedStabTarget()) {
-			decorationProperty2 = IIconProperty.DECORATION_STAB_TARGET_SELECTED;
+			decorationProperty2 = IIconProperty.DECORATION_STAB_TARGET;
 		}
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((actingPlayer.getPlayer() == pPlayer) && actingPlayer.isSufferingBloodLust()) {

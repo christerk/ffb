@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -19,15 +19,15 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.block.StepStab;
 import com.balancedbytes.games.ffb.server.step.action.block.StepStab.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
-import com.balancedbytes.games.ffb.skill.Stab;
+import com.balancedbytes.games.ffb.skill.bb2016.Stab;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class StabBehaviour extends SkillBehaviour<Stab> {
 	public StabBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepStab, StepStab.StepState>() {
+		registerModifier(new StepModifier<StepStab, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepStab step, StepState state,

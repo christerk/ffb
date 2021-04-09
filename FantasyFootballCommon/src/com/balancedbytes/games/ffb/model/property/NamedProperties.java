@@ -14,7 +14,6 @@ public class NamedProperties {
 	public static final ISkillProperty allowStandupAssists = new NamedProperty("Allow Stand Up Assists");
 	public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
 	public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
-	public static final ISkillProperty armourRollWithoutBlockHasIncreasedEffectOnUndead = new NamedProperty("Armour Roll Without Block Has Increased Effect On Undead");
 	public static final ISkillProperty assistsBlocksInTacklezones = new NamedProperty("Assists Blocks in Tacklezones");
 	public static final ISkillProperty assistsFoulsInTacklezones = new NamedProperty("Assists Fouls in Tacklezones");
 	public static final ISkillProperty blocksDuringMove = new NamedProperty("Blocks During Move");
@@ -144,6 +143,8 @@ public class NamedProperties {
 	public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
+	public static final ISkillProperty providesBlockAlternative = new NamedProperty("Provides Block Alternative");
+	public static final ISkillProperty providesChainsawBlockAlternative = new NamedProperty("Provides Chainsaw Block Alternative");
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");
 	public static final ISkillProperty smallIcon = new NamedProperty("Display with a small icon");

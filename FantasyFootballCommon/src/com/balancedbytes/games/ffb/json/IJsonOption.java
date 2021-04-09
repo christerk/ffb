@@ -455,6 +455,7 @@ public interface IJsonOption {
 	JsonBooleanOption USED = new JsonBooleanOption("used");
 	JsonIntOption USES = new JsonIntOption("uses");
 	JsonBooleanOption USES_A_TEAM_REROLL = new JsonBooleanOption("usesATeamReroll");
+	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
 	JsonBooleanOption USING_STAB = new JsonBooleanOption("usingStab");
 	JsonIntOption VALUE = new JsonIntOption("value");
 	JsonStringOption VICTIM_ID = new JsonStringOption("victimId");

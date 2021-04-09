@@ -1,10 +1,10 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 
 /**
  * A player with this skill is armed with something very good at stabbing,
@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
  * of a Blitz Action, the player cannot continue moving after using it.
  * Casualties caused by a stabbing attack do not count for Star Player points.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class Stab extends Skill {
 
 	public Stab() {
@@ -27,6 +27,7 @@ public class Stab extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
+		registerProperty(NamedProperties.providesBlockAlternative);
 	}
 
 }

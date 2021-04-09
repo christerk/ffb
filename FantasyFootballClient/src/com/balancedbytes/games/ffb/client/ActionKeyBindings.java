@@ -158,6 +158,11 @@ public class ActionKeyBindings {
 			playerActions
 					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionStab), ActionKey.PLAYER_ACTION_STAB));
 		}
+		String actionChainsaw = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_CHAINSAW);
+		if (StringTool.isProvided(actionChainsaw)) {
+			playerActions
+				.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionChainsaw), ActionKey.PLAYER_ACTION_CHAINSAW));
+		}
 		String actionGaze = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_GAZE);
 		if (StringTool.isProvided(actionGaze)) {
 			playerActions

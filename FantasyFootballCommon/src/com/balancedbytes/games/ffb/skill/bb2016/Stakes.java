@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2016;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.modifiers.StaticArmourModifier;
  * the Armour roll when they make a Stab attack against any player playing for a
  * Khemri, Necromantic, Undead or Vampire team.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class Stakes extends Skill {
 
 	public Stakes() {
@@ -39,7 +39,7 @@ public class Stakes extends Skill {
 			}
 		});
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
-		registerProperty(NamedProperties.armourRollWithoutBlockHasIncreasedEffectOnUndead);
+		registerProperty(NamedProperties.providesBlockAlternative);
 	}
 
 }
