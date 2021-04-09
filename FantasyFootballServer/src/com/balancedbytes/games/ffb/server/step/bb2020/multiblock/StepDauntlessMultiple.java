@@ -50,6 +50,16 @@ public class StepDauntlessMultiple extends AbstractStep {
 	}
 
 	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.PLAYER_ID_TO_REMOVE) {
+			state.blockTargets.remove((String) parameter.getValue());
+			return true;
+		}
+
+		return super.setParameter(parameter);
+	}
+
+	@Override
 	public void start() {
 		super.start();
 		executeStep();
