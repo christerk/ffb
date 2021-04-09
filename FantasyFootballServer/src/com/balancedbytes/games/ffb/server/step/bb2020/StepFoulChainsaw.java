@@ -46,6 +46,7 @@ import com.eclipsesource.json.JsonValue;
 public class StepFoulChainsaw extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
+	private boolean usingChainsaw;
 
 	public StepFoulChainsaw(GameState pGameState) {
 		super(pGameState);
@@ -59,18 +60,25 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-				case GOTO_LABEL_ON_FAILURE:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
 		if (!StringTool.isProvided(fGotoLabelOnFailure)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
 		}
+	}
+
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.USING_CHAINSAW) {
+			usingChainsaw = parameter.getValue() != null && (boolean) parameter.getValue();
+			consume(parameter);
+			return true;
+		}
+
+		return super.setParameter(parameter);
 	}
 
 	@Override
@@ -91,7 +99,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)) {
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw) && usingChainsaw) {
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {
 				if ((getReRollSource() == null)
@@ -142,6 +150,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		return jsonObject;
 	}
 
@@ -150,6 +159,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
 		return this;
 	}
 

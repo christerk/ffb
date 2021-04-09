@@ -15,14 +15,16 @@ public class ClientCommandFoul extends ClientCommand implements ICommandWithActi
 
 	private String fActingPlayerId;
 	private String fDefenderId;
+	private boolean usingChainsaw;
 
 	public ClientCommandFoul() {
 		super();
 	}
 
-	public ClientCommandFoul(String pActingPlayerId, String pDefenderId) {
+	public ClientCommandFoul(String pActingPlayerId, String pDefenderId, boolean usingChainsaw) {
 		fActingPlayerId = pActingPlayerId;
 		fDefenderId = pDefenderId;
+		this.usingChainsaw = usingChainsaw;
 	}
 
 	public NetCommandId getId() {
@@ -37,12 +39,16 @@ public class ClientCommandFoul extends ClientCommand implements ICommandWithActi
 		return fDefenderId;
 	}
 
-	// JSON serialization
+	public boolean isUsingChainsaw() {
+		return usingChainsaw;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.ACTING_PLAYER_ID.addTo(jsonObject, fActingPlayerId);
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
+		IJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		return jsonObject;
 	}
 
@@ -51,6 +57,7 @@ public class ClientCommandFoul extends ClientCommand implements ICommandWithActi
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
+		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
 		return this;
 	}
 

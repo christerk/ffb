@@ -242,7 +242,7 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case FOUL:
 				if (pWithParameter) {
-					foulGenerator.pushSequence(new Foul.SequenceParams(getGameState(), fFoulDefenderId));
+					foulGenerator.pushSequence(new Foul.SequenceParams(getGameState(), fFoulDefenderId, false));
 				} else {
 					foulGenerator.pushSequence(new Foul.SequenceParams(getGameState()));
 				}

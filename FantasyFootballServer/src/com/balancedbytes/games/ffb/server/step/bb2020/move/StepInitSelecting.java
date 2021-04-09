@@ -159,6 +159,7 @@ public final class StepInitSelecting extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), foulCommand)
 						&& !game.getTurnData().isFoulUsed()) {
 						publishParameter(new StepParameter(StepParameterKey.FOUL_DEFENDER_ID, foulCommand.getDefenderId()));
+						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, foulCommand.isUsingChainsaw()));
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.FOUL, false);
 						fDispatchPlayerAction = PlayerAction.FOUL;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;

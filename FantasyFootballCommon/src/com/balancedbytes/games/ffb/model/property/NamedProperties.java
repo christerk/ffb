@@ -144,7 +144,9 @@ public class NamedProperties {
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
 	public static final ISkillProperty providesBlockAlternative = new NamedProperty("Provides Block Alternative");
+	public static final ISkillProperty providesFoulingAlternative = new NamedProperty("Provides Fouling Alternative");
 	public static final ISkillProperty providesChainsawBlockAlternative = new NamedProperty("Provides Chainsaw Block Alternative");
+	public static final ISkillProperty providesChainsawFoulingAlternative = new NamedProperty("Provides Chainsaw Fouling Alternative");
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");
 	public static final ISkillProperty smallIcon = new NamedProperty("Display with a small icon");

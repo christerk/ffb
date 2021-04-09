@@ -27,7 +27,7 @@ public class Foul extends SequenceGenerator<Foul.SequenceParams> {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_FOULING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING),
-			from(StepParameterKey.FOUL_DEFENDER_ID, params.fouldDefenderId));
+			from(StepParameterKey.FOUL_DEFENDER_ID, params.fouldDefenderId), from(StepParameterKey.USING_CHAINSAW, params.usingChainsaw));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
@@ -50,14 +50,16 @@ public class Foul extends SequenceGenerator<Foul.SequenceParams> {
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String fouldDefenderId;
+		private final boolean usingChainsaw;
 
-		public SequenceParams(GameState gameState, String fouldDefenderId) {
+		public SequenceParams(GameState gameState, String fouldDefenderId, boolean usingChainsaw) {
 			super(gameState);
 			this.fouldDefenderId = fouldDefenderId;
+			this.usingChainsaw = usingChainsaw;
 		}
 
 		public SequenceParams(GameState gameState) {
-			this(gameState, null);
+			this(gameState, null, false);
 		}
 	}
 }
