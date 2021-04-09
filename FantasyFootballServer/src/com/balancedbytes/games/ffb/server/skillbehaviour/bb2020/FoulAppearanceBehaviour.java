@@ -100,7 +100,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 		registerModifier(new AbstractStepModifierMultipleBlock<StepFoulAppearanceMultiple, StepStateMultipleRolls>() {
 
 			@Override
-			protected boolean requiresRoll(Player<?> opponentPlayer) {
+			protected boolean requiresRoll(Player<?> actingPlayer, Player<?> opponentPlayer) {
 				return UtilCards.hasSkillWithProperty(opponentPlayer, NamedProperties.forceRollBeforeBeingBlocked);
 			}
 
@@ -115,13 +115,18 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			}
 
 			@Override
-			protected int minimumRoll() {
+			protected int minimumRoll(Game game, Player<?> actingPlayer, Player<?> opponentPlayer) {
 				return DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
 			}
 
 			@Override
-			protected IReport report(String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId) {
+			protected IReport report(Game game, String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId) {
 				return new ReportFoulAppearanceRoll(playerId, mayBlock, actualRoll, minimumRoll, reRolling, null, currentTargetId);
+			}
+
+			@Override
+			protected void failedRollEffect(StepFoulAppearanceMultiple step) {
+				step.getResult().setSound(SoundId.EW);
 			}
 
 			@Override

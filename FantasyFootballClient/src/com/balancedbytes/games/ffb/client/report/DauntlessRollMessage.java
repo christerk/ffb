@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.client.TextStyle;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportDauntlessRoll;
 import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.DAUNTLESS_ROLL)
 @RulesCollection(Rules.COMMON)
@@ -20,12 +21,20 @@ public class DauntlessRollMessage extends ReportMessageBase<ReportDauntlessRoll>
   		print(getIndent() + 1, false, player);
   		status = new StringBuilder();
   		if (report.isSuccessful()) {
-  			status.append(" uses Dauntless to push ").append(player.getPlayerGender().getSelf()).append(" to Strength ")
-  				.append(report.getStrength()).append(".");
+  			status.append(" uses Dauntless to push ").append(player.getPlayerGender().getSelf()).append(" to strength ")
+  				.append(report.getStrength());
   		} else {
-  			status.append(" fails to push ").append(player.getPlayerGender().getGenitive()).append(" strength.");
+  			status.append(" fails to push ").append(player.getPlayerGender().getGenitive()).append(" strength");
   		}
-  		println(getIndent() + 1, status.toString());
+  		print(getIndent() + 1, status.toString());
+  		if (StringTool.isProvided(report.getDefenderId())) {
+  			Player<?> defender = game.getPlayerById(report.getDefenderId());
+  			if (defender != null) {
+					print(getIndent() +1, " to match ");
+					print(getIndent() + 1, false, defender);
+			  }
+		  }
+  		println(getIndent() + 1, ".");
     }
 
 }

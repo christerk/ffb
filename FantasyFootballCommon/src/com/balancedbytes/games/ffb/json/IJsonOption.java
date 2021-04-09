@@ -388,6 +388,7 @@ public interface IJsonOption {
 	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");
 	JsonBooleanOption SUCCESSFUL = new JsonBooleanOption("successful");
+	JsonBooleanOption SUCCESSFUL_DAUNTLESS = new JsonBooleanOption("successfulDauntless");
 	JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");
 	JsonBooleanOption SUFFERING_BLOODLUST = new JsonBooleanOption("sufferingBloodlust");
 	JsonIntOption SWARMING_PLAYER_ACTUAL = new JsonIntOption("swarmingPlayerActual");

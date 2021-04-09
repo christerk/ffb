@@ -90,6 +90,7 @@ public enum StepParameterKey {
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
+	SUCCESSFUL_DAUNTLESS, // Boolean
 	TARGET_COORDINATE, // FieldCoordinate
 	THROW_IN_COORDINATE, // FieldCoordinate
 	THROWN_PLAYER_COORDINATE, // FieldCoordinate

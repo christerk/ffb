@@ -37,7 +37,7 @@ public class HornsBehaviour extends SkillBehaviour<Horns> {
 				state.usingHorns = (UtilCards.hasSkill(actingPlayer, skill)
 						&& (PlayerAction.BLITZ == actingPlayer.getPlayerAction()));
 				if (state.usingHorns) {
-					actingPlayer.setStrength(actingPlayer.getStrength() + 1);
+					// not adding the strength here but in ServerUtilBlock#getAttackerStrength which is also called for dice decorations
 					actingPlayer.markSkillUsed(skill);
 					step.getResult()
 							.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.INCREASE_STRENGTH_BY_1));

@@ -96,6 +96,16 @@ public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.Ro
 		return interpretSeriousInjuryRoll(roll[0], roll[1]);
 	}
 
+	@Override
+	public int multiBlockAttackerModifier() {
+		return -2;
+	}
+
+	@Override
+	public int multiBlockDefenderModifier() {
+		return 0;
+	}
+
 	private SeriousInjury interpretSeriousInjuryRoll(int casRoll, int siRoll) {
 		if (isSI(casRoll)) {
 			return mapSIRoll(siRoll);

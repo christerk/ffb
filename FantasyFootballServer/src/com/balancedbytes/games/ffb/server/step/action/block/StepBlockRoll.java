@@ -49,6 +49,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 	private int[] fBlockRoll;
 	private int fDiceIndex;
 	private BlockResult fBlockResult;
+	private boolean successfulDauntless;
 
 	public StepBlockRoll(GameState pGameState) {
 		super(pGameState);
@@ -85,6 +86,16 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		return commandStatus;
 	}
 
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.SUCCESSFUL_DAUNTLESS) {
+			successfulDauntless = (boolean) parameter.getValue();
+			consume(parameter);
+			return true;
+		}
+		return false;
+	}
+
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -99,8 +110,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			}
 			if (doRoll) {
 				game.getFieldModel().clearDiceDecorations();
-				fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), actingPlayer.getStrength(),
-						game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK));
+				fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
+						game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK), successfulDauntless);
 				fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
 				getResult().addReport(new ReportBlock(game.getDefenderId()));
 				getResult().setSound(SoundId.BLOCK);
@@ -143,6 +154,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		IServerJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
 		IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
 		IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
+		IServerJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successfulDauntless);
 		return jsonObject;
 	}
 
@@ -154,6 +166,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
 		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);
 		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
+		successfulDauntless = IServerJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);
 		return this;
 	}
 

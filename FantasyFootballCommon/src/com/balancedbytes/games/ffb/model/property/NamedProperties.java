@@ -17,6 +17,7 @@ public class NamedProperties {
 	public static final ISkillProperty armourRollWithoutBlockHasIncreasedEffectOnUndead = new NamedProperty("Armour Roll Without Block Has Increased Effect On Undead");
 	public static final ISkillProperty assistsBlocksInTacklezones = new NamedProperty("Assists Blocks in Tacklezones");
 	public static final ISkillProperty assistsFoulsInTacklezones = new NamedProperty("Assists Fouls in Tacklezones");
+	public static final ISkillProperty blocksDuringMove = new NamedProperty("Blocks During Move");
 	public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
 	public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty(

@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollForTargetsParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -45,7 +44,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 			state.firstRun = false;
 			state.initialCount = state.blockTargets.size();
 			state.blockTargets = state.blockTargets.stream().map(game::getPlayerById)
-				.filter(this::requiresRoll)
+				.filter(opponentPlayer -> requiresRoll(actingPlayer.getPlayer(), opponentPlayer))
 				.map(Player::getId).collect(Collectors.toList());
 
 			for (String targetId: new ArrayList<>(state.blockTargets)) {
@@ -70,18 +69,18 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	protected abstract ReRolledAction reRolledAction();
 
-	protected abstract boolean requiresRoll(Player<?> opponentPlayer);
+	protected abstract boolean requiresRoll(Player<?> actingPlayer, Player<?> opponentPlayer);
 
 	protected abstract boolean canBeSkipped(Player<?> actingPlayer);
 
 	protected abstract int skillRoll(T step);
 
-	protected abstract int minimumRoll();
+	protected abstract int minimumRoll(Game game, Player<?> actingPlayer, Player<?> opponentPlayer);
 
-	protected abstract IReport report(String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId);
+	protected abstract IReport report(Game game, String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId);
 
 	private void nextStep(T step, V state) {
-		if (state.blockTargets.size() == state.initialCount) {
+		if (StringTool.isProvided(state.goToLabelOnFailure) && state.blockTargets.size() == state.initialCount) {
 			step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 		} else {
 			state.blockTargets.forEach(target -> step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, target)));
@@ -104,17 +103,21 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 	}
 
 	private void roll(T step, ActingPlayer actingPlayer, List<String> targets, String currentTargetId, boolean reRolling, Map<String, Integer> minimumRolls) {
+		Game game = step.getGameState().getGame();
+		Player<?> defender = game.getPlayerById(currentTargetId);
 		int actualRoll = skillRoll(step);
-		int minimumRoll = minimumRoll();
+		int minimumRoll = minimumRoll(game, actingPlayer.getPlayer(), defender);
 		boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(actualRoll, minimumRoll);
 		minimumRolls.put(currentTargetId, minimumRoll);
-		step.getResult().addReport(report(actingPlayer.getPlayerId(), mayBlock, actualRoll, minimumRoll, reRolling, currentTargetId));
+		step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), mayBlock, actualRoll, minimumRoll, reRolling, currentTargetId));
 		if (mayBlock) {
 			targets.remove(currentTargetId);
 		} else if (!reRolling) {
-			step.getResult().setSound(SoundId.EW);
+			failedRollEffect(step);
 		}
 	}
+
+	protected abstract void failedRollEffect(T step);
 
 	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, V state) {
 		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets, reRolledAction(),

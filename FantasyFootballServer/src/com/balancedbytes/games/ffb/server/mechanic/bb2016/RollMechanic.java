@@ -146,6 +146,16 @@ public class RollMechanic extends com.balancedbytes.games.ffb.server.mechanic.Ro
 	}
 
 	@Override
+	public int multiBlockAttackerModifier() {
+		return 0;
+	}
+
+	@Override
+	public int multiBlockDefenderModifier() {
+		return 2;
+	}
+
+	@Override
 	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player) {
 		int[] roll = injuryContext.getCasualtyRoll();
 		if (ArrayTool.isProvided(roll)) {

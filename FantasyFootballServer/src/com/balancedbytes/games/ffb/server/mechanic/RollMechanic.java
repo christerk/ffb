@@ -24,4 +24,8 @@ public abstract class RollMechanic implements Mechanic {
 	public abstract SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext, boolean useDecay);
 
 	public abstract SeriousInjury interpretSeriousInjuryRoll(int[] roll);
+
+	public abstract int multiBlockAttackerModifier();
+
+	public abstract int multiBlockDefenderModifier();
 }

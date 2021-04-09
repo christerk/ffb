@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.DirectionFactory;
@@ -162,7 +161,7 @@ public class DiceInterpreter {
 	}
 
 	public int minimumRollDauntless(int pAttackerStrength, int pDefenderStrength) {
-		return (pDefenderStrength - pAttackerStrength + 1);
+		return Math.min(6, (pDefenderStrength - pAttackerStrength + 1));
 	}
 
 	public int minimumRollChainsaw() {
