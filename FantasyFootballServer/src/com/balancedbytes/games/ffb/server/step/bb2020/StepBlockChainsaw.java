@@ -49,6 +49,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnSuccess;
 	private String fGotoLabelOnFailure;
+	private boolean usingChainsaw;
 
 	public StepBlockChainsaw(GameState pGameState) {
 		super(pGameState);
@@ -83,6 +84,17 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 	}
 
 	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.USING_CHAINSAW) {
+			usingChainsaw = (boolean) parameter.getValue();
+			consume(parameter);
+			return true;
+		}
+
+		return super.setParameter(parameter);
+	}
+
+	@Override
 	public void start() {
 		super.start();
 		executeStep();
@@ -100,7 +112,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)) {
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw) && usingChainsaw) {
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {
 				if ((getReRollSource() == null)
@@ -159,6 +171,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		return jsonObject;
 	}
 
@@ -168,6 +181,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		return this;
 	}
 

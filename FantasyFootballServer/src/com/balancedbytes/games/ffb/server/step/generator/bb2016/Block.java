@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.generator.common;
+package com.balancedbytes.games.ffb.server.step.generator.bb2016;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -8,19 +8,14 @@ import com.balancedbytes.games.ffb.server.step.IStepLabel;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.generator.Sequence;
-import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 
 import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class Block extends SequenceGenerator<Block.SequenceParams> {
-
-	public Block() {
-		super(Type.Block);
-	}
+@RulesCollection(RulesCollection.Rules.BB2016)
+public class Block extends com.balancedbytes.games.ffb.server.step.generator.Block {
 
 	@Override
-	public void pushSequence(SequenceParams params) {
+	public void pushSequence(com.balancedbytes.games.ffb.server.step.generator.Block.SequenceParams params) {
 		GameState gameState = params.getGameState();
 		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(),
 			"push blockSequence onto stack");
@@ -28,8 +23,8 @@ public class Block extends SequenceGenerator<Block.SequenceParams> {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_BLOCKING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING),
-			from(StepParameterKey.BLOCK_DEFENDER_ID, params.blockDefenderId), from(StepParameterKey.USING_STAB, params.usingStab),
-			from(StepParameterKey.MULTI_BLOCK_DEFENDER_ID, params.multiBlockDefenderId));
+			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()), from(StepParameterKey.USING_STAB, params.isUsingStab()),
+			from(StepParameterKey.MULTI_BLOCK_DEFENDER_ID, params.getMultiBlockDefenderId()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
@@ -91,22 +86,5 @@ public class Block extends SequenceGenerator<Block.SequenceParams> {
 
 		gameState.getStepStack().push(sequence.getSequence());
 
-	}
-
-	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final String blockDefenderId;
-		private final String multiBlockDefenderId;
-		private final boolean usingStab;
-
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, String multiBlockDefenderId) {
-			super(gameState);
-			this.blockDefenderId = blockDefenderId;
-			this.multiBlockDefenderId = multiBlockDefenderId;
-			this.usingStab = usingStab;
-		}
-
-		public SequenceParams(GameState gameState) {
-			this(gameState, null, false, null);
-		}
 	}
 }

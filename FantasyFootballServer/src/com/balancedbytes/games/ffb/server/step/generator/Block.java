@@ -2,10 +2,10 @@ package com.balancedbytes.games.ffb.server.step.generator;
 
 import com.balancedbytes.games.ffb.server.GameState;
 
-public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequenceParams> {
+public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 
-	public BlitzBlock() {
-		super(Type.BlitzBlock);
+	public Block() {
+		super(Type.Block);
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
@@ -21,7 +21,7 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 			this(gameState, blockDefenderId, usingStab, false, multiBlockDefenderId);
 		}
 
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, String multiBlockDefenderId) {
+		private SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, String multiBlockDefenderId) {
 			super(gameState);
 			this.blockDefenderId = blockDefenderId;
 			this.multiBlockDefenderId = multiBlockDefenderId;
@@ -29,12 +29,12 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 			this.usingChainsaw = usingChainsaw;
 		}
 
-		public SequenceParams(GameState gameState, boolean usingChainsaw) {
-			this(gameState, null, false, usingChainsaw, null);
-		}
-
 		public SequenceParams(GameState gameState) {
 			this(gameState, null, false, false, null);
+		}
+
+		public SequenceParams(GameState gameState, boolean usingChainsaw) {
+			this(gameState, null, false, usingChainsaw, null);
 		}
 
 		public String getBlockDefenderId() {

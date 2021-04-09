@@ -12,9 +12,6 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class BlitzMove extends com.balancedbytes.games.ffb.server.step.generator.BlitzMove {
-	public BlitzMove() {
-		super(Type.BlitzMove);
-	}
 
 	@Override
 	public void pushSequence(SequenceParams params) {

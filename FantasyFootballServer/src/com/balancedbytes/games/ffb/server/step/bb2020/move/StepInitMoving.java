@@ -68,8 +68,7 @@ public class StepInitMoving extends AbstractStep {
 	private String fGotoLabelOnEnd;
 	private FieldCoordinate[] fMoveStack;
 	private String fGazeVictimId;
-	private boolean fEndTurn;
-	private boolean fEndPlayerAction;
+	private boolean fEndTurn, fEndPlayerAction;
 
 	private String fKickedPlayerId;
 	private int fNumDice;
@@ -167,6 +166,7 @@ public class StepInitMoving extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)
 							&& (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) && !actingPlayer.hasBlocked()) {
 						commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
+						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 					}
 					break;
 				case CLIENT_FOUL:

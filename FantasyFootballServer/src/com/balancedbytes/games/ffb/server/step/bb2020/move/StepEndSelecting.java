@@ -26,7 +26,7 @@ import com.balancedbytes.games.ffb.server.step.generator.Pass;
 import com.balancedbytes.games.ffb.server.step.generator.SelectBlitzTarget;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.bb2020.MultiBlock;
-import com.balancedbytes.games.ffb.server.step.generator.common.Block;
+import com.balancedbytes.games.ffb.server.step.generator.Block;
 import com.balancedbytes.games.ffb.server.step.generator.common.Foul;
 import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
 import com.balancedbytes.games.ffb.server.step.generator.common.Move;
@@ -73,6 +73,7 @@ public final class StepEndSelecting extends AbstractStep {
 	// blockSequence
 	private String fBlockDefenderId;
 	private Boolean fUsingStab;
+	private boolean usingChainsaw;
 	// foulSequence
 	private String fFoulDefenderId;
 	// passSequence + throwTeamMateSequence
@@ -155,6 +156,10 @@ public final class StepEndSelecting extends AbstractStep {
 					return true;
 				case USING_STAB:
 					fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case USING_CHAINSAW:
+					usingChainsaw = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 					consume(pParameter);
 					return true;
 				case BLOCK_TARGETS:
@@ -252,14 +257,14 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case BLITZ:
 				if (pWithParameter) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, null));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw));
 				} else {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState()));
 				}
 				break;
 			case BLOCK:
 				if (pWithParameter) {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, null));
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw));
 				} else {
 					blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
 				}
@@ -330,6 +335,7 @@ public final class StepEndSelecting extends AbstractStep {
 		IServerJsonOption.GAZE_VICTIM_ID.addTo(jsonObject, fGazeVictimId);
 		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
 		IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
+		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.FOUL_DEFENDER_ID.addTo(jsonObject, fFoulDefenderId);
 		IServerJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
 		IServerJsonOption.HAIL_MARY_PASS.addTo(jsonObject, fHailMaryPass);
@@ -352,6 +358,7 @@ public final class StepEndSelecting extends AbstractStep {
 		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
 		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(game, jsonObject);
 		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
 		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
 		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(game, jsonObject);
 		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);

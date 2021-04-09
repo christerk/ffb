@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.server.step.generator.BlitzBlock;
 import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.common.Block;
+import com.balancedbytes.games.ffb.server.step.generator.Block;
 import com.balancedbytes.games.ffb.server.step.generator.common.Foul;
 import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
 import com.balancedbytes.games.ffb.server.step.generator.common.Move;

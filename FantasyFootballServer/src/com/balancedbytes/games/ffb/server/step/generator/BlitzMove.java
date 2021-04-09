@@ -5,8 +5,8 @@ import com.balancedbytes.games.ffb.server.GameState;
 
 public abstract class BlitzMove extends SequenceGenerator<BlitzMove.SequenceParams> {
 
-	protected BlitzMove(Type type) {
-		super(type);
+	public BlitzMove() {
+		super(Type.BlitzMove);
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {

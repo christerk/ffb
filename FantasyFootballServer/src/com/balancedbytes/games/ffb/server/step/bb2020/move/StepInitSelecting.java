@@ -169,6 +169,7 @@ public final class StepInitSelecting extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
 						publishParameter(new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, blockCommand.getDefenderId()));
 						publishParameter(new StepParameter(StepParameterKey.USING_STAB, blockCommand.isUsingStab()));
+						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 						fDispatchPlayerAction = PlayerAction.BLOCK;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

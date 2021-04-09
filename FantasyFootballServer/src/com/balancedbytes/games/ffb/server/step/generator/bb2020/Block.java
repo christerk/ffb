@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.generator.bb2016;
+package com.balancedbytes.games.ffb.server.step.generator.bb2020;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -11,20 +11,20 @@ import com.balancedbytes.games.ffb.server.step.generator.Sequence;
 
 import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 
-@RulesCollection(RulesCollection.Rules.BB2016)
-public class BlitzBlock extends com.balancedbytes.games.ffb.server.step.generator.BlitzBlock {
+@RulesCollection(RulesCollection.Rules.BB2020)
+public class Block extends com.balancedbytes.games.ffb.server.step.generator.Block {
 
 	@Override
-	public void pushSequence(SequenceParams params) {
+	public void pushSequence(com.balancedbytes.games.ffb.server.step.generator.Block.SequenceParams params) {
 		GameState gameState = params.getGameState();
 		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(),
-			"push blitzBlockSequence onto stack");
+			"push blockSequence onto stack");
 
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_BLOCKING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()), from(StepParameterKey.USING_STAB, params.isUsingStab()),
-			from(StepParameterKey.MULTI_BLOCK_DEFENDER_ID, params.getMultiBlockDefenderId()));
+			from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
@@ -87,4 +87,5 @@ public class BlitzBlock extends com.balancedbytes.games.ffb.server.step.generato
 		gameState.getStepStack().push(sequence.getSequence());
 
 	}
+
 }

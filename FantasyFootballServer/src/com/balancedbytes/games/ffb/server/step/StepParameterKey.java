@@ -101,6 +101,7 @@ public enum StepParameterKey {
 	TOUCHBACK, // Boolean
 	UPDATE_PERSISTENCE, // Boolean
 	USING_BREAK_TACKLE, // Boolean
+	USING_CHAINSAW, // Boolean
 	USING_DIVING_TACKLE, // Boolean
 	USING_PILING_ON, // Boolean,
 	USING_STAB // Boolean

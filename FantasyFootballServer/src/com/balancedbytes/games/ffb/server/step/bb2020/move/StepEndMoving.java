@@ -20,10 +20,10 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.generator.BlitzBlock;
+import com.balancedbytes.games.ffb.server.step.generator.Block;
 import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.common.Block;
 import com.balancedbytes.games.ffb.server.step.generator.common.Foul;
 import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
 import com.balancedbytes.games.ffb.server.step.generator.common.Move;
@@ -55,8 +55,7 @@ import java.util.Arrays;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepEndMoving extends AbstractStep {
 
-	private boolean fEndTurn;
-	private boolean fEndPlayerAction;
+	private boolean fEndTurn, fEndPlayerAction, usingChainsaw;
 	private Boolean fFeedingAllowed;
 	private FieldCoordinate[] fMoveStack;
 	private FieldCoordinate moveStart;
@@ -109,6 +108,10 @@ public class StepEndMoving extends AbstractStep {
 					return true;
 				case MOVE_STACK:
 					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case USING_CHAINSAW:
+					usingChainsaw = pParameter.getValue() != null && (boolean) pParameter.getValue();
 					consume(pParameter);
 					return true;
 				default:
@@ -220,12 +223,12 @@ public class StepEndMoving extends AbstractStep {
 			switch (pPlayerAction) {
 				case BLOCK:
 					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-							.pushSequence(new Block.SequenceParams(getGameState()));
+						.pushSequence(new Block.SequenceParams(getGameState(), usingChainsaw));
 					return true;
 				case BLITZ:
 				case BLITZ_MOVE:
 					((BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name()))
-							.pushSequence(new BlitzBlock.SequenceParams(getGameState()));
+						.pushSequence(new BlitzBlock.SequenceParams(getGameState(), usingChainsaw));
 					return true;
 				case FOUL:
 				case FOUL_MOVE:
@@ -272,6 +275,7 @@ public class StepEndMoving extends AbstractStep {
 		IServerJsonOption.MOVE_STACK.addTo(jsonObject, fMoveStack);
 		IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, fDispatchPlayerAction);
 		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
+		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		return jsonObject;
 	}
 
@@ -285,6 +289,7 @@ public class StepEndMoving extends AbstractStep {
 		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
 		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
 		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
 		return this;
 	}
 

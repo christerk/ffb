@@ -14,10 +14,6 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class BlitzBlock extends com.balancedbytes.games.ffb.server.step.generator.BlitzBlock {
 
-	public BlitzBlock() {
-		super(Type.BlitzBlock);
-	}
-
 	@Override
 	public void pushSequence(SequenceParams params) {
 		GameState gameState = params.getGameState();
@@ -28,7 +24,7 @@ public class BlitzBlock extends com.balancedbytes.games.ffb.server.step.generato
 
 		sequence.add(StepId.INIT_BLOCKING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()), from(StepParameterKey.USING_STAB, params.isUsingStab()),
-			from(StepParameterKey.MULTI_BLOCK_DEFENDER_ID, params.getMultiBlockDefenderId()));
+			from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()));
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.HORNS);
 		sequence.add(StepId.BLOCK_STATISTICS);
