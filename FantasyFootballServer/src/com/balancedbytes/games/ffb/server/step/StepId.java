@@ -32,6 +32,7 @@ public enum StepId implements INamedObject {
 	CLOUD_BURSTER("cloudBurster"), // action.pass
 	DAUNTLESS("dauntless"), // action.block
 	DAUNTLESS_MULTIPLE("dauntlessMultiple"), // action.multiBlock 2020
+	DISPATCH_DUMP_OFF("dispatchDumpOff"),
 	DISPATCH_PASSING("dispatchPassing"), // action.pass
 	DIVING_TACKLE("divingTackle"), // action.move
 	DROP_DIVING_TACKLER("dropDivingTackler"), // action.move
@@ -96,6 +97,7 @@ public enum StepId implements INamedObject {
 	MOVE("move"), // action.move
 	MOVE_BALL_AND_CHAIN("moveBallAndChain"), // action.move
 	MOVE_DODGE("moveDodge"), // action.move
+	MULTI_BLOCK_FORK("multiBlockFork"), // action.multiBlock 2020
 	MVP("mvp"), // game.end
 	NEXT_STEP("nextStep"), //
 	PASS("pass"), // action.pass

@@ -367,9 +367,9 @@ public final class StepEndSelecting extends AbstractStep {
 		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
 		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
 		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
+		blockTargets.clear();
 		jsonArray.values().stream()
 			.map(value -> new BlockTarget().initFrom(game, value))
-			.limit(2)
 			.forEach(value -> blockTargets.add(value));
 
 		return this;
