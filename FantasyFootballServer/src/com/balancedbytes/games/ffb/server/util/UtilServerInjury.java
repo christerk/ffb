@@ -132,7 +132,7 @@ public class UtilServerInjury {
 			injuryContext.setSendToBoxReason(pInjuryType.sendToBoxReason());
 		}
 
-		if ((injuryContext != null) && (injuryContext.getPlayerState() != null)) {
+		if (injuryContext.getPlayerState() != null) {
 			switch (injuryContext.getPlayerState().getBase()) {
 			case PlayerState.RIP:
 				injuryContext.setSound(SoundId.RIP);

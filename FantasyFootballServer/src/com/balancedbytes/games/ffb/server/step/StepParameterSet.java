@@ -32,7 +32,7 @@ public class StepParameterSet {
 	}
 
 	public StepParameter[] values() {
-		return fParameterById.values().toArray(new StepParameter[fParameterById.size()]);
+		return fParameterById.values().toArray(new StepParameter[0]);
 	}
 
 }

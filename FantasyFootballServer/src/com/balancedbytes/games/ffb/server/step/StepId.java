@@ -11,10 +11,12 @@ public enum StepId implements INamedObject {
 	ALWAYS_HUNGRY("alwaysHungry"), // action.ttm
 	ANIMOSITY("animosity"), // action.pass
 	APOTHECARY("apothecary"), // action.common
+	APOTHECARY_MULTIPLE("apothecaryMultiple"), // action.multiBlock 2020
 	APPLY_KICKOFF_RESULT("applyKickoffResult"), // phase.kickoff
 	BLITZ_TURN("blitzTurn"), // phase.kickoff
 	BLOCK_BALL_AND_CHAIN("blockBallAndChain"), // action.block
 	BLOCK_CHAINSAW("blockChainsaw"), // action.block
+	BLOCK_CHAINSAW_MULTIPLE("blockChainsawMultiple"), // action.multiBlock 2020
 	BLOCK_CHOICE("blockChoice"), // action.block
 	BLOCK_DODGE("blockDodge"), // action.block
 	BLOCK_ROLL("blockRoll"), // action.block

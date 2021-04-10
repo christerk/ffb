@@ -39,8 +39,9 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.DISPATCH_DUMP_OFF, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		// might insert dump off here with game#defenderId set
 		sequence.add(StepId.BLOCK_STATISTICS, from(StepParameterKey.INCREMENT, params.blockTargets.size()));
-		sequence.add(StepId.DAUNTLESS_MULTIPLE, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
+		sequence.add(StepId.BLOCK_CHAINSAW_MULTIPLE, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		sequence.add(StepId.MULTI_BLOCK_FORK, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
+		//sequence.add(StepId.DAUNTLESS_MULTIPLE, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		/*sequence.add(StepId.DUMP_OFF);
 		sequence.add(StepId.STAB, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.APOTHECARY_DEFENDER));
 		sequence.add(StepId.BLOCK_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.APOTHECARY_DEFENDER),
