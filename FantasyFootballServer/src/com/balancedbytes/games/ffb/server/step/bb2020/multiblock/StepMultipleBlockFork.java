@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.BlockKind;
 import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -21,10 +22,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepMultipleBlockFork extends AbstractStep {
-	private List<BlockTarget> targets = new ArrayList<>();
+	private final List<BlockTarget> targets = new ArrayList<>();
 	private List<String> successfulDauntless = new ArrayList<>();
 
 	public StepMultipleBlockFork(GameState pGameState) {
@@ -77,7 +80,26 @@ public class StepMultipleBlockFork extends AbstractStep {
 
 	private void executeStep() {
 		Sequence sequence = new Sequence(getGameState());
+		Map<BlockKind, List<BlockTarget>> groupedTargets = targets.stream().collect(Collectors.groupingBy(BlockTarget::getKind));
 
+		if (groupedTargets.containsKey(BlockKind.STAB)) {
+			groupedTargets.get(BlockKind.STAB).forEach(target -> {
+					sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target));
+					sequence.add(StepId.STAB);
+				}
+			);
+		}
+
+		List<BlockTarget> chainsawGroup = groupedTargets.get(BlockKind.CHAINSAW);
+		if (chainsawGroup != null && !chainsawGroup.isEmpty()) {
+			sequence.add(StepId.BLOCK_CHAINSAW_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, chainsawGroup));
+		}
+
+		List<BlockTarget> blockGroup = groupedTargets.get(BlockKind.BLOCK);
+
+		if (blockGroup != null && !blockGroup.isEmpty()) {
+			sequence.add(StepId.DAUNTLESS_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
+		}
 
 		getGameState().getStepStack().push(sequence.getSequence());
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -99,7 +121,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
 		jsonArray.values().stream()
 			.map(value -> new BlockTarget().initFrom(game, value))
-			.forEach(value -> targets.add(value));
+			.forEach(targets::add);
 		successfulDauntless = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		return this;
 	}
