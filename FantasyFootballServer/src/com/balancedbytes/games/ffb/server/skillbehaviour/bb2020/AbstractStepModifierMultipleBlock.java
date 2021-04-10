@@ -12,14 +12,11 @@ import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -48,7 +45,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 				.map(Player::getId).collect(Collectors.toList());
 
 			for (String targetId: new ArrayList<>(state.blockTargets)) {
-				roll(step, actingPlayer, state.blockTargets, targetId, false, state.minimumRolls);
+				roll(step, actingPlayer, targetId, false, state.minimumRolls, state);
 			}
 			state.reRollAvailableAgainst.addAll(state.blockTargets);
 			decideNextStep(game, step, state);
@@ -58,7 +55,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 				nextStep(step, state);
 			} else {
 				if (UtilServerReRoll.useReRoll(step, state.reRollSource, actingPlayer.getPlayer())) {
-					roll(step, actingPlayer, state.blockTargets, state.reRollTarget, true, state.minimumRolls);
+					roll(step, actingPlayer, state.reRollTarget,true, state.minimumRolls, state);
 				}
 				state.reRollAvailableAgainst.remove(state.reRollTarget);
 				decideNextStep(game, step, state);
@@ -79,11 +76,13 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	protected abstract IReport report(Game game, String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId);
 
+	protected abstract void unhandledTargetsCallback(T step, V state);
+
 	private void nextStep(T step, V state) {
 		if (StringTool.isProvided(state.goToLabelOnFailure) && state.blockTargets.size() == state.initialCount) {
 			step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 		} else {
-			state.blockTargets.forEach(target -> step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, target)));
+			unhandledTargetsCallback(step, state);
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
@@ -102,7 +101,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		}
 	}
 
-	private void roll(T step, ActingPlayer actingPlayer, List<String> targets, String currentTargetId, boolean reRolling, Map<String, Integer> minimumRolls) {
+	private void roll(T step, ActingPlayer actingPlayer, String currentTargetId, boolean reRolling, Map<String, Integer> minimumRolls, V state) {
 		Game game = step.getGameState().getGame();
 		Player<?> defender = game.getPlayerById(currentTargetId);
 		int actualRoll = skillRoll(step);
@@ -111,11 +110,14 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		minimumRolls.put(currentTargetId, minimumRoll);
 		step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), mayBlock, actualRoll, minimumRoll, reRolling, currentTargetId));
 		if (mayBlock) {
-			targets.remove(currentTargetId);
+			state.blockTargets.remove(currentTargetId);
+			successFulRollCallback(step, currentTargetId);
 		} else if (!reRolling) {
 			failedRollEffect(step);
 		}
 	}
+
+	protected abstract void successFulRollCallback(T step, String successfulId);
 
 	protected abstract void failedRollEffect(T step);
 

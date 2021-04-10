@@ -84,6 +84,7 @@ public enum StepParameterKey {
 	PASS_FUMBLE, // Boolean
 	PLAYER_ID, // String
 	PLAYER_ID_TO_REMOVE, // String
+	PLAYER_ID_DAUNTLESS_SUCCESS, // String
 	ATTACKER_POISONED, // Boolean
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean

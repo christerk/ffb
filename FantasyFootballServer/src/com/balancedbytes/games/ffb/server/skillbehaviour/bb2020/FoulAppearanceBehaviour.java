@@ -18,6 +18,8 @@ import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.block.StepFoulAppearance;
 import com.balancedbytes.games.ffb.server.step.action.block.StepFoulAppearance.StepState;
 import com.balancedbytes.games.ffb.server.step.bb2020.multiblock.StepFoulAppearanceMultiple;
@@ -122,6 +124,16 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			@Override
 			protected IReport report(Game game, String playerId, boolean mayBlock, int actualRoll, int minimumRoll, boolean reRolling, String currentTargetId) {
 				return new ReportFoulAppearanceRoll(playerId, mayBlock, actualRoll, minimumRoll, reRolling, null, currentTargetId);
+			}
+
+			@Override
+			protected void unhandledTargetsCallback(StepFoulAppearanceMultiple step, StepStateMultipleRolls state) {
+				state.blockTargets.forEach(target -> step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, target)));
+			}
+
+			@Override
+			protected void successFulRollCallback(StepFoulAppearanceMultiple step, String successfulId) {
+
 			}
 
 			@Override
