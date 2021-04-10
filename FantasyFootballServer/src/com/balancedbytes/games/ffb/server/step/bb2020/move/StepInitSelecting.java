@@ -357,7 +357,7 @@ public final class StepInitSelecting extends AbstractStep {
 				playerState = playerState.changeSelectedStabTarget(true);
 				break;
 			case CHAINSAW:
-				playerState = playerState.changeSelectedBlockTarget(true);
+				playerState = playerState.changeSelectedChainsawTarget(true);
 				break;
 			default:
 				playerState = playerState.changeSelectedBlockTarget(true);

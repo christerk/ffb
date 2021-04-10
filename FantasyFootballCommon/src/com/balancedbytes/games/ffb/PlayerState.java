@@ -32,6 +32,7 @@ public class PlayerState {
 	private static final int _BIT_USED_PRO = 0x02000;
 	private static final int _BIT_SELECTED_BLITZ_TARGET = 0x04000;
 	private static final int _BIT_SELECTED_BLOCK_TARGET = 0x08000;
+	private static final int _BIT_SELECTED_CHAINSAW_TARGET = 0x10000;
 
 	private static final int[] _BASE_MASK = new int[] { 0x00000, // UNKNOWN
 			0xfff00, // STANDING
@@ -141,6 +142,14 @@ public class PlayerState {
 
 	public PlayerState changeSelectedBlockTarget(boolean isSelectedBlockTarget) {
 		return changeBit(_BIT_SELECTED_BLOCK_TARGET, isSelectedBlockTarget);
+	}
+
+	public boolean isSelectedChainsawTarget() {
+		return hasBit(_BIT_SELECTED_CHAINSAW_TARGET);
+	}
+
+	public PlayerState changeSelectedChainsawTarget(boolean isSelectedBlockTarget) {
+		return changeBit(_BIT_SELECTED_CHAINSAW_TARGET, isSelectedBlockTarget);
 	}
 
 	public boolean hasUsedPro() {

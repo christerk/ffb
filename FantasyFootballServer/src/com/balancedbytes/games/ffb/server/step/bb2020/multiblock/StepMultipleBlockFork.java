@@ -80,6 +80,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 
 
 		getGameState().getStepStack().push(sequence.getSequence());
+		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	@Override

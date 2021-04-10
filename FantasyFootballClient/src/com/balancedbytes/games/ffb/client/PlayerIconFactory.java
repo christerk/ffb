@@ -227,6 +227,9 @@ public class PlayerIconFactory {
 		if (playerState.isSelectedStabTarget()) {
 			decorationProperty2 = IIconProperty.DECORATION_STAB_TARGET;
 		}
+		if (playerState.isSelectedChainsawTarget()) {
+			decorationProperty2 = IIconProperty.DECORATION_CHAINSAW_TARGET;
+		}
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((actingPlayer.getPlayer() == pPlayer) && actingPlayer.isSufferingBloodLust()) {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
