@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.client.util.UtilClientStateBlocking;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.BlockKind;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.BlockTarget;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class ClientStateSynchronousMultiBlock extends ClientState {
 
-	private final Map<String, Boolean> selectedPlayers = new HashMap<>();
+	private final Map<String, BlockKind> selectedPlayers = new HashMap<>();
 
 	protected ClientStateSynchronousMultiBlock(FantasyFootballClient pClient) {
 		super(pClient);
@@ -74,23 +75,15 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative)) {
 				UtilClientStateBlocking.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), defender);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
-				selectPlayerForBlock(defender);
+				selectPlayer(defender, BlockKind.BLOCK);
 			}
 		}
 	}
 
-	private void selectPlayerForBlock(Player<?> player) {
+	private void selectPlayer(Player<?> player, BlockKind kind) {
 		if (selectedPlayers.size() < 2) {
-			selectedPlayers.put(player.getId(), false);
-			getClient().getCommunication().sendSetBlockTarget(player.getId(), false);
-			sendIfSelectionComplete();
-		}
-	}
-
-	private void selectPlayerForStab(Player<?> player) {
-		if (selectedPlayers.size() < 2) {
-			selectedPlayers.put(player.getId(), true);
-			getClient().getCommunication().sendSetBlockTarget(player.getId(), true);
+			selectedPlayers.put(player.getId(), kind);
+			getClient().getCommunication().sendSetBlockTarget(player.getId(), kind);
 			sendIfSelectionComplete();
 		}
 	}
@@ -183,10 +176,13 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					getClient().getCommunication().sendActingPlayer(null, null, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_BLOCK:
-					selectPlayerForBlock(player);
+					selectPlayer(player, BlockKind.BLOCK);
 					break;
 				case IPlayerPopupMenuKeys.KEY_STAB:
-					selectPlayerForStab(player);
+					selectPlayer(player, BlockKind.STAB);
+					break;
+				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
+					selectPlayer(player, BlockKind.CHAINSAW);
 					break;
 				default:
 					break;
@@ -214,7 +210,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
-		createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
 

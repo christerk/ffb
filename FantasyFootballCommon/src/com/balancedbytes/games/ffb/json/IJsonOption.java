@@ -42,6 +42,7 @@ public interface IJsonOption {
 	JsonObjectOption BLITZ_STATE = new JsonObjectOption("blitzState");
 	JsonStringOption BLITZ_STATUS = new JsonStringOption("blitzStatus");
 	JsonBooleanOption BLITZ_USED = new JsonBooleanOption("blitzUsed");
+	JsonStringOption BLOCK_KIND = new JsonStringOption("blockKind");
 	JsonEnumWithNameOption BLOCK_RESULT = new JsonEnumWithNameOption("blockResult", Factory.BLOCK_RESULT);
 	JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
 	JsonIntOption BLOCKS = new JsonIntOption("blocks");

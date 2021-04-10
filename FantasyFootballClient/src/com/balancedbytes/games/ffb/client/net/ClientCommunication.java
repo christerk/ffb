@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.handler.ClientCommandHandlerMode;
 import com.balancedbytes.games.ffb.inducement.CardType;
 import com.balancedbytes.games.ffb.inducement.InducementType;
+import com.balancedbytes.games.ffb.model.BlockKind;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.BlockTarget;
@@ -429,8 +430,8 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandSelectCardToBuy(selection));
 	}
 
-	public void sendSetBlockTarget(String playerId, boolean useStab) {
-		send(new ClientCommandSetBlockTargetSelection(playerId, useStab));
+	public void sendSetBlockTarget(String playerId, BlockKind kind) {
+		send(new ClientCommandSetBlockTargetSelection(playerId, kind));
 	}
 
 	public void sendUnsetBlockTarget(String playerId) {

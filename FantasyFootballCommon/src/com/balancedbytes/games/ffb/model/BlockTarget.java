@@ -9,28 +9,28 @@ import com.eclipsesource.json.JsonValue;
 
 public class BlockTarget implements IJsonSerializable {
 	private String playerId;
-	private boolean useStab;
+	private BlockKind kind;
 
 	public BlockTarget() {
 	}
 
-	public BlockTarget(String playerId, boolean useStab) {
+	public BlockTarget(String playerId, BlockKind kind) {
 		this.playerId = playerId;
-		this.useStab = useStab;
+		this.kind = kind;
 	}
 
 	public String getPlayerId() {
 		return playerId;
 	}
 
-	public boolean isUseStab() {
-		return useStab;
+	public BlockKind getKind() {
+		return kind;
 	}
 
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
-		IJsonOption.USING_STAB.addTo(jsonObject, useStab);
+		IJsonOption.BLOCK_KIND.addTo(jsonObject, kind.name());
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		return jsonObject;
 	}
@@ -39,7 +39,8 @@ public class BlockTarget implements IJsonSerializable {
 	public BlockTarget initFrom(IFactorySource game, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		useStab = IJsonOption.USING_STAB.getFrom(game, jsonObject);
+		kind = BlockKind.valueOf(IJsonOption.BLOCK_KIND.getFrom(game, jsonObject));
 		return this;
 	}
+
 }

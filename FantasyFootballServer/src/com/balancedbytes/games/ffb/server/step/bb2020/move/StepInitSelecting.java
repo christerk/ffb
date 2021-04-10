@@ -351,11 +351,17 @@ public final class StepInitSelecting extends AbstractStep {
 	private void handleSetBlockTarget(Game game, ClientCommandSetBlockTargetSelection command) {
 		Player<?> player = game.getPlayerById(command.getPlayerId());
 		FieldModel fieldModel = game.getFieldModel();
-		PlayerState playerState;
-		if (command.isUseStab()) {
-			playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(true);
-		} else {
-			playerState = fieldModel.getPlayerState(player).changeSelectedBlockTarget(true);
+		PlayerState playerState = fieldModel.getPlayerState(player);
+		switch (command.getKind()) {
+			case STAB:
+				playerState = playerState.changeSelectedStabTarget(true);
+				break;
+			case CHAINSAW:
+				playerState = playerState.changeSelectedBlockTarget(true);
+				break;
+			default:
+				playerState = playerState.changeSelectedBlockTarget(true);
+				break;
 		}
 		fieldModel.setPlayerState(player, playerState);
 	}

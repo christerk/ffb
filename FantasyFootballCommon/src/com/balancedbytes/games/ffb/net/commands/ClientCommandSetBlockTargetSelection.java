@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.BlockKind;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -10,14 +11,14 @@ import com.eclipsesource.json.JsonValue;
 public class ClientCommandSetBlockTargetSelection extends ClientCommand {
 
 	private String playerId;
-	private boolean useStab;
+	private BlockKind kind;
 
 	public ClientCommandSetBlockTargetSelection() {
 	}
 
-	public ClientCommandSetBlockTargetSelection(String playerId, boolean useStab) {
+	public ClientCommandSetBlockTargetSelection(String playerId, BlockKind kind) {
 		this.playerId = playerId;
-		this.useStab = useStab;
+		this.kind = kind;
 	}
 
 	@Override
@@ -29,15 +30,15 @@ public class ClientCommandSetBlockTargetSelection extends ClientCommand {
 		return playerId;
 	}
 
-	public boolean isUseStab() {
-		return useStab;
+	public BlockKind getKind() {
+		return kind;
 	}
 
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
-		IJsonOption.USING_STAB.addTo(jsonObject, useStab);
+		IJsonOption.BLOCK_KIND.addTo(jsonObject, kind.name());
 		return jsonObject;
 	}
 
@@ -46,7 +47,7 @@ public class ClientCommandSetBlockTargetSelection extends ClientCommand {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		useStab = IJsonOption.USING_STAB.getFrom(game, jsonObject);
+		kind = BlockKind.valueOf(IJsonOption.BLOCK_KIND.getFrom(game, jsonObject));
 		return this;
 	}
 
