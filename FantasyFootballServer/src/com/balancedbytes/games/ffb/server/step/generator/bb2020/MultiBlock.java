@@ -40,9 +40,6 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.BLOCK_STATISTICS, from(StepParameterKey.INCREMENT, params.blockTargets.size()));
 		sequence.add(StepId.MULTI_BLOCK_FORK, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		/*
-		sequence.add(StepId.STAB, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.APOTHECARY_DEFENDER));
-		sequence.add(StepId.BLOCK_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.APOTHECARY_DEFENDER),
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER));
 
 		sequence.add(StepId.BLOCK_ROLL);
 		sequence.add(StepId.BLOCK_CHOICE, from(StepParameterKey.GOTO_LABEL_ON_DODGE, IStepLabel.DODGE_BLOCK),
