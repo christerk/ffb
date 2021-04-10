@@ -14,16 +14,22 @@ import com.eclipsesource.json.JsonValue;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportBlockRoll implements IReport {
 
-	private int[] fBlockRoll;
-	private String fChoosingTeamId;
+	private int[] blockRoll;
+	private String choosingTeamId;
+	private String defenderId;
 
 	public ReportBlockRoll() {
 		super();
 	}
 
-	public ReportBlockRoll(String pChoosingTeamId, int[] pBlockRoll) {
-		fChoosingTeamId = pChoosingTeamId;
-		fBlockRoll = pBlockRoll;
+	public ReportBlockRoll(String choosingTeamId, int[] blockRoll) {
+		this(choosingTeamId, blockRoll, null);
+	}
+
+	public ReportBlockRoll(String choosingTeamId, int[] blockRoll, String defenderId) {
+		this.choosingTeamId = choosingTeamId;
+		this.blockRoll = blockRoll;
+		this.defenderId = defenderId;
 	}
 
 	public ReportId getId() {
@@ -31,17 +37,17 @@ public class ReportBlockRoll implements IReport {
 	}
 
 	public String getChoosingTeamId() {
-		return fChoosingTeamId;
+		return choosingTeamId;
 	}
 
 	public int[] getBlockRoll() {
-		return fBlockRoll;
+		return blockRoll;
 	}
 
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportBlockRoll(getChoosingTeamId(), getBlockRoll());
+		return new ReportBlockRoll(getChoosingTeamId(), getBlockRoll(), defenderId);
 	}
 
 	// JSON serialization
@@ -49,16 +55,18 @@ public class ReportBlockRoll implements IReport {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-		IJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, fChoosingTeamId);
-		IJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
+		IJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, choosingTeamId);
+		IJsonOption.BLOCK_ROLL.addTo(jsonObject, blockRoll);
+		IJsonOption.DEFENDER_ID.addTo(jsonObject, defenderId);
 		return jsonObject;
 	}
 
 	public ReportBlockRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);
-		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
+		choosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);
+		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
+		defenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

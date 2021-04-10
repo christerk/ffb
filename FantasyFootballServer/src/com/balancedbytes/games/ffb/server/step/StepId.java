@@ -20,6 +20,7 @@ public enum StepId implements INamedObject {
 	BLOCK_CHOICE("blockChoice"), // action.block
 	BLOCK_DODGE("blockDodge"), // action.block
 	BLOCK_ROLL("blockRoll"), // action.block
+	BLOCK_ROLL_MULTIPLE("blockRollMultiple"), // action.multiBlock 2020
 	BLOCK_STATISTICS("blockStatistics"), // action.block
 	BLOOD_LUST("bloodLust"), // action.common
 	BOMBARDIER("bombardier"), // action.pass

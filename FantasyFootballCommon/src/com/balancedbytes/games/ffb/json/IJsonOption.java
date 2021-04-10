@@ -45,6 +45,7 @@ public interface IJsonOption {
 	JsonStringOption BLOCK_KIND = new JsonStringOption("blockKind");
 	JsonEnumWithNameOption BLOCK_RESULT = new JsonEnumWithNameOption("blockResult", Factory.BLOCK_RESULT);
 	JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
+	JsonArrayOption BLOCK_ROLLS = new JsonArrayOption("blockRolls");
 	JsonIntOption BLOCKS = new JsonIntOption("blocks");
 	JsonArrayOption BLOODSPOT_ARRAY = new JsonArrayOption("bloodspotArray");
 	JsonIntOption BLOODWEISER_KEGS = new JsonIntOption("bloodweiserBabes");// retain old key to maintain compatibility with old replays.
