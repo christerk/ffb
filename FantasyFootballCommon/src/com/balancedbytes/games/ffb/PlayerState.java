@@ -3,53 +3,53 @@ package com.balancedbytes.games.ffb;
 // immutable object
 public class PlayerState {
 
-	public static final int UNKNOWN = 0x0000;
-	public static final int STANDING = 0x0001;
-	public static final int MOVING = 0x0002;
-	public static final int PRONE = 0x0003;
-	public static final int STUNNED = 0x0004;
-	public static final int KNOCKED_OUT = 0x0005;
-	public static final int BADLY_HURT = 0x0006;
-	public static final int SERIOUS_INJURY = 0x0007;
-	public static final int RIP = 0x0008;
-	public static final int RESERVE = 0x0009;
-	public static final int MISSING = 0x000a;
-	public static final int FALLING = 0x000b;
-	public static final int BLOCKED = 0x000c;
-	public static final int BANNED = 0x000d;
-	public static final int EXHAUSTED = 0x000e;
-	public static final int BEING_DRAGGED = 0x000f;
-	public static final int PICKED_UP = 0x0010;
-	public static final int HIT_BY_FIREBALL = 0x0011; // used for bloodSpots only
-	public static final int HIT_BY_LIGHTNING = 0x0012; // used for bloodSpots only
-	public static final int HIT_BY_BOMB = 0x0013; // used for bloodSpots only
+	public static final int UNKNOWN = 0x00000;
+	public static final int STANDING = 0x00001;
+	public static final int MOVING = 0x00002;
+	public static final int PRONE = 0x00003;
+	public static final int STUNNED = 0x00004;
+	public static final int KNOCKED_OUT = 0x00005;
+	public static final int BADLY_HURT = 0x00006;
+	public static final int SERIOUS_INJURY = 0x00007;
+	public static final int RIP = 0x00008;
+	public static final int RESERVE = 0x00009;
+	public static final int MISSING = 0x0000a;
+	public static final int FALLING = 0x0000b;
+	public static final int BLOCKED = 0x0000c;
+	public static final int BANNED = 0x0000d;
+	public static final int EXHAUSTED = 0x0000e;
+	public static final int BEING_DRAGGED = 0x0000f;
+	public static final int PICKED_UP = 0x00010;
+	public static final int HIT_BY_FIREBALL = 0x00011; // used for bloodSpots only
+	public static final int HIT_BY_LIGHTNING = 0x00012; // used for bloodSpots only
+	public static final int HIT_BY_BOMB = 0x00013; // used for bloodSpots only
 
-	private static final int _BIT_ACTIVE = 0x0100;
-	private static final int _BIT_CONFUSED = 0x0200;
-	private static final int _BIT_ROOTED = 0x0400;
-	private static final int _BIT_HYPNOTIZED = 0x0800;
-	private static final int _BIT_SELECTED_STAB_TARGET = 0x1000;
-	private static final int _BIT_USED_PRO = 0x2000;
-	private static final int _BIT_SELECTED_BLITZ_TARGET = 0x4000;
-	private static final int _BIT_SELECTED_BLOCK_TARGET = 0x8000;
+	private static final int _BIT_ACTIVE = 0x00100;
+	private static final int _BIT_CONFUSED = 0x00200;
+	private static final int _BIT_ROOTED = 0x00400;
+	private static final int _BIT_HYPNOTIZED = 0x00800;
+	private static final int _BIT_SELECTED_STAB_TARGET = 0x01000;
+	private static final int _BIT_USED_PRO = 0x02000;
+	private static final int _BIT_SELECTED_BLITZ_TARGET = 0x04000;
+	private static final int _BIT_SELECTED_BLOCK_TARGET = 0x08000;
 
-	private static final int[] _BASE_MASK = new int[] { 0x0000, // UNKNOWN
-			0xff00, // STANDING
-			0xff00, // MOVING
-			0xff00, // PRONE
-			0xff00, // STUNNED
-			0x0000, // KNOCKED_OUT
-			0x0000, // BADLY_HURT
-			0x0000, // SERIOUS_INJURY
-			0x0000, // RIP
-			0x0000, // RESERVE
-			0x0000, // MISSING
-			0xff00, // FALLING
-			0xff00, // BLOCKED
-			0x0000, // BANNED
-			0xff00, // EXHAUSTED
-			0xff00, // BEING_DRAGGED
-			0xff00, // PICKED_UP
+	private static final int[] _BASE_MASK = new int[] { 0x00000, // UNKNOWN
+			0xfff00, // STANDING
+			0xfff00, // MOVING
+			0xfff00, // PRONE
+			0xfff00, // STUNNED
+			0x00000, // KNOCKED_OUT
+			0x00000, // BADLY_HURT
+			0x00000, // SERIOUS_INJURY
+			0x00000, // RIP
+			0x00000, // RESERVE
+			0x00000, // MISSING
+			0xfff00, // FALLING
+			0xfff00, // BLOCKED
+			0x00000, // BANNED
+			0xfff00, // EXHAUSTED
+			0xfff00, // BEING_DRAGGED
+			0xfff00, // PICKED_UP
 	};
 
 	private final int fId;
@@ -67,11 +67,11 @@ public class PlayerState {
 	}
 
 	public int getBase() {
-		return (getId() & 0x00ff);
+		return (getId() & 0x000ff);
 	}
 
 	public PlayerState changeBase(int pBase) {
-		int baseMask = ((pBase > 0) && (pBase < _BASE_MASK.length)) ? _BASE_MASK[pBase] : 0x0000;
+		int baseMask = ((pBase > 0) && (pBase < _BASE_MASK.length)) ? _BASE_MASK[pBase] : 0x00000;
 		return new PlayerState((getId() & baseMask) | pBase);
 	}
 
