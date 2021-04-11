@@ -253,7 +253,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public boolean isClickable() {
-		return (fClickable && !getClient().getUserInterface().getDialogManager().isDialogVisible() && !fPopupMenuShown);
+		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() && !fPopupMenuShown);
 	}
 
 	public void setSelectable(boolean pSelectable) {

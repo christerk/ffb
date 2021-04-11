@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -14,32 +13,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DialogReRollForTargetsParameter implements IDialogParameter {
+public class DialogReRollBlockForTargetsParameter implements IDialogParameter {
 
 	private String playerId;
 	private List<String> targetIds = new ArrayList<>();
-	private Map<String, Integer> minimumRolls = new HashMap<>();
-	private ReRolledAction reRolledAction;
+	private Map<String, List<Integer>> blockRolls = new HashMap<>();
+	private Map<String, Boolean> choices = new HashMap<>();
 	private List<String> reRollAvailableAgainst = new ArrayList<>();
 	private boolean proReRollAvailable, teamReRollAvailable;
 
-	public DialogReRollForTargetsParameter() {
+	public DialogReRollBlockForTargetsParameter() {
 		super();
 	}
 
-	public DialogReRollForTargetsParameter(String playerId, List<String> targetIds, ReRolledAction reRolledAction, Map<String, Integer> minimumRolls,
-	                                       List<String> reRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable) {
+	public DialogReRollBlockForTargetsParameter(String playerId, List<String> targetIds, Map<String, List<Integer>> blockRolls,
+	                                            List<String> reRollAvailableAgainst, Map<String, Boolean> choices, boolean proReRollAvailable, boolean teamReRollAvailable) {
 		this.targetIds = targetIds;
-		this.reRolledAction = reRolledAction;
 		this.reRollAvailableAgainst = reRollAvailableAgainst;
 		this.proReRollAvailable = proReRollAvailable;
-		this.minimumRolls = minimumRolls;
+		this.blockRolls = blockRolls;
 		this.playerId = playerId;
 		this.teamReRollAvailable = teamReRollAvailable;
+		this.choices = choices;
 	}
 
 	public DialogId getId() {
-		return DialogId.RE_ROLL_FOR_TARGETS;
+		return DialogId.RE_ROLL_BLOCK_FOR_TARGETS;
 	}
 
 	public List<String> getTargetIds() {
@@ -54,12 +53,8 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		return proReRollAvailable;
 	}
 
-	public ReRolledAction getReRolledAction() {
-		return reRolledAction;
-	}
-
-	public Map<String, Integer> getMinimumRolls() {
-		return minimumRolls;
+	public Map<String, List<Integer>> getBlockRolls() {
+		return blockRolls;
 	}
 
 	public String getPlayerId() {
@@ -69,11 +64,14 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 	public boolean isTeamReRollAvailable() {
 		return teamReRollAvailable;
 	}
-// transformation
+
+	public Map<String, Boolean> getChoices() {
+		return choices;
+	}
+	// transformation
 
 	public IDialogParameter transform() {
-		return new DialogReRollForTargetsParameter(getPlayerId(), getTargetIds(), getReRolledAction(),
-			getMinimumRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable);
+		return new DialogReRollBlockForTargetsParameter(getPlayerId(), getTargetIds(), getBlockRolls(), getReRollAvailableAgainst(), choices, isProReRollAvailable(), teamReRollAvailable);
 	}
 
 	// JSON serialization
@@ -82,25 +80,25 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.PLAYER_IDS.addTo(jsonObject, targetIds);
-		IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, reRolledAction);
 		IJsonOption.RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, reRollAvailableAgainst);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, proReRollAvailable);
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, teamReRollAvailable);
-		IJsonOption.MINIMUM_ROLLS.addTo(jsonObject, minimumRolls);
+		IJsonOption.BLOCK_ROLLS_FOR_TARGETS.addTo(jsonObject, blockRolls);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IJsonOption.ARE_OWN_CHOICES.addTo(jsonObject, choices);
 		return jsonObject;
 	}
 
-	public DialogReRollForTargetsParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public DialogReRollBlockForTargetsParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		targetIds = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
-		reRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(game, jsonObject);
 		reRollAvailableAgainst = Arrays.asList(IJsonOption.RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 		proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
+		blockRolls = IJsonOption.BLOCK_ROLLS_FOR_TARGETS.getFrom(game, jsonObject);
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		choices = IJsonOption.ARE_OWN_CHOICES.getFrom(game, jsonObject);
 		return this;
 	}
 

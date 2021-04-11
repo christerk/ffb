@@ -33,6 +33,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandCloseSession;
@@ -444,6 +445,10 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUseReRollForTarget(ReRolledAction reRolledAction, ReRollSource reRollSource, String targetId) {
 		send(new ClientCommandUseReRollForTarget(reRolledAction, reRollSource, targetId));
+	}
+
+	public void sendBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, ReRollSource reRollSource) {
+		send(new ClientCommandBlockOrReRollChoiceForTarget(targetId, selectedIndex, reRollSource));
 	}
 
 	public FantasyFootballClient getClient() {

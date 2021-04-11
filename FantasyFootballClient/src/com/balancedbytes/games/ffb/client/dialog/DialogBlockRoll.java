@@ -1,26 +1,5 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -29,16 +8,25 @@ import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 /**
  * 
  * @author Kalimar
  */
-public class DialogBlockRoll extends Dialog implements ActionListener, KeyListener {
+public class DialogBlockRoll extends AbstractDialogBlock implements ActionListener, KeyListener {
 
-	private static final Color _COLOR_BLUE = new Color(12, 20, 136);
-	private static final Color _COLOR_RED = new Color(128, 0, 0);
-
-	private JButton[] fBlockDice;
+	private final JButton[] fBlockDice;
 
 	private JButton fButtonTeamReRoll;
 	private JButton fButtonProReRoll;
@@ -47,32 +35,7 @@ public class DialogBlockRoll extends Dialog implements ActionListener, KeyListen
 	private int fDiceIndex;
 	private ReRollSource fReRollSource;
 
-	private DialogBlockRollParameter fDialogParameter;
-
-	private class BackgroundPanel extends JPanel {
-
-		private Color fColor;
-
-		public BackgroundPanel(Color pColor) {
-			fColor = pColor;
-			setOpaque(true);
-		}
-
-		protected void paintComponent(Graphics pGraphics) {
-			if (!isOpaque()) {
-				super.paintComponent(pGraphics);
-			} else {
-				Graphics2D g2d = (Graphics2D) pGraphics;
-				Dimension size = getSize();
-				g2d.setPaint(new GradientPaint(0, 0, fColor, size.width - 1, 0, Color.WHITE, false));
-				g2d.fillRect(0, 0, size.width, size.height);
-				setOpaque(false);
-				super.paintComponent(pGraphics);
-				setOpaque(true);
-			}
-		}
-
-	}
+	private final DialogBlockRollParameter fDialogParameter;
 
 	public DialogBlockRoll(FantasyFootballClient pClient, DialogBlockRollParameter pDialogParameter) {
 
@@ -83,13 +46,10 @@ public class DialogBlockRoll extends Dialog implements ActionListener, KeyListen
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
-		JPanel centerPanel = new BackgroundPanel((getDialogParameter().getNrOfDice() < 0) ? _COLOR_BLUE : _COLOR_RED);
+		JPanel centerPanel = new BackgroundPanel((getDialogParameter().getNrOfDice() < 0) ? colorOwnChoice : colorOpponentChoice);
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-		JPanel blockRollPanel = new JPanel();
-		blockRollPanel.setOpaque(false);
-		blockRollPanel.setLayout(new BoxLayout(blockRollPanel, BoxLayout.X_AXIS));
-		blockRollPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		JPanel blockRollPanel = blockRollPanel();
 
 		int[] blockRoll = getDialogParameter().getBlockRoll();
 		fBlockDice = new JButton[blockRoll.length];
@@ -114,9 +74,6 @@ public class DialogBlockRoll extends Dialog implements ActionListener, KeyListen
 				if (i == 2) {
 					fBlockDice[i].setMnemonic(KeyEvent.VK_3);
 				}
-				if (i > 0) {
-					blockRollPanel.add(Box.createHorizontalStrut(5));
-				}
 				fBlockDice[i].addKeyListener(this);
 			}
 		}
@@ -124,15 +81,7 @@ public class DialogBlockRoll extends Dialog implements ActionListener, KeyListen
 		centerPanel.add(blockRollPanel);
 
 		if (!ownChoice) {
-			JPanel opponentsChoicePanel = new JPanel();
-			opponentsChoicePanel.setOpaque(false);
-			opponentsChoicePanel.setLayout(new BoxLayout(opponentsChoicePanel, BoxLayout.X_AXIS));
-			JLabel opponentsChoiceLabel = new JLabel("Opponent's choice");
-			opponentsChoiceLabel.setFont(
-					new Font(opponentsChoiceLabel.getFont().getName(), Font.BOLD, opponentsChoiceLabel.getFont().getSize()));
-			opponentsChoicePanel.add(opponentsChoiceLabel);
-			opponentsChoicePanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-			centerPanel.add(opponentsChoicePanel);
+			centerPanel.add(opponentChoicePanel());
 		}
 
 		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption()) {

@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandCloseSession;
@@ -121,8 +122,8 @@ public enum NetCommandId implements INamedObject {
 	INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"), INTERNAL_SERVER_CLEAR_CACHE("internalServerClearCache"),
 	CLIENT_CLOSE_SESSION("clientCloseSession"), CLIENT_ARGUE_THE_CALL("clientArgueTheCall"),
 	SERVER_GAME_TIME("serverGameTime"), CLIENT_PING("clientPing"), SERVER_PONG("serverPong"),
-	CLIENT_SET_BLOCK_TARGET_SELECTION("setBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("unsetBlockTargetSelection"),
-	CLIENT_SYNCHRONOUS_MULTI_BLOCK("synchronousMultiBlock");
+	CLIENT_SET_BLOCK_TARGET_SELECTION("clientSetBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("clientUnsetBlockTargetSelection"),
+	CLIENT_SYNCHRONOUS_MULTI_BLOCK("clientSynchronousMultiBlock"), CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET("clientBlockOrReRollChoiceForTarget");
 
 	private final String fName;
 
@@ -289,7 +290,9 @@ public enum NetCommandId implements INamedObject {
 			case CLIENT_SYNCHRONOUS_MULTI_BLOCK:
 				return new ClientCommandSynchronousMultiBlock();
 			case CLIENT_USE_RE_ROLL_FOR_TARGET:
-				return new ClientCommandUseReRollForTarget(); 
+				return new ClientCommandUseReRollForTarget();
+			case CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET:
+				return new ClientCommandBlockOrReRollChoiceForTarget();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

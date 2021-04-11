@@ -9,7 +9,7 @@ import com.eclipsesource.json.JsonValue;
 
 public class BlockRoll implements IJsonSerializable {
 	private String targetId;
-	private boolean successFulDauntless;
+	private boolean successFulDauntless, ownChoice;
 	private int nrOfDice;
 	private int[] blockRoll;
 	private int selectedDie;
@@ -57,6 +57,14 @@ public class BlockRoll implements IJsonSerializable {
 		this.selectedDie = selectedDie;
 	}
 
+	public boolean isOwnChoice() {
+		return ownChoice;
+	}
+
+	public void setOwnChoice(boolean ownChoice) {
+		this.ownChoice = ownChoice;
+	}
+
 	@Override
 	public BlockRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
@@ -65,6 +73,7 @@ public class BlockRoll implements IJsonSerializable {
 		nrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
 		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
 		selectedDie = IJsonOption.NUMBER.getFrom(game, jsonObject);
+		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(game, jsonObject);
 		return null;
 	}
 
@@ -76,6 +85,7 @@ public class BlockRoll implements IJsonSerializable {
 		IJsonOption.NR_OF_DICE.addTo(jsonObject, nrOfDice);
 		IJsonOption.BLOCK_ROLL.addTo(jsonObject, blockRoll);
 		IJsonOption.NUMBER.addTo(jsonObject, selectedDie);
+		IJsonOption.IS_OWN_CHOICE.addTo(jsonObject, ownChoice);
 		return jsonObject;
 	}
 }

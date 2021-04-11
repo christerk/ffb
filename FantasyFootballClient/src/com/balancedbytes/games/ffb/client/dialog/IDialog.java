@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
+import com.balancedbytes.games.ffb.dialog.DialogId;
+
 import java.awt.Dimension;
 import java.awt.Point;
-
-import com.balancedbytes.games.ffb.dialog.DialogId;
 
 /**
  * 
@@ -11,16 +11,16 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  */
 public interface IDialog {
 
-	public DialogId getId();
+	DialogId getId();
 
-	public void showDialog(IDialogCloseListener pCloseListener);
+	void showDialog(IDialogCloseListener pCloseListener);
 
-	public void hideDialog();
+	void hideDialog();
 
-	public void setLocation(Point pLocation);
+	void setLocation(Point pLocation);
 
-	public Dimension getSize();
+	Dimension getSize();
 
-	public boolean isVisible();
+	boolean isVisible();
 
 }

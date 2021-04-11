@@ -34,7 +34,7 @@ public class StepStateMultipleRolls implements IJsonSerializable {
 		IJsonOption.FIRST_RUN.addTo(jsonObject, firstRun);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, proReRollAvailable);
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, teamReRollAvailable);
-		IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, reRollAvailableAgainst);
+		IJsonOption.RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, reRollAvailableAgainst);
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, reRollSource);
 		IJsonOption.MINIMUM_ROLLS.addTo(jsonObject, minimumRolls);
 		IJsonOption.NUMBER.addTo(jsonObject, initialCount);
@@ -50,7 +50,7 @@ public class StepStateMultipleRolls implements IJsonSerializable {
 		firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
 		proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		reRollAvailableAgainst = Arrays.asList(IJsonOption.TEAM_RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
+		reRollAvailableAgainst = Arrays.asList(IJsonOption.RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
 		initialCount = IJsonOption.NUMBER.getFrom(game, jsonObject);

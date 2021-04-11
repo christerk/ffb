@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.Game;
  */
 public class DialogManager {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
 	private DialogHandler fDialogHandler;
 	private IDialogParameter fShownDialogParameter;
@@ -150,6 +150,9 @@ public class DialogManager {
 					case RE_ROLL_FOR_TARGETS:
 						setDialogHandler(new DialogReRollForTargetsHandler(getClient()));
 						break;
+					case RE_ROLL_BLOCK_FOR_TARGETS:
+						setDialogHandler(new DialogReRollBlockForTargetsHandler(getClient()));
+						break;
 					default:
 						break;
 				}
@@ -172,13 +175,13 @@ public class DialogManager {
 		fDialogHandler = pDialogHandler;
 	}
 
-	public boolean isDialogVisible() {
-		return ((getDialogHandler() != null) && (getDialogHandler().getDialog() != null)
-			&& getDialogHandler().getDialog().isVisible());
+	public boolean isDialogHidden() {
+		return ((getDialogHandler() == null) || (getDialogHandler().getDialog() == null)
+			|| !getDialogHandler().getDialog().isVisible());
 	}
 
 	public boolean isEndTurnAllowed() {
-		return (!isDialogVisible() || getDialogHandler().isEndTurnAllowedWhileDialogVisible());
+		return (isDialogHidden() || getDialogHandler().isEndTurnAllowedWhileDialogVisible());
 	}
 
 	public IDialogParameter getShownDialogParameter() {

@@ -16,6 +16,7 @@ public interface IJsonOption {
 	JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
 	JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
+	JsonBooleanMapOption ARE_OWN_CHOICES = new JsonBooleanMapOption("areOwnChoices");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
 	JsonBooleanOption ARMOR_BROKEN = new JsonBooleanOption("armorBroken");
@@ -46,6 +47,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption BLOCK_RESULT = new JsonEnumWithNameOption("blockResult", Factory.BLOCK_RESULT);
 	JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
 	JsonArrayOption BLOCK_ROLLS = new JsonArrayOption("blockRolls");
+	JsonIntegerListMapOption BLOCK_ROLLS_FOR_TARGETS = new JsonIntegerListMapOption("blockRollsForTargets");
 	JsonIntOption BLOCKS = new JsonIntOption("blocks");
 	JsonArrayOption BLOODSPOT_ARRAY = new JsonArrayOption("bloodspotArray");
 	JsonIntOption BLOODWEISER_KEGS = new JsonIntOption("bloodweiserBabes");// retain old key to maintain compatibility with old replays.
@@ -200,6 +202,7 @@ public interface IJsonOption {
 	JsonIntOption INTERCEPTIONS = new JsonIntOption("interceptions");
 	JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
+	JsonBooleanOption IS_OWN_CHOICE = new JsonBooleanOption("isOwnChoice");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
 	JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", Factory.KICKOFF_RESULT);
 	JsonIntArrayOption KICKOFF_ROLL = new JsonIntArrayOption("kickoffRoll");
@@ -315,6 +318,7 @@ public interface IJsonOption {
 	JsonArrayOption REPORTS = new JsonArrayOption("reports");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
 	JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", Factory.RE_ROLLED_ACTION);
+	JsonStringArrayOption RE_ROLL_AVAILABLE_AGAINST = new JsonStringArrayOption("reRollAvailableFOr");
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
@@ -412,7 +416,6 @@ public interface IJsonOption {
 	JsonArrayOption TEAM_LIST_ENTRIES = new JsonArrayOption("teamListEntries");
 	JsonStringOption TEAM_NAME = new JsonStringOption("teamName");
 	JsonBooleanOption TEAM_RE_ROLL_OPTION = new JsonBooleanOption("teamReRollOption");
-	JsonStringArrayOption TEAM_RE_ROLL_AVAILABLE_AGAINST = new JsonStringArrayOption("teamReRollAvailableFOr");
 	JsonObjectOption TEAM_RESULT_AWAY = new JsonObjectOption("teamResultAway");
 	JsonObjectOption TEAM_RESULT_HOME = new JsonObjectOption("teamResultHome");
 	JsonEnumWithNameOption TEAM_STATUS = new JsonEnumWithNameOption("teamStatus", Factory.TEAM_STATUS);
