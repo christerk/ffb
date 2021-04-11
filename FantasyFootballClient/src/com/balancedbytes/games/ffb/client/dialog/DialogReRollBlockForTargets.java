@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.client.dialog;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollBlockForTargetsParameter;
 import com.balancedbytes.games.ffb.model.Game;
@@ -13,22 +12,17 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.Insets;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DialogReRollBlockForTargets extends AbstractDialogBlock {
+public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
-	private String selectedTarget;
-	private Integer selectedIndex;
 	private ReRollSource reRollSource;
 
 	@SuppressWarnings("FieldCanBeLocal")
@@ -37,38 +31,11 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 		add(new Mnemonics('e', 'o'));
 	}};
 
-	@SuppressWarnings("FieldCanBeLocal")
-	private final List<List<Integer>> keyEvents = new ArrayList<List<Integer>>() {{
-		add(new ArrayList<Integer>() {{
-			add(KeyEvent.VK_1);
-			add(KeyEvent.VK_2);
-			add(KeyEvent.VK_3);
-		}});
-		add(new ArrayList<Integer>() {{
-			add(KeyEvent.VK_4);
-			add(KeyEvent.VK_5);
-			add(KeyEvent.VK_6);
-		}});
-	}};
-
-
 	public DialogReRollBlockForTargets(FantasyFootballClient pClient, DialogReRollBlockForTargetsParameter parameter) {
 
-		super(pClient, "Use a Re-roll", false);
+		super(pClient, "Select Block Result or Use a Re-roll", false);
 
 		dialogParameter = parameter;
-
-		JButton fButtonNoReRoll = new JButton("No Re-Roll");
-		fButtonNoReRoll.addActionListener(e -> {
-			close();
-		});
-		fButtonNoReRoll.addKeyListener(new PressedKeyListener() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				close();
-			}
-		});
-		fButtonNoReRoll.setMnemonic((int) 'N');
 
 		StringBuilder mainMessage = new StringBuilder();
 
@@ -132,16 +99,8 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 				mainMessagePanel.add(opponentChoicePanel());
 			}
 
-			Player<?> defender = game.getPlayerById(target);
-			JLabel nameLabel = new JLabel("<html>"+ defender.getName() +"</html>");
-			nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			mainMessagePanel.add(nameLabel);
+			mainMessagePanel.add(nameLabel(target));
 		}
-
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setAlignmentX(CENTER_ALIGNMENT);
-		bottomPanel.add(fButtonNoReRoll);
-		mainMessagePanel.add(bottomPanel);
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(mainMessagePanel);
@@ -149,49 +108,6 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 		pack();
 		setLocationToCenter();
 
-	}
-
-	private JButton dieButton(int blockRoll) {
-		IconCache iconCache = getClient().getUserInterface().getIconCache();
-
-		JButton button = new JButton();
-		button.setOpaque(false);
-		button.setBounds(0, 0, 45, 45);
-		button.setFocusPainted(false);
-		button.setMargin(new Insets(5, 5, 5, 5));
-		button.setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll)));
-		return button;
-	}
-
-	private JPanel dicePanel(List<Integer> blockRoll, String targetId, boolean activeButtons, List<Integer> events) {
-		JPanel panel = blockRollPanel();
-
-		for (int i = 0; i < blockRoll.size(); i++) {
-			JButton dieButton = dieButton(blockRoll.get(i));
-
-			if (activeButtons) {
-				dieButton.setMnemonic(events.get(i));
-				int index = i;
-				dieButton.addActionListener(e -> {
-					selectedTarget = targetId;
-					selectedIndex = index;
-					close();
-				});
-				dieButton.addKeyListener(new PressedKeyListener() {
-					@Override
-					public void keyPressed(KeyEvent e) {
-						if (e.getKeyCode() == index) {
-							selectedTarget = targetId;
-							selectedIndex = index;
-							close();
-						}
-					}
-				});
-			}
-			panel.add(dieButton);
-		}
-
-		return panel;
 	}
 
 	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
@@ -215,7 +131,8 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 		close();
 	}
 
-	private void close() {
+	@Override
+	protected void close() {
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(DialogReRollBlockForTargets.this);
 		}
@@ -239,20 +156,6 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 
 	public DialogReRollBlockForTargetsParameter getDialogParameter() {
 		return dialogParameter;
-	}
-
-
-	private static abstract class PressedKeyListener implements KeyListener {
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-
-		}
 	}
 
 	private static class Mnemonics {
