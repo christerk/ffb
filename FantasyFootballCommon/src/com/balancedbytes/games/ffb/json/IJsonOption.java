@@ -25,6 +25,7 @@ public interface IJsonOption {
 	JsonIntOption ARMOUR = new JsonIntOption("armour");
 	JsonIntOption ASSISTANT_COACHES = new JsonIntOption("assistantCoaches");
 	JsonStringOption ATTACKER_ID = new JsonStringOption("attackerId");
+	JsonBooleanOption ATTACKER_SELECTS = new JsonBooleanOption("attackerSelects");
 	JsonIntOption AVAILABLE_CARDS = new JsonIntOption("availableCards");
 	JsonIntOption AVAILABLE_GOLD = new JsonIntOption("availableGold");
 	JsonBooleanOption AWAY_GAINS_RE_ROLL = new JsonBooleanOption("awayGainsReRoll");

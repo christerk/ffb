@@ -28,7 +28,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
 	private String selectedTarget;
-	private int selectedIndex = -1;
+	private Integer selectedIndex;
 	private ReRollSource reRollSource;
 
 	@SuppressWarnings("FieldCanBeLocal")
@@ -131,6 +131,11 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 			if (!ownChoice) {
 				mainMessagePanel.add(opponentChoicePanel());
 			}
+
+			Player<?> defender = game.getPlayerById(target);
+			JLabel nameLabel = new JLabel("<html>"+ defender.getName() +"</html>");
+			nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			mainMessagePanel.add(nameLabel);
 		}
 
 		JPanel bottomPanel = new JPanel();
@@ -228,7 +233,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogBlock {
 		return reRollSource;
 	}
 
-	public int getSelectedIndex() {
+	public Integer getSelectedIndex() {
 		return selectedIndex;
 	}
 

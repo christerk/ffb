@@ -12,7 +12,7 @@ public class BlockRoll implements IJsonSerializable {
 	private boolean successFulDauntless, ownChoice;
 	private int nrOfDice;
 	private int[] blockRoll;
-	private int selectedDie;
+	private Integer selectedIndex;
 
 	public BlockRoll() {
 	}
@@ -49,12 +49,12 @@ public class BlockRoll implements IJsonSerializable {
 		this.blockRoll = blockRoll;
 	}
 
-	public int getSelectedDie() {
-		return selectedDie;
+	public Integer getSelectedIndex() {
+		return selectedIndex;
 	}
 
-	public void setSelectedDie(int selectedDie) {
-		this.selectedDie = selectedDie;
+	public void setSelectedIndex(Integer selectedIndex) {
+		this.selectedIndex = selectedIndex;
 	}
 
 	public boolean isOwnChoice() {
@@ -72,7 +72,7 @@ public class BlockRoll implements IJsonSerializable {
 		successFulDauntless = IJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(game, jsonObject);
 		nrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
 		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		selectedDie = IJsonOption.NUMBER.getFrom(game, jsonObject);
+		selectedIndex = IJsonOption.NUMBER.getFrom(game, jsonObject);
 		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(game, jsonObject);
 		return null;
 	}
@@ -84,7 +84,7 @@ public class BlockRoll implements IJsonSerializable {
 		IJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successFulDauntless);
 		IJsonOption.NR_OF_DICE.addTo(jsonObject, nrOfDice);
 		IJsonOption.BLOCK_ROLL.addTo(jsonObject, blockRoll);
-		IJsonOption.NUMBER.addTo(jsonObject, selectedDie);
+		IJsonOption.NUMBER.addTo(jsonObject, selectedIndex);
 		IJsonOption.IS_OWN_CHOICE.addTo(jsonObject, ownChoice);
 		return jsonObject;
 	}
