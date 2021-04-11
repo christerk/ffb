@@ -96,6 +96,8 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 			if (state.reRollAvailableAgainst.isEmpty() || (!state.teamReRollAvailable && !state.proReRollAvailable)) {
 				nextStep(step, state);
 			} else {
+				state.reRollTarget = null;
+				state.reRollSource = null;
 				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(game.getActingPlayer().getPlayer(), state), false);
 			}
 		}
