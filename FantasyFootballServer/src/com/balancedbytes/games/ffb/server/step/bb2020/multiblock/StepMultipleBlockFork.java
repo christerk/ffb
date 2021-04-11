@@ -99,6 +99,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 
 		if (blockGroup != null && !blockGroup.isEmpty()) {
 			sequence.add(StepId.DAUNTLESS_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
+			sequence.add(StepId.BLOCK_ROLL_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
 		}
 
 		getGameState().getStepStack().push(sequence.getSequence());

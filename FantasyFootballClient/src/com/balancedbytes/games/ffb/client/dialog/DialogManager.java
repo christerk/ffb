@@ -153,6 +153,9 @@ public class DialogManager {
 					case RE_ROLL_BLOCK_FOR_TARGETS:
 						setDialogHandler(new DialogReRollBlockForTargetsHandler(getClient()));
 						break;
+					case OPPONENT_BLOCK_SELECTION:
+						setDialogHandler(new DialogOpponentBlockSelectionHandler(getClient()));
+						break;
 					default:
 						break;
 				}

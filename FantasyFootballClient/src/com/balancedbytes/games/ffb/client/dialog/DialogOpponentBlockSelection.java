@@ -54,7 +54,7 @@ public class DialogOpponentBlockSelection extends AbstractDialogMultiBlock {
 			JPanel dicePanel = dicePanel(parameter.getBlockRolls().get(target), target, true, keyEvents.remove(0));
 			mainMessagePanel.add(dicePanel);
 
-			mainMessagePanel.add(nameLabel(target));
+			mainMessagePanel.add(namePanel(target));
 		}
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

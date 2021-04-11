@@ -93,6 +93,10 @@ public class DialogParameterFactory {
 				return new DialogBuyCardsAndInducementsParameter();
 			case SELECT_BLITZ_TARGET:
 				return new DialogSelectBlitzTargetParameter();
+			case RE_ROLL_BLOCK_FOR_TARGETS:
+				return new DialogReRollBlockForTargetsParameter();
+			case OPPONENT_BLOCK_SELECTION:
+				return new DialogOpponentBlockSelectionParameter();
 			default:
 				return null;
 		}

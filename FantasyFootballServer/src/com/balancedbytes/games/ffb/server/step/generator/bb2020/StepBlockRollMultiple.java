@@ -143,13 +143,12 @@ public class StepBlockRollMultiple extends AbstractStep {
 		}
 
 		if (state.attackerTeamSelects) {
-			List<BlockRoll> unselectedAttacker = unselected.stream().filter(BlockRoll::isOwnChoice).collect(Collectors.toList());
-			if (unselectedAttacker.isEmpty()) {
+			if (unselected.stream().anyMatch(BlockRoll::isOwnChoice)) {
 				state.attackerTeamSelects = false;
 			} else {
 				state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
 				state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
-				UtilServerDialog.showDialog(getGameState(), createAttackerDialogParameter(game.getActingPlayer().getPlayer(), unselectedAttacker), false);
+				UtilServerDialog.showDialog(getGameState(), createAttackerDialogParameter(game.getActingPlayer().getPlayer(), unselected), false);
 			}
  		}
 		if (!state.attackerTeamSelects) {

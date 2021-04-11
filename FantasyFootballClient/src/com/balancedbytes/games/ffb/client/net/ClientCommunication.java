@@ -447,7 +447,7 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseReRollForTarget(reRolledAction, reRollSource, targetId));
 	}
 
-	public void sendBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, ReRollSource reRollSource) {
+	public void sendBlockOrReRollChoiceForTarget(String targetId, Integer selectedIndex, ReRollSource reRollSource) {
 		send(new ClientCommandBlockOrReRollChoiceForTarget(targetId, selectedIndex, reRollSource));
 	}
 

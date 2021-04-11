@@ -5,17 +5,13 @@ import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollBlockForTargetsParameter;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.property.NamedProperties;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,50 +33,28 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 		dialogParameter = parameter;
 
-		StringBuilder mainMessage = new StringBuilder();
-
-		mainMessage.append("<html>Do you want to re-roll the block");
-		if (dialogParameter.getTargetIds().size() > 1) {
-			mainMessage.append("s");
-		}
-		mainMessage.append("?</html>");
-
-		List<String> mainMessages = new ArrayList<>();
-		mainMessages.add(mainMessage.toString());
-
-		Game game = getClient().getGame();
-		Player<?> reRollingPlayer = game.getPlayerById(parameter.getPlayerId());
-		if ((reRollingPlayer != null)
-			&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
-			mainMessages.add("<html>Player is a LONER - the Re-Roll is not guaranteed to help.</html>");
-		}
-
 		JPanel mainMessagePanel = new JPanel();
 		mainMessagePanel.setLayout(new BoxLayout(mainMessagePanel, BoxLayout.Y_AXIS));
 		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		mainMessages.stream().map(JLabel::new).forEach(label -> {
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			mainMessagePanel.add(label);
-			mainMessagePanel.add(Box.createVerticalStrut(5));
-		});
-
 		for (String target : parameter.getTargetIds()) {
 
 			boolean ownChoice = parameter.getChoices().get(target) != null && parameter.getChoices().get(target);
-			JPanel targetPanel = new BackgroundPanel(ownChoice ? colorOwnChoice : colorOpponentChoice);
+			Color background = ownChoice ? colorOwnChoice : colorOpponentChoice;
+			JPanel targetPanel = new BackgroundPanel(background);
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
 			mainMessagePanel.add(targetPanel);
 			JPanel dicePanel = dicePanel(parameter.getBlockRolls().get(target), target, ownChoice, keyEvents.remove(0));
-			mainMessagePanel.add(dicePanel);
+			targetPanel.add(dicePanel);
 			if (parameter.getReRollAvailableAgainst().contains(target)) {
 				Mnemonics currentMnemonics = mnemonics.remove(0);
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 				buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
 				buttonPanel.add(Box.createHorizontalGlue());
+				buttonPanel.setOpaque(false);
 
 				if (parameter.isTeamReRollAvailable()) {
 					buttonPanel.add(createReRollButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, currentMnemonics.team));
@@ -96,10 +70,10 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 			}
 
 			if (!ownChoice) {
-				mainMessagePanel.add(opponentChoicePanel());
+				targetPanel.add(opponentChoicePanel());
 			}
 
-			mainMessagePanel.add(nameLabel(target));
+			targetPanel.add(namePanel(target));
 		}
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

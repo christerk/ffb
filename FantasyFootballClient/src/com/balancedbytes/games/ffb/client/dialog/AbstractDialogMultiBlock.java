@@ -81,11 +81,16 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 		return panel;
 	}
 
-	protected JLabel nameLabel(String target) {
+	protected JPanel namePanel(String target) {
 		Player<?> defender = getClient().getGame().getPlayerById(target);
 		JLabel nameLabel = new JLabel("<html>"+ defender.getName() +"</html>");
 		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		return nameLabel;
+		nameLabel.setOpaque(false);
+		JPanel panel = new JPanel();
+		panel.add(nameLabel);
+		panel.setAlignmentX(CENTER_ALIGNMENT);
+		panel.setOpaque(false);
+		return panel;
 	}
 
 	protected abstract void close();
