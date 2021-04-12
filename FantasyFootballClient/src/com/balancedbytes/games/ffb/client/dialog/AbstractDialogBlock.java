@@ -15,8 +15,8 @@ import java.awt.Graphics2D;
 
 public abstract class AbstractDialogBlock extends Dialog {
 
-	protected final Color colorOwnChoice = new Color(12, 20, 136);
-	protected final Color colorOpponentChoice = new Color(128, 0, 0);
+	protected final Color colorOwnChoice = new Color(128, 0, 0);
+	protected final Color colorOpponentChoice = new Color(12, 20, 136);
 
 
 	public AbstractDialogBlock(FantasyFootballClient pClient, String pTitle, boolean pCloseable) {

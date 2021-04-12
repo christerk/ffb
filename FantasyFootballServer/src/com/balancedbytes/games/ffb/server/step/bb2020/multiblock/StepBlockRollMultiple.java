@@ -159,12 +159,12 @@ public class StepBlockRollMultiple extends AbstractStep {
 			}
  		}
 		if (!state.attackerTeamSelects) {
-			List<BlockRoll> unselectedDefender = unselected.stream().filter(roll -> !roll.isOwnChoice()).collect(Collectors.toList());
-			if (unselectedDefender.isEmpty()) {
-				nextStep();
-			} else {
+			List<BlockRoll> defender = state.blockRolls.stream().filter(roll -> !roll.isOwnChoice()).collect(Collectors.toList());
+			if (unselected.stream().anyMatch(roll -> !roll.isOwnChoice())) {
 				Team otherTeam = game.getOtherTeam(game.getActingTeam());
-				UtilServerDialog.showDialog(getGameState(), createDefenderDialogParameter(otherTeam, unselectedDefender), true);
+				UtilServerDialog.showDialog(getGameState(), createDefenderDialogParameter(otherTeam, defender), true);
+			} else {
+				nextStep();
 			}
 		}
 	}

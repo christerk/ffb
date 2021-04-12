@@ -27,11 +27,11 @@ public class DialogOpponentBlockSelection extends AbstractDialogMultiBlock {
 		for (BlockRoll blockRoll : parameter.getBlockRolls()) {
 
 			String target = blockRoll.getTargetId();
-			JPanel targetPanel = new BackgroundPanel(colorOwnChoice);
+			JPanel targetPanel = new BackgroundPanel(colorOpponentChoice);
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
 			mainPanel.add(targetPanel);
-			JPanel dicePanel = dicePanel(blockRoll, true, keyEvents.remove(0));
+			JPanel dicePanel = dicePanel(blockRoll, blockRoll.needsSelection(), keyEvents.remove(0));
 			targetPanel.add(dicePanel);
 
 			targetPanel.add(namePanel(target));

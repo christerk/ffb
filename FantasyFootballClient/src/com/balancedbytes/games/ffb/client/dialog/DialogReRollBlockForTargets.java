@@ -48,7 +48,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
 			mainPanel.add(targetPanel);
-			JPanel dicePanel = dicePanel(blockRoll, ownChoice, keyEvents.remove(0));
+			JPanel dicePanel = dicePanel(blockRoll, ownChoice && blockRoll.needsSelection(), keyEvents.remove(0));
 			targetPanel.add(dicePanel);
 			if (parameter.getReRollAvailableAgainst().contains(target)) {
 				Mnemonics currentMnemonics = mnemonics.remove(0);

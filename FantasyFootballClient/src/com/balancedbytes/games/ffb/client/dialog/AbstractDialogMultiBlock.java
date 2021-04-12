@@ -77,7 +77,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 				});
 			}
 			if (!blockRoll.needsSelection()) {
-				dieButton.setEnabled(i != blockRoll.getSelectedIndex());
+				dieButton.setEnabled(i == blockRoll.getSelectedIndex());
 			}
 			panel.add(dieButton);
 		}
