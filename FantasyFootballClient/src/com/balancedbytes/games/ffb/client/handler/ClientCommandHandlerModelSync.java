@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientThrowTeamMate;
 import com.balancedbytes.games.ffb.client.util.UtilClientTimeout;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Animation;
+import com.balancedbytes.games.ffb.model.BlockRoll;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
@@ -24,11 +25,13 @@ import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
+import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.util.StringTool;
 
+import java.util.Collections;
+
 /**
- *
  * @author Kalimar
  */
 public class ClientCommandHandlerModelSync extends ClientCommandHandler implements IAnimationListener {
@@ -89,39 +92,39 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 
 		Animation animation = fSyncCommand.getAnimation();
 		boolean waitForAnimation = ((animation != null)
-				&& ((fMode == ClientCommandHandlerMode.PLAYING) || ((fMode == ClientCommandHandlerMode.REPLAYING)
-						&& getClient().getReplayer().isReplayingSingleSpeedForward())));
+			&& ((fMode == ClientCommandHandlerMode.PLAYING) || ((fMode == ClientCommandHandlerMode.REPLAYING)
+			&& getClient().getReplayer().isReplayingSingleSpeedForward())));
 
 		// prepare for animation by hiding ball, bomb or thrown player
 
 		if (waitForAnimation) {
 			switch (animation.getAnimationType()) {
-			case THROW_BOMB:
-			case HAIL_MARY_BOMB:
-				game.getFieldModel().setRangeRuler(null);
-				fBombCoordinate = game.getFieldModel().getBombCoordinate();
-				game.getFieldModel().setBombCoordinate(null);
-				break;
-			case PASS:
-			case KICK:
-			case HAIL_MARY_PASS:
-				game.getFieldModel().setRangeRuler(null);
-				fBallCoordinate = game.getFieldModel().getBallCoordinate();
-				game.getFieldModel().setBallCoordinate(null);
-				break;
-			case THROW_TEAM_MATE:
-				game.getFieldModel().setRangeRuler(null);
-				Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
-				fThrownPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
-				game.getFieldModel().remove(thrownPlayer);
-				break;
-			case KICK_TEAM_MATE:
-				Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
-				fKickedPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickedPlayer);
-				game.getFieldModel().remove(kickedPlayer);
-				break;
-			default:
-				break;
+				case THROW_BOMB:
+				case HAIL_MARY_BOMB:
+					game.getFieldModel().setRangeRuler(null);
+					fBombCoordinate = game.getFieldModel().getBombCoordinate();
+					game.getFieldModel().setBombCoordinate(null);
+					break;
+				case PASS:
+				case KICK:
+				case HAIL_MARY_PASS:
+					game.getFieldModel().setRangeRuler(null);
+					fBallCoordinate = game.getFieldModel().getBallCoordinate();
+					game.getFieldModel().setBallCoordinate(null);
+					break;
+				case THROW_TEAM_MATE:
+					game.getFieldModel().setRangeRuler(null);
+					Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
+					fThrownPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
+					game.getFieldModel().remove(thrownPlayer);
+					break;
+				case KICK_TEAM_MATE:
+					Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
+					fKickedPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickedPlayer);
+					game.getFieldModel().remove(kickedPlayer);
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -144,25 +147,25 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 
 		Animation animation = fSyncCommand.getAnimation();
 		switch (animation.getAnimationType()) {
-		case THROW_BOMB:
-		case HAIL_MARY_BOMB:
-			game.getFieldModel().setBombCoordinate(fBombCoordinate);
-			break;
-		case PASS:
-		case KICK:
-		case HAIL_MARY_PASS:
-			game.getFieldModel().setBallCoordinate(fBallCoordinate);
-			break;
-		case THROW_TEAM_MATE:
-			Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
-			game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);
-			break;
-		case KICK_TEAM_MATE:
-			Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
-			game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
-			break;
-		default:
-			break;
+			case THROW_BOMB:
+			case HAIL_MARY_BOMB:
+				game.getFieldModel().setBombCoordinate(fBombCoordinate);
+				break;
+			case PASS:
+			case KICK:
+			case HAIL_MARY_PASS:
+				game.getFieldModel().setBallCoordinate(fBallCoordinate);
+				break;
+			case THROW_TEAM_MATE:
+				Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
+				game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);
+				break;
+			case KICK_TEAM_MATE:
+				Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
+				game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
+				break;
+			default:
+				break;
 		}
 
 		userInterface.getFieldComponent().refresh();
@@ -189,44 +192,44 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 
 			for (ModelChange modelChange : pModelChangeList.getChanges()) {
 				switch (modelChange.getChangeId()) {
-				case ACTING_PLAYER_MARK_SKILL_USED:
-				case ACTING_PLAYER_SET_CURRENT_MOVE:
-				case ACTING_PLAYER_SET_DODGING:
-				case ACTING_PLAYER_SET_GOING_FOR_IT:
-				case ACTING_PLAYER_SET_HAS_BLOCKED:
-				case ACTING_PLAYER_SET_HAS_FED:
-				case ACTING_PLAYER_SET_HAS_FOULED:
-				case ACTING_PLAYER_SET_HAS_MOVED:
-				case ACTING_PLAYER_SET_HAS_PASSED:
-				case ACTING_PLAYER_SET_JUMPING:
-				case ACTING_PLAYER_SET_PLAYER_ACTION:
-				case ACTING_PLAYER_SET_PLAYER_ID:
-				case ACTING_PLAYER_SET_STANDING_UP:
-				case ACTING_PLAYER_SET_STRENGTH:
-				case ACTING_PLAYER_SET_SUFFERING_ANIMOSITY:
-				case ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST:
-					fUpdateActingPlayer = true;
-					break;
-				case TURN_DATA_SET_TURN_NR:
-					fUpdateTurnNr = true;
-					break;
-				case GAME_SET_TIMEOUT_POSSIBLE:
-					fUpdateTimeout = true;
-					break;
-				case GAME_SET_DEFENDER_ID:
-					fClearSelectedPlayer = (modelChange.getValue() != null);
-					break;
-				case GAME_SET_TURN_MODE:
-					fUpdateTurnMode = true;
-					break;
-				case GAME_OPTIONS_ADD_OPTION:
-					IGameOption gameOption = (IGameOption) modelChange.getValue();
-					if ((gameOption != null) && (GameOptionId.PITCH_URL == gameOption.getId())) {
-						fReloadPitch = true;
-					}
-					break;
-				default:
-					break;
+					case ACTING_PLAYER_MARK_SKILL_USED:
+					case ACTING_PLAYER_SET_CURRENT_MOVE:
+					case ACTING_PLAYER_SET_DODGING:
+					case ACTING_PLAYER_SET_GOING_FOR_IT:
+					case ACTING_PLAYER_SET_HAS_BLOCKED:
+					case ACTING_PLAYER_SET_HAS_FED:
+					case ACTING_PLAYER_SET_HAS_FOULED:
+					case ACTING_PLAYER_SET_HAS_MOVED:
+					case ACTING_PLAYER_SET_HAS_PASSED:
+					case ACTING_PLAYER_SET_JUMPING:
+					case ACTING_PLAYER_SET_PLAYER_ACTION:
+					case ACTING_PLAYER_SET_PLAYER_ID:
+					case ACTING_PLAYER_SET_STANDING_UP:
+					case ACTING_PLAYER_SET_STRENGTH:
+					case ACTING_PLAYER_SET_SUFFERING_ANIMOSITY:
+					case ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST:
+						fUpdateActingPlayer = true;
+						break;
+					case TURN_DATA_SET_TURN_NR:
+						fUpdateTurnNr = true;
+						break;
+					case GAME_SET_TIMEOUT_POSSIBLE:
+						fUpdateTimeout = true;
+						break;
+					case GAME_SET_DEFENDER_ID:
+						fClearSelectedPlayer = (modelChange.getValue() != null);
+						break;
+					case GAME_SET_TURN_MODE:
+						fUpdateTurnMode = true;
+						break;
+					case GAME_OPTIONS_ADD_OPTION:
+						IGameOption gameOption = (IGameOption) modelChange.getValue();
+						if ((gameOption != null) && (GameOptionId.PITCH_URL == gameOption.getId())) {
+							fReloadPitch = true;
+						}
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -285,21 +288,21 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 	private void handleExtraEffects(ReportList pReportList) {
 		ClientData clientData = getClient().getClientData();
 		for (IReport report : pReportList.getReports()) {
-			switch (report.getId()) {
-			case BLOCK_CHOICE:
+			if (report.getId() == ReportId.BLOCK_CHOICE) {
 				ReportBlockChoice reportBlockChoice = (ReportBlockChoice) report;
-				clientData.setBlockDiceResult(reportBlockChoice.getNrOfDice(), reportBlockChoice.getBlockRoll(),
-						reportBlockChoice.getDiceIndex());
-				break;
-			default:
-				break;
+				BlockRoll blockRoll = new BlockRoll();
+				blockRoll.setNrOfDice(Math.abs(reportBlockChoice.getNrOfDice()));
+				blockRoll.setOwnChoice(reportBlockChoice.getNrOfDice() >= 0);
+				blockRoll.setBlockRoll(reportBlockChoice.getBlockRoll());
+				blockRoll.setSelectedIndex(reportBlockChoice.getDiceIndex());
+				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
 			}
 		}
 	}
 
 	private void startAnimation(Animation pAnimation) {
 		IAnimationSequence animationSequence = AnimationSequenceFactory.getInstance().getAnimationSequence(getClient(),
-				pAnimation);
+			pAnimation);
 		if (animationSequence != null) {
 			if (fMode == ClientCommandHandlerMode.REPLAYING) {
 				getClient().getReplayer().pause();

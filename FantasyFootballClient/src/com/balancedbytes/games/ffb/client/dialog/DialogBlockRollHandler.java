@@ -10,7 +10,10 @@ import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.model.BlockRoll;
 import com.balancedbytes.games.ffb.model.Game;
+
+import java.util.Collections;
 
 /**
  * 
@@ -44,8 +47,11 @@ public class DialogBlockRollHandler extends DialogHandler {
 				}
 
 			} else {
-
-				clientData.setBlockDiceResult(fDialogParameter.getNrOfDice(), fDialogParameter.getBlockRoll(), -1);
+				BlockRoll blockRoll = new BlockRoll();
+				blockRoll.setBlockRoll(fDialogParameter.getBlockRoll());
+				blockRoll.setNrOfDice(Math.abs(fDialogParameter.getNrOfDice()));
+				blockRoll.setOwnChoice(fDialogParameter.getNrOfDice() >= 0);
+				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
 				if ((fDialogParameter.getNrOfDice() < 0) && game.isHomePlaying()) {
 					showStatus("Block Roll", "Waiting for coach to choose Block Dice.", StatusType.WAITING);
 				}
@@ -67,13 +73,16 @@ public class DialogBlockRollHandler extends DialogHandler {
 			DialogBlockRoll blockRollDialog = (DialogBlockRoll) pDialog;
 			ClientCommunication communication = getClient().getCommunication();
 			if (game.getTeamHome().getId().equals(fDialogParameter.getChoosingTeamId())) {
-				if (blockRollDialog.getDiceIndex() >= 0) {
-					clientData.setBlockDiceResult(fDialogParameter.getNrOfDice(), fDialogParameter.getBlockRoll(),
-							blockRollDialog.getDiceIndex());
-					communication.sendBlockChoice(blockRollDialog.getDiceIndex());
-				} else {
-					clientData.setBlockDiceResult(fDialogParameter.getNrOfDice(), fDialogParameter.getBlockRoll(), -1);
+				BlockRoll blockRoll = new BlockRoll();
+				blockRoll.setBlockRoll(fDialogParameter.getBlockRoll());
+				blockRoll.setNrOfDice(Math.abs(fDialogParameter.getNrOfDice()));
+				blockRoll.setOwnChoice(fDialogParameter.getNrOfDice() >= 0);
+				blockRoll.setSelectedIndex(blockRollDialog.getDiceIndex());
+				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
+				if (blockRoll.needsSelection()) {
 					communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
+				} else {
+					communication.sendBlockChoice(blockRollDialog.getDiceIndex());
 				}
 				userInterface.refreshSideBars();
 			}

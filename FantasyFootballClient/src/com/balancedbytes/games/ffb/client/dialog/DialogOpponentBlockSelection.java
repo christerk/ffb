@@ -15,7 +15,7 @@ public class DialogOpponentBlockSelection extends AbstractDialogMultiBlock {
 
 	public DialogOpponentBlockSelection(FantasyFootballClient pClient, DialogOpponentBlockSelectionParameter parameter) {
 
-		super(pClient, "Select Block Result", false);
+		super(pClient, "Block Roll", false);
 
 		dialogParameter = parameter;
 

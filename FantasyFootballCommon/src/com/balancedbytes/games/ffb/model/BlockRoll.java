@@ -7,6 +7,9 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class BlockRoll implements IJsonSerializable {
 	private String targetId;
 	private boolean successFulDauntless, ownChoice;
@@ -67,6 +70,21 @@ public class BlockRoll implements IJsonSerializable {
 
 	public boolean needsSelection() {
 		return selectedIndex < 0;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BlockRoll blockRoll1 = (BlockRoll) o;
+		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice && nrOfDice == blockRoll1.nrOfDice && selectedIndex == blockRoll1.selectedIndex && Objects.equals(targetId, blockRoll1.targetId) && Arrays.equals(blockRoll, blockRoll1.blockRoll);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(targetId, successFulDauntless, ownChoice, nrOfDice, selectedIndex);
+		result = 31 * result + Arrays.hashCode(blockRoll);
+		return result;
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	public DialogReRollBlockForTargets(FantasyFootballClient pClient, DialogReRollBlockForTargetsParameter parameter) {
 
-		super(pClient, "Select Block Result or Use a Re-roll", false);
+		super(pClient, "Block Roll", false);
 
 		dialogParameter = parameter;
 
@@ -47,7 +47,6 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 			JPanel targetPanel = new BackgroundPanel(background);
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
-			mainPanel.add(targetPanel);
 			JPanel dicePanel = dicePanel(blockRoll, ownChoice && blockRoll.needsSelection(), keyEvents.remove(0));
 			targetPanel.add(dicePanel);
 			if (parameter.getReRollAvailableAgainst().contains(target)) {
@@ -80,6 +79,8 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 			}
 
 			targetPanel.add(namePanel(target));
+			mainPanel.add(targetPanel);
+			mainPanel.add(Box.createVerticalStrut(5));
 		}
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

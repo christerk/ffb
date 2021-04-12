@@ -46,7 +46,7 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
-		JPanel centerPanel = new BackgroundPanel((getDialogParameter().getNrOfDice() < 0) ? colorOwnChoice : colorOpponentChoice);
+		JPanel centerPanel = new BackgroundPanel((getDialogParameter().getNrOfDice() < 0) ? colorOpponentChoice : colorOwnChoice);
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
 		JPanel blockRollPanel = blockRollPanel();

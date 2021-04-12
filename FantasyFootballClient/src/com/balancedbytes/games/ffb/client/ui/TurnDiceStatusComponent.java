@@ -1,5 +1,26 @@
 package com.balancedbytes.games.ffb.client.ui;
 
+import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.IIconProperty;
+import com.balancedbytes.games.ffb.StatusType;
+import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.client.ActionKey;
+import com.balancedbytes.games.ffb.client.ClientData;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.IconCache;
+import com.balancedbytes.games.ffb.client.UserInterface;
+import com.balancedbytes.games.ffb.client.dialog.DialogEndTurn;
+import com.balancedbytes.games.ffb.client.dialog.IDialog;
+import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
+import com.balancedbytes.games.ffb.client.util.UtilClientGraphics;
+import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.model.BlockRoll;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.util.DateTool;
+import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import javax.swing.JPanel;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -19,29 +40,9 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
+import java.util.ArrayList;
 import java.util.Date;
-
-import javax.swing.JPanel;
-
-import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.StatusType;
-import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.client.ActionKey;
-import com.balancedbytes.games.ffb.client.ClientData;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.IIconProperty;
-import com.balancedbytes.games.ffb.client.IconCache;
-import com.balancedbytes.games.ffb.client.UserInterface;
-import com.balancedbytes.games.ffb.client.dialog.DialogEndTurn;
-import com.balancedbytes.games.ffb.client.dialog.IDialog;
-import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
-import com.balancedbytes.games.ffb.client.util.UtilClientGraphics;
-import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.DateTool;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilPlayer;
+import java.util.List;
 
 /**
  * 
@@ -87,9 +88,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private boolean fEndTurnButtonHidden;
 	private Date fFinished;
 
-	private int fNrOfBlockDice;
-	private int[] fBlockRoll;
-	private int fBlockDiceIndex;
+	private List<BlockRoll> blockRolls = new ArrayList<>();
 
 	private boolean fRefreshNecessary;
 
@@ -238,27 +237,28 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private void drawBlockDice() {
-		if (ArrayTool.isProvided(fBlockRoll)) {
-			int x = 0, y = 38;
+		int x, y = 38;
+		for (BlockRoll blockRoll: blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
 			Composite oldComposite = g2d.getComposite();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			for (int i = 0; i < fBlockRoll.length; i++) {
+			int length = blockRoll.getBlockRoll().length;
+			for (int i = 0; i < length; i++) {
 				g2d.setComposite(oldComposite);
-				BufferedImage diceIcon = iconCache.getDiceIcon(fBlockRoll[i]);
-				if ((fBlockDiceIndex >= 0) && (fBlockDiceIndex != i)) {
+				BufferedImage diceIcon = iconCache.getDiceIcon(blockRoll.getBlockRoll()[i]);
+				if (!blockRoll.needsSelection() && (blockRoll.getSelectedIndex() != i)) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				}
-				if (fBlockRoll.length > 2) {
-					x = 1 + (39 * i);
-				} else if (fBlockRoll.length > 1) {
-					x = 20 + (39 * i);
+				if (length > 2) {
+					x = 15 + (39 * i);
+				} else if (length > 1) {
+					x = 34 + (39 * i);
 				} else {
-					x = 39;
+					x = 53;
 				}
 				g2d.drawImage(diceIcon, x, y, null);
 			}
-			if (fNrOfBlockDice < 0) {
+			if (!blockRoll.isOwnChoice()) {
 				g2d.setFont(_DICE_FONT);
 				g2d.setComposite(oldComposite);
 				FontMetrics fontMetrics = g2d.getFontMetrics();
@@ -268,6 +268,7 @@ public class TurnDiceStatusComponent extends JPanel
 				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
 			}
 			g2d.dispose();
+			y += 38;
 		}
 	}
 
@@ -277,9 +278,6 @@ public class TurnDiceStatusComponent extends JPanel
 		fTurnMode = null;
 		fHomePlaying = false;
 		fEndTurnButtonHidden = false;
-		fBlockDiceIndex = -1;
-		fNrOfBlockDice = 0;
-		fBlockRoll = null;
 		fWaitingForOpponent = false;
 		fTimeoutPossible = false;
 		fTimeoutEnforced = false;
@@ -303,9 +301,7 @@ public class TurnDiceStatusComponent extends JPanel
 			fRefreshNecessary = (fEndTurnButtonHidden != clientData.isEndTurnButtonHidden());
 		}
 		if (!fRefreshNecessary) {
-			fRefreshNecessary = ((fBlockDiceIndex != clientData.getBlockDiceIndex())
-					|| (fNrOfBlockDice != clientData.getNrOfBlockDice())
-					|| !ArrayTool.isEqual(fBlockRoll, clientData.getBlockRoll()));
+			fRefreshNecessary = !blockRolls.equals(clientData.getBlockRolls());
 		}
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = ((fWaitingForOpponent != game.isWaitingForOpponent())
@@ -316,9 +312,8 @@ public class TurnDiceStatusComponent extends JPanel
 			fButtonSelected = false;
 			fTurnMode = game.getTurnMode();
 			fHomePlaying = game.isHomePlaying();
-			fNrOfBlockDice = clientData.getNrOfBlockDice();
-			fBlockRoll = clientData.getBlockRoll();
-			fBlockDiceIndex = clientData.getBlockDiceIndex();
+			blockRolls.clear();
+			blockRolls.addAll(clientData.getBlockRolls());
 			fStatusTitle = clientData.getStatusTitle();
 			fStatusMessage = clientData.getStatusMessage();
 			fStatusType = clientData.getStatusType();

@@ -3,7 +3,11 @@ package com.balancedbytes.games.ffb.client;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.StatusType;
+import com.balancedbytes.games.ffb.model.BlockRoll;
 import com.balancedbytes.games.ffb.model.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientData {
 
@@ -15,9 +19,7 @@ public class ClientData {
 	private String fStatusMessage;
 	private StatusType fStatusType;
 
-	private int fNrOfBlockDice;
-	private int[] fBlockRoll;
-	private int fBlockDiceIndex;
+	List<BlockRoll> blockRolls = new ArrayList<>();
 
 	private boolean fActingPlayerUpdated;
 	private boolean fTurnTimerStopped;
@@ -54,26 +56,17 @@ public class ClientData {
 		fDragStartPosition = pStartPosition;
 	}
 
-	public void setBlockDiceResult(int pNrOfBlockDice, int[] pBlockRoll, int pBlockDiceIndex) {
-		fNrOfBlockDice = pNrOfBlockDice;
-		fBlockRoll = pBlockRoll;
-		fBlockDiceIndex = pBlockDiceIndex;
+	public void setBlockDiceResult(List<BlockRoll> blockRolls) {
+		clearBlockDiceResult();
+		this.blockRolls.addAll(blockRolls);
 	}
 
 	public void clearBlockDiceResult() {
-		setBlockDiceResult(0, null, -1);
+		blockRolls.clear();
 	}
 
-	public int getNrOfBlockDice() {
-		return fNrOfBlockDice;
-	}
-
-	public int[] getBlockRoll() {
-		return fBlockRoll;
-	}
-
-	public int getBlockDiceIndex() {
-		return fBlockDiceIndex;
+	public List<BlockRoll> getBlockRolls() {
+		return blockRolls;
 	}
 
 	public void setStatus(String pTitle, String pMessage, StatusType pType) {
