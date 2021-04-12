@@ -10,7 +10,7 @@ import com.eclipsesource.json.JsonValue;
 
 public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 	private String targetId;
-	private Integer selectedIndex;
+	private int selectedIndex = -1;
 	private ReRollSource reRollSource;
 
 	@Override
@@ -21,7 +21,7 @@ public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 	public ClientCommandBlockOrReRollChoiceForTarget() {
 	}
 
-	public ClientCommandBlockOrReRollChoiceForTarget(String targetId, Integer selectedIndex, ReRollSource reRollSource) {
+	public ClientCommandBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, ReRollSource reRollSource) {
 		this.targetId = targetId;
 		this.selectedIndex = selectedIndex;
 		this.reRollSource = reRollSource;
@@ -31,7 +31,7 @@ public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 		return targetId;
 	}
 
-	public Integer getSelectedIndex() {
+	public int getSelectedIndex() {
 		return selectedIndex;
 	}
 

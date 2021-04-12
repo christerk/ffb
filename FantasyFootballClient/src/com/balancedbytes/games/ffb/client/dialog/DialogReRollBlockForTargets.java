@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollBlockForTargetsParameter;
+import com.balancedbytes.games.ffb.model.BlockRoll;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -23,8 +24,8 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	@SuppressWarnings("FieldCanBeLocal")
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
-		add(new Mnemonics('T', 'P'));
-		add(new Mnemonics('e', 'o'));
+		add(new Mnemonics('T', 'P', 'N'));
+		add(new Mnemonics('e', 'o', 'l'));
 	}};
 
 	public DialogReRollBlockForTargets(FantasyFootballClient pClient, DialogReRollBlockForTargetsParameter parameter) {
@@ -33,20 +34,21 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 		dialogParameter = parameter;
 
-		JPanel mainMessagePanel = new JPanel();
-		mainMessagePanel.setLayout(new BoxLayout(mainMessagePanel, BoxLayout.Y_AXIS));
-		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
-		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		for (String target : parameter.getTargetIds()) {
+		for (BlockRoll blockRoll : parameter.getBlockRolls()) {
 
-			boolean ownChoice = parameter.getChoices().get(target) != null && parameter.getChoices().get(target);
+			String target = blockRoll.getTargetId();
+			boolean ownChoice = blockRoll.isOwnChoice();
 			Color background = ownChoice ? colorOwnChoice : colorOpponentChoice;
 			JPanel targetPanel = new BackgroundPanel(background);
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
-			mainMessagePanel.add(targetPanel);
-			JPanel dicePanel = dicePanel(parameter.getBlockRolls().get(target), target, ownChoice, keyEvents.remove(0));
+			mainPanel.add(targetPanel);
+			JPanel dicePanel = dicePanel(blockRoll, ownChoice, keyEvents.remove(0));
 			targetPanel.add(dicePanel);
 			if (parameter.getReRollAvailableAgainst().contains(target)) {
 				Mnemonics currentMnemonics = mnemonics.remove(0);
@@ -64,6 +66,10 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
+				if (!ownChoice) {
+					buttonPanel.add(createReRollButton(target, "No Re-Roll", null, currentMnemonics.none));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 				targetPanel.add(Box.createVerticalStrut(3));
@@ -77,7 +83,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		}
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		getContentPane().add(mainMessagePanel);
+		getContentPane().add(mainPanel);
 
 		pack();
 		setLocationToCenter();
@@ -135,10 +141,12 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 	private static class Mnemonics {
 		private final char team;
 		private final char pro;
+		private final char none;
 
-		public Mnemonics(char team, char pro) {
+		public Mnemonics(char team, char pro, char none) {
 			this.team = team;
 			this.pro = pro;
+			this.none = none;
 		}
 	}
 }

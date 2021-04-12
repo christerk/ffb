@@ -3,15 +3,11 @@ package com.balancedbytes.games.ffb.client.dialog;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogOpponentBlockSelectionParameter;
+import com.balancedbytes.games.ffb.model.BlockRoll;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DialogOpponentBlockSelection extends AbstractDialogMultiBlock {
 
@@ -23,42 +19,26 @@ public class DialogOpponentBlockSelection extends AbstractDialogMultiBlock {
 
 		dialogParameter = parameter;
 
-		StringBuilder mainMessage = new StringBuilder();
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		mainMessage.append("<html>Select block result");
-		if (dialogParameter.getTargetIds().size() > 1) {
-			mainMessage.append("s");
-		}
-		mainMessage.append("?</html>");
+		for (BlockRoll blockRoll : parameter.getBlockRolls()) {
 
-		List<String> mainMessages = new ArrayList<>();
-		mainMessages.add(mainMessage.toString());
-
-		JPanel mainMessagePanel = new JPanel();
-		mainMessagePanel.setLayout(new BoxLayout(mainMessagePanel, BoxLayout.Y_AXIS));
-		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
-		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-
-		mainMessages.stream().map(JLabel::new).forEach(label -> {
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			mainMessagePanel.add(label);
-			mainMessagePanel.add(Box.createVerticalStrut(5));
-		});
-
-		for (String target : parameter.getTargetIds()) {
-
+			String target = blockRoll.getTargetId();
 			JPanel targetPanel = new BackgroundPanel(colorOwnChoice);
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
-			mainMessagePanel.add(targetPanel);
-			JPanel dicePanel = dicePanel(parameter.getBlockRolls().get(target), target, true, keyEvents.remove(0));
-			mainMessagePanel.add(dicePanel);
+			mainPanel.add(targetPanel);
+			JPanel dicePanel = dicePanel(blockRoll, true, keyEvents.remove(0));
+			targetPanel.add(dicePanel);
 
-			mainMessagePanel.add(namePanel(target));
+			targetPanel.add(namePanel(target));
 		}
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		getContentPane().add(mainMessagePanel);
+		getContentPane().add(mainPanel);
 
 		pack();
 		setLocationToCenter();

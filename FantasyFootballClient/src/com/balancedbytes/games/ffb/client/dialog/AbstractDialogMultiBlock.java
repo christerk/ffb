@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IconCache;
+import com.balancedbytes.games.ffb.model.BlockRoll;
 import com.balancedbytes.games.ffb.model.Player;
 
 import javax.swing.ImageIcon;
@@ -31,7 +32,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 	}};
 
 	protected String selectedTarget;
-	protected Integer selectedIndex;
+	protected int selectedIndex = -1;
 
 
 	public AbstractDialogMultiBlock(FantasyFootballClient pClient, String pTitle, boolean pCloseable) {
@@ -50,17 +51,17 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 		return button;
 	}
 
-	protected JPanel dicePanel(List<Integer> blockRoll, String targetId, boolean activeButtons, List<Integer> events) {
+	protected JPanel dicePanel(BlockRoll blockRoll, boolean activeButtons, List<Integer> events) {
 		JPanel panel = blockRollPanel();
 
-		for (int i = 0; i < blockRoll.size(); i++) {
-			JButton dieButton = dieButton(blockRoll.get(i));
+		for (int i = 0; i < blockRoll.getBlockRoll().length; i++) {
+			JButton dieButton = dieButton(blockRoll.getBlockRoll()[i]);
 
 			if (activeButtons) {
 				dieButton.setMnemonic(events.get(i));
 				int index = i;
 				dieButton.addActionListener(e -> {
-					selectedTarget = targetId;
+					selectedTarget = blockRoll.getTargetId();
 					selectedIndex = index;
 					close();
 				});
@@ -68,12 +69,15 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 					@Override
 					public void keyPressed(KeyEvent e) {
 						if (e.getKeyCode() == index) {
-							selectedTarget = targetId;
+							selectedTarget = blockRoll.getTargetId();
 							selectedIndex = index;
 							close();
 						}
 					}
 				});
+			}
+			if (!blockRoll.needsSelection()) {
+				dieButton.setEnabled(i != blockRoll.getSelectedIndex());
 			}
 			panel.add(dieButton);
 		}

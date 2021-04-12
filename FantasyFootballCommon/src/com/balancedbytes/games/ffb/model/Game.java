@@ -267,6 +267,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		notifyObservers(ModelChangeId.GAME_SET_SETUP_OFFENSE, null, fSetupOffense);
 	}
 
+	public Team getOtherTeam(Team team) {
+		return team == fTeamHome ? fTeamAway : fTeamHome;
+	}
+
 	public Team getTeamById(String pTeamId) {
 		Team team = null;
 		if (pTeamId != null) {

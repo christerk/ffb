@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.generator.bb2020;
+package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -12,7 +12,7 @@ public class BlockRoll implements IJsonSerializable {
 	private boolean successFulDauntless, ownChoice;
 	private int nrOfDice;
 	private int[] blockRoll;
-	private Integer selectedIndex;
+	private int selectedIndex = -1;
 
 	public BlockRoll() {
 	}
@@ -49,11 +49,11 @@ public class BlockRoll implements IJsonSerializable {
 		this.blockRoll = blockRoll;
 	}
 
-	public Integer getSelectedIndex() {
+	public int getSelectedIndex() {
 		return selectedIndex;
 	}
 
-	public void setSelectedIndex(Integer selectedIndex) {
+	public void setSelectedIndex(int selectedIndex) {
 		this.selectedIndex = selectedIndex;
 	}
 
@@ -65,6 +65,10 @@ public class BlockRoll implements IJsonSerializable {
 		this.ownChoice = ownChoice;
 	}
 
+	public boolean needsSelection() {
+		return selectedIndex < 0;
+	}
+
 	@Override
 	public BlockRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
@@ -74,7 +78,7 @@ public class BlockRoll implements IJsonSerializable {
 		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
 		selectedIndex = IJsonOption.NUMBER.getFrom(game, jsonObject);
 		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(game, jsonObject);
-		return null;
+		return this;
 	}
 
 	@Override

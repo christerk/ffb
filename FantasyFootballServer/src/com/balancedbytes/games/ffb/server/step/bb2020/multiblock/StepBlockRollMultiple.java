@@ -1,17 +1,20 @@
-package com.balancedbytes.games.ffb.server.step.generator.bb2020;
+package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.dialog.DialogOpponentBlockSelectionParameter;
 import com.balancedbytes.games.ffb.dialog.DialogReRollBlockForTargetsParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.BlockRoll;
 import com.balancedbytes.games.ffb.model.BlockTarget;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.balancedbytes.games.ffb.report.ReportBlock;
@@ -35,9 +38,7 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -84,12 +85,14 @@ public class StepBlockRollMultiple extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus stepCommandStatus = super.handleCommand(pReceivedCommand);
-		if (pReceivedCommand.getId() == NetCommandId.CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET) {
+		if (stepCommandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET) {
 			ClientCommandBlockOrReRollChoiceForTarget command = (ClientCommandBlockOrReRollChoiceForTarget) pReceivedCommand.getCommand();
 			state.reRollSource = command.getReRollSource();
-			state.reRollTarget = command.getTargetId();
+			state.selectedTarget = command.getTargetId();
 			state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(command.getTargetId()))
 				.findFirst().ifPresent(roll -> roll.setSelectedIndex(command.getSelectedIndex()));
+			state.reRollAvailableAgainst.remove(state.selectedTarget);
+			stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 		}
 		if (stepCommandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
@@ -122,33 +125,37 @@ public class StepBlockRollMultiple extends AbstractStep {
 			decideNextStep(game);
 
 		} else {
-			if (StringTool.isProvided(state.reRollTarget) && state.reRollSource != null) {
+			if (StringTool.isProvided(state.selectedTarget) && state.reRollSource != null) {
 				if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
 					state.blockRolls.stream()
-						.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.reRollTarget))
+						.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
 						.findFirst().ifPresent(roll -> roll(roll, true));
 				}
-				state.reRollAvailableAgainst.remove(state.reRollTarget);
 			}
 			decideNextStep(game);
 		}
 	}
 
 	private void decideNextStep(Game game) {
-		List<BlockRoll> unselected = state.blockRolls.stream().filter(roll -> roll.getSelectedIndex() == null).collect(Collectors.toList());
+		List<BlockRoll> unselected = state.blockRolls.stream().filter(BlockRoll::needsSelection).collect(Collectors.toList());
 
 		if (unselected.isEmpty()) {
 			nextStep();
 			return;
 		}
 
+		state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
+		state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
+
+		if (!state.proReRollAvailable && !state.teamReRollAvailable) {
+			state.reRollAvailableAgainst.clear();
+		}
+
 		if (state.attackerTeamSelects) {
-			if (unselected.stream().anyMatch(BlockRoll::isOwnChoice)) {
-				state.attackerTeamSelects = false;
+			if (unselected.stream().anyMatch(BlockRoll::isOwnChoice) || !state.reRollAvailableAgainst.isEmpty()) {
+				UtilServerDialog.showDialog(getGameState(), createAttackerDialogParameter(game.getActingPlayer().getPlayer(), state.blockRolls), false);
 			} else {
-				state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
-				state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
-				UtilServerDialog.showDialog(getGameState(), createAttackerDialogParameter(game.getActingPlayer().getPlayer(), unselected), false);
+				state.attackerTeamSelects = false;
 			}
  		}
 		if (!state.attackerTeamSelects) {
@@ -156,7 +163,8 @@ public class StepBlockRollMultiple extends AbstractStep {
 			if (unselectedDefender.isEmpty()) {
 				nextStep();
 			} else {
-				UtilServerDialog.showDialog(getGameState(), createAttackerDialogParameter(game.getActingPlayer().getPlayer(), unselectedDefender), true);
+				Team otherTeam = game.getOtherTeam(game.getActingTeam());
+				UtilServerDialog.showDialog(getGameState(), createDefenderDialogParameter(otherTeam, unselectedDefender), true);
 			}
 		}
 	}
@@ -172,22 +180,18 @@ public class StepBlockRollMultiple extends AbstractStep {
 		getResult().setSound(SoundId.BLOCK);
 	}
 
-	private DialogReRollBlockForTargetsParameter createAttackerDialogParameter(Player<?> player, List<BlockRoll> rollsToSelect) {
-		List<String> targetIds = new ArrayList<>();
-		Map<String, List<Integer>> blockRolls = new HashMap<>();
-		Map<String, Boolean> choices = new HashMap<>();
+	private DialogOpponentBlockSelectionParameter createDefenderDialogParameter(Team team, List<BlockRoll> blockRolls){
+		return new DialogOpponentBlockSelectionParameter(team.getId(), blockRolls);
+	}
 
-		rollsToSelect.forEach(blockRoll -> {
-			targetIds.add(blockRoll.getTargetId());
-			blockRolls.put(blockRoll.getTargetId(), Arrays.stream(blockRoll.getBlockRoll()).boxed().collect(Collectors.toList()));
-			choices.put(blockRoll.getTargetId(), blockRoll.isOwnChoice());
-		});
-		return new DialogReRollBlockForTargetsParameter(player.getId(), targetIds, blockRolls,
-			state.reRollAvailableAgainst, choices, state.proReRollAvailable, state.teamReRollAvailable);
+	private DialogReRollBlockForTargetsParameter createAttackerDialogParameter(Player<?> player, List<BlockRoll> blockRolls) {
+
+		return new DialogReRollBlockForTargetsParameter(player.getId(), blockRolls,
+			state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable);
 	}
 
 	private void nextStep() {
-		//TODO progress to next step
+		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	@Override
@@ -210,7 +214,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 		private List<BlockRoll> blockRolls = new ArrayList<>();
 		private boolean firstRun = true, teamReRollAvailable, proReRollAvailable, attackerTeamSelects = true;
 		private ReRollSource reRollSource;
-		private String reRollTarget;
+		private String selectedTarget;
 
 		@Override
 		public JsonObject toJsonValue() {
@@ -218,7 +222,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			JsonArray jsonArray = new JsonArray();
 			blockRolls.stream().map(BlockRoll::toJsonValue).forEach(jsonArray::add);
 			IJsonOption.BLOCK_ROLLS.addTo(jsonObject, jsonArray);
-			IJsonOption.PLAYER_ID.addTo(jsonObject, reRollTarget);
+			IJsonOption.PLAYER_ID.addTo(jsonObject, selectedTarget);
 			IJsonOption.FIRST_RUN.addTo(jsonObject, firstRun);
 			IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, proReRollAvailable);
 			IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, teamReRollAvailable);
@@ -233,7 +237,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 			JsonArray jsonArray = IJsonOption.BLOCK_ROLLS.getFrom(game, jsonObject);
 			blockRolls = jsonArray.values().stream().map(value -> new BlockRoll().initFrom(game, value)).collect(Collectors.toList());
-			reRollTarget = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+			selectedTarget = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 			firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
 			proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
 			teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
