@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.dialog.DialogOpponentBlockSelectionParameter;
 import com.balancedbytes.games.ffb.model.BlockRoll;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -35,6 +36,7 @@ public class DialogOpponentBlockSelection extends AbstractDialogMultiBlock {
 			targetPanel.add(dicePanel);
 
 			targetPanel.add(namePanel(target));
+			mainPanel.add(Box.createVerticalStrut(5));
 		}
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
