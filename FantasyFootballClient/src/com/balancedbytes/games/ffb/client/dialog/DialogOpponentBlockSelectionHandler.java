@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.ClientData;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -30,6 +31,7 @@ public class DialogOpponentBlockSelectionHandler extends DialogHandler {
 
 				setDialog(new DialogOpponentBlockSelection(getClient(), dialogParameter));
 				getDialog().showDialog(this);
+				playSound(SoundId.QUESTION);
 
 			} else {
 				clientData.setBlockDiceResult(dialogParameter.getBlockRolls());

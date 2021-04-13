@@ -237,7 +237,7 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private void drawBlockDice() {
-		int x, y = 38;
+		int x, y = blockRolls.size() > 1 ? 0 : 38;
 		for (BlockRoll blockRoll: blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
 			Composite oldComposite = g2d.getComposite();
@@ -266,9 +266,10 @@ public class TurnDiceStatusComponent extends JPanel
 				y += 38 + fontMetrics.getAscent();
 				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, WIDTH);
 				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
+			} else {
+				y += 38;
 			}
 			g2d.dispose();
-			y += 38;
 		}
 	}
 
