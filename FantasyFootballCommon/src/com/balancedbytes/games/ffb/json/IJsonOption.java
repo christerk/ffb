@@ -393,13 +393,14 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
+	JsonStringArrayOption STEP_PARAMETER_KEYS = new JsonStringArrayOption("stepParameterKeys");
 	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");
 	JsonBooleanOption SUCCESSFUL = new JsonBooleanOption("successful");
 	JsonBooleanOption SUCCESSFUL_DAUNTLESS = new JsonBooleanOption("successfulDauntless");
 	JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");
 	JsonBooleanOption SUFFERING_BLOODLUST = new JsonBooleanOption("sufferingBloodlust");
-	JsonBooleanOption SUPPRESS_EXTRA_EFFECT_HANDLE = new JsonBooleanOption("suppressExtraEffectHandling");
+	JsonBooleanOption SUPPRESS_EXTRA_EFFECT_HANDLING = new JsonBooleanOption("suppressExtraEffectHandling");
 	JsonIntOption SWARMING_PLAYER_ACTUAL = new JsonIntOption("swarmingPlayerActual");
 	JsonIntOption SWARMING_PLAYER_ALLOWED = new JsonIntOption("swarmingPlayerAllowed");
 	JsonIntOption SWARMING_PLAYER_AMOUNT = new JsonIntOption("swarmingPlayerAmount");

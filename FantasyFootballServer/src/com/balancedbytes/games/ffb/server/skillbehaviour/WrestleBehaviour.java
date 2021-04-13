@@ -47,7 +47,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 
 			@Override
 			public boolean handleExecuteStepHook(StepWrestle step, StepWrestle.StepState state) {
-				StepAction nextAction = StepAction.NEXT_STEP;
+				StepAction nextAction;
 				
 				if (state.usingWrestleAttacker == null) {
 					nextAction = askAttackerForWrestleUse(step, state);

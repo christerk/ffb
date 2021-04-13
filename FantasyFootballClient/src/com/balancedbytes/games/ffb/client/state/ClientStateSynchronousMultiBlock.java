@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.client.state;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IIconProperty;
+import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IconCache;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class ClientStateSynchronousMultiBlock extends ClientState {
 
 	private final Map<String, BlockKind> selectedPlayers = new HashMap<>();
+	private final Map<String, PlayerState> originalPlayerStates = new HashMap<>();
 
 	protected ClientStateSynchronousMultiBlock(FantasyFootballClient pClient) {
 		super(pClient);
@@ -43,6 +45,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	public void enterState() {
 		super.enterState();
 		selectedPlayers.clear();
+		originalPlayerStates.clear();
 	}
 
 	protected void clickOnPlayer(Player<?> player) {
@@ -58,6 +61,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	private void handlePlayerSelection(Player<?> player) {
 		if (selectedPlayers.containsKey(player.getId())) {
 			selectedPlayers.remove(player.getId());
+			originalPlayerStates.remove(player.getId());
 			getClient().getCommunication().sendUnsetBlockTarget(player.getId());
 		} else {
 			showPopupOrBlockPlayer(player);
@@ -83,6 +87,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	private void selectPlayer(Player<?> player, BlockKind kind) {
 		if (selectedPlayers.size() < 2) {
 			selectedPlayers.put(player.getId(), kind);
+			originalPlayerStates.put(player.getId(), getClient().getGame().getFieldModel().getPlayerState(player));
 			getClient().getCommunication().sendSetBlockTarget(player.getId(), kind);
 			sendIfSelectionComplete();
 		}
@@ -91,7 +96,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	private void sendIfSelectionComplete() {
 		if (selectedPlayers.size() == 2) {
 			List<BlockTarget> blockTargets = selectedPlayers.entrySet().stream()
-				.map(entry -> new BlockTarget(entry.getKey(), entry.getValue()))
+				.map(entry -> new BlockTarget(entry.getKey(), entry.getValue(), originalPlayerStates.get(entry.getKey())))
 				.sorted(Comparator.comparing(BlockTarget::getPlayerId))
 				.collect(Collectors.toList());
 			getClient().getCommunication().sendBlockTargets(blockTargets);

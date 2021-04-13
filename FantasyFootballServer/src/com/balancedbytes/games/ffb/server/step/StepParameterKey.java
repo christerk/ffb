@@ -22,6 +22,7 @@ public enum StepParameterKey {
 	CATCHER_ID, // String
 	CHOOSING_TEAM_ID, // String
 	CLIENT_RECEIVE_CHOICE, // Boolean
+	CONSUME_PARAMETER, // Set<StepParameterKey>
 	COORDINATE_FROM, // FieldCoordinate
 	COORDINATE_TO, // FieldCoordinate
 	DEFENDER_POSITION, // FieldCoordinate
@@ -91,6 +92,8 @@ public enum StepParameterKey {
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
+	SUPPRESS_EXTRA_EFFECT_HANDLING, // Boolean
+	SHOW_NAME_IN_REPORT, // Boolean
 	SUCCESSFUL_DAUNTLESS, // Boolean
 	TARGET_COORDINATE, // FieldCoordinate
 	THROW_IN_COORDINATE, // FieldCoordinate

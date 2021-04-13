@@ -8,8 +8,8 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.model.property.NamedProperties;
+import com.balancedbytes.games.ffb.model.skill.Skill;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
@@ -33,17 +33,17 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in block sequence to handle the block choice.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_DODGE. Needs to be
  * initialized with stepParameter GOTO_LABEL_ON_JUGGERNAUT. Needs to be
  * initialized with stepParameter GOTO_LABEL_ON_PUSHBACK.
- *
+ * <p>
  * Expects stepParameter BLOCK_DICE_INDEX to be set by a preceding step. Expects
  * stepParameter BLOCK_RESULT to be set by a preceding step. Expects
  * stepParameter BLOCK_ROLL to be set by a preceding step. Expects stepParameter
  * NR_OF_BLOCK_DICE to be set by a preceding step. Expects stepParameter
  * OLD_DEFENDER_STATE to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
@@ -58,6 +58,7 @@ public class StepBlockChoice extends AbstractStep {
 	private int fDiceIndex;
 	private BlockResult fBlockResult;
 	private PlayerState fOldDefenderState;
+	private boolean suppressExtraEffectHandling, showNameInReport;
 
 	public StepBlockChoice(GameState pGameState) {
 		super(pGameState);
@@ -72,20 +73,26 @@ public class StepBlockChoice extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_DODGE:
-					fGotoLabelOnDodge = (String) parameter.getValue();
-					break;
-				// mandatory
-				case GOTO_LABEL_ON_JUGGERNAUT:
-					fGotoLabelOnJuggernaut = (String) parameter.getValue();
-					break;
-				// mandatory
-				case GOTO_LABEL_ON_PUSHBACK:
-					fGotoLabelOnPushback = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_DODGE:
+						fGotoLabelOnDodge = (String) parameter.getValue();
+						break;
+					// mandatory
+					case GOTO_LABEL_ON_JUGGERNAUT:
+						fGotoLabelOnJuggernaut = (String) parameter.getValue();
+						break;
+					// mandatory
+					case GOTO_LABEL_ON_PUSHBACK:
+						fGotoLabelOnPushback = (String) parameter.getValue();
+						break;
+					case SUPPRESS_EXTRA_EFFECT_HANDLING:
+						suppressExtraEffectHandling = parameter.getValue() != null && (boolean) parameter.getValue();
+						break;
+					case SHOW_NAME_IN_REPORT:
+						showNameInReport = parameter.getValue() != null && (boolean) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -119,23 +126,23 @@ public class StepBlockChoice extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case DICE_INDEX:
-				fDiceIndex = (Integer) pParameter.getValue();
-				return true;
-			case BLOCK_RESULT:
-				fBlockResult = (BlockResult) pParameter.getValue();
-				return true;
-			case BLOCK_ROLL:
-				fBlockRoll = (int[]) pParameter.getValue();
-				return true;
-			case NR_OF_DICE:
-				fNrOfDice = (Integer) pParameter.getValue();
-				return true;
-			case OLD_DEFENDER_STATE:
-				fOldDefenderState = (PlayerState) pParameter.getValue();
-				return true;
-			default:
-				break;
+				case DICE_INDEX:
+					fDiceIndex = (Integer) pParameter.getValue();
+					return true;
+				case BLOCK_RESULT:
+					fBlockResult = (BlockResult) pParameter.getValue();
+					return true;
+				case BLOCK_ROLL:
+					fBlockRoll = (int[]) pParameter.getValue();
+					return true;
+				case NR_OF_DICE:
+					fNrOfDice = (Integer) pParameter.getValue();
+					return true;
+				case OLD_DEFENDER_STATE:
+					fOldDefenderState = (PlayerState) pParameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -148,58 +155,58 @@ public class StepBlockChoice extends AbstractStep {
 		PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 		switch (fBlockResult) {
-		case SKULL:
-			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
-			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-			getResult().setNextAction(StepAction.NEXT_STEP);
-			break;
-		case BOTH_DOWN:
-			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
-			break;
-		case POW_PUSHBACK:
-			Skill defenderDodgeSkill = game.getDefender().getSkillWithProperty(NamedProperties.ignoreDefenderStumblesResult);
-			if (defenderDodgeSkill != null) {
-				Skill attackerCanCancelDodgeSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), defenderDodgeSkill);
-				if ((attackerCanCancelDodgeSkill != null)
+			case SKULL:
+				game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
+				game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+				getResult().setNextAction(StepAction.NEXT_STEP);
+				break;
+			case BOTH_DOWN:
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
+				break;
+			case POW_PUSHBACK:
+				Skill defenderDodgeSkill = game.getDefender().getSkillWithProperty(NamedProperties.ignoreDefenderStumblesResult);
+				if (defenderDodgeSkill != null) {
+					Skill attackerCanCancelDodgeSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), defenderDodgeSkill);
+					if ((attackerCanCancelDodgeSkill != null)
 						&& (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer)
-								|| actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
+						|| actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
 
-					Skill ignoreTackleSkill = game.getDefender().getSkillWithProperty(NamedProperties.ignoreTackleWhenBlocked);
-					if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
+						Skill ignoreTackleSkill = game.getDefender().getSkillWithProperty(NamedProperties.ignoreTackleWhenBlocked);
+						if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
 							&& ignoreTackleSkill != null) {
-						getResult().addReport(
+							getResult().addReport(
 								new ReportSkillUse(game.getDefenderId(), ignoreTackleSkill, true, SkillUse.CANCEL_TACKLE));
-						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
-					} else {
-						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), attackerCanCancelDodgeSkill, true,
+							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
+						} else {
+							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), attackerCanCancelDodgeSkill, true,
 								SkillUse.CANCEL_DODGE));
-						game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-						publishParameters(UtilBlockSequence.initPushback(this));
-						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+							game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+							publishParameters(UtilBlockSequence.initPushback(this));
+							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+						}
+					} else {
+						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
 					}
 				} else {
-					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
+					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+					publishParameters(UtilBlockSequence.initPushback(this));
+					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
 				}
-			} else {
+				break;
+			case POW:
 				game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
 				publishParameters(UtilBlockSequence.initPushback(this));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-			}
-			break;
-		case POW:
-			game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-			publishParameters(UtilBlockSequence.initPushback(this));
-			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-			break;
-		case PUSHBACK:
-			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-			publishParameters(UtilBlockSequence.initPushback(this));
-			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-			break;
-		default:
-			break;
+				break;
+			case PUSHBACK:
+				game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+				publishParameters(UtilBlockSequence.initPushback(this));
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+				break;
+			default:
+				break;
 		}
-		getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId(), false, false));
+		getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId(), suppressExtraEffectHandling, showNameInReport));
 	}
 
 	// JSON serialization
@@ -215,6 +222,8 @@ public class StepBlockChoice extends AbstractStep {
 		IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
 		IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+		IServerJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.addTo(jsonObject, suppressExtraEffectHandling);
+		IServerJsonOption.SHOW_NAME_IN_REPORT.addTo(jsonObject, showNameInReport);
 		return jsonObject;
 	}
 
@@ -230,6 +239,8 @@ public class StepBlockChoice extends AbstractStep {
 		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);
 		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
 		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		suppressExtraEffectHandling = IServerJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(source, jsonObject);
+		showNameInReport = IServerJsonOption.SHOW_NAME_IN_REPORT.getFrom(source, jsonObject);
 		return this;
 	}
 

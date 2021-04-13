@@ -87,7 +87,7 @@ public class ReportBlockChoice implements IReport {
 		IJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
 		IJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
-		IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLE.addTo(jsonObject, suppressExtraEffectHandling);
+		IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.addTo(jsonObject, suppressExtraEffectHandling);
 		IJsonOption.SHOW_NAME_IN_REPORT.addTo(jsonObject, showNameInReport);
 		return jsonObject;
 	}
@@ -100,7 +100,7 @@ public class ReportBlockChoice implements IReport {
 		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
 		fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		suppressExtraEffectHandling = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLE.getFrom(game, jsonObject);
+		suppressExtraEffectHandling = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(game, jsonObject);
 		showNameInReport = IJsonOption.SHOW_NAME_IN_REPORT.getFrom(game, jsonObject);
 		return this;
 	}

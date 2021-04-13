@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
+import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 public class BlockRoll implements IJsonSerializable {
 	private String targetId;
+	private PlayerState oldPlayerState;
 	private boolean successFulDauntless, ownChoice;
 	private int nrOfDice;
 	private int[] blockRoll;
@@ -20,7 +22,7 @@ public class BlockRoll implements IJsonSerializable {
 	public BlockRoll() {
 	}
 
-	public BlockRoll(String targetId) {
+	public BlockRoll(String targetId, PlayerState oldPlayerState) {
 		this.targetId = targetId;
 	}
 
@@ -72,6 +74,10 @@ public class BlockRoll implements IJsonSerializable {
 		return selectedIndex < 0;
 	}
 
+	public PlayerState getOldPlayerState() {
+		return oldPlayerState;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -96,6 +102,7 @@ public class BlockRoll implements IJsonSerializable {
 		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
 		selectedIndex = IJsonOption.NUMBER.getFrom(game, jsonObject);
 		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(game, jsonObject);
+		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -108,6 +115,7 @@ public class BlockRoll implements IJsonSerializable {
 		IJsonOption.BLOCK_ROLL.addTo(jsonObject, blockRoll);
 		IJsonOption.NUMBER.addTo(jsonObject, selectedIndex);
 		IJsonOption.IS_OWN_CHOICE.addTo(jsonObject, ownChoice);
+		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 }

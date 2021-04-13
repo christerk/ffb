@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -13,6 +14,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepSetDefender extends AbstractStep {
 	private String defenderId;
 

@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
-import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -21,17 +20,18 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.balancedbytes.games.ffb.report.ReportBlock;
-import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportBlockRoll;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.IStepLabel;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.generator.Sequence;
 import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
@@ -42,13 +42,28 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBlockRollMultiple extends AbstractStep {
 
 	private State state = new State();
+	private final Set<StepParameterKey> parameterToConsume = new HashSet<StepParameterKey>() {{
+		add(StepParameterKey.BLOCK_ROLL);
+		add(StepParameterKey.BLOCK_RESULT);
+		add(StepParameterKey.DICE_INDEX);
+		add(StepParameterKey.NR_OF_DICE);
+		add(StepParameterKey.OLD_DEFENDER_STATE);
+		add(StepParameterKey.STARTING_PUSHBACK_SQUARE);
+		add(StepParameterKey.DEFENDER_PUSHED);
+		add(StepParameterKey.FOLLOWUP_CHOICE);
+	}};
 
 	public StepBlockRollMultiple(GameState pGameState) {
 		super(pGameState);
@@ -69,7 +84,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			for (StepParameter parameter : pParameterSet.values()) {
 				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {
 					//noinspection unchecked
-					state.blockRolls.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(target -> new BlockRoll(target.getPlayerId())).collect(Collectors.toList()));
+					state.blockRolls.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(target -> new BlockRoll(target.getPlayerId(), target.getOriginalPlayerState())).collect(Collectors.toList()));
 				}
 			}
 		}
@@ -94,12 +109,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			state.reRollSource = command.getReRollSource();
 			state.selectedTarget = command.getTargetId();
 			state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(command.getTargetId()))
-				.findFirst().ifPresent(roll -> {
-				roll.setSelectedIndex(command.getSelectedIndex());
-				if (!roll.needsSelection()) {
-					reportBlockChoice(roll);
-				}
-			});
+				.findFirst().ifPresent(roll -> roll.setSelectedIndex(command.getSelectedIndex()));
 			state.reRollAvailableAgainst.remove(state.selectedTarget);
 			stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 		}
@@ -113,11 +123,6 @@ public class StepBlockRollMultiple extends AbstractStep {
 	public void start() {
 		super.start();
 		executeStep();
-	}
-
-	private void reportBlockChoice(BlockRoll blockRoll) {
-		BlockResult blockResult = getGameState().getGame().getRules().<BlockResultFactory>getFactory(FactoryType.Factory.BLOCK_RESULT).forRoll(blockRoll.getBlockRoll()[blockRoll.getSelectedIndex()]);
-		getResult().addReport(new ReportBlockChoice(blockRoll.getNrOfDice(), blockRoll.getBlockRoll(), blockRoll.getSelectedIndex(), blockResult, blockRoll.getTargetId(), true, true));
 	}
 
 	private void executeStep() {
@@ -205,7 +210,43 @@ public class StepBlockRollMultiple extends AbstractStep {
 	}
 
 	private void nextStep() {
+		Collections.reverse(state.blockRolls);
+		state.blockRolls.forEach(this::generateBlockEvaluationSequence);
+
 		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+
+	private void generateBlockEvaluationSequence(BlockRoll blockRoll) {
+		Sequence sequence = new Sequence(getGameState());
+		sequence.add(StepId.SET_DEFENDER, new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, blockRoll.getTargetId()));
+
+		sequence.add(StepId.BLOCK_CHOICE, from(StepParameterKey.GOTO_LABEL_ON_DODGE, IStepLabel.DODGE_BLOCK),
+			from(StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT, IStepLabel.BOTH_DOWN),
+			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK),
+			from(StepParameterKey.SUPPRESS_EXTRA_EFFECT_HANDLING, true),
+			from(StepParameterKey.SHOW_NAME_IN_REPORT, true));
+		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
+
+		sequence.add(StepId.BOTH_DOWN, IStepLabel.BOTH_DOWN);
+		sequence.add(StepId.WRESTLE);
+		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
+
+		sequence.add(StepId.BLOCK_DODGE, IStepLabel.DODGE_BLOCK);
+		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
+
+		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.CONSUME_PARAMETER, from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
+
+		getGameState().getStepStack().push(sequence.getSequence());
+
+		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
+
+		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, blockRoll.getOldPlayerState()));
+		publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, blockRoll.getNrOfDice()));
+		publishParameter(new StepParameter(StepParameterKey.BLOCK_ROLL, blockRoll.getBlockRoll()));
+		publishParameter(new StepParameter(StepParameterKey.DICE_INDEX, blockRoll.getSelectedIndex()));
+		publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT, factory.forRoll(blockRoll.getBlockRoll()[blockRoll.getSelectedIndex()])));
 	}
 
 	@Override
