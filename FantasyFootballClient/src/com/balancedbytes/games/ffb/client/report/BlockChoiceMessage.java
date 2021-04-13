@@ -15,11 +15,16 @@ public class BlockChoiceMessage extends ReportMessageBase<ReportBlockChoice> {
 
     @Override
     protected void render(ReportBlockChoice report) {
-  		StringBuilder status = new StringBuilder();
-  		status.append("Block Result [ ").append(report.getBlockResult().getName()).append(" ]");
-  		println(getIndent(), TextStyle.ROLL, status.toString());
-  		Player<?> attacker = game.getActingPlayer().getPlayer();
-  		Player<?> defender = game.getPlayerById(report.getDefenderId());
+	    Player<?> defender = game.getPlayerById(report.getDefenderId());
+	    StringBuilder status = new StringBuilder();
+	    status.append("Block Result");
+	    if (report.isShowNameInReport()) {
+			  status.append(" against ");
+			  status.append(defender.getName());
+		  }
+	    status.append(" [ ").append(report.getBlockResult().getName()).append(" ]");
+	    println(getIndent(), TextStyle.ROLL, status.toString());
+	    Player<?> attacker = game.getActingPlayer().getPlayer();
   		switch (report.getBlockResult()) {
   			case BOTH_DOWN:
   				if (attacker.hasSkillProperty(NamedProperties.preventFallOnBothDown)) {

@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
+import com.balancedbytes.games.ffb.BlockResult;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogOpponentBlockSelectionParameter;
 import com.balancedbytes.games.ffb.dialog.DialogReRollBlockForTargetsParameter;
+import com.balancedbytes.games.ffb.factory.BlockResultFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -18,6 +21,7 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.balancedbytes.games.ffb.report.ReportBlock;
+import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportBlockRoll;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -90,7 +94,12 @@ public class StepBlockRollMultiple extends AbstractStep {
 			state.reRollSource = command.getReRollSource();
 			state.selectedTarget = command.getTargetId();
 			state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(command.getTargetId()))
-				.findFirst().ifPresent(roll -> roll.setSelectedIndex(command.getSelectedIndex()));
+				.findFirst().ifPresent(roll -> {
+				roll.setSelectedIndex(command.getSelectedIndex());
+				if (!roll.needsSelection()) {
+					reportBlockChoice(roll);
+				}
+			});
 			state.reRollAvailableAgainst.remove(state.selectedTarget);
 			stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 		}
@@ -104,6 +113,11 @@ public class StepBlockRollMultiple extends AbstractStep {
 	public void start() {
 		super.start();
 		executeStep();
+	}
+
+	private void reportBlockChoice(BlockRoll blockRoll) {
+		BlockResult blockResult = getGameState().getGame().getRules().<BlockResultFactory>getFactory(FactoryType.Factory.BLOCK_RESULT).forRoll(blockRoll.getBlockRoll()[blockRoll.getSelectedIndex()]);
+		getResult().addReport(new ReportBlockChoice(blockRoll.getNrOfDice(), blockRoll.getBlockRoll(), blockRoll.getSelectedIndex(), blockResult, blockRoll.getTargetId(), true, true));
 	}
 
 	private void executeStep() {
@@ -176,7 +190,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 		if (!reRolling) {
 			getResult().addReport(new ReportBlock(game.getDefenderId()));
 		}
-		getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), reRolling ? roll.getTargetId() : null));
+		getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
 		getResult().setSound(SoundId.BLOCK);
 	}
 

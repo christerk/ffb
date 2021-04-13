@@ -15,6 +15,7 @@ public class BlockMessage extends ReportMessageBase<ReportBlock> {
 
     @Override
     protected void render(ReportBlock report) {
+    	setIndent(1);
   		ActingPlayer actingPlayer = game.getActingPlayer();
   		Player<?> attacker = actingPlayer.getPlayer();
   		Player<?> defender = game.getPlayerById(report.getDefenderId());
@@ -27,6 +28,5 @@ public class BlockMessage extends ReportMessageBase<ReportBlock> {
   		}
   		print(getIndent(), true, defender);
   		println(getIndent(), TextStyle.BOLD, ":");
-  		setIndent(getIndent() + 1);
     }
 }

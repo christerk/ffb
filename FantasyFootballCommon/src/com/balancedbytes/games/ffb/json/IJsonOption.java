@@ -369,6 +369,7 @@ public interface IJsonOption {
 	JsonStringArrayOption SETUP_NAMES = new JsonStringArrayOption("setupNames");
 	JsonBooleanOption SETUP_OFFENSE = new JsonBooleanOption("setupOffense");
 	JsonStringOption SHORTHAND = new JsonStringOption("shorthand");
+	JsonBooleanOption SHOW_NAME_IN_REPORT = new JsonBooleanOption("showNameInReport");
 	JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", Factory.SKILL);
 	JsonArrayOption SKILL_ARRAY = new JsonArrayOption("skillArray");
 	JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");
@@ -398,6 +399,7 @@ public interface IJsonOption {
 	JsonBooleanOption SUCCESSFUL_DAUNTLESS = new JsonBooleanOption("successfulDauntless");
 	JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");
 	JsonBooleanOption SUFFERING_BLOODLUST = new JsonBooleanOption("sufferingBloodlust");
+	JsonBooleanOption SUPPRESS_EXTRA_EFFECT_HANDLE = new JsonBooleanOption("suppressExtraEffectHandling");
 	JsonIntOption SWARMING_PLAYER_ACTUAL = new JsonIntOption("swarmingPlayerActual");
 	JsonIntOption SWARMING_PLAYER_ALLOWED = new JsonIntOption("swarmingPlayerAllowed");
 	JsonIntOption SWARMING_PLAYER_AMOUNT = new JsonIntOption("swarmingPlayerAmount");

@@ -290,12 +290,14 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 		for (IReport report : pReportList.getReports()) {
 			if (report.getId() == ReportId.BLOCK_CHOICE) {
 				ReportBlockChoice reportBlockChoice = (ReportBlockChoice) report;
-				BlockRoll blockRoll = new BlockRoll();
-				blockRoll.setNrOfDice(Math.abs(reportBlockChoice.getNrOfDice()));
-				blockRoll.setOwnChoice(reportBlockChoice.getNrOfDice() >= 0);
-				blockRoll.setBlockRoll(reportBlockChoice.getBlockRoll());
-				blockRoll.setSelectedIndex(reportBlockChoice.getDiceIndex());
-				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
+				if (!reportBlockChoice.isSuppressExtraEffectHandling()) {
+					BlockRoll blockRoll = new BlockRoll();
+					blockRoll.setNrOfDice(Math.abs(reportBlockChoice.getNrOfDice()));
+					blockRoll.setOwnChoice(reportBlockChoice.getNrOfDice() >= 0);
+					blockRoll.setBlockRoll(reportBlockChoice.getBlockRoll());
+					blockRoll.setSelectedIndex(reportBlockChoice.getDiceIndex());
+					clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
+				}
 			}
 		}
 	}

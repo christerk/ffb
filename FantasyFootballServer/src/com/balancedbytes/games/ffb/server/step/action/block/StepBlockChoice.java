@@ -199,7 +199,7 @@ public class StepBlockChoice extends AbstractStep {
 		default:
 			break;
 		}
-		getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId()));
+		getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId(), false, false));
 	}
 
 	// JSON serialization

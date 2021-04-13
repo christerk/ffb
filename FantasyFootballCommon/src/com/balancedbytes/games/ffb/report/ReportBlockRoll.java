@@ -44,7 +44,10 @@ public class ReportBlockRoll implements IReport {
 		return blockRoll;
 	}
 
-	// transformation
+	public String getDefenderId() {
+		return defenderId;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
 		return new ReportBlockRoll(getChoosingTeamId(), getBlockRoll(), defenderId);

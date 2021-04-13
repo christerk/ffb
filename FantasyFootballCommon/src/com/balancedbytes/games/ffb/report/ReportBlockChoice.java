@@ -20,18 +20,23 @@ public class ReportBlockChoice implements IReport {
 	private int fDiceIndex;
 	private BlockResult fBlockResult;
 	private String fDefenderId;
+	// use negative boolean variable to remain backwards compatible with old replays
+	private boolean suppressExtraEffectHandling;
+	private boolean showNameInReport;
 
 	public ReportBlockChoice() {
 		super();
 	}
 
 	public ReportBlockChoice(int pNrOfDice, int[] pBlockRoll, int pDiceIndex, BlockResult pBlockResult,
-			String pDefenderId) {
+			String pDefenderId, boolean suppressExtraEffectHandling, boolean showNameInReport) {
 		fNrOfDice = pNrOfDice;
 		fBlockRoll = pBlockRoll;
 		fDiceIndex = pDiceIndex;
 		fBlockResult = pBlockResult;
 		fDefenderId = pDefenderId;
+		this.suppressExtraEffectHandling = suppressExtraEffectHandling;
+		this.showNameInReport = showNameInReport;
 	}
 
 	public ReportId getId() {
@@ -58,10 +63,18 @@ public class ReportBlockChoice implements IReport {
 		return fDefenderId;
 	}
 
+	public boolean isSuppressExtraEffectHandling() {
+		return suppressExtraEffectHandling;
+	}
+
+	public boolean isShowNameInReport() {
+		return showNameInReport;
+	}
+
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportBlockChoice(getNrOfDice(), getBlockRoll(), getDiceIndex(), getBlockResult(), getDefenderId());
+		return new ReportBlockChoice(getNrOfDice(), getBlockRoll(), getDiceIndex(), getBlockResult(), getDefenderId(), suppressExtraEffectHandling, showNameInReport);
 	}
 
 	// JSON serialization
@@ -74,6 +87,8 @@ public class ReportBlockChoice implements IReport {
 		IJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
 		IJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
+		IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLE.addTo(jsonObject, suppressExtraEffectHandling);
+		IJsonOption.SHOW_NAME_IN_REPORT.addTo(jsonObject, showNameInReport);
 		return jsonObject;
 	}
 
@@ -85,6 +100,8 @@ public class ReportBlockChoice implements IReport {
 		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
 		fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
+		suppressExtraEffectHandling = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLE.getFrom(game, jsonObject);
+		showNameInReport = IJsonOption.SHOW_NAME_IN_REPORT.getFrom(game, jsonObject);
 		return this;
 	}
 
