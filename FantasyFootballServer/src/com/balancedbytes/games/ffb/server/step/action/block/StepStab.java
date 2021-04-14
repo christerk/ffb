@@ -33,13 +33,13 @@ import com.eclipsesource.json.JsonValue;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepStab extends AbstractStep {
 
-	public class StepState {
+	public static class StepState {
 		public ActionStatus status;
-		public String goToLabelOnFailure;
+		public String goToLabelOnSuccess;
 		public Boolean usingStab;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepStab(GameState pGameState) {
 		super(pGameState);
@@ -54,16 +54,12 @@ public class StepStab extends AbstractStep {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-				case GOTO_LABEL_ON_SUCCESS:
-					state.goToLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_SUCCESS) {
+					state.goToLabelOnSuccess = (String) parameter.getValue();
 				}
 			}
 		}
-		if (!StringTool.isProvided(state.goToLabelOnFailure)) {
+		if (!StringTool.isProvided(state.goToLabelOnSuccess)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
 		}
 	}
@@ -86,12 +82,9 @@ public class StepStab extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case USING_STAB:
+			if (pParameter.getKey() == StepParameterKey.USING_STAB) {
 				state.usingStab = (Boolean) pParameter.getValue();
 				return true;
-			default:
-				break;
 			}
 		}
 		return false;
@@ -106,7 +99,7 @@ public class StepStab extends AbstractStep {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnFailure);
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnSuccess);
 		IServerJsonOption.USING_STAB.addTo(jsonObject, state.usingStab);
 		return jsonObject;
 	}
@@ -115,7 +108,7 @@ public class StepStab extends AbstractStep {
 	public StepStab initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
 		state.usingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
 		return this;
 	}

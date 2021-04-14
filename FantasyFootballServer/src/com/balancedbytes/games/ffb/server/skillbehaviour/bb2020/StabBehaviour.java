@@ -48,7 +48,7 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
 					}
 					step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
 				} else {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}

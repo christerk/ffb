@@ -1,13 +1,16 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.multiblock;
 
+import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.BlockKind;
 import com.balancedbytes.games.ffb.model.BlockTarget;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.IStepLabel;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
@@ -21,14 +24,27 @@ import com.eclipsesource.json.JsonValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepMultipleBlockFork extends AbstractStep {
 	private final List<BlockTarget> targets = new ArrayList<>();
 	private List<String> successfulDauntless = new ArrayList<>();
+	private final Set<StepParameterKey> parameterToConsume = new HashSet<StepParameterKey>() {{
+		add(StepParameterKey.BLOCK_ROLL);
+		add(StepParameterKey.BLOCK_RESULT);
+		add(StepParameterKey.DICE_INDEX);
+		add(StepParameterKey.NR_OF_DICE);
+		add(StepParameterKey.OLD_DEFENDER_STATE);
+		add(StepParameterKey.STARTING_PUSHBACK_SQUARE);
+		add(StepParameterKey.DEFENDER_PUSHED);
+		add(StepParameterKey.FOLLOWUP_CHOICE);
+	}};
 
 	public StepMultipleBlockFork(GameState pGameState) {
 		super(pGameState);
@@ -46,7 +62,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 	@Override
 	public void init(StepParameterSet parameterSet) {
 		if (parameterSet != null) {
-			for (StepParameter parameter: parameterSet.values()) {
+			for (StepParameter parameter : parameterSet.values()) {
 				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {//noinspection unchecked
 					targets.addAll((Collection<? extends BlockTarget>) parameter.getValue());
 				}
@@ -79,30 +95,63 @@ public class StepMultipleBlockFork extends AbstractStep {
 	}
 
 	private void executeStep() {
-		Sequence sequence = new Sequence(getGameState());
 		Map<BlockKind, List<BlockTarget>> groupedTargets = targets.stream().collect(Collectors.groupingBy(BlockTarget::getKind));
 
-		if (groupedTargets.containsKey(BlockKind.STAB)) {
-			groupedTargets.get(BlockKind.STAB).forEach(target -> {
-					sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target));
-					sequence.add(StepId.STAB);
-				}
-			);
+		List<BlockTarget> blockGroup = groupedTargets.get(BlockKind.BLOCK);
+		if (blockGroup != null && !blockGroup.isEmpty()) {
+			Sequence sequence = new Sequence(getGameState());
+			sequence.add(StepId.DAUNTLESS_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
+			sequence.add(StepId.BLOCK_ROLL_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup),
+				StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
+			blockGroup.forEach(target -> {
+				Player<?> player = getGameState().getGame().getPlayerById(target.getPlayerId());
+				PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
+				getGameState().getGame().getFieldModel().setPlayerState(player, playerState.changeSelectedBlockTarget(false));
+			});
+			getGameState().getStepStack().push(sequence.getSequence());
 		}
 
 		List<BlockTarget> chainsawGroup = groupedTargets.get(BlockKind.CHAINSAW);
 		if (chainsawGroup != null && !chainsawGroup.isEmpty()) {
+			List<BlockTarget> reversed = new ArrayList<>(chainsawGroup);
+			reversed.forEach(target -> {
+				Sequence sequence = new Sequence(getGameState());
+				sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
+				sequence.add(StepId.DROP_FALLING_PLAYERS);
+				sequence.add(StepId.CONSUME_PARAMETER, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
+				getGameState().getStepStack().push(sequence.getSequence());
+				publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
+
+				Player<?> player = getGameState().getGame().getPlayerById(target.getPlayerId());
+				PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
+				getGameState().getGame().getFieldModel().setPlayerState(player, playerState.changeSelectedChainsawTarget(false));
+			});
+			Sequence sequence = new Sequence(getGameState());
 			sequence.add(StepId.BLOCK_CHAINSAW_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, chainsawGroup));
+			getGameState().getStepStack().push(sequence.getSequence());
 		}
 
-		List<BlockTarget> blockGroup = groupedTargets.get(BlockKind.BLOCK);
+		List<BlockTarget> stabGroup = groupedTargets.get(BlockKind.STAB);
+		if (stabGroup != null && !stabGroup.isEmpty()) {
+			Collections.reverse(stabGroup);
+			stabGroup.forEach(
+				target -> {
+					Sequence sequence = new Sequence(getGameState());
+					sequence.add(StepId.STAB, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.NEXT));
+					sequence.add(StepId.SET_DEFENDER, IStepLabel.NEXT, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
+					sequence.add(StepId.DROP_FALLING_PLAYERS);
+					sequence.add(StepId.CONSUME_PARAMETER, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
+					getGameState().getStepStack().push(sequence.getSequence());
+					publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
 
-		if (blockGroup != null && !blockGroup.isEmpty()) {
-			sequence.add(StepId.DAUNTLESS_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
-			sequence.add(StepId.BLOCK_ROLL_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
+					Player<?> player = getGameState().getGame().getPlayerById(target.getPlayerId());
+					PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
+					getGameState().getGame().getFieldModel().setPlayerState(player, playerState.changeSelectedStabTarget(false));
+				}
+			);
 		}
 
-		getGameState().getStepStack().push(sequence.getSequence());
+
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

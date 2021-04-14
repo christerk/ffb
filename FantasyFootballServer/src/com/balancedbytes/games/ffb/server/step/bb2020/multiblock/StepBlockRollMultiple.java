@@ -42,6 +42,7 @@ import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -54,16 +55,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 public class StepBlockRollMultiple extends AbstractStep {
 
 	private State state = new State();
-	private final Set<StepParameterKey> parameterToConsume = new HashSet<StepParameterKey>() {{
-		add(StepParameterKey.BLOCK_ROLL);
-		add(StepParameterKey.BLOCK_RESULT);
-		add(StepParameterKey.DICE_INDEX);
-		add(StepParameterKey.NR_OF_DICE);
-		add(StepParameterKey.OLD_DEFENDER_STATE);
-		add(StepParameterKey.STARTING_PUSHBACK_SQUARE);
-		add(StepParameterKey.DEFENDER_PUSHED);
-		add(StepParameterKey.FOLLOWUP_CHOICE);
-	}};
+	private final Set<StepParameterKey> parameterToConsume = new HashSet<>();
 
 	public StepBlockRollMultiple(GameState pGameState) {
 		super(pGameState);
@@ -82,9 +74,15 @@ public class StepBlockRollMultiple extends AbstractStep {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {
-					//noinspection unchecked
-					state.blockRolls.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(target -> new BlockRoll(target.getPlayerId(), target.getOriginalPlayerState())).collect(Collectors.toList()));
+				switch (parameter.getKey()) {
+					case BLOCK_TARGETS:
+						//noinspection unchecked
+						state.blockRolls.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(target -> new BlockRoll(target.getPlayerId(), target.getOriginalPlayerState())).collect(Collectors.toList()));
+						break;
+					case CONSUME_PARAMETER:
+						//noinspection unchecked
+						parameterToConsume.addAll((Collection<? extends StepParameterKey>) parameter.getValue());
+						break;
 				}
 			}
 		}
@@ -253,6 +251,8 @@ public class StepBlockRollMultiple extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.STEP_STATE.addTo(jsonObject, state.toJsonValue());
+		String[] keys = parameterToConsume.stream().map(StepParameterKey::name).collect(Collectors.toList()).toArray(new String[] {});
+		IJsonOption.STEP_PARAMETER_KEYS.addTo(jsonObject, keys);
 		return jsonObject;
 	}
 
@@ -261,6 +261,8 @@ public class StepBlockRollMultiple extends AbstractStep {
 		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state = new State().initFrom(source, IJsonOption.STEP_STATE.getFrom(source, jsonObject));
+		parameterToConsume.addAll(Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(pJsonValue)))
+			.map(StepParameterKey::valueOf).collect(Collectors.toSet()));
 		return this;
 	}
 

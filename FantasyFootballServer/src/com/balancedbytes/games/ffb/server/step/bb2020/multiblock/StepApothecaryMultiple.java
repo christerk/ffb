@@ -5,27 +5,20 @@ import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
-import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
-import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.inducement.Usage;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.report.ReportApothecaryChoice;
 import com.balancedbytes.games.ffb.report.ReportApothecaryRoll;
-import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
@@ -34,19 +27,14 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
-import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
-import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepApothecaryMultiple extends AbstractStep {
 
 	private ApothecaryMode fApothecaryMode;
@@ -61,22 +49,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 	}
 
 	public StepId getId() {
-		return StepId.APOTHECARY;
-	}
-
-	@Override
-	public void init(StepParameterSet pParameterSet) {
-		if (pParameterSet != null) {
-			for (StepParameter parameter : pParameterSet.values()) {
-				// mandatory
-				if (parameter.getKey() == StepParameterKey.APOTHECARY_MODE) {
-					fApothecaryMode = (ApothecaryMode) parameter.getValue();
-				}
-			}
-		}
-		if (fApothecaryMode == null) {
-			throw new StepException("StepParameter " + StepParameterKey.APOTHECARY_MODE + " is not initialized.");
-		}
+		return StepId.APOTHECARY_MULTIPLE;
 	}
 
 	@Override
@@ -144,19 +117,6 @@ public class StepApothecaryMultiple extends AbstractStep {
 						return true;
 					}
 					return false;
-				case USING_PILING_ON:
-					Boolean usingPilingOn = (Boolean) pParameter.getValue();
-					if ((ApothecaryMode.DEFENDER == fApothecaryMode) && (usingPilingOn != null) && !usingPilingOn) {
-						fShowReport = false;
-						return true;
-					}
-					return false;
-				case DEFENDER_POISONED:
-					fDefenderPoisoned = (Boolean) pParameter.getValue();
-					return fApothecaryMode == ApothecaryMode.DEFENDER;
-				case ATTACKER_POISONED:
-					fAttackerPoisoned = (Boolean) pParameter.getValue();
-					return fApothecaryMode == ApothecaryMode.ATTACKER;
 				default:
 					break;
 			}
@@ -165,7 +125,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 	}
 
 	private void executeStep() {
-		if (fInjuryResult == null) {
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	/*	if (fInjuryResult == null) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			UtilServerDialog.hideDialog(getGameState());
@@ -251,7 +212,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 				UtilServerInjury.handleRaiseDead(this, fInjuryResult);
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
-		}
+		}*/
 	}
 
 	private boolean rollApothecary() {

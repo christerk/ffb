@@ -69,8 +69,9 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.FALL_DOWN);
 
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
-			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);*/
+			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));*/
+		sequence.add(StepId.APOTHECARY_MULTIPLE);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
 		sequence.add(StepId.END_BLOCKING, IStepLabel.END_BLOCKING);
 		// may insert endTurn sequence add this point
 

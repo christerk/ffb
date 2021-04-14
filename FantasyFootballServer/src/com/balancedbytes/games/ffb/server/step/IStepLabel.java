@@ -40,6 +40,7 @@ public interface IStepLabel {
 	String KICKOFF_ANIMATION = "kickoffAnimation";
 	String KICK_TM_DOUBLE_ROLLED = "kickTeamMateDoubleRolled";
 	String MISSED_PASS = "missedPass";
+	String NEXT = "next";
 	String PASS = "pass";
 	String PUSHBACK = "pushback";
 	String RETRY_DODGE = "dodgeAgain";
