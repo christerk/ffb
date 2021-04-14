@@ -28,6 +28,7 @@ public class ChainsawRollMessage extends ReportMessageBase<ReportChainsawRoll> {
   		print(getIndent() + 1, status.toString());
 
   		if (StringTool.isProvided(report.getDefenderId())) {
+  			print(getIndent() + 1, " against ");
 			  Player<?> defender = game.getPlayerById(report.getDefenderId());
 			  if (defender != null) {
 			  	print(getIndent() + 1 , false, defender);

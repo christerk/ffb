@@ -44,6 +44,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 		add(StepParameterKey.STARTING_PUSHBACK_SQUARE);
 		add(StepParameterKey.DEFENDER_PUSHED);
 		add(StepParameterKey.FOLLOWUP_CHOICE);
+		add(StepParameterKey.USING_STAB);
 	}};
 
 	public StepMultipleBlockFork(GameState pGameState) {
@@ -137,12 +138,13 @@ public class StepMultipleBlockFork extends AbstractStep {
 			stabGroup.forEach(
 				target -> {
 					Sequence sequence = new Sequence(getGameState());
-					sequence.add(StepId.STAB, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.NEXT));
 					sequence.add(StepId.SET_DEFENDER, IStepLabel.NEXT, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
-					sequence.add(StepId.DROP_FALLING_PLAYERS);
+					sequence.add(StepId.STAB, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.NEXT));
+					sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.NEXT);
 					sequence.add(StepId.CONSUME_PARAMETER, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
 					getGameState().getStepStack().push(sequence.getSequence());
-					publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
+					publishParameter(StepParameter.from(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
+					publishParameter(StepParameter.from(StepParameterKey.USING_STAB, true));
 
 					Player<?> player = getGameState().getGame().getPlayerById(target.getPlayerId());
 					PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
