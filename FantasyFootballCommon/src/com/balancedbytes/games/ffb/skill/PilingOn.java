@@ -18,6 +18,8 @@ import com.balancedbytes.games.ffb.model.property.NamedProperties;
  * unless the Piling On player is carrying the ball. Piling On cannot be used
  * with the Stab or Chainsaw skills.
  */
+// This should be moved to 2016 rules but at the moment PilingOnBehavior is used to handle block knockdowns
+// (e.g. for BothDown results). So this needs to be untangled first
 @RulesCollection(Rules.COMMON)
 public class PilingOn extends Skill {
 
