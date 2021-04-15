@@ -76,6 +76,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupSave;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecaries;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
@@ -345,6 +346,10 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendArgueTheCall(String[] playerIds) {
 		send(new ClientCommandArgueTheCall(playerIds));
+	}
+
+	public void sendUseApothecaries(List<String> playerIds) {
+		send(new ClientCommandUseApothecaries(playerIds));
 	}
 
 	public void sendPushback(Pushback pPushback) {

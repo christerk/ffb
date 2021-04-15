@@ -7,6 +7,7 @@ package com.balancedbytes.games.ffb.server.step;
  */
 public enum StepParameterKey {
 
+	ACTING_TEAM, // Boolean
 	ADMIN_MODE, // Boolean
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean

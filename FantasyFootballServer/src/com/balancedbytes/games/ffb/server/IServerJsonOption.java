@@ -85,6 +85,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption INDUCEMENTS_SELECTED_AWAY = new JsonBooleanOption("inducementsSelectedAway");
 	JsonBooleanOption INDUCEMENTS_SELECTED_HOME = new JsonBooleanOption("inducementsSelectedHome");
 	JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
+	JsonArrayOption INJURY_RESULTS = new JsonArrayOption("injuryResults");
 	JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
 	JsonBooleanOption INTERCEPTION_SUCCESSFUL = new JsonBooleanOption("interceptionSuccessfull");
 	JsonBooleanOption INTERCEPTOR_CHOSEN = new JsonBooleanOption("interceptorChosen");

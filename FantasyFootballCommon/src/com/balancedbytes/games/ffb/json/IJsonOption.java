@@ -197,6 +197,7 @@ public interface IJsonOption {
 	JsonStringArrayOption INDUCEMENT_TYPE_ARRAY = new JsonStringArrayOption("inducementTypeArray");
 	JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
 	JsonPlayerStateOption INJURY_DECAY = new JsonPlayerStateOption("injuryDecay");
+	JsonArrayOption INJURY_DESCRIPTIONS = new JsonArrayOption("injuryDescriptions");
 	JsonArrayOption INJURY_MODIFIERS = new JsonArrayOption("injuryModifiers");
 	JsonIntArrayOption INJURY_ROLL = new JsonIntArrayOption("injuryRoll");
 	JsonEnumWithNameOption INJURY_TYPE = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE);

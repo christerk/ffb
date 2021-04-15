@@ -156,6 +156,9 @@ public class DialogManager {
 					case OPPONENT_BLOCK_SELECTION:
 						setDialogHandler(new DialogOpponentBlockSelectionHandler(getClient()));
 						break;
+					case USE_APOTHECARIES:
+						setDialogHandler(new DialogUseApothecariesHandler(getClient()));
+						break;
 					default:
 						break;
 				}
