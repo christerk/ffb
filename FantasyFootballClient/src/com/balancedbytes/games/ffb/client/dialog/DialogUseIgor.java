@@ -26,11 +26,14 @@ public class DialogUseIgor extends DialogYesOrNoQuestion {
 		return fDialogParameter.getPlayerId();
 	}
 
+	public DialogUseIgorParameter getDialogParameter() {
+		return fDialogParameter;
+	}
+
 	private static String[] createMessages(FantasyFootballClient pClient, DialogUseIgorParameter pDialogParameter) {
 		String[] messages = new String[2];
 		messages[0] = "Do you want to use your Igor?";
 		messages[1] = "Using the Igor will re-roll the failed Regeneration.";
 		return messages;
 	}
-
 }

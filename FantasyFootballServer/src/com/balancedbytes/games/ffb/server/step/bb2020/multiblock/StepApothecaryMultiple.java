@@ -5,23 +5,31 @@ import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.bb2020.InjuryDescription;
 import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecariesParameter;
+import com.balancedbytes.games.ffb.dialog.DialogUseIgorsParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.inducement.InducementType;
+import com.balancedbytes.games.ffb.inducement.Usage;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.property.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecaries;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseIgors;
 import com.balancedbytes.games.ffb.report.ReportApothecaryChoice;
 import com.balancedbytes.games.ffb.report.ReportApothecaryRoll;
+import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
@@ -35,23 +43,33 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepApothecaryMultiple extends AbstractStep {
 
-	private ApothecaryMode fApothecaryMode;
+	private static final Set<ApothecaryStatus> ignoreForIgorCheck = new HashSet<ApothecaryStatus>() {{
+		add(ApothecaryStatus.WAIT_FOR_IGOR_USE);
+		add(ApothecaryStatus.DO_NOT_USE_IGOR);
+	}};
+
+	private ApothecaryMode apothecaryMode;
 	private List<InjuryResult> injuryResults = new ArrayList<>();
 	private String teamId;
+	private boolean reportInjuriesApo = true, reportInjuriesIgor = true;
 
 	public StepApothecaryMultiple(GameState pGameState) {
 		super(pGameState);
@@ -104,7 +122,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 							ApothecaryStatus newStatus;
 							if (!ArrayTool.isProvided(useApothecaryCommand.getPlayerIds())) {
 								newStatus = ApothecaryStatus.DO_NOT_USE_APOTHECARY;
-							} else if (useApothecaryCommand.hasPlayerId(injuryResult.injuryContext().fDefenderId)) {
+							} else if (useApothecaryCommand.hasPlayerId(injuryResult.injuryContext().getDefenderId())) {
 								newStatus = ApothecaryStatus.USE_APOTHECARY;
 							} else {
 								newStatus = ApothecaryStatus.DO_REQUEST;
@@ -113,19 +131,22 @@ public class StepApothecaryMultiple extends AbstractStep {
 						});
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
-				case CLIENT_USE_INDUCEMENT:
-					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-/*					if (inducementCommand.getInducementType().getUsage() == Usage.REGENERATION) {
-						if ((fInjuryResult != null)
-							&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)) {
-							if (inducementCommand.hasPlayerId(fInjuryResult.injuryContext().getDefenderId())) {
-								fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.USE_IGOR);
+				case CLIENT_USE_IGORS:
+					ClientCommandUseIgors useIgorsCommand = (ClientCommandUseIgors) pReceivedCommand.getCommand();
+					injuryResults.stream()
+						.filter(injuryResult -> injuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)
+						.forEach(injuryResult -> {
+							ApothecaryStatus newStatus;
+							if (!ArrayTool.isProvided(useIgorsCommand.getPlayerIds())) {
+								newStatus = ApothecaryStatus.DO_NOT_USE_IGOR;
+							} else if (useIgorsCommand.hasPlayerId(injuryResult.injuryContext().getDefenderId())) {
+								newStatus = ApothecaryStatus.USE_IGOR;
 							} else {
-								fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_IGOR);
+								newStatus = ApothecaryStatus.WAIT_FOR_IGOR_USE;
 							}
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						}
-					}*/
+							injuryResult.injuryContext().setApothecaryStatus(newStatus);
+						});
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
 					break;
@@ -164,7 +185,6 @@ public class StepApothecaryMultiple extends AbstractStep {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			UtilServerDialog.hideDialog(getGameState());
-			boolean doNextStep = true;
 			Game game = getGameState().getGame();
 			Map<ApothecaryStatus, List<InjuryResult>> groupedInjuries = injuryResults.stream()
 				.collect(Collectors.groupingBy(injuryResult -> injuryResult.injuryContext().getApothecaryStatus()));
@@ -172,8 +192,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 			List<InjuryResult> useApo = groupedInjuries.get(ApothecaryStatus.USE_APOTHECARY);
 
 			if (useApo != null && !useApo.isEmpty()) {
-				for (InjuryResult injuryResult: useApo) {
-					if (rollApothecary(injuryResult)) {
+				for (InjuryResult injuryResult : useApo) {
+					int remainingApos = remainingApos();
+					if (remainingApos <= 0) {
+						injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_APOTHECARY);
+					} else if (rollApothecary(injuryResult)) {
 						injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_CHOICE);
 						return;
 					} else {
@@ -186,14 +209,16 @@ public class StepApothecaryMultiple extends AbstractStep {
 			if (doRequest != null && !doRequest.isEmpty()) {
 				List<InjuryDescription> injuryDescriptions = new ArrayList<>();
 				doRequest.forEach(injuryResult -> {
-					injuryResult.report(this);
+					if (reportInjuriesApo) {
+						injuryResult.report(this);
+					}
 					injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
 					InjuryContext injuryContext = injuryResult.injuryContext();
 					injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury));
 				});
-				TurnData turnData = game.getTeamById(teamId) == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
 
-				UtilServerDialog.showDialog(getGameState(), new DialogUseApothecariesParameter(teamId, injuryDescriptions, turnData.getApothecaries()), true);
+				reportInjuriesApo = false;
+				UtilServerDialog.showDialog(getGameState(), new DialogUseApothecariesParameter(teamId, injuryDescriptions, remainingApos()), true);
 
 				return;
 			}
@@ -201,8 +226,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 			List<InjuryResult> doNotUseApo = groupedInjuries.get(ApothecaryStatus.DO_NOT_USE_APOTHECARY);
 			if (doNotUseApo != null) {
 				doNotUseApo.forEach(injuryResult ->
-				getResult().addReport(
-					new ReportApothecaryRoll(injuryResult.injuryContext().getDefenderId(), null, null, null))
+					getResult().addReport(
+						new ReportApothecaryRoll(injuryResult.injuryContext().getDefenderId(), null, null, null))
 				);
 			}
 
@@ -211,54 +236,85 @@ public class StepApothecaryMultiple extends AbstractStep {
 				noApo.forEach(injuryResult -> injuryResult.report(this));
 			}
 
-			/*
-			if (doNextStep) {
-				Player<?> player = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
-				switch (fInjuryResult.injuryContext().getApothecaryStatus()) {
-					case DO_NOT_USE_IGOR:
-						break;
-					case USE_IGOR:
-						Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
-						InducementSet inducementSetIgor = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REGENERATION)
-							.findFirst().ifPresent(type -> {
-							UtilServerInducementUse.useInducement(getGameState(), team, type, 1);
-							getResult().addReport(new ReportInducement(team.getId(), type, 0));
-							boolean success = UtilServerInjury.handleRegeneration(this, player);
-							if (success) {
-								curePoison();
-							}
-						});
-						break;
-					default:
-						fInjuryResult.applyTo(this);
-						PlayerState playerState = game.getFieldModel().getPlayerState(player);
-						if ((playerState != null) && playerState.isCasualty()
-							&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
-							&& (fInjuryResult.injuryContext().getInjuryType().canUseApo())) {
-							if (!UtilServerInjury.handleRegeneration(this, player)) {
-								InducementSet inducementSet = game.getTeamHome().hasPlayer(player)
-									? game.getTurnDataHome().getInducementSet()
-									: game.getTurnDataAway().getInducementSet();
-								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream().anyMatch(type -> type.getUsage() == Usage.REGENERATION
-									&& inducementSet.hasUsesLeft(type));
-									if (hasInducement && player.getPlayerType() != PlayerType.STAR) {
-										game.setDialogParameter(new DialogUseIgorParameter(player.getId()));
-										fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
-										doNextStep = false;
-									}
-							} else {
-								curePoison();
-							}
-						}
-						break;
+			Team team = game.getTeamById(teamId);
+			InducementSet inducementSet = getTurnData().getInducementSet();
+			Optional<InducementType> regenerationType = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REGENERATION).findFirst();
+
+			boolean hasRegenerationInducement = regenerationType.isPresent() && inducementSet.hasUsesLeft(regenerationType.get());
+
+			List<InjuryResult> injuriesToUseIgorOn = injuryResults.stream().filter(injuryResult -> injuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.USE_IGOR).collect(Collectors.toList());
+			for (InjuryResult injuryResult : injuriesToUseIgorOn) {
+				Player<?> player = game.getPlayerById(injuryResult.injuryContext().getDefenderId());
+				PlayerState playerState = game.getFieldModel().getPlayerState(player);
+				injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_IGOR);
+
+				if (playerState != null && playerState.isCasualty()
+					&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
+					&& injuryResult.injuryContext().getInjuryType().canUseApo()
+					&& hasRegenerationInducement) {
+					UtilServerInducementUse.useInducement(getGameState(), team, regenerationType.get(), 1);
+					hasRegenerationInducement = inducementSet.hasUsesLeft(regenerationType.get());
+
+					getResult().addReport(new ReportInducement(teamId, regenerationType.get(), 0));
+					UtilServerInjury.handleRegeneration(this, player);
 				}
 			}
-			if (doNextStep) {
-				UtilServerInjury.handleRaiseDead(this, fInjuryResult);
-				getResult().setNextAction(StepAction.NEXT_STEP);
-			}*/
+
+			boolean finalHasRegenerationInducement = hasRegenerationInducement;
+			injuryResults.stream()
+				.filter(injuryResult -> !ignoreForIgorCheck.contains(injuryResult.injuryContext().getApothecaryStatus()))
+				.forEach(injuryResult -> {
+						injuryResult.applyTo(this);
+
+						Player<?> player = game.getPlayerById(injuryResult.injuryContext().getDefenderId());
+						PlayerState playerState = game.getFieldModel().getPlayerState(player);
+						injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_IGOR);
+
+						if (playerState != null && playerState.isCasualty()
+							&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
+							&& injuryResult.injuryContext().getInjuryType().canUseApo()
+							&& !UtilServerInjury.handleRegeneration(this, player)
+							&& finalHasRegenerationInducement
+							&& player.getPlayerType() != PlayerType.STAR) {
+							injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
+						}
+					}
+				);
+
+			List<InjuryResult> regenerationToReRoll = injuryResults.stream()
+				.filter(injuryResult -> injuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE).collect(Collectors.toList());
+
+			if (!regenerationToReRoll.isEmpty()) {
+				List<InjuryDescription> injuryDescriptions = new ArrayList<>();
+				regenerationToReRoll.forEach(injuryResult -> {
+					injuryResult.report(this);
+					InjuryContext injuryContext = injuryResult.injuryContext();
+					injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury));
+				});
+
+				UtilServerDialog.showDialog(getGameState(), new DialogUseIgorsParameter(teamId, injuryDescriptions, remainingApos()), true);
+				return;
+			}
+
+			for (InjuryResult injuryResult: injuryResults) {
+				if (UtilServerInjury.handleRaiseDead(this, injuryResult)) {
+					break;
+				}
+			}
+
+			getResult().setNextAction(StepAction.NEXT_STEP);
+
 		}
+	}
+
+	private int remainingApos() {
+		TurnData turnData = getTurnData();
+		return turnData.getApothecaries();
+	}
+
+	private TurnData getTurnData() {
+		Game game = getGameState().getGame();
+		return game.getTeamById(teamId) == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
 	}
 
 	private boolean rollApothecary(InjuryResult injuryResult) {
@@ -317,10 +373,12 @@ public class StepApothecaryMultiple extends AbstractStep {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, fApothecaryMode);
+		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, apothecaryMode);
 		JsonArray injuriesAsJson = new JsonArray();
 		injuryResults.stream().map(InjuryResult::toJsonValue).forEach(injuriesAsJson::add);
 		IServerJsonOption.INJURY_RESULTS.addTo(jsonObject, injuriesAsJson);
+		IJsonOption.REPORT_INJURIES_APO.addTo(jsonObject, reportInjuriesApo);
+		IJsonOption.REPORT_INJURIES_IGOR.addTo(jsonObject, reportInjuriesIgor);
 		return jsonObject;
 	}
 
@@ -328,11 +386,13 @@ public class StepApothecaryMultiple extends AbstractStep {
 	public StepApothecaryMultiple initFrom(IFactorySource source, JsonValue pJsonValue) {
 		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
+		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
 		JsonArray injuryResultObject = IServerJsonOption.INJURY_RESULTS.getFrom(source, jsonObject);
 		if (injuryResultObject != null) {
 			injuryResults = injuryResultObject.values().stream().map(value -> new InjuryResult().initFrom(source, value)).collect(Collectors.toList());
 		}
+		reportInjuriesApo = IJsonOption.REPORT_INJURIES_APO.getFrom(source, jsonObject);
+		reportInjuriesIgor = IJsonOption.REPORT_INJURIES_IGOR.getFrom(source, jsonObject);
 		return this;
 	}
 

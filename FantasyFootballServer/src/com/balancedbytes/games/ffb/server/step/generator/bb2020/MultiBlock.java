@@ -39,37 +39,7 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		// might insert dump off here with game#defenderId set
 		sequence.add(StepId.BLOCK_STATISTICS, from(StepParameterKey.INCREMENT, params.blockTargets.size()));
 		sequence.add(StepId.MULTI_BLOCK_FORK, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
-		/*
-
-		sequence.add(StepId.BLOCK_CHOICE, from(StepParameterKey.GOTO_LABEL_ON_DODGE, IStepLabel.DODGE_BLOCK),
-			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK));
-		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
-
-		sequence.add(StepId.BOTH_DOWN);
-		sequence.add(StepId.WRESTLE);
-		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
-
-		// on blockChoice = POW_PUSHBACK
-		sequence.add(StepId.BLOCK_DODGE, IStepLabel.DODGE_BLOCK);
-
-		// on blockChoice = POW or PUSHBACK
-		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
-		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.FALL_DOWN, IStepLabel.FALL_DOWN);
-		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
-
-		// on blockChoice = SKULL
-		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_DEFENDER,
-			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
-
-		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
-		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.FALL_DOWN);
-
-		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
-			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));*/
+		// inserts different sequences depending on the kind of blocks thrown
 		sequence.add(StepId.APOTHECARY_MULTIPLE, from(StepParameterKey.ACTING_TEAM, false));
 		sequence.add(StepId.APOTHECARY_MULTIPLE, from(StepParameterKey.ACTING_TEAM, true));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);

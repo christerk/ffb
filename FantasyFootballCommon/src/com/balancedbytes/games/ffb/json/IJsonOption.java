@@ -316,6 +316,8 @@ public interface IJsonOption {
 	JsonEnumWithNameOption RECOVERING_INJURY = new JsonEnumWithNameOption("recoveringInjury", Factory.SERIOUS_INJURY);
 	JsonIntOption REPLAY_TO_COMMAND_NR = new JsonIntOption("replayToCommandNr");
 	JsonEnumWithNameOption REPORT_ID = new JsonEnumWithNameOption("reportId", Factory.REPORT_ID);
+	JsonBooleanOption REPORT_INJURIES_APO = new JsonBooleanOption("reportInjuriesApo");
+	JsonBooleanOption REPORT_INJURIES_IGOR = new JsonBooleanOption("reportInjuriesIgor");
 	JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");
 	JsonArrayOption REPORTS = new JsonArrayOption("reports");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");

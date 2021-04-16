@@ -78,6 +78,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecaries;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseIgors;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRollForTarget;
@@ -350,6 +351,10 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUseApothecaries(List<String> playerIds) {
 		send(new ClientCommandUseApothecaries(playerIds));
+	}
+
+	public void sendUseIgors(List<String> playerIds) {
+		send(new ClientCommandUseIgors(playerIds));
 	}
 
 	public void sendPushback(Pushback pPushback) {

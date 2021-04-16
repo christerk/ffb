@@ -159,6 +159,9 @@ public class DialogManager {
 					case USE_APOTHECARIES:
 						setDialogHandler(new DialogUseApothecariesHandler(getClient()));
 						break;
+					case USE_IGORS:
+						setDialogHandler(new DialogUseIgorsHandler(getClient()));
+						break;
 					default:
 						break;
 				}

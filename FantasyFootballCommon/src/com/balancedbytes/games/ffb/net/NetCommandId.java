@@ -53,6 +53,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecaries;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseIgors;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRollForTarget;
@@ -121,7 +122,8 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_BUY_CARD("clientBuyCard"), CLIENT_SELECT_CARD_TO_BUY("clientSelectCardToBuy"), INTERNAL_SERVER_CLOSE_GAME("internalServerCloseGame"),
 	INTERNAL_SERVER_DELETE_GAME("internalServerDeleteGame"), INTERNAL_SERVER_UPLOAD_GAME("internalServerUploadGame"),
 	INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"), INTERNAL_SERVER_CLEAR_CACHE("internalServerClearCache"),
-	CLIENT_CLOSE_SESSION("clientCloseSession"), CLIENT_ARGUE_THE_CALL("clientArgueTheCall"), CLIENT_USE_APOTHECARIES("clientUseApothecaries"),
+	CLIENT_CLOSE_SESSION("clientCloseSession"), CLIENT_ARGUE_THE_CALL("clientArgueTheCall"),
+	CLIENT_USE_APOTHECARIES("clientUseApothecaries"), CLIENT_USE_IGORS("clientUseIgors"),
 	SERVER_GAME_TIME("serverGameTime"), CLIENT_PING("clientPing"), SERVER_PONG("serverPong"),
 	CLIENT_SET_BLOCK_TARGET_SELECTION("clientSetBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("clientUnsetBlockTargetSelection"),
 	CLIENT_SYNCHRONOUS_MULTI_BLOCK("clientSynchronousMultiBlock"), CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET("clientBlockOrReRollChoiceForTarget");
@@ -296,6 +298,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandBlockOrReRollChoiceForTarget();
 			case CLIENT_USE_APOTHECARIES:
 				return new ClientCommandUseApothecaries();
+			case CLIENT_USE_IGORS:
+				return new ClientCommandUseIgors();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

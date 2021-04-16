@@ -5,17 +5,17 @@ import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.bb2020.InjuryDescription;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.dialog.DialogUseApothecariesParameter;
-import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
+import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
+import com.balancedbytes.games.ffb.dialog.DialogUseIgorsParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DialogUseApothecariesHandler extends DialogHandler {
+public class DialogUseIgorsHandler extends DialogHandler {
 
-	public DialogUseApothecariesHandler(FantasyFootballClient pClient) {
+	public DialogUseIgorsHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
@@ -23,7 +23,7 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 
-		DialogUseApothecariesParameter dialogParameter = (DialogUseApothecariesParameter) game.getDialogParameter();
+		DialogUseIgorsParameter dialogParameter = (DialogUseIgorsParameter) game.getDialogParameter();
 		if (dialogParameter != null) {
 
 			if ((ClientMode.PLAYER == getClient().getMode())
@@ -31,7 +31,7 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 
 				if (dialogParameter.getInjuryDescriptions().size() == 1) {
 					InjuryDescription description = dialogParameter.getInjuryDescriptions().get(0);
-					setDialog(new DialogUseApothecary(getClient(), new DialogUseApothecaryParameter(description.getPlayerId(), description.getPlayerState(), description.getSeriousInjury())));
+					setDialog(new DialogUseIgor(getClient(), new DialogUseIgorParameter(description.getPlayerId())));
 
 				} else {
 					List<String> playerIds = new ArrayList<>();
@@ -40,14 +40,14 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 						playerIds.add(injuryDescription.getPlayerId());
 						descriptions.add(injuryDescription.getSeriousInjury() != null ? injuryDescription.getSeriousInjury().getDescription() : injuryDescription.getPlayerState().getDescription());
 					});
-					setDialog(new DialogPlayerChoice(getClient(), "Select players to use apothecary for",
-							playerIds.toArray(new String[0]), descriptions.toArray(new String[0]), 0, dialogParameter.getMaxApos(), null, true));
+					setDialog(new DialogPlayerChoice(getClient(), "Select players to use igor for",
+							playerIds.toArray(new String[0]), descriptions.toArray(new String[0]), 0, dialogParameter.getMaxIgors(), null, true));
 				}
 
 				getDialog().showDialog(this);
 
 			} else {
-				showStatus("Apothecary", "Waiting for coach to use Apothecaries.", StatusType.WAITING);
+				showStatus("Igor", "Waiting for coach to use Igors.", StatusType.WAITING);
 			}
 
 		}
@@ -57,9 +57,9 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
 		List<String> playerIds = new ArrayList<>();
-		if (testDialogHasId(pDialog, DialogId.USE_APOTHECARY)) {
-			DialogUseApothecary dialog = (DialogUseApothecary) pDialog;
-			DialogUseApothecaryParameter dialogParameter = dialog.getDialogParameter();
+		if (testDialogHasId(pDialog, DialogId.USE_IGOR)) {
+			DialogUseIgor dialog = (DialogUseIgor) pDialog;
+			DialogUseIgorParameter dialogParameter = dialog.getDialogParameter();
 			if (dialog.isChoiceYes()) {
 				playerIds.add(dialogParameter.getPlayerId());
 			}
@@ -71,7 +71,7 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 				playerIds.add(selectedPlayer.getId());
 			}
 		}
-		getClient().getCommunication().sendUseApothecaries(playerIds);
+		getClient().getCommunication().sendUseIgors(playerIds);
 	}
 
 }

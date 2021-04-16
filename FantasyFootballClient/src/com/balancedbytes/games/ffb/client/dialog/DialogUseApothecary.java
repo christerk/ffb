@@ -28,6 +28,10 @@ public class DialogUseApothecary extends DialogYesOrNoQuestion {
 		return fDialogParameter.getPlayerId();
 	}
 
+	public DialogUseApothecaryParameter getDialogParameter() {
+		return fDialogParameter;
+	}
+
 	private static String[] createMessages(FantasyFootballClient pClient, DialogUseApothecaryParameter pDialogParameter) {
 		String[] messages = new String[0];
 		if ((pClient != null) && (pDialogParameter != null)) {

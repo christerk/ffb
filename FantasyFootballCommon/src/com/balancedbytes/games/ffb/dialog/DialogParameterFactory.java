@@ -97,6 +97,10 @@ public class DialogParameterFactory {
 				return new DialogReRollBlockForTargetsParameter();
 			case OPPONENT_BLOCK_SELECTION:
 				return new DialogOpponentBlockSelectionParameter();
+			case USE_APOTHECARIES:
+				return new DialogUseApothecariesParameter();
+			case USE_IGORS:
+				return new DialogUseIgorsParameter();
 			default:
 				return null;
 		}
