@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.client.net;
 
+import com.balancedbytes.games.ffb.bb2020.InjuryDescription;
 import com.balancedbytes.games.ffb.inducement.Card;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.ConcedeGameStatus;
@@ -349,12 +350,12 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandArgueTheCall(playerIds));
 	}
 
-	public void sendUseApothecaries(List<String> playerIds) {
-		send(new ClientCommandUseApothecaries(playerIds));
+	public void sendUseApothecaries(List<InjuryDescription> injuryDescriptions) {
+		send(new ClientCommandUseApothecaries(injuryDescriptions));
 	}
 
-	public void sendUseIgors(List<String> playerIds) {
-		send(new ClientCommandUseIgors(playerIds));
+	public void sendUseIgors(List<InjuryDescription> injuryDescriptions) {
+		send(new ClientCommandUseIgors(injuryDescriptions));
 	}
 
 	public void sendPushback(Pushback pPushback) {
@@ -387,8 +388,8 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed));
 	}
 
-	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
-		send(new ClientCommandApothecaryChoice(pPlayerId, pPlayerState, pSeriousInjury));
+	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, PlayerState oldPlayerState) {
+		send(new ClientCommandApothecaryChoice(pPlayerId, pPlayerState, pSeriousInjury, oldPlayerState));
 	}
 
 	public void sendUserSettings(String[] pSettingNames, String[] pSettingValues) {

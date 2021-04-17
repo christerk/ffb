@@ -47,10 +47,10 @@ public class DialogApothecaryChoiceHandler extends DialogHandler {
 			DialogApothecaryChoice apothecaryChoiceDialog = (DialogApothecaryChoice) pDialog;
 			if (apothecaryChoiceDialog.isChoiceNewInjury()) {
 				getClient().getCommunication().sendApothecaryChoice(fDialogParameter.getPlayerId(),
-						fDialogParameter.getPlayerStateNew(), fDialogParameter.getSeriousInjuryNew());
+						fDialogParameter.getPlayerStateNew(), fDialogParameter.getSeriousInjuryNew(), fDialogParameter.getPlayerStateOld());
 			} else {
 				getClient().getCommunication().sendApothecaryChoice(fDialogParameter.getPlayerId(),
-						fDialogParameter.getPlayerStateOld(), fDialogParameter.getSeriousInjuryOld());
+						fDialogParameter.getPlayerStateOld(), fDialogParameter.getSeriousInjuryOld(), fDialogParameter.getPlayerStateOld());
 			}
 		}
 	}

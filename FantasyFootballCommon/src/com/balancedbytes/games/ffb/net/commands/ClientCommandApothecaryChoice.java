@@ -16,17 +16,18 @@ import com.eclipsesource.json.JsonValue;
 public class ClientCommandApothecaryChoice extends ClientCommand {
 
 	private String fPlayerId;
-	private PlayerState fPlayerState;
+	private PlayerState fPlayerState, oldPlayerState;
 	private SeriousInjury fSeriousInjury;
 
 	public ClientCommandApothecaryChoice() {
 		super();
 	}
 
-	public ClientCommandApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
+	public ClientCommandApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, PlayerState oldPlayerState) {
 		fPlayerId = pPlayerId;
 		fPlayerState = pPlayerState;
 		fSeriousInjury = pSeriousInjury;
+		this.oldPlayerState = oldPlayerState;
 	}
 
 	public NetCommandId getId() {
@@ -45,6 +46,10 @@ public class ClientCommandApothecaryChoice extends ClientCommand {
 		return fSeriousInjury;
 	}
 
+	public PlayerState getOldPlayerState() {
+		return oldPlayerState;
+	}
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -52,6 +57,7 @@ public class ClientCommandApothecaryChoice extends ClientCommand {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
 		IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -61,6 +67,7 @@ public class ClientCommandApothecaryChoice extends ClientCommand {
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(game, jsonObject);
 		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
+		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
 		return this;
 	}
 

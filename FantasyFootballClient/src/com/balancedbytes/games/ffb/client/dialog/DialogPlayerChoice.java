@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.layer.FieldLayer;
+import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
+import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.model.Player;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,13 +14,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.layer.FieldLayer;
-import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
-import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.model.Player;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.util.List;
 
 public class DialogPlayerChoice extends Dialog implements ActionListener {
 
@@ -142,4 +142,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		return fSelectedPlayers;
 	}
 
+	public List<Integer> getSelectedIndexes() {
+		return fList.getSelectedIndexes();
+	}
 }

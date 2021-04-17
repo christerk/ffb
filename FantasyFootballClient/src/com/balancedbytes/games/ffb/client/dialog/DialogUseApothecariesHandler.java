@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecariesParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,22 +55,26 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
-		List<String> playerIds = new ArrayList<>();
+		List<Integer> selectedIndexes = new ArrayList<>();
 		if (testDialogHasId(pDialog, DialogId.USE_APOTHECARY)) {
 			DialogUseApothecary dialog = (DialogUseApothecary) pDialog;
-			DialogUseApothecaryParameter dialogParameter = dialog.getDialogParameter();
 			if (dialog.isChoiceYes()) {
-				playerIds.add(dialogParameter.getPlayerId());
+				selectedIndexes.add(0);
 			}
 		}
 		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
 			DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-			Player<?>[] selectedPlayers = playerChoiceDialog.getSelectedPlayers();
-			for (Player<?> selectedPlayer : selectedPlayers) {
-				playerIds.add(selectedPlayer.getId());
-			}
+			selectedIndexes.addAll(playerChoiceDialog.getSelectedIndexes());
 		}
-		getClient().getCommunication().sendUseApothecaries(playerIds);
+
+		Game game = getClient().getGame();
+		DialogUseApothecariesParameter dialogParameter = (DialogUseApothecariesParameter) game.getDialogParameter();
+
+		List<InjuryDescription> allInjuries = dialogParameter.getInjuryDescriptions();
+		List<InjuryDescription> selectedInjuries = new ArrayList<>();
+		selectedIndexes.forEach(index -> selectedInjuries.add(allInjuries.get(index)));
+
+		getClient().getCommunication().sendUseApothecaries(selectedInjuries);
 	}
 
 }

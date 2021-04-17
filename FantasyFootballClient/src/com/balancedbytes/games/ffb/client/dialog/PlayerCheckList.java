@@ -1,11 +1,10 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -16,12 +15,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
-
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.PlayerIconFactory;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.util.ArrayTool;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
@@ -29,8 +28,8 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
 	private class PlayerCheckListRenderer extends JPanel implements ListCellRenderer<PlayerCheckListItem> {
 
-		private JCheckBox fCheckBox;
-		private JLabel fLabel;
+		private final JCheckBox fCheckBox;
+		private final JLabel fLabel;
 
 		public PlayerCheckListRenderer() {
 			super();
@@ -48,7 +47,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 			setBackground(pList.getBackground());
 			setForeground(pList.getForeground());
 			fCheckBox.setBackground(pList.getBackground());
-			PlayerCheckListItem listItem = (PlayerCheckListItem) pValue;
+			PlayerCheckListItem listItem = pValue;
 			fCheckBox.setSelected(listItem.isSelected());
 			fLabel.setIcon(listItem.getIcon());
 			fLabel.setText(listItem.getText());
@@ -58,9 +57,9 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
 	private class PlayerCheckListMouseAdapter extends MouseAdapter {
 
-		private int fMinSelects;
-		private int fMaxSelects;
-		private JButton fSelectButton;
+		private final int fMinSelects;
+		private final int fMaxSelects;
+		private final JButton fSelectButton;
 
 		public PlayerCheckListMouseAdapter(int minSelects, int maxSelects, JButton selectButton) {
 			fMinSelects = minSelects;
@@ -143,7 +142,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 	}
 
 	public Player<?> getPlayerAtIndex(int pIndex) {
-		PlayerCheckListItem checkListItem = (PlayerCheckListItem) getModel().getElementAt(pIndex);
+		PlayerCheckListItem checkListItem = getModel().getElementAt(pIndex);
 		if (checkListItem != null) {
 			return checkListItem.getPlayer();
 		} else {
@@ -154,18 +153,30 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 	public Player<?>[] getSelectedPlayers() {
 		List<Player<?>> selectedPlayers = new ArrayList<>();
 		for (int i = 0; i < getModel().getSize(); i++) {
-			PlayerCheckListItem item = (PlayerCheckListItem) getModel().getElementAt(i);
+			PlayerCheckListItem item = getModel().getElementAt(i);
 			if (item.isSelected()) {
 				selectedPlayers.add(item.getPlayer());
 			}
 		}
-		return selectedPlayers.toArray(new Player[selectedPlayers.size()]);
+		return selectedPlayers.toArray(new Player[0]);
+	}
+
+	public List<Integer> getSelectedIndexes() {
+		List<Integer> selectedIndexes = new ArrayList<>();
+		for (int i = 0; i < getModel().getSize(); i++) {
+			PlayerCheckListItem item = getModel().getElementAt(i);
+			if (item.isSelected()) {
+				selectedIndexes.add(i);
+			}
+		}
+
+		return selectedIndexes;
 	}
 
 	private int findNrOfSelectedItems() {
 		int nrOfSelectedItems = 0;
 		for (int i = 0; i < getModel().getSize(); i++) {
-			PlayerCheckListItem item = (PlayerCheckListItem) getModel().getElementAt(i);
+			PlayerCheckListItem item = getModel().getElementAt(i);
 			if (item.isSelected()) {
 				nrOfSelectedItems++;
 			}
