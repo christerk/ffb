@@ -113,8 +113,10 @@ public class NamedProperties {
 	public static final ISkillProperty isHurtMoreEasily = new NamedProperty("Is Hurt More Easily");
 	public static final ISkillProperty makesDodgingHarder = new NamedProperty("Makes Dodging Harder");
 	public static final ISkillProperty makesJumpingHarder = new NamedProperty("Makes Jumping Harder");
+	public static final ISkillProperty makesStrengthTestObsolete = new NamedProperty("Makes Strength Test Obsolete");
 	public static final ISkillProperty mightEatPlayerToThrow = new NamedProperty("Might Eat Player To Throw");
 	public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
+	public static final ISkillProperty needsNoDiceDecorations = new NamedProperty("Needs No Dice Decorations");
 	public static final ISkillProperty needsToRollForActionButKeepsTacklezone = new NamedProperty("Needs To Roll For Action But Keeps Tacklezone");
 	public static final ISkillProperty needsToRollHighToAvoidConfusion = new NamedProperty("Need To Roll High To Avoid Confusion");
 	public static final ISkillProperty passesAreInterceptedEasier = new NamedProperty("Passes Are Intercepted Easier");
@@ -153,6 +155,5 @@ public class NamedProperties {
 	public static final ISkillProperty setGfiRollToFive = new NamedProperty("Set Gfi Roll To Five");
 	public static final ISkillProperty ttmScattersInSingleDirection = new NamedProperty(
 			"Throw Team Mate Scatters In Single Direction");
-	public static final ISkillProperty useSpecialBlockRules = new NamedProperty("Use Special Block Rules");
 	public static final ISkillProperty weakenOpposingBlitzer = new NamedProperty("Weaken Opposing Blitzer");
 }

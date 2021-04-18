@@ -15,8 +15,7 @@ import com.balancedbytes.games.ffb.server.mechanic.RollMechanic;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class ServerUtilBlock {
-	public static boolean updateDiceDecorations(Game pGame) {
-		boolean diceDecorationsDrawn = false;
+	public static void updateDiceDecorations(Game pGame) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
 		boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
@@ -36,7 +35,6 @@ public class ServerUtilBlock {
 						UtilPlayer.findAdjacentBlockablePlayers(pGame, actingPlayer.getPlayer().getTeam(), coordinateAttacker));
 			}
 		}
-		return diceDecorationsDrawn;
 	}
 
 	public static void removePlayerBlockStates(Game pGame) {
@@ -48,24 +46,22 @@ public class ServerUtilBlock {
 		}
 	}
 
-	private static boolean addDiceDecorations(Game pGame, Player<?>[] pPlayers) {
+	private static void addDiceDecorations(Game pGame, Player<?>[] pPlayers) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		if (pPlayers.length > 0) {
 			boolean usingMultiBlock = (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK);
-			for (int i = 0; i < pPlayers.length; i++) {
-				if (!usingMultiBlock || (pPlayers[i] != pGame.getDefender())) {
+			for (Player<?> pPlayer : pPlayers) {
+				if (!usingMultiBlock || (pPlayer != pGame.getDefender())) {
 					int nrOfDice = 0;
-					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.useSpecialBlockRules)) {
-						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayers[i],
-								usingMultiBlock, false);
+					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.needsNoDiceDecorations)) {
+						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayer,
+							usingMultiBlock, false);
 					}
-					FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayers[i]);
+					FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
 					pGame.getFieldModel().add(new DiceDecoration(coordinateOpponent, nrOfDice));
 				}
 			}
-			return true;
 		}
-		return false;
 	}
 
 	public static int getAttackerStrength(Game game, Player<?> attacker, Player<?> defender, boolean isMultiBlock) {

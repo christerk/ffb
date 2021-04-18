@@ -37,7 +37,7 @@ public class Chainsaw extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.useSpecialBlockRules);
+		registerProperty(NamedProperties.makesStrengthTestObsolete);
 		registerProperty(NamedProperties.blocksLikeChainsaw);
 		registerProperty(NamedProperties.providesBlockAlternative);
 		registerProperty(NamedProperties.providesChainsawBlockAlternative);
