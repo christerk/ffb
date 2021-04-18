@@ -225,7 +225,7 @@ public class StepApothecary extends AbstractStep {
 						break;
 					case USE_IGOR:
 						Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
-						InducementSet inducementSetIgor = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+						InducementSet inducementSetIgor = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REGENERATION)
 							.findFirst().ifPresent(type -> {
 							UtilServerInducementUse.useInducement(getGameState(), team, type, 1);

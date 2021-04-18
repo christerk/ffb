@@ -1,9 +1,8 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
+import com.balancedbytes.games.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -11,10 +10,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
-import com.balancedbytes.games.ffb.dialog.DialogId;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * 
@@ -31,12 +30,15 @@ public class DialogApothecaryChoice extends Dialog implements ActionListener {
 
 		super(pClient, "Choose Apothecary Result", false);
 
+		String playerName = pClient.getGame().getPlayerById(pDialogParameter.getPlayerId()).getName();
+
 		JPanel panelMain = new JPanel();
 		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.Y_AXIS));
 
 		JPanel panelInfo1 = new JPanel();
 		panelInfo1.setLayout(new BoxLayout(panelInfo1, BoxLayout.X_AXIS));
 		panelInfo1.add(new JLabel("The apothecary gives you a choice."));
+		panelInfo1.add(new JLabel("Injury for " + playerName));
 		panelInfo1.add(Box.createHorizontalGlue());
 
 		panelMain.add(panelInfo1);
