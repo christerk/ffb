@@ -38,6 +38,7 @@ public class ClientStateSelect extends ClientState {
 	public void enterState() {
 		super.enterState();
 		getClient().getGame().setDefenderId(null);
+		getClient().getClientData().clearBlockDiceResult();
 	}
 
 	public ClientStateId getId() {
