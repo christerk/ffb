@@ -40,7 +40,7 @@ public class DialogUseIgorsHandler extends DialogHandler {
 						descriptions.add(injuryDescription.getSeriousInjury() != null ? injuryDescription.getSeriousInjury().getDescription() : injuryDescription.getPlayerState().getDescription());
 					});
 					setDialog(new DialogPlayerChoice(getClient(), "Select players to use igor for",
-							playerIds.toArray(new String[0]), descriptions.toArray(new String[0]), 0, dialogParameter.getMaxIgors(), null, true));
+							playerIds.toArray(new String[0]), descriptions.toArray(new String[0]), 0, dialogParameter.getMaxIgors(), null, false));
 				}
 
 				getDialog().showDialog(this);

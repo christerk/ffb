@@ -40,7 +40,7 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 						descriptions.add(injuryDescription.getSeriousInjury() != null ? injuryDescription.getSeriousInjury().getDescription() : injuryDescription.getPlayerState().getDescription());
 					});
 					setDialog(new DialogPlayerChoice(getClient(), "Select players to use apothecary for",
-							playerIds.toArray(new String[0]), descriptions.toArray(new String[0]), 0, dialogParameter.getMaxApos(), null, true));
+							playerIds.toArray(new String[0]), descriptions.toArray(new String[0]), 0, dialogParameter.getMaxApos(), null, false));
 				}
 
 				getDialog().showDialog(this);

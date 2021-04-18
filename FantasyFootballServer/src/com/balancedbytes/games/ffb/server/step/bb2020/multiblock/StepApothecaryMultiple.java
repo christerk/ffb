@@ -219,16 +219,22 @@ public class StepApothecaryMultiple extends AbstractStep {
 			List<InjuryResult> doRequest = groupedInjuries.get(ApothecaryStatus.DO_REQUEST);
 			if (doRequest != null && !doRequest.isEmpty()) {
 				List<InjuryDescription> injuryDescriptions = new ArrayList<>();
+				int remainingApos = remainingApos();
 				doRequest.forEach(injuryResult -> {
 					injuryResult.report(this);
-					injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
 					InjuryContext injuryContext = injuryResult.injuryContext();
-					injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury));
+					if (remainingApos > 0) {
+						injuryContext.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
+						injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury));
+					} else {
+						injuryContext.setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_APOTHECARY);
+					}
 				});
 
-				UtilServerDialog.showDialog(getGameState(), new DialogUseApothecariesParameter(teamId, injuryDescriptions, remainingApos()), true);
-
-				return;
+				if (remainingApos > 0) {
+					UtilServerDialog.showDialog(getGameState(), new DialogUseApothecariesParameter(teamId, injuryDescriptions, remainingApos), true);
+					return;
+				}
 			}
 
 			List<InjuryResult> doNotUseApo = groupedInjuries.get(ApothecaryStatus.DO_NOT_USE_APOTHECARY);
