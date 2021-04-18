@@ -1,14 +1,13 @@
 package com.balancedbytes.games.ffb.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * 
@@ -123,11 +122,7 @@ public class UtilBox {
 				coordinates.add(coordinate);
 			}
 		}
-		Collections.sort(coordinates, new Comparator<FieldCoordinate>() {
-			public int compare(FieldCoordinate pO1, FieldCoordinate pO2) {
-				return pO1.getY() - pO2.getY();
-			}
-		});
+		coordinates.sort(Comparator.comparingInt(FieldCoordinate::getY));
 		for (int y = 0; y < coordinates.size(); y++) {
 			Player<?> player = pGame.getFieldModel().getPlayer(coordinates.get(y));
 			pGame.getFieldModel().setPlayerCoordinate(player, new FieldCoordinate(pBoxX, y));

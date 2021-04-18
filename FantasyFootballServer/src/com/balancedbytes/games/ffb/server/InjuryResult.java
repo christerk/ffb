@@ -35,11 +35,23 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
  */
 public class InjuryResult implements IJsonSerializable {
+
+	private static List<Integer> basePrecedenceList = new ArrayList<Integer>() {{
+		add(PlayerState.PRONE);
+		add(PlayerState.STUNNED);
+		add(PlayerState.KNOCKED_OUT);
+		add(PlayerState.BADLY_HURT);
+		add(PlayerState.SERIOUS_INJURY);
+		add(PlayerState.RIP);
+	}};
 
 	private InjuryContext injuryContext;
 
@@ -56,6 +68,10 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 	public void applyTo(IStep pStep) {
+		applyTo(pStep, true);
+	}
+
+	public void applyTo(IStep pStep, boolean updateStats) {
 		Game game = pStep.getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		Player<?> defender = game.getPlayerById(injuryContext.getDefenderId());
@@ -69,28 +85,31 @@ public class InjuryResult implements IJsonSerializable {
 
 		PlayerState oldPlayerState = game.getFieldModel().getPlayerState(defender);
 		if (injuryContext.getPlayerState() != null) {
-			// Make sure the player isn't converted from a stun to prone (for example when
-			// fouling a stunned player)
-			if ((injuryContext.getPlayerState().getBase() != PlayerState.PRONE)
-					|| (oldPlayerState.getBase() != PlayerState.STUNNED)) {
+			// Make sure the player isn't converted e.g. from a stun to prone (for example when
+			// fouling a stunned player) or in case of two cas vs a multiblock player a BH does override a RIP
+			if (!basePrecedenceList.contains(oldPlayerState.getBase()) ||
+				basePrecedenceList.indexOf(injuryContext.getPlayerState().getBase()) > basePrecedenceList.indexOf(oldPlayerState.getBase())) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(defender);
 				game.getFieldModel().setPlayerState(defender, playerState.changeBase(injuryContext.getPlayerState().getBase()));
 				if ((injuryContext.getPlayerState().getBase() == PlayerState.STUNNED)
-						&& (((defender.getTeam() == game.getTeamHome()) && game.isHomePlaying())
-								|| ((defender.getTeam() == game.getTeamAway()) && !game.isHomePlaying()))) {
+					&& (((defender.getTeam() == game.getTeamHome()) && game.isHomePlaying())
+					|| ((defender.getTeam() == game.getTeamAway()) && !game.isHomePlaying()))) {
 					game.getFieldModel().setPlayerState(defender,
-							game.getFieldModel().getPlayerState(defender).changeActive(false));
+						game.getFieldModel().getPlayerState(defender).changeActive(false));
 				}
-			}
-			if (injuryContext.isCasualty() || injuryContext.isKnockedOut() || injuryContext.isReserve()) {
-				UtilBox.putPlayerIntoBox(game, defender);
-				UtilServerGame.updateLeaderReRolls(pStep);
+				if (injuryContext.isCasualty() || injuryContext.isKnockedOut() || injuryContext.isReserve()) {
+					UtilBox.putPlayerIntoBox(game, defender);
+					UtilServerGame.updateLeaderReRolls(pStep);
+				}
 			}
 		}
 		// death is also a serious injury
 		if ((injuryContext.getPlayerState() != null) && (injuryContext.getPlayerState().getBase() == PlayerState.RIP)) {
 			playerResult.setSeriousInjury(((SeriousInjuryFactory) game.getFactory(FactoryType.Factory.SERIOUS_INJURY)).dead());
 			playerResult.setSeriousInjuryDecay(null);
+		} else if (playerResult.getSeriousInjury() != null) {
+			// hacky workaround for 2 cas against an attacker during multiblock
+			playerResult.setSeriousInjuryDecay(injuryContext.getSeriousInjury());
 		} else {
 			playerResult.setSeriousInjury(injuryContext.getSeriousInjury());
 			playerResult.setSeriousInjuryDecay(injuryContext.getSeriousInjuryDecay());
@@ -101,7 +120,7 @@ public class InjuryResult implements IJsonSerializable {
 			playerResult.setSendToBoxHalf(injuryContext.getSendToBoxHalf());
 			playerResult.setSendToBoxByPlayerId(injuryContext.getAttackerId());
 		}
-		if (injuryContext.getSufferedInjury() != null) {
+		if (injuryContext.getSufferedInjury() != null && updateStats) {
 			if (isCausedByOpponent) {
 				if ((injuryContext.fApothecaryStatus == ApothecaryStatus.RESULT_CHOICE)
 						&& (injuryContext.getPlayerState().getBase() == PlayerState.RESERVE)) {

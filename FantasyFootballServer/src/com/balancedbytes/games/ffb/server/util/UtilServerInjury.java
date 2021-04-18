@@ -157,13 +157,16 @@ public class UtilServerInjury {
 		return injuryResult;
 
 	}
-
 	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer) {
+		return handleRegeneration(pStep, pPlayer, null);
+	}
+
+	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer, PlayerState givenPlayerState) {
 		boolean successful = false;
 		if (pPlayer != null) {
 			GameState gameState = pStep.getGameState();
 			Game game = gameState.getGame();
-			PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+			PlayerState playerState = givenPlayerState != null ? givenPlayerState : game.getFieldModel().getPlayerState(pPlayer);
 			if ((playerState != null) && playerState.isCasualty()
 					&& pPlayer.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)) {
 				DiceRoller diceRoller = gameState.getDiceRoller();
