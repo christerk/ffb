@@ -26,7 +26,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
 	// Handles rendering cells in the list using a check box
 
-	private class PlayerCheckListRenderer extends JPanel implements ListCellRenderer<PlayerCheckListItem> {
+	private static class PlayerCheckListRenderer extends JPanel implements ListCellRenderer<PlayerCheckListItem> {
 
 		private final JCheckBox fCheckBox;
 		private final JLabel fLabel;
@@ -47,10 +47,9 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 			setBackground(pList.getBackground());
 			setForeground(pList.getForeground());
 			fCheckBox.setBackground(pList.getBackground());
-			PlayerCheckListItem listItem = pValue;
-			fCheckBox.setSelected(listItem.isSelected());
-			fLabel.setIcon(listItem.getIcon());
-			fLabel.setText(listItem.getText());
+			fCheckBox.setSelected(pValue.isSelected());
+			fLabel.setIcon(pValue.getIcon());
+			fLabel.setText(pValue.getText());
 			return this;
 		}
 	}
@@ -130,7 +129,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 				checkListItems.add(checkListItem);
 			}
 		}
-		setListData(checkListItems.toArray(new PlayerCheckListItem[checkListItems.size()]));
+		setListData(checkListItems.toArray(new PlayerCheckListItem[0]));
 
 		// Use a CheckListRenderer (see below) to renderer list cells
 		setCellRenderer(new PlayerCheckListRenderer());
