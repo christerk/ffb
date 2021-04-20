@@ -22,11 +22,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.RosterPosition;
-import com.balancedbytes.games.ffb.xml.XmlHandler;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.xml.XmlHandler;
 
 /**
  * Ergebnis eines XML Imports.

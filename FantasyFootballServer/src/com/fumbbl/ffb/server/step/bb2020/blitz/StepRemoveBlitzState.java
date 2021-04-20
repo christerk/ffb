@@ -1,0 +1,49 @@
+package com.fumbbl.ffb.server.step.bb2020.blitz;
+
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepId;
+
+@RulesCollection(RulesCollection.Rules.BB2020)
+public class StepRemoveBlitzState extends AbstractStep {
+
+	public StepRemoveBlitzState(GameState pGameState) {
+		super(pGameState);
+	}
+
+	@Override
+	public StepId getId() {
+		return StepId.REMOVE_BLITZ_STATE;
+	}
+
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
+
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		BlitzState blitzState = game.getFieldModel().getBlitzState();
+		if (blitzState != null) {
+			game.getFieldModel().setBlitzState(null);
+			String playerId = blitzState.getSelectedPlayerId();
+			if (playerId != null) {
+				Player<?> player = game.getPlayerById(playerId);
+				if (player != null) {
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					if (playerState != null) {
+						game.getFieldModel().setPlayerState(player, playerState.removeSelectedBlitzTarget());
+					}
+				}
+			}
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+}

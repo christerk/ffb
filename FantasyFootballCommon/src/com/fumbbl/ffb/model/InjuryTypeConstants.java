@@ -1,0 +1,54 @@
+package com.fumbbl.ffb.model;
+
+import com.fumbbl.ffb.InjuryType;
+import com.fumbbl.ffb.injury.BallAndChain;
+import com.fumbbl.ffb.injury.Bitten;
+import com.fumbbl.ffb.injury.Block;
+import com.fumbbl.ffb.injury.BlockProne;
+import com.fumbbl.ffb.injury.BlockStunned;
+import com.fumbbl.ffb.injury.Bomb;
+import com.fumbbl.ffb.injury.Chainsaw;
+import com.fumbbl.ffb.injury.CrowdPush;
+import com.fumbbl.ffb.injury.DropDodge;
+import com.fumbbl.ffb.injury.DropGFI;
+import com.fumbbl.ffb.injury.DropJump;
+import com.fumbbl.ffb.injury.EatPlayer;
+import com.fumbbl.ffb.injury.Fireball;
+import com.fumbbl.ffb.injury.Foul;
+import com.fumbbl.ffb.injury.KTMCrowd;
+import com.fumbbl.ffb.injury.KTMInjury;
+import com.fumbbl.ffb.injury.Lightning;
+import com.fumbbl.ffb.injury.PilingOnArmour;
+import com.fumbbl.ffb.injury.PilingOnInjury;
+import com.fumbbl.ffb.injury.PilingOnKnockedOut;
+import com.fumbbl.ffb.injury.Stab;
+import com.fumbbl.ffb.injury.TTMHitPlayer;
+import com.fumbbl.ffb.injury.TTMLanding;
+import com.fumbbl.ffb.injury.ThrowARock;
+
+public class InjuryTypeConstants {
+	public static final InjuryType BALL_AND_CHAIN = new BallAndChain();
+	public static final InjuryType BITTEN = new Bitten();
+	public static final InjuryType BLOCK = new Block();
+	public static final InjuryType BLOCK_PRONE = new BlockProne();
+	public static final InjuryType BLOCK_STUNNED = new BlockStunned();
+	public static final InjuryType BOMB = new Bomb();
+	public static final InjuryType CHAINSAW = new Chainsaw();
+	public static final InjuryType CROWD_PUSH = new CrowdPush();
+	public static final InjuryType DROP_DODGE = new DropDodge();
+	public static final InjuryType DROP_GFI = new DropGFI();
+	public static final InjuryType DROP_JUMP = new DropJump();
+	public static final InjuryType EAT_PLAYER = new EatPlayer();
+	public static final InjuryType FIREBALL = new Fireball();
+	public static final InjuryType FOUL = new Foul();
+	public static final InjuryType KTM_CROWD = new KTMCrowd();
+	public static final InjuryType KTM_INJURY = new KTMInjury();
+	public static final InjuryType LIGHTNING = new Lightning();
+	public static final InjuryType PILING_ON_ARMOUR = new PilingOnArmour();
+	public static final InjuryType PILING_ON_INJURY = new PilingOnInjury();
+	public static final InjuryType PILING_ON_KNOCKED_OUT = new PilingOnKnockedOut();
+	public static final InjuryType STAB = new Stab();
+	public static final InjuryType THROW_A_ROCK = new ThrowARock();
+	public static final InjuryType TTM_HIT_PLAYER = new TTMHitPlayer();
+	public static final InjuryType TTM_LANDING = new TTMLanding();
+}
