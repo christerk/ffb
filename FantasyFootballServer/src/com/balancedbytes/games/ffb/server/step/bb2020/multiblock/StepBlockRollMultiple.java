@@ -77,7 +77,10 @@ public class StepBlockRollMultiple extends AbstractStep {
 				switch (parameter.getKey()) {
 					case BLOCK_TARGETS:
 						//noinspection unchecked
-						state.blockRolls.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(target -> new BlockRoll(target.getPlayerId(), target.getOriginalPlayerState())).collect(Collectors.toList()));
+						List<BlockTarget> targets = (List<BlockTarget>) parameter.getValue();
+						state.blockRolls.addAll(targets.stream().map(target ->
+							new BlockRoll(target.getPlayerId(), target.getOriginalPlayerState(), targets.indexOf(target))
+						).collect(Collectors.toList()));
 						break;
 					case CONSUME_PARAMETER:
 						//noinspection unchecked
@@ -223,6 +226,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			from(StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT, IStepLabel.BOTH_DOWN),
 			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK),
 			from(StepParameterKey.SUPPRESS_EXTRA_EFFECT_HANDLING, true),
+			from(StepParameterKey.BLOCK_ROLL_ID, blockRoll.getId()),
 			from(StepParameterKey.SHOW_NAME_IN_REPORT, true));
 		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
 

@@ -16,6 +16,7 @@ public enum StepParameterKey {
 	BLOCK_TARGETS, // List<Target>
 	BLOCK_RESULT, // BlockResult
 	BLOCK_ROLL, // int[]
+	BLOCK_ROLL_ID, // int
 	BOMB_EXPLODED, // Boolean
 	BOMB_OUT_OF_BOUNDS, // Boolean
 	CARD, // Card

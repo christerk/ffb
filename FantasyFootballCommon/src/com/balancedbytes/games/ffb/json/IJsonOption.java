@@ -47,8 +47,8 @@ public interface IJsonOption {
 	JsonStringOption BLOCK_KIND = new JsonStringOption("blockKind");
 	JsonEnumWithNameOption BLOCK_RESULT = new JsonEnumWithNameOption("blockResult", Factory.BLOCK_RESULT);
 	JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
+	JsonIntOption BLOCK_ROLL_ID = new JsonIntOption("blockRollId");
 	JsonArrayOption BLOCK_ROLLS = new JsonArrayOption("blockRolls");
-	JsonIntegerListMapOption BLOCK_ROLLS_FOR_TARGETS = new JsonIntegerListMapOption("blockRollsForTargets");
 	JsonIntOption BLOCKS = new JsonIntOption("blocks");
 	JsonArrayOption BLOODSPOT_ARRAY = new JsonArrayOption("bloodspotArray");
 	JsonIntOption BLOODWEISER_KEGS = new JsonIntOption("bloodweiserBabes");// retain old key to maintain compatibility with old replays.
@@ -353,6 +353,7 @@ public interface IJsonOption {
 	JsonDateOption SCHEDULED = new JsonDateOption("scheduled");
 	JsonIntOption SCORE = new JsonIntOption("score");
 	JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
+	JsonIntOption SELECTED_INDEX = new JsonIntOption("selectedIndex");
 	JsonArrayOption SELECTED_BLOCK_TARGETS = new JsonArrayOption("selectedBlockTargets");
 	JsonStringOption SEND_TO_BOX_BY_PLAYER_ID = new JsonStringOption("sendToBoxByPlayerId");
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");

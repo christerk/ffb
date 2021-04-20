@@ -17,7 +17,7 @@ public class ReportBlockChoice implements IReport {
 
 	private int fNrOfDice;
 	private int[] fBlockRoll;
-	private int fDiceIndex;
+	private int fDiceIndex, blockRollId;
 	private BlockResult fBlockResult;
 	private String fDefenderId;
 	// use negative boolean variable to remain backwards compatible with old replays
@@ -29,7 +29,7 @@ public class ReportBlockChoice implements IReport {
 	}
 
 	public ReportBlockChoice(int pNrOfDice, int[] pBlockRoll, int pDiceIndex, BlockResult pBlockResult,
-			String pDefenderId, boolean suppressExtraEffectHandling, boolean showNameInReport) {
+			String pDefenderId, boolean suppressExtraEffectHandling, boolean showNameInReport, int blockRollId) {
 		fNrOfDice = pNrOfDice;
 		fBlockRoll = pBlockRoll;
 		fDiceIndex = pDiceIndex;
@@ -37,6 +37,7 @@ public class ReportBlockChoice implements IReport {
 		fDefenderId = pDefenderId;
 		this.suppressExtraEffectHandling = suppressExtraEffectHandling;
 		this.showNameInReport = showNameInReport;
+		this.blockRollId = blockRollId;
 	}
 
 	public ReportId getId() {
@@ -71,10 +72,14 @@ public class ReportBlockChoice implements IReport {
 		return showNameInReport;
 	}
 
-	// transformation
+	public int getBlockRollId() {
+		return blockRollId;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportBlockChoice(getNrOfDice(), getBlockRoll(), getDiceIndex(), getBlockResult(), getDefenderId(), suppressExtraEffectHandling, showNameInReport);
+		return new ReportBlockChoice(getNrOfDice(), getBlockRoll(), getDiceIndex(), getBlockResult(), getDefenderId(),
+			suppressExtraEffectHandling, showNameInReport, blockRollId);
 	}
 
 	// JSON serialization
@@ -89,6 +94,7 @@ public class ReportBlockChoice implements IReport {
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
 		IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.addTo(jsonObject, suppressExtraEffectHandling);
 		IJsonOption.SHOW_NAME_IN_REPORT.addTo(jsonObject, showNameInReport);
+		IJsonOption.BLOCK_ROLL_ID.addTo(jsonObject, blockRollId);
 		return jsonObject;
 	}
 
@@ -102,6 +108,7 @@ public class ReportBlockChoice implements IReport {
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
 		suppressExtraEffectHandling = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(game, jsonObject);
 		showNameInReport = IJsonOption.SHOW_NAME_IN_REPORT.getFrom(game, jsonObject);
+		blockRollId = IJsonOption.BLOCK_ROLL_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

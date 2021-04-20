@@ -15,15 +15,21 @@ public class BlockRoll implements IJsonSerializable {
 	private String targetId;
 	private PlayerState oldPlayerState;
 	private boolean successFulDauntless, ownChoice;
-	private int nrOfDice;
+	private int nrOfDice, id;
 	private int[] blockRoll;
 	private int selectedIndex = -1;
 
 	public BlockRoll() {
 	}
 
-	public BlockRoll(String targetId, PlayerState oldPlayerState) {
+	public BlockRoll(String targetId, PlayerState oldPlayerState, int id) {
 		this.targetId = targetId;
+		this.oldPlayerState = oldPlayerState;
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getTargetId() {
@@ -83,12 +89,15 @@ public class BlockRoll implements IJsonSerializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		BlockRoll blockRoll1 = (BlockRoll) o;
-		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice && nrOfDice == blockRoll1.nrOfDice && selectedIndex == blockRoll1.selectedIndex && Objects.equals(targetId, blockRoll1.targetId) && Arrays.equals(blockRoll, blockRoll1.blockRoll);
+		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice
+			&& nrOfDice == blockRoll1.nrOfDice && selectedIndex == blockRoll1.selectedIndex
+			&& id == blockRoll1.id
+			&& Objects.equals(targetId, blockRoll1.targetId) && Arrays.equals(blockRoll, blockRoll1.blockRoll);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(targetId, successFulDauntless, ownChoice, nrOfDice, selectedIndex);
+		int result = Objects.hash(targetId, successFulDauntless, ownChoice, nrOfDice, selectedIndex, id);
 		result = 31 * result + Arrays.hashCode(blockRoll);
 		return result;
 	}
@@ -100,9 +109,10 @@ public class BlockRoll implements IJsonSerializable {
 		successFulDauntless = IJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(game, jsonObject);
 		nrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
 		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		selectedIndex = IJsonOption.NUMBER.getFrom(game, jsonObject);
+		selectedIndex = IJsonOption.SELECTED_INDEX.getFrom(game, jsonObject);
 		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(game, jsonObject);
 		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
+		id = IJsonOption.BLOCK_ROLL_ID.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -113,9 +123,10 @@ public class BlockRoll implements IJsonSerializable {
 		IJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successFulDauntless);
 		IJsonOption.NR_OF_DICE.addTo(jsonObject, nrOfDice);
 		IJsonOption.BLOCK_ROLL.addTo(jsonObject, blockRoll);
-		IJsonOption.NUMBER.addTo(jsonObject, selectedIndex);
+		IJsonOption.SELECTED_INDEX.addTo(jsonObject, selectedIndex);
 		IJsonOption.IS_OWN_CHOICE.addTo(jsonObject, ownChoice);
 		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
+		IJsonOption.BLOCK_ROLL_ID.addTo(jsonObject, id);
 		return jsonObject;
 	}
 }

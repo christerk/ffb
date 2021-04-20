@@ -55,7 +55,7 @@ public class StepBlockChoice extends AbstractStep {
 
 	private int fNrOfDice;
 	private int[] fBlockRoll;
-	private int fDiceIndex;
+	private int fDiceIndex, blockRollId;
 	private BlockResult fBlockResult;
 	private PlayerState fOldDefenderState;
 	private boolean suppressExtraEffectHandling, showNameInReport;
@@ -90,6 +90,9 @@ public class StepBlockChoice extends AbstractStep {
 						break;
 					case SHOW_NAME_IN_REPORT:
 						showNameInReport = parameter.getValue() != null && (boolean) parameter.getValue();
+						break;
+					case BLOCK_ROLL_ID:
+						blockRollId = (int) parameter.getValue();
 						break;
 					default:
 						break;
@@ -206,7 +209,7 @@ public class StepBlockChoice extends AbstractStep {
 			default:
 				break;
 		}
-		getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId(), suppressExtraEffectHandling, showNameInReport));
+		getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId(), suppressExtraEffectHandling, showNameInReport, blockRollId));
 	}
 
 	// JSON serialization
@@ -224,6 +227,7 @@ public class StepBlockChoice extends AbstractStep {
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
 		IServerJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.addTo(jsonObject, suppressExtraEffectHandling);
 		IServerJsonOption.SHOW_NAME_IN_REPORT.addTo(jsonObject, showNameInReport);
+		IServerJsonOption.BLOCK_ROLL_ID.addTo(jsonObject, blockRollId);
 		return jsonObject;
 	}
 
@@ -241,6 +245,7 @@ public class StepBlockChoice extends AbstractStep {
 		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		suppressExtraEffectHandling = IServerJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(source, jsonObject);
 		showNameInReport = IServerJsonOption.SHOW_NAME_IN_REPORT.getFrom(source, jsonObject);
+		blockRollId = IServerJsonOption.BLOCK_ROLL_ID.getFrom(source, jsonObject);
 		return this;
 	}
 
