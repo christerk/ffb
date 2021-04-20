@@ -1,13 +1,12 @@
 package com.balancedbytes.games.ffb.server.net;
 
+import com.balancedbytes.games.ffb.ClientMode;
+import org.eclipse.jetty.websocket.api.Session;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.eclipse.jetty.websocket.api.Session;
-
-import com.balancedbytes.games.ffb.ClientMode;
 
 /**
  * 

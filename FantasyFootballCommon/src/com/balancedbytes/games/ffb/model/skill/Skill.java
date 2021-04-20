@@ -246,4 +246,9 @@ public abstract class Skill implements INamedObject {
 	public SkillValueEvaluator evaluator() {
 		return SkillValueEvaluator.DEFAULT;
 	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
 }
