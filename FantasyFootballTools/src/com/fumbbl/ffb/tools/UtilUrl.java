@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.tools;
+package com.fumbbl.ffb.tools;
 
 import java.net.MalformedURLException;
 import java.net.URL;

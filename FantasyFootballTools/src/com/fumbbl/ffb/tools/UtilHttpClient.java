@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.tools;
+package com.fumbbl.ffb.tools;
 
 import java.io.IOException;
 import java.util.logging.Level;
