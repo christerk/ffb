@@ -10,7 +10,7 @@ public class ScannerSingleton {
 	public ScannerSingleton() {
 		scanResult = new ClassGraph()
 				.enableClassInfo()
-				.acceptPackages("com.balancedbytes.games.ffb")
+				.acceptPackages("com.fumbbl.ffb")
 				.enableRemoteJarScanning()
 				.scan();
 	}

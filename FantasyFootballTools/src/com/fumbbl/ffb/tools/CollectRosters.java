@@ -80,7 +80,7 @@ public class CollectRosters {
         pAnyException.printStackTrace();
       }
     } else {
-      System.out.println("java com.balancedbytes.games.ffb.tools.CollectRosters <downloadDirectory>");
+      System.out.println("java com.fumbbl.ffb.tools.CollectRosters <downloadDirectory>");
     }
   }
 

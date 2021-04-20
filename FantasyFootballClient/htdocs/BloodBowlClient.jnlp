@@ -2,11 +2,11 @@
 <jnlp href="BloodBowlClient.jnlp">
   <information>
     <title>BloodBowlClient</title>
-    <vendor>www.balancedbytes.com</vendor>
+    <vendor>fumbbl.com</vendor>
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
     <jar href="BloodBowlClient.jar" main="true" />
   </resources>
-  <applet-desc name="BloodBowlClient" main-class="com.balancedbytes.games.bloodbowl.client.BloodBowlApplet" width="1014" height="682" />
+  <applet-desc name="BloodBowlClient" main-class="com.fumbbl.bloodbowl.client.BloodBowlApplet" width="1014" height="682" />
 </jnlp>

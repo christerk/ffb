@@ -198,7 +198,7 @@ public class BuildFumbblIconCache {
         pAnyException.printStackTrace();
       }
     } else {
-      System.out.println("java com.balancedbytes.games.ffb.tools.BuildFumbblIconCache <downloadDirectory>");
+      System.out.println("java com.fumbbl.ffb.tools.BuildFumbblIconCache <downloadDirectory>");
     }
   }
 

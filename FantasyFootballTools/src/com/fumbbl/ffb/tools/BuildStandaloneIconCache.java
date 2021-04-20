@@ -58,7 +58,7 @@ public class BuildStandaloneIconCache {
   
   public static void main(String[] args) {
     if ((args == null) || (args.length < 2)) {
-      System.out.println("java com.balancedbytes.games.ffb.tools.BuildStandaloneIconCache <iconDir> <iconsIniFile>");
+      System.out.println("java com.fumbbl.ffb.tools.BuildStandaloneIconCache <iconDir> <iconsIniFile>");
       return;
     }
     BuildStandaloneIconCache buildIconsIni = new BuildStandaloneIconCache();
