@@ -1,23 +1,8 @@
 Behaviour Changes:
 
-- Chainsaw is optional on blocks and fouls
-- Catch skill grants no reroll for deflection
-- Simultaneous MultiBlock (still has some issues with reflecting selection in sidebars, needs to wait until later)
-
 Technical Changes:
-
 
 Areas of Testing:
 
-- Chainsaw
-- Deflect
-- MultiBlock
-    + Different combinations of block, stab and chainsaw
-    + Different combinations of block dice: -2/3db, 1db, 2/3db
-    + 0, 1 or 2 Cas/KO in combination with 0/1/2+ Apos and Igors
-    + Double attacker injury
-
 Bugfixes:
 
-- Bug 105: Failed dodge on a blitz causes opponent players to be unblockable if block is clocked before reroll dialog appears
-- During setup avoid updating PlayerState if coordinate collision appears
