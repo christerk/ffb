@@ -67,7 +67,7 @@
         <jar destfile="${build.dir}/${ant.project.name}.jar">
             <manifest>
               <attribute name="Built-By" value="${user.name}" />
-              <attribute name="Main-Class" value="com.balancedbytes.games.ffb.server.FantasyFootballServer" />
+              <attribute name="Main-Class" value="com.fumbbl.ffb.server.FantasyFootballServer" />
               <attribute name="Class-Path" value="${manifest-classpath}" />
             </manifest>
             <zipfileset dir="${bin.dir}" includes="**/*.class" />

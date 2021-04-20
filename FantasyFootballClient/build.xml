@@ -60,7 +60,7 @@
         	<metainf dir="${metainf.dir}" />
 			<manifest>
         		<attribute name="Built-By" value="${user.name}" />
-            	<attribute name="Main-Class" value="com.balancedbytes.games.ffb.client.FantasyFootballClient" />
+            	<attribute name="Main-Class" value="com.fumbbl.ffb.client.FantasyFootballClient" />
             	<attribute name="Permissions" value="all-permissions" />
             	<attribute name="Application-Name" value="Fantasy Football Client" />
             	<attribute name="Codebase" value="www.fumbbl.com fumbbl.com" />
