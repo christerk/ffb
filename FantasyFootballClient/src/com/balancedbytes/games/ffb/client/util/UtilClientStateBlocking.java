@@ -122,8 +122,6 @@ public class UtilClientStateBlocking {
 	}
 
 	private static void block(ClientState pClientState, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab, boolean usingChainsaw) {
-		Game game = pClientState.getClient().getGame();
-		game.getFieldModel().clearDiceDecorations();
 		pClientState.getClient().getUserInterface().getFieldComponent().refresh();
 		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw);
 	}
