@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.util;
 
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.TeamSetup;
@@ -21,9 +19,9 @@ import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsQuery;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
+import org.eclipse.jetty.websocket.api.Session;
 
 /**
- *
  * @author Kalimar
  */
 public class UtilServerSetup {
@@ -38,7 +36,7 @@ public class UtilServerSetup {
 
 			if (StringTool.isProvided(setupName)) {
 				DbTeamSetupsQuery teamSetupQuery = (DbTeamSetupsQuery) server.getDbQueryFactory()
-						.getStatement(DbStatementId.TEAM_SETUPS_QUERY);
+					.getStatement(DbStatementId.TEAM_SETUPS_QUERY);
 				TeamSetup teamSetup = teamSetupQuery.execute(team.getId(), setupName);
 				if (teamSetup != null) {
 					teamSetup.applyTo(game);
@@ -47,10 +45,10 @@ public class UtilServerSetup {
 
 			} else {
 				DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
-						.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
+					.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
 				String[] setupNames = allSetupNamesQuery.execute(team);
 				Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
-						: server.getSessionManager().getSessionOfAwayCoach(game.getId());
+					: server.getSessionManager().getSessionOfAwayCoach(game.getId());
 				server.getCommunication().sendTeamSetupList(session, setupNames);
 			}
 
@@ -59,7 +57,7 @@ public class UtilServerSetup {
 	}
 
 	public static void saveTeamSetup(GameState gameState, String pSetupName, int[] pPlayerNumbers,
-			FieldCoordinate[] pPlayerCoordinates) {
+	                                 FieldCoordinate[] pPlayerCoordinates) {
 
 		if ((gameState != null) && StringTool.isProvided(pSetupName)) {
 
@@ -104,10 +102,10 @@ public class UtilServerSetup {
 			}
 
 			DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
-					.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
+				.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
 			String[] setupNames = allSetupNamesQuery.execute(team);
 			Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
-					: server.getSessionManager().getSessionOfAwayCoach(game.getId());
+				: server.getSessionManager().getSessionOfAwayCoach(game.getId());
 			server.getCommunication().sendTeamSetupList(session, setupNames);
 
 		}
@@ -134,15 +132,6 @@ public class UtilServerSetup {
 			FieldCoordinate oldCoordinate = fieldModel.getPlayerCoordinate(player);
 			PlayerState playerState = fieldModel.getPlayerState(player);
 
-			if (coordinate.isBoxCoordinate()) {
-				fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-			} else {
-				if ((game.getTurnMode() == TurnMode.QUICK_SNAP) && !coordinate.equals(oldCoordinate)) {
-					fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(false));
-				} else {
-					fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true));
-				}
-			}
 			if (fieldModel.getPlayer(coordinate) != null) {
 				// Client is confused and tried to put a player in a square that already had a
 				// player.
@@ -151,6 +140,15 @@ public class UtilServerSetup {
 				Player<?> otherPlayer = fieldModel.getPlayer(coordinate);
 				fieldModel.sendPosition(otherPlayer);
 			} else {
+				if (coordinate.isBoxCoordinate()) {
+					fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+				} else {
+					if ((game.getTurnMode() == TurnMode.QUICK_SNAP) && !coordinate.equals(oldCoordinate)) {
+						fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(false));
+					} else {
+						fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true));
+					}
+				}
 				fieldModel.setPlayerCoordinate(player, coordinate);
 			}
 		}
