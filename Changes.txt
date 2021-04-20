@@ -1,6 +1,7 @@
 Behaviour Changes:
 
 - Chainsaw is optional on blocks and fouls
+- Catch skill grants no reroll for deflection
 
 Technical Changes:
 
@@ -8,3 +9,4 @@ Technical Changes:
 Areas of Testing:
 
 - Chainsaw
+- Deflect
