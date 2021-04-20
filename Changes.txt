@@ -7,3 +7,4 @@ Areas of Testing:
 Bugfixes:
 
 - Button background for end turn/setup button not showing
+- Show proper skill names in log
