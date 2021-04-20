@@ -187,11 +187,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			executeStep(StepExecutionMode.Start, null);
 		}
 	}
-	
+
 	private void progressToNextStep() {
 		fCurrentStep = getStepStack().pop();
 	}
-	
+
 	private void executeStep(StepExecutionMode mode, ReceivedCommand receivedCommand) {
 		boolean forward;
 		do {
@@ -200,11 +200,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			} else {
 				fCurrentStep.handleCommand(receivedCommand);
 			}
-	
+
 			while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
 				fCurrentStep.repeat();
 			}
-	
+
 			UtilServerGame.syncGameModel(fCurrentStep);
 			forward = processStepResult();
 			if (forward) {
@@ -297,11 +297,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	public void setKickingSwarmers(int kickingSwarmers) {
 		this.kickingSwarmers = kickingSwarmers;
 	}
-	
+
 	public StepFactory getStepFactory() {
 		return stepFactory;
 	}
-	
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
