@@ -13,7 +13,7 @@ import com.fumbbl.ffb.model.Player;
  */
 public class DialogUseApothecary extends DialogYesOrNoQuestion {
 
-	private DialogUseApothecaryParameter fDialogParameter;
+	private final DialogUseApothecaryParameter fDialogParameter;
 
 	public DialogUseApothecary(FantasyFootballClient pClient, DialogUseApothecaryParameter pDialogParameter) {
 		super(pClient, "Use Apothecary", createMessages(pClient, pDialogParameter), IIconProperty.RESOURCE_APOTHECARY);
@@ -26,10 +26,6 @@ public class DialogUseApothecary extends DialogYesOrNoQuestion {
 
 	public String getPlayerId() {
 		return fDialogParameter.getPlayerId();
-	}
-
-	public DialogUseApothecaryParameter getDialogParameter() {
-		return fDialogParameter;
 	}
 
 	private static String[] createMessages(FantasyFootballClient pClient, DialogUseApothecaryParameter pDialogParameter) {

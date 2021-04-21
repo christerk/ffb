@@ -109,6 +109,7 @@ public enum StepId implements INamedObject {
 	PENALTY_SHOOTOUT("penaltyShootout"), // game.end
 	PETTY_CASH("pettyCash"), // game.start
 	PICK_UP("pickUp"), // action.common
+	PILE_DRIVER("pileDriver"), // skill.pileDriver
 	PLAY_CARD("playCard"), // phase.inducement
 	PLAYER_LOSS("playerLoss"), // game.end
 	PUSHBACK("pushback"), // action.block
