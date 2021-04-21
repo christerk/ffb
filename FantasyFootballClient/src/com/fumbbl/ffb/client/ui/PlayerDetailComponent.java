@@ -206,8 +206,9 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			boolean moveIsRed = false;
-			int moveLeft = getPlayer().getMovementWithModifiers()
+			int movement = getPlayer().getMovementWithModifiers()
 				- findNewStatDecreases(playerResult, InjuryAttribute.MA);
+			int moveLeft = movement;
 			int strength = getPlayer().getStrengthWithModifiers()
 				- findNewStatDecreases(playerResult, InjuryAttribute.ST);
 			int agility = getPlayer().getAgilityWithModifiers() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
@@ -229,13 +230,13 @@ public class PlayerDetailComponent extends JPanel {
 				.forName(Mechanic.Type.STAT.name());
 			Player<?> player = getPlayer();
 			Position position = player.getPosition();
-			int movementModifier = player.getMovementWithModifiers() - position.getMovement();
+			int movementModifier = movement - position.getMovement();
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
-			int strengthModifier = player.getStrengthWithModifiers() - position.getStrength();
+			int strengthModifier = strength - position.getStrength();
 			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
 
-			int agilityModifier = player.getAgilityWithModifiers() - position.getAgility();
+			int agilityModifier = agility - position.getAgility();
 			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
@@ -243,11 +244,11 @@ public class PlayerDetailComponent extends JPanel {
 				if (passing > 0) {
 					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
 				}
-				int passingModifier = player.getPassingWithModifiers() - position.getPassing();
+				int passingModifier = passing - position.getPassing();
 				drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
-			int armourModifier = player.getArmourWithModifiers() - position.getArmour();
+			int armourModifier = armour - position.getArmour();
 			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();

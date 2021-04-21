@@ -13,3 +13,4 @@ Bugfixes:
 - Catch not working
 - With activated jump only valid jump squares can be selected
 - Wording for catch modifier for scatter or deviated balls was missing
+- Stat decreases by ingame injuries were not displayed in player detail view
