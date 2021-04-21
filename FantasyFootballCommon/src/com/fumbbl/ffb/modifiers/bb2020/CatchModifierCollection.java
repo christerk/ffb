@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.modifiers.bb2020;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -10,13 +7,16 @@ import com.fumbbl.ffb.modifiers.CatchContext;
 import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModifierCollection {
 
 	public CatchModifierCollection() {
 		super();
 
-		add(new CatchModifier("Inaccurate Pass", 1, ModifierType.REGULAR) {
+		add(new CatchModifier("Inaccurate Pass, Deviated Ball or Scatter", 1, ModifierType.REGULAR) {
 			private final Set<CatchScatterThrowInMode> scatter = new HashSet<CatchScatterThrowInMode>() {
 				private static final long serialVersionUID = 6752365907656902172L;
 				{
