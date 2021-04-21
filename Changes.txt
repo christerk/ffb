@@ -7,4 +7,6 @@ Areas of Testing:
 Bugfixes:
 
 - Button background for end turn/setup button not showing
-- Show proper skill names in log
+- Skill names not showing properly in log
+- Reroll source names not showing properly in log
+- Catch not working
