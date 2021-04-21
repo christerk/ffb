@@ -1,6 +1,7 @@
 Behaviour Changes:
 
 Technical Changes:
+- Unify suppression syntax
 
 Areas of Testing:
 
