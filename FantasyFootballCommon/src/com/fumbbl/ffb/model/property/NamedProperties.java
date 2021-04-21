@@ -1,17 +1,18 @@
 package com.fumbbl.ffb.model.property;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.modifiers.PassContext;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class NamedProperties {
 	public static final ISkillProperty addBonusForAccuratePass = new NamedProperty("Add Bonus For Accurate Pass");
 	public static final ISkillProperty addStrengthOnBlitz = new NamedProperty("Add Strength on Blitz");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnBlock = new NamedProperty("Affects Either Armour Or Injury On Block");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnFoul = new NamedProperty("Affects Either Armour Or Injury On Foul");
-	public static final ISkillProperty allowStandupAssists = new NamedProperty("Allow Stand Up Assists");
+	public static final ISkillProperty allowFoulAfterBlock = new NamedProperty("Allow Foul After Block");
+	public static final ISkillProperty allowStandUpAssists = new NamedProperty("Allow Stand Up Assists");
 	public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
 	public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
 	public static final ISkillProperty assistsBlocksInTacklezones = new NamedProperty("Assists Blocks in Tacklezones");

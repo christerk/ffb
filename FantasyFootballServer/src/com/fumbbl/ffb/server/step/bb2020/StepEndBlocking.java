@@ -24,6 +24,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.PileDriver;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Move;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
@@ -118,6 +119,8 @@ public class StepEndBlocking extends AbstractStep {
 		EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
 		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
 		Block blockGenerator = (Block) factory.forName(SequenceGenerator.Type.Block.name());
+		PileDriver pileDriver = (PileDriver) factory.forName(SequenceGenerator.Type.PileDriver.name());
+
 		if (fEndTurn || fEndPlayerAction) {
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
@@ -172,6 +175,11 @@ public class StepEndBlocking extends AbstractStep {
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+				} else if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowFoulAfterBlock) && !knockedDownPlayers.isEmpty()) {
+					String actingPlayerId = actingPlayer.getPlayer().getId();
+					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.FOUL, actingPlayer.isJumping());
+					ServerUtilBlock.updateDiceDecorations(game);
+					pileDriver.pushSequence(new PileDriver.SequenceParams(getGameState(), knockedDownPlayers));
 				} else {
 					game.setDefenderId(null); // clear defender for next multi block
 					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));

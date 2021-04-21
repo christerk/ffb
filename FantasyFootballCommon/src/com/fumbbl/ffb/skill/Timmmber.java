@@ -26,7 +26,7 @@ public class Timmmber extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.allowStandupAssists);
+		registerProperty(NamedProperties.allowStandUpAssists);
 	}
 
 }
