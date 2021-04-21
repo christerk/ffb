@@ -11,3 +11,4 @@ Bugfixes:
 - Skill names not showing properly in log
 - Reroll source names not showing properly in log
 - Catch not working
+- With activated jump only valid jump squares can be selected

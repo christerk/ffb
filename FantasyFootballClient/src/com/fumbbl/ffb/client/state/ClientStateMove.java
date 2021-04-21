@@ -60,7 +60,12 @@ public class ClientStateMove extends ClientState {
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(pCoordinate);
-		if (moveSquare != null) {
+		FieldCoordinate fromCoordinate = null;
+		if (actingPlayer != null) {
+			fromCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		}
+		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+		if (moveSquare != null && (actingPlayer == null || !actingPlayer.isJumping() || mechanic.isValidJump(game, actingPlayer.getPlayer(), fromCoordinate, pCoordinate))) {
 			setCustomCursor(moveSquare);
 		} else {
 			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
@@ -349,6 +354,13 @@ public class ClientStateMove extends ClientState {
 		if (coordinateFrom == null) {
 			return;
 		}
+
+		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+
+		if (actingPlayer.isJumping() && !mechanic.isValidJump(game, actingPlayer.getPlayer(), coordinateFrom, pCoordinates[pCoordinates.length - 1])) {
+			return;
+		}
+
 		getClient().getGame().getFieldModel().clearMoveSquares();
 		getClient().getUserInterface().getFieldComponent().refresh();
 		sendCommand(actingPlayer, coordinateFrom, pCoordinates);
