@@ -38,8 +38,8 @@ public class TeamCache {
     }).get();
   }
 
+  @SuppressWarnings("OptionalGetWithoutIsPresent")
   public TeamSkeleton getSkeleton(String teamId) {
-    //noinspection OptionalGetWithoutIsPresent
     return teamFiles.keySet().stream().filter(key -> key.getId().equals(teamId)).findFirst().get();
   }
 

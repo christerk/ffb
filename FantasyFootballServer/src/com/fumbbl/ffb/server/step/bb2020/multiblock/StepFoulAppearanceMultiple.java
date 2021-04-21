@@ -48,7 +48,6 @@ public class StepFoulAppearanceMultiple extends AbstractStep {
 						state.goToLabelOnFailure = (String) parameter.getValue();
 						break;
 					case BLOCK_TARGETS:
-						//noinspection unchecked
 						state.blockTargets.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()));
 						break;
 					default:

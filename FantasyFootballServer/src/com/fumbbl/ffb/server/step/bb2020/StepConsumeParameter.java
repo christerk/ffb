@@ -44,7 +44,6 @@ public class StepConsumeParameter extends AbstractStep {
 		if (parameterSet != null) {
 			for (StepParameter parameter: parameterSet.values()) {
 				if (parameter.getKey() == StepParameterKey.CONSUME_PARAMETER) {
-					//noinspection unchecked
 					parameterToConsume.addAll((Collection<? extends StepParameterKey>) parameter.getValue());
 				}
 			}

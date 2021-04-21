@@ -40,6 +40,7 @@ public class StatusReport {
 		messageRenderers = new HashMap<>();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void init(GameOptions gameOptions) {
 		if (initialized) {
 			return;
@@ -51,10 +52,9 @@ public class StatusReport {
 			try {
 				renderer.setStatusReport(this);
 				ReportId reportId = renderer.getClass().getAnnotation(ReportMessageType.class).value();
-				//noinspection unchecked
 				messageRenderers.put(reportId, renderer);
 			} catch (SecurityException | IllegalArgumentException e) {
-				System.err.println(e.toString());
+				System.err.println(e);
 			} catch (NullPointerException npe) {
 				System.err.println("Error processing " + renderer.getClass().getName());
 			}

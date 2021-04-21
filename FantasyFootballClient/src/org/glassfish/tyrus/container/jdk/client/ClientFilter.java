@@ -39,6 +39,21 @@
  */
 package org.glassfish.tyrus.container.jdk.client;
 
+import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.core.Base64Utils;
+import org.glassfish.tyrus.core.CloseReasons;
+import org.glassfish.tyrus.core.TyrusUpgradeResponse;
+import org.glassfish.tyrus.core.Utils;
+import org.glassfish.tyrus.spi.ClientEngine;
+import org.glassfish.tyrus.spi.CompletionHandler;
+import org.glassfish.tyrus.spi.Connection;
+import org.glassfish.tyrus.spi.Connection.CloseListener;
+import org.glassfish.tyrus.spi.UpgradeRequest;
+import org.glassfish.tyrus.spi.Writer;
+
+import javax.websocket.CloseReason;
+import javax.websocket.DeploymentException;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.net.URI;
@@ -52,22 +67,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.client.ClientProperties;
-import org.glassfish.tyrus.core.Base64Utils;
-import org.glassfish.tyrus.core.CloseReasons;
-import org.glassfish.tyrus.core.TyrusUpgradeResponse;
-import org.glassfish.tyrus.core.Utils;
-import org.glassfish.tyrus.spi.ClientEngine;
-import org.glassfish.tyrus.spi.CompletionHandler;
-import org.glassfish.tyrus.spi.Connection;
-import org.glassfish.tyrus.spi.Connection.CloseListener;
-import org.glassfish.tyrus.spi.UpgradeRequest;
-import org.glassfish.tyrus.spi.Writer;
 
 /**
  * A filter that interacts with Tyrus SPI and handles proxy.
@@ -358,7 +357,6 @@ class ClientFilter extends Filter {
 
 	@SuppressWarnings("unchecked")
 	private static Map<String, String> getProxyHeaders(Map<String, Object> properties) throws DeploymentException {
-		// noinspection unchecked
 		Map<String, String> proxyHeaders = Utils.getProperty(properties, ClientProperties.PROXY_HEADERS, Map.class);
 
 		String wlsProxyUsername = null;

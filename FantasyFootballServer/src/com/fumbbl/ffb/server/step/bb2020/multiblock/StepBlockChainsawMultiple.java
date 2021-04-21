@@ -44,7 +44,6 @@ public class StepBlockChainsawMultiple extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {
-					//noinspection unchecked
 					state.blockTargets.addAll(((List<BlockTarget>) parameter.getValue()).stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()));
 				}
 			}

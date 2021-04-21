@@ -39,6 +39,21 @@
  */
 package org.glassfish.tyrus.core;
 
+import org.glassfish.tyrus.core.cluster.ClusterContext;
+import org.glassfish.tyrus.core.cluster.DistributedSession;
+import org.glassfish.tyrus.core.cluster.RemoteSession;
+import org.glassfish.tyrus.core.cluster.SessionEventListener;
+import org.glassfish.tyrus.core.coder.CoderWrapper;
+import org.glassfish.tyrus.core.l10n.LocalizationMessages;
+
+import javax.websocket.CloseReason;
+import javax.websocket.DecodeException;
+import javax.websocket.Decoder;
+import javax.websocket.Extension;
+import javax.websocket.MessageHandler;
+import javax.websocket.PongMessage;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -58,22 +73,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.websocket.CloseReason;
-import javax.websocket.DecodeException;
-import javax.websocket.Decoder;
-import javax.websocket.Extension;
-import javax.websocket.MessageHandler;
-import javax.websocket.PongMessage;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-
-import org.glassfish.tyrus.core.cluster.ClusterContext;
-import org.glassfish.tyrus.core.cluster.DistributedSession;
-import org.glassfish.tyrus.core.cluster.RemoteSession;
-import org.glassfish.tyrus.core.cluster.SessionEventListener;
-import org.glassfish.tyrus.core.coder.CoderWrapper;
-import org.glassfish.tyrus.core.l10n.LocalizationMessages;
 
 /**
  * Implementation of the {@link Session}.
@@ -559,7 +558,7 @@ public class TyrusSession implements Session, DistributedSession {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	void notifyMessageHandlers(Object message, List<CoderWrapper<Decoder>> availableDecoders)
 			throws DecodeException, IOException {
 		boolean decoded = false;
@@ -588,7 +587,6 @@ public class TyrusSession implements Session, DistributedSession {
 					if (object != null) {
 						final State currentState = state.get();
 						if (currentState != State.CLOSED) {
-							// noinspection unchecked
 							((MessageHandler.Whole) mh).onMessage(object);
 						}
 						decoded = true;
@@ -618,7 +616,7 @@ public class TyrusSession implements Session, DistributedSession {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	void notifyMessageHandlers(Object message, boolean last) {
 		boolean handled = false;
 
@@ -632,7 +630,6 @@ public class TyrusSession implements Session, DistributedSession {
 
 				final State currentState = state.get();
 				if (currentState != State.CLOSED) {
-					// noinspection unchecked
 					((MessageHandler.Partial) handler).onMessage(message, last);
 				}
 				handled = true;

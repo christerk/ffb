@@ -164,7 +164,6 @@ public final class StepEndSelecting extends AbstractStep {
 					consume(pParameter);
 					return true;
 				case BLOCK_TARGETS:
-					//noinspection unchecked
 					blockTargets = (List<BlockTarget>) pParameter.getValue();
 					consume(pParameter);
 					return true;

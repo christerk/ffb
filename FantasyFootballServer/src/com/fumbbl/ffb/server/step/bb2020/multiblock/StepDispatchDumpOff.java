@@ -48,7 +48,6 @@ public class StepDispatchDumpOff extends AbstractStep {
 		if (parameterSet != null) {
 			for (StepParameter parameter: parameterSet.values()) {
 				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {
-					//noinspection unchecked
 					targets.addAll(((Collection<? extends BlockTarget>) parameter.getValue()).stream().map(BlockTarget::getPlayerId).collect(Collectors.toList()));
 				}
 			}

@@ -65,7 +65,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 	public void init(StepParameterSet parameterSet) {
 		if (parameterSet != null) {
 			for (StepParameter parameter : parameterSet.values()) {
-				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {//noinspection unchecked
+				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {
 					targets.addAll((Collection<? extends BlockTarget>) parameter.getValue());
 				}
 			}

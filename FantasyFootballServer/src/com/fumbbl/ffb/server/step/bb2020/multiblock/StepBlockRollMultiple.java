@@ -40,8 +40,6 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,6 +48,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBlockRollMultiple extends AbstractStep {
@@ -77,14 +77,12 @@ public class StepBlockRollMultiple extends AbstractStep {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
 					case BLOCK_TARGETS:
-						//noinspection unchecked
 						List<BlockTarget> targets = (List<BlockTarget>) parameter.getValue();
 						state.blockRolls.addAll(targets.stream().map(target ->
 							new BlockRoll(target.getPlayerId(), target.getOriginalPlayerState(), targets.indexOf(target))
 						).collect(Collectors.toList()));
 						break;
 					case CONSUME_PARAMETER:
-						//noinspection unchecked
 						parameterToConsume.addAll((Collection<? extends StepParameterKey>) parameter.getValue());
 						break;
 				default:

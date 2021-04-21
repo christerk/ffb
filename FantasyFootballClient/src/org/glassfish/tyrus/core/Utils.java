@@ -39,6 +39,10 @@
  */
 package org.glassfish.tyrus.core;
 
+import org.glassfish.tyrus.core.l10n.LocalizationMessages;
+import org.glassfish.tyrus.spi.UpgradeRequest;
+import org.glassfish.tyrus.spi.UpgradeResponse;
+
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
@@ -52,10 +56,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.glassfish.tyrus.core.l10n.LocalizationMessages;
-import org.glassfish.tyrus.spi.UpgradeRequest;
-import org.glassfish.tyrus.spi.UpgradeResponse;
 
 /**
  * Utility methods shared among Tyrus modules.
@@ -388,7 +388,7 @@ public class Utils {
 	 * @return typed value or {@code null} if property is not set or value is not
 	 *         assignable.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> T getProperty(final Map<String, Object> properties, final String key, final Class<T> type,
 			final T defaultValue) {
 		if (properties != null) {
@@ -396,17 +396,13 @@ public class Utils {
 			if (o != null) {
 				try {
 					if (type.isAssignableFrom(o.getClass())) {
-						// noinspection unchecked
 						return (T) o;
 					} else if (type.equals(Integer.class)) {
-						// noinspection unchecked
 						return (T) Integer.valueOf(o.toString());
 					} else if (type.equals(Long.class)) {
-						// noinspection unchecked
 						return (T) Long.valueOf(o.toString());
 					} else if (type.equals(Boolean.class)) {
-						// noinspection unchecked
-						return (T) (Boolean) (o.toString().equals("1") || Boolean.valueOf(o.toString()));
+						return (T) (Boolean) (o.toString().equals("1") || Boolean.parseBoolean(o.toString()));
 					} else if (type.isEnum()) {
 						try {
 							return (T) Enum.valueOf((Class<? extends Enum>) type, o.toString().trim().toUpperCase(Locale.US));
@@ -419,7 +415,7 @@ public class Utils {
 				} catch (final Throwable t) {
 					LOGGER.log(Level.CONFIG,
 							String.format("Invalid type of configuration property of %s (%s), %s cannot be cast to %s", key,
-									o.toString(), o.getClass().toString(), type.toString()));
+								o, o.getClass().toString(), type.toString()));
 					return null;
 				}
 			}

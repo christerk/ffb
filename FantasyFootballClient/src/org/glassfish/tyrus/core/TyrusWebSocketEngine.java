@@ -40,26 +40,6 @@
 
 package org.glassfish.tyrus.core;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.Extension;
-import javax.websocket.WebSocketContainer;
-import javax.websocket.server.ServerEndpointConfig;
-
 import org.glassfish.tyrus.core.cluster.ClusterContext;
 import org.glassfish.tyrus.core.extension.ExtendedExtension;
 import org.glassfish.tyrus.core.frame.CloseFrame;
@@ -76,6 +56,25 @@ import org.glassfish.tyrus.spi.UpgradeRequest;
 import org.glassfish.tyrus.spi.UpgradeResponse;
 import org.glassfish.tyrus.spi.WebSocketEngine;
 import org.glassfish.tyrus.spi.Writer;
+
+import javax.websocket.CloseReason;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.Extension;
+import javax.websocket.WebSocketContainer;
+import javax.websocket.server.ServerEndpointConfig;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * {@link WebSocketEngine} implementation, which handles server-side handshake,
@@ -658,7 +657,6 @@ public class TyrusWebSocketEngine implements WebSocketEngine {
 		if (isEndpointClass) {
 			// we are pretty sure that endpoint class is javax.websocket.Endpoint
 			// descendant.
-			// noinspection unchecked
 			endpointWrapper = new TyrusEndpointWrapper((Class<? extends Endpoint>) endpointClass, serverConfig,
 					componentProviderService, webSocketContainer, contextPath, serverConfig.getConfigurator(), sessionListener,
 					clusterContext, endpointEventListenerWrapper, parallelBroadcastEnabled);

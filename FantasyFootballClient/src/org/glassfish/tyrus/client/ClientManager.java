@@ -39,6 +39,28 @@
  */
 package org.glassfish.tyrus.client;
 
+import org.glassfish.tyrus.core.AnnotatedEndpoint;
+import org.glassfish.tyrus.core.BaseContainer;
+import org.glassfish.tyrus.core.ComponentProviderService;
+import org.glassfish.tyrus.core.DebugContext;
+import org.glassfish.tyrus.core.ErrorCollector;
+import org.glassfish.tyrus.core.ReflectionHelper;
+import org.glassfish.tyrus.core.TyrusEndpointWrapper;
+import org.glassfish.tyrus.core.TyrusFuture;
+import org.glassfish.tyrus.core.TyrusSession;
+import org.glassfish.tyrus.core.Utils;
+import org.glassfish.tyrus.core.monitoring.EndpointEventListener;
+import org.glassfish.tyrus.spi.ClientContainer;
+import org.glassfish.tyrus.spi.ClientEngine;
+
+import javax.websocket.ClientEndpoint;
+import javax.websocket.ClientEndpointConfig;
+import javax.websocket.CloseReason;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.Extension;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -55,29 +77,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
-
-import javax.websocket.ClientEndpoint;
-import javax.websocket.ClientEndpointConfig;
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.Extension;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-
-import org.glassfish.tyrus.core.AnnotatedEndpoint;
-import org.glassfish.tyrus.core.BaseContainer;
-import org.glassfish.tyrus.core.ComponentProviderService;
-import org.glassfish.tyrus.core.DebugContext;
-import org.glassfish.tyrus.core.ErrorCollector;
-import org.glassfish.tyrus.core.ReflectionHelper;
-import org.glassfish.tyrus.core.TyrusEndpointWrapper;
-import org.glassfish.tyrus.core.TyrusFuture;
-import org.glassfish.tyrus.core.TyrusSession;
-import org.glassfish.tyrus.core.Utils;
-import org.glassfish.tyrus.core.monitoring.EndpointEventListener;
-import org.glassfish.tyrus.spi.ClientContainer;
-import org.glassfish.tyrus.spi.ClientEngine;
 
 /**
  * ClientManager implementation.
@@ -576,7 +575,6 @@ public class ClientManager extends BaseContainer implements WebSocketContainer {
 						config = configuration == null ? ClientEndpointConfig.Builder.create().build() : configuration;
 					} else if (o instanceof Class) {
 						if (Endpoint.class.isAssignableFrom((Class<?>) o)) {
-							// noinspection unchecked
 							endpoint = ReflectionHelper.getInstance(((Class<Endpoint>) o), collector);
 							config = configuration == null ? ClientEndpointConfig.Builder.create().build() : configuration;
 						} else if ((((Class<?>) o).getAnnotation(ClientEndpoint.class) != null)) {

@@ -40,8 +40,18 @@
 
 package org.glassfish.tyrus.core.cluster;
 
-import static org.glassfish.tyrus.core.Utils.checkNotNull;
+import org.glassfish.tyrus.core.TyrusEndpointWrapper;
+import org.glassfish.tyrus.core.Utils;
 
+import javax.websocket.CloseReason;
+import javax.websocket.EncodeException;
+import javax.websocket.Extension;
+import javax.websocket.MessageHandler;
+import javax.websocket.RemoteEndpoint;
+import javax.websocket.SendHandler;
+import javax.websocket.SendResult;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -59,18 +69,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import javax.websocket.CloseReason;
-import javax.websocket.EncodeException;
-import javax.websocket.Extension;
-import javax.websocket.MessageHandler;
-import javax.websocket.RemoteEndpoint;
-import javax.websocket.SendHandler;
-import javax.websocket.SendResult;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-
-import org.glassfish.tyrus.core.TyrusEndpointWrapper;
-import org.glassfish.tyrus.core.Utils;
+import static org.glassfish.tyrus.core.Utils.checkNotNull;
 
 /**
  * Remote session represents session originating from another node.
@@ -636,7 +635,6 @@ public class RemoteSession implements Session, DistributedSession {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Extension> getNegotiatedExtensions() {
-		// noinspection unchecked
 		return (List<Extension>) distributedPropertyMap.get(DistributedMapKey.NEGOTIATED_EXTENSIONS);
 	}
 
@@ -648,7 +646,6 @@ public class RemoteSession implements Session, DistributedSession {
 	 */
 	@Override
 	public boolean isSecure() {
-		// noinspection unchecked
 		return (Boolean) distributedPropertyMap.get(DistributedMapKey.SECURE);
 	}
 
@@ -672,7 +669,6 @@ public class RemoteSession implements Session, DistributedSession {
 	 */
 	@Override
 	public long getMaxIdleTimeout() {
-		// noinspection unchecked
 		return (Long) distributedPropertyMap.get(DistributedMapKey.MAX_IDLE_TIMEOUT);
 	}
 
@@ -686,7 +682,6 @@ public class RemoteSession implements Session, DistributedSession {
 	 */
 	@Override
 	public int getMaxBinaryMessageBufferSize() {
-		// noinspection unchecked
 		return (Integer) distributedPropertyMap.get(DistributedMapKey.MAX_BINARY_MESSAGE_BUFFER_SIZE);
 	}
 
@@ -700,7 +695,6 @@ public class RemoteSession implements Session, DistributedSession {
 	 */
 	@Override
 	public int getMaxTextMessageBufferSize() {
-		// noinspection unchecked
 		return (Integer) distributedPropertyMap.get(DistributedMapKey.MAX_TEXT_MESSAGE_BUFFER_SIZE);
 	}
 
@@ -777,7 +771,6 @@ public class RemoteSession implements Session, DistributedSession {
 	 */
 	@Override
 	public URI getRequestURI() {
-		// noinspection unchecked
 		return (URI) distributedPropertyMap.get(DistributedMapKey.REQUEST_URI);
 	}
 
@@ -790,7 +783,6 @@ public class RemoteSession implements Session, DistributedSession {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, List<String>> getRequestParameterMap() {
-		// noinspection unchecked
 		return (Map<String, List<String>>) distributedPropertyMap.get(DistributedMapKey.REQUEST_PARAMETER_MAP);
 	}
 
@@ -815,7 +807,6 @@ public class RemoteSession implements Session, DistributedSession {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> getPathParameters() {
-		// noinspection unchecked
 		return (Map<String, String>) distributedPropertyMap.get(DistributedMapKey.PATH_PARAMETERS);
 	}
 
@@ -844,7 +835,6 @@ public class RemoteSession implements Session, DistributedSession {
 	 */
 	@Override
 	public Principal getUserPrincipal() {
-		// noinspection unchecked
 		return (Principal) distributedPropertyMap.get(DistributedMapKey.USER_PRINCIPAL);
 	}
 
