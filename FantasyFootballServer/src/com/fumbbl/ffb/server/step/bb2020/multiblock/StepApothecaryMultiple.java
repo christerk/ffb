@@ -179,7 +179,6 @@ public class StepApothecaryMultiple extends AbstractStep {
 						String defenderId = injuryResult.injuryContext().getDefenderId();
 						if (teamId.equals(getGameState().getGame().getPlayerById(defenderId).getTeam().getId())) {
 							injuryResults.add(injuryResult);
-							consume(parameter);
 							return true;
 						}
 					}
