@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2016;
 
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -9,12 +9,12 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.bb2016.StepCatchScatterThrowIn;
 import com.fumbbl.ffb.server.step.bb2016.StepCatchScatterThrowIn.StepState;
-import com.fumbbl.ffb.skill.MonstrousMouth;
+import com.fumbbl.ffb.skill.Catch;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
-public class MonstrousMouthBehaviour extends SkillBehaviour<MonstrousMouth> {
-	public MonstrousMouthBehaviour() {
+@RulesCollection(Rules.BB2016)
+public class CatchBehaviour extends SkillBehaviour<Catch> {
+	public CatchBehaviour() {
 		super();
 
 		registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {

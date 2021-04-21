@@ -4,14 +4,9 @@ import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 
-/**
- * 
- * @author Kalimar
- */
 public class ReRollSource implements INamedObject {
 
-	private int id;
-	private String name;
+	private final String name;
 	private Class<? extends Skill> skill;
 
 	ReRollSource(String pName) {
@@ -21,10 +16,6 @@ public class ReRollSource implements INamedObject {
 	ReRollSource(Class<? extends Skill> skill) {
 		this(skill.getName());
 		this.skill = skill;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public String getName() {
@@ -40,4 +31,13 @@ public class ReRollSource implements INamedObject {
 		}
 	}
 
+	public String getName(Game game) {
+		Skill skill = getSkill(game);
+
+		if (skill != null) {
+			return skill.getName();
+		}
+
+		return name;
+	}
 }

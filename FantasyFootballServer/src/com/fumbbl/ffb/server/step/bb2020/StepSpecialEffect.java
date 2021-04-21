@@ -30,7 +30,6 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.bb2016.StepCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 
 /**

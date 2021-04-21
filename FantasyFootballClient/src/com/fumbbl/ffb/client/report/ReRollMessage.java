@@ -38,7 +38,7 @@ public class ReRollMessage extends ReportMessageBase<ReportReRoll> {
   			}
   			println(getIndent() + 2, status.toString());
   		} else {
-  			status.append("Re-Roll using ").append(report.getReRollSource().getName().toUpperCase());
+  			status.append("Re-Roll using ").append(report.getReRollSource().getName(game).toUpperCase());
   			println(getIndent() + 1, status.toString());
   		}
     }

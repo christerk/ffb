@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -7,17 +7,17 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.bb2016.StepCatchScatterThrowIn;
-import com.fumbbl.ffb.server.step.bb2016.StepCatchScatterThrowIn.StepState;
-import com.fumbbl.ffb.skill.Catch;
+import com.fumbbl.ffb.server.step.bb2020.StepCatchScatterThrowIn;
+import com.fumbbl.ffb.server.step.bb2020.StepCatchScatterThrowIn.StepState;
+import com.fumbbl.ffb.skill.MonstrousMouth;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
-public class CatchBehaviour extends SkillBehaviour<Catch> {
-	public CatchBehaviour() {
+@RulesCollection(Rules.BB2020)
+public class MonstrousMouthBehaviour extends SkillBehaviour<MonstrousMouth> {
+	public MonstrousMouthBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {
+		registerModifier(new StepModifier<StepCatchScatterThrowIn, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepCatchScatterThrowIn step, StepState state,
