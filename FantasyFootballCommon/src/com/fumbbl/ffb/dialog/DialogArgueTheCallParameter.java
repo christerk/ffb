@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
@@ -12,6 +9,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -19,15 +19,17 @@ import com.fumbbl.ffb.util.StringTool;
 public class DialogArgueTheCallParameter implements IDialogParameter {
 
 	private String fTeamId;
-	private List<String> fPlayerIds;
+	private final List<String> fPlayerIds;
+	private boolean stayOnPitch;
 
 	public DialogArgueTheCallParameter() {
 		fPlayerIds = new ArrayList<>();
 	}
 
-	public DialogArgueTheCallParameter(String teamId) {
+	public DialogArgueTheCallParameter(String teamId, boolean stayOnPitch) {
 		this();
 		setTeamId(teamId);
+		this.stayOnPitch = stayOnPitch;
 	}
 
 	public DialogId getId() {
@@ -40,6 +42,10 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 
 	public void setTeamId(String teamId) {
 		fTeamId = teamId;
+	}
+
+	public boolean isStayOnPitch() {
+		return stayOnPitch;
 	}
 
 	public void addPlayerId(String pPlayerId) {
@@ -57,13 +63,13 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 	}
 
 	public String[] getPlayerIds() {
-		return fPlayerIds.toArray(new String[fPlayerIds.size()]);
+		return fPlayerIds.toArray(new String[0]);
 	}
 
 	// transformation
 
 	public IDialogParameter transform() {
-		DialogArgueTheCallParameter transformedParameter = new DialogArgueTheCallParameter(getTeamId());
+		DialogArgueTheCallParameter transformedParameter = new DialogArgueTheCallParameter(getTeamId(), stayOnPitch);
 		transformedParameter.addPlayerIds(getPlayerIds());
 		return transformedParameter;
 	}
@@ -75,6 +81,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.TEAM_ID.addTo(jsonObject, getTeamId());
 		IJsonOption.PLAYER_IDS.addTo(jsonObject, getPlayerIds());
+		IJsonOption.STAYS_ON_PITCH.addTo(jsonObject, stayOnPitch);
 		return jsonObject;
 	}
 
@@ -83,6 +90,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		setTeamId(IJsonOption.TEAM_ID.getFrom(game, jsonObject));
 		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+		stayOnPitch = IJsonOption.STAYS_ON_PITCH.getFrom(game, jsonObject);
 		return this;
 	}
 

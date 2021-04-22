@@ -187,7 +187,7 @@ public class StepBribes extends AbstractStep {
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) && !game.getTurnData().isCoachBanned()) {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId());
+			DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), true);
 			dialogParameter.addPlayerId(actingPlayer.getPlayerId());
 			UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
 			fArgueTheCallChoice = null;

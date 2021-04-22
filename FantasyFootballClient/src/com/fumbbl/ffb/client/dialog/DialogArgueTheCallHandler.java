@@ -31,7 +31,7 @@ public class DialogArgueTheCallHandler extends DialogHandler {
 
 				if (ArrayTool.isProvided(dialogParameter.getPlayerIds()) && dialogParameter.getPlayerIds().length == 1) {
 					Player<?> player = game.getPlayerById(dialogParameter.getPlayerIds()[0]);
-					setDialog(new DialogArgueTheCall(getClient(), player));
+					setDialog(new DialogArgueTheCall(getClient(), player, dialogParameter.isStayOnPitch()));
 
 				} else {
 					setDialog(new DialogPlayerChoice(getClient(), "Select players to argue the call for",

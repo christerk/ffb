@@ -627,7 +627,7 @@ public class StepEndTurn extends AbstractStep {
 		if (playerIds.size() > 0) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
-				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId());
+				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false);
 				dialogParameter.addPlayerIds(playerIds.toArray(new String[0]));
 				UtilServerDialog.showDialog(getGameState(), dialogParameter,
 						(game.isHomePlaying() && (team != game.getTeamHome()))
