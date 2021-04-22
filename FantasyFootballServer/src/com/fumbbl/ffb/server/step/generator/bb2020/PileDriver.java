@@ -21,8 +21,8 @@ public class PileDriver extends com.fumbbl.ffb.server.step.generator.PileDriver 
 
 		Sequence sequence = new Sequence(gameState);
 
-		sequence.add(StepId.PILE_DRIVER, from(StepParameterKey.PLAYER_IDS, params.getKnockedDownPlayers()),
-			from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
+		sequence.add(StepId.PILE_DRIVER, from(StepParameterKey.PLAYER_ID, params.getTargetPlayerId()),
+			from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.SKIP_PILE_DRIVER));
 		sequence.add(StepId.FOUL_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER));
 		sequence.add(StepId.FOUL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
@@ -32,7 +32,8 @@ public class PileDriver extends com.fumbbl.ffb.server.step.generator.PileDriver 
 		sequence.jump(IStepLabel.END_FOULING);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.END_FOULING);
+		sequence.add(StepId.DROP_ACTING_PLAYER, IStepLabel.END_FOULING);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SKIP_PILE_DRIVER);
 		sequence.add(StepId.END_FOULING);
 
 		gameState.getStepStack().push(sequence.getSequence());

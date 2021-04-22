@@ -7,18 +7,23 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
@@ -31,6 +36,7 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -59,7 +65,9 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
 	private boolean fUsingStab;
+	private Boolean usePileDriver;
 	private List<String> knockedDownPlayers = new ArrayList<>();
+	private String targetPlayerId;
 
 	public StepEndBlocking(GameState pGameState) {
 		super(pGameState);
@@ -68,6 +76,28 @@ public class StepEndBlocking extends AbstractStep {
 	public StepId getId() {
 		return StepId.END_BLOCKING;
 	}
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), receivedCommand)) {
+			switch (receivedCommand.getId()) {
+				case CLIENT_PILE_DRIVER:
+					ClientCommandPileDriver commandPileDriver = (ClientCommandPileDriver) receivedCommand.getCommand();
+					targetPlayerId = commandPileDriver.getPlayerId();
+					usePileDriver = StringTool.isProvided(targetPlayerId);
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
+			}
+		}
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
@@ -121,30 +151,33 @@ public class StepEndBlocking extends AbstractStep {
 		Block blockGenerator = (Block) factory.forName(SequenceGenerator.Type.Block.name());
 		PileDriver pileDriver = (PileDriver) factory.forName(SequenceGenerator.Type.PileDriver.name());
 
+		getResult().setNextAction(StepAction.NEXT_STEP);
+
 		if (fEndTurn || fEndPlayerAction) {
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else {
 			// Revert back strength gained from HORNS and DAUNTLESS to avoid interaction
 			// with tentacles.
-			Skill skillHorns = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.addStrengthOnBlitz);
-			Skill skillDauntless = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRollToMatchOpponentsStrength);
+			Player<?> activePlayer = actingPlayer.getPlayer();
+			Skill skillHorns = activePlayer.getSkillWithProperty(NamedProperties.addStrengthOnBlitz);
+			Skill skillDauntless = activePlayer.getSkillWithProperty(NamedProperties.canRollToMatchOpponentsStrength);
 			boolean usedHorns = (skillHorns != null) && actingPlayer.isSkillUsed(skillHorns);
 			boolean usedDauntless = (skillDauntless != null) && actingPlayer.isSkillUsed(skillDauntless);
 
 			if (usedHorns || usedDauntless) {
-				actingPlayer.setStrength(actingPlayer.getPlayer().getStrengthWithModifiers());
+				actingPlayer.setStrength(activePlayer.getStrengthWithModifiers());
 			}
 
 			FieldCoordinate defenderPosition = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-			FieldCoordinate attackerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-			PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+			FieldCoordinate attackerPosition = game.getFieldModel().getPlayerCoordinate(activePlayer);
+			PlayerState attackerState = game.getFieldModel().getPlayerState(activePlayer);
 			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 
 			Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
 				NamedProperties.forceSecondBlock);
 
-			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceSecondBlock)) {
+			if (activePlayer.hasSkillProperty(NamedProperties.forceSecondBlock)) {
 				actingPlayer.setGoingForIt(true);
 			}
 
@@ -160,11 +193,32 @@ public class StepEndBlocking extends AbstractStep {
 				ServerUtilBlock.removePlayerBlockStates(game);
 				game.getFieldModel().clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
-				// go-for-it
-				if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
-					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw)
+				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(activePlayer);
+				knockedDownPlayers = knockedDownPlayers.stream().filter(player ->
+					game.getFieldModel().getPlayerCoordinate(game.getPlayerById(player)).isAdjacent(attackerCoordinate)
+				).collect(Collectors.toList());
+
+				PlayerState playerState = game.getFieldModel().getPlayerState(activePlayer);
+
+				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.allowFoulAfterBlock);
+
+				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty()) {
+					usePileDriver = false;
+				}
+
+				if (usePileDriver == null) {
+					UtilServerDialog.showDialog(getGameState(), new DialogPileDriverParameter(game.getActingTeam().getId(), knockedDownPlayers), false);
+					getResult().setNextAction(StepAction.CONTINUE);
+				} else if (usePileDriver) {
+					String actingPlayerId = activePlayer.getId();
+					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.FOUL, actingPlayer.isJumping());
+					ServerUtilBlock.updateDiceDecorations(game);
+					pileDriver.pushSequence(new PileDriver.SequenceParams(getGameState(), targetPlayerId));
+					// go-for-it
+				} else if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
+					&& !activePlayer.hasSkillProperty(NamedProperties.blocksLikeChainsaw)
 					&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
-					String actingPlayerId = actingPlayer.getPlayer().getId();
+					String actingPlayerId = activePlayer.getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
@@ -175,18 +229,12 @@ public class StepEndBlocking extends AbstractStep {
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-				} else if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowFoulAfterBlock) && !knockedDownPlayers.isEmpty()) {
-					String actingPlayerId = actingPlayer.getPlayer().getId();
-					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.FOUL, actingPlayer.isJumping());
-					ServerUtilBlock.updateDiceDecorations(game);
-					pileDriver.pushSequence(new PileDriver.SequenceParams(getGameState(), knockedDownPlayers));
 				} else {
-					game.setDefenderId(null); // clear defender for next multi block
+					game.setDefenderId(null);
 					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));
 				}
 			}
 		}
-		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	// JSON serialization
@@ -199,6 +247,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.DEFENDER_PUSHED.addTo(jsonObject, fDefenderPushed);
 		IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, knockedDownPlayers);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, targetPlayerId);
 		return jsonObject;
 	}
 
@@ -211,6 +260,7 @@ public class StepEndBlocking extends AbstractStep {
 		fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(game, jsonObject);
 		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
 		knockedDownPlayers = Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject)).collect(Collectors.toList());
+		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

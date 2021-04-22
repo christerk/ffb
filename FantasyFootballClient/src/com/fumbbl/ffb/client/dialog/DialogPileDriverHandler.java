@@ -45,7 +45,9 @@ public class DialogPileDriverHandler extends DialogHandler {
 		String selectedPlayer = null;
 		if (testDialogHasId(pDialog, DialogId.PILE_DRIVER)) {
 			DialogPileDriver dialog = (DialogPileDriver) pDialog;
-			selectedPlayer = dialog.getPlayerId();
+			if (dialog.isChoiceYes()) {
+				selectedPlayer = dialog.getPlayerId();
+			}
 		}
 		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
 			DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;

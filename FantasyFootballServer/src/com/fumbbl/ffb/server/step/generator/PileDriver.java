@@ -2,8 +2,6 @@ package com.fumbbl.ffb.server.step.generator;
 
 import com.fumbbl.ffb.server.GameState;
 
-import java.util.List;
-
 public abstract class PileDriver extends SequenceGenerator<PileDriver.SequenceParams> {
 
 	public PileDriver() {
@@ -12,15 +10,15 @@ public abstract class PileDriver extends SequenceGenerator<PileDriver.SequencePa
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 
-		private final List<String> knockedDownPlayers;
+		private final String targetPlayerId;
 
-		public SequenceParams(GameState gameState, List<String> knockedDownPlayers) {
+		public SequenceParams(GameState gameState, String targetPlayerId) {
 			super(gameState);
-			this.knockedDownPlayers = knockedDownPlayers;
+			this.targetPlayerId = targetPlayerId;
 		}
 
-		public List<String> getKnockedDownPlayers() {
-			return knockedDownPlayers;
+		public String getTargetPlayerId() {
+			return targetPlayerId;
 		}
 	}
 }

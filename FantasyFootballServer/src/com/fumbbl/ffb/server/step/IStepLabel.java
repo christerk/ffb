@@ -48,5 +48,6 @@ public interface IStepLabel {
 	String RIGHT_STUFF = "rightStuff";
 	String SCATTER_BALL = "scatterBall";
 	String SHADOWING = "shadowing";
+	String SKIP_PILE_DRIVER = "skipPileDriver";
 
 }
