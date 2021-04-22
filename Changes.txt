@@ -1,4 +1,5 @@
 Behaviour Changes:
+- Pile Driver implemented
 
 Technical Changes:
 - Unify suppression syntax
@@ -14,3 +15,4 @@ Bugfixes:
 - With activated jump only valid jump squares can be selected
 - Wording for catch modifier for scatter or deviated balls was missing
 - Stat decreases by ingame injuries were not displayed in player detail view
+- Chainsaw modifier was always used even when blocking regularly

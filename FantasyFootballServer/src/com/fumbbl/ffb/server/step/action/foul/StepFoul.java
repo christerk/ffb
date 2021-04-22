@@ -7,6 +7,8 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.IJsonOption;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -34,6 +36,8 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepFoul extends AbstractStep {
 
+	private boolean usingChainsaw;
+
 	public StepFoul(GameState pGameState) {
 		super(pGameState);
 	}
@@ -57,6 +61,19 @@ public class StepFoul extends AbstractStep {
 		return commandStatus;
 	}
 
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.USING_CHAINSAW) {
+				usingChainsaw = parameter.getValue() != null && (boolean) parameter.getValue();
+				consume(parameter);
+				return true;
+			}
+		}
+		return false;
+	}
+
+
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -66,7 +83,7 @@ public class StepFoul extends AbstractStep {
 		}
 		UtilServerGame.syncGameModel(this);
 		FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeFoul(),
+		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeFoul(usingChainsaw),
 				actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -82,12 +99,15 @@ public class StepFoul extends AbstractStep {
 
 	@Override
 	public JsonObject toJsonValue() {
-		return super.toJsonValue();
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
+		return jsonObject;
 	}
 
 	@Override
-	public StepFoul initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepFoul initFrom(IFactorySource game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
+		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(game, UtilJson.toJsonObject(jsonValue));
 		return this;
 	}
 

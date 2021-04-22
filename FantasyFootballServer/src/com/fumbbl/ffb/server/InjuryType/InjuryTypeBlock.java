@@ -39,10 +39,8 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
-			Skill chainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
-				.orElseGet(() ->
-					pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw)
-				);
+			Skill chainsaw = Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
+				.orElse(null);
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));

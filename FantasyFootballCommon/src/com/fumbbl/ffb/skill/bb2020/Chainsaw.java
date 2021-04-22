@@ -5,6 +5,7 @@ import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.StaticArmourModifier;
 
 /**
@@ -44,7 +45,12 @@ public class Chainsaw extends Skill {
 		registerProperty(NamedProperties.providesChainsawFoulingAlternative);
 		registerProperty(NamedProperties.providesFoulingAlternative);
 
-		registerModifier(new StaticArmourModifier("Chainsaw", 3, false));
+		registerModifier(new StaticArmourModifier("Chainsaw", 3, false) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				return false;
+			}
+		});
 	}
 
 }

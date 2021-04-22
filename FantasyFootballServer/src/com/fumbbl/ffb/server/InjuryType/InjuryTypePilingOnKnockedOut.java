@@ -21,15 +21,9 @@ public class InjuryTypePilingOnKnockedOut extends InjuryTypeServer<PilingOnKnock
 			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
 			ApothecaryMode pApothecaryMode) {
 
-		if (!injuryContext.isArmorBroken()) {
-			injuryContext.setArmorBroken(true);
-		}
+		injuryContext.setArmorBroken(true);
 
-		if (injuryContext.isArmorBroken()) {
-			injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
-		} else {
-			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-		}
+		injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 
 		return injuryContext;
 	}

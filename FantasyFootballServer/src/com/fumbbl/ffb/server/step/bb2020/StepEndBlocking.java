@@ -194,8 +194,12 @@ public class StepEndBlocking extends AbstractStep {
 				game.getFieldModel().clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(activePlayer);
-				knockedDownPlayers = knockedDownPlayers.stream().filter(player ->
-					game.getFieldModel().getPlayerCoordinate(game.getPlayerById(player)).isAdjacent(attackerCoordinate)
+				knockedDownPlayers = knockedDownPlayers.stream().filter(player -> {
+					Player<?> playerById = game.getPlayerById(player);
+					PlayerState playerState = game.getFieldModel().getPlayerState(playerById);
+					return game.getFieldModel().getPlayerCoordinate(playerById).isAdjacent(attackerCoordinate)
+						&& (playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED);
+					}
 				).collect(Collectors.toList());
 
 				PlayerState playerState = game.getFieldModel().getPlayerState(activePlayer);

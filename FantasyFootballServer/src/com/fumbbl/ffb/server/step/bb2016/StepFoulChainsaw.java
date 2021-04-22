@@ -109,6 +109,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 				getResult().addReport(new ReportChainsawRoll(actingPlayer.getPlayerId(), successful, roll,
 						minimumRoll, reRolled, null));
 				if (successful) {
+					publishParameter(StepParameter.from(StepParameterKey.USING_CHAINSAW, true));
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),

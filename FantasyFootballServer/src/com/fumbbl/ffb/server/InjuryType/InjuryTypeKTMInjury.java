@@ -23,9 +23,7 @@ public class InjuryTypeKTMInjury extends InjuryTypeServer<KTMInjury> {
 			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
 			ApothecaryMode pApothecaryMode) {
 
-		if (!injuryContext.isArmorBroken()) {
-			injuryContext.setArmorBroken(true);
-		}
+		injuryContext.setArmorBroken(true);
 
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 		injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));

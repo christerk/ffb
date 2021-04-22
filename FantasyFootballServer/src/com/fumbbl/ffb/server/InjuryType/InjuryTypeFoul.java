@@ -25,8 +25,11 @@ import java.util.Optional;
 import java.util.Set;
 
 public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
-	public InjuryTypeFoul() {
+	private final boolean useChainsaw;
+
+	public InjuryTypeFoul(boolean useChainsaw) {
 		super(new Foul());
+		this.useChainsaw = useChainsaw;
 	}
 
 	@Override
@@ -43,10 +46,12 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 
 		if (!injuryContext.isArmorBroken()) {
 
-			Optional<Skill> attackerHasChainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
-
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			attackerHasChainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+
+			if (useChainsaw) {
+				Optional<Skill> attackerHasChainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
+				attackerHasChainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+			}
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 			ArmorModifierContext context = new ArmorModifierContext(game, pAttacker, pDefender, false, true, UtilPlayer.findFoulAssists(game, pAttacker, pDefender));
