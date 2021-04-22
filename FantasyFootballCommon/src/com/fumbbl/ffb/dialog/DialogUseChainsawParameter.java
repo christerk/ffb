@@ -34,13 +34,16 @@ public class DialogUseChainsawParameter implements IDialogParameter {
 
 	@Override
 	public IDialogParameter initFrom(IFactorySource game, JsonValue jsonValue) {
-		teamId = IJsonOption.TEAM_ID.getFrom(game, UtilJson.toJsonObject(jsonValue));
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
 		return this;
 	}
 
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
+		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.TEAM_ID.addTo(jsonObject, teamId);
 		return jsonObject;
 	}

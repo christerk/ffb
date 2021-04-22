@@ -45,6 +45,7 @@ public class DialogPileDriverParameter implements IDialogParameter {
 	@Override
 	public IDialogParameter initFrom(IFactorySource game, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
 		knockedDownPlayers.addAll(Arrays.stream(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject)).collect(Collectors.toList()));
 		return this;
@@ -53,6 +54,7 @@ public class DialogPileDriverParameter implements IDialogParameter {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
+		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.PLAYER_IDS.addTo(jsonObject, knockedDownPlayers);
 		IJsonOption.TEAM_ID.addTo(jsonObject, teamId);
 		return jsonObject;
