@@ -16,6 +16,9 @@ public class DialogPileDriverParameter implements IDialogParameter {
 	private final List<String> knockedDownPlayers = new ArrayList<>();
 	private String teamId;
 
+	public DialogPileDriverParameter() {
+	}
+
 	public DialogPileDriverParameter(String teamId, List<String> knockedDownPlayers) {
 		this.teamId = teamId;
 		this.knockedDownPlayers.addAll(knockedDownPlayers);

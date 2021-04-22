@@ -162,6 +162,12 @@ public class DialogManager {
 					case USE_IGORS:
 						setDialogHandler(new DialogUseIgorsHandler(getClient()));
 						break;
+					case PILE_DRIVER:
+						setDialogHandler(new DialogPileDriverHandler(getClient()));
+						break;
+					case USE_CHAINSAW:
+						setDialogHandler(new DialogUseChainsawHandler(getClient()));
+						break;
 					default:
 						break;
 				}

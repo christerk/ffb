@@ -2,15 +2,10 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.StatusType;
-import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
-import com.fumbbl.ffb.dialog.DialogUseApothecariesParameter;
 import com.fumbbl.ffb.model.Game;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DialogPileDriverHandler extends DialogHandler {
 
@@ -57,7 +52,7 @@ public class DialogPileDriverHandler extends DialogHandler {
 			selectedPlayer = playerChoiceDialog.getSelectedPlayers()[0].getId();
 		}
 
-		getClient().getCommunication().sendUseApothecaries(selectedInjuries);
+		getClient().getCommunication().sendPileDriver(selectedPlayer);
 	}
 
 }

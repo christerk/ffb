@@ -101,6 +101,10 @@ public class DialogParameterFactory {
 				return new DialogUseApothecariesParameter();
 			case USE_IGORS:
 				return new DialogUseIgorsParameter();
+			case PILE_DRIVER:
+				return new DialogPileDriverParameter();
+			case USE_CHAINSAW:
+				return new DialogUseChainsawParameter();
 			default:
 				return null;
 		}

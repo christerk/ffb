@@ -9,7 +9,7 @@ public class DialogPileDriver extends DialogYesOrNoQuestion {
 	private final String playerId;
 
 	public DialogPileDriver(FantasyFootballClient pClient, String playerId) {
-		super(pClient, "Use Pile Driver", "Do you want to foul " + getName(pClient.getGame(), playerId) + " using Pile Driver");
+		super(pClient, "Use Pile Driver", "Do you want to foul " + getName(pClient.getGame(), playerId) + " using Pile Driver?");
 		this.playerId = playerId;
 	}
 

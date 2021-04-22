@@ -58,6 +58,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandPasswordChallenge;
 import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
+import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandPing;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
@@ -80,6 +81,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandTouchback;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
+import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
@@ -460,6 +462,14 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, ReRollSource reRollSource) {
 		send(new ClientCommandBlockOrReRollChoiceForTarget(targetId, selectedIndex, reRollSource));
+	}
+
+	public void sendPileDriver(String playerId) {
+		send(new ClientCommandPileDriver(playerId));
+	}
+
+	public void sendUseChainsaw(boolean useChainsaw) {
+		send(new ClientCommandUseChainsaw(useChainsaw));
 	}
 
 	public FantasyFootballClient getClient() {
