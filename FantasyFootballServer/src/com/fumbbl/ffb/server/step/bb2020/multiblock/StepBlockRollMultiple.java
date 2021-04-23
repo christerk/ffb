@@ -98,12 +98,19 @@ public class StepBlockRollMultiple extends AbstractStep {
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
-		if (parameter != null && parameter.getKey() == StepParameterKey.PLAYER_ID_TO_REMOVE) {
-			state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(parameter.getValue())).findFirst()
-				.ifPresent(roll -> state.blockRolls.remove(roll));
-			return true;
+		if (parameter != null) {
+			switch (parameter.getKey()) {
+				case PLAYER_ID_TO_REMOVE:
+					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(parameter.getValue())).findFirst()
+						.ifPresent(roll -> state.blockRolls.remove(roll));
+					return true;
+				case PLAYER_ID_DAUNTLESS_SUCCESS:
+					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(parameter.getValue())).findFirst()
+						.ifPresent(roll -> roll.setSuccessFulDauntless(true));
+					consume(parameter);
+					return true;
+			}
 		}
-
 		return super.setParameter(parameter);
 	}
 

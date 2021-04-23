@@ -22,7 +22,6 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,7 +33,6 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepMultipleBlockFork extends AbstractStep {
 	private final List<BlockTarget> targets = new ArrayList<>();
-	private List<String> successfulDauntless = new ArrayList<>();
 	private final Set<StepParameterKey> parameterToConsume = new HashSet<StepParameterKey>() {{
 		add(StepParameterKey.BLOCK_ROLL);
 		add(StepParameterKey.BLOCK_RESULT);
@@ -75,18 +73,11 @@ public class StepMultipleBlockFork extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if (parameter != null) {
-			switch (parameter.getKey()) {
-				case PLAYER_ID_TO_REMOVE:
-					targets.stream().filter(target -> target.getPlayerId().equals(parameter.getValue()))
-						.findFirst().ifPresent(targets::remove);
-					consume(parameter);
-					return true;
-				case PLAYER_ID_DAUNTLESS_SUCCESS:
-					successfulDauntless.add((String) parameter.getValue());
-					consume(parameter);
-					return true;
-			default:
-				break;
+			if (parameter.getKey() == StepParameterKey.PLAYER_ID_TO_REMOVE) {
+				targets.stream().filter(target -> target.getPlayerId().equals(parameter.getValue()))
+					.findFirst().ifPresent(targets::remove);
+				consume(parameter);
+				return true;
 			}
 		}
 		return super.setParameter(parameter);
@@ -175,7 +166,6 @@ public class StepMultipleBlockFork extends AbstractStep {
 		jsonArray.values().stream()
 			.map(value -> new BlockTarget().initFrom(game, value))
 			.forEach(targets::add);
-		successfulDauntless = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		return this;
 	}
 }
