@@ -13,7 +13,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,9 +119,9 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 			int finalSelection = brawlerSelection;
 			brawlerButton.addActionListener(e -> brawlerAction(target, finalSelection));
 			brawlerButton.setMnemonic(mnemonics.get(0));
-			brawlerButton.addKeyListener(new PressedKeyListener() {
+			this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
 				@Override
-				public void keyPressed(KeyEvent e) {
+				protected void handleKey() {
 					brawlerAction(target, finalSelection);
 				}
 			});
@@ -146,9 +145,9 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		button.addActionListener(e -> {
 			handleReRollUse(target, reRollSource);
 		});
-		button.addKeyListener(new PressedKeyListener() {
+		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			protected void handleKey() {
 				handleReRollUse(target, reRollSource);
 			}
 		});

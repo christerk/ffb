@@ -23,7 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,9 +45,9 @@ public class DialogReRollForTargets extends Dialog {
 		fButtonNoReRoll.addActionListener(e -> {
 			close();
 		});
-		fButtonNoReRoll.addKeyListener(new PressedKeyListener() {
+		this.addKeyListener(new PressedKeyListener('N') {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			protected void handleKey() {
 				close();
 			}
 		});
@@ -170,9 +169,9 @@ public class DialogReRollForTargets extends Dialog {
 		button.addActionListener(e -> {
 			handleUserInteraction(target, reRollSource);
 		});
-		button.addKeyListener(new PressedKeyListener() {
+		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			protected void handleKey() {
 				handleUserInteraction(target, reRollSource);
 			}
 		});

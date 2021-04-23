@@ -65,14 +65,12 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 					selectedIndex = index;
 					close();
 				});
-				dieButton.addKeyListener(new PressedKeyListener() {
+				this.addKeyListener(new PressedKeyListener(index) {
 					@Override
-					public void keyPressed(KeyEvent e) {
-						if (e.getKeyCode() == index) {
-							selectedTarget = blockRoll.getTargetId();
-							selectedIndex = index;
-							close();
-						}
+					protected void handleKey() {
+						selectedTarget = blockRoll.getTargetId();
+						selectedIndex = index;
+						close();
 					}
 				});
 			}
@@ -87,7 +85,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 
 	protected JPanel namePanel(String target) {
 		Player<?> defender = getClient().getGame().getPlayerById(target);
-		JLabel nameLabel = new JLabel("<html>"+ defender.getName() +"</html>");
+		JLabel nameLabel = new JLabel("<html>" + defender.getName() + "</html>");
 		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		nameLabel.setOpaque(false);
 		JPanel panel = new JPanel();
@@ -101,10 +99,25 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 
 	protected static abstract class PressedKeyListener implements KeyListener {
 
+		private final int keyCode;
+
+		protected PressedKeyListener(int keyCode) {
+			this.keyCode = keyCode;
+		}
+
 		@Override
 		public void keyTyped(KeyEvent e) {
 
 		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == keyCode) {
+				handleKey();
+			}
+		}
+
+		protected abstract void handleKey();
 
 		@Override
 		public void keyReleased(KeyEvent e) {
