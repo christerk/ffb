@@ -1,12 +1,11 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.FantasyFootballClient;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -25,15 +24,23 @@ public abstract class AbstractDialogBlock extends Dialog {
 	}
 
 	protected JPanel opponentChoicePanel() {
-		JPanel opponentsChoicePanel = new JPanel();
-		opponentsChoicePanel.setOpaque(false);
-		opponentsChoicePanel.setLayout(new BoxLayout(opponentsChoicePanel, BoxLayout.X_AXIS));
-		JLabel opponentsChoiceLabel = new JLabel("Opponent's choice");
-		opponentsChoiceLabel.setFont(
-			new Font(opponentsChoiceLabel.getFont().getName(), Font.BOLD, opponentsChoiceLabel.getFont().getSize()));
-		opponentsChoicePanel.add(opponentsChoiceLabel);
-		opponentsChoicePanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-		return opponentsChoicePanel;
+		return textPanel("Opponent's choice");
+	}
+
+	protected JPanel brawlerTextPanel() {
+		return textPanel("Brawler Re-Rolls");
+	}
+
+	private JPanel textPanel(String text) {
+		JPanel textPanel = new JPanel();
+		textPanel.setOpaque(false);
+		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
+		JLabel label = new JLabel(text);
+		label.setFont(
+			new Font(label.getFont().getName(), Font.BOLD, label.getFont().getSize()));
+		textPanel.add(label);
+		textPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+		return textPanel;
 	}
 
 	protected JPanel blockRollPanel() {

@@ -19,9 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogBlockRoll extends AbstractDialogBlock implements ActionListener, KeyListener {
@@ -31,8 +32,9 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 	private JButton fButtonTeamReRoll;
 	private JButton fButtonProReRoll;
 	private JButton fButtonNoReRoll;
+	private JButton brawlerButton1, brawlerButton2, brawlerButton3;
 
-	private int fDiceIndex;
+	private int fDiceIndex, brawlerCount;
 	private ReRollSource fReRollSource;
 
 	private final DialogBlockRollParameter fDialogParameter;
@@ -54,7 +56,7 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		int[] blockRoll = getDialogParameter().getBlockRoll();
 		fBlockDice = new JButton[blockRoll.length];
 		boolean ownChoice = ((fDialogParameter.getNrOfDice() > 0)
-				|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption()));
+			|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption()));
 		for (int i = 0; i < fBlockDice.length; i++) {
 			fBlockDice[i] = new JButton();
 			fBlockDice[i].setOpaque(false);
@@ -126,6 +128,10 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 			centerPanel.add(Box.createVerticalStrut(10));
 			centerPanel.add(reRollPanel);
 
+			if (pDialogParameter.getBrawlerOptions() > 0) {
+				centerPanel.add(brawlerPanel(pDialogParameter.getBrawlerOptions()));
+				centerPanel.add(Box.createVerticalStrut(3));
+			}
 		}
 
 		getContentPane().setLayout(new BorderLayout());
@@ -140,6 +146,56 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		return DialogId.BLOCK_ROLL;
 	}
 
+	private JPanel brawlerPanel(int brawlerOptions) {
+		List<Integer> brawlerMnemonics = new ArrayList<>();
+		brawlerMnemonics.add(KeyEvent.VK_B);
+		brawlerMnemonics.add(KeyEvent.VK_O);
+		brawlerMnemonics.add(KeyEvent.VK_H);
+		JPanel brawlerPanel = new JPanel();
+		brawlerPanel.setLayout(new BoxLayout(brawlerPanel, BoxLayout.Y_AXIS));
+		brawlerPanel.setAlignmentX(CENTER_ALIGNMENT);
+		brawlerPanel.add(brawlerTextPanel());
+		brawlerPanel.setOpaque(false);
+
+		JPanel brawlerButtonPanel = new JPanel();
+		brawlerButtonPanel.setLayout(new BoxLayout(brawlerButtonPanel, BoxLayout.X_AXIS));
+		brawlerButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		for (int i = 1; i <= brawlerOptions; i++) {
+			JButton button = brawlerButton(i, brawlerMnemonics.get(0));
+			switch (i) {
+				case 1:
+					brawlerButton1 = button;
+					break;
+				case 2:
+					brawlerButton2 = button;
+					break;
+				default:
+					brawlerButton3 = button;
+					break;
+			}
+			brawlerButtonPanel.add(button);
+			brawlerMnemonics.remove(0);
+		}
+
+		brawlerPanel.add(brawlerButtonPanel);
+
+		return brawlerPanel;
+	}
+
+	private JButton brawlerButton(int brawlerCount, int keyEvent) {
+		JButton brawlerButton = new JButton();
+		brawlerButton.setText(brawlerCount + " BothDown" + (brawlerCount > 1 ? "s" : ""));
+		brawlerButton.addActionListener(this);
+		brawlerButton.setMnemonic(keyEvent);
+		brawlerButton.addKeyListener(this);
+		return brawlerButton;
+	}
+
+	private void setBrawler(int brawlerCount) {
+		this.brawlerCount = brawlerCount;
+		fReRollSource = ReRollSources.BRAWLER;
+	}
+
 	public void actionPerformed(ActionEvent pActionEvent) {
 		Game game = getClient().getGame();
 		boolean homeChoice = ((getDialogParameter().getNrOfDice() > 0) || !game.isHomePlaying());
@@ -148,6 +204,15 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		}
 		if (pActionEvent.getSource() == fButtonProReRoll) {
 			fReRollSource = ReRollSources.PRO;
+		}
+		if (pActionEvent.getSource() == brawlerButton1) {
+			setBrawler(1);
+		}
+		if (pActionEvent.getSource() == brawlerButton2) {
+			setBrawler(2);
+		}
+		if (pActionEvent.getSource() == brawlerButton3) {
+			setBrawler(3);
 		}
 		if (homeChoice && (fBlockDice.length >= 1) && (pActionEvent.getSource() == fBlockDice[0])) {
 			fDiceIndex = 0;
@@ -180,6 +245,10 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		return fDialogParameter;
 	}
 
+	public int getBrawlerCount() {
+		return brawlerCount;
+	}
+
 	public void keyPressed(KeyEvent pKeyEvent) {
 	}
 
@@ -188,40 +257,58 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		boolean homeChoice = ((getDialogParameter().getNrOfDice() > 0) || !game.isHomePlaying());
 		boolean keyHandled = false;
 		switch (pKeyEvent.getKeyCode()) {
-		case KeyEvent.VK_1:
-			if (homeChoice && (fBlockDice.length >= 1)) {
-				keyHandled = true;
-				fDiceIndex = 0;
-			}
-			break;
-		case KeyEvent.VK_2:
-			if (homeChoice && (fBlockDice.length >= 2)) {
-				keyHandled = true;
-				fDiceIndex = 1;
-			}
-			break;
-		case KeyEvent.VK_3:
-			if (homeChoice && (fBlockDice.length >= 3)) {
-				keyHandled = true;
-				fDiceIndex = 2;
-			}
-			break;
-		case KeyEvent.VK_T:
-			if (getDialogParameter().hasTeamReRollOption()) {
-				keyHandled = true;
-				fReRollSource = ReRollSources.TEAM_RE_ROLL;
-			}
-			break;
-		case KeyEvent.VK_P:
-			if (getDialogParameter().hasProReRollOption()) {
-				keyHandled = true;
-				fReRollSource = ReRollSources.PRO;
-			}
-			break;
-		case KeyEvent.VK_N:
-			keyHandled = ((getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption())
+			case KeyEvent.VK_1:
+				if (homeChoice && (fBlockDice.length >= 1)) {
+					keyHandled = true;
+					fDiceIndex = 0;
+				}
+				break;
+			case KeyEvent.VK_2:
+				if (homeChoice && (fBlockDice.length >= 2)) {
+					keyHandled = true;
+					fDiceIndex = 1;
+				}
+				break;
+			case KeyEvent.VK_3:
+				if (homeChoice && (fBlockDice.length >= 3)) {
+					keyHandled = true;
+					fDiceIndex = 2;
+				}
+				break;
+			case KeyEvent.VK_T:
+				if (getDialogParameter().hasTeamReRollOption()) {
+					keyHandled = true;
+					fReRollSource = ReRollSources.TEAM_RE_ROLL;
+				}
+				break;
+			case KeyEvent.VK_P:
+				if (getDialogParameter().hasProReRollOption()) {
+					keyHandled = true;
+					fReRollSource = ReRollSources.PRO;
+				}
+				break;
+			case KeyEvent.VK_N:
+				keyHandled = ((getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption())
 					&& (getDialogParameter().getNrOfDice() < 0));
-			break;
+				break;
+			case KeyEvent.VK_B:
+				if (brawlerButton1 != null) {
+					keyHandled = true;
+					setBrawler(1);
+				}
+				break;
+			case KeyEvent.VK_O:
+				if (brawlerButton2 != null) {
+					keyHandled = true;
+					setBrawler(2);
+				}
+				break;
+			case KeyEvent.VK_H:
+				if (brawlerButton3 != null) {
+					keyHandled = true;
+					setBrawler(3);
+				}
+				break;
 		}
 		if (keyHandled) {
 			if (getCloseListener() != null) {

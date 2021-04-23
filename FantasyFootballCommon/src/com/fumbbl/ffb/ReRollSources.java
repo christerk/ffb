@@ -1,9 +1,5 @@
 package com.fumbbl.ffb;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fumbbl.ffb.skill.Catch;
 import com.fumbbl.ffb.skill.Dodge;
 import com.fumbbl.ffb.skill.Leader;
@@ -12,6 +8,11 @@ import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.Pro;
 import com.fumbbl.ffb.skill.SureFeet;
 import com.fumbbl.ffb.skill.SureHands;
+import com.fumbbl.ffb.skill.bb2020.Brawler;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReRollSources {
 
@@ -26,8 +27,9 @@ public class ReRollSources {
 	public static final ReRollSource LONER = new ReRollSource("Loner");
 	public static final ReRollSource LEADER = new ReRollSource(Leader.class);
 	public static final ReRollSource MONSTROUS_MOUTH = new ReRollSource(MonstrousMouth.class);
+	public static final ReRollSource BRAWLER = new ReRollSource(Brawler.class);
 
-	private Map<String, ReRollSource> values;
+	private final Map<String, ReRollSource> values;
 
 	public Map<String, ReRollSource> values() {
 		return values;

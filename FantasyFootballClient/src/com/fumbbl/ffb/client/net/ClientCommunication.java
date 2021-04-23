@@ -81,6 +81,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandTouchback;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
+import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
@@ -470,6 +471,10 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUseChainsaw(boolean useChainsaw) {
 		send(new ClientCommandUseChainsaw(useChainsaw));
+	}
+
+	public void sendUseBrawler(int brawlerCount) {
+		send(new ClientCommandUseBrawler(brawlerCount));
 	}
 
 	public FantasyFootballClient getClient() {
