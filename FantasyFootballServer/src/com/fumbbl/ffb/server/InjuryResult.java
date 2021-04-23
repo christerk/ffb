@@ -53,6 +53,7 @@ public class InjuryResult implements IJsonSerializable {
 		add(PlayerState.BADLY_HURT);
 		add(PlayerState.SERIOUS_INJURY);
 		add(PlayerState.RIP);
+		add(PlayerState.RESERVE);
 	}};
 
 	private InjuryContext injuryContext;
