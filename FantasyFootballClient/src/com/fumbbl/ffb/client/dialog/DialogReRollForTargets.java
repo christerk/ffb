@@ -1,11 +1,12 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.Game;
@@ -23,7 +24,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -212,17 +212,4 @@ public class DialogReRollForTargets extends Dialog {
 		return dialogParameter;
 	}
 
-
-	private static abstract class PressedKeyListener implements KeyListener {
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-
-		}
-	}
 }
