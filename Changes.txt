@@ -16,3 +16,4 @@ Bugfixes:
 - Wording for catch modifier for scatter or deviated balls was missing
 - Stat decreases by ingame injuries were not displayed in player detail view
 - Chainsaw modifier was always used even when blocking regularly
+- Order of injury reports during multi block was confusing
