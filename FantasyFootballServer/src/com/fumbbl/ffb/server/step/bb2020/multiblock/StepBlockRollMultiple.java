@@ -195,7 +195,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 		Player<?> defender = game.getPlayerById(roll.getTargetId());
 		roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 		if (!reRolling) {
-			getResult().addReport(new ReportBlock(game.getDefenderId()));
+			getResult().addReport(new ReportBlock(defender.getId()));
 		}
 		getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
 		getResult().setSound(SoundId.BLOCK);
