@@ -21,6 +21,7 @@ import com.fumbbl.ffb.json.JsonStringOption;
 public interface IServerJsonOption extends IJsonOption {
 
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
+	JsonBooleanOption ALREADY_REPORTED = new JsonBooleanOption("alreadyReported");
 	JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
 	JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
 	JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");

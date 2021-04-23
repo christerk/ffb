@@ -44,7 +44,9 @@ import java.util.List;
  */
 public class InjuryResult implements IJsonSerializable {
 
-	private static List<Integer> basePrecedenceList = new ArrayList<Integer>() {{
+	private boolean alreadyReported;
+
+	private static final List<Integer> basePrecedenceList = new ArrayList<Integer>() {{
 		add(PlayerState.PRONE);
 		add(PlayerState.STUNNED);
 		add(PlayerState.KNOCKED_OUT);
@@ -148,10 +150,14 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 	public void report(IStep pStep) {
+		if (alreadyReported) {
+			return;
+		}
 		ReportFactory factory = pStep.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
 		ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
 		pStep.getResult().addReport(reportInjury.init(injuryContext));
 		pStep.getResult().setSound(injuryContext.getSound());
+		alreadyReported = true;
 	}
 
 	// JSON serialization
@@ -159,6 +165,8 @@ public class InjuryResult implements IJsonSerializable {
 	public JsonObject toJsonValue() {
 
 		JsonObject jsonObject = new JsonObject();
+
+		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
 
 		IServerJsonOption.INJURY_TYPE.addTo(jsonObject, injuryContext.fInjuryType);
 		IServerJsonOption.DEFENDER_ID.addTo(jsonObject, injuryContext.fDefenderId);
@@ -203,6 +211,8 @@ public class InjuryResult implements IJsonSerializable {
 	public InjuryResult initFrom(IFactorySource source, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
 
 		injuryContext.fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(source, jsonObject);
 		injuryContext.fDefenderId = IServerJsonOption.DEFENDER_ID.getFrom(source, jsonObject);

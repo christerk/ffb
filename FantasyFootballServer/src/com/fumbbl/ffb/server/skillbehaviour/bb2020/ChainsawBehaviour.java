@@ -93,6 +93,7 @@ public class ChainsawBehaviour extends SkillBehaviour<Chainsaw> {
 					step.publishParameters(UtilServerInjury.dropPlayer(step, defender, ApothecaryMode.DEFENDER));
 				}
 				step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
+				injuryResultDefender.report(step);
 			}
 
 			@Override
