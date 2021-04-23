@@ -82,7 +82,7 @@ public class DialogBlockRollHandler extends DialogHandler {
 				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
 				if (blockRoll.needsSelection()) {
 					if (blockRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
-						communication.sendUseBrawler(blockRollDialog.getBrawlerCount());
+						communication.sendUseBrawler(blockRollDialog.getBrawlerCount(), null);
 					} else {
 						communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
 					}

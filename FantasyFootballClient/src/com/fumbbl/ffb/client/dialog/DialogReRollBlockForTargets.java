@@ -21,10 +21,19 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
 	private ReRollSource reRollSource;
+	private int brawlerSelection;
 
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
-		add(new Mnemonics('T', 'P', 'N'));
-		add(new Mnemonics('e', 'o', 'l'));
+		add(new Mnemonics('T', 'P', 'N', new ArrayList<Character>() {{
+			add('B');
+			add('h');
+			add('d');
+		}}));
+		add(new Mnemonics('e', 'o', 'l', new ArrayList<Character>() {{
+			add('w');
+			add('s');
+			add('u');
+		}}));
 	}};
 
 	public DialogReRollBlockForTargets(FantasyFootballClient pClient, DialogReRollBlockForTargetsParameter parameter) {
@@ -70,6 +79,10 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 				}
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
+
+				if (dialogParameter.isBrawlerAvailable() && blockRoll.getBrawlerOptions() > 0) {
+					targetPanel.add(createBrawlerPanel(blockRoll.getTargetId(), blockRoll.getBrawlerOptions(), currentMnemonics.brawler));
+				}
 				targetPanel.add(Box.createVerticalStrut(3));
 			}
 
@@ -88,6 +101,44 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		pack();
 		setLocationToCenter();
 
+	}
+
+	private JPanel createBrawlerPanel(String target, int brawlerOptions, List<Character> mnemonics) {
+		JPanel brawlerPanel = new JPanel();
+		brawlerPanel.setOpaque(false);
+		brawlerPanel.setLayout(new BoxLayout(brawlerPanel, BoxLayout.Y_AXIS));
+		brawlerPanel.setAlignmentX(CENTER_ALIGNMENT);
+		brawlerPanel.add(brawlerTextPanel());
+
+		JPanel brawlerButtonPanel = new JPanel();
+		brawlerButtonPanel.setLayout(new BoxLayout(brawlerButtonPanel, BoxLayout.X_AXIS));
+		brawlerButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+
+		for (int brawlerSelection = 1; brawlerSelection <= brawlerOptions; brawlerSelection++) {
+			JButton brawlerButton = new JButton();
+			brawlerButton.setText(brawlerSelection + " Both Down" + (brawlerSelection > 1 ? "s" : ""));
+			int finalSelection = brawlerSelection;
+			brawlerButton.addActionListener(e -> brawlerAction(target, finalSelection));
+			brawlerButton.setMnemonic(mnemonics.get(0));
+			brawlerButton.addKeyListener(new PressedKeyListener() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					brawlerAction(target, finalSelection);
+				}
+			});
+			brawlerButtonPanel.add(brawlerButton);
+			mnemonics.remove(0);
+		}
+
+		brawlerPanel.add(brawlerButtonPanel);
+		return brawlerPanel;
+	}
+
+	private void brawlerAction(String target, int brawlerSelection) {
+		reRollSource = ReRollSources.BRAWLER;
+		this.brawlerSelection = brawlerSelection;
+		this.selectedTarget = target;
+		close();
 	}
 
 	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
@@ -134,6 +185,10 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		return selectedIndex;
 	}
 
+	public int getBrawlerSelection() {
+		return brawlerSelection;
+	}
+
 	public DialogReRollBlockForTargetsParameter getDialogParameter() {
 		return dialogParameter;
 	}
@@ -142,11 +197,13 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		private final char team;
 		private final char pro;
 		private final char none;
+		private final List<Character> brawler;
 
-		public Mnemonics(char team, char pro, char none) {
+		public Mnemonics(char team, char pro, char none, List<Character> brawler) {
 			this.team = team;
 			this.pro = pro;
 			this.none = none;
+			this.brawler = brawler;
 		}
 	}
 }

@@ -18,19 +18,20 @@ public class DialogReRollBlockForTargetsParameter implements IDialogParameter {
 
 	private String playerId;
 	private List<String> reRollAvailableAgainst = new ArrayList<>();
-	private boolean proReRollAvailable, teamReRollAvailable;
+	private boolean proReRollAvailable, teamReRollAvailable, brawlerAvailable;
 	private List<BlockRoll> blockRolls;
 
 	public DialogReRollBlockForTargetsParameter() {
 		super();
 	}
 
-	public DialogReRollBlockForTargetsParameter(String playerId, List<BlockRoll> blockRolls, List<String> reRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable) {
+	public DialogReRollBlockForTargetsParameter(String playerId, List<BlockRoll> blockRolls, List<String> reRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable, boolean brawlerAvailable) {
 		this.reRollAvailableAgainst = reRollAvailableAgainst;
 		this.proReRollAvailable = proReRollAvailable;
 		this.playerId = playerId;
 		this.teamReRollAvailable = teamReRollAvailable;
 		this.blockRolls = blockRolls;
+		this.brawlerAvailable = brawlerAvailable;
 	}
 
 	public DialogId getId() {
@@ -57,10 +58,13 @@ public class DialogReRollBlockForTargetsParameter implements IDialogParameter {
 		return teamReRollAvailable;
 	}
 
-	// transformation
+	public boolean isBrawlerAvailable() {
+		return brawlerAvailable;
+	}
+// transformation
 
 	public IDialogParameter transform() {
-		return new DialogReRollBlockForTargetsParameter(getPlayerId(), getBlockRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable);
+		return new DialogReRollBlockForTargetsParameter(getPlayerId(), getBlockRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable, brawlerAvailable);
 	}
 
 	// JSON serialization
@@ -75,6 +79,7 @@ public class DialogReRollBlockForTargetsParameter implements IDialogParameter {
 		blockRolls.forEach(roll -> array.add(roll.toJsonValue()));
 		IJsonOption.BLOCK_ROLLS.addTo(jsonObject, array);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IJsonOption.BRAWLER_AVAILABLE.addTo(jsonObject, brawlerAvailable);
 		return jsonObject;
 	}
 
@@ -87,6 +92,7 @@ public class DialogReRollBlockForTargetsParameter implements IDialogParameter {
 		JsonArray array =  IJsonOption.BLOCK_ROLLS.getFrom(game, jsonObject);
 		blockRolls = array.values().stream().map(roll -> new BlockRoll().initFrom(game, roll)).collect(Collectors.toList());
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		brawlerAvailable = IJsonOption.BRAWLER_AVAILABLE.getFrom(game, jsonObject);
 		return this;
 	}
 

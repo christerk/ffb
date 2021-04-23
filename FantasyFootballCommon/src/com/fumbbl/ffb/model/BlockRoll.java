@@ -2,7 +2,10 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.BlockResult;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -17,7 +20,7 @@ public class BlockRoll implements IJsonSerializable {
 	private boolean successFulDauntless, ownChoice;
 	private int nrOfDice, id;
 	private int[] blockRoll;
-	private int selectedIndex = -1;
+	private int selectedIndex = -1, brawlerOptions, brawlerCount;
 
 	public BlockRoll() {
 	}
@@ -60,6 +63,12 @@ public class BlockRoll implements IJsonSerializable {
 		this.blockRoll = blockRoll;
 	}
 
+	public void setBlockRoll(Game game, int[] blockRoll) {
+		this.blockRoll = blockRoll;
+		BlockResultFactory factory = game.getFactory(FactoryType.Factory.BLOCK_RESULT);
+		brawlerOptions = (int) Arrays.stream(blockRoll).mapToObj(factory::forRoll).filter(blockResult -> blockResult == BlockResult.BOTH_DOWN).count();
+	}
+
 	public int getSelectedIndex() {
 		return selectedIndex;
 	}
@@ -84,20 +93,33 @@ public class BlockRoll implements IJsonSerializable {
 		return oldPlayerState;
 	}
 
+	public void setBrawlerOptions(int brawlerOptions) {
+		this.brawlerOptions = brawlerOptions;
+	}
+
+	public int getBrawlerOptions() {
+		return brawlerOptions;
+	}
+
+	public void setBrawlerCount(int brawlerCount) {
+		this.brawlerCount = brawlerCount;
+	}
+
+	public int getBrawlerCount() {
+		return brawlerCount;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		BlockRoll blockRoll1 = (BlockRoll) o;
-		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice
-			&& nrOfDice == blockRoll1.nrOfDice && selectedIndex == blockRoll1.selectedIndex
-			&& id == blockRoll1.id
-			&& Objects.equals(targetId, blockRoll1.targetId) && Arrays.equals(blockRoll, blockRoll1.blockRoll);
+		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice && nrOfDice == blockRoll1.nrOfDice && id == blockRoll1.id && selectedIndex == blockRoll1.selectedIndex && brawlerOptions == blockRoll1.brawlerOptions && brawlerCount == blockRoll1.brawlerCount && Objects.equals(targetId, blockRoll1.targetId) && Objects.equals(oldPlayerState, blockRoll1.oldPlayerState) && Arrays.equals(blockRoll, blockRoll1.blockRoll);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(targetId, successFulDauntless, ownChoice, nrOfDice, selectedIndex, id);
+		int result = Objects.hash(targetId, oldPlayerState, successFulDauntless, ownChoice, nrOfDice, id, selectedIndex, brawlerOptions, brawlerCount);
 		result = 31 * result + Arrays.hashCode(blockRoll);
 		return result;
 	}
@@ -113,6 +135,8 @@ public class BlockRoll implements IJsonSerializable {
 		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(game, jsonObject);
 		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
 		id = IJsonOption.BLOCK_ROLL_ID.getFrom(game, jsonObject);
+		brawlerOptions = IJsonOption.BRAWLER_OPTIONS.getFrom(game, jsonObject);
+		brawlerCount = IJsonOption.BRAWLER_COUNT.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -127,6 +151,8 @@ public class BlockRoll implements IJsonSerializable {
 		IJsonOption.IS_OWN_CHOICE.addTo(jsonObject, ownChoice);
 		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
 		IJsonOption.BLOCK_ROLL_ID.addTo(jsonObject, id);
+		IJsonOption.BRAWLER_OPTIONS.addTo(jsonObject, brawlerOptions);
+		IJsonOption.BRAWLER_COUNT.addTo(jsonObject, brawlerCount);
 		return jsonObject;
 	}
 }

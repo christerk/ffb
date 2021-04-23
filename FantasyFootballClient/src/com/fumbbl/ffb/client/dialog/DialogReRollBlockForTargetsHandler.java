@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsParameter;
@@ -37,7 +38,11 @@ public class DialogReRollBlockForTargetsHandler extends DialogHandler {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_BLOCK_FOR_TARGETS)) {
 			DialogReRollBlockForTargets reRollDialog = (DialogReRollBlockForTargets) pDialog;
-			getClient().getCommunication().sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(), reRollDialog.getReRollSource());
+			if (reRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
+				getClient().getCommunication().sendUseBrawler(reRollDialog.getBrawlerSelection(), reRollDialog.getSelectedTarget());
+			} else {
+				getClient().getCommunication().sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(), reRollDialog.getReRollSource());
+			}
 		}
 	}
 }

@@ -77,7 +77,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 		if (parameter != null) {
 			switch (parameter.getKey()) {
 				case PLAYER_ID_TO_REMOVE:
-					targets.stream().filter(target -> target.getPlayerId().equals((String) parameter.getValue()))
+					targets.stream().filter(target -> target.getPlayerId().equals(parameter.getValue()))
 						.findFirst().ifPresent(targets::remove);
 					consume(parameter);
 					return true;

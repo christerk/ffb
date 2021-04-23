@@ -473,8 +473,8 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseChainsaw(useChainsaw));
 	}
 
-	public void sendUseBrawler(int brawlerCount) {
-		send(new ClientCommandUseBrawler(brawlerCount));
+	public void sendUseBrawler(int brawlerCount, String targetId) {
+		send(new ClientCommandUseBrawler(brawlerCount, targetId));
 	}
 
 	public FantasyFootballClient getClient() {

@@ -184,7 +184,7 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 
 	private JButton brawlerButton(int brawlerCount, int keyEvent) {
 		JButton brawlerButton = new JButton();
-		brawlerButton.setText(brawlerCount + " BothDown" + (brawlerCount > 1 ? "s" : ""));
+		brawlerButton.setText(brawlerCount + " Both Down" + (brawlerCount > 1 ? "s" : ""));
 		brawlerButton.addActionListener(this);
 		brawlerButton.setMnemonic(keyEvent);
 		brawlerButton.addKeyListener(this);

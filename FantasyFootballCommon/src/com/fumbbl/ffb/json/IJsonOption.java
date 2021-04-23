@@ -56,6 +56,8 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption BOMB_COORDINATE = new JsonFieldCoordinateOption("bombCoordinate");
 	JsonBooleanOption BOMB_MOVING = new JsonBooleanOption("bombMoving");
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
+	JsonBooleanOption BRAWLER_AVAILABLE = new JsonBooleanOption("brawlerAvailable");
+	JsonIntOption BRAWLER_COUNT = new JsonIntOption("brawlerCount");
 	JsonIntOption BRAWLER_OPTIONS = new JsonIntOption("brawlerOptions");
 	JsonBooleanOption CAN_BUY_CARDS = new JsonBooleanOption("canBuyCards");
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);

@@ -65,7 +65,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 					selectedIndex = index;
 					close();
 				});
-				dieButton.addKeyListener(new DialogOpponentBlockSelection.PressedKeyListener() {
+				dieButton.addKeyListener(new PressedKeyListener() {
 					@Override
 					public void keyPressed(KeyEvent e) {
 						if (e.getKeyCode() == index) {

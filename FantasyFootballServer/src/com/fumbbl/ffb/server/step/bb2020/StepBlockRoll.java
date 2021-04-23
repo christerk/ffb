@@ -15,11 +15,13 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
+import com.fumbbl.ffb.report.bb2020.ReportUseBrawler;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -51,7 +53,7 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBlockRoll extends AbstractStepWithReRoll {
 
-	private int fNrOfDice, fDiceIndex, brawlerOptions;
+	private int fNrOfDice, fDiceIndex, brawlerCount;
 	private int[] fBlockRoll;
 	private BlockResult fBlockResult;
 	private boolean successfulDauntless;
@@ -85,7 +87,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					ClientCommandUseBrawler brawlerCommand = (ClientCommandUseBrawler) pReceivedCommand.getCommand();
 					setReRollSource(ReRollSources.BRAWLER);
 					setReRolledAction(ReRolledActions.BLOCK);
-					brawlerOptions = brawlerCommand.getBrawlerCount();
+					brawlerCount = brawlerCommand.getBrawlerCount();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
@@ -123,7 +125,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			if (doRoll) {
 				game.getFieldModel().clearDiceDecorations();
 				if (getReRollSource() == ReRollSources.BRAWLER) {
-					handleBrawler();
+					handleBrawler(actingPlayer.getPlayer());
 				} else {
 					fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
 						game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK), successfulDauntless);
@@ -142,8 +144,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 	}
 
-	private void handleBrawler() {
-		List<Integer> rerolledDice = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(brawlerOptions)).boxed().collect(Collectors.toList());
+	private void handleBrawler(Player<?> player) {
+		getResult().addReport(new ReportUseBrawler(player.getId(), brawlerCount));
+		List<Integer> rerolledDice = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(brawlerCount)).boxed().collect(Collectors.toList());
 		BlockResultFactory factory = getGameState().getGame().getFactory(Factory.BLOCK_RESULT);
 		for (int i = 0; i < Math.abs(fNrOfDice); i++) {
 			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN && !rerolledDice.isEmpty()) {
@@ -163,7 +166,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn);
 		boolean brawlerOption = actingPlayer.getPlayerAction() != PlayerAction.BLITZ
 			&& (getReRollSource() == null)
-			&& brawlerOptions == 0
+			&& brawlerCount == 0
 			&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
 		long bothDownCount = brawlerOption ? Arrays.stream(fBlockRoll).mapToObj(factory::forRoll).filter(roll -> roll == BlockResult.BOTH_DOWN).count() : 0;
 
@@ -190,7 +193,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
 		IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
 		IServerJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successfulDauntless);
-		IServerJsonOption.BRAWLER_OPTIONS.addTo(jsonObject, brawlerOptions);
+		IServerJsonOption.BRAWLER_COUNT.addTo(jsonObject, brawlerCount);
 		return jsonObject;
 	}
 
@@ -203,7 +206,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);
 		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
 		successfulDauntless = IServerJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);
-		brawlerOptions = IServerJsonOption.BRAWLER_OPTIONS.getFrom(source, jsonObject);
+		brawlerCount = IServerJsonOption.BRAWLER_COUNT.getFrom(source, jsonObject);
 		return this;
 	}
 

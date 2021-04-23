@@ -3,8 +3,10 @@ package com.fumbbl.ffb.server.step.bb2020.multiblock;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.BlockResult;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogOpponentBlockSelectionParameter;
@@ -20,10 +22,12 @@ import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
+import com.fumbbl.ffb.report.bb2020.ReportUseBrawler;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -85,8 +89,8 @@ public class StepBlockRollMultiple extends AbstractStep {
 					case CONSUME_PARAMETER:
 						parameterToConsume.addAll((Collection<? extends StepParameterKey>) parameter.getValue());
 						break;
-				default:
-					break;
+					default:
+						break;
 				}
 			}
 		}
@@ -106,14 +110,33 @@ public class StepBlockRollMultiple extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus stepCommandStatus = super.handleCommand(pReceivedCommand);
-		if (stepCommandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET) {
-			ClientCommandBlockOrReRollChoiceForTarget command = (ClientCommandBlockOrReRollChoiceForTarget) pReceivedCommand.getCommand();
-			state.reRollSource = command.getReRollSource();
-			state.selectedTarget = command.getTargetId();
-			state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(command.getTargetId()))
-				.findFirst().ifPresent(roll -> roll.setSelectedIndex(command.getSelectedIndex()));
-			state.reRollAvailableAgainst.remove(state.selectedTarget);
-			stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
+		if (stepCommandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET:
+					ClientCommandBlockOrReRollChoiceForTarget command = (ClientCommandBlockOrReRollChoiceForTarget) pReceivedCommand.getCommand();
+					state.reRollSource = command.getReRollSource();
+					state.selectedTarget = command.getTargetId();
+					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(command.getTargetId()))
+						.findFirst().ifPresent(roll -> roll.setSelectedIndex(command.getSelectedIndex()));
+					state.reRollAvailableAgainst.remove(state.selectedTarget);
+					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+
+				case CLIENT_USE_BRAWLER:
+					ClientCommandUseBrawler brawlerCommand = (ClientCommandUseBrawler) pReceivedCommand.getCommand();
+					state.reRollSource = ReRollSources.BRAWLER;
+					state.selectedTarget = brawlerCommand.getTargetId();
+					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(brawlerCommand.getTargetId()))
+						.findFirst().ifPresent(roll -> {
+						roll.setBrawlerCount(brawlerCommand.getBrawlerCount());
+						roll.setBrawlerOptions(0);
+					});
+					state.reRollAvailableAgainst.remove(state.selectedTarget);
+					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
+			}
 		}
 		if (stepCommandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
@@ -143,17 +166,36 @@ public class StepBlockRollMultiple extends AbstractStep {
 				roll(roll, false);
 			});
 			state.reRollAvailableAgainst.addAll(state.blockRolls.stream().map(BlockRoll::getTargetId).collect(Collectors.toList()));
+
+			state.brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
+
 			decideNextStep(game);
 
 		} else {
 			if (StringTool.isProvided(state.selectedTarget) && state.reRollSource != null) {
-				if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
-					state.blockRolls.stream()
-						.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
-						.findFirst().ifPresent(roll -> roll(roll, true));
-				}
+				state.blockRolls.stream()
+					.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
+					.findFirst().ifPresent(roll -> {
+					if (state.reRollSource == ReRollSources.BRAWLER) {
+						handleBrawler(actingPlayer.getPlayer(), roll);
+					} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
+						roll(roll, true);
+					}
+				});
 			}
 			decideNextStep(game);
+		}
+	}
+
+	private void handleBrawler(Player<?> player, BlockRoll blockRoll) {
+		getResult().addReport(new ReportUseBrawler(player.getId(), blockRoll.getBrawlerCount()));
+		List<Integer> rerolledDice = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(blockRoll.getBrawlerCount())).boxed().collect(Collectors.toList());
+		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
+		for (int i = 0; i < blockRoll.getNrOfDice(); i++) {
+			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN && !rerolledDice.isEmpty()) {
+				blockRoll.getBlockRoll()[i] = rerolledDice.get(0);
+				rerolledDice.remove(0);
+			}
 		}
 	}
 
@@ -178,7 +220,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			} else {
 				state.attackerTeamSelects = false;
 			}
- 		}
+		}
 		if (!state.attackerTeamSelects) {
 			List<BlockRoll> defender = state.blockRolls.stream().filter(roll -> !roll.isOwnChoice()).collect(Collectors.toList());
 			if (unselected.stream().anyMatch(roll -> !roll.isOwnChoice())) {
@@ -193,22 +235,24 @@ public class StepBlockRollMultiple extends AbstractStep {
 	private void roll(BlockRoll roll, boolean reRolling) {
 		Game game = getGameState().getGame();
 		Player<?> defender = game.getPlayerById(roll.getTargetId());
-		roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
-		if (!reRolling) {
+		if (reRolling) {
+			roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
+		} else {
+			roll.setBlockRoll(game, getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 			getResult().addReport(new ReportBlock(defender.getId()));
+			getResult().setSound(SoundId.BLOCK);
 		}
 		getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
-		getResult().setSound(SoundId.BLOCK);
 	}
 
-	private DialogOpponentBlockSelectionParameter createDefenderDialogParameter(Team team, List<BlockRoll> blockRolls){
+	private DialogOpponentBlockSelectionParameter createDefenderDialogParameter(Team team, List<BlockRoll> blockRolls) {
 		return new DialogOpponentBlockSelectionParameter(team.getId(), blockRolls);
 	}
 
 	private DialogReRollBlockForTargetsParameter createAttackerDialogParameter(Player<?> player, List<BlockRoll> blockRolls) {
 
 		return new DialogReRollBlockForTargetsParameter(player.getId(), blockRolls,
-			state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable);
+			state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable, state.brawlerAvailable);
 	}
 
 	private void nextStep() {
@@ -256,7 +300,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.STEP_STATE.addTo(jsonObject, state.toJsonValue());
-		String[] keys = parameterToConsume.stream().map(StepParameterKey::name).collect(Collectors.toList()).toArray(new String[] {});
+		String[] keys = parameterToConsume.stream().map(StepParameterKey::name).collect(Collectors.toList()).toArray(new String[]{});
 		IJsonOption.STEP_PARAMETER_KEYS.addTo(jsonObject, keys);
 		return jsonObject;
 	}
@@ -274,7 +318,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 	private static class State implements IJsonSerializable {
 		private List<String> reRollAvailableAgainst = new ArrayList<>();
 		private List<BlockRoll> blockRolls = new ArrayList<>();
-		private boolean firstRun = true, teamReRollAvailable, proReRollAvailable, attackerTeamSelects = true;
+		private boolean firstRun = true, teamReRollAvailable, proReRollAvailable, attackerTeamSelects = true, brawlerAvailable;
 		private ReRollSource reRollSource;
 		private String selectedTarget;
 
@@ -291,6 +335,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			IJsonOption.RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, reRollAvailableAgainst);
 			IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, reRollSource);
 			IJsonOption.ATTACKER_SELECTS.addTo(jsonObject, attackerTeamSelects);
+			IJsonOption.BRAWLER_AVAILABLE.addTo(jsonObject, brawlerAvailable);
 			return jsonObject;
 		}
 
@@ -306,6 +351,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			reRollAvailableAgainst = Arrays.asList(IJsonOption.RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
 			reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 			attackerTeamSelects = IJsonOption.ATTACKER_SELECTS.getFrom(game, jsonObject);
+			brawlerAvailable = IJsonOption.BRAWLER_AVAILABLE.getFrom(game, jsonObject);
 			return this;
 		}
 	}
