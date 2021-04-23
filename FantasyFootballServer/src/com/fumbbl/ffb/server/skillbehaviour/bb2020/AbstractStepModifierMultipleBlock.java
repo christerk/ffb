@@ -78,6 +78,8 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	protected abstract void unhandledTargetsCallback(T step, V state);
 
+	protected abstract void cleanUp(T step, V state);
+
 	private void nextStep(T step, V state) {
 		if (StringTool.isProvided(state.goToLabelOnFailure) && state.blockTargets.size() == state.initialCount) {
 			step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
@@ -85,6 +87,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 			unhandledTargetsCallback(step, state);
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+		cleanUp(step, state);
 	}
 
 	private void decideNextStep(Game game, T step, V state) {

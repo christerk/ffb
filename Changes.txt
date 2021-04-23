@@ -17,3 +17,4 @@ Bugfixes:
 - Stat decreases by ingame injuries were not displayed in player detail view
 - Chainsaw modifier was always used even when blocking regularly
 - Order of injury reports during multi block was confusing
+- MultiBlock marks were cleared not or too early

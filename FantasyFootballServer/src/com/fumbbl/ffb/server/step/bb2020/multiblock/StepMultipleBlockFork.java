@@ -126,9 +126,6 @@ public class StepMultipleBlockFork extends AbstractStep {
 				getGameState().getStepStack().push(sequence.getSequence());
 				publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
 
-				Player<?> player = getGameState().getGame().getPlayerById(target.getPlayerId());
-				PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
-				getGameState().getGame().getFieldModel().setPlayerState(player, playerState.changeSelectedChainsawTarget(false));
 			});
 			Sequence sequence = new Sequence(getGameState());
 			sequence.add(StepId.BLOCK_CHAINSAW_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, chainsawGroup));
@@ -143,7 +140,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 					Sequence sequence = new Sequence(getGameState());
 					sequence.add(StepId.SET_DEFENDER, IStepLabel.NEXT, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
 					sequence.add(StepId.STAB, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.NEXT));
-					sequence.add(StepId.REPORT_INJURY, IStepLabel.NEXT);
+					sequence.add(StepId.REPORT_STAB_INJURY, IStepLabel.NEXT, StepParameter.from(StepParameterKey.PLAYER_ID, target.getPlayerId()));
 					sequence.add(StepId.DROP_FALLING_PLAYERS);
 					sequence.add(StepId.CONSUME_PARAMETER, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
 					getGameState().getStepStack().push(sequence.getSequence());

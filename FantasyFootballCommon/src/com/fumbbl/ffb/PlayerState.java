@@ -202,7 +202,7 @@ public class PlayerState {
 		if (pBit) {
 			return new PlayerState(getId() | pMask);
 		} else {
-			return new PlayerState(getId() & (0xffff ^ pMask));
+			return new PlayerState(getId() & (0xfffff ^ pMask));
 		}
 	}
 

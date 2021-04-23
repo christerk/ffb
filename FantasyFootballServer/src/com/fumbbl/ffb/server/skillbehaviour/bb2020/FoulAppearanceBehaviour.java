@@ -132,6 +132,11 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			}
 
 			@Override
+			protected void cleanUp(StepFoulAppearanceMultiple step, StepStateMultipleRolls state) {
+
+			}
+
+			@Override
 			protected void successFulRollCallback(StepFoulAppearanceMultiple step, String successfulId) {
 
 			}

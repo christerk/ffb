@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -82,6 +83,16 @@ public class ChainsawBehaviour extends SkillBehaviour<Chainsaw> {
 			}
 
 			@Override
+			protected void cleanUp(StepBlockChainsawMultiple step, StepStateMultipleRolls state) {
+				Game game = step.getGameState().getGame();
+				state.blockTargets.forEach(target -> {
+					Player<?> defender = game.getPlayerById(target);
+					PlayerState playerState = game.getFieldModel().getPlayerState(defender);
+					game.getFieldModel().setPlayerState(defender, playerState.changeSelectedChainsawTarget(false));
+				});
+			}
+
+			@Override
 			protected void successFulRollCallback(StepBlockChainsawMultiple step, String successfulId) {
 				step.getResult().setSound(SoundId.CHAINSAW);
 				Game game = step.getGameState().getGame();
@@ -91,6 +102,9 @@ public class ChainsawBehaviour extends SkillBehaviour<Chainsaw> {
 					game.getActingPlayer().getPlayer(), defender, defenderCoordinate, null, ApothecaryMode.DEFENDER);
 				if (injuryResultDefender.injuryContext().isArmorBroken()) {
 					step.publishParameters(UtilServerInjury.dropPlayer(step, defender, ApothecaryMode.DEFENDER));
+				} else {
+					PlayerState playerState = game.getFieldModel().getPlayerState(defender);
+					game.getFieldModel().setPlayerState(defender, playerState.changeSelectedChainsawTarget(false));
 				}
 				step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
 				injuryResultDefender.report(step);

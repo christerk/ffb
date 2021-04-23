@@ -123,6 +123,11 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 			}
 
 			@Override
+			protected void cleanUp(StepDauntlessMultiple step, StepStateMultipleRolls state) {
+
+			}
+
+			@Override
 			protected void successFulRollCallback(StepDauntlessMultiple step, String successfulId) {
 				step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_DAUNTLESS_SUCCESS, successfulId));
 			}

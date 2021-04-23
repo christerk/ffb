@@ -118,7 +118,7 @@ public enum StepId implements INamedObject {
 	RECEIVE_CHOICE("receiveChoice"), // game.start
 	REFEREE("referee"), // action.foul
 	REMOVE_BLITZ_STATE("removeBlitzState"), // action.blitz
-	REPORT_INJURY("reportInjury"), // action.multiBlock 2020
+	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
 	RESOLVE_PASS("resovlePass"),
 	RIGHT_STUFF("rightStuff"), // action.ttm
 	RIOTOUS_ROOKIES("riotousRookies"),
