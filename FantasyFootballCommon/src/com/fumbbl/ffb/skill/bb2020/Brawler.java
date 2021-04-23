@@ -6,13 +6,13 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class PileDriver extends Skill {
-	public PileDriver() {
-		super("Pile Driver", SkillCategory.STRENGTH);
+public class Brawler extends Skill {
+	public Brawler() {
+		super("Brawler", SkillCategory.STRENGTH);
 	}
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canFoulAfterBlock);
+		registerProperty(NamedProperties.canRerollBothDowns);
 	}
 }

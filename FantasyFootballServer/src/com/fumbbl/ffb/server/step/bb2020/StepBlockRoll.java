@@ -1,13 +1,13 @@
-package com.fumbbl.ffb.server.step.action.block;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.BlockResult;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.dialog.DialogBlockRollParameter;
 import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -42,7 +42,7 @@ import com.fumbbl.ffb.util.UtilCards;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBlockRoll extends AbstractStepWithReRoll {
 
 	private int fNrOfDice;

@@ -204,7 +204,7 @@ public class StepEndBlocking extends AbstractStep {
 
 				PlayerState playerState = game.getFieldModel().getPlayerState(activePlayer);
 
-				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.allowFoulAfterBlock);
+				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
 
 				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty()) {
 					usePileDriver = false;
