@@ -163,7 +163,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
 		int minimumRoll = minimumRollO.orElse(0);
 		int roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
-		state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, PlayerAction.THROW_BOMB != game.getThrowerAction()));
+		state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, PlayerAction.THROW_BOMB == game.getThrowerAction()));
 		if (PassResult.FUMBLE == state.getResult()) {
 			publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, false));
 		} else if (PassResult.SAVED_FUMBLE == state.getResult()) {

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -13,7 +13,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * Agility roll. If this is successful then the interception is cancelled out
  * and the passing sequence continues as normal.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class SafeThrow extends Skill {
 
 	public SafeThrow() {

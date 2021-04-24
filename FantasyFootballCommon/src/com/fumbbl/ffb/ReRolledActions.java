@@ -1,9 +1,5 @@
 package com.fumbbl.ffb;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fumbbl.ffb.skill.AlwaysHungry;
 import com.fumbbl.ffb.skill.Animosity;
 import com.fumbbl.ffb.skill.BloodLust;
@@ -15,11 +11,14 @@ import com.fumbbl.ffb.skill.JumpUp;
 import com.fumbbl.ffb.skill.KickTeamMate;
 import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.ReallyStupid;
-import com.fumbbl.ffb.skill.SafeThrow;
 import com.fumbbl.ffb.skill.TakeRoot;
 import com.fumbbl.ffb.skill.ThrowTeamMate;
 import com.fumbbl.ffb.skill.WildAnimal;
 import com.fumbbl.ffb.skill.bb2016.RightStuff;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReRolledActions {
 
@@ -46,7 +45,7 @@ public class ReRolledActions {
 	public static final ReRolledAction TENTACLES = new ReRolledAction("Tentacles");
 	public static final ReRolledAction TENTACLES_ESCAPE = new ReRolledAction("Tentacles Escape");
 	public static final ReRolledAction ESCAPE = new ReRolledAction("Escape");
-	public static final ReRolledAction SAFE_THROW = new ReRolledAction(SafeThrow.class);
+	public static final ReRolledAction SAFE_THROW = new ReRolledAction("Safe Throw");
 	public static final ReRolledAction INTERCEPTION = new ReRolledAction("Interception");
 	public static final ReRolledAction JUMP_UP = new ReRolledAction(JumpUp.class);
 	public static final ReRolledAction STAND_UP = new ReRolledAction("standUp");
