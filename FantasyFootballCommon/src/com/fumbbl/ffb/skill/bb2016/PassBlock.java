@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -25,7 +25,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * skills and the player does have to dodge in order to leave opposing players'
  * tackle zones.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class PassBlock extends Skill {
 
 	public PassBlock() {

@@ -35,7 +35,7 @@ import com.fumbbl.ffb.skill.HypnoticGaze;
 import com.fumbbl.ffb.skill.Kick;
 import com.fumbbl.ffb.skill.NoHands;
 import com.fumbbl.ffb.skill.Pass;
-import com.fumbbl.ffb.skill.PassBlock;
+import com.fumbbl.ffb.skill.bb2016.PassBlock;
 import com.fumbbl.ffb.skill.Pro;
 import com.fumbbl.ffb.skill.SecretWeapon;
 import com.fumbbl.ffb.skill.Shadowing;

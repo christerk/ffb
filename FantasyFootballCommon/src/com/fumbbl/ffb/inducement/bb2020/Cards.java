@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.inducement.bb2020;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.CardTarget;
 import com.fumbbl.ffb.RulesCollection;
@@ -35,7 +30,6 @@ import com.fumbbl.ffb.skill.HypnoticGaze;
 import com.fumbbl.ffb.skill.Kick;
 import com.fumbbl.ffb.skill.NoHands;
 import com.fumbbl.ffb.skill.Pass;
-import com.fumbbl.ffb.skill.PassBlock;
 import com.fumbbl.ffb.skill.Pro;
 import com.fumbbl.ffb.skill.SecretWeapon;
 import com.fumbbl.ffb.skill.Shadowing;
@@ -45,6 +39,11 @@ import com.fumbbl.ffb.skill.bb2020.Accurate;
 import com.fumbbl.ffb.skill.bb2020.DirtyPlayer;
 import com.fumbbl.ffb.skill.bb2020.MightyBlow;
 import com.fumbbl.ffb.util.UtilCards;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class Cards implements com.fumbbl.ffb.inducement.Cards {
@@ -276,11 +275,6 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 						return super.appliesToContext(skill, context) && UtilCards.hasCard(context.getGame(), context.getPlayer(), instance);
 					}
 				});
-			}
-
-			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(new SkillClassWithValue(PassBlock.class)));
 			}
 
 		});
@@ -559,7 +553,6 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			public TemporaryEnhancements activationEnhancement() {
 				return super.activationEnhancement().withSkills(
 					new HashSet<SkillClassWithValue>() {{
-						add(new SkillClassWithValue(PassBlock.class));
 						add(new SkillClassWithValue(Shadowing.class));
 					}});
 			}

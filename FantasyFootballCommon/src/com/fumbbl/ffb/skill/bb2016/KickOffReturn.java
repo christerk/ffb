@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -14,7 +14,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * each kick-off. This skill may not be used for a touchback kick-off and does
  * not allow the player to cross into the opponent's half of the pitch.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class KickOffReturn extends Skill {
 
 	public KickOffReturn() {
