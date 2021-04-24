@@ -54,7 +54,7 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 				players.add(shadowingOrDtPlayer);
 			}
 
-			avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge))
+			avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump))
 				.filter(Objects::nonNull).findFirst().orElse(null);
 		}
 
