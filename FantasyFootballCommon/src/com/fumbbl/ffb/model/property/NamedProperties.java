@@ -10,7 +10,9 @@ public class NamedProperties {
 	public static final ISkillProperty addBonusForAccuratePass = new NamedProperty("Add Bonus For Accurate Pass");
 	public static final ISkillProperty addStrengthOnBlitz = new NamedProperty("Add Strength on Blitz");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnBlock = new NamedProperty("Affects Either Armour Or Injury On Block");
+	public static final ISkillProperty affectsEitherArmourOrInjuryOnDodge = new NamedProperty("Affects Either Armour Or Injury On Dodge");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnFoul = new NamedProperty("Affects Either Armour Or Injury On Foul");
+	public static final ISkillProperty affectsEitherArmourOrInjuryOnJump = new NamedProperty("Affects Either Armour Or Injury On Jump");
 	public static final ISkillProperty allowStandUpAssists = new NamedProperty("Allow Stand Up Assists");
 	public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
 	public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
