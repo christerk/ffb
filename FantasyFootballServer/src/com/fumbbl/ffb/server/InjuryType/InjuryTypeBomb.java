@@ -24,8 +24,8 @@ public class InjuryTypeBomb extends InjuryTypeServer<Bomb> {
 
 	@Override
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
-			ApothecaryMode pApothecaryMode) {
+	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                                  ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 

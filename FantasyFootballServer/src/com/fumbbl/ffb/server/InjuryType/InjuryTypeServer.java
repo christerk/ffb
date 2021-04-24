@@ -61,8 +61,9 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	}
 
 	public abstract InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
-			ApothecaryMode pApothecaryMode);
+	                                           Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
+	                                           FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                                           ApothecaryMode pApothecaryMode);
 
 	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
 		RollMechanic mechanic = ((RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));

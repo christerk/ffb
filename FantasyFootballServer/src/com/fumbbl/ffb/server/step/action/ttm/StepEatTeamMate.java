@@ -94,7 +94,7 @@ public final class StepEatTeamMate extends AbstractStep {
 						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 			}
 			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeEatPlayer(), null,
-					thrownPlayer, fThrownPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+					thrownPlayer, fThrownPlayerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
 			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 			getResult().setSound(SoundId.NOMNOM);

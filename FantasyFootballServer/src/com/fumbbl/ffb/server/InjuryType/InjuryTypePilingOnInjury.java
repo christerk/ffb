@@ -28,7 +28,7 @@ public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury> {
 
 	@Override
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode) {
 
 		if (pOldInjuryContext != null) {

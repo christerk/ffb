@@ -46,8 +46,8 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class UtilServerInjury {
 
 	public static InjuryResult handleInjury(IStep pStep, InjuryTypeServer<?> pInjuryType, Player<?> pAttacker,
-			Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryResult pOldInjuryResult,
-			ApothecaryMode pApothecaryMode) {
+	                                        Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
+	                                        InjuryResult pOldInjuryResult, ApothecaryMode pApothecaryMode) {
 
 		if (pDefender == null) {
 			throw new IllegalArgumentException("Parameter defender must not be null.");
@@ -81,7 +81,7 @@ public class UtilServerInjury {
 		}
 
 		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate,
-				oldInjuryContext, pApothecaryMode);
+			fromCoordinate, oldInjuryContext, pApothecaryMode);
 
 		if (injuryContext.isArmorBroken()) {
 			if (pDefender.hasSkillProperty(NamedProperties.ignoreFirstArmourBreak) && (injuryContext.getArmorRoll() != null)) {
@@ -290,7 +290,7 @@ public class UtilServerInjury {
 		if ((playerCoordinate != null) && (playerState != null)) {
 			if (pPlayer.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
 				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(pStep,
-						new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null, pApothecaryMode)));
+						new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null, null, pApothecaryMode)));
 			} else {
 				if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
 					playerState = playerState.changeBase(pPlayerBase);

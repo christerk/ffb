@@ -1,6 +1,7 @@
 Behaviour Changes:
 - Pile Driver implemented
 - Brawler implemented
+- Arm Bar implemented
 
 Technical Changes:
 - Unify suppression syntax

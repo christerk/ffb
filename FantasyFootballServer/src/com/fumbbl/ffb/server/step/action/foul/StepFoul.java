@@ -84,7 +84,7 @@ public class StepFoul extends AbstractStep {
 		UtilServerGame.syncGameModel(this);
 		FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeFoul(usingChainsaw),
-				actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+				actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

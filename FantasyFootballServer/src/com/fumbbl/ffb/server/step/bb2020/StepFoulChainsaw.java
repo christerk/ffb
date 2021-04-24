@@ -130,7 +130,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 			if (dropChainsawPlayer) {
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(), null,
-						actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
+						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
 					publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 					if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {

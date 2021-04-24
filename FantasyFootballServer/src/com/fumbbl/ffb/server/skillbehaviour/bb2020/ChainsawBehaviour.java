@@ -69,7 +69,7 @@ public class ChainsawBehaviour extends SkillBehaviour<Chainsaw> {
 				state.blockTargets.forEach(target -> {
 					FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(attacker);
 					InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeChainsaw(), null,
-						attacker, attackerCoordinate, null, ApothecaryMode.ATTACKER);
+						attacker, attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 					if (injuryResultAttacker.injuryContext().isArmorBroken()) {
 						StepParameterSet parameterSet = UtilServerInjury.dropPlayer(step, attacker, ApothecaryMode.ATTACKER);
 						parameterSet.remove(StepParameterKey.END_TURN);
@@ -99,7 +99,7 @@ public class ChainsawBehaviour extends SkillBehaviour<Chainsaw> {
 				Player<?> defender = game.getPlayerById(successfulId);
 				FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(defender);
 				InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeChainsaw(),
-					game.getActingPlayer().getPlayer(), defender, defenderCoordinate, null, ApothecaryMode.DEFENDER);
+					game.getActingPlayer().getPlayer(), defender, defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 				if (injuryResultDefender.injuryContext().isArmorBroken()) {
 					step.publishParameters(UtilServerInjury.dropPlayer(step, defender, ApothecaryMode.DEFENDER));
 				} else {

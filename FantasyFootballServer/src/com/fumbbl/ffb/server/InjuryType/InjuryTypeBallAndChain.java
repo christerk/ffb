@@ -20,8 +20,8 @@ public class InjuryTypeBallAndChain extends InjuryTypeServer<BallAndChain> {
 
 	@Override
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
-			ApothecaryMode pApothecaryMode) {
+	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                                  ApothecaryMode pApothecaryMode) {
 		// ball and chain always breaks armour on being knocked down
 		injuryContext.setArmorBroken(true);
 

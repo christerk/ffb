@@ -85,7 +85,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 						FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 								UtilServerInjury.handleInjury(step, new InjuryTypeBallAndChain(), actingPlayer.getPlayer(),
-										game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER)));
+										game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER)));
 					}
 				}
 				return StepAction.NEXT_STEP;

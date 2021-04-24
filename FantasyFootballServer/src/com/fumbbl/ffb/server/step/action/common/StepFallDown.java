@@ -27,9 +27,9 @@ import com.fumbbl.ffb.util.UtilBox;
 
 /**
  * Step in move sequence to drop the acting player.
- *
+ * <p>
  * Expects stepParameter INJURY_TYPE to be set by a preceding step.
- *
+ * <p>
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
  *
@@ -38,7 +38,8 @@ import com.fumbbl.ffb.util.UtilBox;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepFallDown extends AbstractStep {
 
-	private InjuryTypeServer fInjuryType;
+	private InjuryTypeServer<?> fInjuryType;
+	private FieldCoordinate fCoordinateFrom;
 
 	public StepFallDown(GameState pGameState) {
 		super(pGameState);
@@ -49,14 +50,17 @@ public class StepFallDown extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case INJURY_TYPE:
-				fInjuryType = (InjuryTypeServer) pParameter.getValue();
-				return true;
-			default:
-				break;
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
+				case INJURY_TYPE:
+					fInjuryType = (InjuryTypeServer<?>) parameter.getValue();
+					return true;
+				case COORDINATE_FROM:
+					fCoordinateFrom = (FieldCoordinate) parameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -82,7 +86,7 @@ public class StepFallDown extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(),
-				playerCoordinate, null, ApothecaryMode.ATTACKER);
+			playerCoordinate, fCoordinateFrom, null, ApothecaryMode.ATTACKER);
 		publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 		if (actingPlayer.isSufferingBloodLust()) {
 			game.getFieldModel().clearMoveSquares();
@@ -103,6 +107,7 @@ public class StepFallDown extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
+		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
 		return jsonObject;
 	}
 
@@ -110,7 +115,8 @@ public class StepFallDown extends AbstractStep {
 	public StepFallDown initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInjuryType = (InjuryTypeServer) IServerJsonOption.INJURY_TYPE.getFrom(game, jsonObject);
+		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
+		fInjuryType = (InjuryTypeServer<?>) IServerJsonOption.INJURY_TYPE.getFrom(game, jsonObject);
 		return this;
 	}
 

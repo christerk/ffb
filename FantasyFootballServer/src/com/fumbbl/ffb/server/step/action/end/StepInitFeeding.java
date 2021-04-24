@@ -163,7 +163,7 @@ public class StepInitFeeding extends AbstractStep {
 			if ((fFeedOnPlayerChoice != null) && fFeedOnPlayerChoice && (game.getDefender() != null)) {
 				FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 				InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, new InjuryTypeBitten(),
-						actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, ApothecaryMode.FEEDING);
+						actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, null, ApothecaryMode.FEEDING);
 				fEndTurn = UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
 				publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));

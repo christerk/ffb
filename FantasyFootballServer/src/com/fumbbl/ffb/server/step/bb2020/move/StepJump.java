@@ -116,6 +116,7 @@ public class StepJump extends AbstractStepWithReRoll {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
+					publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, moveStart));
 					getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 					doLeap = false;
 				}
@@ -133,6 +134,7 @@ public class StepJump extends AbstractStepWithReRoll {
 						actingPlayer.setHasJumped(true);
 						actingPlayer.markSkillUsed(NamedProperties.canLeap);
 						publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
+						publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, moveStart));
 						getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 						break;
 					default:

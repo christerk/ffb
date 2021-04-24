@@ -84,20 +84,20 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 							boolean rolledDouble;
 							if (reRollInjury) {
 								state.injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypePilingOnInjury(),
-										actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, state.injuryResultDefender,
+										actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, state.injuryResultDefender,
 										ApothecaryMode.DEFENDER);
 								rolledDouble = DiceInterpreter.getInstance()
 										.isDouble(state.injuryResultDefender.injuryContext().getInjuryRoll());
 							} else {
 								state.injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypePilingOnArmour(),
-										actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+										actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 								rolledDouble = DiceInterpreter.getInstance()
 										.isDouble(state.injuryResultDefender.injuryContext().getArmorRoll());
 							}
 							if (rolledDouble && UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_TO_KO_ON_DOUBLE)) {
 								step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 										UtilServerInjury.handleInjury(step, new InjuryTypePilingOnKnockedOut(step), null,
-												actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
+												actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER)));
 							}
 						}
 					} else {
@@ -113,7 +113,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						}
 
 						state.injuryResultDefender = UtilServerInjury.handleInjury(step, injuryType, actingPlayer.getPlayer(),
-								game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+								game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 
 						if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& state.injuryResultDefender.injuryContext().isBadlyHurt()) {
@@ -163,7 +163,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						step.publishParameters(
 								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
-								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
+								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 						if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
 							boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);
