@@ -11,9 +11,10 @@ public enum PassingDistance implements INamedObject {
 	LONG_PASS("Long Pass", -1, 2, 'L'),
 	LONG_BOMB("Long Bomb", -2, 3, 'B');
 
-	private String fName;
-	private int modifier2016, modifier2020;
-	private char fShortcut;
+	private final String fName;
+	private final int modifier2016;
+	private final int modifier2020;
+	private final char fShortcut;
 
 	PassingDistance(String pName, int modifier2016, int modifier2020, char pShortcut) {
 		fName = pName;

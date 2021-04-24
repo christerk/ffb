@@ -251,7 +251,6 @@ public final class StepInitPassing extends AbstractStep {
 						.setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
 				}
 				getResult().setNextAction(StepAction.NEXT_STEP);
-				return;
 			}
 		}
 	}

@@ -3,6 +3,7 @@ Behaviour Changes:
 - Brawler implemented
 - Arm Bar implemented
 - Safe Pass implemented
+- Running Pass implemented
 
 Technical Changes:
 - Unify suppression syntax

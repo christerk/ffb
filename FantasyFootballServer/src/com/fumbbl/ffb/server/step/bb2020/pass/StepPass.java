@@ -158,6 +158,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
 			false);
+		publishParameter(StepParameter.from(StepParameterKey.PASSING_DISTANCE, passingDistance));
 		Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(game, game.getThrower(),
 			passingDistance, false));
 		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
