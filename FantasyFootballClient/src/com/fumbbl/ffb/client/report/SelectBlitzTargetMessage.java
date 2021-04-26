@@ -16,10 +16,10 @@ public class SelectBlitzTargetMessage extends ReportMessageBase<ReportSelectBlit
   		Player<?> attacker = game.getPlayerById(report.getAttacker());
   		Player<?> defender = game.getPlayerById(report.getDefender());
 
-  		print(getIndent() + 1, teamStyleForPlayer(attacker), attacker.getName());
-  		print(getIndent() + 1, TextStyle.NONE, " targets ");
-  		print(getIndent() + 1, teamStyleForPlayer(defender), defender.getName());
-  		println(getIndent() + 1, TextStyle.NONE, ".");
+  		print(getIndent(), teamStyleForPlayer(attacker), attacker.getName());
+  		print(getIndent(), TextStyle.NONE, " targets ");
+  		print(getIndent(), teamStyleForPlayer(defender), defender.getName());
+  		println(getIndent(), TextStyle.NONE, ".");
     }
     
   	private TextStyle teamStyleForPlayer(Player<?> player) {
