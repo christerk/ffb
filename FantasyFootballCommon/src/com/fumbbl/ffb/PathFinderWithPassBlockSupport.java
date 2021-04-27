@@ -1,18 +1,17 @@
 package com.fumbbl.ffb;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Set;
-
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.util.UtilPassing;
+
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  *
@@ -286,7 +285,6 @@ public class PathFinderWithPassBlockSupport {
 
 						// mark the node as a tacklezone
 						data.setNode(tzCoord, new PathFindNode(normalState, tzCoord, 1000, true, pEndCoords, null));
-						continue;
 					}
 				}
 			}
@@ -376,22 +374,16 @@ public class PathFinderWithPassBlockSupport {
 	}
 
 	public static FieldCoordinate[] allowPassBlockMove(Game pGame, Player<?> passBlocker, FieldCoordinate startPosition,
-			int distance, boolean canJump) {
+			int distance, boolean canJump, Set<FieldCoordinate> validEndCoordinates) {
 		// Skip if the player doesn't have pass block
 
 		if (!passBlocker.hasSkillProperty(NamedProperties.canMoveWhenOpponentPasses)) {
 			return new FieldCoordinate[0];
 		}
 
-		// Get a list of coordinates eligible for interception
-		Set<FieldCoordinate> validEndCoordinates = UtilPassing.findValidPassBlockEndCoordinates(pGame);
-
-		// Pathfind to the interception coordinates
-		FieldCoordinate[] path = getShortestPath(pGame, startPosition, validEndCoordinates, distance, passBlocker.getTeam(),
-				passBlockContext, canJump);
-
 		// If we have a path, the player can intercept.
-		return path;
+		return getShortestPath(pGame, startPosition, validEndCoordinates, distance, passBlocker.getTeam(),
+				passBlockContext, canJump);
 
 	}
 

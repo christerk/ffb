@@ -110,7 +110,7 @@ public class UtilServerPlayerMove {
 								if (validPassBlockCoordinates.contains(coordinate)
 										|| ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game,
 												actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(),
-												canStillJump))) {
+												canStillJump, validPassBlockCoordinates))) {
 									addMoveSquare(pGameState, jumping, coordinate);
 								}
 							} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
