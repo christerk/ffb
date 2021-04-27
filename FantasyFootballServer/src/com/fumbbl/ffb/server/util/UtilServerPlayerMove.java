@@ -1,18 +1,18 @@
 package com.fumbbl.ffb.server.util;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.factory.GoForItModifierFactory;
 import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -103,14 +103,13 @@ public class UtilServerPlayerMove {
 							FieldCoordinateBounds.FIELD, steps, false);
 					JumpMechanic mechanic = (JumpMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 					boolean canStillJump = mechanic.canStillJump(game, actingPlayer);
+					OnTheBallMechanic onTheBallMechanic = (OnTheBallMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
 					for (FieldCoordinate coordinate : adjacentCoordinates) {
 						if (fieldModel.getPlayer(coordinate) == null) {
 							if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 								int distance = coordinate.distanceInSteps(playerCoordinate);
-								if (validPassBlockCoordinates.contains(coordinate)
-										|| ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game,
-												actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(),
-												canStillJump, validPassBlockCoordinates))) {
+								if (onTheBallMechanic.validPassBlockMove(game, actingPlayer, playerCoordinate, coordinate,
+									validPassBlockCoordinates, canStillJump, distance)) {
 									addMoveSquare(pGameState, jumping, coordinate);
 								}
 							} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {

@@ -4,7 +4,6 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
@@ -12,13 +11,12 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPassBlockParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportPassBlock;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -38,7 +36,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPassing;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -135,8 +132,10 @@ public class StepPassBlock extends AbstractStep {
 			return;
 		}
 
+		OnTheBallMechanic mechanic = (OnTheBallMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
+
 		Team opposingTeam = UtilPlayer.findOtherTeam(game, game.getThrower());
-		Set<Player<?>> passBlockers = findPassBlockers(opposingTeam, false);
+		Set<Player<?>> passBlockers = mechanic.findPassBlockers(game, opposingTeam, false);
 		if (passBlockers.size() == 0) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -226,7 +225,7 @@ public class StepPassBlock extends AbstractStep {
 
 		} else {
 
-			Set<Player<?>> availablePassBlockers = findPassBlockers(opposingTeam, true);
+			Set<Player<?>> availablePassBlockers = mechanic.findPassBlockers(game, opposingTeam, true);
 			if (availablePassBlockers.size() == 0) {
 
 				getResult().addReport(new ReportPassBlock(opposingTeam.getId(), false));
@@ -286,24 +285,7 @@ public class StepPassBlock extends AbstractStep {
 		return true;
 	}
 
-	private Set<Player<?>> findPassBlockers(Team pTeam, boolean pCheckCanReach) {
-		Set<Player<?>> passBlockers = new HashSet<>();
-		Game game = getGameState().getGame();
-		Player<?>[] players = pTeam.getPlayers();
-		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		Set<FieldCoordinate> validPassBlockEndCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
-		for (Player<?> player : players) {
-			if (player.hasSkillProperty(NamedProperties.canMoveWhenOpponentPasses)) {
-				PlayerState playerState = game.getFieldModel().getPlayerState(player);
-				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
-				if (!pCheckCanReach || (playerState.hasTacklezones()
-						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player, startPosition, 3, mechanic.canJump(game, player, startPosition), validPassBlockEndCoordinates)))) {
-					passBlockers.add(player);
-				}
-			}
-		}
-		return passBlockers;
-	}
+
 
 	// JSON serialization
 
