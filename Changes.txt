@@ -4,6 +4,7 @@ Behaviour Changes:
 - Arm Bar implemented
 - Safe Pass implemented
 - Running Pass implemented
+- On The Ball Implemented (short comings of 2016 Pass Block persist: Does not work during Dump Off and only one player can move)
 
 Technical Changes:
 - Unify suppression syntax
