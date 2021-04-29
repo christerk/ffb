@@ -58,6 +58,7 @@ public class NamedProperties {
 	public static final ISkillProperty canPassToAnySquare = new NamedProperty("Can Pass To Any Square");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlock = new NamedProperty(
 			"Can Perform Armour Roll Instead Of Block");
+	public static final ISkillProperty canPlaceBallWhenKnockedDownOrPlacedProne = new NamedProperty("Can Place Ball When Knocked Down Or Placed Prone");
 	public static final ISkillProperty canPushBackToAnySquare = new NamedProperty("Can Push Back To Any Square");
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
