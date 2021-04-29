@@ -11,7 +11,7 @@ import com.fumbbl.ffb.dialog.DialogUseIgorParameter;
  */
 public class DialogUseIgor extends DialogYesOrNoQuestion {
 
-	private DialogUseIgorParameter fDialogParameter;
+	private final DialogUseIgorParameter fDialogParameter;
 
 	public DialogUseIgor(FantasyFootballClient pClient, DialogUseIgorParameter pDialogParameter) {
 		super(pClient, "Use Igor", createMessages(pClient, pDialogParameter), IIconProperty.RESOURCE_IGOR);

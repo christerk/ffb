@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.generator.bb2020;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -10,6 +8,8 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock {
@@ -62,6 +62,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_DEFENDER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 
@@ -71,7 +72,8 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.FALL_DOWN);
-
+		
+		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);

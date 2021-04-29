@@ -105,6 +105,8 @@ public class DialogParameterFactory {
 				return new DialogPileDriverParameter();
 			case USE_CHAINSAW:
 				return new DialogUseChainsawParameter();
+			case USE_SAFE_PAIR_OF_HANDS:
+				return new DialogUseSafePairOfHandsParameter();
 			default:
 				return null;
 		}

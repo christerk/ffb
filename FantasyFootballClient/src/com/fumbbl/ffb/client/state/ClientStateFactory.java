@@ -58,6 +58,7 @@ public class ClientStateFactory {
 		register(new ClientStateIllegalSubstitution(pClient));
 		register(new ClientStateSelectBlitzTarget(pClient));
 		register(new ClientStateSynchronousMultiBlock(pClient));
+		register(new ClientStateSafePairOfHands(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -265,6 +266,13 @@ public class ClientStateFactory {
 				case BOMB_AWAY_BLITZ:
 					if (game.isHomePlaying()) {
 						clientStateId = ClientStateId.BOMB;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case SAFE_PAIR_OF_HANDS:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.SAFE_PAIR_OF_HANDS;
 					} else {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					}

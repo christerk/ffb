@@ -17,6 +17,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandConcedeGame;
 import com.fumbbl.ffb.net.commands.ClientCommandConfirm;
 import com.fumbbl.ffb.net.commands.ClientCommandDebugClientState;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
+import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandFoul;
 import com.fumbbl.ffb.net.commands.ClientCommandGaze;
@@ -60,6 +61,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSafePairOfHands;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
@@ -130,7 +132,8 @@ public enum NetCommandId implements INamedObject {
 	SERVER_GAME_TIME("serverGameTime"), CLIENT_PING("clientPing"), SERVER_PONG("serverPong"),
 	CLIENT_SET_BLOCK_TARGET_SELECTION("clientSetBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("clientUnsetBlockTargetSelection"),
 	CLIENT_SYNCHRONOUS_MULTI_BLOCK("clientSynchronousMultiBlock"), CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET("clientBlockOrReRollChoiceForTarget"),
-	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler");
+	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler"),
+	CLIENT_USE_SAFE_PAIR_OF_HANDS("clientUseSafePairOfHands"), CLIENT_FIELD_COORDINATE("clientFieldCoordinate");
 
 	private final String fName;
 
@@ -310,6 +313,10 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseChainsaw();
 			case CLIENT_USE_BRAWLER:
 				return new ClientCommandUseBrawler();
+			case CLIENT_USE_SAFE_PAIR_OF_HANDS:
+				return new ClientCommandUseSafePairOfHands();
+			case CLIENT_FIELD_COORDINATE:
+				return new ClientCommandFieldCoordinate();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

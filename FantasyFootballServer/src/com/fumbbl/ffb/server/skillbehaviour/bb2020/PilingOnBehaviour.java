@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CardEffect;
@@ -37,15 +37,15 @@ import com.fumbbl.ffb.server.step.action.block.StepDropFallingPlayers.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.PilingOn;
+import com.fumbbl.ffb.skill.bb2020.PilingOn;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 	public PilingOnBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepDropFallingPlayers, StepDropFallingPlayers.StepState>() {
+		registerModifier(new StepModifier<StepDropFallingPlayers, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepDropFallingPlayers step, StepState state,
@@ -102,6 +102,11 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						}
 					} else {
 						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
+
+						if (game.getFieldModel().getPlayerCoordinate(game.getDefender()).equals(game.getFieldModel().getBallCoordinate())) {
+							step.publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, game.getDefender().getId()));
+						}
+
 						InjuryTypeServer<?> injuryType = new InjuryTypeBlock();
 
 						if (state.oldDefenderState != null) {
@@ -162,6 +167,11 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 						step.publishParameters(
 								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
+
+						if (game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).equals(game.getFieldModel().getBallCoordinate())) {
+							step.publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, actingPlayer.getPlayer().getId()));
+						}
+
 						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
 								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 						if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)

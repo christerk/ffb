@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -18,9 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * unless the Piling On player is carrying the ball. Piling On cannot be used
  * with the Stab or Chainsaw skills.
  */
-// This should be moved to 2016 rules but at the moment PilingOnBehavior is used to handle block knockdowns
-// (e.g. for BothDown results). So this needs to be untangled first
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class PilingOn extends Skill {
 
 	public PilingOn() {

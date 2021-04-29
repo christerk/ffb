@@ -144,6 +144,7 @@ public interface IJsonOption {
 	JsonIntOption FAN_FACTOR_MODIFIER_HOME = new JsonIntOption("fanFactorModifierHome");
 	JsonIntArrayOption FAN_FACTOR_ROLL_AWAY = new JsonIntArrayOption("fanFactorRollAway");
 	JsonIntArrayOption FAN_FACTOR_ROLL_HOME = new JsonIntArrayOption("fanFactorRollHome");
+	JsonObjectOption FIELD_COORDINATE = new JsonObjectOption("fieldCoordinate");
 	JsonObjectOption FIELD_COORDINATE_THROWER = new JsonObjectOption("fieldCoordinateThrower");
 	JsonIntOption FIELD_COORDINATE_X = new JsonIntOption("x");
 	JsonIntOption FIELD_COORDINATE_Y = new JsonIntOption("y");
