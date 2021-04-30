@@ -23,6 +23,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerTimer;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -124,6 +125,10 @@ public class StepPlaceBall extends AbstractStep {
 				game.setTurnMode(TurnMode.SAFE_PAIR_OF_HANDS);
 				break;
 			case PLACE:
+				if (!ballCarrierTeamTurn) {
+					game.setWaitingForOpponent(true);
+					UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
+				}
 				game.getFieldModel().setBallCoordinate(selectedCoordinate);
 				game.getFieldModel().setBallMoving(true);
 				leave(game);
