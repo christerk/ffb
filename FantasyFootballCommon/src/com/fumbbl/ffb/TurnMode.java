@@ -11,9 +11,8 @@ public enum TurnMode implements INamedObject {
 	TOUCHBACK("touchback", true), INTERCEPTION("interception", true), END_GAME("endGame", true),
 	SWARMING("swarming", true), KICKOFF_RETURN("kickoffReturn", true), WIZARD("wizard", true),
 	PASS_BLOCK("passBlock", true), DUMP_OFF("dumpOff", true), NO_PLAYERS_TO_FIELD("noPlayersToField", true),
-	BOMB_HOME("bombHome", false), BOMB_AWAY("bombAway", false), BOMB_HOME_BLITZ("bombHomeBlitz", false), // TODO: use
-																																																				// game.getLastTurnMode()
-																																																				// for this
+	BOMB_HOME("bombHome", false), BOMB_AWAY("bombAway", false),
+	BOMB_HOME_BLITZ("bombHomeBlitz", false), // TODO: use game.getLastTurnMode() for this
 	BOMB_AWAY_BLITZ("bombAwayBlitz", false), // TODO: use game.getLastTurnMode() for this
 	ILLEGAL_SUBSTITUTION("illegalSubstitution", true),
 	SELECT_BLITZ_TARGET("selectBlitzTarget", true), SAFE_PAIR_OF_HANDS("safePairOfHands", true);

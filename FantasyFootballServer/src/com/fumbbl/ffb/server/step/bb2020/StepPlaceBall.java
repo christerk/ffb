@@ -20,6 +20,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 import java.util.Arrays;
@@ -59,7 +61,11 @@ public class StepPlaceBall extends AbstractStep {
 					break;
 				case CLIENT_FIELD_COORDINATE:
 					ClientCommandFieldCoordinate commandFieldCoordinate = (ClientCommandFieldCoordinate) receivedCommand.getCommand();
-					selectedCoordinate = commandFieldCoordinate.getFieldCoordinate();
+					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), receivedCommand)) {
+						selectedCoordinate = commandFieldCoordinate.getFieldCoordinate();
+					} else {
+						selectedCoordinate = commandFieldCoordinate.getFieldCoordinate().transform();
+					}
 					phase = Phase.PLACE;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -96,6 +102,8 @@ public class StepPlaceBall extends AbstractStep {
 	}
 
 	private void executeStep() {
+		UtilServerDialog.hideDialog(getGameState());
+
 		if (playerId == null || catchScatterThrowInMode != CatchScatterThrowInMode.SCATTER_BALL) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -117,7 +125,7 @@ public class StepPlaceBall extends AbstractStep {
 				break;
 			case PLACE:
 				game.getFieldModel().setBallCoordinate(selectedCoordinate);
-				game.getFieldModel().setBallMoving(false);
+				game.getFieldModel().setBallMoving(true);
 				leave(game);
 				break;
 			case DONE:
@@ -148,13 +156,14 @@ public class StepPlaceBall extends AbstractStep {
 			game.setHomePlaying(!game.isHomePlaying());
 		}
 
-		UtilServerDialog.showDialog(getGameState(), new DialogUseSafePairOfHandsParameter(playerId), !ballCarrierTeamTurn);
+		UtilServerDialog.showDialog(getGameState(), new DialogUseSafePairOfHandsParameter(playerId), !game.isHomePlaying());
 	}
 
 	private void leave(Game game) {
 		if (!ballCarrierTeamTurn) {
 			game.setHomePlaying(!game.isHomePlaying());
 		}
+		publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 		game.setTurnMode(game.getLastTurnMode());
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
