@@ -37,7 +37,7 @@ public class StepPlaceBall extends AbstractStep {
 	private CatchScatterThrowInMode catchScatterThrowInMode;
 	private Phase phase = Phase.ASK;
 	private boolean ballCarrierTeamTurn;
-	private Set<FieldCoordinate> adjacentSquares = new HashSet<>();
+	private final Set<FieldCoordinate> adjacentSquares = new HashSet<>();
 	private FieldCoordinate selectedCoordinate;
 
 	public StepPlaceBall(GameState pGameState) {
@@ -70,6 +70,8 @@ public class StepPlaceBall extends AbstractStep {
 					phase = Phase.PLACE;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
+				default:
+					break;
 			}
 		}
 
@@ -90,6 +92,8 @@ public class StepPlaceBall extends AbstractStep {
 				case DROPPED_BALL_CARRIER:
 					playerId = (String) parameter.getValue();
 					return true;
+				default:
+					break;
 			}
 		}
 
