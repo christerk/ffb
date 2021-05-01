@@ -59,7 +59,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 
 					state.coordinateFrom = game.getFieldModel().getPlayerCoordinate(swoopingPlayer);
 
-					Direction playerScatter = null;
+					Direction playerScatter;
 					int scatterRoll = step.getGameState().getDiceRoller().rollThrowInDirection();
 					if (state.coordinateFrom.getX() < state.coordinateTo.getX()) {
 						playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.EAST, scatterRoll);
@@ -122,7 +122,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 										game.getFieldModel().setBallCoordinate(null);
 									}
 
-									step.publishParameters(UtilServerInjury.dropPlayer(step, p, ApothecaryMode.HIT_PLAYER));
+									step.publishParameters(UtilServerInjury.dropPlayer(step, p, ApothecaryMode.HIT_PLAYER, true));
 
 									step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, state.thrownPlayerId));
 									step.publishParameter(

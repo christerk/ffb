@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.generator.common;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -13,6 +11,8 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ScatterPlayer extends SequenceGenerator<ScatterPlayer.SequenceParams> {
@@ -43,6 +43,7 @@ public class ScatterPlayer extends SequenceGenerator<ScatterPlayer.SequenceParam
 				from(StepParameterKey.THROWN_PLAYER_COORDINATE, params.thrownPlayerCoordinate),
 				from(StepParameterKey.THROW_SCATTER, params.throwScatter));
 		}
+		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_HIT_PLAYER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);

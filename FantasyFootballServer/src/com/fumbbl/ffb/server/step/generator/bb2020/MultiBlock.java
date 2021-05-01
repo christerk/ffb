@@ -10,9 +10,9 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import java.util.List;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
@@ -40,6 +40,7 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.BLOCK_STATISTICS, from(StepParameterKey.INCREMENT, params.blockTargets.size()));
 		sequence.add(StepId.MULTI_BLOCK_FORK, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		// inserts different sequences depending on the kind of blocks thrown
+		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY_MULTIPLE, from(StepParameterKey.ACTING_TEAM, false));
 		sequence.add(StepId.APOTHECARY_MULTIPLE, from(StepParameterKey.ACTING_TEAM, true));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);

@@ -11,8 +11,10 @@ public interface IStepLabel {
 	String APOTHECARY_HIT_PLAYER = "apothecaryHitPlayer";
 	String APOTHECARY_THROWN_PLAYER = "apothecaryThrownPlayer";
 	String APOTHECARY_KICKED_PLAYER = "apothecaryKickedPlayer";
+	String ATTACKER_DROPPED = "attackerDropped";
 	String BLITZ_TURN = "blitzTurn";
 	String BOTH_DOWN = "bothDown";
+	String DEFENDER_DROPPED = "defenderDropped";
 	String DODGE_BLOCK = "dodgeBlock";
 	String DROP_FALLING_PLAYERS = "dropFallingPlayers";
 	String EAT_TEAM_MATE = "eatTeamMate";

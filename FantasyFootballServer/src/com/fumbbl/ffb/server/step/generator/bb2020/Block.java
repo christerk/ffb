@@ -35,9 +35,9 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.DUMP_OFF);
 		sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
-		sequence.add(StepId.STAB, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.APOTHECARY_DEFENDER));
-		sequence.add(StepId.BLOCK_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.APOTHECARY_DEFENDER),
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER));
+		sequence.add(StepId.STAB, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED));
+		sequence.add(StepId.BLOCK_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
 		sequence.add(StepId.BLOCK_BALL_AND_CHAIN, from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK));
 		sequence.add(StepId.BLOCK_ROLL);
 		sequence.add(StepId.BLOCK_CHOICE, from(StepParameterKey.GOTO_LABEL_ON_DODGE, IStepLabel.DODGE_BLOCK),
@@ -63,22 +63,24 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.PICK_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
 		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.FALL_DOWN, IStepLabel.FALL_DOWN);
-		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
+		sequence.jump(IStepLabel.ATTACKER_DROPPED);
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.PLACE_BALL);
-		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_DEFENDER,
+		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
+		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 
 		// GFI for ball & chain should go here.
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS),
 			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
-		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
+		sequence.jump(IStepLabel.ATTACKER_DROPPED);
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.FALL_DOWN);
 
-		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
+		sequence.add(StepId.PLACE_BALL, IStepLabel.ATTACKER_DROPPED);
+
+		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
 		sequence.add(StepId.END_BLOCKING, IStepLabel.END_BLOCKING);

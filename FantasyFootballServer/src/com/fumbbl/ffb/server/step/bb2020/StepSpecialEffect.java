@@ -129,7 +129,7 @@ public final class StepSpecialEffect extends AbstractStep {
 				if (fSpecialEffect == SpecialEffect.LIGHTNING) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
 							new InjuryTypeLightning(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
-					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
+					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true));
 				}
 				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
 					ZappedPlayer zappedPlayer = new ZappedPlayer();
@@ -147,12 +147,12 @@ public final class StepSpecialEffect extends AbstractStep {
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
 							new InjuryTypeFireball(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
-					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
+					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
 							new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
-					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
+					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true));
 				}
 
 				// check end turn

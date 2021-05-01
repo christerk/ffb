@@ -1,9 +1,6 @@
-package com.fumbbl.ffb.server.step.generator.common;
-
-import static com.fumbbl.ffb.server.step.StepParameter.from;
+package com.fumbbl.ffb.server.step.generator.bb2016;
 
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -11,14 +8,11 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class ThrowTeamMate extends SequenceGenerator<ThrowTeamMate.SequenceParams> {
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-	public ThrowTeamMate() {
-		super(Type.ThrowTeamMate);
-	}
+@RulesCollection(RulesCollection.Rules.BB2016)
+public class ThrowTeamMate extends com.fumbbl.ffb.server.step.generator.ThrowTeamMate {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
@@ -29,8 +23,8 @@ public class ThrowTeamMate extends SequenceGenerator<ThrowTeamMate.SequenceParam
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_THROW_TEAM_MATE, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_THROW_TEAM_MATE),
-			from(StepParameterKey.THROWN_PLAYER_ID, params.thrownPlayerId),
-			from(StepParameterKey.TARGET_COORDINATE, params.targetCoordinate));
+			from(StepParameterKey.THROWN_PLAYER_ID, params.getThrownPlayerId()),
+			from(StepParameterKey.TARGET_COORDINATE, params.getTargetCoordinate()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
@@ -53,20 +47,5 @@ public class ThrowTeamMate extends SequenceGenerator<ThrowTeamMate.SequenceParam
 
 		gameState.getStepStack().push(sequence.getSequence());
 
-	}
-
-	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final String thrownPlayerId;
-		private final FieldCoordinate targetCoordinate;
-
-		public SequenceParams(GameState gameState, String thrownPlayerId, FieldCoordinate targetCoordinate) {
-			super(gameState);
-			this.thrownPlayerId = thrownPlayerId;
-			this.targetCoordinate = targetCoordinate;
-		}
-
-		public SequenceParams(GameState gameState) {
-			this(gameState, null, null);
-		}
 	}
 }

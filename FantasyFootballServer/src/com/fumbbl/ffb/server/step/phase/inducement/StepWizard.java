@@ -33,7 +33,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.SpecialEffect.SequenceParams;
+import com.fumbbl.ffb.server.step.generator.SpecialEffect.SequenceParams;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
@@ -164,8 +164,8 @@ public final class StepWizard extends AbstractStep {
 						(fWizardSpell == SpecialEffect.FIREBALL) ? PlayerState.HIT_BY_FIREBALL : PlayerState.HIT_BY_LIGHTNING);
 					game.getFieldModel().add(new BloodSpot(fTargetCoordinate, bloodSpotInjury));
 					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-					com.fumbbl.ffb.server.step.generator.common.SpecialEffect generator =
-						(com.fumbbl.ffb.server.step.generator.common.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
+					com.fumbbl.ffb.server.step.generator.SpecialEffect generator =
+						(com.fumbbl.ffb.server.step.generator.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
 					affectedPlayers.stream().map(affectedPlayer -> new SequenceParams(getGameState(), fWizardSpell, affectedPlayer.getId(),
 						true)).forEach(generator::pushSequence);
 				});

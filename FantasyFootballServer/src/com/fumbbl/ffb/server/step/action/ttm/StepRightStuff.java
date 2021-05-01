@@ -121,10 +121,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		if (fThrownPlayerHasBall) {
 			game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(thrownPlayer));
 		}
-		boolean doRoll = true;
-		if (fDropThrownPlayer) {
-			doRoll = false;
-		}
+		boolean doRoll = !fDropThrownPlayer;
 		if (!fDropThrownPlayer && (ReRolledActions.RIGHT_STUFF == getReRolledAction())) {
 			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
 				doRoll = false;

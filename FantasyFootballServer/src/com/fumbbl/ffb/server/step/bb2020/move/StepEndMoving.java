@@ -29,7 +29,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Foul;
 import com.fumbbl.ffb.server.step.generator.common.KickTeamMate;
 import com.fumbbl.ffb.server.step.generator.common.Move;
-import com.fumbbl.ffb.server.step.generator.common.ThrowTeamMate;
+import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
