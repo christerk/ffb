@@ -1,5 +1,8 @@
 package com.fumbbl.ffb.server.step.bb2020;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -7,6 +10,8 @@ import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -15,6 +20,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -182,6 +188,42 @@ public class StepPlaceBall extends AbstractStep {
 		publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 		game.setTurnMode(game.getLastTurnMode());
 		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE.addTo(jsonObject, catchScatterThrowInMode);
+		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
+		IServerJsonOption.FIELD_COORDINATE.addTo(jsonObject, selectedCoordinate.toJsonValue());
+		JsonArray jsonArray = new JsonArray();
+		adjacentSquares.stream().map(FieldCoordinate::toJsonValue).forEach(jsonArray::add);
+		IServerJsonOption.FIELD_COORDINATES.addTo(jsonObject, jsonArray);
+		return jsonObject;
+	}
+
+	@Override
+	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		catchScatterThrowInMode = (CatchScatterThrowInMode) IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE.getFrom(source, jsonObject);
+		phase = Phase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
+
+		JsonObject fieldCoordinate = IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject);
+		if (fieldCoordinate != null) {
+			selectedCoordinate = new FieldCoordinate(0).initFrom(source, fieldCoordinate);
+		}
+
+		JsonArray jsonArray = IServerJsonOption.FIELD_COORDINATES.getFrom(source, jsonObject);
+		if (jsonArray != null) {
+			adjacentSquares.clear();
+			jsonArray.values().stream().map(value -> new FieldCoordinate(0).initFrom(source, value)).forEach(adjacentSquares::add);
+		}
+
+		return this;
 	}
 
 	private enum Phase {
