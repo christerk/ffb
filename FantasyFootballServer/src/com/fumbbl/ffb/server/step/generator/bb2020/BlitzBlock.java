@@ -62,6 +62,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.REMOVE_BLITZ_STATE);
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
 		sequence.add(StepId.APOTHECARY, IStepLabel.DEFENDER_DROPPED,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
