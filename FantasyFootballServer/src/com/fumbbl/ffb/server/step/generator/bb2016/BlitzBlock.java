@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.generator.bb2016;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -10,6 +8,8 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock {
@@ -70,13 +70,6 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_DEFENDER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
-
-		// GFI for ball & chain should go here.
-		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS),
-			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
-		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
-		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.FALL_DOWN);
 
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
