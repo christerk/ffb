@@ -270,18 +270,26 @@ public class UtilServerInjury {
 	}
 
 	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode) {
-		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode);
+		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, false);
 	}
 
 	public static StepParameterSet stunPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode) {
-		return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode);
+		return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode, false);
+	}
+
+	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
+		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands);
+	}
+
+	public static StepParameterSet stunPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
+		return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode, eligibleForSafePairOfHands);
 	}
 
 	// drops the given player
 	// sets stepParameter END_TURN if player is on acting team and drops the ball
 	// sets stepParameter INJURY_RESULT if player has skill Ball&Chain
 	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
-			ApothecaryMode pApothecaryMode) {
+			ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
 		StepParameterSet stepParameters = new StepParameterSet();
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
@@ -301,6 +309,11 @@ public class UtilServerInjury {
 				playerState = playerState.changeRooted(false);
 				game.getFieldModel().setPlayerState(pPlayer, playerState);
 			}
+
+			if (eligibleForSafePairOfHands && UtilPlayer.hasBall(game, pPlayer)) {
+				stepParameters.add(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, pPlayer.getId()));
+			}
+
 			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && game.getTurnMode() != TurnMode.BLITZ) {
 				game.getFieldModel().setBallMoving(true);
 				stepParameters

@@ -101,11 +101,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 							}
 						}
 					} else {
-						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
-
-						if (game.getFieldModel().getPlayerCoordinate(game.getDefender()).equals(game.getFieldModel().getBallCoordinate())) {
-							step.publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, game.getDefender().getId()));
-						}
+						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
 
 						InjuryTypeServer<?> injuryType = new InjuryTypeBlock();
 
@@ -166,11 +162,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 							&& (attackerCoordinate != null)) {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 						step.publishParameters(
-								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-
-						if (game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).equals(game.getFieldModel().getBallCoordinate())) {
-							step.publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, actingPlayer.getPlayer().getId()));
-						}
+								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
 
 						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
 								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
