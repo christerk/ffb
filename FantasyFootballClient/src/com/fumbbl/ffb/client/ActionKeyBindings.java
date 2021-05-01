@@ -1,12 +1,11 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.util.StringTool;
+
 import javax.swing.Action;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-
-import com.fumbbl.ffb.util.StringTool;
-
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +18,8 @@ import java.util.Map;
  */
 public class ActionKeyBindings {
 
-	private FantasyFootballClient fClient;
-	private Map<ActionKeyGroup, List<ActionKeyAction>> fActionsByGroup;
+	private final FantasyFootballClient fClient;
+	private final Map<ActionKeyGroup, List<ActionKeyAction>> fActionsByGroup;
 
 	public ActionKeyBindings(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -169,6 +168,11 @@ public class ActionKeyBindings {
 			playerActions
 					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionGaze), ActionKey.PLAYER_ACTION_GAZE));
 		}
+		String actionFumblerooskie = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_FUMBLEROOSKIE);
+		if (StringTool.isProvided(actionFumblerooskie)) {
+			playerActions
+				.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionFoul), ActionKey.PLAYER_ACTION_FUMBLEROOSKIE));
+		}
 		String actionRangeGrid = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_RANGE_GRID);
 		if (StringTool.isProvided(actionRangeGrid)) {
 			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionRangeGrid),
@@ -212,7 +216,7 @@ public class ActionKeyBindings {
 				InputMap inputMap = pComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 				for (ActionKeyAction action : actions) {
 					Object actionMapKey = inputMap.get(action.getKeyStroke());
-					if ((actionMapKey != null) && (actionMapKey instanceof ActionKey)) {
+					if ((actionMapKey instanceof ActionKey)) {
 						Action currentAction = pComponent.getActionMap().get(action.getActionKey());
 						if (currentAction != null) {
 							if (currentAction instanceof ActionKeyAction) {

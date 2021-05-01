@@ -18,11 +18,11 @@ public enum PlayerAction implements INamedObject {
 	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
 	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, null), KICK_TEAM_MATE("kickTeamMate", 31, null);
 
-	private String fName;
-	private int fType;
-	private String fDescription;
+	private final String fName;
+	private final int fType;
+	private final String fDescription;
 
-	private PlayerAction(String pName, int pType, String pDescription) {
+	PlayerAction(String pName, int pType, String pDescription) {
 		fName = pName;
 		fType = pType;
 		fDescription = pDescription;
@@ -48,6 +48,10 @@ public enum PlayerAction implements INamedObject {
 	public boolean isPassing() {
 		return ((this == PASS) || (this == DUMP_OFF) || (this == HAND_OVER) || (this == HAIL_MARY_PASS)
 				|| (this == THROW_BOMB) || (this == HAIL_MARY_BOMB));
+	}
+
+	public boolean allowsFumblerooskie() {
+		return this == MOVE || this == BLITZ_MOVE;
 	}
 
 }

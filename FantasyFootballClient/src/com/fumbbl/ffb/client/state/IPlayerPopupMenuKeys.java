@@ -32,5 +32,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_HAIL_MARY_BOMB = KeyEvent.VK_H;
 	int KEY_SHORT = KeyEvent.VK_S;
 	int KEY_LONG = KeyEvent.VK_L;
-
+	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;
 }
