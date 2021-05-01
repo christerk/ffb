@@ -160,7 +160,6 @@ public class StepPlaceBall extends AbstractStep {
 				game.getFieldModel().setBallMoving(true);
 				game.setTurnMode(game.getLastTurnMode());
 				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-				publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, null));
 				leave(game);
 				break;
 			case DONE:
@@ -196,6 +195,7 @@ public class StepPlaceBall extends AbstractStep {
 	}
 
 	private void leave(Game game) {
+		publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, null));
 		if (!ballCarrierTeamTurn) {
 			game.setHomePlaying(!game.isHomePlaying());
 		}
