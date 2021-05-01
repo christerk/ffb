@@ -168,9 +168,6 @@ public class DialogManager {
 					case USE_CHAINSAW:
 						setDialogHandler(new DialogUseChainsawHandler(getClient()));
 						break;
-					case USE_SAFE_PAIR_OF_HANDS:
-						setDialogHandler(new DialogUseSafePairOfHandsHandler(getClient()));
-						break;
 					default:
 						break;
 				}

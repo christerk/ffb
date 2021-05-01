@@ -6,13 +6,15 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.dialog.DialogUseSafePairOfHandsParameter;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSafePairOfHands;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -58,6 +60,14 @@ public class StepPlaceBall extends AbstractStep {
 				case CLIENT_USE_SAFE_PAIR_OF_HANDS:
 					ClientCommandUseSafePairOfHands commandUseSafePairOfHands = (ClientCommandUseSafePairOfHands) receivedCommand.getCommand();
 					phase = commandUseSafePairOfHands.isUsingSafePairOfHands() ? Phase.SELECT : Phase.DONE;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) receivedCommand.getCommand();
+					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canPlaceBallWhenKnockedDownOrPlacedProne)
+						&& commandUseSkill.getPlayerId().equals(playerId)) {
+						phase = commandUseSkill.isSkillUsed() ? Phase.SELECT : Phase.DONE;
+					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_FIELD_COORDINATE:
@@ -145,7 +155,8 @@ public class StepPlaceBall extends AbstractStep {
 	}
 
 	private void setup(Game game, Player<?> ballCarrier) {
-		if (!ballCarrier.hasSkillProperty(NamedProperties.canPlaceBallWhenKnockedDownOrPlacedProne)) {
+		Skill skill = ballCarrier.getSkillWithProperty(NamedProperties.canPlaceBallWhenKnockedDownOrPlacedProne);
+		if (skill == null) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
@@ -165,7 +176,7 @@ public class StepPlaceBall extends AbstractStep {
 			game.setHomePlaying(!game.isHomePlaying());
 		}
 
-		UtilServerDialog.showDialog(getGameState(), new DialogUseSafePairOfHandsParameter(playerId), !game.isHomePlaying());
+		UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(playerId, skill, 0), !game.isHomePlaying());
 	}
 
 	private void leave(Game game) {
