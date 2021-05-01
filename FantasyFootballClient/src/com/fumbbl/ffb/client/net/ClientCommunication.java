@@ -88,7 +88,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
-import com.fumbbl.ffb.net.commands.ClientCommandUseSafePairOfHands;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
@@ -477,10 +476,6 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUseBrawler(int brawlerCount, String targetId) {
 		send(new ClientCommandUseBrawler(brawlerCount, targetId));
-	}
-
-	public void sendUseSafePairOfHands(boolean use) {
-		send(new ClientCommandUseSafePairOfHands(use));
 	}
 
 	public void sendFieldCoordinate(FieldCoordinate fieldCoordinate) {

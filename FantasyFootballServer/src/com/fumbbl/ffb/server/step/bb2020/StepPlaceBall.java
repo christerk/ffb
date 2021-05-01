@@ -13,7 +13,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
-import com.fumbbl.ffb.net.commands.ClientCommandUseSafePairOfHands;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -57,11 +56,6 @@ public class StepPlaceBall extends AbstractStep {
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (receivedCommand.getId()) {
-				case CLIENT_USE_SAFE_PAIR_OF_HANDS:
-					ClientCommandUseSafePairOfHands commandUseSafePairOfHands = (ClientCommandUseSafePairOfHands) receivedCommand.getCommand();
-					phase = commandUseSafePairOfHands.isUsingSafePairOfHands() ? Phase.SELECT : Phase.DONE;
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-					break;
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) receivedCommand.getCommand();
 					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canPlaceBallWhenKnockedDownOrPlacedProne)
@@ -72,12 +66,14 @@ public class StepPlaceBall extends AbstractStep {
 					break;
 				case CLIENT_FIELD_COORDINATE:
 					ClientCommandFieldCoordinate commandFieldCoordinate = (ClientCommandFieldCoordinate) receivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), receivedCommand)) {
-						selectedCoordinate = commandFieldCoordinate.getFieldCoordinate();
-					} else {
-						selectedCoordinate = commandFieldCoordinate.getFieldCoordinate().transform();
+					if (commandFieldCoordinate.getFieldCoordinate() != null && adjacentSquares.contains(commandFieldCoordinate.getFieldCoordinate())) {
+						if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), receivedCommand)) {
+							selectedCoordinate = commandFieldCoordinate.getFieldCoordinate();
+						} else {
+							selectedCoordinate = commandFieldCoordinate.getFieldCoordinate().transform();
+						}
+						phase = Phase.PLACE;
 					}
-					phase = Phase.PLACE;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
