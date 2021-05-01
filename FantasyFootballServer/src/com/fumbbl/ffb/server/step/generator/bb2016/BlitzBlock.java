@@ -71,6 +71,13 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_DEFENDER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 
+		// GFI for ball & chain should go here.
+		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS),
+			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
+		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
+		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.FALL_DOWN);
+
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_ATTACKER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
