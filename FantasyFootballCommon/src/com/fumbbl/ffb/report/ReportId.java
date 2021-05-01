@@ -41,7 +41,7 @@ public enum ReportId implements INamedObject {
 	WEEPING_DAGGER_ROLL("weepingDaggerRoll"), KICK_TEAM_MATE_ROLL("kickTeamMateRoll"), RIOTOUS_ROOKIES("riotousRookies"),
 	SWARMING_PLAYERS_ROLL("swarmingPlayersRoll"), PASS_DEVIATE("passDeviate"), CARDS_AND_INDUCEMENTS_BOUGHT("cardsAndInducementsBought"),
 	FAN_FACTOR("fanFactor"), SELECT_BLITZ_TARGET("selectBlitzTarget"), BOMB_EXPLODES_AFTER_CATCH("bombExplodesAfterCatch"),
-	USE_BRAWLER("useBrawler");
+	USE_BRAWLER("useBrawler"), PLACE_BALL_DIRECTION("placedBallDirection");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)

@@ -63,7 +63,7 @@ public class FieldCoordinate implements IJsonSerializable {
 
 	// java.lang.Object#equals(java.lang.Object)
 	public boolean equals(Object pObject) {
-		if ((pObject != null) && (pObject instanceof FieldCoordinate)) {
+		if ((pObject instanceof FieldCoordinate)) {
 			FieldCoordinate otherCoordinate = (FieldCoordinate) pObject;
 			return ((getY() == otherCoordinate.getY()) && (getX() == otherCoordinate.getX()));
 		} else {
@@ -123,16 +123,11 @@ public class FieldCoordinate implements IJsonSerializable {
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(").append(getX()).append(",").append(getY()).append(")");
-		return sb.toString();
+		return "(" + getX() + "," + getY() + ")";
 	}
 
 	public int compareTo(FieldCoordinate pAnotherFc) {
 		if (pAnotherFc == null) {
-			return -1;
-		}
-		if (!(pAnotherFc instanceof FieldCoordinate)) {
 			return -1;
 		}
 		if (pAnotherFc.getX() < getX()) {
@@ -173,38 +168,34 @@ public class FieldCoordinate implements IJsonSerializable {
 	public static boolean equals(FieldCoordinate pCoordinate1, FieldCoordinate pCoordinate2) {
 		if (pCoordinate1 != null) {
 			return pCoordinate1.equals(pCoordinate2);
-		} else if (pCoordinate2 != null) {
-			return pCoordinate2.equals(pCoordinate1);
-		} else {
-			return true;
-		}
+		} else return pCoordinate2 == null;
 	}
 
-	public static Direction GetDirection(FieldCoordinate from, FieldCoordinate to) {
+	public static Direction getDirection(FieldCoordinate from, FieldCoordinate to) {
 		int dx = to.getX() - from.getX();
 		int dy = to.getY() - from.getY();
 
 		if (dx < 0) {
 			if (dy < 0) {
-				return Direction.SOUTHWEST;
-			} else if (dy > 0) {
 				return Direction.NORTHWEST;
+			} else if (dy > 0) {
+				return Direction.SOUTHWEST;
 			} else {
 				return Direction.WEST;
 			}
 		} else if (dx > 0) {
 			if (dy < 0) {
-				return Direction.SOUTHEAST;
-			} else if (dy > 0) {
 				return Direction.NORTHEAST;
+			} else if (dy > 0) {
+				return Direction.SOUTHEAST;
 			} else {
 				return Direction.EAST;
 			}
 		} else {
 			if (dy < 0) {
-				return Direction.SOUTH;
-			} else if (dy > 0) {
 				return Direction.NORTH;
+			} else if (dy > 0) {
+				return Direction.SOUTH;
 			}
 		}
 		return null;
@@ -219,11 +210,11 @@ public class FieldCoordinate implements IJsonSerializable {
 		switch (d) {
 		case NORTH:
 			dx = 0;
-			dy = 1;
+			dy = -1;
 			break;
 		case NORTHEAST:
 			dx = 1;
-			dy = 1;
+			dy = -1;
 			break;
 		case EAST:
 			dx = 1;
@@ -231,15 +222,15 @@ public class FieldCoordinate implements IJsonSerializable {
 			break;
 		case SOUTHEAST:
 			dx = 1;
-			dy = -1;
+			dy = 1;
 			break;
 		case SOUTH:
 			dx = 0;
-			dy = -1;
+			dy = 1;
 			break;
 		case SOUTHWEST:
 			dx = -1;
-			dy = -1;
+			dy = 1;
 			break;
 		case WEST:
 			dx = -1;
@@ -247,7 +238,7 @@ public class FieldCoordinate implements IJsonSerializable {
 			break;
 		case NORTHWEST:
 			dx = -1;
-			dy = 1;
+			dy = -1;
 			break;
 		}
 

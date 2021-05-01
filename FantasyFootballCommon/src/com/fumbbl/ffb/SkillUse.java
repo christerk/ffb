@@ -2,11 +2,6 @@ package com.fumbbl.ffb;
 
 import com.fumbbl.ffb.model.Player;
 
-/**
- * LRB5 Skill Categories
- * 
- * @author Kalimar
- */
 public enum SkillUse implements INamedObject {
 
 	WOULD_NOT_HELP("wouldNotHelp", "because it would not help"),
@@ -23,14 +18,15 @@ public enum SkillUse implements INamedObject {
 	CANCEL_DODGE("cancelDodge", "to cancel %g opponent's Dodge skill"), AVOID_FALLING("avoidFalling", "to avoid falling"),
 	CANCEL_TACKLE("cancelTackle", "to cancel %g opponent's Tackle skill"),
 	INCREASE_STRENGTH_BY_1("increaseStrengthBy1", "to increase %g strength by 1"),
-	CANCEL_DIVING_CATCH("cancelDivingCatch", "because players from both teams hinder each other");
+	CANCEL_DIVING_CATCH("cancelDivingCatch", "because players from both teams hinder each other"),
+	PLACE_BALL("placeBall", "to place ball in an empty adjacent square");
 
-	private String fName;
-	private String fDescription;
+	private final String fName;
+	private final String fDescription;
 
 	private static final String _PARAMETER_GENITIVE = "%g";
 
-	private SkillUse(String pName, String pDescription) {
+	SkillUse(String pName, String pDescription) {
 		fName = pName;
 		fDescription = pDescription;
 	}

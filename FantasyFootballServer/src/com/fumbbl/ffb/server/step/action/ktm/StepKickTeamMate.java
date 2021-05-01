@@ -149,7 +149,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 			FieldCoordinate kickerCoordinate = game.getFieldModel().getPlayerCoordinate(kicker);
 			FieldCoordinate kickedPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickedPlayer);
 
-			Direction d = FieldCoordinate.GetDirection(kickerCoordinate, kickedPlayerCoordinate);
+			Direction d = FieldCoordinate.getDirection(kickerCoordinate, kickedPlayerCoordinate);
 
 			fRolls = new int[fNumDice];
 			for (int i = 0; i < fNumDice; i++) {

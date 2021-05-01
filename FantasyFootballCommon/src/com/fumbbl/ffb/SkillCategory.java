@@ -11,10 +11,10 @@ public enum SkillCategory implements INamedObject {
 	MUTATION("Mutation", "M"), EXTRAORDINARY("Extraordinary", "E"), STAT_INCREASE("Stat Increase", "+"),
 	STAT_DECREASE("Stat Decrease", "-");
 
-	private String fName;
-	private String fTypeString;
+	private final String fName;
+	private final String fTypeString;
 
-	private SkillCategory(String pName, String pTypeString) {
+	SkillCategory(String pName, String pTypeString) {
 		fName = pName;
 		fTypeString = pTypeString;
 	}

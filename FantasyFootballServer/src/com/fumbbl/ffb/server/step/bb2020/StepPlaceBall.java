@@ -4,10 +4,12 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -19,6 +21,8 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2020.ReportPlaceBallDirection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -67,20 +71,25 @@ public class StepPlaceBall extends AbstractStep {
 					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canPlaceBallWhenKnockedDownOrPlacedProne)
 						&& commandUseSkill.getPlayerId().equals(playerId)) {
 						phase = commandUseSkill.isSkillUsed() ? Phase.SELECT : Phase.DONE;
+						getResult().addReport(new ReportSkillUse(playerId, commandUseSkill.getSkill(), commandUseSkill.isSkillUsed(), SkillUse.PLACE_BALL));
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_FIELD_COORDINATE:
 					ClientCommandFieldCoordinate commandFieldCoordinate = (ClientCommandFieldCoordinate) receivedCommand.getCommand();
-					if (commandFieldCoordinate.getFieldCoordinate() != null && adjacentSquares.contains(commandFieldCoordinate.getFieldCoordinate())) {
+					if (commandFieldCoordinate.getFieldCoordinate() != null) {
+						FieldCoordinate fieldCoordinate;
 						if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), receivedCommand)) {
-							selectedCoordinate = commandFieldCoordinate.getFieldCoordinate();
+							fieldCoordinate = commandFieldCoordinate.getFieldCoordinate();
 						} else {
-							selectedCoordinate = commandFieldCoordinate.getFieldCoordinate().transform();
+							fieldCoordinate = commandFieldCoordinate.getFieldCoordinate().transform();
 						}
-						phase = Phase.PLACE;
+						if (adjacentSquares.contains(fieldCoordinate)) {
+							selectedCoordinate = fieldCoordinate;
+							phase = Phase.PLACE;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
 					}
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
 					break;
@@ -145,6 +154,8 @@ public class StepPlaceBall extends AbstractStep {
 					game.setWaitingForOpponent(true);
 					UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
 				}
+				Direction direction = FieldCoordinate.getDirection(game.getFieldModel().getBallCoordinate(), selectedCoordinate);
+				getResult().addReport(new ReportPlaceBallDirection(playerId, direction));
 				game.getFieldModel().setBallCoordinate(selectedCoordinate);
 				game.getFieldModel().setBallMoving(true);
 				leave(game);
