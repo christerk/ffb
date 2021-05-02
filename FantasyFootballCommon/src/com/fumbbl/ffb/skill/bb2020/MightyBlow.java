@@ -1,16 +1,17 @@
 package com.fumbbl.ffb.skill.bb2020;
 
-import java.util.Arrays;
-
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
+import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.InjuryModifierContext;
 import com.fumbbl.ffb.modifiers.VariableArmourModifier;
 import com.fumbbl.ffb.modifiers.VariableInjuryModifierAttacker;
+
+import java.util.Arrays;
 
 /**
  * Add 1 to any Armour or Injury roll made by a player with this skill when an
@@ -28,8 +29,14 @@ public class MightyBlow extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new VariableArmourModifier("Mighty Blow",false));
-		registerModifier(new VariableInjuryModifierAttacker("Mighty Blow",false) {
+		registerModifier(new VariableArmourModifier("Mighty Blow", false) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				return super.appliesToContext(context)
+					&& !context.isFoul();
+			}
+		});
+		registerModifier(new VariableInjuryModifierAttacker("Mighty Blow", false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)

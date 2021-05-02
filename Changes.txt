@@ -9,6 +9,7 @@ Behaviour Changes:
     + Safe Pair of Hands
     + Fumblerooskie
     + Iron Hard Skin
+    + Defensive
 
 Technical Changes:
 - Unify suppression syntax
@@ -36,3 +37,4 @@ Bugfixes:
 - Dauntless for MultiBlock was not applied
 - Safe Throw was not taking effect on fumbles
 - Block on Blitz without prior movement used regular Block sequence e.g. prompting for negatraits again and not resetting blitz marker
+- Mighty Blow was applied to foul armor rolls
