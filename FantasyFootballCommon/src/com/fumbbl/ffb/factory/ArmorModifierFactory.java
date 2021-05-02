@@ -56,9 +56,9 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 						&& (UtilPlayer.findTacklezones(game, context.getAttacker()) < 1)));
 			}
 		});
-		add(new SpecialEffectArmourModifier("Bomb", 1 , false, SpecialEffect.BOMB));
-		add(new SpecialEffectArmourModifier("Fireball", 1 , false, SpecialEffect.FIREBALL));
-		add(new SpecialEffectArmourModifier("Lightning", 1 , false, SpecialEffect.LIGHTNING));
+		add(new SpecialEffectArmourModifier("Bomb", 1, false, SpecialEffect.BOMB));
+		add(new SpecialEffectArmourModifier("Fireball", 1, false, SpecialEffect.FIREBALL));
+		add(new SpecialEffectArmourModifier("Lightning", 1, false, SpecialEffect.LIGHTNING));
 	}};
 
 	public ArmorModifier forName(String name) {
@@ -73,6 +73,14 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 
 		ArmorModifierContext context = new ArmorModifierContext(game, attacker, defender, isStab, isFoul);
 		Set<ArmorModifier> armorModifiers = getArmorModifiers(attacker, context);
+
+		armorModifiers.stream().filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue)).findFirst()
+			.ifPresent(armorModifier -> defender.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.canCancel(armorModifier.getRegisteredTo())).findFirst()
+				.ifPresent(cancelingSkill -> {
+						armorModifiers.remove(armorModifier);
+						armorModifiers.addAll(cancelingSkill.getArmorModifiers());
+					}
+				));
 
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)
 			&& armorModifiers.stream().anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue))

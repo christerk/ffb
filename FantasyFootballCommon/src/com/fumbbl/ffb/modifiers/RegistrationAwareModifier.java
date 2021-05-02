@@ -7,6 +7,11 @@ public abstract class RegistrationAwareModifier implements IRegistrationAwareMod
 	protected Skill registeredTo;
 
 	@Override
+	public Skill getRegisteredTo() {
+		return registeredTo;
+	}
+
+	@Override
 	public boolean isRegisteredToSkillWithProperty(ISkillProperty property) {
 		return registeredTo != null && registeredTo.hasSkillProperty(property);
 	}

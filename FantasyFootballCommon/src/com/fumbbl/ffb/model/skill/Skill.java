@@ -1,11 +1,5 @@
 package com.fumbbl.ffb.model.skill;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
@@ -28,6 +22,12 @@ import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class Skill implements INamedObject {
 
@@ -214,6 +214,16 @@ public abstract class Skill implements INamedObject {
 		for (ISkillProperty skillProperty : skillProperties) {
 			if (skillProperty instanceof CancelSkillProperty
 					&& ((CancelSkillProperty) skillProperty).cancelsSkill(otherSkill)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean canCancel(ISkillProperty otherProperty) {
+		for (ISkillProperty skillProperty : skillProperties) {
+			if (skillProperty instanceof CancelSkillProperty
+				&& ((CancelSkillProperty) skillProperty).cancelsProperty(otherProperty)) {
 				return true;
 			}
 		}

@@ -2,15 +2,17 @@ package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
+import com.fumbbl.ffb.modifiers.IRegistrationAwareModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.report.ReportId;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @ReportMessageType(ReportId.INJURY)
 @RulesCollection(Rules.BB2020)
@@ -52,7 +55,11 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
   			int armorModifierTotal = 0;
   			boolean usingClaws = Arrays.stream(report.getArmorModifiers())
   				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue));
-  			for (ArmorModifier armorModifier : report.getArmorModifiers()) {
+			  Optional<Skill> cancelingClaws = Arrays.stream(report.getArmorModifiers())
+				  .map(IRegistrationAwareModifier::getRegisteredTo)
+				  .filter(skill -> skill.canCancel(NamedProperties.reducesArmourToFixedValue)).findFirst();
+
+			  for (ArmorModifier armorModifier : report.getArmorModifiers()) {
   				if (armorModifier.getModifier(attacker) != 0) {
   					armorModifierTotal += armorModifier.getModifier(attacker);
   					if (armorModifier.getModifier(attacker) > 0) {
@@ -72,8 +79,12 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
   			println(getIndent() + 1, status.toString());
   			if ((attacker != null) && usingClaws) {
   				print(getIndent() + 1, false, attacker);
-  				println(getIndent() + 1, " uses Claws to reduce opponents armour to 7.");
+  				println(getIndent() + 1, " uses Claws to reduce opponent's armour to 7.");
   			}
+  			if (defender != null && cancelingClaws.isPresent()) {
+				  print(getIndent() + 1, false, defender);
+				  println(getIndent() + 1, " uses " + cancelingClaws.get().getName() + " to cancel opponent's Claws.");
+			  }
   			if (report.isArmorBroken()) {
   				print(getIndent() + 1, "The armour of ");
   				print(getIndent() + 1, false, defender);

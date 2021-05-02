@@ -7,4 +7,6 @@ public interface IRegistrationAwareModifier {
 	boolean isRegisteredToSkillWithProperty(ISkillProperty property);
 
 	void setRegisteredTo(Skill registeredTo);
+
+	Skill getRegisteredTo();
 }

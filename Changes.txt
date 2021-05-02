@@ -8,6 +8,7 @@ Behaviour Changes:
     + On The Ball (short comings of 2016 Pass Block persist: Does not work during Dump Off and only one player can move)
     + Safe Pair of Hands
     + Fumblerooskie
+    + Iron Hard Skin
 
 Technical Changes:
 - Unify suppression syntax
