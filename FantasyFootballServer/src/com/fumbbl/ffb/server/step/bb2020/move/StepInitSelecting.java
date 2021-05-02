@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -26,6 +27,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
+import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerConstant;
@@ -279,6 +281,16 @@ public final class StepInitSelecting extends AbstractStep {
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MULTIPLE_BLOCK, false);
 						fDispatchPlayerAction = PlayerAction.MULTIPLE_BLOCK;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_USE_FUMBLEROOSKIE:
+					Player<?> player = game.getActingPlayer().getPlayer();
+					PlayerAction playerAction = game.getActingPlayer().getPlayerAction();
+					if (playerAction != null && playerAction.allowsFumblerooskie() && UtilPlayer.hasBall(game, player)) {
+						game.getFieldModel().setBallMoving(true);
+						getResult().setSound(SoundId.BOUNCE);
+						getResult().addReport(new ReportFumblerooskie(player.getId(), true));
+						actingPlayer.setFumblerooskiePending(true);
 					}
 					break;
 				default:

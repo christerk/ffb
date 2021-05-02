@@ -57,6 +57,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
+import com.fumbbl.ffb.net.commands.ClientCommandUseFumblerooskie;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
@@ -132,7 +133,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_SET_BLOCK_TARGET_SELECTION("clientSetBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("clientUnsetBlockTargetSelection"),
 	CLIENT_SYNCHRONOUS_MULTI_BLOCK("clientSynchronousMultiBlock"), CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET("clientBlockOrReRollChoiceForTarget"),
 	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler"),
-	CLIENT_FIELD_COORDINATE("clientFieldCoordinate");
+	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie");
 
 	private final String fName;
 
@@ -314,6 +315,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseBrawler();
 			case CLIENT_FIELD_COORDINATE:
 				return new ClientCommandFieldCoordinate();
+			case CLIENT_USE_FUMBLEROOSKIE:
+				return new ClientCommandUseFumblerooskie();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

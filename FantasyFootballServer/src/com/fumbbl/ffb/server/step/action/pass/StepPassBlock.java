@@ -31,7 +31,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Move;
-import com.fumbbl.ffb.server.step.generator.common.Select;
+import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPassing;
 import com.fumbbl.ffb.util.UtilPlayer;

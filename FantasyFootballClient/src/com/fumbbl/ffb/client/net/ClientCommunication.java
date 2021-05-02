@@ -84,6 +84,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
+import com.fumbbl.ffb.net.commands.ClientCommandUseFumblerooskie;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
@@ -480,6 +481,10 @@ public class  ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendFieldCoordinate(FieldCoordinate fieldCoordinate) {
 		send(new ClientCommandFieldCoordinate(fieldCoordinate));
+	}
+
+	public void sendUseFumblerooskie() {
+		send(new ClientCommandUseFumblerooskie());
 	}
 
 	public FantasyFootballClient getClient() {

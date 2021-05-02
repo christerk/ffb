@@ -35,13 +35,14 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean fHasMoved;
 	private boolean fHasFed;
 	private boolean hasJumped;
+	private boolean fumblerooskiePending;
 	private PlayerAction fPlayerAction;
-	private Set<Skill> fUsedSkills;
+	private final Set<Skill> fUsedSkills;
 	private boolean fStandingUp;
 	private boolean fSufferingBloodLust;
 	private boolean fSufferingAnimosity;
 
-	private transient Game fGame;
+	private final transient Game fGame;
 
 	public ActingPlayer(Game pGame) {
 		fGame = pGame;
@@ -72,6 +73,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fSufferingBloodLust = false;
 		fSufferingAnimosity = false;
 		hasJumped = false;
+		fumblerooskiePending = false;
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, fPlayerId);
@@ -97,6 +99,8 @@ public class ActingPlayer implements IJsonSerializable {
 		if (pCurrentMove == fCurrentMove) {
 			return;
 		}
+		fumblerooskiePending = false;
+
 		fCurrentMove = pCurrentMove;
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_CURRENT_MOVE, fCurrentMove);
 	}
@@ -298,6 +302,14 @@ public class ActingPlayer implements IJsonSerializable {
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_FOULED, fHasFouled);
 	}
 
+	public boolean isFumblerooskiePending() {
+		return fumblerooskiePending;
+	}
+
+	public void setFumblerooskiePending(boolean fumblerooskiePending) {
+		this.fumblerooskiePending = fumblerooskiePending;
+	}
+
 	public Game getGame() {
 		return fGame;
 	}
@@ -331,6 +343,7 @@ public class ActingPlayer implements IJsonSerializable {
 		IJsonOption.STANDING_UP.addTo(jsonObject, fStandingUp);
 		IJsonOption.SUFFERING_ANIMOSITY.addTo(jsonObject, fSufferingAnimosity);
 		IJsonOption.SUFFERING_BLOODLUST.addTo(jsonObject, fSufferingBloodLust);
+		IJsonOption.FUMBLEROOSKIE_PENDING.addTo(jsonObject, fumblerooskiePending);
 		JsonArray usedSkillsArray = new JsonArray();
 		for (Skill skill : getUsedSkills()) {
 			usedSkillsArray.add(UtilJson.toJsonValue(skill));
@@ -353,6 +366,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fStandingUp = IJsonOption.STANDING_UP.getFrom(source, jsonObject);
 		fSufferingAnimosity = IJsonOption.SUFFERING_ANIMOSITY.getFrom(source, jsonObject);
 		fSufferingBloodLust = IJsonOption.SUFFERING_BLOODLUST.getFrom(source, jsonObject);
+		fumblerooskiePending = IJsonOption.FUMBLEROOSKIE_PENDING.getFrom(source, jsonObject);
 		JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(source, jsonObject);
 		fUsedSkills.clear();
 		if (usedSkillsArray != null) {

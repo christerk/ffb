@@ -1,22 +1,18 @@
-package com.fumbbl.ffb.server.step.generator.common;
-
-import static com.fumbbl.ffb.server.step.StepParameter.from;
+package com.fumbbl.ffb.server.step.generator.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class Select extends SequenceGenerator<Select.SequenceParams> {
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-	public Select() {
-		super(Type.Select);
-	}
+@RulesCollection(RulesCollection.Rules.BB2020)
+public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
@@ -28,7 +24,7 @@ public class Select extends SequenceGenerator<Select.SequenceParams> {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_SELECTING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_SELECTING),
-			from(StepParameterKey.UPDATE_PERSISTENCE, params.updatePersistence));
+			from(StepParameterKey.UPDATE_PERSISTENCE, params.isUpdatePersistence()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
@@ -36,19 +32,11 @@ public class Select extends SequenceGenerator<Select.SequenceParams> {
 		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
-		sequence.add(StepId.END_SELECTING, IStepLabel.END_SELECTING);
+		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING, StepParameter.from(StepParameterKey.CHECK_PLAYER_ACTION, true));
+		sequence.add(StepId.END_SELECTING);
 		// may insert endTurn, pass, throwTeamMate, block, foul or moveSequence add
 		// this point
 
 		gameState.getStepStack().push(sequence.getSequence());
-	}
-
-	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final boolean updatePersistence;
-
-		public SequenceParams(GameState gameState, boolean updatePersistence) {
-			super(gameState);
-			this.updatePersistence = updatePersistence;
-		}
 	}
 }

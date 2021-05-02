@@ -120,7 +120,8 @@ public enum StepId implements INamedObject {
 	REFEREE("referee"), // action.foul
 	REMOVE_BLITZ_STATE("removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
-	RESOLVE_PASS("resovlePass"),
+	RESET_FUMBLEROOSKIE("resetFumblerooskie"), // action.move/action.blitz
+	RESOLVE_PASS("resolvePass"),
 	RIGHT_STUFF("rightStuff"), // action.ttm
 	RIOTOUS_ROOKIES("riotousRookies"),
 	SAFE_THROW("safeThrow"), // action.pass

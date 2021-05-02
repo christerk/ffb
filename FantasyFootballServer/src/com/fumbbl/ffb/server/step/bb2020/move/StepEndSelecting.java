@@ -33,7 +33,7 @@ import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
 import com.fumbbl.ffb.server.step.generator.common.Foul;
 import com.fumbbl.ffb.server.step.generator.common.KickTeamMate;
 import com.fumbbl.ffb.server.step.generator.common.Move;
-import com.fumbbl.ffb.server.step.generator.common.Select;
+import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 

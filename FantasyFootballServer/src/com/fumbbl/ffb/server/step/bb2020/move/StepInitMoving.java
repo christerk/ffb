@@ -8,10 +8,12 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
@@ -22,6 +24,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandKickTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
+import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -40,6 +43,7 @@ import com.fumbbl.ffb.server.step.generator.common.KickTeamMate;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step to init the move sequence.
@@ -233,6 +237,16 @@ public class StepInitMoving extends AbstractStep {
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						fEndTurn = true;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_USE_FUMBLEROOSKIE:
+					Player<?> player = game.getActingPlayer().getPlayer();
+					PlayerAction playerAction = game.getActingPlayer().getPlayerAction();
+					if (playerAction != null && playerAction.allowsFumblerooskie() && UtilPlayer.hasBall(game, player)) {
+						game.getFieldModel().setBallMoving(true);
+						getResult().setSound(SoundId.BOUNCE);
+						getResult().addReport(new ReportFumblerooskie(player.getId(), true));
+						actingPlayer.setFumblerooskiePending(true);
 					}
 					break;
 				default:

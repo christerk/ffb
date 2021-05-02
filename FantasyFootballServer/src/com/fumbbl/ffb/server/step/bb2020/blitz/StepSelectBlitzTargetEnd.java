@@ -16,7 +16,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.Select;
+import com.fumbbl.ffb.server.step.generator.Select;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepSelectBlitzTargetEnd extends AbstractStep {

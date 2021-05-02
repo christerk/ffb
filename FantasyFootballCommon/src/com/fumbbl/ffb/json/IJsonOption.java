@@ -158,6 +158,7 @@ public interface IJsonOption {
 	JsonBooleanOption FOULING_PLAYER_BANNED = new JsonBooleanOption("foulingPlayerBanned");
 	JsonIntOption FOULS = new JsonIntOption("fouls");
 	JsonBooleanOption FUMBLE = new JsonBooleanOption("fumble");
+	JsonBooleanOption FUMBLEROOSKIE_PENDING = new JsonBooleanOption("fumblerooskiePending");
 	JsonObjectOption GAME = new JsonObjectOption("game");
 	JsonLongOption GAME_ID = new JsonLongOption("gameId");
 	JsonObjectOption GAME_LIST = new JsonObjectOption("gameList");

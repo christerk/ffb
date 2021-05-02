@@ -22,6 +22,7 @@ public enum StepParameterKey {
 	CARD, // Card
 	CATCH_SCATTER_THROW_IN_MODE, // CatchScatterThrowinMode
 	CATCHER_ID, // String
+	CHECK_PLAYER_ACTION, // Boolean
 	CHOOSING_TEAM_ID, // String
 	CLIENT_RECEIVE_CHOICE, // Boolean
 	CONSUME_PARAMETER, // Set<StepParameterKey>

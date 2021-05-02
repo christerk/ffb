@@ -214,6 +214,7 @@ public class ClientStateMove extends ClientState {
 					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, actingPlayer.isJumping());
 					break;
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
+					communication.sendUseFumblerooskie();
 					break;
 				default:
 					break;
