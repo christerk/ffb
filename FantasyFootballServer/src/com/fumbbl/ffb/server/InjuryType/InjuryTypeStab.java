@@ -7,7 +7,7 @@ import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.modifiers.ArmorModifierFactory;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;

@@ -1,12 +1,16 @@
-package com.fumbbl.ffb.modifiers;
+package com.fumbbl.ffb.factory;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SpecialEffect;
-import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.modifiers.ArmorModifier;
+import com.fumbbl.ffb.modifiers.ArmorModifierContext;
+import com.fumbbl.ffb.modifiers.ModifierAggregator;
+import com.fumbbl.ffb.modifiers.SpecialEffectArmourModifier;
+import com.fumbbl.ffb.modifiers.StaticArmourModifier;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.UtilCards;

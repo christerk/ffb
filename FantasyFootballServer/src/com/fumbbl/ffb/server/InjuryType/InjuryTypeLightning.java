@@ -10,7 +10,7 @@ import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.Lightning;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.modifiers.ArmorModifierFactory;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.modifiers.SpecialEffectArmourModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;

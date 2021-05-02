@@ -13,7 +13,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
-import com.fumbbl.ffb.modifiers.ArmorModifierFactory;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;

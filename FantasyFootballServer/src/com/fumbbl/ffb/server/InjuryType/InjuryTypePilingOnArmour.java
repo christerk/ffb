@@ -10,7 +10,7 @@ import com.fumbbl.ffb.injury.PilingOnArmour;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
-import com.fumbbl.ffb.modifiers.ArmorModifierFactory;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
