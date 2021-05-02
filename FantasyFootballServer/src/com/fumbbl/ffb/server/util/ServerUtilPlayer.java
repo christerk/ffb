@@ -7,6 +7,8 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
+
 public class ServerUtilPlayer {
 
 	public static int findBlockStrength(Game game, Player<?> attacker, int attackerStrength, Player<?> defender) {
@@ -23,21 +25,25 @@ public class ServerUtilPlayer {
 		FieldCoordinate coordinateDefender = game.getFieldModel().getPlayerCoordinate(defender);
 		Player<?>[] offensiveAssists = UtilPlayer.findAdjacentPlayersWithTacklezones(game, attacker.getTeam(),
 				coordinateDefender, false);
-		for (int i = 0; i < offensiveAssists.length; i++) {
-			if (offensiveAssists[i] != attacker) {
-				FieldCoordinate coordinateAssist = game.getFieldModel().getPlayerCoordinate(offensiveAssists[i]);
+		for (Player<?> offensiveAssist : offensiveAssists) {
+			if (offensiveAssist != attacker) {
+				FieldCoordinate coordinateAssist = game.getFieldModel().getPlayerCoordinate(offensiveAssist);
 				Player<?>[] defensiveAssists = UtilPlayer.findAdjacentPlayersWithTacklezones(game, defenderTeam, coordinateAssist,
-						false);
+					false);
 				// Check to see if the assisting player is not close to anyone else but the
 				// defending blocker
 				int defendingPlayersOtherThanBlocker = 0;
-				for (int y = 0; y < defensiveAssists.length; y++) {
-					if (defensiveAssists[y] != defender)
+				for (Player<?> defensiveAssist : defensiveAssists) {
+					if (defensiveAssist != defender)
 						defendingPlayersOtherThanBlocker++;
 				}
 
-				if (offensiveAssists[i].hasSkillProperty(NamedProperties.assistsBlocksInTacklezones)
-						|| (defendingPlayersOtherThanBlocker == 0)) {
+				boolean guardIsCanceled = game.getActingTeam().hasPlayer(attacker) && Arrays.stream(defensiveAssists)
+					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
+					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsBlocksInTacklezones));
+
+				if ((offensiveAssist.hasSkillProperty(NamedProperties.assistsBlocksInTacklezones) && !guardIsCanceled)
+					|| (defendingPlayersOtherThanBlocker == 0)) {
 					// System.out.println(offensiveAssists[i].getName() + " assists " +
 					// pAttacker.getName());
 					blockStrength++;

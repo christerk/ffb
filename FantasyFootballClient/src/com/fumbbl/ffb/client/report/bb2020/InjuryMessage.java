@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @ReportMessageType(ReportId.INJURY)
@@ -57,6 +58,7 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
   				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue));
 			  Optional<Skill> cancelingClaws = Arrays.stream(report.getArmorModifiers())
 				  .map(IRegistrationAwareModifier::getRegisteredTo)
+				  .filter(Objects::nonNull)
 				  .filter(skill -> skill.canCancel(NamedProperties.reducesArmourToFixedValue)).findFirst();
 
 			  for (ArmorModifier armorModifier : report.getArmorModifiers()) {

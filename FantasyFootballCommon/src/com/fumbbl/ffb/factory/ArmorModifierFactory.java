@@ -75,7 +75,7 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 		Set<ArmorModifier> armorModifiers = getArmorModifiers(attacker, context);
 
 		armorModifiers.stream().filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue)).findFirst()
-			.ifPresent(armorModifier -> defender.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.canCancel(armorModifier.getRegisteredTo())).findFirst()
+			.ifPresent(armorModifier -> defender.getSkillsIncludingTemporaryOnes().stream().filter(skill -> armorModifier.getRegisteredTo() != null && skill.canCancel(armorModifier.getRegisteredTo())).findFirst()
 				.ifPresent(cancelingSkill -> {
 						armorModifiers.remove(armorModifier);
 						armorModifiers.addAll(cancelingSkill.getArmorModifiers());

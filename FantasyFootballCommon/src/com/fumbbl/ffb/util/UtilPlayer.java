@@ -1,12 +1,5 @@
 package com.fumbbl.ffb.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
@@ -22,6 +15,13 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Kalimar
@@ -203,10 +203,14 @@ public class UtilPlayer {
 			false)) {
 			if (offensiveAssist != pAttacker) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
-				if ((findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false).length < 1)
+				Player<?>[] adjacentPlayersWithTacklezones = findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false);
+				boolean guardIsCanceled = Arrays.stream(adjacentPlayersWithTacklezones)
+					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
+					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsFoulsInTacklezones));
+				if ((adjacentPlayersWithTacklezones.length < 1)
 					|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD)
 					&& offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFouls))
-					|| offensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones)) {
+					|| (offensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones) && !guardIsCanceled)) {
 					foulAssists++;
 				}
 			}
