@@ -6,7 +6,6 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 
@@ -24,7 +23,9 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.REMOVE_BLITZ_STATE);
-		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING, StepParameter.from(StepParameterKey.CHECK_PLAYER_ACTION, false));
+		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING,
+			from(StepParameterKey.CHECK_PLAYER_ACTION, false),
+			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false));
 		sequence.add(StepId.INIT_FEEDING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FEEDING),
 			from(StepParameterKey.FEEDING_ALLOWED, params.isFeedingAllowed()),
 			from(StepParameterKey.END_PLAYER_ACTION, params.isEndPlayerAction()), from(StepParameterKey.END_TURN, params.isEndTurn()));

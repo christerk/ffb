@@ -99,7 +99,6 @@ public class ActingPlayer implements IJsonSerializable {
 		if (pCurrentMove == fCurrentMove) {
 			return;
 		}
-		fumblerooskiePending = false;
 
 		fCurrentMove = pCurrentMove;
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_CURRENT_MOVE, fCurrentMove);

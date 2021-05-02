@@ -15,7 +15,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStateBlitz extends ClientStateMove {
@@ -88,27 +87,30 @@ public class ClientStateBlitz extends ClientStateMove {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_END_MOVE:
-				communication.sendActingPlayer(null, null, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_JUMP:
-				if (isJumpAvailableAsNextMove(game, actingPlayer,false)) {
-					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_MOVE:
-				if (actingPlayer.isSufferingBloodLust()) {
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
-				}
-				break;
-			default:
-				UtilClientStateBlocking.menuItemSelected(this, pPlayer, pMenuKey);
-				break;
+				case IPlayerPopupMenuKeys.KEY_END_MOVE:
+					communication.sendActingPlayer(null, null, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_JUMP:
+					if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+						communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_MOVE:
+					if (actingPlayer.isSufferingBloodLust()) {
+						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
+					communication.sendUseFumblerooskie();
+					break;
+				default:
+					UtilClientStateBlocking.menuItemSelected(this, pPlayer, pMenuKey);
+					break;
 			}
 		}
 	}
 
-	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates){
+	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates) {
 		getClient().getCommunication().sendPlayerBlitzMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
 	}
 }

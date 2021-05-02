@@ -17,9 +17,9 @@ public class UseFumblerooskieMessage extends ReportMessageBase<ReportFumbleroosk
 
 		print(getIndent(), false, player);
 		if (report.isUsed()) {
-			println(getIndent(), TextStyle.NONE, " drops the ball using Fumblerooskie.");
+			println(getIndent(), TextStyle.NONE, " will drop the ball using Fumblerooskie once he moves from the current square.");
 		} else {
-			println(getIndent(), TextStyle.NONE, " did not vacant the square and thus keeps the ball.");
+			println(getIndent(), TextStyle.NONE, " did not vacate the square and thus keeps the ball.");
 		}
 	}
 }

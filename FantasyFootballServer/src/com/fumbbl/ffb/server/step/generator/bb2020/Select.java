@@ -5,7 +5,6 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 
@@ -32,7 +31,9 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
-		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING, StepParameter.from(StepParameterKey.CHECK_PLAYER_ACTION, true));
+		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING,
+			from(StepParameterKey.CHECK_PLAYER_ACTION, true),
+			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false));
 		sequence.add(StepId.END_SELECTING);
 		// may insert endTurn, pass, throwTeamMate, block, foul or moveSequence add
 		// this point

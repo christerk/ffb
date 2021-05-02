@@ -140,6 +140,7 @@ public class ClientStateMove extends ClientState {
 			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 			if (actingPlayer.hasActed() || mechanic.canJump(game, pPlayer, position)
 				|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
+				|| pPlayer.hasSkillProperty(NamedProperties.canDropBall)
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)
@@ -402,7 +403,9 @@ public class ClientStateMove extends ClientState {
 	private boolean isFumblerooskieAvailable() {
 		ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
 
-		return (actingPlayer.getPlayerAction() != null && actingPlayer.getPlayerAction().allowsFumblerooskie()
+		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canDropBall)
+			&& actingPlayer.getPlayerAction() != null
+			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
 			&& UtilPlayer.hasBall(getClient().getGame(), actingPlayer.getPlayer()));
 	}
 }
