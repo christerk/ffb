@@ -11,6 +11,7 @@ Behaviour Changes:
     + Iron Hard Skin
     + Defensive
     + Animal Savagery
+    + Unchannelled Fury
 
 Technical Changes:
 - Unify suppression syntax
@@ -39,3 +40,4 @@ Bugfixes:
 - Safe Throw was not taking effect on fumbles
 - Block on Blitz without prior movement used regular Block sequence e.g. prompting for negatraits again and not resetting blitz marker
 - Mighty Blow was applied to foul armor rolls
+- End turn or end action did not work when selecting blitz target (happened when failing a nega trait)

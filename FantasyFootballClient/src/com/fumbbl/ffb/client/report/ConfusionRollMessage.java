@@ -40,9 +40,9 @@ public class ConfusionRollMessage extends ReportMessageBase<ReportConfusionRoll>
   			if (neededRoll != null) {
   				if (report.getConfusionSkill().hasSkillProperty(NamedProperties.needsToRollForActionButKeepsTacklezone)) {
   					if (report.getMinimumRoll() > 2) {
-  						neededRoll.append(" (Wild Animal does not attack)");
+  						neededRoll.append(" (Player does not attack)");
   					} else {
-  						neededRoll.append(" (Wild Animal does attack)");
+  						neededRoll.append(" (Player does attack)");
   					}
   				}
   				if (report.getConfusionSkill().hasSkillProperty(NamedProperties.needsToRollHighToAvoidConfusion)) {

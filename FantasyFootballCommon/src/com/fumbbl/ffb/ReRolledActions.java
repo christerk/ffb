@@ -16,6 +16,7 @@ import com.fumbbl.ffb.skill.ThrowTeamMate;
 import com.fumbbl.ffb.skill.bb2016.RightStuff;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
+import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ public class ReRolledActions {
 	public static final ReRolledAction BLOOD_LUST = new ReRolledAction(BloodLust.class);
 	public static final ReRolledAction HYPNOTIC_GAZE = new ReRolledAction(HypnoticGaze.class);
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction(Animosity.class);
+	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);
 
 	private Map<String, ReRolledAction> values;
 

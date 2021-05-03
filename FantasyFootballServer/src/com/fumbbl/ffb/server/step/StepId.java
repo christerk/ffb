@@ -142,6 +142,7 @@ public enum StepId implements INamedObject {
 	TEST("test"), // test
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
 	TOUCHBACK("touchback"), // phase.kickoff
+	UNCHANNELLED_FURY("unchannelledFury"), // action.common
 	WEATHER("weather"), // game.start
 	WILD_ANIMAL("wildAnimal"), // action.common
 	WINNINGS("winnings"), // game.end
@@ -151,9 +152,9 @@ public enum StepId implements INamedObject {
 	// obsolete = 57 (createGame)
 	// maxId = 111
 
-	private String fName;
+	private final String fName;
 
-	private StepId(String pName) {
+	StepId(String pName) {
 		fName = pName;
 	}
 
