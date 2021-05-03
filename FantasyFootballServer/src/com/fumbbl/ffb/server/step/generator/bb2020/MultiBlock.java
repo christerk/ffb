@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.generator.bb2020;
 
+import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.server.GameState;
@@ -28,11 +29,16 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 
 		Sequence sequence = new Sequence(gameState);
 
-		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.ANIMAL_SAVAGERY_AVOIDED),
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.PLACE_BALL);
+		sequence.add(StepId.APOTHECARY,
+			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+		sequence.jump(IStepLabel.END_BLOCKING);
+		sequence.add(StepId.BONE_HEAD, IStepLabel.ANIMAL_SAVAGERY_AVOIDED, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.FOUL_APPEARANCE_MULTIPLE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		sequence.add(StepId.DISPATCH_DUMP_OFF, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));

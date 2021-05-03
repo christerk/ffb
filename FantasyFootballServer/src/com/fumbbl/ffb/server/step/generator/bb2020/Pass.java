@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.server.step.generator.bb2020;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
+import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -10,6 +9,8 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class Pass extends com.fumbbl.ffb.server.step.generator.Pass {
@@ -23,11 +24,16 @@ public class Pass extends com.fumbbl.ffb.server.step.generator.Pass {
 
 		sequence.add(StepId.INIT_PASSING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_PASSING),
 			from(StepParameterKey.TARGET_COORDINATE, params.getTargetCoordinate()));
-		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.ANIMAL_SAVAGERY_AVOIDED),
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+		sequence.add(StepId.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.PLACE_BALL);
+		sequence.add(StepId.APOTHECARY,
+			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+		sequence.jump(IStepLabel.END_PASSING);
+		sequence.add(StepId.BONE_HEAD, IStepLabel.ANIMAL_SAVAGERY_AVOIDED, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
-		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
-		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
 		sequence.add(StepId.BOMBARDIER);
 		sequence.add(StepId.ANIMOSITY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
 		sequence.add(StepId.PASS_BLOCK, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_PASSING));

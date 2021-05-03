@@ -208,7 +208,9 @@ public class StepPlaceBall extends AbstractStep {
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE.addTo(jsonObject, catchScatterThrowInMode);
 		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
-		IServerJsonOption.FIELD_COORDINATE.addTo(jsonObject, selectedCoordinate.toJsonValue());
+		if (selectedCoordinate != null) {
+			IServerJsonOption.FIELD_COORDINATE.addTo(jsonObject, selectedCoordinate.toJsonValue());
+		}
 		JsonArray jsonArray = new JsonArray();
 		adjacentSquares.stream().map(FieldCoordinate::toJsonValue).forEach(jsonArray::add);
 		IServerJsonOption.FIELD_COORDINATES.addTo(jsonObject, jsonArray);
