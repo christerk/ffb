@@ -15,17 +15,18 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 
 	private String fActingPlayerId;
 	private String fDefenderId;
-	private boolean fUsingStab, usingChainsaw;
+	private boolean fUsingStab, usingChainsaw, usingVomit;
 
 	public ClientCommandBlock() {
 		super();
 	}
 
-	public ClientCommandBlock(String pActingPlayerId, String pDefenderId, boolean pUsingStab, boolean usingChainsaw) {
+	public ClientCommandBlock(String pActingPlayerId, String pDefenderId, boolean pUsingStab, boolean usingChainsaw, boolean usingVomit) {
 		fActingPlayerId = pActingPlayerId;
 		fDefenderId = pDefenderId;
 		fUsingStab = pUsingStab;
 		this.usingChainsaw = usingChainsaw;
+		this.usingVomit = usingVomit;
 	}
 
 	public NetCommandId getId() {
@@ -47,6 +48,11 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 	public boolean isUsingChainsaw() {
 		return usingChainsaw;
 	}
+
+	public boolean isUsingVomit() {
+		return usingVomit;
+	}
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -55,6 +61,7 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
 		IJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
 		IJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
+		IJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		return jsonObject;
 	}
 
@@ -65,6 +72,7 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
 		fUsingStab = IJsonOption.USING_STAB.getFrom(game, jsonObject);
 		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
+		usingVomit = IJsonOption.USING_VOMIT.getFrom(game, jsonObject);
 		return this;
 	}
 

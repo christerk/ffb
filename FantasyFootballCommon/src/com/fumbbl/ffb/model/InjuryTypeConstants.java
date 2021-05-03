@@ -21,6 +21,7 @@ import com.fumbbl.ffb.injury.Lightning;
 import com.fumbbl.ffb.injury.PilingOnArmour;
 import com.fumbbl.ffb.injury.PilingOnInjury;
 import com.fumbbl.ffb.injury.PilingOnKnockedOut;
+import com.fumbbl.ffb.injury.ProjectileVomit;
 import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.TTMHitPlayer;
 import com.fumbbl.ffb.injury.TTMLanding;
@@ -47,6 +48,7 @@ public class InjuryTypeConstants {
 	public static final InjuryType PILING_ON_ARMOUR = new PilingOnArmour();
 	public static final InjuryType PILING_ON_INJURY = new PilingOnInjury();
 	public static final InjuryType PILING_ON_KNOCKED_OUT = new PilingOnKnockedOut();
+	public static final InjuryType PROJECTILE_VOMIT = new ProjectileVomit();
 	public static final InjuryType STAB = new Stab();
 	public static final InjuryType THROW_A_ROCK = new ThrowARock();
 	public static final InjuryType TTM_HIT_PLAYER = new TTMHitPlayer();

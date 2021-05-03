@@ -28,6 +28,7 @@ public class Stab extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
 		registerProperty(NamedProperties.providesBlockAlternative);
+		registerProperty(NamedProperties.providesMultipleBlockAlternative);
 	}
 
 }

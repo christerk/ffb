@@ -163,6 +163,11 @@ public class ActionKeyBindings {
 			playerActions
 				.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionChainsaw), ActionKey.PLAYER_ACTION_CHAINSAW));
 		}
+		String actionProjectileVomit = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_PROJECTILE_VOMIT);
+		if (StringTool.isProvided(actionProjectileVomit)) {
+			playerActions
+				.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionProjectileVomit), ActionKey.PLAYER_ACTION_PROJECTILE_VOMIT));
+		}
 		String actionGaze = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_GAZE);
 		if (StringTool.isProvided(actionGaze)) {
 			playerActions

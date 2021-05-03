@@ -476,6 +476,7 @@ public interface IJsonOption {
 	JsonBooleanOption USES_A_TEAM_REROLL = new JsonBooleanOption("usesATeamReroll");
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
 	JsonBooleanOption USING_STAB = new JsonBooleanOption("usingStab");
+	JsonBooleanOption USING_VOMIT = new JsonBooleanOption("usingVomit");
 	JsonIntOption VALUE = new JsonIntOption("value");
 	JsonStringOption VICTIM_ID = new JsonStringOption("victimId");
 	JsonBooleanOption WAITING_FOR_OPPONENT = new JsonBooleanOption("waitingForOpponent");

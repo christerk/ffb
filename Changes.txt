@@ -13,6 +13,7 @@ Behaviour Changes:
     + Animal Savagery
     + Unchannelled Fury
     + Plague Ridden
+    + Projectile Vomit
 
 Technical Changes:
 - Unify suppression syntax

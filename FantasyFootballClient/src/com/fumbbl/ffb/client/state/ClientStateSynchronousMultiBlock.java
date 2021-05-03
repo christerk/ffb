@@ -76,7 +76,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (UtilPlayer.isBlockable(game, defender)) {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(defender);
-			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative)) {
+			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesMultipleBlockAlternative)) {
 				UtilClientStateBlocking.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), defender);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				selectPlayer(defender, BlockKind.BLOCK);

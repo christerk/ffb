@@ -11,30 +11,32 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String blockDefenderId;
 		private final String multiBlockDefenderId;
-		private final boolean usingStab, usingChainsaw;
+		private final boolean usingStab, usingChainsaw, usingVomit;
 
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw) {
-			this(gameState, blockDefenderId, usingStab, usingChainsaw, null);
+		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, boolean usingVomit) {
+			this(gameState, blockDefenderId, usingStab, usingChainsaw, usingVomit, null);
 		}
 
 		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, String multiBlockDefenderId) {
-			this(gameState, blockDefenderId, usingStab, false, multiBlockDefenderId);
+			this(gameState, blockDefenderId, usingStab, false, false, multiBlockDefenderId);
 		}
 
-		private SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, String multiBlockDefenderId) {
+		private SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw,
+		                       boolean usingVomit, String multiBlockDefenderId) {
 			super(gameState);
 			this.blockDefenderId = blockDefenderId;
 			this.multiBlockDefenderId = multiBlockDefenderId;
 			this.usingStab = usingStab;
 			this.usingChainsaw = usingChainsaw;
+			this.usingVomit = usingVomit;
 		}
 
 		public SequenceParams(GameState gameState) {
-			this(gameState, null, false, false, null);
+			this(gameState, null, false, false, false, null);
 		}
 
 		public SequenceParams(GameState gameState, boolean usingChainsaw) {
-			this(gameState, null, false, usingChainsaw, null);
+			this(gameState, null, false, usingChainsaw, false, null);
 		}
 
 		public String getBlockDefenderId() {
@@ -51,6 +53,10 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 
 		public boolean isUsingChainsaw() {
 			return usingChainsaw;
+		}
+
+		public boolean isUsingVomit() {
+			return usingVomit;
 		}
 	}
 }

@@ -1,17 +1,14 @@
 package com.fumbbl.ffb.server;
 
-import java.util.Arrays;
-import java.util.Set;
-
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.KickoffResult;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.DirectionFactory;
 import com.fumbbl.ffb.factory.KickoffResultFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -23,6 +20,9 @@ import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilRangeRuler;
+
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  *
@@ -165,6 +165,10 @@ public class DiceInterpreter {
 	}
 
 	public int minimumRollChainsaw() {
+		return 2;
+	}
+
+	public int minimumRollProjectileVomit() {
 		return 2;
 	}
 

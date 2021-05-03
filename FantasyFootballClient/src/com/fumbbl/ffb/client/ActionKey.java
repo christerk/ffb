@@ -31,6 +31,7 @@ public enum ActionKey {
 	PLAYER_ACTION_CHAINSAW(IClientProperty.KEY_PLAYER_ACTION_CHAINSAW),
 	PLAYER_ACTION_GAZE(IClientProperty.KEY_PLAYER_ACTION_GAZE),
 	PLAYER_ACTION_FUMBLEROOSKIE(IClientProperty.KEY_PLAYER_ACTION_FUMBLEROOSKIE),
+	PLAYER_ACTION_PROJECTILE_VOMIT(IClientProperty.KEY_PLAYER_ACTION_PROJECTILE_VOMIT),
 	PLAYER_ACTION_RANGE_GRID(IClientProperty.KEY_PLAYER_ACTION_RANGE_GRID),
 	PLAYER_ACTION_HAIL_MARY_PASS(IClientProperty.KEY_PLAYER_ACTION_HAIL_MARY_PASS),
 	PLAYER_ACTION_MULTIPLE_BLOCK(IClientProperty.KEY_PLAYER_ACTION_MULTIPLE_BLOCK),
@@ -41,9 +42,9 @@ public enum ActionKey {
 	MENU_SETUP_LOAD(IClientProperty.KEY_MENU_SETUP_LOAD), MENU_SETUP_SAVE(IClientProperty.KEY_MENU_SETUP_SAVE),
 	MENU_REPLAY(IClientProperty.KEY_MENU_REPLAY);
 
-	private String fPropertyName;
+	private final String fPropertyName;
 
-	private ActionKey(String pPropertyName) {
+	ActionKey(String pPropertyName) {
 		fPropertyName = pPropertyName;
 	}
 

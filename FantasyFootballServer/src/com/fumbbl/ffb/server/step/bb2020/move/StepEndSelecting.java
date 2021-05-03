@@ -73,7 +73,7 @@ public final class StepEndSelecting extends AbstractStep {
 	// blockSequence
 	private String fBlockDefenderId;
 	private Boolean fUsingStab;
-	private boolean usingChainsaw;
+	private boolean usingChainsaw, usingVomit;
 	// foulSequence
 	private String fFoulDefenderId;
 	// passSequence + throwTeamMateSequence
@@ -161,6 +161,10 @@ public final class StepEndSelecting extends AbstractStep {
 					return true;
 				case USING_CHAINSAW:
 					usingChainsaw = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case USING_VOMIT:
+					usingVomit = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 					consume(pParameter);
 					return true;
 				case BLOCK_TARGETS:
@@ -257,14 +261,14 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case BLITZ:
 				if (pWithParameter) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw, usingVomit));
 				} else {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState()));
 				}
 				break;
 			case BLOCK:
 				if (pWithParameter) {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw));
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw, usingVomit));
 				} else {
 					blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
 				}
@@ -336,6 +340,7 @@ public final class StepEndSelecting extends AbstractStep {
 		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
 		IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
+		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IServerJsonOption.FOUL_DEFENDER_ID.addTo(jsonObject, fFoulDefenderId);
 		IServerJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
 		IServerJsonOption.HAIL_MARY_PASS.addTo(jsonObject, fHailMaryPass);
@@ -359,6 +364,7 @@ public final class StepEndSelecting extends AbstractStep {
 		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(game, jsonObject);
 		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
 		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
+		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(game, jsonObject);
 		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
 		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(game, jsonObject);
 		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);

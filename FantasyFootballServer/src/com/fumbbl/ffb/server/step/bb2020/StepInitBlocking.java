@@ -46,7 +46,7 @@ public class StepInitBlocking extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
 	private String fBlockDefenderId;
-	private boolean fUsingStab, usingChainsaw;
+	private boolean fUsingStab, usingChainsaw, usingVomit;
 	private String fMultiBlockDefenderId;
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
@@ -81,6 +81,10 @@ public class StepInitBlocking extends AbstractStep {
 						usingChainsaw = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 						break;
 					// optional
+					case USING_VOMIT:
+						usingVomit = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					// optional
 					case MULTI_BLOCK_DEFENDER_ID:
 						fMultiBlockDefenderId = (String) parameter.getValue();
 						break;
@@ -112,6 +116,7 @@ public class StepInitBlocking extends AbstractStep {
 							fBlockDefenderId = blockCommand.getDefenderId();
 							fUsingStab = blockCommand.isUsingStab();
 							usingChainsaw = blockCommand.isUsingChainsaw();
+							usingVomit = blockCommand.isUsingVomit();
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
 					}
@@ -164,6 +169,7 @@ public class StepInitBlocking extends AbstractStep {
 					game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 				publishParameter(new StepParameter(StepParameterKey.USING_STAB, fUsingStab));
 				publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, usingChainsaw));
+				publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, usingVomit));
 				game.getFieldModel().setPlayerState(defender, oldDefenderState.changeBase(PlayerState.BLOCKED));
 				if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.BLITZ,
@@ -186,6 +192,7 @@ public class StepInitBlocking extends AbstractStep {
 		IServerJsonOption.MULTI_BLOCK_DEFENDER_ID.addTo(jsonObject, fMultiBlockDefenderId);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		return jsonObject;
 	}
 
@@ -200,6 +207,7 @@ public class StepInitBlocking extends AbstractStep {
 		fMultiBlockDefenderId = IServerJsonOption.MULTI_BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(game, jsonObject);
 		return this;
 	}
 

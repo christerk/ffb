@@ -41,6 +41,7 @@ public class Chainsaw extends Skill {
 		registerProperty(NamedProperties.makesStrengthTestObsolete);
 		registerProperty(NamedProperties.blocksLikeChainsaw);
 		registerProperty(NamedProperties.providesBlockAlternative);
+		registerProperty(NamedProperties.providesMultipleBlockAlternative);
 		registerProperty(NamedProperties.providesChainsawBlockAlternative);
 		registerProperty(NamedProperties.providesChainsawFoulingAlternative);
 		registerProperty(NamedProperties.providesFoulingAlternative);

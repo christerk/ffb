@@ -40,6 +40,10 @@ public class UtilClientStateBlocking {
 				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_CHAINSAW);
 				actionHandled = true;
 				break;
+			case PLAYER_ACTION_PROJECTILE_VOMIT:
+				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
+				actionHandled = true;
+				break;
 			default:
 				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(pClientState.getClient(), playerPosition,
@@ -59,15 +63,21 @@ public class UtilClientStateBlocking {
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_BLOCK:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_STAB:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, true, false);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, true, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, true);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, true, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
+					handled = true;
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+					break;
+				default:
 					break;
 			}
 		}
@@ -87,7 +97,7 @@ public class UtilClientStateBlocking {
 			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative)) {
 				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
-				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false);
+				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false);
 			} else {
 				handled = false;
 			}
@@ -112,6 +122,12 @@ public class UtilClientStateBlocking {
 			chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
 			menuItemList.add(chainsawAction);
 		}
+		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail)) {
+			JMenuItem projectileVomit = new JMenuItem("Projectile Vomit");
+			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
+			projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
+			menuItemList.add(projectileVomit);
+		}
 		JMenuItem blockAction = new JMenuItem("Block Opponent",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
 		blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
@@ -121,9 +137,10 @@ public class UtilClientStateBlocking {
 		pClientState.showPopupMenuForPlayer(defender);
 	}
 
-	private static void block(ClientState pClientState, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab, boolean usingChainsaw) {
+	private static void block(ClientState pClientState, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
+	                          boolean usingChainsaw, boolean usingVomit) {
 		pClientState.getClient().getUserInterface().getFieldComponent().refresh();
-		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw);
+		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit);
 	}
 
 }
