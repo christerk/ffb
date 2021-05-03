@@ -52,7 +52,7 @@ public class Stunty extends Skill {
 
 		registerProperty(NamedProperties.smallIcon);
 		registerProperty(NamedProperties.preventRaiseFromDead);
-		registerProperty(new CancelSkillProperty(NamedProperties.hasNurglesRot));
+		registerProperty(new CancelSkillProperty(NamedProperties.allowsRaisingLineman));
 		registerProperty(NamedProperties.ignoreTacklezonesWhenDodging);
 		registerProperty(NamedProperties.isHurtMoreEasily);
 	}

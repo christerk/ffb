@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -17,7 +17,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * Roster slot. This new Rotter still counts at full value towards the total
  * value of the Nurgle team.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class NurglesRot extends Skill {
 
 	public NurglesRot() {
@@ -26,7 +26,7 @@ public class NurglesRot extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.hasNurglesRot);
+		registerProperty(NamedProperties.allowsRaisingLineman);
 
 	}
 

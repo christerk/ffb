@@ -12,6 +12,7 @@ Behaviour Changes:
     + Defensive
     + Animal Savagery
     + Unchannelled Fury
+    + Plague Ridden
 
 Technical Changes:
 - Unify suppression syntax

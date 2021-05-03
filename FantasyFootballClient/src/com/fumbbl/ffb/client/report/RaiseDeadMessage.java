@@ -1,8 +1,11 @@
 package com.fumbbl.ffb.client.report;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportRaiseDead;
@@ -16,7 +19,8 @@ public class RaiseDeadMessage extends ReportMessageBase<ReportRaiseDead> {
   		Player<?> raisedPlayer = game.getPlayerById(report.getPlayerId());
   		print(getIndent(), false, raisedPlayer);
   		if (report.isNurglesRot()) {
-  			print(getIndent(), " has been infected with Nurgle's Rot and will join team ");
+			  GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+  			print(getIndent(), gameMechanic.raisedByNurgleMessage());
   		} else {
   			print(getIndent(), " is raised from the dead to join team ");
   		}

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.inducement.Card;
+import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -210,7 +211,7 @@ public class UtilServerInjury {
 						deadPlayer.getId());
 			} else {
 				Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
-				if ((attacker != null) && attacker.hasSkillProperty(NamedProperties.hasNurglesRot)
+				if ((attacker != null) && attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman)
 						&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
 						&& !deadPlayer.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
@@ -246,9 +247,9 @@ public class UtilServerInjury {
 		if (zombiePosition != null) {
 			pNecroTeamResult.setRaisedDead(pNecroTeamResult.getRaisedDead() + 1);
 			raisedPlayer = new RosterPlayer();
-			StringBuilder raisedPlayerId = new StringBuilder().append(killedId).append("R")
-					.append(pNecroTeamResult.getRaisedDead());
-			raisedPlayer.setId(raisedPlayerId.toString());
+			String raisedPlayerId = killedId + "R" +
+				pNecroTeamResult.getRaisedDead();
+			raisedPlayer.setId(raisedPlayerId);
 			raisedPlayer.updatePosition(zombiePosition, pGame.getRules());
 			raisedPlayer.setName(pPlayerName);
 			raisedPlayer.setNr(pNecroTeam.getMaxPlayerNr() + 1);
@@ -258,8 +259,9 @@ public class UtilServerInjury {
 			playerResult.setSendToBoxHalf(pGame.getHalf());
 			playerResult.setSendToBoxTurn(pGame.getTurnData().getTurnNr());
 			if (pNurglesRot) {
+				GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(PlayerState.MISSING));
-				playerResult.setSendToBoxReason(SendToBoxReason.NURGLES_ROT);
+				playerResult.setSendToBoxReason(mechanic.raisedByNurgleReason());
 			} else {
 				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(PlayerState.RESERVE));
 				playerResult.setSendToBoxReason(SendToBoxReason.RAISED);

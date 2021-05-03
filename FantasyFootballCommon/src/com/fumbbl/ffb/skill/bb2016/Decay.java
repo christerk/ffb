@@ -23,7 +23,7 @@ public class Decay extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(new CancelSkillProperty(NamedProperties.hasNurglesRot));
+		registerProperty(new CancelSkillProperty(NamedProperties.allowsRaisingLineman));
 
 		registerProperty(NamedProperties.requiresSecondCasualtyRoll);
 	}

@@ -30,7 +30,7 @@ public class Regeneration extends Skill {
 		registerProperty(NamedProperties.preventRaiseFromDead);
 		registerProperty(NamedProperties.canRollToSaveFromInjury);
 
-		registerProperty(new CancelSkillProperty(NamedProperties.hasNurglesRot));
+		registerProperty(new CancelSkillProperty(NamedProperties.allowsRaisingLineman));
 
 	}
 

@@ -13,6 +13,7 @@ public class NamedProperties {
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnDodge = new NamedProperty("Affects Either Armour Or Injury On Dodge");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnFoul = new NamedProperty("Affects Either Armour Or Injury On Foul");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnJump = new NamedProperty("Affects Either Armour Or Injury On Jump");
+	public static final ISkillProperty allowsRaisingLineman = new NamedProperty("Allows Raising Lineman");
 	public static final ISkillProperty allowStandUpAssists = new NamedProperty("Allow Stand Up Assists");
 	public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
 	public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
@@ -97,7 +98,6 @@ public class NamedProperties {
 	public static final ISkillProperty grantsTeamRerollWhenOnPitch = new NamedProperty(
 			"Grants Team Reroll When On Pitch");
 	public static final ISkillProperty hasNoTacklezone = new NamedProperty("Has No Tacklezone");
-	public static final ISkillProperty hasNurglesRot = new NamedProperty("Has Nurgles Rot");
 	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
 	public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty(

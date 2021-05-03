@@ -18,12 +18,12 @@ public enum SendToBoxReason implements INamedObject {
 	NURGLES_ROT("nurglesRot", "has been infected with Nurgle's Rot"), RAISED("raised", "has been raised from the dead"),
 	LIGHTNING("lightning", "has been hit by a lightning bolt"), FIREBALL("fireball", "has been hit by a fireball"),
 	KO_ON_PILING_ON("koOnPilingOn", "has been knocked out while Piling On"), BOMB("bomb", "has been hit by a bomb"),
-	BALL_AND_CHAIN("ballAndChain", "has been hit by a ball and chain");
+	BALL_AND_CHAIN("ballAndChain", "has been hit by a ball and chain"), PLAGUE_RIDDEN("plagueRidden", "is now plague ridden");
 
-	private String fName;
-	private String fReason;
+	private final String fName;
+	private final String fReason;
 
-	private SendToBoxReason(String pName, String pReason) {
+	SendToBoxReason(String pName, String pReason) {
 		fName = pName;
 		fReason = pReason;
 	}
