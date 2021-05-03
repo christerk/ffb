@@ -102,11 +102,11 @@ import java.util.List;
  *
  * @author Kalimar
  */
-public class  ClientCommunication implements Runnable, INetCommandHandler {
+public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	private boolean fStopped;
-	private List<NetCommand> fCommandQueue;
-	private FantasyFootballClient fClient;
+	private final List<NetCommand> fCommandQueue;
+	private final FantasyFootballClient fClient;
 
 	public ClientCommunication(FantasyFootballClient pClient) {
 		fClient = pClient;
