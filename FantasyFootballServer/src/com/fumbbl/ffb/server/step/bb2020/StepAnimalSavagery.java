@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class StepAnimalSavagery extends AbstractStepWithReRoll {
 
 	public static class StepState {
-		public String goToLabelOnFailure;
+		public String goToLabelOnFailure, goToLabelOnSuccess;
 		public String playerId;
 		public Set<String> playerIds;
 	}
@@ -48,17 +48,23 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
-					state.goToLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_FAILURE:
+						state.goToLabelOnFailure = (String) parameter.getValue();
+						break;
+					case GOTO_LABEL_ON_SUCCESS:
+						state.goToLabelOnSuccess = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
 		if (state.goToLabelOnFailure == null) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+		}
+		if (state.goToLabelOnSuccess == null) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
 		}
 	}
 
@@ -98,6 +104,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnSuccess);
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, state.playerId);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, state.playerIds);
 		return jsonObject;
@@ -108,6 +115,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
 		state.playerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		String[] playerArray = IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
 		if (playerArray != null) {

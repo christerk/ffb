@@ -17,6 +17,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
+import com.fumbbl.ffb.report.bb2020.ReportAnimalSavagery;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -115,7 +116,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					}
 				}
 				if (status == ActionStatus.SUCCESS) {
-					step.getResult().setNextAction(StepAction.NEXT_STEP);
+					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
 				} else {
 					if (status == ActionStatus.FAILURE) {
 
@@ -146,6 +147,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 							step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+							step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId()));
 						}
 					}
 				}
@@ -157,9 +159,10 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 	private void lashOut(Game game, StepAnimalSavagery step, Player<?> player) {
 		game.setDefenderId(player.getId());
+		step.getResult().addReport(new ReportAnimalSavagery(game.getActingPlayer().getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
-			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.FEEDING);
+		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(true),
+			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.DEFENDER);
 		step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
 

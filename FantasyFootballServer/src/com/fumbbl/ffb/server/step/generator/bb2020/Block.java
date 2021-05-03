@@ -25,12 +25,16 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.INIT_BLOCKING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()), from(StepParameterKey.USING_STAB, params.isUsingStab()),
 			from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()));
-		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.ANIMAL_SAVAGERY_AVOIDED),
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.PLACE_BALL);
+		sequence.add(StepId.APOTHECARY,
+			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+		sequence.jump(IStepLabel.END_BLOCKING);
+		sequence.add(StepId.BONE_HEAD, IStepLabel.ANIMAL_SAVAGERY_AVOIDED, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.DUMP_OFF);
 		sequence.add(StepId.BLOCK_STATISTICS);

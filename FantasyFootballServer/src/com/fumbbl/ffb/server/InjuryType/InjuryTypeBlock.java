@@ -24,8 +24,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
+	private boolean useModifiersVsTeamMates;
+
 	public InjuryTypeBlock() {
 		super(new Block());
+	}
+
+	public InjuryTypeBlock(boolean useModifiersVsTeamMates) {
+		this();
+		this.useModifiersVsTeamMates = useModifiersVsTeamMates;
 	}
 
 	@Override
@@ -47,7 +54,7 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 			if (chainsaw != null) {
 				chainsaw.getArmorModifiers().forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			} else if (!injuryContext.isArmorBroken() && pAttacker.getTeam() != pDefender.getTeam()) {
+			} else if (!injuryContext.isArmorBroken() && (useModifiersVsTeamMates || pAttacker.getTeam() != pDefender.getTeam())) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 					isFoul());
 				if (!armorModifiers.isEmpty()) {

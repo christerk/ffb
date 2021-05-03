@@ -16,15 +16,16 @@ public class AnimalSavageryMessage extends ReportMessageBase<ReportAnimalSavager
 	protected void render(ReportAnimalSavagery report) {
 		Player<?> attacker = game.getPlayerById(report.getAttackerId());
 
-		print(getIndent(), false, attacker);
+		int indent = getIndent() + 1;
+		print(indent, false, attacker);
 
 		if (StringTool.isProvided(report.getDefenderId())) {
 			Player<?> defender = game.getPlayerById(report.getDefenderId());
-			print(getIndent(), TextStyle.NONE, " lashes out against ");
-			print(getIndent(), false, defender);
-			println(getIndent(), TextStyle.NONE, ".");
+			print(indent, TextStyle.NONE, " lashes out against ");
+			print(indent, false, defender);
+			println(indent, TextStyle.NONE, ".");
 		} else {
-			println(getIndent(), TextStyle.NONE, " has no one to lash out against and thus loses " + attacker.getPlayerGender().getGenitive() + " action.");
+			println(indent, TextStyle.NONE, " has no one to lash out against and thus loses " + attacker.getPlayerGender().getGenitive() + " action.");
 		}
 	}
 }
