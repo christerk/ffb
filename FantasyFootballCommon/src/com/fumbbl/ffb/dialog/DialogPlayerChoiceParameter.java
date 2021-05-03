@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
@@ -14,6 +11,9 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
@@ -24,7 +24,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 	private PlayerChoiceMode fPlayerChoiceMode;
 	private List<String> fPlayerIds;
 	private List<String> fDescriptions;
-	private int fMaxSelects;
+	private int fMaxSelects, minSelects;
 
 	public DialogPlayerChoiceParameter() {
 		fPlayerIds = new ArrayList<>();
@@ -33,11 +33,11 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 
 	public DialogPlayerChoiceParameter(String pTeamId, PlayerChoiceMode pPlayerChoiceMode, Player<?>[] pPlayers,
 			String[] pDescriptions, int pMaxSelects) {
-		this(pTeamId, pPlayerChoiceMode, findPlayerIds(pPlayers), pDescriptions, pMaxSelects);
+		this(pTeamId, pPlayerChoiceMode, findPlayerIds(pPlayers), pDescriptions, pMaxSelects, 0);
 	}
 
 	public DialogPlayerChoiceParameter(String pTeamId, PlayerChoiceMode pPlayerChoiceMode, String[] pPlayerIds,
-			String[] pDescriptions, int pMaxSelects) {
+	                                   String[] pDescriptions, int pMaxSelects, int minSelects) {
 		this();
 		fTeamId = pTeamId;
 		fPlayerChoiceMode = pPlayerChoiceMode;
@@ -58,12 +58,16 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 		return fMaxSelects;
 	}
 
+	public int getMinSelects() {
+		return minSelects;
+	}
+
 	public PlayerChoiceMode getPlayerChoiceMode() {
 		return fPlayerChoiceMode;
 	}
 
 	public String[] getPlayerIds() {
-		return fPlayerIds.toArray(new String[fPlayerIds.size()]);
+		return fPlayerIds.toArray(new String[0]);
 	}
 
 	public void addPlayerId(String pPlayerId) {
@@ -114,7 +118,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 
 	public IDialogParameter transform() {
 		return new DialogPlayerChoiceParameter(getTeamId(), getPlayerChoiceMode(), getPlayerIds(), getDescriptions(),
-				getMaxSelects());
+				getMaxSelects(), minSelects);
 	}
 
 	// JSON serialization

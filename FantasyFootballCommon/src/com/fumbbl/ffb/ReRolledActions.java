@@ -13,8 +13,9 @@ import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.ReallyStupid;
 import com.fumbbl.ffb.skill.TakeRoot;
 import com.fumbbl.ffb.skill.ThrowTeamMate;
-import com.fumbbl.ffb.skill.WildAnimal;
 import com.fumbbl.ffb.skill.bb2016.RightStuff;
+import com.fumbbl.ffb.skill.bb2016.WildAnimal;
+import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class ReRolledActions {
 	public static final ReRolledAction REALLY_STUPID = new ReRolledAction(ReallyStupid.class);
 	public static final ReRolledAction BONE_HEAD = new ReRolledAction(BoneHead.class);
 	public static final ReRolledAction WILD_ANIMAL = new ReRolledAction(WildAnimal.class);
+	public static final ReRolledAction ANIMAL_SAVAGERY = new ReRolledAction(AnimalSavagery.class);
 	public static final ReRolledAction TAKE_ROOT = new ReRolledAction(TakeRoot.class);
 	public static final ReRolledAction WINNINGS = new ReRolledAction("Winnings");
 	public static final ReRolledAction ALWAYS_HUNGRY = new ReRolledAction(AlwaysHungry.class);

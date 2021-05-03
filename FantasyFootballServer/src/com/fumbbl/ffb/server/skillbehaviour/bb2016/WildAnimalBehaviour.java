@@ -4,8 +4,8 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -19,10 +19,10 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.action.common.StepWildAnimal;
-import com.fumbbl.ffb.server.step.action.common.StepWildAnimal.StepState;
+import com.fumbbl.ffb.server.step.bb2016.StepWildAnimal;
+import com.fumbbl.ffb.server.step.bb2016.StepWildAnimal.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.WildAnimal;
+import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)
@@ -30,7 +30,7 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 	public WildAnimalBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepWildAnimal, StepWildAnimal.StepState>() {
+		registerModifier(new StepModifier<StepWildAnimal, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepWildAnimal step, StepState state,
@@ -39,8 +39,7 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 			}
 
 			@Override
-			public boolean handleExecuteStepHook(StepWildAnimal step,
-					com.fumbbl.ffb.server.step.action.common.StepWildAnimal.StepState state) {
+			public boolean handleExecuteStepHook(StepWildAnimal step, StepState state) {
 
 				ActionStatus status = ActionStatus.SUCCESS;
 				Game game = step.getGameState().getGame();
@@ -146,10 +145,6 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 		}
 		game.setPassCoordinate(null);
 		step.getResult().setSound(SoundId.ROAR);
-	}
-
-	public int getByteArraySerializationVersion() {
-		return 1;
 	}
 
 }

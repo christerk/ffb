@@ -1,8 +1,8 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -14,7 +14,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * to the roll if taking a Block or Blitz Action. On a roll of 1-3, the Wild
  * Animal does not move and roars in rage instead, and the Action is wasted.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class WildAnimal extends Skill {
 
 	public WildAnimal() {

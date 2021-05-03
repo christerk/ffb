@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.server.step.game.end;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.PlayerChoiceMode;
@@ -33,6 +30,9 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.ListTool;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Step in end game sequence to determine the MVP.
@@ -142,9 +142,10 @@ public final class StepMvp extends AbstractStep {
 						fHomePlayersMvp.add(playersForMvp[0]);
 						fNrOfHomeChoices++;
 					} else {
+						int maxSelects = Math.min(mvpNominations, playersForMvp.length);
 						DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(game.getTeamHome().getId(),
 								PlayerChoiceMode.MVP, findPlayerIdsForMvp(game.getTeamHome()), null,
-								Math.min(mvpNominations, playersForMvp.length));
+							maxSelects, maxSelects);
 						UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
 					}
 				} else {
@@ -160,8 +161,9 @@ public final class StepMvp extends AbstractStep {
 						fAwayPlayersMvp.add(playersForMvp[0]);
 						fNrOfAwayChoices++;
 					} else {
+						int maxSelects = Math.min(mvpNominations, playersForMvp.length);
 						DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(game.getTeamAway().getId(),
-								PlayerChoiceMode.MVP, playersForMvp, null, Math.min(mvpNominations, playersForMvp.length));
+								PlayerChoiceMode.MVP, playersForMvp, null, maxSelects, maxSelects);
 						UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
 					}
 				} else {

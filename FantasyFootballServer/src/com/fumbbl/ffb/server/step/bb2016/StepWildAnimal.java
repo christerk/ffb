@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.common;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -26,15 +26,15 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepWildAnimal extends AbstractStepWithReRoll {
 
-	public class StepState {
+	public static class StepState {
 		public ActionStatus status;
 		public String goToLabelOnFailure;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepWildAnimal(GameState pGameState) {
 		super(pGameState);

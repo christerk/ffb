@@ -9,6 +9,7 @@ import com.fumbbl.ffb.INamedObject;
 public enum StepId implements INamedObject {
 
 	ALWAYS_HUNGRY("alwaysHungry"), // action.ttm
+	ANIMAL_SAVAGERY("animalSavagery"), // action.common
 	ANIMOSITY("animosity"), // action.pass
 	APOTHECARY("apothecary"), // action.common
 	APOTHECARY_MULTIPLE("apothecaryMultiple"), // action.multiBlock 2020
