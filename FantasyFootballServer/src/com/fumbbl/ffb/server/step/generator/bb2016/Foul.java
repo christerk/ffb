@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.common;
-
-import static com.fumbbl.ffb.server.step.StepParameter.from;
+package com.fumbbl.ffb.server.step.generator.bb2016;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
@@ -10,14 +8,11 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class Foul extends SequenceGenerator<Foul.SequenceParams> {
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-	public Foul() {
-		super(Type.Foul);
-	}
+@RulesCollection(RulesCollection.Rules.BB2016)
+public class Foul extends com.fumbbl.ffb.server.step.generator.Foul {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
@@ -27,7 +22,7 @@ public class Foul extends SequenceGenerator<Foul.SequenceParams> {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_FOULING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING),
-			from(StepParameterKey.FOUL_DEFENDER_ID, params.fouldDefenderId), from(StepParameterKey.USING_CHAINSAW, params.usingChainsaw));
+			from(StepParameterKey.FOUL_DEFENDER_ID, params.getFouledDefenderId()), from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
@@ -48,18 +43,4 @@ public class Foul extends SequenceGenerator<Foul.SequenceParams> {
 		gameState.getStepStack().push(sequence.getSequence());
 	}
 
-	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final String fouldDefenderId;
-		private final boolean usingChainsaw;
-
-		public SequenceParams(GameState gameState, String fouldDefenderId, boolean usingChainsaw) {
-			super(gameState);
-			this.fouldDefenderId = fouldDefenderId;
-			this.usingChainsaw = usingChainsaw;
-		}
-
-		public SequenceParams(GameState gameState) {
-			this(gameState, null, false);
-		}
-	}
 }

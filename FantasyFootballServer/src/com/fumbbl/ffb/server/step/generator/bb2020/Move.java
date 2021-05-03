@@ -1,9 +1,6 @@
-package com.fumbbl.ffb.server.step.generator.common;
-
-import static com.fumbbl.ffb.server.step.StepParameter.from;
+package com.fumbbl.ffb.server.step.generator.bb2020;
 
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -11,14 +8,11 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class Move extends SequenceGenerator<Move.SequenceParams> {
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-	public Move() {
-		super(Type.Move);
-	}
+@RulesCollection(RulesCollection.Rules.BB2020)
+public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
@@ -29,7 +23,7 @@ public class Move extends SequenceGenerator<Move.SequenceParams> {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_MOVING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
-			from(StepParameterKey.MOVE_STACK, params.pMoveStack), from(StepParameterKey.GAZE_VICTIM_ID, params.pGazeVictimId));
+			from(StepParameterKey.MOVE_STACK, params.getMoveStack()), from(StepParameterKey.GAZE_VICTIM_ID, params.getGazeVictimId()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
@@ -45,7 +39,7 @@ public class Move extends SequenceGenerator<Move.SequenceParams> {
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN),
 			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
 		sequence.add(StepId.TENTACLES, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_MOVING));
-		sequence.add(StepId.JUMP, from(StepParameterKey.MOVE_START, params.moveStart), from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
+		sequence.add(StepId.JUMP, from(StepParameterKey.MOVE_START, params.getMoveStart()), from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.MOVE_DODGE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.DIVING_TACKLE, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.RETRY_DODGE));
 		sequence.jump(IStepLabel.SHADOWING);
@@ -65,22 +59,5 @@ public class Move extends SequenceGenerator<Move.SequenceParams> {
 		// may insert endTurn or block sequence add this point
 
 		gameState.getStepStack().push(sequence.getSequence());
-	}
-
-	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final FieldCoordinate[] pMoveStack;
-		private final String pGazeVictimId;
-		private final FieldCoordinate moveStart;
-
-		public SequenceParams(GameState gameState, FieldCoordinate[] pMoveStack, String pGazeVictimId, FieldCoordinate moveStart) {
-			super(gameState);
-			this.pMoveStack = pMoveStack;
-			this.pGazeVictimId = pGazeVictimId;
-			this.moveStart = moveStart;
-		}
-
-		public SequenceParams(GameState gameState) {
-			this(gameState, null, null, null);
-		}
 	}
 }

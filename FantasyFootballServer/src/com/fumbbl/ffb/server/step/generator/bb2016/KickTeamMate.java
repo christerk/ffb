@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.common;
-
-import static com.fumbbl.ffb.server.step.StepParameter.from;
+package com.fumbbl.ffb.server.step.generator.bb2016;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
@@ -10,14 +8,11 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class KickTeamMate extends SequenceGenerator<KickTeamMate.SequenceParams> {
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-	public KickTeamMate() {
-		super(Type.KickTeamMate);
-	}
+@RulesCollection(RulesCollection.Rules.BB2016)
+public class KickTeamMate extends com.fumbbl.ffb.server.step.generator.KickTeamMate {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
@@ -28,7 +23,7 @@ public class KickTeamMate extends SequenceGenerator<KickTeamMate.SequenceParams>
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_KICK_TEAM_MATE, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICK_TEAM_MATE),
-			from(StepParameterKey.KICKED_PLAYER_ID, params.kickedPlayerId), from(StepParameterKey.NR_OF_DICE, params.numDice));
+			from(StepParameterKey.KICKED_PLAYER_ID, params.getKickedPlayerId()), from(StepParameterKey.NR_OF_DICE, params.getNumDice()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
@@ -50,18 +45,4 @@ public class KickTeamMate extends SequenceGenerator<KickTeamMate.SequenceParams>
 		gameState.getStepStack().push(sequence.getSequence());
 	}
 
-	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final int numDice;
-		private final String kickedPlayerId;
-
-		public SequenceParams(GameState gameState, int numDice, String kickedPlayerId) {
-			super(gameState);
-			this.numDice = numDice;
-			this.kickedPlayerId = kickedPlayerId;
-		}
-
-		public SequenceParams(GameState gameState) {
-			this(gameState, 0, null);
-		}
-	}
 }
