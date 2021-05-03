@@ -10,6 +10,7 @@ Behaviour Changes:
     + Fumblerooskie
     + Iron Hard Skin
     + Defensive
+    + Animal Savagery
 
 Technical Changes:
 - Unify suppression syntax
