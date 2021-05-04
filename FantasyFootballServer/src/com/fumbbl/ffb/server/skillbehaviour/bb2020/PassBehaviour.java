@@ -99,7 +99,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 									new DialogSkillUseParameter(game.getThrowerId(), skill, 2),
 									actingTeam.hasPlayer(game.getThrower()));
 							} else {
-								if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(),
+								if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(),
 										ReRolledActions.PASS, 2, false)) {
 									doNextStep = false;
 								}

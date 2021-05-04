@@ -98,7 +98,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 								UtilServerDialog.showDialog(step.getGameState(),
 										new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(game), minimumRoll), false);
 							} else {
-								if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+								if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 										ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
 									step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 								}

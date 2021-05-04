@@ -162,7 +162,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 						UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
 						return pickUp();
 					} else {
-						if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+						if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 								ReRolledActions.PICK_UP, minimumRoll, false)) {
 							return ActionStatus.WAITING_FOR_RE_ROLL;
 						} else {

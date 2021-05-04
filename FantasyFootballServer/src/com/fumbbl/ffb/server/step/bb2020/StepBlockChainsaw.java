@@ -140,7 +140,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
 					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
 				} else {
-					if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+					if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 							ReRolledActions.CHAINSAW, minimumRoll, false)) {
 						dropChainsawPlayer = true;
 					}

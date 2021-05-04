@@ -73,7 +73,7 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 							actingPlayer.markSkillUsed(skill);
 							step.publishParameter(new StepParameter(StepParameterKey.SUCCESSFUL_DAUNTLESS, true));
 						} else {
-							if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+							if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 									ReRolledActions.DAUNTLESS, minimumRoll, false)) {
 								doNextStep = false;
 							}

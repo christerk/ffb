@@ -72,7 +72,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						if (mayBlock) {
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
-							if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 									ReRolledActions.FOUL_APPEARANCE, minimumRoll, false)) {
 								handleFailure(step, state, game, actingPlayer);
 							}

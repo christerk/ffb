@@ -121,7 +121,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 					publishParameter(StepParameter.from(StepParameterKey.USING_CHAINSAW, true));
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
-					if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+					if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 							ReRolledActions.CHAINSAW, minimumRoll, false)) {
 						dropChainsawPlayer = true;
 					}

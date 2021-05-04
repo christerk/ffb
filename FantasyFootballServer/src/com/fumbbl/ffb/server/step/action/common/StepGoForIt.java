@@ -177,7 +177,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 					UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
 					return goForIt();
 				} else {
-					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 							ReRolledActions.GO_FOR_IT, minimumRoll, false)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
