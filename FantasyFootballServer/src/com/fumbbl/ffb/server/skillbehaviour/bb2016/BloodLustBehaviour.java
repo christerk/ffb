@@ -15,10 +15,10 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.action.common.StepBloodLust;
-import com.fumbbl.ffb.server.step.action.common.StepBloodLust.StepState;
+import com.fumbbl.ffb.server.step.bb2016.StepBloodLust;
+import com.fumbbl.ffb.server.step.bb2016.StepBloodLust.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.BloodLust;
+import com.fumbbl.ffb.skill.bb2016.BloodLust;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -23,7 +23,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * when he was removed and he will not score a touchdown if he was in the
  * opposing end zone.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class BloodLust extends Skill {
 
 	public BloodLust() {

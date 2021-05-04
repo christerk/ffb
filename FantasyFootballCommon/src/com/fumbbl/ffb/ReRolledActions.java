@@ -2,7 +2,7 @@ package com.fumbbl.ffb;
 
 import com.fumbbl.ffb.skill.AlwaysHungry;
 import com.fumbbl.ffb.skill.Animosity;
-import com.fumbbl.ffb.skill.BloodLust;
+import com.fumbbl.ffb.skill.bb2016.BloodLust;
 import com.fumbbl.ffb.skill.BoneHead;
 import com.fumbbl.ffb.skill.Dauntless;
 import com.fumbbl.ffb.skill.FoulAppearance;
