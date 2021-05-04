@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.inducement.bb2016;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.CardTarget;
 import com.fumbbl.ffb.RulesCollection;
@@ -26,25 +21,30 @@ import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatIncrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
-import com.fumbbl.ffb.skill.Bombardier;
-import com.fumbbl.ffb.skill.BoneHead;
+import com.fumbbl.ffb.skill.bb2016.BoneHead;
 import com.fumbbl.ffb.skill.Catch;
 import com.fumbbl.ffb.skill.DisturbingPresence;
 import com.fumbbl.ffb.skill.Fend;
-import com.fumbbl.ffb.skill.HypnoticGaze;
+import com.fumbbl.ffb.skill.bb2016.HypnoticGaze;
 import com.fumbbl.ffb.skill.Kick;
-import com.fumbbl.ffb.skill.NoHands;
+import com.fumbbl.ffb.skill.bb2016.NoHands;
 import com.fumbbl.ffb.skill.Pass;
-import com.fumbbl.ffb.skill.bb2016.PassBlock;
 import com.fumbbl.ffb.skill.Pro;
-import com.fumbbl.ffb.skill.SecretWeapon;
+import com.fumbbl.ffb.skill.bb2016.SecretWeapon;
 import com.fumbbl.ffb.skill.Shadowing;
 import com.fumbbl.ffb.skill.SideStep;
 import com.fumbbl.ffb.skill.SureHands;
 import com.fumbbl.ffb.skill.bb2016.Accurate;
+import com.fumbbl.ffb.skill.bb2016.Bombardier;
 import com.fumbbl.ffb.skill.bb2016.DirtyPlayer;
 import com.fumbbl.ffb.skill.bb2016.MightyBlow;
+import com.fumbbl.ffb.skill.bb2016.PassBlock;
 import com.fumbbl.ffb.util.UtilCards;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class Cards implements com.fumbbl.ffb.inducement.Cards {

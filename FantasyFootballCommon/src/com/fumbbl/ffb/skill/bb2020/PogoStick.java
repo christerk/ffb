@@ -8,7 +8,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class PogoStick extends Skill {
 	public PogoStick() {
-		super("Pogo Stick", SkillCategory.EXTRAORDINARY);
+		super("Pogo Stick", SkillCategory.TRAIT);
 	}
 
 	@Override

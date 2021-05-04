@@ -1,14 +1,14 @@
 package com.fumbbl.ffb;
 
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.skill.JumpUp;
+import com.fumbbl.ffb.skill.bb2016.NoHands;
+import com.fumbbl.ffb.skill.bb2016.ReallyStupid;
+import com.fumbbl.ffb.skill.bb2016.BoneHead;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.skill.BoneHead;
-import com.fumbbl.ffb.skill.JumpUp;
-import com.fumbbl.ffb.skill.NoHands;
-import com.fumbbl.ffb.skill.ReallyStupid;
 
 /**
  * 

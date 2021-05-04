@@ -236,7 +236,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 			int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
 			int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-			boolean canBuyCards = cardSlots > 0 && availableInducementGoldHome >= cardPrice;
+			boolean canBuyCards = cardSlots > 0 && availableInducementGoldHome >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
 
 			boolean canBuyInducements = minimumInducementCost(game.getTeamHome()) <= availableInducementGoldHome;
 
@@ -256,7 +256,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
 		int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-		boolean canBuyCards = cardSlots > 0 && availableInducementGoldAway >= cardPrice;
+		boolean canBuyCards = cardSlots > 0 && availableInducementGoldAway >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
 
 		boolean canBuyInducements = minimumInducementCost(game.getTeamHome()) <= availableInducementGoldAway;
 
@@ -284,8 +284,12 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 	private void handleCard() {
 		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
 		CardChoice choice = currentSelection.isInitialDeckChoice() ? cardChoices.getInitial() : cardChoices.getRerolled();
-		usedCards.add(choice.getChoiceOne());
-		usedCards.add(choice.getChoiceTwo());
+		if (choice.getChoiceOne() != null) {
+			usedCards.add(choice.getChoiceOne());
+		}
+		if (choice.getChoiceTwo() != null) {
+			usedCards.add(choice.getChoiceTwo());
+		}
 		Card chosenCard = currentSelection.isFirstCardChoice() ? choice.getChoiceOne() : choice.getChoiceTwo();
 		updateChoices();
 		String changeKey = phase == Phase.HOME ? ModelChange.HOME : ModelChange.AWAY;
@@ -293,12 +297,14 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 		// we have to update the card choices on client side first before adding the card as that will trigger the redraw
 		// otherwise the model change for card choices might arrive after the coach clicked "Buy Card" again and thus the old choices could be displayed
-		if (phase == Phase.HOME) {
-			availableInducementGoldHome -= cardPrice;
-			getGameState().getGame().getTurnDataHome().getInducementSet().addAvailableCard(chosenCard);
-		} else {
-			availableInducementGoldAway -= cardPrice;
-			getGameState().getGame().getTurnDataAway().getInducementSet().addAvailableCard(chosenCard);
+		if (chosenCard != null) {
+			if (phase == Phase.HOME) {
+				availableInducementGoldHome -= cardPrice;
+				getGameState().getGame().getTurnDataHome().getInducementSet().addAvailableCard(chosenCard);
+			} else {
+				availableInducementGoldAway -= cardPrice;
+				getGameState().getGame().getTurnDataAway().getInducementSet().addAvailableCard(chosenCard);
+			}
 		}
 	}
 
@@ -335,7 +341,9 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int treasury, int availableGold, boolean canBuyCards, int cardSlots, int cardPrice) {
 
-		updateChoices();
+		if (canBuyCards) {
+			updateChoices();
+		}
 		DialogBuyCardsAndInducementsParameter dialogParameter =
 			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlots, treasury, availableGold, cardChoices, cardPrice);
 		for (CardType type : fDeckByType.keySet()) {

@@ -16,7 +16,7 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Animosity;
+import com.fumbbl.ffb.skill.bb2020.Animosity;
 
 @RulesCollection(Rules.BB2020)
 public class AnimosityBehaviour extends SkillBehaviour<Animosity> {

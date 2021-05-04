@@ -25,7 +25,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Animosity;
+import com.fumbbl.ffb.skill.bb2016.Animosity;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;

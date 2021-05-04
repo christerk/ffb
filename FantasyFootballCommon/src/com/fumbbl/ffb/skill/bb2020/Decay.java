@@ -19,7 +19,7 @@ import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 public class Decay extends Skill {
 
 	public Decay() {
-		super("Decay", SkillCategory.EXTRAORDINARY);
+		super("Decay", SkillCategory.TRAIT);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.skillbehaviour.bb2020.StepTakeRoot.StepState;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.TakeRoot;
+import com.fumbbl.ffb.skill.bb2020.TakeRoot;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)

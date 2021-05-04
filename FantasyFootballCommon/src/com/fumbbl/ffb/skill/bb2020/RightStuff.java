@@ -24,7 +24,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class RightStuff extends Skill {
 
 	public RightStuff() {
-		super("Right Stuff", SkillCategory.EXTRAORDINARY);
+		super("Right Stuff", SkillCategory.TRAIT);
 	}
 
 	@Override

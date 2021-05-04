@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.common.StepBoneHead;
 import com.fumbbl.ffb.server.step.action.common.StepBoneHead.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.BoneHead;
+import com.fumbbl.ffb.skill.bb2016.BoneHead;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)

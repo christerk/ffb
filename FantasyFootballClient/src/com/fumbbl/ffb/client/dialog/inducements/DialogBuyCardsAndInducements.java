@@ -70,7 +70,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(verticalMainPanel, BorderLayout.CENTER);
-		showAddCardButton();
+		showDialog();
+
 
 		setLocationToCenter();
 		Point p = getLocation();
@@ -171,7 +172,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		return panelGold;
 	}
 
-	private void showAddCardButton() {
+	private void showDialog() {
 		super.okButton.setEnabled(true);
 		dynamicPanel.removeAll();
 		dynamicPanel.add(addCardPanel);
@@ -192,8 +193,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		currentChoice = choice;
 		dynamicPanel.removeAll();
 		typeLabel.setText("<html>Choose from<br/>" + choice.getType().getDeckName() + "</html>");
-		choiceOneButton.setText(choice.getChoiceOne().getName());
-		choiceTwoButton.setText(choice.getChoiceTwo().getName());
+		if (choice.getChoiceOne() != null) {
+			choiceOneButton.setText(choice.getChoiceOne().getName());
+		}
+		if (choice.getChoiceTwo() != null) {
+			choiceTwoButton.setText(choice.getChoiceTwo().getName());
+		}
 		dynamicPanel.add(cardChoicePanel);
 		getContentPane().validate();
 		pack();
@@ -287,7 +292,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		setAvailableGold(availableGold - cardPrice);
 		nrOfCardsPerType.put(card.getType(), nrOfCardsPerType.get(card.getType()) - 2);
 		updateSummaryPanel();
-		showAddCardButton();
+		showDialog();
 	}
 
 	public DialogId getId() {

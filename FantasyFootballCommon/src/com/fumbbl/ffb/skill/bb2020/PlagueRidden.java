@@ -21,7 +21,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class PlagueRidden extends Skill {
 
 	public PlagueRidden() {
-		super("Plague Ridden", SkillCategory.EXTRAORDINARY);
+		super("Plague Ridden", SkillCategory.TRAIT);
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class AnimalSavagery extends Skill {
 
 	public AnimalSavagery() {
-		super("Animal Savagery", SkillCategory.EXTRAORDINARY);
+		super("Animal Savagery", SkillCategory.TRAIT);
 	}
 
 	@Override

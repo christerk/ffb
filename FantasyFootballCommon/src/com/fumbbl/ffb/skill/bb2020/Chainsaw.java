@@ -33,7 +33,7 @@ import com.fumbbl.ffb.modifiers.StaticArmourModifier;
 public class Chainsaw extends Skill {
 
 	public Chainsaw() {
-		super("Chainsaw", SkillCategory.EXTRAORDINARY);
+		super("Chainsaw", SkillCategory.TRAIT);
 	}
 
 	@Override

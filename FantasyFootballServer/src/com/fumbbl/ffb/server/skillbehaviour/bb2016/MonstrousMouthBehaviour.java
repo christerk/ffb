@@ -9,7 +9,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.bb2016.StepCatchScatterThrowIn;
 import com.fumbbl.ffb.server.step.bb2016.StepCatchScatterThrowIn.StepState;
-import com.fumbbl.ffb.skill.MonstrousMouth;
+import com.fumbbl.ffb.skill.bb2016.MonstrousMouth;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)

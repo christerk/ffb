@@ -27,7 +27,7 @@ import com.fumbbl.ffb.modifiers.StaticInjuryModifier;
 public class Stunty extends Skill {
 
 	public Stunty() {
-		super("Stunty", SkillCategory.EXTRAORDINARY);
+		super("Stunty", SkillCategory.TRAIT);
 	}
 
 	@Override

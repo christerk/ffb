@@ -12,13 +12,8 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.skill.Dodge;
-import com.fumbbl.ffb.skill.NoHands;
-import com.fumbbl.ffb.skill.Titchy;
-import com.fumbbl.ffb.skill.bb2016.Leap;
-import com.fumbbl.ffb.skill.bb2016.Stunty;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -46,11 +41,11 @@ public class ZappedPosition implements Position {
 		this.originalPosition = originalPosition;
 		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
 		skills.add(factory.forClass(Dodge.class));
-		skills.add(factory.forClass(NoHands.class));
-		skills.add(factory.forClass(Titchy.class));
-		skills.add(factory.forClass(Stunty.class));
+		skills.add(factory.forName("No Hands"));
+		skills.add(factory.forName("Titchy"));
+		skills.add(factory.forName("Stunty"));
 		skills.add(factory.forName("Very Long Legs"));
-		skills.add(factory.forClass(Leap.class));
+		skills.add(factory.forName("Leap"));
 	}
 
 	@Override

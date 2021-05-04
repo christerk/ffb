@@ -8,7 +8,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class ProjectileVomit extends Skill {
 	public ProjectileVomit() {
-		super("Projectile Vomit", SkillCategory.EXTRAORDINARY);
+		super("Projectile Vomit", SkillCategory.TRAIT);
 	}
 
 	@Override

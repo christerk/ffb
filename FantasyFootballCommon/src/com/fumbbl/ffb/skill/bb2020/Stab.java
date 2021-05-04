@@ -21,7 +21,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class Stab extends Skill {
 
 	public Stab() {
-		super("Stab", SkillCategory.EXTRAORDINARY);
+		super("Stab", SkillCategory.TRAIT);
 	}
 
 	@Override

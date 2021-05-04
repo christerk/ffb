@@ -19,7 +19,7 @@ import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 public class Loner extends Skill {
 
 	public Loner() {
-		super("Loner", SkillCategory.EXTRAORDINARY, 4);
+		super("Loner", SkillCategory.TRAIT, 4);
 	}
 
 	@Override
