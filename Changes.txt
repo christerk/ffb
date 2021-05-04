@@ -17,6 +17,7 @@ Behaviour Changes:
 
 Technical Changes:
 - Unify suppression syntax
+- Bloodlust removed from 2020 ruleset
 
 Areas of Testing:
 
@@ -43,3 +44,4 @@ Bugfixes:
 - Block on Blitz without prior movement used regular Block sequence e.g. prompting for negatraits again and not resetting blitz marker
 - Mighty Blow was applied to foul armor rolls
 - End turn or end action did not work when selecting blitz target (happened when failing a nega trait)
+- Some rolls could have been rerolled multiple times
