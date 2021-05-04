@@ -386,7 +386,7 @@ public final class StepInitSelecting extends AbstractStep {
 	private void handleUnsetBlockTarget(Game game, ClientCommandUnsetBlockTargetSelection command) {
 		Player<?> player = game.getPlayerById(command.getPlayerId());
 		FieldModel fieldModel = game.getFieldModel();
-		PlayerState playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false);
+		PlayerState playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false).changeSelectedChainsawTarget(false);
 		fieldModel.setPlayerState(player, playerState);
 	}
 
