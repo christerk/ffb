@@ -9,5 +9,5 @@ Areas of Testing:
 
 - Traits
 
-
 Bugfixes:
+ - Clear chainsaw marker when deselecting multi block player
