@@ -123,7 +123,8 @@ public class UtilClientStateBlocking {
 			menuItemList.add(chainsawAction);
 		}
 		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail)) {
-			JMenuItem projectileVomit = new JMenuItem("Projectile Vomit");
+			JMenuItem projectileVomit = new JMenuItem("Projectile Vomit",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
 			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 			projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
 			menuItemList.add(projectileVomit);

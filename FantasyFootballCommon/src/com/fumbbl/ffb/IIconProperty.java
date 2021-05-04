@@ -156,6 +156,7 @@ public interface IIconProperty {
 	String ACTION_BOMB = "action.bomb";
 	String ACTION_TOGGLE_HAIL_MARY_BOMB = "action.toggle.hailMaryBomb";
 	String ACTION_CHAINSAW = "action.chainsaw";
+	String ACTION_VOMIT = "action.vomit";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

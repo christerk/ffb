@@ -1,5 +1,6 @@
 Behaviour Changes:
 - Cards for 2020 removed
+- New icons for vomit, blitz target and chainsaw
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
