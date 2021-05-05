@@ -331,12 +331,12 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
 				NamedProperties.increasesTeamsFame).length;
 		int totalAway = rollAway + gameResult.getTeamResultAway().getFame() + fanFavouritesAway;
-		if (fKickoffResult == KickoffResult.CHEERING_FANS) {
+		if (fKickoffResult.isFanReRoll()) {
 			totalHome += game.getTeamHome().getCheerleaders();
 			totalAway += game.getTeamAway().getCheerleaders();
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_CHEERING_FANS));
 		}
-		if (fKickoffResult == KickoffResult.BRILLIANT_COACHING) {
+		if (fKickoffResult.isCoachReRoll()) {
 			boolean homeCoachBanned = game.getTurnDataHome().isCoachBanned();
 			boolean awayCoachBanned = game.getTurnDataAway().isCoachBanned();
 

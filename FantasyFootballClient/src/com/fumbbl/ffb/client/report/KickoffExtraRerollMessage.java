@@ -23,7 +23,7 @@ public class KickoffExtraRerollMessage extends ReportMessageBase<ReportKickoffEx
   		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
   			NamedProperties.increasesTeamsFame).length;
   		StringBuilder status = new StringBuilder();
-  		if (kickoffResult == KickoffResult.CHEERING_FANS) {
+  		if (kickoffResult.isFanReRoll()) {
   			status.append("Cheering Fans Roll Home Team [ ").append(report.getRollHome()).append(" ]");
   			println(getIndent(), TextStyle.ROLL, status.toString());
   			int totalHome = report.getRollHome() + gameResult.getTeamResultHome().getFame() + fanFavouritesHome
@@ -48,7 +48,7 @@ public class KickoffExtraRerollMessage extends ReportMessageBase<ReportKickoffEx
   			status.append(" = ").append(totalAway).append(".");
   			println(getIndent() + 1, status.toString());
   		}
-  		if (kickoffResult == KickoffResult.BRILLIANT_COACHING) {
+  		if (kickoffResult.isCoachReRoll()) {
   			boolean homeBanned = game.getTurnDataHome().isCoachBanned();
   			boolean awayBanned = game.getTurnDataAway().isCoachBanned();
 
