@@ -2,9 +2,11 @@ package com.fumbbl.ffb.factory;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.KickoffResult;
+import com.fumbbl.ffb.KickoffResultMapping;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.util.Scanner;
 
 /**
  * 
@@ -12,10 +14,12 @@ import com.fumbbl.ffb.model.Game;
  */
 @FactoryType(FactoryType.Factory.KICKOFF_RESULT)
 @RulesCollection(Rules.COMMON)
-public class KickoffResultFactory implements INamedObjectFactory {
+public class KickoffResultFactory implements INamedObjectFactory<KickoffResult> {
+
+	private KickoffResultMapping mapping;
 
 	public KickoffResult forName(String pName) {
-		for (KickoffResult kickoff : KickoffResult.values()) {
+		for (KickoffResult kickoff : mapping.getValues()) {
 			if (kickoff.getName().equalsIgnoreCase(pName)) {
 				return kickoff;
 			}
@@ -24,38 +28,13 @@ public class KickoffResultFactory implements INamedObjectFactory {
 	}
 
 	public KickoffResult forRoll(int pRoll) {
-		switch (pRoll) {
-		case 2:
-			return KickoffResult.GET_THE_REF;
-		case 3:
-			return KickoffResult.RIOT;
-		case 4:
-			return KickoffResult.PERFECT_DEFENCE;
-		case 5:
-			return KickoffResult.HIGH_KICK;
-		case 6:
-			return KickoffResult.CHEERING_FANS;
-		case 7:
-			return KickoffResult.WEATHER_CHANGE;
-		case 8:
-			return KickoffResult.BRILLIANT_COACHING;
-		case 9:
-			return KickoffResult.QUICK_SNAP;
-		case 10:
-			return KickoffResult.BLITZ;
-		case 11:
-			return KickoffResult.THROW_A_ROCK;
-		case 12:
-			return KickoffResult.PITCH_INVASION;
-		default:
-			return null;
-		}
+		return mapping.getResult(pRoll);
 	}
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
+		new Scanner<>(KickoffResultMapping.class).getSubclasses(game.getOptions())
+			.stream().findFirst().ifPresent(mapping -> this.mapping = mapping);
 	}
 
 }

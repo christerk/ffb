@@ -59,7 +59,7 @@ public final class StepKickoffResultRoll extends AbstractStep {
 		UtilServerDialog.hideDialog(getGameState());
 
 		int[] rollKickoff = getGameState().getDiceRoller().rollKickoff();
-		fKickoffResult = DiceInterpreter.getInstance().interpretRollKickoff(rollKickoff);
+		fKickoffResult = DiceInterpreter.getInstance().interpretRollKickoff(getGameState().getGame(), rollKickoff);
 		getResult().addReport(new ReportKickoffResult(fKickoffResult, rollKickoff));
 
 		publishParameter(new StepParameter(StepParameterKey.KICKOFF_RESULT, fKickoffResult));

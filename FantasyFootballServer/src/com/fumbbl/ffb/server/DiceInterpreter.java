@@ -43,9 +43,9 @@ public class DiceInterpreter {
 		super();
 	}
 
-	public KickoffResult interpretRollKickoff(int[] roll) {
+	public KickoffResult interpretRollKickoff(Game game, int[] roll) {
 		int kickoffRoll = roll[0] + roll[1];
-		return new KickoffResultFactory().forRoll(kickoffRoll);
+		return ((KickoffResultFactory) game.getFactory(Factory.KICKOFF_RESULT)).forRoll(kickoffRoll);
 	}
 
 	public Weather interpretRollWeather(int[] roll) {
