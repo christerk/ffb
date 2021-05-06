@@ -1,4 +1,6 @@
-package com.fumbbl.ffb;
+package com.fumbbl.ffb.kickoff;
+
+import com.fumbbl.ffb.IKeyedItem;
 
 import java.util.Collection;
 

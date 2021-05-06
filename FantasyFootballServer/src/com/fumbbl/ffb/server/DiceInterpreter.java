@@ -5,7 +5,7 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryContext;
-import com.fumbbl.ffb.KickoffResult;
+import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.Weather;

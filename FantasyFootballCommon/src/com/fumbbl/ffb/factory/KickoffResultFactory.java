@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.factory;
 
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.KickoffResult;
-import com.fumbbl.ffb.KickoffResultMapping;
+import com.fumbbl.ffb.kickoff.KickoffResult;
+import com.fumbbl.ffb.kickoff.KickoffResultMapping;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.Game;

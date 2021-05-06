@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.report;
 
-import com.fumbbl.ffb.KickoffResult;
+import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
