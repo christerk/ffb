@@ -6,8 +6,6 @@ public interface KickoffResult extends INamedObject {
 
 	String getName();
 
-	String getTitle();
-
 	String getDescription();
 
 	boolean isFanReRoll();
