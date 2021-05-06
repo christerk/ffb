@@ -39,6 +39,8 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceKickoff.KICKOFF_NICE;
 			case KICKOFF_PERFECT_DEFENSE:
 				return AnimationSequenceKickoff.KICKOFF_PERFECT_DEFENSE;
+			case KICKOFF_SOLID_DEFENSE:
+				return AnimationSequenceKickoff.KICKOFF_SOLID_DEFENSE;
 			case KICKOFF_PITCH_INVASION:
 				return AnimationSequenceKickoff.KICKOFF_PITCH_INVASION;
 			case KICKOFF_POURING_RAIN:

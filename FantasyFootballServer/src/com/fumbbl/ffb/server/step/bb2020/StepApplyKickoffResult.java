@@ -183,8 +183,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			case TIME_OUT:
 			handleTimeout();
 			break;
-		case PERFECT_DEFENCE:
-			handlePerfectDefense();
+		case SOLID_DEFENCE:
+			handleSolidDefense();
 			break;
 		case HIGH_KICK:
 			handleHighKick();
@@ -234,9 +234,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-	private void handlePerfectDefense() {
+	private void handleSolidDefense() {
 		Game game = getGameState().getGame();
-		if (game.getTurnMode() == TurnMode.PERFECT_DEFENCE) {
+		if (game.getTurnMode() == TurnMode.SOLID_DEFENCE) {
 			if (fEndKickoff) {
 				if (UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
 					getGameState().setKickingSwarmers(0);
@@ -247,8 +247,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				}
 			}
 		} else {
-			getResult().setAnimation(new Animation(AnimationType.KICKOFF_PERFECT_DEFENSE));
-			game.setTurnMode(TurnMode.PERFECT_DEFENCE);
+			getResult().setAnimation(new Animation(AnimationType.KICKOFF_SOLID_DEFENSE));
+			game.setTurnMode(TurnMode.SOLID_DEFENCE);
 		}
 	}
 

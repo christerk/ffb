@@ -40,6 +40,9 @@ public class AnimationSequenceKickoff implements IAnimationSequence, ActionListe
 	public static final AnimationSequenceKickoff KICKOFF_PERFECT_DEFENSE = createAnimationSequence(
 			IIconProperty.ANIMATION_KICKOFF_PERFECT_DEFENSE);
 
+	public static final AnimationSequenceKickoff KICKOFF_SOLID_DEFENSE = createAnimationSequence(
+		IIconProperty.ANIMATION_KICKOFF_SOLID_DEFENCE);
+
 	public static final AnimationSequenceKickoff KICKOFF_PITCH_INVASION = createAnimationSequence(
 			IIconProperty.ANIMATION_KICKOFF_PITCH_INVASION);
 

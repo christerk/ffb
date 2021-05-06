@@ -6,7 +6,8 @@ package com.fumbbl.ffb;
  */
 public enum TurnMode implements INamedObject {
 
-	REGULAR("regular", true), SETUP("setup", true), KICKOFF("kickoff", true), PERFECT_DEFENCE("perfectDefence", true),
+	REGULAR("regular", true), SETUP("setup", true), KICKOFF("kickoff", true),
+	PERFECT_DEFENCE("perfectDefence", true), SOLID_DEFENCE("solidDefence", true),
 	QUICK_SNAP("quickSnap", true), HIGH_KICK("highKick", true), START_GAME("startGame", true), BLITZ("blitz", true),
 	TOUCHBACK("touchback", true), INTERCEPTION("interception", true), END_GAME("endGame", true),
 	SWARMING("swarming", true), KICKOFF_RETURN("kickoffReturn", true), WIZARD("wizard", true),

@@ -14,11 +14,11 @@ public enum ClientStateId implements INamedObject {
 	WAIT_FOR_SETUP("waitForSetup"), GAZE("gaze"), KICKOFF_RETURN("kickoffReturn"), SWARMING("swarming"), WIZARD("wizard"),
 	PASS_BLOCK("passBlock"), BOMB("bomb"), ILLEGAL_SUBSTITUTION("illegalSubstitution"),
 	SELECT_BLITZ_TARGET("selectBlitzTarget"), SYNCHRONOUS_MULTI_BLOCK("synchronousMultiBlock"),
-	PLACE_BALL("safePairOfHands");
+	PLACE_BALL("safePairOfHands"), SOLID_DEFENCE("solidDefence");
 
-	private String fName;
+	private final String fName;
 
-	private ClientStateId(String pName) {
+	ClientStateId(String pName) {
 		fName = pName;
 	}
 
