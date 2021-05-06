@@ -1,15 +1,14 @@
 package com.fumbbl.ffb.client.animation;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Timer;
-
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
+
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * 
@@ -52,6 +51,9 @@ public class AnimationSequenceKickoff implements IAnimationSequence, ActionListe
 
 	public static final AnimationSequenceKickoff KICKOFF_RIOT = createAnimationSequence(
 			IIconProperty.ANIMATION_KICKOFF_RIOT);
+
+	public static final AnimationSequenceKickoff KICKOFF_TIMEOUT = createAnimationSequence(
+		IIconProperty.ANIMATION_KICKOFF_TIMEOUT);
 
 	public static final AnimationSequenceKickoff KICKOFF_SWELTERING_HEAT = createAnimationSequence(
 			IIconProperty.ANIMATION_KICKOFF_SWELTERING_HEAT);

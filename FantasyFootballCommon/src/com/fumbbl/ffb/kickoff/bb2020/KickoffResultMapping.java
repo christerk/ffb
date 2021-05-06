@@ -10,7 +10,7 @@ import java.util.Map;
 public class KickoffResultMapping extends com.fumbbl.ffb.kickoff.KickoffResultMapping {
 	private final Map<Integer, KickoffResult> results = new HashMap<Integer, KickoffResult>() {{
 		put(2, KickoffResult.GET_THE_REF);
-		put(3, KickoffResult.RIOT);
+		put(3, KickoffResult.TIME_OUT);
 		put(4, KickoffResult.PERFECT_DEFENCE);
 		put(5, KickoffResult.HIGH_KICK);
 		put(6, KickoffResult.CHEERING_FANS);

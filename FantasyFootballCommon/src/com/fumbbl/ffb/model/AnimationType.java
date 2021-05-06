@@ -15,13 +15,14 @@ public enum AnimationType implements INamedObject {
 	KICKOFF_GET_THE_REF("kickoffGetTheRef"), KICKOFF_HIGH_KICK("kickoffHighKick"), KICKOFF_NICE("kickoffNice"),
 	KICKOFF_PERFECT_DEFENSE("kickoffPerfectDefense"), KICKOFF_PITCH_INVASION("kickoffPitchInvasion"),
 	KICKOFF_POURING_RAIN("kickoffPouringRain"), KICKOFF_QUICK_SNAP("kickoffQuickSnap"), KICKOFF_RIOT("kickoffRiot"),
+	KICKOFF_TIMEOUT("kickoffTimeout"),
 	KICKOFF_SWELTERING_HEAT("kickoffSwelteringHeat"), KICKOFF_THROW_A_ROCK("kickoffThrowARock"),
 	KICKOFF_VERY_SUNNY("kickoffVerySunny"), HAIL_MARY_PASS("hailMaryPass"), THROW_A_ROCK("throwARock"),
 	THROW_BOMB("throwBomb"), HAIL_MARY_BOMB("hailMaryBomb"), BOMB_EXLOSION("bombExplosion"), CARD("card");
 
-	private String fName;
+	private final String fName;
 
-	private AnimationType(String pName) {
+	AnimationType(String pName) {
 		fName = pName;
 	}
 

@@ -29,10 +29,10 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.ReportKickoffPitchInvasion;
-import com.fumbbl.ffb.report.ReportKickoffRiot;
 import com.fumbbl.ffb.report.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffTimeout;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -180,8 +180,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		case GET_THE_REF:
 			handleGetTheRef();
 			break;
-		case RIOT:
-			handleRiot();
+			case TIME_OUT:
+			handleTimeout();
 			break;
 		case PERFECT_DEFENCE:
 			handlePerfectDefense();
@@ -252,45 +252,22 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 	}
 
-	private void handleRiot() {
+	private void handleTimeout() {
 
 		Game game = getGameState().getGame();
 		TurnData turnDataHome = game.getTurnDataHome();
 		TurnData turnDataAway = game.getTurnDataAway();
 
-		int riotRoll = 0;
-		int turnModifier = 0;
-		if ((game.isHomePlaying() && (turnDataAway.getTurnNr() == 0))
-				|| (!game.isHomePlaying() && (turnDataHome.getTurnNr() == 0))) {
-			turnModifier = 1;
-		}
-		if ((game.isHomePlaying() && (turnDataAway.getTurnNr() == 7))
-				|| (!game.isHomePlaying() && (turnDataHome.getTurnNr() == 7))) {
-			turnModifier = -1;
-		}
-		if (turnModifier == 0) {
-			riotRoll = getGameState().getDiceRoller().rollRiot();
-			turnModifier = DiceInterpreter.getInstance().interpretRiotRoll(riotRoll);
-		}
+		int kickingTeamTurn = game.isHomePlaying() ? turnDataHome.getTurnNr() : turnDataAway.getTurnNr();
+
+		int turnModifier = kickingTeamTurn >= 6 ? -1 : 1;
 
 		turnDataHome.setTurnNr(turnDataHome.getTurnNr() + turnModifier);
-		if (turnDataHome.getTurnNr() < 0) {
-			turnDataHome.setTurnNr(0);
-		}
-
 		turnDataAway.setTurnNr(turnDataAway.getTurnNr() + turnModifier);
-		if (turnDataAway.getTurnNr() < 0) {
-			turnDataAway.setTurnNr(0);
-		}
 
-		getResult().addReport(new ReportKickoffRiot(riotRoll, turnModifier));
-		getResult().setAnimation(new Animation(AnimationType.KICKOFF_RIOT));
-
-		if ((turnDataHome.getTurnNr() > 8) || (turnDataAway.getTurnNr() > 8)) {
-			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-		} else {
-			getResult().setNextAction(StepAction.NEXT_STEP);
-		}
+		getResult().addReport(new ReportKickoffTimeout(kickingTeamTurn, turnModifier));
+		getResult().setAnimation(new Animation(AnimationType.KICKOFF_TIMEOUT));
+		getResult().setNextAction(StepAction.NEXT_STEP);
 
 	}
 
