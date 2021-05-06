@@ -20,7 +20,7 @@ public enum DialogId implements INamedObject {
 	DEFENDER_ACTION("defenderAction"), JOIN("join"), CONCEDE_GAME("concedeGame"), ABOUT("about"), END_TURN("endTurn"),
 	LEAVE_GAME("leaveGame"), BRIBES("bribes"), PILING_ON("pilingOn"), BUY_INDUCEMENTS("buyInducements"),
 	SOUND_VOLUME("soundVolume"), JOURNEYMEN("journeymen"),
-	KICKOFF_RESULT("kickoffResult"), CHAT_COMMANDS("chatCommands"), KICK_SKILL("kickSkill"), USE_IGOR("useIgor"),
+	CHAT_COMMANDS("chatCommands"), KICK_SKILL("kickSkill"), USE_IGOR("useIgor"),
 	KICKOFF_RETURN("kickoffReturn"), SWARMING("swarming"), SWARMING_ERROR("swarmingError"), PETTY_CASH("pettyCash"),
 	WIZARD_SPELL("wizardSpell"), USE_INDUCEMENT("useInducement"), PASS_BLOCK("passBlock"), BUY_CARDS("buyCards"),
 	BUY_CARDS_AND_INDUCEMENTS("buyCardsAndInducements"), ARGUE_THE_CALL("argueTheCall"), SELECT_BLITZ_TARGET("selectBlitzTarget"),

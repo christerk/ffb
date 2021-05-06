@@ -63,9 +63,6 @@ public class DialogManager {
 					case TOUCHBACK:
 						setDialogHandler(new DialogTouchbackHandler(getClient()));
 						break;
-					case KICKOFF_RESULT:
-						setDialogHandler(new DialogKickoffResultHandler(getClient()));
-						break;
 					case SETUP_ERROR:
 						setDialogHandler(new DialogSetupErrorHandler(getClient()));
 						break;

@@ -65,8 +65,6 @@ public class DialogParameterFactory {
 				return new DialogBuyInducementsParameter();
 			case JOURNEYMEN:
 				return new DialogJourneymenParameter();
-			case KICKOFF_RESULT:
-				return new DialogKickoffResultParameter();
 			case KICK_SKILL:
 				return new DialogKickSkillParameter();
 			case USE_IGOR:
