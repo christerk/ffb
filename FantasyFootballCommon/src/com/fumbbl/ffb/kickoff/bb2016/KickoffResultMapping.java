@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.kickoff.bb2016;
 
-import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.RulesCollection;
 
 import java.util.Collection;

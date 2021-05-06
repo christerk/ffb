@@ -11,5 +11,5 @@ public abstract class KickoffResultMapping implements IKeyedItem {
 	}
 
 	public abstract KickoffResult getResult(int roll);
-	public abstract Collection<KickoffResult> getValues();
+	public abstract Collection<? extends KickoffResult> getValues();
 }
