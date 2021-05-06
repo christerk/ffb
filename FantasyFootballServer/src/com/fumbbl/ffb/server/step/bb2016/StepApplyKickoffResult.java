@@ -226,7 +226,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
 				Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
 					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
-				bribesHome.setValue(bribesHome.getValue() + 1);
+				bribesAway.setValue(bribesAway.getValue() + 1);
 				inducementSetAway.addInducement(bribesAway);
 
 			});
