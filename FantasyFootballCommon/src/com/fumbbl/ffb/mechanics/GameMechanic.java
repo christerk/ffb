@@ -11,7 +11,10 @@ public abstract class GameMechanic implements Mechanic {
 		return Type.GAME;
 	}
 
-	public abstract void updateTurnDataAfterReRollUsage(TurnData turnData);
+	/**
+	 * @return true if the re-roll used was only available in the current drive
+	 */
+	public abstract boolean updateTurnDataAfterReRollUsage(TurnData turnData);
 
 	public abstract int minimumLonerRoll(Player<?> player);
 

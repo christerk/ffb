@@ -1,5 +1,7 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -7,12 +9,12 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportKickoffExtraReRoll;
+import com.fumbbl.ffb.report.bb2016.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 @ReportMessageType(ReportId.KICKOFF_EXTRA_REROLL)
-@RulesCollection(Rules.COMMON)
-public class KickoffExtraRerollMessage extends ReportMessageBase<ReportKickoffExtraReRoll> {
+@RulesCollection(Rules.BB2016)
+public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffExtraReRoll> {
 
     @Override
     protected void render(ReportKickoffExtraReRoll report) {

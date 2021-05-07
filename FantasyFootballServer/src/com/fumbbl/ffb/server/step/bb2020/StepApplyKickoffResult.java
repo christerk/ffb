@@ -29,7 +29,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
-import com.fumbbl.ffb.report.ReportKickoffExtraReRoll;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.ReportKickoffPitchInvasion;
 import com.fumbbl.ffb.report.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
@@ -66,15 +66,15 @@ import java.util.Map;
 
 /**
  * Step in kickoff sequence to apply the kickoff result.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_END.
- *
+ * <p>
  * Needs to be initialized with stepParameter SKIP_PAST_LABEL_ON_BLITZ.
- *
+ * <p>
  * Expects stepParameter KICKOFF_BOUNDS to be set by a preceding step. Expects
  * stepParameter KICKOFF_RESULT to be set by a preceding step. Expects
  * stepParameter TOUCHBACK to be set by a preceding step.
- *
+ * <p>
  * Sets stepParameter TOUCHBACK for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
  *
@@ -105,16 +105,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_END:
-					fGotoLabelOnEnd = (String) parameter.getValue();
-					break;
-				// mandatory
-				case GOTO_LABEL_ON_BLITZ:
-					fGotoLabelOnBlitz = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_END:
+						fGotoLabelOnEnd = (String) parameter.getValue();
+						break;
+					// mandatory
+					case GOTO_LABEL_ON_BLITZ:
+						fGotoLabelOnBlitz = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -130,17 +130,17 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case KICKOFF_BOUNDS:
-				fKickoffBounds = (FieldCoordinateBounds) pParameter.getValue();
-				return true;
-			case KICKOFF_RESULT:
-				fKickoffResult = (KickoffResult) pParameter.getValue();
-				return true;
-			case TOUCHBACK:
-				fTouchback = (Boolean) pParameter.getValue();
-				return true;
-			default:
-				break;
+				case KICKOFF_BOUNDS:
+					fKickoffBounds = (FieldCoordinateBounds) pParameter.getValue();
+					return true;
+				case KICKOFF_RESULT:
+					fKickoffResult = (KickoffResult) pParameter.getValue();
+					return true;
+				case TOUCHBACK:
+					fTouchback = (Boolean) pParameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -157,20 +157,20 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_SETUP_PLAYER:
-				ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-				UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(),
+				case CLIENT_SETUP_PLAYER:
+					ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
+					UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(),
 						setupPlayerCommand.getCoordinate());
-				commandStatus = StepCommandStatus.SKIP_STEP;
-				break;
-			case CLIENT_END_TURN:
-				if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
-					fEndKickoff = true;
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-				}
-				break;
-			default:
-				break;
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					break;
+				case CLIENT_END_TURN:
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						fEndKickoff = true;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -184,39 +184,39 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			return;
 		}
 		switch (fKickoffResult) {
-		case GET_THE_REF:
-			handleGetTheRef();
-			break;
+			case GET_THE_REF:
+				handleGetTheRef();
+				break;
 			case TIME_OUT:
-			handleTimeout();
-			break;
-		case SOLID_DEFENCE:
-			handleSolidDefense();
-			break;
-		case HIGH_KICK:
-			handleHighKick();
-			break;
-		case CHEERING_FANS:
-			handleExtraReRoll();
-			break;
-		case WEATHER_CHANGE:
-			handleWeatherChange();
-			break;
-		case BRILLIANT_COACHING:
-			handleExtraReRoll();
-			break;
-		case QUICK_SNAP:
-			handleQuickSnap();
-			break;
-		case BLITZ:
-			handleBlitz();
-			break;
-		case THROW_A_ROCK:
-			handleThrowARock();
-			break;
-		case PITCH_INVASION:
-			handlePitchInvasion();
-			break;
+				handleTimeout();
+				break;
+			case SOLID_DEFENCE:
+				handleSolidDefense();
+				break;
+			case HIGH_KICK:
+				handleHighKick();
+				break;
+			case CHEERING_FANS:
+				handleExtraReRoll();
+				break;
+			case WEATHER_CHANGE:
+				handleWeatherChange();
+				break;
+			case BRILLIANT_COACHING:
+				handleBrilliantCoaching();
+				break;
+			case QUICK_SNAP:
+				handleQuickSnap();
+				break;
+			case BLITZ:
+				handleBlitz();
+				break;
+			case THROW_A_ROCK:
+				handleThrowARock();
+				break;
+			case PITCH_INVASION:
+				handlePitchInvasion();
+				break;
 		}
 	}
 
@@ -224,19 +224,19 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		Game game = getGameState().getGame();
 		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
 			.findFirst().ifPresent(bribesType -> {
-				InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
-				Inducement bribesHome = inducementSetHome.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
-					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
-				bribesHome.setValue(bribesHome.getValue() + 1);
-				inducementSetHome.addInducement(bribesHome);
+			InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
+			Inducement bribesHome = inducementSetHome.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+				.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
+			bribesHome.setValue(bribesHome.getValue() + 1);
+			inducementSetHome.addInducement(bribesHome);
 
-				InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
-				Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
-					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
-				bribesAway.setValue(bribesAway.getValue() + 1);
-				inducementSetAway.addInducement(bribesAway);
+			InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
+			Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+				.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
+			bribesAway.setValue(bribesAway.getValue() + 1);
+			inducementSetAway.addInducement(bribesAway);
 
-			});
+		});
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_GET_THE_REF));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -267,7 +267,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_SOLID_DEFENSE));
 			game.setTurnMode(TurnMode.SOLID_DEFENCE);
 			Team actingTeam = game.getActingTeam();
-			for (Player<?> player: actingTeam.getPlayers()) {
+			for (Player<?> player : actingTeam.getPlayers()) {
 				FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
 					playersAtCoordinates.put(player.getId(), fieldCoordinate);
@@ -338,6 +338,52 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 	}
 
+	private void handleBrilliantCoaching() {
+
+		Game game = getGameState().getGame();
+		GameResult gameResult = game.getGameResult();
+
+		int rollHome = getGameState().getDiceRoller().rollDice(6);
+		int totalHome = rollHome + gameResult.getTeamResultHome().getFanFactor();
+		int rollAway = getGameState().getDiceRoller().rollDice(6);
+		int totalAway = rollAway + gameResult.getTeamResultAway().getFanFactor();
+
+		totalHome += game.getTeamHome().getAssistantCoaches();
+		totalAway += game.getTeamAway().getAssistantCoaches();
+
+		TurnData turnDataHome = game.getTurnDataHome();
+		TurnData turnDataAway = game.getTurnDataAway();
+		boolean homeCoachBanned = turnDataHome.isCoachBanned();
+		boolean awayCoachBanned = turnDataAway.isCoachBanned();
+
+		totalHome += homeCoachBanned ? -1 : 0;
+		totalAway += awayCoachBanned ? -1 : 0;
+
+		getResult().setAnimation(new Animation(AnimationType.KICKOFF_BRILLIANT_COACHING));
+
+		String teamId = null;
+		boolean homeGainsReRoll = (totalHome > totalAway);
+		if (homeGainsReRoll) {
+			turnDataHome.setReRolls(turnDataHome.getReRolls() + 1);
+			turnDataHome.setReRollsBrilliantCoachingOneDrive(
+				turnDataHome.getReRollsBrilliantCoachingOneDrive() + 1 );
+			teamId = game.getTeamHome().getId();
+		}
+
+		boolean awayGainsReRoll = (totalAway > totalHome);
+		if (awayGainsReRoll) {
+			turnDataAway.setReRolls(turnDataAway.getReRolls() + 1);
+			turnDataAway.setReRollsBrilliantCoachingOneDrive(
+				turnDataAway.getReRollsBrilliantCoachingOneDrive() + 1 );
+			teamId = game.getTeamAway().getId();
+		}
+
+		getResult().addReport(new ReportKickoffExtraReRoll(rollHome, rollAway, teamId));
+		getResult().setNextAction(StepAction.NEXT_STEP);
+
+	}
+
+
 	private void handleExtraReRoll() {
 
 		Game game = getGameState().getGame();
@@ -345,11 +391,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		int rollHome = getGameState().getDiceRoller().rollExtraReRoll();
 		int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(),
-				NamedProperties.increasesTeamsFame).length;
+			NamedProperties.increasesTeamsFame).length;
 		int totalHome = rollHome + gameResult.getTeamResultHome().getFame() + fanFavouritesHome;
 		int rollAway = getGameState().getDiceRoller().rollExtraReRoll();
 		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
-				NamedProperties.increasesTeamsFame).length;
+			NamedProperties.increasesTeamsFame).length;
 		int totalAway = rollAway + gameResult.getTeamResultAway().getFame() + fanFavouritesAway;
 		if (fKickoffResult.isFanReRoll()) {
 			totalHome += game.getTeamHome().getCheerleaders();
@@ -379,7 +425,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 
 		getResult()
-				.addReport(new ReportKickoffExtraReRoll(fKickoffResult, rollHome, homeGainsReRoll, rollAway, awayGainsReRoll));
+			.addReport(new com.fumbbl.ffb.report.bb2016.ReportKickoffExtraReRoll(fKickoffResult, rollHome, homeGainsReRoll, rollAway, awayGainsReRoll));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 	}
@@ -394,29 +440,29 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		getResult().addReport(new ReportWeather(weather, weatherRoll));
 
 		switch (game.getFieldModel().getWeather()) {
-		case BLIZZARD:
-			getResult().setAnimation(new Animation(AnimationType.KICKOFF_BLIZZARD));
-			break;
-		case POURING_RAIN:
-			getResult().setAnimation(new Animation(AnimationType.KICKOFF_POURING_RAIN));
-			break;
-		case SWELTERING_HEAT:
-			getResult().setAnimation(new Animation(AnimationType.KICKOFF_SWELTERING_HEAT));
-			for (Player<?> player : game.getPlayers()) {
-				PlayerState playerState = game.getFieldModel().getPlayerState(player);
-				if (playerState.getBase() == PlayerState.EXHAUSTED) {
-					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+			case BLIZZARD:
+				getResult().setAnimation(new Animation(AnimationType.KICKOFF_BLIZZARD));
+				break;
+			case POURING_RAIN:
+				getResult().setAnimation(new Animation(AnimationType.KICKOFF_POURING_RAIN));
+				break;
+			case SWELTERING_HEAT:
+				getResult().setAnimation(new Animation(AnimationType.KICKOFF_SWELTERING_HEAT));
+				for (Player<?> player : game.getPlayers()) {
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					if (playerState.getBase() == PlayerState.EXHAUSTED) {
+						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+					}
 				}
-			}
-			break;
-		case VERY_SUNNY:
-			getResult().setAnimation(new Animation(AnimationType.KICKOFF_VERY_SUNNY));
-			break;
-		case NICE:
-			getResult().setAnimation(new Animation(AnimationType.KICKOFF_NICE));
-			break;
-		default:
-			break;
+				break;
+			case VERY_SUNNY:
+				getResult().setAnimation(new Animation(AnimationType.KICKOFF_VERY_SUNNY));
+				break;
+			case NICE:
+				getResult().setAnimation(new Animation(AnimationType.KICKOFF_NICE));
+				break;
+			default:
+				break;
 		}
 
 		if (!fTouchback && (Weather.NICE == game.getFieldModel().getWeather())) {
@@ -424,7 +470,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			int roll = getGameState().getDiceRoller().rollScatterDirection();
 			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
 			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate,
-					direction, 1);
+				direction, 1);
 			fTouchback = !fKickoffBounds.isInBounds(ballCoordinateEnd);
 			if (!fTouchback) {
 				game.getFieldModel().setBallCoordinate(ballCoordinateEnd);
@@ -432,7 +478,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			} else {
 				game.getFieldModel().setBallCoordinate(lastValidCoordinate);
 			}
-			getResult().addReport(new ReportScatterBall(new Direction[] { direction }, new int[] { roll }, true));
+			getResult().addReport(new ReportScatterBall(new Direction[]{direction}, new int[]{roll}, true));
 		}
 
 		publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, fTouchback));
@@ -470,11 +516,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		int rollHome = getGameState().getDiceRoller().rollThrowARock();
 		int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(),
-				NamedProperties.increasesTeamsFame).length;
+			NamedProperties.increasesTeamsFame).length;
 		int totalHome = rollHome + gameResult.getTeamResultHome().getFame() + fanFavouritesHome;
 		int rollAway = getGameState().getDiceRoller().rollThrowARock();
 		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
-				NamedProperties.increasesTeamsFame).length;
+			NamedProperties.increasesTeamsFame).length;
 		int totalAway = rollAway + gameResult.getTeamResultAway().getFame() + fanFavouritesAway;
 
 		String hitPlayerIdHome = null;
@@ -495,13 +541,13 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		String[] hitPlayerIds = null;
 		if ((hitPlayerIdHome != null) && (hitPlayerIdAway != null)) {
-			hitPlayerIds = new String[] { hitPlayerIdHome, hitPlayerIdAway };
+			hitPlayerIds = new String[]{hitPlayerIdHome, hitPlayerIdAway};
 		} else {
 			if (hitPlayerIdHome != null) {
-				hitPlayerIds = new String[] { hitPlayerIdHome };
+				hitPlayerIds = new String[]{hitPlayerIdHome};
 			}
 			if (hitPlayerIdAway != null) {
-				hitPlayerIds = new String[] { hitPlayerIdAway };
+				hitPlayerIds = new String[]{hitPlayerIdAway};
 			}
 		}
 		getResult().addReport(new ReportKickoffThrowARock(rollHome, rollAway, hitPlayerIds));
@@ -522,7 +568,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HOME));
 			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
-					new InjuryTypeThrowARock(), null, player, playerCoordinate, null, null, ApothecaryMode.HOME)));
+				new InjuryTypeThrowARock(), null, player, playerCoordinate, null, null, ApothecaryMode.HOME)));
 
 		}
 
@@ -542,7 +588,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.AWAY));
 			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
-					new InjuryTypeThrowARock(), null, player, playerCoordinate, null, null, ApothecaryMode.AWAY)));
+				new InjuryTypeThrowARock(), null, player, playerCoordinate, null, null, ApothecaryMode.AWAY)));
 
 		}
 
@@ -556,9 +602,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		GameResult gameResult = game.getGameResult();
 
 		int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(),
-				NamedProperties.increasesTeamsFame).length;
+			NamedProperties.increasesTeamsFame).length;
 		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
-				NamedProperties.increasesTeamsFame).length;
+			NamedProperties.increasesTeamsFame).length;
 
 		Player<?>[] playersHome = game.getTeamHome().getPlayers();
 		int[] rollsHome = new int[playersHome.length];
@@ -567,7 +613,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			if (isPlayerOnField(game, playersHome[i])) {
 				rollsHome[i] = getGameState().getDiceRoller().rollPitchInvasion();
 				playerAffectedHome[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsHome[i],
-						gameResult.getTeamResultAway().getFame() + fanFavouritesAway);
+					gameResult.getTeamResultAway().getFame() + fanFavouritesAway);
 				if (playerAffectedHome[i]) {
 					UtilServerInjury.stunPlayer(this, playersHome[i], ApothecaryMode.HOME);
 				}
@@ -581,7 +627,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			if (isPlayerOnField(game, playersAway[i])) {
 				rollsAway[i] = getGameState().getDiceRoller().rollPitchInvasion();
 				playerAffectedAway[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsAway[i],
-						gameResult.getTeamResultHome().getFame() + fanFavouritesHome);
+					gameResult.getTeamResultHome().getFame() + fanFavouritesHome);
 				if (playerAffectedAway[i]) {
 					UtilServerInjury.stunPlayer(this, playersAway[i], ApothecaryMode.DEFENDER);
 				}

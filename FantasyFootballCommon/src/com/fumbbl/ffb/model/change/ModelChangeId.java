@@ -114,6 +114,7 @@ public enum ModelChangeId implements INamedObject {
 
 	TEAM_RESULT_SET_CONCEDED("teamResultSetConceded", ModelChangeDataType.BOOLEAN),
 	TEAM_RESULT_SET_FAME("teamResultSetFame", ModelChangeDataType.INTEGER),
+	TEAM_RESULT_SET_FAN_FACTOR("teamResultSetFanFactor", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_BADLY_HURT_SUFFERED("teamResultSetBadlyHurtSuffered", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_FAN_FACTOR_MODIFIER("teamResultSetFanFactorModifier", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED("teamResultSetPettyCashTransferred", ModelChangeDataType.INTEGER),
@@ -135,15 +136,16 @@ public enum ModelChangeId implements INamedObject {
 	TURN_DATA_SET_LEADER_STATE("turnDataSetLeaderState", ModelChangeDataType.LEADER_STATE),
 	TURN_DATA_SET_PASS_USED("turnDataSetPassUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_RE_ROLLS("turnDataSetReRolls", ModelChangeDataType.INTEGER),
+	TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE("turnDataSetReRollsBrilliantCoachingOneDrive", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_RE_ROLL_USED("turnDataSetReRollUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_TURN_NR("turnDataSetTurnNr", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_TURN_STARTED("turnDataSetTurnStarted", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_COACH_BANNED("turnDataSetCoachBanned", ModelChangeDataType.BOOLEAN);
 
-	private String fName;
-	private ModelChangeDataType fDataType;
+	private final String fName;
+	private final ModelChangeDataType fDataType;
 
-	private ModelChangeId(String pName, ModelChangeDataType pDataType) {
+	ModelChangeId(String pName, ModelChangeDataType pDataType) {
 		fName = pName;
 		fDataType = pDataType;
 	}

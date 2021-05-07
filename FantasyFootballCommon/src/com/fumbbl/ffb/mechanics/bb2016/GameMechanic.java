@@ -9,9 +9,10 @@ import com.fumbbl.ffb.model.TurnData;
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
-	public void updateTurnDataAfterReRollUsage(TurnData turnData) {
+	public boolean updateTurnDataAfterReRollUsage(TurnData turnData) {
 		turnData.setReRollUsed(true);
 		turnData.setReRolls(turnData.getReRolls() - 1);
+		return false;
 	}
 
 	@Override

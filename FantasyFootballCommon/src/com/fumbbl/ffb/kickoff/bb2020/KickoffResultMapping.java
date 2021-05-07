@@ -14,8 +14,8 @@ public class KickoffResultMapping extends com.fumbbl.ffb.kickoff.KickoffResultMa
 		put(4, KickoffResult.SOLID_DEFENCE);
 		put(5, KickoffResult.HIGH_KICK);
 		put(6, KickoffResult.CHEERING_FANS);
-		put(7, KickoffResult.WEATHER_CHANGE);
-		put(8, KickoffResult.BRILLIANT_COACHING);
+		put(7, KickoffResult.BRILLIANT_COACHING);
+		put(8, KickoffResult.WEATHER_CHANGE);
 		put(9, KickoffResult.QUICK_SNAP);
 		put(10, KickoffResult.BLITZ);
 		put(11, KickoffResult.THROW_A_ROCK);

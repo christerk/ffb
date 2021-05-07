@@ -272,7 +272,11 @@ public class TeamResult implements IJsonSerializable {
 	}
 
 	public void setFanFactor(int fanFactor) {
+		if (this.fanFactor == fanFactor) {
+			return;
+		}
 		this.fanFactor = fanFactor;
+		notifyObservers(ModelChangeId.TEAM_RESULT_SET_FAN_FACTOR, fanFactor);
 	}
 
 	public int totalCompletions() {

@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.model.change;
 
-import java.util.Date;
-
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.DiceDecoration;
@@ -32,6 +30,8 @@ import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.IGameOption;
+
+import java.util.Date;
 
 /**
  * @author Kalimar
@@ -273,7 +273,7 @@ public class ModelChangeProcessor {
 			case INDUCEMENT_SET_CARD_CHOICES:
 				IDialogParameter dialogParameter = pGame.getDialogParameter();
 				if (dialogParameter instanceof DialogBuyCardsAndInducementsParameter) {
-					((DialogBuyCardsAndInducementsParameter)dialogParameter).setCardChoices((CardChoices) pModelChange.getValue());
+					((DialogBuyCardsAndInducementsParameter) dialogParameter).setCardChoices((CardChoices) pModelChange.getValue());
 				}
 				return true;
 			case INDUCEMENT_SET_DEACTIVATE_CARD:
@@ -386,6 +386,9 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_TEAM_VALUE:
 				getTeamResult(pGame, isHomeData(pModelChange)).setTeamValue((Integer) pModelChange.getValue());
 				return true;
+			case TEAM_RESULT_SET_FAN_FACTOR:
+				getTeamResult(pGame, isHomeData(pModelChange)).setFanFactor((Integer) pModelChange.getValue());
+				return true;
 			case TEAM_RESULT_SET_WINNINGS:
 				getTeamResult(pGame, isHomeData(pModelChange)).setWinnings((Integer) pModelChange.getValue());
 				return true;
@@ -413,6 +416,9 @@ public class ModelChangeProcessor {
 				return true;
 			case TURN_DATA_SET_RE_ROLLS:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRolls((Integer) pModelChange.getValue());
+				return true;
+			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
+				getTurnData(pGame, isHomeData(pModelChange)).setReRollsBrilliantCoachingOneDrive((Integer) pModelChange.getValue());
 				return true;
 			case TURN_DATA_SET_RE_ROLL_USED:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollUsed((Boolean) pModelChange.getValue());
@@ -526,6 +532,7 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_SPECTATORS:
 			case TEAM_RESULT_SET_SPIRALLING_EXPENSES:
 			case TEAM_RESULT_SET_TEAM_VALUE:
+			case TEAM_RESULT_SET_FAN_FACTOR:
 			case TEAM_RESULT_SET_WINNINGS:
 			case TURN_DATA_SET_APOTHECARIES:
 			case TURN_DATA_SET_BLITZ_USED:
@@ -535,6 +542,7 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_LEADER_STATE:
 			case TURN_DATA_SET_PASS_USED:
 			case TURN_DATA_SET_RE_ROLLS:
+			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
 			case TURN_DATA_SET_RE_ROLL_USED:
 			case TURN_DATA_SET_TURN_NR:
 			case TURN_DATA_SET_TURN_STARTED:

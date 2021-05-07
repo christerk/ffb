@@ -337,6 +337,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
 	JsonBooleanOption RE_ROLL_USED = new JsonBooleanOption("reRollUsed");
 	JsonIntOption RE_ROLLS = new JsonIntOption("reRolls");
+	JsonIntOption RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE = new JsonIntOption("rerollBrilliantCoachingOneDrive");
 	JsonIntOption RE_ROLLS_LEFT_AWAY = new JsonIntOption("reRollsLeftAway");
 	JsonIntOption RE_ROLLS_LEFT_HOME = new JsonIntOption("reRollsLeftHome");
 	JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");

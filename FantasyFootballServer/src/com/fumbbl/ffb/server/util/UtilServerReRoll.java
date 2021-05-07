@@ -41,10 +41,9 @@ public class UtilServerReRoll {
 		if (pReRollSource != null) {
 			if (ReRollSources.TEAM_RE_ROLL == pReRollSource) {
 				TurnData turnData = game.getTurnData();
-				gameMechanic
-					.updateTurnDataAfterReRollUsage(turnData);
-
-				if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+				if (gameMechanic.updateTurnDataAfterReRollUsage(turnData)) {
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.BRILLIANT_COACHING_RE_ROLL, successful, 0));
+				} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
 					turnData.setLeaderState(LeaderState.USED);
 				} else {

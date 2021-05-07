@@ -21,6 +21,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean fFirstTurnAfterKickoff;
 	private boolean fTurnStarted;
 	private int fReRolls;
+	private int reRollsBrilliantCoachingOneDrive;
 	private int fApothecaries;
 	private boolean fBlitzUsed;
 	private boolean fFoulUsed;
@@ -90,6 +91,18 @@ public class TurnData implements IJsonSerializable {
 		}
 		fReRolls = pReRolls;
 		notifyObservers(ModelChangeId.TURN_DATA_SET_RE_ROLLS, fReRolls);
+	}
+
+	public int getReRollsBrilliantCoachingOneDrive() {
+		return reRollsBrilliantCoachingOneDrive;
+	}
+
+	public void setReRollsBrilliantCoachingOneDrive(int reRollsBrilliantCoachingOneDrive) {
+		if (this.reRollsBrilliantCoachingOneDrive == reRollsBrilliantCoachingOneDrive) {
+			return;
+		}
+		this.reRollsBrilliantCoachingOneDrive = reRollsBrilliantCoachingOneDrive;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE, reRollsBrilliantCoachingOneDrive);
 	}
 
 	public boolean isBlitzUsed() {
@@ -253,6 +266,7 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.TURN_NR.addTo(jsonObject, fTurnNr);
 		IJsonOption.FIRST_TURN_AFTER_KICKOFF.addTo(jsonObject, fFirstTurnAfterKickoff);
 		IJsonOption.RE_ROLLS.addTo(jsonObject, fReRolls);
+		IJsonOption.RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE.addTo(jsonObject, reRollsBrilliantCoachingOneDrive);
 		IJsonOption.APOTHECARIES.addTo(jsonObject, fApothecaries);
 		IJsonOption.BLITZ_USED.addTo(jsonObject, fBlitzUsed);
 		IJsonOption.FOUL_USED.addTo(jsonObject, fFoulUsed);
@@ -274,6 +288,7 @@ public class TurnData implements IJsonSerializable {
 		fTurnNr = IJsonOption.TURN_NR.getFrom(source, jsonObject);
 		fFirstTurnAfterKickoff = IJsonOption.FIRST_TURN_AFTER_KICKOFF.getFrom(source, jsonObject);
 		fReRolls = IJsonOption.RE_ROLLS.getFrom(source, jsonObject);
+		reRollsBrilliantCoachingOneDrive = IJsonOption.RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE.getFrom(source, jsonObject);
 		fApothecaries = IJsonOption.APOTHECARIES.getFrom(source, jsonObject);
 		fBlitzUsed = IJsonOption.BLITZ_USED.getFrom(source, jsonObject);
 		fFoulUsed = IJsonOption.FOUL_USED.getFrom(source, jsonObject);

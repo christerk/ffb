@@ -10,8 +10,13 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
-	public void updateTurnDataAfterReRollUsage(TurnData turnData) {
+	public boolean updateTurnDataAfterReRollUsage(TurnData turnData) {
 		turnData.setReRolls(turnData.getReRolls() - 1);
+		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
+			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
