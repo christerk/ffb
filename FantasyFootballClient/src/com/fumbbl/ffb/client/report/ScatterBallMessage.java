@@ -17,7 +17,7 @@ public class ScatterBallMessage extends ReportMessageBase<ReportScatterBall> {
   		StringBuilder status = new StringBuilder();
   		if (report.isGustOfWind()) {
   			setIndent(getIndent() + 1);
-  			status.append("A gust of wind scatters the ball 1 square.");
+  			status.append("A gust of wind scatters the ball.");
   			println(getIndent(), status.toString());
   			status = new StringBuilder();
   		}

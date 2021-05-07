@@ -467,18 +467,25 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		if (!fTouchback && (Weather.NICE == game.getFieldModel().getWeather())) {
 			FieldCoordinate lastValidCoordinate = game.getFieldModel().getBallCoordinate();
-			int roll = getGameState().getDiceRoller().rollScatterDirection();
-			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
-			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate,
-				direction, 1);
-			fTouchback = !fKickoffBounds.isInBounds(ballCoordinateEnd);
-			if (!fTouchback) {
-				game.getFieldModel().setBallCoordinate(ballCoordinateEnd);
-				lastValidCoordinate = ballCoordinateEnd;
-			} else {
-				game.getFieldModel().setBallCoordinate(lastValidCoordinate);
+			List<Direction> directions = new ArrayList<>();
+			List<Integer> rolls = new ArrayList<>();
+			for (int i = 0; i < 3; i++) {
+				int roll = getGameState().getDiceRoller().rollScatterDirection();
+				Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
+				FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate,
+					direction, 1);
+				fTouchback = !fKickoffBounds.isInBounds(ballCoordinateEnd);
+				directions.add(direction);
+				rolls.add(roll);
+				if (!fTouchback) {
+					game.getFieldModel().setBallCoordinate(ballCoordinateEnd);
+					lastValidCoordinate = ballCoordinateEnd;
+				} else {
+					game.getFieldModel().setBallCoordinate(lastValidCoordinate);
+					break;
+				}
 			}
-			getResult().addReport(new ReportScatterBall(new Direction[]{direction}, new int[]{roll}, true));
+			getResult().addReport(new ReportScatterBall(directions.toArray(new Direction[0]), rolls.stream().mapToInt(integer -> integer).toArray(), true));
 		}
 
 		publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, fTouchback));
