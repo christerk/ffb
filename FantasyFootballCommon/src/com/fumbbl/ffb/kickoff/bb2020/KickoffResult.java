@@ -19,7 +19,7 @@ public enum KickoffResult implements com.fumbbl.ffb.kickoff.KickoffResult {
 			return true;
 		}
 	},
-	QUICK_SNAP("Quick Snap", "The offence may reposition their players 1 square each."),
+	QUICK_SNAP("Quick Snap", "The offence may reposition D3+3 of their open players 1 square each."),
 	BLITZ("Blitz", "The defence receives a free turn for moving and blitzing."),
 	THROW_A_ROCK("Throw a Rock", "A random player is hit by a rock and suffers an injury."),
 	PITCH_INVASION("Pitch Invasion", "Random players are being stunned by the crowd.");

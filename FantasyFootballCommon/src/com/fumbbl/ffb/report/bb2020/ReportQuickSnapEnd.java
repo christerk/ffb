@@ -1,0 +1,53 @@
+package com.fumbbl.ffb.report.bb2020;
+
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.IJsonOption;
+import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.UtilReport;
+
+@RulesCollection(RulesCollection.Rules.BB2020)
+public class ReportQuickSnapEnd implements IReport {
+	private boolean limitReached;
+
+	public ReportQuickSnapEnd() {
+	}
+
+	public ReportQuickSnapEnd(boolean limitReached) {
+		this.limitReached = limitReached;
+	}
+
+	@Override
+	public ReportId getId() {
+		return ReportId.QUICK_SNAP_END;
+	}
+
+	public boolean isLimitReached() {
+		return limitReached;
+	}
+
+	@Override
+	public IReport transform(IFactorySource source) {
+		return new ReportQuickSnapEnd(limitReached);
+	}
+
+	@Override
+	public Object initFrom(IFactorySource game, JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		limitReached = IJsonOption.LIMIT_REACHED.getFrom(game, jsonObject);
+		return this;
+	}
+
+	@Override
+	public JsonValue toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.LIMIT_REACHED.addTo(jsonObject, limitReached);
+		return jsonObject;
+	}
+}

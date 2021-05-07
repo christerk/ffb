@@ -35,6 +35,9 @@ import com.fumbbl.ffb.report.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffTimeout;
+import com.fumbbl.ffb.report.bb2020.ReportQuickSnapCount;
+import com.fumbbl.ffb.report.bb2020.ReportQuickSnapEnd;
+import com.fumbbl.ffb.report.bb2020.ReportQuickSnapRoll;
 import com.fumbbl.ffb.report.bb2020.ReportSolidDefenceRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -56,10 +59,12 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerSetup;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +95,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	private FieldCoordinateBounds fKickoffBounds;
 	private boolean fEndKickoff;
 	private final Map<String, FieldCoordinate> playersAtCoordinates = new HashMap<>();
-	private int nrOfPlayersAllowed;
+	private int nrOfPlayersAllowed, nrOfMovedPlayers;
+	private String movedPlayer;
+	private FieldCoordinate toCoordinate;
 
 	public StepApplyKickoffResult(GameState pGameState) {
 		super(pGameState);
@@ -159,9 +166,15 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_SETUP_PLAYER:
 					ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-					UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(),
-						setupPlayerCommand.getCoordinate());
-					commandStatus = StepCommandStatus.SKIP_STEP;
+					if (getGameState().getGame().getTurnMode() == TurnMode.QUICK_SNAP) {
+						movedPlayer = setupPlayerCommand.getPlayerId();
+						toCoordinate = setupPlayerCommand.getCoordinate();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					} else {
+						UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(),
+							setupPlayerCommand.getCoordinate());
+						commandStatus = StepCommandStatus.SKIP_STEP;
+					}
 					break;
 				case CLIENT_END_TURN:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
@@ -496,16 +509,66 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	private void handleQuickSnap() {
 		Game game = getGameState().getGame();
 		if (game.getTurnMode() == TurnMode.QUICK_SNAP) {
+			if (StringTool.isProvided(movedPlayer) && toCoordinate != null) {
+				if (nrOfMovedPlayers < nrOfPlayersAllowed) {
+					nrOfMovedPlayers++;
+					UtilServerSetup.setupPlayer(getGameState(), movedPlayer,
+						toCoordinate);
+
+					int activePlayersOnField = (int) Arrays.stream(game.getActingTeam().getPlayers())
+						.filter(player ->
+							fKickoffBounds.isInBounds(game.getFieldModel().getPlayerCoordinate(player))
+							&& game.getFieldModel().getPlayerState(player).isActive()
+						)
+						.count();
+
+					getResult().addReport(new ReportQuickSnapCount(activePlayersOnField, nrOfMovedPlayers, nrOfPlayersAllowed));
+
+					if (nrOfMovedPlayers == nrOfPlayersAllowed) {
+						fEndKickoff = true;
+						getResult().addReport(new ReportQuickSnapEnd(true));
+					} else if (activePlayersOnField == 0) {
+						fEndKickoff = true;
+						getResult().addReport(new ReportQuickSnapEnd(false));
+					}
+				} else {
+					// In case of lag we might get more requests to move a player than are allowed, so we reset the coordinate also in the client
+					Player<?> player = game.getPlayerById(movedPlayer);
+					game.getFieldModel().setPlayerCoordinate(player, game.getFieldModel().getPlayerCoordinate(player));
+				}
+				movedPlayer = null;
+				toCoordinate = null;
+			}
 			if (fEndKickoff) {
-				game.setHomePlaying(!game.isHomePlaying());
-				game.setTurnMode(TurnMode.KICKOFF);
-				getResult().setNextAction(StepAction.NEXT_STEP);
+				endQuickSnap(game);
 			}
 		} else {
 			game.setHomePlaying(!game.isHomePlaying());
 			game.setTurnMode(TurnMode.QUICK_SNAP);
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_QUICK_SNAP));
+			int roll = getGameState().getDiceRoller().rollDice(3);
+			nrOfPlayersAllowed = roll + 3;
+			getResult().addReport(new ReportQuickSnapRoll(game.getActingTeam().getId(), roll, nrOfPlayersAllowed));
+			Arrays.stream(game.getActingTeam().getPlayers()).filter(player -> ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(
+				getGameState().getGame(),
+				game.getOtherTeam(game.getActingTeam()),
+				game.getFieldModel().getPlayerCoordinate(player),
+				false
+			)))
+				.forEach(player -> game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false)));
+
+			if (Arrays.stream(game.getActingTeam().getPlayers()).noneMatch(player -> game.getFieldModel().getPlayerState(player).isActive())) {
+				getResult().addReport(new ReportQuickSnapEnd(false));
+				endQuickSnap(game);
+			}
+
 		}
+	}
+
+	private void endQuickSnap(Game game) {
+		game.setHomePlaying(!game.isHomePlaying());
+		game.setTurnMode(TurnMode.KICKOFF);
+		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	private void handleBlitz() {
@@ -678,6 +741,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		IServerJsonOption.END_KICKOFF.addTo(jsonObject, fEndKickoff);
 		IServerJsonOption.PLAYERS_AT_COORDINATES.addTo(jsonObject, playersAtCoordinates);
 		IServerJsonOption.NR_OF_PLAYERS_ALLOWED.addTo(jsonObject, nrOfPlayersAllowed);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, movedPlayer);
+		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, toCoordinate);
+		IServerJsonOption.NR_OF_PLAYERS.addTo(jsonObject, nrOfMovedPlayers);
 		return jsonObject;
 	}
 
@@ -697,6 +763,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(source, jsonObject);
 		playersAtCoordinates.putAll(IServerJsonOption.PLAYERS_AT_COORDINATES.getFrom(source, jsonObject));
 		nrOfPlayersAllowed = IServerJsonOption.NR_OF_PLAYERS_ALLOWED.getFrom(source, jsonObject);
+		movedPlayer = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		toCoordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		nrOfMovedPlayers = IServerJsonOption.NR_OF_PLAYERS.getFrom(source, jsonObject);
 		return this;
 	}
 
