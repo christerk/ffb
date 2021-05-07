@@ -12,6 +12,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -34,6 +35,7 @@ import com.fumbbl.ffb.report.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffTimeout;
+import com.fumbbl.ffb.report.bb2020.ReportSolidDefenceRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -50,6 +52,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerSetup;
@@ -86,7 +89,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	private boolean fTouchback;
 	private FieldCoordinateBounds fKickoffBounds;
 	private boolean fEndKickoff;
-	private Map<String, FieldCoordinate> playersAtCoordinates = new HashMap<>();
+	private final Map<String, FieldCoordinate> playersAtCoordinates = new HashMap<>();
+	private int nrOfPlayersAllowed;
 
 	public StepApplyKickoffResult(GameState pGameState) {
 		super(pGameState);
@@ -241,7 +245,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		Game game = getGameState().getGame();
 		if (game.getTurnMode() == TurnMode.SOLID_DEFENCE) {
 			if (fEndKickoff) {
-				if (UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
+				int movedPlayers = (int) playersAtCoordinates.keySet().stream().filter(playerId ->
+					!game.getFieldModel().getPlayerCoordinate(game.getPlayerById(playerId)).equals(playersAtCoordinates.get(playerId)))
+					.count();
+				if (validSolidDefence(movedPlayers) && UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
 					getGameState().setKickingSwarmers(0);
 					game.setTurnMode(TurnMode.KICKOFF);
 					getResult().setNextAction(StepAction.NEXT_STEP);
@@ -272,7 +279,19 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					}
 				}
 			}
+			int roll = getGameState().getDiceRoller().rollDice(3);
+			nrOfPlayersAllowed = roll + 3;
+			getResult().addReport(new ReportSolidDefenceRoll(game.getActingTeam().getId(), roll, nrOfPlayersAllowed));
 		}
+	}
+
+	private boolean validSolidDefence(int movedPlayers) {
+		if (movedPlayers > nrOfPlayersAllowed) {
+			UtilServerDialog.showDialog(getGameState(), new DialogInvalidSolidDefenceParameter(getGameState().getGame().getActingTeam().getId(), movedPlayers, nrOfPlayersAllowed), false);
+			return false;
+		}
+
+		return true;
 	}
 
 	private void handleTimeout() {
@@ -605,6 +624,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 		IServerJsonOption.END_KICKOFF.addTo(jsonObject, fEndKickoff);
 		IServerJsonOption.PLAYERS_AT_COORDINATES.addTo(jsonObject, playersAtCoordinates);
+		IServerJsonOption.NR_OF_PLAYERS_ALLOWED.addTo(jsonObject, nrOfPlayersAllowed);
 		return jsonObject;
 	}
 
@@ -623,6 +643,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 		fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(source, jsonObject);
 		playersAtCoordinates.putAll(IServerJsonOption.PLAYERS_AT_COORDINATES.getFrom(source, jsonObject));
+		nrOfPlayersAllowed = IServerJsonOption.NR_OF_PLAYERS_ALLOWED.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -103,6 +103,8 @@ public class DialogParameterFactory {
 				return new DialogPileDriverParameter();
 			case USE_CHAINSAW:
 				return new DialogUseChainsawParameter();
+			case INVALID_SOLID_DEFENCE:
+				return new DialogInvalidSolidDefenceParameter();
 			default:
 				return null;
 		}

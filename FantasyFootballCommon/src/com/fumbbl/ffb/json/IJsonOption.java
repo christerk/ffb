@@ -256,6 +256,8 @@ public interface IJsonOption {
 	JsonIntOption NR_OF_ICONS = new JsonIntOption("nrOfIcons");
 	JsonIntOption NR_OF_INDUCEMENTS = new JsonIntOption("nrOfInducements");
 	JsonIntOption NR_OF_MERCENARIES = new JsonIntOption("nrOfMercenaries");
+	JsonIntOption NR_OF_PLAYERS = new JsonIntOption("nrOfPlayers");
+	JsonIntOption NR_OF_PLAYERS_ALLOWED = new JsonIntOption("nrOfPlayersAllowed");
 	JsonIntOption NR_OF_SLOTS = new JsonIntOption("nrOfSlots");
 	JsonIntOption NR_OF_STARS = new JsonIntOption("nrOfStars");
 	JsonIntOption NUMBER = new JsonIntOption("number");

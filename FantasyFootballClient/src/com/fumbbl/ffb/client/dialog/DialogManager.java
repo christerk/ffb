@@ -165,6 +165,9 @@ public class DialogManager {
 					case USE_CHAINSAW:
 						setDialogHandler(new DialogUseChainsawHandler(getClient()));
 						break;
+					case INVALID_SOLID_DEFENCE:
+						setDialogHandler(new DialogInvalidSolidDefenceHandler(getClient()));
+						break;
 					default:
 						break;
 				}

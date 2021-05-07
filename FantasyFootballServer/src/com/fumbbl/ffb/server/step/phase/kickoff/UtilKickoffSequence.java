@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.server.step.phase.kickoff;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
@@ -16,6 +13,9 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -107,7 +107,7 @@ public class UtilKickoffSequence {
 		}
 		if (messageList.size() > 0) {
 			UtilServerDialog.showDialog(pGameState,
-					new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[messageList.size()])), false);
+					new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[0])), false);
 			return false;
 		} else {
 			return true;
