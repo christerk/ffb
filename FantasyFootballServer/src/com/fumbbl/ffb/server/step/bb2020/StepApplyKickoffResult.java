@@ -7,6 +7,7 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
@@ -56,6 +57,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +86,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	private boolean fTouchback;
 	private FieldCoordinateBounds fKickoffBounds;
 	private boolean fEndKickoff;
+	private Map<String, FieldCoordinate> playersAtCoordinates = new HashMap<>();
 
 	public StepApplyKickoffResult(GameState pGameState) {
 		super(pGameState);
@@ -242,6 +245,13 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					getGameState().setKickingSwarmers(0);
 					game.setTurnMode(TurnMode.KICKOFF);
 					getResult().setNextAction(StepAction.NEXT_STEP);
+					playersAtCoordinates.values().forEach(coordinate -> game.getFieldModel().remove(game.getFieldModel().getFieldMarker(coordinate)));
+					for (Player<?> player : game.getActingTeam().getPlayers()) {
+						PlayerState playerState = game.getFieldModel().getPlayerState(player);
+						if (playerState.getBase() == PlayerState.PRONE) {
+							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+						}
+					}
 				} else {
 					fEndKickoff = false;
 				}
@@ -249,6 +259,19 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		} else {
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_SOLID_DEFENSE));
 			game.setTurnMode(TurnMode.SOLID_DEFENCE);
+			Team actingTeam = game.getActingTeam();
+			for (Player<?> player: actingTeam.getPlayers()) {
+				FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+				if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
+					playersAtCoordinates.put(player.getId(), fieldCoordinate);
+					game.getFieldModel().add(new FieldMarker(fieldCoordinate, String.valueOf(player.getNr()), String.valueOf(player.getNr())));
+				} else {
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					if (playerState.getBase() == PlayerState.RESERVE) {
+						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE));
+					}
+				}
+			}
 		}
 	}
 
@@ -560,7 +583,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				playersOnField.add(player);
 			}
 		}
-		return playersOnField.toArray(new Player[playersOnField.size()]);
+		return playersOnField.toArray(new Player[0]);
 	}
 
 	private boolean isPlayerOnField(Game pGame, Player<?> pPlayer) {
@@ -581,6 +604,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			IServerJsonOption.KICKOFF_BOUNDS.addTo(jsonObject, fKickoffBounds.toJsonValue());
 		}
 		IServerJsonOption.END_KICKOFF.addTo(jsonObject, fEndKickoff);
+		IServerJsonOption.PLAYERS_AT_COORDINATES.addTo(jsonObject, playersAtCoordinates);
 		return jsonObject;
 	}
 
@@ -598,6 +622,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			fKickoffBounds = new FieldCoordinateBounds().initFrom(source, kickoffBoundsObject);
 		}
 		fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(source, jsonObject);
+		playersAtCoordinates.putAll(IServerJsonOption.PLAYERS_AT_COORDINATES.getFrom(source, jsonObject));
 		return this;
 	}
 

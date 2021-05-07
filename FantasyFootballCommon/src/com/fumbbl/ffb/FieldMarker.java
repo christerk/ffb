@@ -13,36 +13,42 @@ import com.fumbbl.ffb.json.UtilJson;
  */
 public class FieldMarker implements IJsonSerializable {
 
-	private FieldCoordinate fCoordinate;
-	private String fHomeText;
-	private String fAwayText;
+	private FieldCoordinate coordinate;
+	private String homeText;
+	private String awayText;
 
 	public FieldMarker() {
 		super();
 	}
 
 	public FieldMarker(FieldCoordinate pCoordinate) {
-		fCoordinate = pCoordinate;
+		coordinate = pCoordinate;
+	}
+
+	public FieldMarker(FieldCoordinate coordinate, String homeText, String awayText) {
+		this.coordinate = coordinate;
+		this.homeText = homeText;
+		this.awayText = awayText;
 	}
 
 	public FieldCoordinate getCoordinate() {
-		return fCoordinate;
+		return coordinate;
 	}
 
 	public void setHomeText(String pHomeText) {
-		fHomeText = pHomeText;
+		homeText = pHomeText;
 	}
 
 	public String getHomeText() {
-		return fHomeText;
+		return homeText;
 	}
 
 	public void setAwayText(String pAwayText) {
-		fAwayText = pAwayText;
+		awayText = pAwayText;
 	}
 
 	public String getAwayText() {
-		return fAwayText;
+		return awayText;
 	}
 
 	public int hashCode() {
@@ -70,17 +76,17 @@ public class FieldMarker implements IJsonSerializable {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
-		IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);
-		IJsonOption.HOME_TEXT.addTo(jsonObject, fHomeText);
-		IJsonOption.AWAY_TEXT.addTo(jsonObject, fAwayText);
+		IJsonOption.COORDINATE.addTo(jsonObject, coordinate);
+		IJsonOption.HOME_TEXT.addTo(jsonObject, homeText);
+		IJsonOption.AWAY_TEXT.addTo(jsonObject, awayText);
 		return jsonObject;
 	}
 
 	public FieldMarker initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
-		fHomeText = IJsonOption.HOME_TEXT.getFrom(game, jsonObject);
-		fAwayText = IJsonOption.AWAY_TEXT.getFrom(game, jsonObject);
+		coordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
+		homeText = IJsonOption.HOME_TEXT.getFrom(game, jsonObject);
+		awayText = IJsonOption.AWAY_TEXT.getFrom(game, jsonObject);
 		return this;
 	}
 

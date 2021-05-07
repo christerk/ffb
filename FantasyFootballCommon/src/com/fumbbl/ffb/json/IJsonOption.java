@@ -303,6 +303,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption PLAYER_TYPE = new JsonEnumWithNameOption("playerType", Factory.PLAYER_TYPE);
 	JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
 	JsonBooleanArrayOption PLAYERS_AFFECTED_HOME = new JsonBooleanArrayOption("playersAffectedHome");
+	JsonFieldCoordinateMapOption PLAYERS_AT_COORDINATES = new JsonFieldCoordinateMapOption("playersAtCoordinates");
 	JsonArrayOption POSITION_ARRAY = new JsonArrayOption("positionArray");
 	JsonObjectOption ROSTER_POSITION = new JsonObjectOption("rosterPosition");
 	JsonIntOption POSITION_ICON_INDEX = new JsonIntOption("positionIconIndex");
