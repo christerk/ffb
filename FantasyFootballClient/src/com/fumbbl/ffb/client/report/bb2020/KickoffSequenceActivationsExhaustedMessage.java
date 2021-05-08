@@ -5,13 +5,13 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportQuickSnapEnd;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@ReportMessageType(ReportId.QUICK_SNAP_END)
-public class QuickSnapEndMessage extends ReportMessageBase<ReportQuickSnapEnd> {
+@ReportMessageType(ReportId.KICKOFF_SEQUENCE_ACTIVATIONS_EXHAUSTED)
+public class KickoffSequenceActivationsExhaustedMessage extends ReportMessageBase<ReportKickoffSequenceActivationsExhausted> {
 	@Override
-	protected void render(ReportQuickSnapEnd report) {
+	protected void render(ReportKickoffSequenceActivationsExhausted report) {
 		String message;
 		if (report.isLimitReached()) {
 			message = "Moved allowed number of players.";

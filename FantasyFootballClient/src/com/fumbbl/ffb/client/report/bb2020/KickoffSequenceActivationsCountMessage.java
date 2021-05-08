@@ -5,13 +5,13 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportQuickSnapCount;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@ReportMessageType(ReportId.QUICK_SNAP_COUNT)
-public class QuickSnapCountMessage extends ReportMessageBase<ReportQuickSnapCount> {
+@ReportMessageType(ReportId.KICKOFF_SEQUENCE_ACTIVATIONS_COUNT)
+public class KickoffSequenceActivationsCountMessage extends ReportMessageBase<ReportKickoffSequenceActivationsCount> {
 	@Override
-	protected void render(ReportQuickSnapCount report) {
+	protected void render(ReportKickoffSequenceActivationsCount report) {
 		String builder = "Moved " +
 			report.getAmount() +
 			" of the allowed " +

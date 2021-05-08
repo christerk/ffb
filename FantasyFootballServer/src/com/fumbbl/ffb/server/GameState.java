@@ -6,6 +6,7 @@ import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.BlitzTurnState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.ISkillBehaviour;
 import com.fumbbl.ffb.model.Player;
@@ -56,6 +57,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private final transient Map<String, Long> fSpectatorCooldownTime;
 	private StepFactory stepFactory;
 	private PassState passState;
+	private BlitzTurnState blitzTurnState;
 
 	private enum StepExecutionMode {
 		Start, HandleCommand
@@ -101,6 +103,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void setPassState(PassState passState) {
 		this.passState = passState;
+	}
+
+	public BlitzTurnState getBlitzTurnState() {
+		return blitzTurnState;
+	}
+
+	public void setBlitzTurnState(BlitzTurnState blitzTurnState) {
+		this.blitzTurnState = blitzTurnState;
 	}
 
 	public long getId() {
@@ -320,6 +330,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (passState != null) {
 			IServerJsonOption.PASS_STATE.addTo(jsonObject, passState.toJsonValue());
 		}
+
+		if (blitzTurnState != null) {
+			IServerJsonOption.BLITZ_TURN_STATE.addTo(jsonObject, blitzTurnState.toJsonValue());
+		}
+
 		return jsonObject;
 	}
 
@@ -361,6 +376,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			passState = new PassState().initFrom(source, passStateObject);
 		}
 
+		JsonObject blitzTurnStateObject = IServerJsonOption.BLITZ_TURN_STATE.getFrom(source, jsonObject);
+		if (blitzTurnStateObject != null) {
+			blitzTurnState = new BlitzTurnState().initFrom(source, blitzTurnStateObject);
+		}
 		return this;
 	}
 

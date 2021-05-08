@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -18,8 +18,10 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 
@@ -31,7 +33,7 @@ import com.fumbbl.ffb.server.util.UtilServerTimer;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepBlitzTurn extends AbstractStep {
 
 	private boolean fEndTurn;
@@ -48,15 +50,12 @@ public final class StepBlitzTurn extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		Game game = getGameState().getGame();
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case END_TURN:
+			if (pParameter.getKey() == StepParameterKey.END_TURN) {
 				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 				if (game.getTurnMode() == TurnMode.BLITZ) {
 					consume(pParameter);
 				}
 				return true;
-			default:
-				break;
 			}
 		}
 		return false;

@@ -5,16 +5,16 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportQuickSnapRoll;
+import com.fumbbl.ffb.report.bb2020.ReportBlitzRoll;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@ReportMessageType(ReportId.QUICK_SNAP_ROLL)
-public class QuickSnapRollMessage extends ReportMessageBase<ReportQuickSnapRoll> {
+@ReportMessageType(ReportId.BLITZ_ROLL)
+public class BlitzRollMessage extends ReportMessageBase<ReportBlitzRoll> {
 	@Override
-	protected void render(ReportQuickSnapRoll report) {
-		println(getIndent(), TextStyle.ROLL, "Quick Snap Roll [ " + report.getRoll() + " ]");
+	protected void render(ReportBlitzRoll report) {
+		println(getIndent(), TextStyle.ROLL, "Blitz Roll [ " + report.getRoll() + " ]");
 		TextStyle teamStyle = game.getTeamHome().getId().equals(report.getTeamId()) ? TextStyle.HOME : TextStyle.AWAY;
 		print(getIndent() + 1, teamStyle, game.getTeamById(report.getTeamId()).getName());
-		println(getIndent() + 1, TextStyle.NONE, " may move " + report.getAmount() + " open players 1 square each");
+		println(getIndent() + 1, TextStyle.NONE, " may activate " + report.getAmount() + " open players");
 	}
 }

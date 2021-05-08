@@ -35,8 +35,8 @@ import com.fumbbl.ffb.report.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffTimeout;
-import com.fumbbl.ffb.report.bb2020.ReportQuickSnapCount;
-import com.fumbbl.ffb.report.bb2020.ReportQuickSnapEnd;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.report.bb2020.ReportQuickSnapRoll;
 import com.fumbbl.ffb.report.bb2020.ReportSolidDefenceRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -522,14 +522,14 @@ public final class StepApplyKickoffResult extends AbstractStep {
 						)
 						.count();
 
-					getResult().addReport(new ReportQuickSnapCount(activePlayersOnField, nrOfMovedPlayers, nrOfPlayersAllowed));
+					getResult().addReport(new ReportKickoffSequenceActivationsCount(activePlayersOnField, nrOfMovedPlayers, nrOfPlayersAllowed));
 
 					if (nrOfMovedPlayers == nrOfPlayersAllowed) {
 						fEndKickoff = true;
-						getResult().addReport(new ReportQuickSnapEnd(true));
+						getResult().addReport(new ReportKickoffSequenceActivationsExhausted(true));
 					} else if (activePlayersOnField == 0) {
 						fEndKickoff = true;
-						getResult().addReport(new ReportQuickSnapEnd(false));
+						getResult().addReport(new ReportKickoffSequenceActivationsExhausted(false));
 					}
 				} else {
 					// In case of lag we might get more requests to move a player than are allowed, so we reset the coordinate also in the client
@@ -558,7 +558,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				.forEach(player -> game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false)));
 
 			if (Arrays.stream(game.getActingTeam().getPlayers()).noneMatch(player -> game.getFieldModel().getPlayerState(player).isActive())) {
-				getResult().addReport(new ReportQuickSnapEnd(false));
+				getResult().addReport(new ReportKickoffSequenceActivationsExhausted(false));
 				endQuickSnap(game);
 			}
 

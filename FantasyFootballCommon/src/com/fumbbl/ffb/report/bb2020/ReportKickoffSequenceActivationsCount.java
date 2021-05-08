@@ -11,16 +11,16 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class ReportQuickSnapCount implements IReport {
+public class ReportKickoffSequenceActivationsCount implements IReport {
 
 	private int amount;
 	private int available;
 	private int limit;
 
-	public ReportQuickSnapCount() {
+	public ReportKickoffSequenceActivationsCount() {
 	}
 
-	public ReportQuickSnapCount(int available, int amount, int limit) {
+	public ReportKickoffSequenceActivationsCount(int available, int amount, int limit) {
 		this.amount = amount;
 		this.available = available;
 		this.limit = limit;
@@ -28,7 +28,7 @@ public class ReportQuickSnapCount implements IReport {
 
 	@Override
 	public ReportId getId() {
-		return ReportId.QUICK_SNAP_COUNT;
+		return ReportId.KICKOFF_SEQUENCE_ACTIVATIONS_COUNT;
 	}
 
 	public int getAmount() {
@@ -45,7 +45,7 @@ public class ReportQuickSnapCount implements IReport {
 
 	@Override
 	public IReport transform(IFactorySource source) {
-		return new ReportQuickSnapCount(available, amount, limit);
+		return new ReportKickoffSequenceActivationsCount(available, amount, limit);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.end;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -16,6 +16,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportBiteSpectator;
 import com.fumbbl.ffb.server.GameState;
@@ -51,7 +52,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepInitFeeding extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -113,17 +114,13 @@ public class StepInitFeeding extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_PLAYER_CHOICE:
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 				if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
 					fFeedOnPlayerChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
 					game.setDefenderId(playerChoiceCommand.getPlayerId());
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
-				break;
-			default:
-				break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {

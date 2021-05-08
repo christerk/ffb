@@ -11,19 +11,19 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class ReportQuickSnapEnd implements IReport {
+public class ReportKickoffSequenceActivationsExhausted implements IReport {
 	private boolean limitReached;
 
-	public ReportQuickSnapEnd() {
+	public ReportKickoffSequenceActivationsExhausted() {
 	}
 
-	public ReportQuickSnapEnd(boolean limitReached) {
+	public ReportKickoffSequenceActivationsExhausted(boolean limitReached) {
 		this.limitReached = limitReached;
 	}
 
 	@Override
 	public ReportId getId() {
-		return ReportId.QUICK_SNAP_END;
+		return ReportId.KICKOFF_SEQUENCE_ACTIVATIONS_EXHAUSTED;
 	}
 
 	public boolean isLimitReached() {
@@ -32,7 +32,7 @@ public class ReportQuickSnapEnd implements IReport {
 
 	@Override
 	public IReport transform(IFactorySource source) {
-		return new ReportQuickSnapEnd(limitReached);
+		return new ReportKickoffSequenceActivationsExhausted(limitReached);
 	}
 
 	@Override

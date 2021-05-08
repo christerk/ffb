@@ -112,13 +112,17 @@ public class UtilServerReRoll {
 
 	public static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {
 		Game game = pGameState.getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+		TurnMode turnMode = game.getTurnMode();
+		boolean homeHasPlayer = game.getTeamHome().hasPlayer(pPlayer);
+		boolean awayHasPlayer = game.getTeamAway().hasPlayer(pPlayer);
 		return (actingTeam.hasPlayer(pPlayer) && !game.getTurnData().isReRollUsed() && (game.getTurnData().getReRolls() > 0)
-				&& game.getTurnMode() != TurnMode.KICKOFF && (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.DUMP_OFF)
-				&& ((game.getTurnMode() != TurnMode.BOMB_HOME) || game.getTeamHome().hasPlayer(pPlayer))
-				&& ((game.getTurnMode() != TurnMode.BOMB_HOME_BLITZ) || game.getTeamHome().hasPlayer(pPlayer))
-				&& ((game.getTurnMode() != TurnMode.BOMB_AWAY) || game.getTeamAway().hasPlayer(pPlayer))
-				&& ((game.getTurnMode() != TurnMode.BOMB_AWAY_BLITZ) || game.getTeamAway().hasPlayer(pPlayer)));
+				&& mechanic.allowsTeamReRoll(turnMode)
+				&& ((turnMode != TurnMode.BOMB_HOME) || homeHasPlayer)
+				&& ((turnMode != TurnMode.BOMB_HOME_BLITZ) || homeHasPlayer)
+				&& ((turnMode != TurnMode.BOMB_AWAY) || awayHasPlayer)
+				&& ((turnMode != TurnMode.BOMB_AWAY_BLITZ) || awayHasPlayer));
 	}
 
 }
