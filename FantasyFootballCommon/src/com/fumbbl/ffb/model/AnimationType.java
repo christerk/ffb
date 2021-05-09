@@ -14,7 +14,7 @@ public enum AnimationType implements INamedObject {
 	KICKOFF_BRILLIANT_COACHING("kickoffBrilliantCoaching"), KICKOFF_CHEERING_FANS("kickoffCheeringFans"),
 	KICKOFF_GET_THE_REF("kickoffGetTheRef"), KICKOFF_HIGH_KICK("kickoffHighKick"), KICKOFF_NICE("kickoffNice"),
 	KICKOFF_PERFECT_DEFENSE("kickoffPerfectDefense"), KICKOFF_SOLID_DEFENSE("kickoffSolidDefense"),
-	KICKOFF_PITCH_INVASION("kickoffPitchInvasion"),
+	KICKOFF_PITCH_INVASION("kickoffPitchInvasion"), KICKOFF_OFFICIOUS_REF("kickoffOfficiousRef"),
 	KICKOFF_POURING_RAIN("kickoffPouringRain"), KICKOFF_QUICK_SNAP("kickoffQuickSnap"), KICKOFF_RIOT("kickoffRiot"),
 	KICKOFF_TIMEOUT("kickoffTimeout"),
 	KICKOFF_SWELTERING_HEAT("kickoffSwelteringHeat"), KICKOFF_THROW_A_ROCK("kickoffThrowARock"),

@@ -30,7 +30,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.ReportKickoffPitchInvasion;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffRiot;
-import com.fumbbl.ffb.report.ReportKickoffThrowARock;
+import com.fumbbl.ffb.report.bb2016.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.server.DiceInterpreter;

@@ -242,6 +242,7 @@ public interface IIconProperty {
 	String ANIMATION_KICKOFF_TIMEOUT = "animation.kickoff.timeout";
 	String ANIMATION_KICKOFF_SOLID_DEFENCE = "animation.kickoff.solidDefence";
 	String ANIMATION_KICKOFF_SWELTERING_HEAT = "animation.kickoff.swelteringHeat";
+	String ANIMATION_KICKOFF_OFFICIOUS_REF = "animation.kickoff.officiousRef";
 	String ANIMATION_KICKOFF_THROW_A_ROCK = "animation.kickoff.throwARock";
 	String ANIMATION_KICKOFF_VERY_SUNNY = "animation.kickoff.verySunny";
 

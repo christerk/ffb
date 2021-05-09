@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.generator.common;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -11,6 +9,8 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
@@ -45,6 +45,7 @@ public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
 		sequence.add(StepId.KICKOFF_RESULT_ROLL);
 		sequence.add(StepId.APPLY_KICKOFF_RESULT, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF),
 			from(StepParameterKey.GOTO_LABEL_ON_BLITZ, IStepLabel.BLITZ_TURN));
+		// may insert send off steps at this point
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HOME));
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.AWAY));
 		sequence.jump(IStepLabel.KICKOFF_ANIMATION);

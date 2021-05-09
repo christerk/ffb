@@ -64,6 +64,9 @@ public class AnimationSequenceKickoff implements IAnimationSequence, ActionListe
 	public static final AnimationSequenceKickoff KICKOFF_THROW_A_ROCK = createAnimationSequence(
 			IIconProperty.ANIMATION_KICKOFF_THROW_A_ROCK);
 
+	public static final AnimationSequenceKickoff KICKOFF_OFFICIOUS_REF = createAnimationSequence(
+		IIconProperty.ANIMATION_KICKOFF_OFFICIOUS_REF);
+
 	public static final AnimationSequenceKickoff KICKOFF_VERY_SUNNY = createAnimationSequence(
 			IIconProperty.ANIMATION_KICKOFF_VERY_SUNNY);
 

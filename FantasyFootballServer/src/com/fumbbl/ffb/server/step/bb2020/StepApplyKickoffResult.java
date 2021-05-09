@@ -10,6 +10,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
@@ -29,22 +30,23 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
-import com.fumbbl.ffb.report.bb2020.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.ReportKickoffPitchInvasion;
-import com.fumbbl.ffb.report.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
-import com.fumbbl.ffb.report.bb2020.ReportKickoffTimeout;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffExtraReRoll;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffOfficiousRef;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffTimeout;
+import com.fumbbl.ffb.report.bb2020.ReportOfficiousRefRoll;
 import com.fumbbl.ffb.report.bb2020.ReportQuickSnapRoll;
 import com.fumbbl.ffb.report.bb2020.ReportSolidDefenceRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeThrowARock;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepException;
@@ -53,6 +55,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -66,8 +69,12 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 /**
  * Step in kickoff sequence to apply the kickoff result.
@@ -224,8 +231,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			case BLITZ:
 				handleBlitz();
 				break;
-			case THROW_A_ROCK:
-				handleThrowARock();
+			case OFFICIOUS_REF:
+				handleOfficiousRef();
 				break;
 			case PITCH_INVASION:
 				handlePitchInvasion();
@@ -379,7 +386,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (homeGainsReRoll) {
 			turnDataHome.setReRolls(turnDataHome.getReRolls() + 1);
 			turnDataHome.setReRollsBrilliantCoachingOneDrive(
-				turnDataHome.getReRollsBrilliantCoachingOneDrive() + 1 );
+				turnDataHome.getReRollsBrilliantCoachingOneDrive() + 1);
 			teamId = game.getTeamHome().getId();
 		}
 
@@ -387,7 +394,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (awayGainsReRoll) {
 			turnDataAway.setReRolls(turnDataAway.getReRolls() + 1);
 			turnDataAway.setReRollsBrilliantCoachingOneDrive(
-				turnDataAway.getReRollsBrilliantCoachingOneDrive() + 1 );
+				turnDataAway.getReRollsBrilliantCoachingOneDrive() + 1);
 			teamId = game.getTeamAway().getId();
 		}
 
@@ -518,7 +525,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					int activePlayersOnField = (int) Arrays.stream(game.getActingTeam().getPlayers())
 						.filter(player ->
 							fKickoffBounds.isInBounds(game.getFieldModel().getPlayerCoordinate(player))
-							&& game.getFieldModel().getPlayerState(player).isActive()
+								&& game.getFieldModel().getPlayerState(player).isActive()
 						)
 						.count();
 
@@ -576,94 +583,75 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnBlitz);
 	}
 
-	private void handleThrowARock() {
+	private void handleOfficiousRef() {
 
-		getResult().setAnimation(new Animation(AnimationType.KICKOFF_THROW_A_ROCK));
+		getResult().setAnimation(new Animation(AnimationType.KICKOFF_OFFICIOUS_REF));
 		UtilServerGame.syncGameModel(this);
 
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 
 		int rollHome = getGameState().getDiceRoller().rollThrowARock();
-		int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(),
-			NamedProperties.increasesTeamsFame).length;
-		int totalHome = rollHome + gameResult.getTeamResultHome().getFame() + fanFavouritesHome;
+		int totalHome = rollHome + gameResult.getTeamResultHome().getFanFactor();
 		int rollAway = getGameState().getDiceRoller().rollThrowARock();
-		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
-			NamedProperties.increasesTeamsFame).length;
-		int totalAway = rollAway + gameResult.getTeamResultAway().getFame() + fanFavouritesAway;
+		int totalAway = rollAway + gameResult.getTeamResultAway().getFanFactor();
 
-		String hitPlayerIdHome = null;
-		String hitPlayerIdAway = null;
+		String playerIdHome = null;
+		String playerIdAway = null;
+		List<String> playerIds = new ArrayList<>();
 
 		if (totalAway >= totalHome) {
 			Player<?> homePlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamHome()));
 			if (homePlayer != null) {
-				hitPlayerIdHome = homePlayer.getId();
+				playerIdHome = homePlayer.getId();
+				playerIds.add(playerIdHome);
 			}
 		}
 		if (totalHome >= totalAway) {
 			Player<?> awayPlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamAway()));
 			if (awayPlayer != null) {
-				hitPlayerIdAway = awayPlayer.getId();
+				playerIdAway = awayPlayer.getId();
+				playerIds.add(playerIdAway);
 			}
 		}
 
-		String[] hitPlayerIds = null;
-		if ((hitPlayerIdHome != null) && (hitPlayerIdAway != null)) {
-			hitPlayerIds = new String[]{hitPlayerIdHome, hitPlayerIdAway};
-		} else {
-			if (hitPlayerIdHome != null) {
-				hitPlayerIds = new String[]{hitPlayerIdHome};
-			}
-			if (hitPlayerIdAway != null) {
-				hitPlayerIds = new String[]{hitPlayerIdAway};
-			}
-		}
-		getResult().addReport(new ReportKickoffThrowARock(rollHome, rollAway, hitPlayerIds));
+		getResult().addReport(new ReportKickoffOfficiousRef(rollHome, rollAway, playerIds));
 
-		if (hitPlayerIdHome != null) {
+		Set<StepParameterKey> parametersToConsume = new HashSet<StepParameterKey>() {{
+			add(StepParameterKey.END_TURN);
+			add(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE);
+			add(StepParameterKey.FOULER_HAS_BALL);
+			add(StepParameterKey.ARGUE_THE_CALL_SUCCESSFUL);
+		}};
 
-			Player<?> player = game.getPlayerById(hitPlayerIdHome);
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+		Sequence sequence = new Sequence(getGameState());
 
-			FieldCoordinate startCoordinate = null;
-			if (FieldCoordinateBounds.UPPER_HALF.isInBounds(playerCoordinate)) {
-				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 0);
-			} else {
-				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 14);
-			}
-			getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
-			UtilServerGame.syncGameModel(this);
-
-			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HOME));
-			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
-				new InjuryTypeThrowARock(), null, player, playerCoordinate, null, null, ApothecaryMode.HOME)));
-
+		if (playerIdHome != null) {
+			insertSteps(game, playerIdHome, parametersToConsume, sequence, ApothecaryMode.HOME);
 		}
 
-		if (hitPlayerIdAway != null) {
-
-			Player<?> player = game.getPlayerById(hitPlayerIdAway);
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-
-			FieldCoordinate startCoordinate = null;
-			if (FieldCoordinateBounds.UPPER_HALF.isInBounds(playerCoordinate)) {
-				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 0);
-			} else {
-				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 14);
-			}
-			getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
-			UtilServerGame.syncGameModel(this);
-
-			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.AWAY));
-			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
-				new InjuryTypeThrowARock(), null, player, playerCoordinate, null, null, ApothecaryMode.AWAY)));
-
+		if (playerIdAway != null) {
+			insertSteps(game, playerIdAway, parametersToConsume, sequence, ApothecaryMode.AWAY);
 		}
+
+		getGameState().getStepStack().push(sequence.getSequence());
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
+	}
+
+	private void insertSteps(Game game, String playerId, Set<StepParameterKey> parametersToConsume, Sequence sequence, ApothecaryMode apothecaryMode) {
+		int roll = getGameState().getDiceRoller().rollDice(6);
+		getResult().addReport(new ReportOfficiousRefRoll(roll, playerId));
+		if (roll == 1) {
+			getResult().setSound(SoundId.WHISTLE);
+			sequence.add(StepId.SET_ACTING_PLAYER_AND_TEAM, StepParameter.from(StepParameterKey.PLAYER_ID, playerId));
+			sequence.add(StepId.BRIBES, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
+			sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
+			sequence.add(StepId.CONSUME_PARAMETER, IStepLabel.END_FOULING, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parametersToConsume));
+		} else {
+			publishParameters(UtilServerInjury.stunPlayer(this, game.getPlayerById(playerId), apothecaryMode));
+		}
 	}
 
 	private void handlePitchInvasion() {

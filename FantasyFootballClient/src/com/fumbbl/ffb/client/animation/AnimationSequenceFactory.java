@@ -55,6 +55,8 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceKickoff.KICKOFF_SWELTERING_HEAT;
 			case KICKOFF_THROW_A_ROCK:
 				return AnimationSequenceKickoff.KICKOFF_THROW_A_ROCK;
+			case KICKOFF_OFFICIOUS_REF:
+				return AnimationSequenceKickoff.KICKOFF_OFFICIOUS_REF;
 			case KICKOFF_VERY_SUNNY:
 				return AnimationSequenceKickoff.KICKOFF_VERY_SUNNY;
 			case SPELL_FIREBALL:
