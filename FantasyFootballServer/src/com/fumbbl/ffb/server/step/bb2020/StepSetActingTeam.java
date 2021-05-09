@@ -40,6 +40,8 @@ public class StepSetActingTeam extends AbstractStep {
 	@Override
 	public void start() {
 		Game game = getGameState().getGame();
+		game.getActingPlayer().setPlayer(null);
+		
 		Team team = game.getTeamById(teamId);
 
 		if (team != game.getActingTeam()) {
