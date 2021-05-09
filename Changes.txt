@@ -1,6 +1,7 @@
 Behaviour Changes:
 - Cards for 2020 removed
 - New icons for vomit, blitz target and chainsaw
+- Implement Kick-off events except Cheering Fans (still uses old result)
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020

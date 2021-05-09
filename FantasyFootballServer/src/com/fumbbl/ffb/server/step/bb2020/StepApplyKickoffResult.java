@@ -22,6 +22,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.InducementSet;
@@ -30,11 +31,11 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
-import com.fumbbl.ffb.report.ReportKickoffPitchInvasion;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffOfficiousRef;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffPitchInvasion;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffTimeout;
@@ -73,6 +74,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
@@ -659,44 +661,41 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 
-		int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(),
-			NamedProperties.increasesTeamsFame).length;
-		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
-			NamedProperties.increasesTeamsFame).length;
+		int rollHome = getGameState().getDiceRoller().rollDice(6);
+		int rollAway = getGameState().getDiceRoller().rollDice(6);
 
-		Player<?>[] playersHome = game.getTeamHome().getPlayers();
-		int[] rollsHome = new int[playersHome.length];
-		boolean[] playerAffectedHome = new boolean[playersHome.length];
-		for (int i = 0; i < playersHome.length; i++) {
-			if (isPlayerOnField(game, playersHome[i])) {
-				rollsHome[i] = getGameState().getDiceRoller().rollPitchInvasion();
-				playerAffectedHome[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsHome[i],
-					gameResult.getTeamResultAway().getFame() + fanFavouritesAway);
-				if (playerAffectedHome[i]) {
-					UtilServerInjury.stunPlayer(this, playersHome[i], ApothecaryMode.HOME);
-				}
-			}
+		int totalHome = rollHome + gameResult.getTeamResultHome().getFanFactor();
+		int totalAway = rollAway + gameResult.getTeamResultAway().getFanFactor();
+
+		List<String> affectedPlayers = new ArrayList<>();
+
+		if (totalHome <= totalAway) {
+			affectedPlayers.addAll(stunPlayers(game.getTeamHome(), game.getFieldModel()));
 		}
 
-		Player<?>[] playersAway = game.getTeamAway().getPlayers();
-		int[] rollsAway = new int[playersAway.length];
-		boolean[] playerAffectedAway = new boolean[playersAway.length];
-		for (int i = 0; i < playersAway.length; i++) {
-			if (isPlayerOnField(game, playersAway[i])) {
-				rollsAway[i] = getGameState().getDiceRoller().rollPitchInvasion();
-				playerAffectedAway[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsAway[i],
-					gameResult.getTeamResultHome().getFame() + fanFavouritesHome);
-				if (playerAffectedAway[i]) {
-					UtilServerInjury.stunPlayer(this, playersAway[i], ApothecaryMode.DEFENDER);
-				}
-			}
+		if (totalHome >= totalAway) {
+			affectedPlayers.addAll(stunPlayers(game.getTeamAway(), game.getFieldModel()));
 		}
 
-		getResult().addReport(new ReportKickoffPitchInvasion(rollsHome, playerAffectedHome, rollsAway, playerAffectedAway));
+		getResult().addReport(new ReportKickoffPitchInvasion(rollHome, rollAway, affectedPlayers));
 
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_PITCH_INVASION));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
+	}
+
+	private List<String> stunPlayers(Team team, FieldModel fieldModel) {
+		List<String> affectedPlayers = new ArrayList<>();
+		int stunned = getGameState().getDiceRoller().rollDice(3);
+		List<Player<?>> standing = Arrays.stream(team.getPlayers()).filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING).collect(Collectors.toList());
+		for (int i = 0; i < stunned; i++) {
+			int index = getGameState().getDiceRoller().rollDice(standing.size()) - 1;
+			Player<?> stunnedPlayer = standing.get(index);
+			UtilServerInjury.stunPlayer(this, stunnedPlayer, ApothecaryMode.HOME);
+			standing.remove(stunnedPlayer);
+			affectedPlayers.add(stunnedPlayer.getId());
+		}
+		return affectedPlayers;
 	}
 
 	private Player<?>[] playersOnField(Game pGame, Team pTeam) {

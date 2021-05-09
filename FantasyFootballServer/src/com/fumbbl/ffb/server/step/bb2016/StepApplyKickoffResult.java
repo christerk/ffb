@@ -28,7 +28,7 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffExtraReRoll;
-import com.fumbbl.ffb.report.ReportKickoffPitchInvasion;
+import com.fumbbl.ffb.report.bb2016.ReportKickoffPitchInvasion;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffRiot;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffThrowARock;
 import com.fumbbl.ffb.report.ReportScatterBall;
