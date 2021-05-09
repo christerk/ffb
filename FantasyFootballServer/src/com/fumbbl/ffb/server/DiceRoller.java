@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class DiceRoller {
 
-	private GameState fGameState;
-	private List<Integer> fTestRolls;
+	private final GameState fGameState;
+	private final List<Integer> fTestRolls;
 
 	public DiceRoller(GameState pGameState) {
 		fGameState = pGameState;
@@ -29,7 +29,7 @@ public class DiceRoller {
 	public int rollDice(int pType) {
 		Fortuna fortuna = getGameState().getServer().getFortuna();
 		while (fTestRolls.size() > 0) {
-			int testRoll = fTestRolls.remove(0).intValue();
+			int testRoll = fTestRolls.remove(0);
 			if (testRoll <= pType) {
 				return testRoll;
 			}

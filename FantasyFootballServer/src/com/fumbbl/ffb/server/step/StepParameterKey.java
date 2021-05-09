@@ -103,6 +103,7 @@ public enum StepParameterKey {
 	SHOW_NAME_IN_REPORT, // Boolean
 	SUCCESSFUL_DAUNTLESS, // Boolean
 	TARGET_COORDINATE, // FieldCoordinate
+	TEAM_ID, // String
 	THROW_IN_COORDINATE, // FieldCoordinate
 	THROWN_PLAYER_COORDINATE, // FieldCoordinate
 	THROWN_PLAYER_HAS_BALL, // Boolean

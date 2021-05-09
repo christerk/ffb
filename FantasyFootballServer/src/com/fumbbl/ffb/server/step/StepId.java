@@ -130,6 +130,8 @@ public enum StepId implements INamedObject {
 	SELECT_BLITZ_TARGET("selectBlitzTarget"),
 	SELECT_BLITZ_TARGET_END("selectBlitzTargetEnd"),
 	SETUP("setup"), // phase.kickoff
+	SET_ACTING_TEAM("setActingTeam"),
+	SET_ACTING_PLAYER_AND_TEAM("setActingPlayerAndTeam"),
 	SET_DEFENDER("setDefender"), // action.MultiBlock 2020
 	SHADOWING("shadowing"), // action.common
 	SPECTATORS("spectators"), // game.start
