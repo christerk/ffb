@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
@@ -13,6 +14,8 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -376,6 +379,8 @@ public class ClientStateSelect extends ClientState {
 
 	private boolean isThrowTeamMateActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
+		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
+
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventThrowTeamMateAction)) {
 			return false;
@@ -384,9 +389,9 @@ public class ClientStateSelect extends ClientState {
 		boolean rightStuffAvailable = false;
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		Player<?>[] teamPlayers = pPlayer.getTeam().getPlayers();
-		for (int i = 0; i < teamPlayers.length; i++) {
-			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
-			if (teamPlayers[i].canBeThrown()
+		for (Player<?> teamPlayer : teamPlayers) {
+			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayer);
+			if (mechanic.canBeThrown(game, teamPlayer)
 				&& !playerCoordinate.isBoxCoordinate()) {
 				rightStuffAvailable = true;
 				break;
@@ -397,8 +402,8 @@ public class ClientStateSelect extends ClientState {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
 			playerCoordinate, false);
-		for (int i = 0; i < adjacentTeamPlayers.length; i++) {
-			if (adjacentTeamPlayers[i].canBeThrown()) {
+		for (Player<?> adjacentTeamPlayer : adjacentTeamPlayers) {
+			if (mechanic.canBeThrown(game, adjacentTeamPlayer)) {
 				rightStuffAdjacent = true;
 				break;
 			}

@@ -1,9 +1,12 @@
 package com.fumbbl.ffb.util;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -338,21 +341,6 @@ public class UtilPlayer {
 			&& pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer)));
 	}
 
-	public static Player<?>[] findThrowableTeamMates(Game pGame, Player<?> pThrower) {
-		List<Player<?>> throwablePlayers = new ArrayList<>();
-		FieldModel fieldModel = pGame.getFieldModel();
-		FieldCoordinate throwerCoordinate = fieldModel.getPlayerCoordinate(pThrower);
-		Player<?>[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pThrower.getTeam(), throwerCoordinate,
-			false);
-		for (Player<?> adjacentPlayer : adjacentPlayers) {
-
-			if (adjacentPlayer.canBeThrown()) {
-				throwablePlayers.add(adjacentPlayer);
-			}
-		}
-		return throwablePlayers.toArray(new Player[0]);
-	}
-
 	public static Player<?>[] findKickableTeamMates(Game pGame, Player<?> pKicker) {
 		List<Player<?>> kickablePlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
@@ -367,9 +355,10 @@ public class UtilPlayer {
 	}
 
 	public static boolean canThrowTeamMate(Game pGame, Player<?> pThrower, boolean pCheckPassUsed) {
+		TtmMechanic mechanic = (TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 		return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed())
 			&& pThrower.hasSkillProperty(NamedProperties.canThrowTeamMates)
-			&& (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
+			&& (mechanic.findThrowableTeamMates(pGame, pThrower).length > 0));
 	}
 
 	public static boolean canKickTeamMate(Game pGame, Player<?> pKicker, boolean pCheckBlitzUsed) {

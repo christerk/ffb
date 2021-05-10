@@ -1,10 +1,10 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -12,13 +12,14 @@ import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
 /**
@@ -134,23 +135,23 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 
 	private boolean canBeThrown(Player<?> pPlayer) {
 		Game game = getClient().getGame();
+		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		PlayerState catcherState = game.getFieldModel().getPlayerState(pPlayer);
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		// added a check so you could not throw the opponents players, maybe this should
 		// be in the server-check?
-		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canThrowTeamMates)
-				&& pPlayer.canBeThrown() && catcherState.hasTacklezones()
-				&& catcherCoordinate.isAdjacent(throwerCoordinate)
-				&& (actingPlayer.getPlayer().getTeam() == pPlayer.getTeam()));
+		return actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canThrowTeamMates)
+				&& mechanic.canBeThrown(game, pPlayer)
+				&& catcherCoordinate.isAdjacent(throwerCoordinate);
 	}
 
 	private void markThrowablePlayers() {
 		Game game = getClient().getGame();
+		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		Player<?>[] throwablePlayers = UtilPlayer.findThrowableTeamMates(game, actingPlayer.getPlayer());
+		Player<?>[] throwablePlayers = mechanic.findThrowableTeamMates(game, actingPlayer.getPlayer());
 		if ((game.getDefender() == null) && ArrayTool.isProvided(throwablePlayers)) {
 			userInterface.getFieldComponent().getLayerRangeRuler().markPlayers(throwablePlayers,
 					FieldLayerRangeRuler.COLOR_THROWABLE_PLAYER);
