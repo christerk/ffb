@@ -87,6 +87,7 @@ public enum StepParameterKey {
 	PASS_ACCURATE, // Boolean
 	PASS_DEVIATES, // Boolean
 	PASS_FUMBLE, // Boolean
+	PASS_RESULT, // PassResult
 	PASSING_DISTANCE, // PassingDistance
 	PLAYER_ID, // String
 	PLAYER_IDS, // List<String>

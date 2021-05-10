@@ -5,9 +5,6 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.modifiers.ModifierType;
-import com.fumbbl.ffb.modifiers.PassContext;
-import com.fumbbl.ffb.modifiers.PassModifier;
 
 /**
  * A player with this skill has the ability to throw a player from the same team
@@ -42,12 +39,6 @@ public class ThrowTeamMate extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canThrowTeamMates);
-		registerModifier(new PassModifier("Throw Team-Mate", 1, ModifierType.REGULAR) {
-			@Override
-			public boolean appliesToContext(Skill skill, PassContext context) {
-				return context.isDuringThrowTeamMate();
-			}
-		});
 	}
 
 }

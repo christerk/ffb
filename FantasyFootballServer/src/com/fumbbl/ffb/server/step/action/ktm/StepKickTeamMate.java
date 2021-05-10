@@ -196,7 +196,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), fKickedPlayerId, fKickedPlayerState,
-					fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true));
+					fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true, passResult));
 			publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
 			if (fDistance >= 9) {
 				publishParameter(new StepParameter(StepParameterKey.KTM_MODIFIER, KickTeamMateRange.LONG));

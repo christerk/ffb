@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.ttm;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -32,7 +32,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 
 	public static class StepState {

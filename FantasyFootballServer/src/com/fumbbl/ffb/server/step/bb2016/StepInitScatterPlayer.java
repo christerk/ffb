@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.ttm;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -27,6 +27,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.action.ttm.UtilThrowTeamMateSequence;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 
@@ -51,7 +52,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepInitScatterPlayer extends AbstractStep {
 
 	private String fThrownPlayerId;

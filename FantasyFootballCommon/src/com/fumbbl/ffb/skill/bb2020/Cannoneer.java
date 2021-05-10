@@ -1,16 +1,16 @@
 package com.fumbbl.ffb.skill.bb2020;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * When this player performs a Long Pass action or a Long Bomb Pass action,

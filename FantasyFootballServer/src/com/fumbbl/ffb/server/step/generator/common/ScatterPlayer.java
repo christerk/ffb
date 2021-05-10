@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.step.IStepLabel;
@@ -41,7 +42,8 @@ public class ScatterPlayer extends SequenceGenerator<ScatterPlayer.SequenceParam
 				from(StepParameterKey.THROWN_PLAYER_STATE, params.thrownPlayerState),
 				from(StepParameterKey.THROWN_PLAYER_HAS_BALL, params.thrownPlayerHasBall),
 				from(StepParameterKey.THROWN_PLAYER_COORDINATE, params.thrownPlayerCoordinate),
-				from(StepParameterKey.THROW_SCATTER, params.throwScatter));
+				from(StepParameterKey.THROW_SCATTER, params.throwScatter),
+				from(StepParameterKey.PASS_RESULT, params.passResult));
 		}
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_HIT_PLAYER,
@@ -59,8 +61,9 @@ public class ScatterPlayer extends SequenceGenerator<ScatterPlayer.SequenceParam
 		private final PlayerState thrownPlayerState;
 		private final FieldCoordinate thrownPlayerCoordinate;
 		private final boolean hasSwoop, thrownPlayerHasBall, throwScatter;
+		private final PassResult passResult;
 
-		public SequenceParams(GameState gameState, String thrownPlayerId, PlayerState thrownPlayerState, boolean thrownPlayerHasBall, FieldCoordinate thrownPlayerCoordinate, boolean hasSwoop, boolean throwScatter) {
+		public SequenceParams(GameState gameState, String thrownPlayerId, PlayerState thrownPlayerState, boolean thrownPlayerHasBall, FieldCoordinate thrownPlayerCoordinate, boolean hasSwoop, boolean throwScatter, PassResult passResult) {
 			super(gameState);
 			this.thrownPlayerId = thrownPlayerId;
 			this.thrownPlayerState = thrownPlayerState;
@@ -68,6 +71,7 @@ public class ScatterPlayer extends SequenceGenerator<ScatterPlayer.SequenceParam
 			this.thrownPlayerCoordinate = thrownPlayerCoordinate;
 			this.hasSwoop = hasSwoop;
 			this.throwScatter = throwScatter;
+			this.passResult = passResult;
 		}
 	}
 }

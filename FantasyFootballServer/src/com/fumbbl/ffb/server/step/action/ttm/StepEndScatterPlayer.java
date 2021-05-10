@@ -109,7 +109,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			((ScatterPlayer)factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), fThrownPlayerId, fThrownPlayerState,
-					fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false));
+					fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false, passResult));
 			if (fIsKickedPlayer) {
 				publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
 			}
