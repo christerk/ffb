@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.ttm;
+package com.fumbbl.ffb.server.step.bb2020.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -36,7 +36,7 @@ import com.fumbbl.ffb.server.step.generator.common.ScatterPlayer;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepEndScatterPlayer extends AbstractStep {
 
 	private String fThrownPlayerId;
@@ -75,7 +75,6 @@ public final class StepEndScatterPlayer extends AbstractStep {
 			case KICKED_PLAYER_COORDINATE:
 			case THROWN_PLAYER_COORDINATE:
 				fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
-				consume(pParameter);
 				return true;
 			case IS_KICKED_PLAYER:
 				fIsKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;

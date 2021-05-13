@@ -80,10 +80,9 @@ public class StepBouncePlayerWithoutTacklezone extends AbstractStep {
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
 					thrownPlayerState, false, throwerCoordinate, false,
 					false));
-			getResult().setNextAction(StepAction.GOTO_LABEL, goToOnFailure);
-
-		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
+		} else {
+			getResult().setNextAction(StepAction.GOTO_LABEL, goToOnFailure);
 		}
 	}
 

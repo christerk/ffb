@@ -128,7 +128,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			}
 		}
 		if (doRoll) {
-			RightStuffModifierFactory modifierFactory = new RightStuffModifierFactory();
+			RightStuffModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.RIGHT_STUFF_MODIFIER);
 			Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findModifiers(new RightStuffContext(game, thrownPlayer, ktmRange));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
