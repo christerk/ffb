@@ -99,7 +99,7 @@ public class StepMissedPass extends AbstractStep {
 				validDistance--;
 				lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, validDistance);
 			}
-			getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll));
+			getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll, false));
 		} else {
 			coordinateStart = game.getPassCoordinate();
 			while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {

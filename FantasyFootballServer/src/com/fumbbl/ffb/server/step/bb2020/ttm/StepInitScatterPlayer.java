@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.bb2020.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -9,7 +9,6 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -62,7 +61,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private boolean fThrowScatter;
 	private boolean fIsKickedPlayer;
-	private PassResult passResult;
 
 	public StepInitScatterPlayer(GameState pGameState) {
 		super(pGameState);
@@ -103,9 +101,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 						break;
 					case IS_KICKED_PLAYER:
 						fIsKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-						break;
-					case PASS_RESULT:
-						passResult = (PassResult) parameter.getValue();
 						break;
 					default:
 						break;

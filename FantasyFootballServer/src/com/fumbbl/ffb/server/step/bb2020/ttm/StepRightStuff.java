@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.ttm;
+package com.fumbbl.ffb.server.step.bb2020.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -14,6 +14,7 @@ import com.fumbbl.ffb.factory.RightStuffModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.KickTeamMateRange;
 import com.fumbbl.ffb.model.Player;
@@ -37,28 +38,31 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
  * Step in ttm sequence to handle skill RIGHT_STUFF (landing roll).
- *
+ * <p>
  * Expects stepParameter DROP_THROWN_PLAYER to be set by a preceding step.
  * Expects stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step.
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step.
- *
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepRightStuff extends AbstractStepWithReRoll {
 
 	private Boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
 	private boolean fDropThrownPlayer;
 	private KickTeamMateRange ktmRange;
+	private PassResult passResult;
+	private String goToOnSuccess;
 
 	public StepRightStuff(GameState pGameState) {
 		super(pGameState);
@@ -69,25 +73,37 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	}
 
 	@Override
+	public void init(StepParameterSet parameterSet) {
+		if (parameterSet != null) {
+			Arrays.stream(parameterSet.values()).forEach(parameter -> {
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_SUCCESS) {
+					goToOnSuccess = (String) parameter.getValue();
+				}
+			});
+		}
+		super.init(parameterSet);
+	}
+
+	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case KICKED_PLAYER_HAS_BALL:
-			case THROWN_PLAYER_HAS_BALL:
-				fThrownPlayerHasBall = (Boolean) pParameter.getValue();
-				return true;
-			case KICKED_PLAYER_ID:
-			case THROWN_PLAYER_ID:
-				fThrownPlayerId = (String) pParameter.getValue();
-				return true;
-			case DROP_THROWN_PLAYER:
-				fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				return true;
-			case KTM_MODIFIER:
-				ktmRange = (pParameter.getValue() != null) ? (KickTeamMateRange) pParameter.getValue() : KickTeamMateRange.SHORT;
-				return true;
-			default:
-				break;
+				case KICKED_PLAYER_HAS_BALL:
+				case THROWN_PLAYER_HAS_BALL:
+					fThrownPlayerHasBall = (Boolean) pParameter.getValue();
+					return true;
+				case KICKED_PLAYER_ID:
+				case THROWN_PLAYER_ID:
+					fThrownPlayerId = (String) pParameter.getValue();
+					return true;
+				case DROP_THROWN_PLAYER:
+					fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					return true;
+				case KTM_MODIFIER:
+					ktmRange = (pParameter.getValue() != null) ? (KickTeamMateRange) pParameter.getValue() : KickTeamMateRange.SHORT;
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -136,7 +152,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
 			getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
-					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
+				minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			if (successful) {
 				if (fThrownPlayerHasBall) {
 					if (UtilServerSteps.checkTouchdown(getGameState())) {
@@ -146,16 +162,16 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					if (game.getFieldModel().getPlayerCoordinate(thrownPlayer).equals(game.getFieldModel().getBallCoordinate())) {
 						game.getFieldModel().setBallMoving(true);
 						publishParameter(
-								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 					}
 				}
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
-				getResult().setNextAction(StepAction.NEXT_STEP);
+				getResult().setNextAction(StepAction.GOTO_LABEL, goToOnSuccess);
 			} else {
 				if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
 					setReRolledAction(ReRolledActions.RIGHT_STUFF);
 					doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
-							minimumRoll, false);
+						minimumRoll, false);
 				} else {
 					doRoll = false;
 				}
@@ -164,7 +180,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		if (!doRoll) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
 			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMLanding(), null,
-					thrownPlayer, playerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
+				thrownPlayer, playerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
 			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 			StepParameterSet params = UtilServerInjury.dropPlayer(this, thrownPlayer, ApothecaryMode.THROWN_PLAYER);
 			if (!fThrownPlayerHasBall) {
@@ -188,6 +204,8 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
 		IServerJsonOption.DROP_THROWN_PLAYER.addTo(jsonObject, fDropThrownPlayer);
 		IServerJsonOption.KICK_TEAM_MATE_RANGE.addTo(jsonObject, ktmRange.name());
+		IServerJsonOption.PASS_RESULT.addTo(jsonObject, passResult);
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, goToOnSuccess);
 		return jsonObject;
 	}
 
@@ -201,6 +219,8 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		if (storedKtmRange != null) {
 			ktmRange = KickTeamMateRange.valueOf(storedKtmRange);
 		}
+		passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
+		goToOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
 		return this;
 	}
 

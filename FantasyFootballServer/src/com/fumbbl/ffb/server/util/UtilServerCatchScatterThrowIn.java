@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.server.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.model.Game;
@@ -11,6 +8,9 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -27,7 +27,7 @@ public class UtilServerCatchScatterThrowIn {
 				divingCatchPlayers.add(player);
 			}
 		}
-		Player<?>[] playerArray = divingCatchPlayers.toArray(new Player[divingCatchPlayers.size()]);
+		Player<?>[] playerArray = divingCatchPlayers.toArray(new Player[0]);
 		UtilPlayer.sortByPlayerNr(playerArray);
 		return playerArray;
 	}

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.bb2016.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -44,7 +44,7 @@ import com.fumbbl.ffb.util.StringTool;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepBribes extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -149,20 +149,15 @@ public class StepBribes extends AbstractStep {
 			fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
 			boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
 			getResult().addReport(
-				new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true));
+				new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, false));
 			if (coachBanned) {
 				game.getTurnData().setCoachBanned(true);
 			}
 		}
 		if ((fBribesChoice != null) && (fArgueTheCallChoice != null)) {
-			boolean successful = (fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false;
-			publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESSFUL, successful));
-			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-			if (successful) {
-				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-			} else {
-				getResult().setNextAction(StepAction.NEXT_STEP);
-			}
+			publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESSFUL,
+				(fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false));
+			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
 
@@ -187,7 +182,7 @@ public class StepBribes extends AbstractStep {
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) && !game.getTurnData().isCoachBanned()) {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), true);
+			DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false);
 			dialogParameter.addPlayerId(actingPlayer.getPlayerId());
 			UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
 			fArgueTheCallChoice = null;

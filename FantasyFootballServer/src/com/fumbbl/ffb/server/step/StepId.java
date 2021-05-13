@@ -26,7 +26,8 @@ public enum StepId implements INamedObject {
 	BLOOD_LUST("bloodLust"), // action.common
 	BOMBARDIER("bombardier"), // action.pass
 	BONE_HEAD("boneHead"), // action.common
-	BOTH_DOWN("bothDown"), // action.block
+	BOTH_DOWN("bothDown"),  // action.block
+	BOUNCE_PLAYER_WITHOUT_TACKLEZONE("bouncePlayerWithoutTacklezone"),  // action.ttm 2020
 	BRIBES("bribes"), // action.foul
 	BUY_CARDS("buyCards"), // game.start
 	BUY_CARDS_AND_INDUCEMENTS("buyCardsAndInducements"), // game.start
@@ -39,6 +40,7 @@ public enum StepId implements INamedObject {
 	DAUNTLESS_MULTIPLE("dauntlessMultiple"), // action.multiBlock 2020
 	DISPATCH_DUMP_OFF("dispatchDumpOff"),
 	DISPATCH_PASSING("dispatchPassing"), // action.pass
+	DISPATCH_SCATTER_PLAYER("dispatchScatterPlayer"), // action.ttm 2020
 	DIVING_TACKLE("divingTackle"), // action.move
 	DROP_ACTING_PLAYER("dropPileDriverPlayer"), // action.block
 	DROP_DIVING_TACKLER("dropDivingTackler"), // action.move

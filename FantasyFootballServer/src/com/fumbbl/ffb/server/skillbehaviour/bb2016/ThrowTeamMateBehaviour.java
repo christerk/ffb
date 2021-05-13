@@ -18,15 +18,15 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportThrowTeamMateRoll;
+import com.fumbbl.ffb.report.bb2016.ReportThrowTeamMateRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.bb2016.StepThrowTeamMate;
-import com.fumbbl.ffb.server.step.bb2016.StepThrowTeamMate.StepState;
+import com.fumbbl.ffb.server.step.bb2016.ttm.StepThrowTeamMate;
+import com.fumbbl.ffb.server.step.bb2016.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.ScatterPlayer;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -87,7 +87,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 						SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 						((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 							.pushSequence(new ScatterPlayer.SequenceParams(step.getGameState(), state.thrownPlayerId,
-								state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true, passResult));
+								state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true));
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					} else {
 						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE) {

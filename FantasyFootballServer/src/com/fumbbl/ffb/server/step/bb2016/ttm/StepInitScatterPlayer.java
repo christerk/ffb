@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2016;
+package com.fumbbl.ffb.server.step.bb2016.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;

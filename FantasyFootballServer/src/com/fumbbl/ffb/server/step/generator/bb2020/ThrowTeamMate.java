@@ -38,15 +38,23 @@ public class ThrowTeamMate extends com.fumbbl.ffb.server.step.generator.ThrowTea
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
 		sequence.add(StepId.ALWAYS_HUNGRY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.EAT_TEAM_MATE),
-			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.FUMBLE_TTM_PASS));
+			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.RESOLVE_PASS));
 		sequence.add(StepId.THROW_TEAM_MATE);
+		sequence.add(StepId.DISPATCH_SCATTER_PLAYER, IStepLabel.RESOLVE_PASS);
 		// insert scatterPlayerSequence at this point
-		sequence.add(StepId.RIGHT_STUFF, IStepLabel.RIGHT_STUFF);
+		sequence.add(StepId.BOUNCE_PLAYER_WITHOUT_TACKLEZONE,
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.RIGHT_STUFF));
+		// insert scatterPlayerSequence at this point
 		sequence.jump(IStepLabel.APOTHECARY_THROWN_PLAYER);
+		sequence.add(StepId.RIGHT_STUFF, IStepLabel.RIGHT_STUFF,
+			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_SCATTER_PLAYER));
+		sequence.jump(IStepLabel.APOTHECARY_THROWN_PLAYER);
+		sequence.add(StepId.PICK_UP, IStepLabel.END_SCATTER_PLAYER,  from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.SCATTER_BALL));
+		sequence.jump(IStepLabel.END_THROW_TEAM_MATE);
 		sequence.add(StepId.EAT_TEAM_MATE, IStepLabel.EAT_TEAM_MATE);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_THROWN_PLAYER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.THROWN_PLAYER));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
 		sequence.add(StepId.END_THROW_TEAM_MATE, IStepLabel.END_THROW_TEAM_MATE);
 
 		gameState.getStepStack().push(sequence.getSequence());

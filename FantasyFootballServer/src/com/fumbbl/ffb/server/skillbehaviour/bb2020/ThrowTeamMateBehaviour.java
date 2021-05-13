@@ -15,21 +15,18 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportThrowTeamMateRoll;
-import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.report.bb2020.ReportThrowTeamMateRoll;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.bb2020.StepThrowTeamMate;
-import com.fumbbl.ffb.server.step.bb2020.StepThrowTeamMate.StepState;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.ScatterPlayer;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
+import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.ThrowTeamMate;
@@ -47,7 +44,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepThrowTeamMate step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -63,7 +60,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				boolean doRoll = true;
 				if (ReRolledActions.THROW_TEAM_MATE == step.getReRolledAction()) {
 					if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), thrower)) {
-						handlePassResult(game, state.passResult, step, state);
+						handlePassResult(state.passResult, step);
 						doRoll = false;
 					}
 				}
@@ -72,18 +69,18 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 					PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 					PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
-							game.getPassCoordinate(), true);
+						game.getPassCoordinate(), true);
 					Set<PassModifier> passModifiers = passModifierFactory.findModifiers(new PassContext(game, thrower, passingDistance, true));
-					int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(passingDistance,
-							passModifiers);
+					int minimumRoll = 2 + calculateModifiers(passModifiers) + passingDistance.getModifier2020();
 					int roll = step.getGameState().getDiceRoller().rollSkill();
 					state.passResult = evaluatePass(thrower.getPassingWithModifiers(), roll, passingDistance, passModifiers);
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
-							&& (step.getReRollSource() != null));
+						&& (step.getReRollSource() != null));
+					boolean successful = state.passResult == PassResult.ACCURATE || state.passResult == PassResult.INACCURATE;
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
-							reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId));
-					if (state.passResult == PassResult.ACCURATE) {
-						handlePassResult(game, state.passResult, step, state);
+						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult));
+					if (successful) {
+						handlePassResult(state.passResult, step);
 					} else {
 						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE) {
 							step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
@@ -91,15 +88,15 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 							ReRollSource unusedPassingReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PASS);
 							if (unusedPassingReroll != null) {
 								UtilServerDialog.showDialog(step.getGameState(),
-										new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(game), minimumRoll), false);
+									new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(game), minimumRoll), false);
 							} else {
 								if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-										ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
-									handlePassResult(game, state.passResult, step, state);
+									ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
+									handlePassResult(state.passResult, step);
 								}
 							}
 						} else {
-							handlePassResult(game, state.passResult, step, state);
+							handlePassResult(state.passResult, step);
 						}
 					}
 				}
@@ -107,17 +104,8 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				return false;
 			}
 
-			private void handlePassResult(Game game, PassResult passResult, StepThrowTeamMate step, StepState state) {
-				Player<?> thrower = game.getActingPlayer().getPlayer();
-				FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-
-				Player<?> thrownPlayer = game.getPlayerById(state.thrownPlayerId);
-				boolean scattersSingleDirection = thrownPlayer != null
-					&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
-				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-				((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
-					.pushSequence(new ScatterPlayer.SequenceParams(step.getGameState(), state.thrownPlayerId,
-						state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true, passResult));
+			private void handlePassResult(PassResult passResult, StepThrowTeamMate step) {
+				step.publishParameter(StepParameter.from(StepParameterKey.PASS_RESULT, passResult));
 				step.getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.common;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -48,7 +48,7 @@ import java.util.Set;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepPickUp extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
