@@ -5,7 +5,6 @@ import com.fumbbl.ffb.skill.FoulAppearance;
 import com.fumbbl.ffb.skill.JumpUp;
 import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.bb2016.BloodLust;
-import com.fumbbl.ffb.skill.bb2016.RightStuff;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
 import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
@@ -35,7 +34,7 @@ public class ReRolledActions {
 	public static final ReRolledAction ALWAYS_HUNGRY = new ReRolledAction("Always Hungry");
 	public static final ReRolledAction THROW_TEAM_MATE = new ReRolledAction("Throw Team-Mate");
 	public static final ReRolledAction KICK_TEAM_MATE = new ReRolledAction("Kick Team-Mate");
-	public static final ReRolledAction RIGHT_STUFF = new ReRolledAction(RightStuff.class);
+	public static final ReRolledAction RIGHT_STUFF = new ReRolledAction("Right Stuff");
 	public static final ReRolledAction SHADOWING = new ReRolledAction("Shadowing");
 	public static final ReRolledAction SHADOWING_ESCAPE = new ReRolledAction("Shadowing Escape");
 	public static final ReRolledAction TENTACLES = new ReRolledAction("Tentacles");

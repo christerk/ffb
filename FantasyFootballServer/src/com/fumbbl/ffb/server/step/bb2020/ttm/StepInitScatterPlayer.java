@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.step.bb2020.ttm;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
@@ -195,25 +194,8 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
 			}
 		} else {
-			// throw player out of bounds
-			game.getFieldModel().setPlayerState(thrownPlayer, new PlayerState(PlayerState.FALLING));
-			if (fIsKickedPlayer) {
-				InjuryResult injuryResultKickedPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeKTMCrowd(), null,
-					thrownPlayer, endCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
-				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultKickedPlayer));
-			} else {
-				InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null,
-					thrownPlayer, endCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
-				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
-			}
-			if (fThrownPlayerHasBall) {
-				publishParameter(
-					new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
-				publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, endCoordinate));
-				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-			}
-			// end loop
-			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
+			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate,
+				fThrownPlayerHasBall, fIsKickedPlayer ? new InjuryTypeKTMCrowd() : new InjuryTypeCrowdPush());
 		}
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, fThrownPlayerId));
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
@@ -234,6 +216,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
 		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
 		IServerJsonOption.THROW_SCATTER.addTo(jsonObject, fThrowScatter);
+		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, fIsKickedPlayer);
 		return jsonObject;
 	}
 
@@ -246,6 +229,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
 		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(game, jsonObject);
 		fThrowScatter = IServerJsonOption.THROW_SCATTER.getFrom(game, jsonObject);
+		fIsKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(game, jsonObject);
 		return this;
 	}
 

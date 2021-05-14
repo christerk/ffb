@@ -5,12 +5,12 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryContext;
-import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.DirectionFactory;
 import com.fumbbl.ffb.factory.KickoffResultFactory;
+import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.Game;
@@ -19,7 +19,6 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -75,17 +74,9 @@ public class DiceInterpreter {
 		return Math.max(2, 2 + modifierTotal);
 	}
 
-
-
 	public int minimumRollResistingFoulAppearance() {
 		return 2;
 	}
-
-	public int minimumRollThrowTeamMate(PassingDistance pPassingDistance,
-	                                    Set<PassModifier> pPassModifiers) {
-		return UtilRangeRuler.minimumRollThrowTeamMate(pPassingDistance, pPassModifiers);
-	}
-
 
 	public boolean isPassFumble(int roll, PassingDistance pPassingDistance,
 			Set<PassModifier> pPassModifiers) {

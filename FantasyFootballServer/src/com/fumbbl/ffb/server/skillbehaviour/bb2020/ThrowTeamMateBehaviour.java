@@ -12,6 +12,7 @@ import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
+import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -32,7 +33,6 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.ThrowTeamMate;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.Collection;
 import java.util.Set;
 
 @RulesCollection(Rules.BB2020)
@@ -71,9 +71,10 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 						game.getPassCoordinate(), true);
 					Set<PassModifier> passModifiers = passModifierFactory.findModifiers(new PassContext(game, thrower, passingDistance, true));
-					int minimumRoll = 2 + calculateModifiers(passModifiers) + passingDistance.getModifier2020();
+					TtmMechanic ttmMechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
+					int minimumRoll = ttmMechanic.minimumRoll(passingDistance, passModifiers);
 					int roll = step.getGameState().getDiceRoller().rollSkill();
-					state.passResult = evaluatePass(thrower.getPassingWithModifiers(), roll, passingDistance, passModifiers);
+					state.passResult = evaluatePass(thrower.getPassingWithModifiers(), roll, ttmMechanic.modifierSum(passingDistance, passModifiers));
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
 						&& (step.getReRollSource() != null));
 					boolean successful = state.passResult == PassResult.ACCURATE || state.passResult == PassResult.INACCURATE;
@@ -109,12 +110,12 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				step.getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 
-			private PassResult evaluatePass(int passValue, int roll, PassingDistance distance, Collection<PassModifier> modifiers) {
+			private PassResult evaluatePass(int passValue, int roll, int modifierSum) {
 				if (passValue <= 0) {
 					return PassResult.FUMBLE;
 				}
 
-				int resultAfterModifiers = roll - calculateModifiers(modifiers) - distance.getModifier2020();
+				int resultAfterModifiers = roll - modifierSum;
 				if (roll == 1) {
 					return PassResult.FUMBLE;
 				} else if (roll == 6 || resultAfterModifiers >= passValue) {
@@ -124,14 +125,6 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				} else {
 					return PassResult.INACCURATE;
 				}
-			}
-
-			private int calculateModifiers(Collection<PassModifier> pPassModifiers) {
-				int modifierTotal = 0;
-				for (PassModifier passModifier : pPassModifiers) {
-					modifierTotal += passModifier.getModifier();
-				}
-				return modifierTotal;
 			}
 		});
 	}

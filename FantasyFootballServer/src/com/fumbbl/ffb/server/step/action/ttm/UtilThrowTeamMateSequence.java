@@ -1,17 +1,20 @@
 package com.fumbbl.ffb.server.step.action.ttm;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.ReportScatterPlayer;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -43,6 +46,7 @@ public class UtilThrowTeamMateSequence {
 
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
+		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 
 		FieldCoordinate endCoordinate = null;
 		FieldCoordinate lastValidCoordinate = null;
@@ -53,7 +57,7 @@ public class UtilThrowTeamMateSequence {
 		boolean inBounds = true;
 		while (inBounds) {
 			if ((pThrowScatter && (rollList.size() >= 3))
-					|| (!pThrowScatter && (rollList.size() >= 1) && (game.getFieldModel().getPlayer(startCoordinate) == null))) {
+					|| (!pThrowScatter && (rollList.size() >= 1) && mechanic.isValidEndScatterCoordinate(game, startCoordinate))) {
 				break;
 			}
 			int roll = gameState.getDiceRoller().rollScatterDirection();

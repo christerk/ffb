@@ -9,7 +9,6 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -28,6 +27,7 @@ import java.util.Arrays;
 public class StepBouncePlayerWithoutTacklezone extends AbstractStep {
 	private String thrownPlayerId, goToOnFailure;
 	private PlayerState thrownPlayerState;
+	private FieldCoordinate thrownPlayerCoordinate;
 
 	public StepBouncePlayerWithoutTacklezone(GameState pGameState) {
 		super(pGameState);
@@ -51,14 +51,17 @@ public class StepBouncePlayerWithoutTacklezone extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case THROWN_PLAYER_ID:
-					thrownPlayerId = (String) pParameter.getValue();
+					thrownPlayerId = (String) parameter.getValue();
 					return true;
 				case THROWN_PLAYER_STATE:
-					thrownPlayerState = (PlayerState) pParameter.getValue();
+					thrownPlayerState = (PlayerState) parameter.getValue();
+					return true;
+				case THROWN_PLAYER_COORDINATE:
+					thrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -70,16 +73,16 @@ public class StepBouncePlayerWithoutTacklezone extends AbstractStep {
 	@Override
 	public void start() {
 		Game game = getGameState().getGame();
-		Player<?> thrower = game.getActingPlayer().getPlayer();
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 		if (!thrownPlayerState.hasTacklezones()) {
-			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
-				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
-					thrownPlayerState, false, throwerCoordinate, false,
-					false));
+			if (thrownPlayerCoordinate != null) {
+				((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
+					.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
+						thrownPlayerState, false, thrownPlayerCoordinate, false,
+						false));
+			}
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToOnFailure);
@@ -92,6 +95,7 @@ public class StepBouncePlayerWithoutTacklezone extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, thrownPlayerId);
 		IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, thrownPlayerState);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToOnFailure);
+		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, thrownPlayerCoordinate);
 		return jsonObject;
 	}
 
@@ -102,6 +106,7 @@ public class StepBouncePlayerWithoutTacklezone extends AbstractStep {
 		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
 		thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(source, jsonObject);
 		goToOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		thrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 }

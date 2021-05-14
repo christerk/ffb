@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.util;
 
-import java.util.Optional;
-import java.util.Set;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
@@ -10,10 +7,14 @@ import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
+import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
+
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * 
@@ -34,8 +35,9 @@ public class UtilRangeRuler {
 				PassModifierFactory factory = pGame.getFactory(FactoryType.Factory.PASS_MODIFIER);
 				Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(pGame, pThrower, passingDistance,
 					pThrowTeamMate));
+				TtmMechanic ttmMechanic = (TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 				if (pThrowTeamMate) {
-					minimumRoll = Optional.of(minimumRollThrowTeamMate(passingDistance, passModifiers));
+					minimumRoll = Optional.of(ttmMechanic.minimumRoll(passingDistance, passModifiers));
 				} else {
 					minimumRoll = mechanic.minimumRoll(pThrower, passingDistance, passModifiers);
 				}
@@ -44,14 +46,4 @@ public class UtilRangeRuler {
 		}
 		return rangeRuler;
 	}
-
-	public static int minimumRollThrowTeamMate(PassingDistance pPassingDistance,
-	                                           Set<PassModifier> pPassModifiers) {
-		int modifierTotal = 0;
-		for (PassModifier passModifier : pPassModifiers) {
-			modifierTotal += passModifier.getModifier();
-		}
-		return Math.max(2, 2 - pPassingDistance.getModifier2016() + modifierTotal);
-	}
-
 }

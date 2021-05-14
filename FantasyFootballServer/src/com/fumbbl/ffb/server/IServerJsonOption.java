@@ -92,6 +92,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
 	JsonBooleanOption INTERCEPTION_SUCCESSFUL = new JsonBooleanOption("interceptionSuccessfull");
 	JsonBooleanOption INTERCEPTOR_CHOSEN = new JsonBooleanOption("interceptorChosen");
+	JsonBooleanOption IS_KICKED_PLAYER = new JsonBooleanOption("isKickedPlayer");
 	JsonStringOption KICK_TEAM_MATE_RANGE = new JsonStringOption("kickTeamMateOption");
 	JsonPlayerStateOption KICKED_PLAYER_STATE = new JsonPlayerStateOption("kickedPlayerState");
 	JsonBooleanOption KICKED_PLAYER_HAS_BALL = new JsonBooleanOption("kickedPlayerHasBall");

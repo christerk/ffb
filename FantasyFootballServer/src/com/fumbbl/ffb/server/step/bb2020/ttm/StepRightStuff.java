@@ -102,6 +102,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				case KTM_MODIFIER:
 					ktmRange = (pParameter.getValue() != null) ? (KickTeamMateRange) pParameter.getValue() : KickTeamMateRange.SHORT;
 					return true;
+				case PASS_RESULT:
+					passResult = (PassResult) pParameter.getValue();
+					return true;
 				default:
 					break;
 			}
@@ -145,7 +148,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		}
 		if (doRoll) {
 			RightStuffModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.RIGHT_STUFF_MODIFIER);
-			Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findModifiers(new RightStuffContext(game, thrownPlayer, ktmRange));
+			Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findModifiers(new RightStuffContext(game, thrownPlayer, passResult));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
 			int roll = getGameState().getDiceRoller().rollSkill();

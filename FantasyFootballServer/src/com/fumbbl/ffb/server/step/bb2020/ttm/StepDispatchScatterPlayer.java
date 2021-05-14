@@ -18,11 +18,14 @@ import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPush;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeKTMCrowd;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.ScatterPlayer;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
@@ -31,7 +34,7 @@ import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 public class StepDispatchScatterPlayer extends AbstractStep {
 	private String thrownPlayerId;
 	private PlayerState thrownPlayerState;
-	private boolean thrownPlayerHasBall = false;
+	private boolean thrownPlayerHasBall = false, isKickedPlayer;
 	private PassResult passResult = PassResult.FUMBLE;
 
 	public StepDispatchScatterPlayer(GameState pGameState) {
@@ -58,6 +61,9 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 					return true;
 				case PASS_RESULT:
 					passResult = (PassResult) pParameter.getValue();
+					return true;
+				case IS_KICKED_PLAYER:
+					isKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 					return true;
 				default:
 					break;
@@ -94,7 +100,18 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 					validDistance--;
 					lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, validDistance);
 				}
+				game.getFieldModel().setPlayerCoordinate(thrownPlayer, lastValidCoordinate);
+				game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
+				game.setDefenderId(null);
+				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, lastValidCoordinate));
+
 				getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll, true));
+
+				if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
+					new TtmToCrowdHandler().handle(game, this, thrownPlayer, lastValidCoordinate,
+						thrownPlayerHasBall, isKickedPlayer ? new InjuryTypeKTMCrowd() : new InjuryTypeCrowdPush());
+				}
+
 				break;
 			case INACCURATE:
 			case ACCURATE:
@@ -118,6 +135,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, thrownPlayerState);
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, thrownPlayerHasBall);
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, passResult);
+		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, isKickedPlayer);
 		return jsonObject;
 	}
 
@@ -129,6 +147,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(source, jsonObject);
 		thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
+		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		return this;
 	}
 }
