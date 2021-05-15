@@ -3,7 +3,9 @@ package com.fumbbl.ffb.server.step.bb2020.ttm;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -11,6 +13,8 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.report.ReportPassDeviate;
+import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -27,6 +31,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.action.ttm.UtilThrowTeamMateSequence;
+import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 
@@ -58,7 +63,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private PlayerState fThrownPlayerState;
 	private boolean fThrownPlayerHasBall;
 	private FieldCoordinate fThrownPlayerCoordinate;
-	private boolean fThrowScatter;
+	private boolean fThrowScatter, deviate;
 	private boolean fIsKickedPlayer;
 
 	public StepInitScatterPlayer(GameState pGameState) {
@@ -100,6 +105,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 						break;
 					case IS_KICKED_PLAYER:
 						fIsKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					case PASS_DEVIATES:
+						deviate = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 						break;
 					default:
 						break;
@@ -154,7 +162,10 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			return;
 		}
 		FieldCoordinate startCoordinate = fThrownPlayerCoordinate;
-		if (fThrowScatter) {
+		if (deviate) {
+			game.getFieldModel().setRangeRuler(null);
+			game.getFieldModel().clearMoveSquares();
+		} else if (fThrowScatter) {
 			game.getFieldModel().setRangeRuler(null);
 			game.getFieldModel().clearMoveSquares();
 			startCoordinate = game.getPassCoordinate();
@@ -162,6 +173,8 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		UtilThrowTeamMateSequence.ScatterResult scatterResult;
 		if (fIsKickedPlayer && fThrowScatter) {
 			scatterResult = UtilThrowTeamMateSequence.kickPlayer(this, fThrownPlayerCoordinate, startCoordinate);
+		} else if (deviate) {
+			scatterResult = deviate(game, fThrownPlayerCoordinate, fThrownPlayerId, fThrownPlayerState);
 		} else {
 			scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, fThrowScatter);
 		}
@@ -206,6 +219,29 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
+	private UtilThrowTeamMateSequence.ScatterResult deviate(Game game, FieldCoordinate throwerCoordinate, String thrownPlayerId, PlayerState thrownPlayerState) {
+		Player<?> thrownPlayer = game.getPlayerById(thrownPlayerId);
+		int directionRoll = getGameState().getDiceRoller().rollScatterDirection();
+		int distanceRoll = getGameState().getDiceRoller().rollScatterDistance();
+		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, directionRoll);
+		FieldCoordinate coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
+		FieldCoordinate lastValidCoordinate = coordinateEnd;
+		int validDistance = distanceRoll;
+		while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate) && validDistance > 0) {
+			validDistance--;
+			lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, validDistance);
+		}
+		game.getFieldModel().setPlayerCoordinate(thrownPlayer, lastValidCoordinate);
+		game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
+		game.setDefenderId(null);
+		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, lastValidCoordinate));
+
+		getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll, true));
+
+		return new UtilThrowTeamMateSequence.ScatterResult(lastValidCoordinate, FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd));
+	}
+
+
 	// JSON serialization
 
 	@Override
@@ -217,6 +253,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
 		IServerJsonOption.THROW_SCATTER.addTo(jsonObject, fThrowScatter);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, fIsKickedPlayer);
+		IServerJsonOption.PASS_DEVIATES.addTo(jsonObject, deviate);
 		return jsonObject;
 	}
 
@@ -230,6 +267,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(game, jsonObject);
 		fThrowScatter = IServerJsonOption.THROW_SCATTER.getFrom(game, jsonObject);
 		fIsKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(game, jsonObject);
+		deviate = IServerJsonOption.PASS_DEVIATES.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.ScatterPlayer;
+import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
 
 /**
  * Step to end ttm scatter sequence.

@@ -2,10 +2,8 @@ package com.fumbbl.ffb.server.step.bb2020.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -14,21 +12,15 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.report.ReportPassDeviate;
-import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPush;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeKTMCrowd;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.ScatterPlayer;
-import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepDispatchScatterPlayer extends AbstractStep {
@@ -82,40 +74,21 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 			&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-		boolean throwScatter;
+		boolean throwScatter, deviate;
 
 		switch (passResult) {
 			case FUMBLE:
 				throwScatter = false;
+				deviate = false;
 				break;
 			case WILDLY_INACCURATE:
 				throwScatter = false;
-				int directionRoll = getGameState().getDiceRoller().rollScatterDirection();
-				int distanceRoll = getGameState().getDiceRoller().rollScatterDistance();
-				Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, directionRoll);
-				FieldCoordinate coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
-				FieldCoordinate lastValidCoordinate = coordinateEnd;
-				int validDistance = distanceRoll;
-				while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate) && validDistance > 0) {
-					validDistance--;
-					lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, validDistance);
-				}
-				game.getFieldModel().setPlayerCoordinate(thrownPlayer, lastValidCoordinate);
-				game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
-				game.setDefenderId(null);
-				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, lastValidCoordinate));
-
-				getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll, true));
-
-				if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
-					new TtmToCrowdHandler().handle(game, this, thrownPlayer, lastValidCoordinate,
-						thrownPlayerHasBall, isKickedPlayer ? new InjuryTypeKTMCrowd() : new InjuryTypeCrowdPush());
-				}
-
+				deviate = true;
 				break;
 			case INACCURATE:
 			case ACCURATE:
 				throwScatter = true;
+				deviate = false;
 				break;
 			default:
 				throw new IllegalStateException("Unexpected pass result for ttm: " + passResult.getName());
@@ -124,7 +97,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
 				thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
-				throwScatter));
+				throwScatter, deviate));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

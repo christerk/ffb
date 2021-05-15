@@ -29,7 +29,7 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.bb2016.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.server.step.bb2016.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.ScatterPlayer;
+import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2016.ThrowTeamMate;
