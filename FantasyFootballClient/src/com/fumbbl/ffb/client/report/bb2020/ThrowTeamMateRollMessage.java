@@ -63,7 +63,7 @@ public class ThrowTeamMateRollMessage extends ReportMessageBase<ReportThrowTeamM
   				.append("+ to avoid a fumble or terrible throw");
   		}
   		if (!report.isSuccessful() && !report.isReRolled()) {
-  			neededRoll = new StringBuilder().append("Roll a ").append(report.getMinimumRoll()).append("+ to hat at least a successful throw");
+  			neededRoll = new StringBuilder().append("Roll a ").append(report.getMinimumRoll()).append("+ to have at least a successful throw");
   		}
   		if (neededRoll != null) {
   			neededRoll.append(" (Roll ");
