@@ -29,7 +29,7 @@ public class ScatterPlayer extends com.fumbbl.ffb.server.step.generator.ScatterP
 				from(StepParameterKey.THROWN_PLAYER_COORDINATE, params.getThrownPlayerCoordinate()),
 				from(StepParameterKey.THROW_SCATTER, params.isThrowScatter()),
 				from(StepParameterKey.GOTO_LABEL_ON_FALL_DOWN, IStepLabel.APOTHECARY_HIT_PLAYER));
-		} else {
+		}
 			sequence.add(StepId.INIT_SCATTER_PLAYER, from(StepParameterKey.THROWN_PLAYER_ID, params.getThrownPlayerId()),
 				from(StepParameterKey.THROWN_PLAYER_STATE, params.getThrownPlayerState()),
 				from(StepParameterKey.THROWN_PLAYER_HAS_BALL, params.isThrownPlayerHasBall()),
@@ -37,7 +37,7 @@ public class ScatterPlayer extends com.fumbbl.ffb.server.step.generator.ScatterP
 				from(StepParameterKey.THROW_SCATTER, params.isThrowScatter()),
 				from(StepParameterKey.PASS_DEVIATES, params.deviates()),
 				from(StepParameterKey.CRASH_LANDING, params.isCrashLanding()));
-		}
+
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_HIT_PLAYER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));

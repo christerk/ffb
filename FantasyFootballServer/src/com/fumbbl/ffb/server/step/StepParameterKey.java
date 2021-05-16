@@ -32,6 +32,7 @@ public enum StepParameterKey {
 	DEFENDER_POSITION, // FieldCoordinate
 	DEFENDER_PUSHED, // Boolean
 	DICE_INDEX, // Integer
+	DIRECTION, // Direction
 	DISPATCH_PLAYER_ACTION, // PlayerAction
 	DODGE_ROLL, // Integer
 	DONT_DROP_FUMBLE, // Boolean

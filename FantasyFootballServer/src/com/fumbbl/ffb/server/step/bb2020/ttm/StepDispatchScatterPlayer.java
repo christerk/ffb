@@ -80,10 +80,12 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 			case FUMBLE:
 				throwScatter = false;
 				deviate = false;
+				scattersSingleDirection = false;
 				break;
 			case WILDLY_INACCURATE:
 				throwScatter = false;
 				deviate = true;
+				scattersSingleDirection = false;
 				break;
 			case INACCURATE:
 			case ACCURATE:
