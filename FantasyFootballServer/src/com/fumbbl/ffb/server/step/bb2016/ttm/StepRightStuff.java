@@ -187,7 +187,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
 		IServerJsonOption.DROP_THROWN_PLAYER.addTo(jsonObject, fDropThrownPlayer);
-		IServerJsonOption.KICK_TEAM_MATE_RANGE.addTo(jsonObject, ktmRange.name());
+		if (ktmRange != null) {
+			IServerJsonOption.KICK_TEAM_MATE_RANGE.addTo(jsonObject, ktmRange.name());
+		}
 		return jsonObject;
 	}
 
