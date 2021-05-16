@@ -34,7 +34,9 @@ public class ScatterPlayer extends com.fumbbl.ffb.server.step.generator.ScatterP
 				from(StepParameterKey.THROWN_PLAYER_STATE, params.getThrownPlayerState()),
 				from(StepParameterKey.THROWN_PLAYER_HAS_BALL, params.isThrownPlayerHasBall()),
 				from(StepParameterKey.THROWN_PLAYER_COORDINATE, params.getThrownPlayerCoordinate()),
-				from(StepParameterKey.THROW_SCATTER, params.isThrowScatter()));
+				from(StepParameterKey.THROW_SCATTER, params.isThrowScatter()),
+				from(StepParameterKey.PASS_DEVIATES, params.deviates()),
+				from(StepParameterKey.CRASH_LANDING, params.isCrashLanding()));
 		}
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_HIT_PLAYER,

@@ -97,7 +97,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
 				thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
-				throwScatter, deviate));
+				throwScatter, deviate, !thrownPlayerState.hasTacklezones()));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

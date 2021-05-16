@@ -38,6 +38,7 @@ public interface IServerJsonOption extends IJsonOption {
 			Factory.CATCH_SCATTER_THROWIN_MODE);
 	JsonBooleanOption CHECK_PLAYER_ACTION = new JsonBooleanOption("checkPlayerAction");
 	JsonFieldCoordinateOption COORDINATE_TO = new JsonFieldCoordinateOption("coordinateTo");
+	JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
 	JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
 	JsonFieldCoordinateOption DEFENDER_POSITION = new JsonFieldCoordinateOption("defenderPosition");
 	JsonBooleanOption DEFENDER_PUSHED = new JsonBooleanOption("defenderPushed");

@@ -28,6 +28,7 @@ public enum StepParameterKey {
 	CONSUME_PARAMETER, // Set<StepParameterKey>
 	COORDINATE_FROM, // FieldCoordinate
 	COORDINATE_TO, // FieldCoordinate
+	CRASH_LANDING, // Boolean
 	DEFENDER_POSITION, // FieldCoordinate
 	DEFENDER_PUSHED, // Boolean
 	DICE_INDEX, // Integer
