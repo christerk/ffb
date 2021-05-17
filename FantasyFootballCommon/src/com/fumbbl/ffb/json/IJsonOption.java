@@ -212,6 +212,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
 	JsonBooleanOption IS_OWN_CHOICE = new JsonBooleanOption("isOwnChoice");
+	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
 	JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", Factory.KICKOFF_RESULT);
 	JsonIntArrayOption KICKOFF_ROLL = new JsonIntArrayOption("kickoffRoll");

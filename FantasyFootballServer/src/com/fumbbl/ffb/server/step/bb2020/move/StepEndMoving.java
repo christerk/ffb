@@ -149,9 +149,6 @@ public class StepEndMoving extends AbstractStep {
 				case CLIENT_THROW_TEAM_MATE:
 					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
 					break;
-				case CLIENT_KICK_TEAM_MATE:
-					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-					break;
 				default:
 					break;
 				// <--

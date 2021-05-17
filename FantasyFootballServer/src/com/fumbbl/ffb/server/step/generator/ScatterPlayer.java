@@ -14,13 +14,14 @@ public abstract class ScatterPlayer extends SequenceGenerator<ScatterPlayer.Sequ
 		private final String thrownPlayerId;
 		private final PlayerState thrownPlayerState;
 		private final FieldCoordinate thrownPlayerCoordinate;
-		private final boolean hasSwoop, thrownPlayerHasBall, throwScatter, deviate, crashLanding;
+		private final boolean hasSwoop, thrownPlayerHasBall, throwScatter, deviate, crashLanding, kickedPlayer;
 
 		public SequenceParams(GameState gameState, String thrownPlayerId, PlayerState thrownPlayerState, boolean thrownPlayerHasBall, FieldCoordinate thrownPlayerCoordinate, boolean hasSwoop,  boolean throwScatter) {
-			this(gameState, thrownPlayerId, thrownPlayerState, thrownPlayerHasBall, thrownPlayerCoordinate, hasSwoop, throwScatter, false, false);
+			this(gameState, thrownPlayerId, thrownPlayerState, thrownPlayerHasBall, thrownPlayerCoordinate, hasSwoop, throwScatter, false, false, false);
 		}
 
-		public SequenceParams(GameState gameState, String thrownPlayerId, PlayerState thrownPlayerState, boolean thrownPlayerHasBall, FieldCoordinate thrownPlayerCoordinate, boolean hasSwoop, boolean throwScatter, boolean deviate, boolean crashLanding) {
+		public SequenceParams(GameState gameState, String thrownPlayerId, PlayerState thrownPlayerState, boolean thrownPlayerHasBall, FieldCoordinate thrownPlayerCoordinate, boolean hasSwoop,
+		                      boolean throwScatter, boolean deviate, boolean crashLanding, boolean kickedPlayer) {
 			super(gameState);
 			this.thrownPlayerId = thrownPlayerId;
 			this.thrownPlayerState = thrownPlayerState;
@@ -30,6 +31,11 @@ public abstract class ScatterPlayer extends SequenceGenerator<ScatterPlayer.Sequ
 			this.throwScatter = throwScatter;
 			this.deviate = deviate;
 			this.crashLanding = crashLanding;
+			this.kickedPlayer = kickedPlayer;
+		}
+
+		public boolean isKickedPlayer() {
+			return kickedPlayer;
 		}
 
 		public boolean isCrashLanding() {

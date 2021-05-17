@@ -26,15 +26,14 @@ import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.BlitzMove;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Foul;
+import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
-import com.fumbbl.ffb.server.step.generator.Foul;
-import com.fumbbl.ffb.server.step.generator.KickTeamMate;
-import com.fumbbl.ffb.server.step.generator.Move;
-import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
+import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public final class StepEndSelecting extends AbstractStep {
 	private String fFoulDefenderId;
 	// passSequence + throwTeamMateSequence
 	private FieldCoordinate fTargetCoordinate;
-	private boolean fHailMaryPass;
+	private boolean fHailMaryPass, kicked;
 	private String fThrownPlayerId;
 	private String fKickedPlayerId;
 	private int fNumDice;
@@ -171,6 +170,10 @@ public final class StepEndSelecting extends AbstractStep {
 					blockTargets = (List<BlockTarget>) pParameter.getValue();
 					consume(pParameter);
 					return true;
+				case IS_KICKED_PLAYER:
+					kicked = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
 				default:
 					break;
 			}
@@ -218,7 +221,6 @@ public final class StepEndSelecting extends AbstractStep {
 		}
 		Pass passGenerator = (Pass) factory.forName(SequenceGenerator.Type.Pass.name());
 		ThrowTeamMate ttmGenerator = (ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name());
-		KickTeamMate ktmGenerator = (KickTeamMate) factory.forName(SequenceGenerator.Type.KickTeamMate.name());
 		Block blockGenerator = (Block) factory.forName(SequenceGenerator.Type.Block.name());
 		Foul foulGenerator = (Foul) factory.forName(SequenceGenerator.Type.Foul.name());
 		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
@@ -247,16 +249,9 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case THROW_TEAM_MATE:
 				if (pWithParameter) {
-					ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), fThrownPlayerId, fTargetCoordinate));
+					ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), fThrownPlayerId, fTargetCoordinate, kicked));
 				} else {
 					ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState()));
-				}
-				break;
-			case KICK_TEAM_MATE:
-				if (pWithParameter) {
-					ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState(), fNumDice, fKickedPlayerId));
-				} else {
-					ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState()));
 				}
 				break;
 			case BLITZ:

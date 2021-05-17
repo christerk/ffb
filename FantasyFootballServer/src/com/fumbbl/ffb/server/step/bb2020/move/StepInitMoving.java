@@ -20,7 +20,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandFoul;
 import com.fumbbl.ffb.net.commands.ClientCommandGaze;
 import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
-import com.fumbbl.ffb.net.commands.ClientCommandKickTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
@@ -38,8 +37,8 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.KickTeamMate;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -205,15 +204,6 @@ public class StepInitMoving extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
 							&& (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)) {
 						commandStatus = dispatchPlayerAction(PlayerAction.THROW_TEAM_MATE);
-					}
-					break;
-				case CLIENT_KICK_TEAM_MATE:
-					ClientCommandKickTeamMate kickTeamMateCommand = (ClientCommandKickTeamMate) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), kickTeamMateCommand)
-							&& (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)) {
-						fKickedPlayerId = kickTeamMateCommand.getKickedPlayerId();
-						fNumDice = kickTeamMateCommand.getNumDice();
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_GAZE:

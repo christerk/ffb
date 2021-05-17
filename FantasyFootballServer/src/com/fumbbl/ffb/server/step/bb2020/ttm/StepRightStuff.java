@@ -16,7 +16,6 @@ import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.KickTeamMateRange;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
@@ -25,6 +24,7 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeFumbledKtm;
 import com.fumbbl.ffb.server.InjuryType.InjuryTypeTTMLanding;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -59,8 +59,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 
 	private Boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
-	private boolean fDropThrownPlayer;
-	private KickTeamMateRange ktmRange;
+	private boolean fDropThrownPlayer, kickedPlayer;
 	private PassResult passResult;
 	private String goToOnSuccess;
 
@@ -76,8 +75,15 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	public void init(StepParameterSet parameterSet) {
 		if (parameterSet != null) {
 			Arrays.stream(parameterSet.values()).forEach(parameter -> {
-				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_SUCCESS) {
-					goToOnSuccess = (String) parameter.getValue();
+				switch (parameter.getKey()) {
+					case GOTO_LABEL_ON_SUCCESS:
+						goToOnSuccess = (String) parameter.getValue();
+						break;
+					case IS_KICKED_PLAYER:
+						kickedPlayer = parameter.getValue() != null && (boolean) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			});
 		}
@@ -88,19 +94,14 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-				case KICKED_PLAYER_HAS_BALL:
 				case THROWN_PLAYER_HAS_BALL:
 					fThrownPlayerHasBall = (Boolean) pParameter.getValue();
 					return true;
-				case KICKED_PLAYER_ID:
 				case THROWN_PLAYER_ID:
 					fThrownPlayerId = (String) pParameter.getValue();
 					return true;
 				case DROP_THROWN_PLAYER:
 					fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					return true;
-				case KTM_MODIFIER:
-					ktmRange = (pParameter.getValue() != null) ? (KickTeamMateRange) pParameter.getValue() : KickTeamMateRange.SHORT;
 					return true;
 				case PASS_RESULT:
 					passResult = (PassResult) pParameter.getValue();
@@ -140,8 +141,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		if (fThrownPlayerHasBall) {
 			game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(thrownPlayer));
 		}
-		boolean doRoll = !fDropThrownPlayer;
-		if (!fDropThrownPlayer && (ReRolledActions.RIGHT_STUFF == getReRolledAction())) {
+		boolean fumbledKtm = PassResult.FUMBLE == passResult && kickedPlayer;
+		boolean doRoll = !fDropThrownPlayer && !fumbledKtm;
+		if (doRoll && (ReRolledActions.RIGHT_STUFF == getReRolledAction())) {
 			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
 				doRoll = false;
 			}
@@ -182,8 +184,8 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		}
 		if (!doRoll) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
-			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMLanding(), null,
-				thrownPlayer, playerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
+			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, fumbledKtm ? new InjuryTypeFumbledKtm() : new InjuryTypeTTMLanding(),
+				game.getActingPlayer().getPlayer(), thrownPlayer, playerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
 			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 			StepParameterSet params = UtilServerInjury.dropPlayer(this, thrownPlayer, ApothecaryMode.THROWN_PLAYER);
 			if (!fThrownPlayerHasBall) {
@@ -206,9 +208,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
 		IServerJsonOption.DROP_THROWN_PLAYER.addTo(jsonObject, fDropThrownPlayer);
-		IServerJsonOption.KICK_TEAM_MATE_RANGE.addTo(jsonObject, ktmRange.name());
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, passResult);
 		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, goToOnSuccess);
+		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, kickedPlayer);
 		return jsonObject;
 	}
 
@@ -218,12 +220,10 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
 		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		String storedKtmRange = IServerJsonOption.KICK_TEAM_MATE_RANGE.getFrom(game, jsonObject);
-		if (storedKtmRange != null) {
-			ktmRange = KickTeamMateRange.valueOf(storedKtmRange);
-		}
 		passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
 		goToOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
+		kickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(game, jsonObject);
+		fDropThrownPlayer = IServerJsonOption.DROP_THROWN_PLAYER.getFrom(game, jsonObject);
 		return this;
 	}
 

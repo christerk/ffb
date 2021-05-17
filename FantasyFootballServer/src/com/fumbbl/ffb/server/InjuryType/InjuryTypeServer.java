@@ -60,6 +60,10 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		return injuryType.isFoul();
 	}
 
+	public boolean stunIsTreatedAsKo() {
+		return false;
+	}
+
 	public abstract InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
 	                                           Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
 	                                           FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,

@@ -20,7 +20,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandFoul;
 import com.fumbbl.ffb.net.commands.ClientCommandGaze;
 import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
-import com.fumbbl.ffb.net.commands.ClientCommandKickTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
@@ -244,22 +243,9 @@ public final class StepInitSelecting extends AbstractStep {
 						}
 						publishParameter(
 							new StepParameter(StepParameterKey.THROWN_PLAYER_ID, throwTeamMateCommand.getThrownPlayerId()));
+						publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, throwTeamMateCommand.isKicked()));
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.THROW_TEAM_MATE, false);
 						fDispatchPlayerAction = PlayerAction.THROW_TEAM_MATE;
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					}
-					break;
-				case CLIENT_KICK_TEAM_MATE:
-					ClientCommandKickTeamMate kickTeamMateCommand = (ClientCommandKickTeamMate) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), kickTeamMateCommand)
-						&& !game.getTurnData().isBlitzUsed()) {
-						if (kickTeamMateCommand.getNumDice() != 0) {
-							publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, kickTeamMateCommand.getNumDice()));
-						}
-						publishParameter(
-							new StepParameter(StepParameterKey.KICKED_PLAYER_ID, kickTeamMateCommand.getKickedPlayerId()));
-						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.KICK_TEAM_MATE, false);
-						fDispatchPlayerAction = PlayerAction.KICK_TEAM_MATE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;

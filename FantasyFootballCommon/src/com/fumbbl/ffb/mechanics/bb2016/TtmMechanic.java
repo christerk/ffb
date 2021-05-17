@@ -6,6 +6,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -39,6 +40,12 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	}
 
 	@Override
+	public boolean canBeKicked(Game game, Player<?> player) {
+		return player.hasSkillProperty(NamedProperties.canBeKicked)
+			&& game.getActingTeam() == player.getTeam();
+	}
+
+	@Override
 	public int minimumRoll(PassingDistance distance, Set<PassModifier> modifiers) {
 		return Math.max(2, 2 + modifierSum(distance, modifiers) );
 	}
@@ -55,5 +62,10 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	@Override
 	public boolean isValidEndScatterCoordinate(Game game, FieldCoordinate coordinate) {
 		return game.getFieldModel().getPlayer(coordinate) == null;
+	}
+
+	@Override
+	public boolean handleKickLikeThrow() {
+		return false;
 	}
 }

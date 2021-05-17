@@ -2,8 +2,13 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -45,6 +50,7 @@ public class ClientStateFactory {
 		register(new ClientStateWaitForOpponent(pClient));
 		register(new ClientStateReplay(pClient));
 		register(new ClientStateThrowTeamMate(pClient));
+		register(new ClientStateKickTeamMateLikeThrow(pClient));
 		register(new ClientStateKickTeamMate(pClient));
 		register(new ClientStateSwoop(pClient));
 		register(new ClientStateDumpOff(pClient));
@@ -151,7 +157,8 @@ public class ClientStateFactory {
 									break;
 								case KICK_TEAM_MATE:
 								case KICK_TEAM_MATE_MOVE:
-									clientStateId = ClientStateId.KICK_TEAM_MATE;
+									TtmMechanic mechanic = (TtmMechanic) getClient().getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
+									clientStateId = mechanic.handleKickLikeThrow() ? ClientStateId.KICK_TEAM_MATE_THROW : ClientStateId.KICK_TEAM_MATE;
 									break;
 								case SWOOP:
 									clientStateId = ClientStateId.SWOOP;
@@ -248,7 +255,7 @@ public class ClientStateFactory {
 				case INTERCEPTION:
 //        if (!game.isHomePlaying() && !StringTool.isProvided(game.getDefenderId())) {
 					if ((!game.isHomePlaying() && (game.getThrowerAction() != PlayerAction.DUMP_OFF))
-							|| (game.isHomePlaying() && (game.getThrowerAction() == PlayerAction.DUMP_OFF))) {
+						|| (game.isHomePlaying() && (game.getThrowerAction() == PlayerAction.DUMP_OFF))) {
 						clientStateId = ClientStateId.INTERCEPTION;
 					} else {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;

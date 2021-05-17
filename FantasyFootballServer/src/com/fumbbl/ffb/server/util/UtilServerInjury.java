@@ -104,7 +104,7 @@ public class UtilServerInjury {
 			}
 		}
 
-		if (pDefender.hasSkillProperty(NamedProperties.convertStunToKO)
+		if ((pDefender.hasSkillProperty(NamedProperties.convertStunToKO) || pInjuryType.stunIsTreatedAsKo())
 				&& (injuryContext.getInjury() != null) && (injuryContext.getInjury().getBase() == PlayerState.STUNNED)) {
 			injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}

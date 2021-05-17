@@ -18,9 +18,13 @@ public abstract class TtmMechanic implements Mechanic {
 
 	public abstract boolean canBeThrown(Game game, Player<?> player);
 
+	public abstract boolean canBeKicked(Game game, Player<?> player);
+
 	public abstract int minimumRoll(PassingDistance distance, Set<PassModifier> modifiers);
 
 	public abstract int modifierSum(PassingDistance distance, Set<PassModifier> modifiers);
 
 	public abstract boolean isValidEndScatterCoordinate(Game game, FieldCoordinate coordinate);
+
+	public abstract boolean handleKickLikeThrow();
 }

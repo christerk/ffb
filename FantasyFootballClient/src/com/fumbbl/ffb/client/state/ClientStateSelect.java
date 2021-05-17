@@ -421,13 +421,14 @@ public class ClientStateSelect extends ClientState {
 		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventKickTeamMateAction)) {
 			return false;
 		}
+		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 
 		boolean rightStuffAvailable = false;
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		Player<?>[] teamPlayers = pPlayer.getTeam().getPlayers();
-		for (int i = 0; i < teamPlayers.length; i++) {
-			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
-			if (teamPlayers[i].hasSkillProperty(NamedProperties.canBeKicked)
+		for (Player<?> teamPlayer : teamPlayers) {
+			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayer);
+			if (mechanic.canBeKicked(game, teamPlayer)
 				&& !playerCoordinate.isBoxCoordinate()) {
 				rightStuffAvailable = true;
 				break;
@@ -438,8 +439,8 @@ public class ClientStateSelect extends ClientState {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
 			playerCoordinate, false);
-		for (int i = 0; i < adjacentTeamPlayers.length; i++) {
-			if (adjacentTeamPlayers[i].hasSkillProperty(NamedProperties.canBeKicked)) {
+		for (Player<?> adjacentTeamPlayer : adjacentTeamPlayers) {
+			if (mechanic.canBeKicked(game, adjacentTeamPlayer)) {
 				rightStuffAdjacent = true;
 				break;
 			}

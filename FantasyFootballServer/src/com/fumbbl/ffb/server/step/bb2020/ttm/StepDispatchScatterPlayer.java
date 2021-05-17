@@ -12,6 +12,7 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.report.bb2020.ReportKickTeamMateFumble;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -19,8 +20,10 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepDispatchScatterPlayer extends AbstractStep {
@@ -37,6 +40,18 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 	public StepId getId() {
 		return StepId.DISPATCH_SCATTER_PLAYER;
 	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				if (parameter.getKey() == StepParameterKey.IS_KICKED_PLAYER) {
+					isKickedPlayer = (Boolean) parameter.getValue();
+				}
+			}
+		}
+	}
+
 
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
@@ -66,40 +81,46 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 
 	@Override
 	public void start() {
-		Game game = getGameState().getGame();
-		Player<?> thrower = game.getActingPlayer().getPlayer();
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-		Player<?> thrownPlayer = game.getPlayerById(thrownPlayerId);
-		boolean scattersSingleDirection = thrownPlayer != null
-			&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
-		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-		boolean throwScatter, deviate;
+		if (passResult == PassResult.FUMBLE && isKickedPlayer) {
+			getResult().addReport(new ReportKickTeamMateFumble());
+		} else {
 
-		switch (passResult) {
-			case FUMBLE:
-				throwScatter = false;
-				deviate = false;
-				scattersSingleDirection = false;
-				break;
-			case WILDLY_INACCURATE:
-				throwScatter = false;
-				deviate = true;
-				scattersSingleDirection = false;
-				break;
-			case INACCURATE:
-			case ACCURATE:
-				throwScatter = true;
-				deviate = false;
-				break;
-			default:
-				throw new IllegalStateException("Unexpected pass result for ttm: " + passResult.getName());
+			Game game = getGameState().getGame();
+			Player<?> thrower = game.getActingPlayer().getPlayer();
+			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
+			Player<?> thrownPlayer = game.getPlayerById(thrownPlayerId);
+			boolean scattersSingleDirection = thrownPlayer != null
+				&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+
+			boolean throwScatter, deviate;
+
+			switch (passResult) {
+				case FUMBLE:
+					throwScatter = false;
+					deviate = false;
+					scattersSingleDirection = false;
+					break;
+				case WILDLY_INACCURATE:
+					throwScatter = false;
+					deviate = true;
+					scattersSingleDirection = false;
+					break;
+				case INACCURATE:
+				case ACCURATE:
+					throwScatter = true;
+					deviate = false;
+					break;
+				default:
+					throw new IllegalStateException("Unexpected pass result for ttm: " + passResult.getName());
+			}
+
+			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
+				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
+					thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
+					throwScatter, deviate, !thrownPlayerState.hasTacklezones(), isKickedPlayer));
 		}
-
-		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
-			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
-				thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
-				throwScatter, deviate, !thrownPlayerState.hasTacklezones()));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

@@ -409,12 +409,20 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandThrowTeamMate(pActingPlayerId, pTargetCoordinate));
 	}
 
+	public void sendThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate, boolean kicked) {
+		send(new ClientCommandThrowTeamMate(pActingPlayerId, pTargetCoordinate, kicked));
+	}
+
 	public void sendKickTeamMate(String pActingPlayerId, String pPlayerId, int numDice) {
 		send(new ClientCommandKickTeamMate(pActingPlayerId, pPlayerId, numDice));
 	}
 
 	public void sendThrowTeamMate(String pActingPlayerId, String pPlayerId) {
 		send(new ClientCommandThrowTeamMate(pActingPlayerId, pPlayerId));
+	}
+
+	public void sendThrowTeamMate(String pActingPlayerId, String pPlayerId, boolean kicked) {
+		send(new ClientCommandThrowTeamMate(pActingPlayerId, pPlayerId, kicked));
 	}
 
 	public void sendSwoop(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {

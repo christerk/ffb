@@ -325,7 +325,6 @@ public class UtilPlayer {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		return (
-			// !pGame.getTurnData().isFoulUsed()&&
 			(UtilPlayer.findAdjacentPronePlayers(pGame, otherTeam, playerCoordinate).length > 0));
 	}
 

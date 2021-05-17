@@ -17,21 +17,32 @@ public class ClientCommandThrowTeamMate extends ClientCommand implements IComman
 	private FieldCoordinate fTargetCoordinate;
 	private String fThrownPlayerId;
 	private String fActingPlayerId;
+	private boolean kicked;
 
 	public ClientCommandThrowTeamMate() {
 		super();
 	}
 
 	public ClientCommandThrowTeamMate(String pActingPlayerId, String pThrownPlayerId) {
+		this(pActingPlayerId, pThrownPlayerId, false);
+	}
+
+	public ClientCommandThrowTeamMate(String pActingPlayerId, String pThrownPlayerId, boolean kicked) {
 		fActingPlayerId = pActingPlayerId;
 		fThrownPlayerId = pThrownPlayerId;
 		fTargetCoordinate = null;
+		this.kicked = kicked;
 	}
 
 	public ClientCommandThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
+		this(pActingPlayerId, pTargetCoordinate, false);
+	}
+
+	public ClientCommandThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate, boolean kicked) {
 		fActingPlayerId = pActingPlayerId;
 		fTargetCoordinate = pTargetCoordinate;
 		fThrownPlayerId = null;
+		this.kicked = kicked;
 	}
 
 	public NetCommandId getId() {
@@ -50,6 +61,10 @@ public class ClientCommandThrowTeamMate extends ClientCommand implements IComman
 		return fTargetCoordinate;
 	}
 
+	public boolean isKicked() {
+		return kicked;
+	}
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -57,6 +72,7 @@ public class ClientCommandThrowTeamMate extends ClientCommand implements IComman
 		IJsonOption.ACTING_PLAYER_ID.addTo(jsonObject, fActingPlayerId);
 		IJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
 		IJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
+		IJsonOption.KICKED.addTo(jsonObject, kicked);
 		return jsonObject;
 	}
 
@@ -66,6 +82,7 @@ public class ClientCommandThrowTeamMate extends ClientCommand implements IComman
 		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
 		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
 		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
+		kicked = IJsonOption.KICKED.getFrom(game, jsonObject);
 		return this;
 	}
 

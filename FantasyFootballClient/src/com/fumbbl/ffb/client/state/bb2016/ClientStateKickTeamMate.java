@@ -1,11 +1,4 @@
-package com.fumbbl.ffb.client.state;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+package com.fumbbl.ffb.client.state.bb2016;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -18,6 +11,8 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.ClientStateMove;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -27,13 +22,19 @@ import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Christer
  */
 public class ClientStateKickTeamMate extends ClientStateMove {
 
-	protected ClientStateKickTeamMate(FantasyFootballClient pClient) {
+	public ClientStateKickTeamMate(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 

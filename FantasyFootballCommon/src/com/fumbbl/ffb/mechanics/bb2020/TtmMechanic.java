@@ -3,6 +3,7 @@ package com.fumbbl.ffb.mechanics.bb2020;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -36,6 +37,12 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	}
 
 	@Override
+	public boolean canBeKicked(Game game, Player<?> player) {
+		return player.canBeThrown()
+			&& game.getFieldModel().getPlayerState(player).getBase() == PlayerState.STANDING
+			&& game.getActingTeam() == player.getTeam();	}
+
+	@Override
 	public int minimumRoll(PassingDistance distance, Set<PassModifier> modifiers) {
 		return 2 + modifierSum(distance, modifiers);
 	}
@@ -47,6 +54,11 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 
 	@Override
 	public boolean isValidEndScatterCoordinate(Game game, FieldCoordinate coordinate) {
+		return true;
+	}
+
+	@Override
+	public boolean handleKickLikeThrow() {
 		return true;
 	}
 
