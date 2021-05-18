@@ -211,6 +211,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				crashLanding = false;
 
 				// continue loop in end step
+				game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
 				publishParameter(new StepParameter(StepParameterKey.CRASH_LANDING, crashLanding));
 
