@@ -217,6 +217,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", Factory.KICKOFF_RESULT);
 	JsonIntArrayOption KICKOFF_ROLL = new JsonIntArrayOption("kickoffRoll");
 	JsonArrayOption KNOCKOUT_RECOVERY_ARRAY = new JsonArrayOption("knockoutRecoveryArray");
+	JsonBooleanOption KTM_USED = new JsonBooleanOption("ktmUsed");
 	JsonArrayOption LASTING_INJURIES = new JsonArrayOption("lastingInjuries");
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);

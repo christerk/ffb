@@ -101,6 +101,8 @@ public class ClientStateSelect extends ClientState {
 						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
 					}
 					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -210,7 +212,7 @@ public class ClientStateSelect extends ClientState {
 			menuItemList.add(standUpAction);
 		}
 		if (menuItemList.size() > 0) {
-			createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 			showPopupMenuForPlayer(pPlayer);
 		}
 	}
@@ -446,7 +448,7 @@ public class ClientStateSelect extends ClientState {
 			}
 		}
 
-		return (!game.getTurnData().isBlitzUsed()
+		return (mechanic.isKtmAvailable(game.getTurnData())
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& pPlayer.hasSkillProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
 			&& (playerState.isAbleToMove() || rightStuffAdjacent));

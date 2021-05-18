@@ -16,6 +16,10 @@ import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
+
+import java.util.Arrays;
 
 /**
  * Step in ttm sequence to actual throw the team mate.
@@ -38,6 +42,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 		public PlayerState thrownPlayerState;
 		public boolean thrownPlayerHasBall;
 		public PassResult passResult;
+		public boolean kicked;
 	}
 
 	private final StepState state;
@@ -49,6 +54,18 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 
 	public StepId getId() {
 		return StepId.THROW_TEAM_MATE;
+	}
+
+	@Override
+	public void init(StepParameterSet parameterSet) {
+		if (parameterSet != null) {
+			Arrays.stream(parameterSet.values()).forEach(parameter -> {
+				if (parameter.getKey() == StepParameterKey.IS_KICKED_PLAYER) {
+					state.kicked = parameter.getValue() != null && (boolean) parameter.getValue();
+				}
+			});
+		}
+		super.init(parameterSet);
 	}
 
 	@Override
@@ -103,6 +120,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 		IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, state.thrownPlayerState);
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, state.thrownPlayerHasBall);
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, state.passResult);
+		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, state.kicked);
 		return jsonObject;
 	}
 
@@ -114,6 +132,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 		state.thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(source, jsonObject);
 		state.thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		state.passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
+		state.kicked = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		return this;
 	}
 }

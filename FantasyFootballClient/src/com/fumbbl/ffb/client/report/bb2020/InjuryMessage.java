@@ -110,7 +110,7 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
   				println(getIndent(), TextStyle.ROLL, status.toString());
   				status = new StringBuilder();
           int rolledTotal = injuryRoll[0] + injuryRoll[1];
-          status.append("Rolled Total of ").append(rolledTotal).append(" ");
+          status.append("Rolled Total of ").append(rolledTotal);
           int injuryModifierTotal = 0;
           for (InjuryModifier injuryModifier : report.getInjuryModifiers()) {
             int modifierValue = injuryModifier.getModifier(attacker, defender);

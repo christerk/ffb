@@ -54,7 +54,11 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				actingPlayer.setHasPassed(true);
 				game.setConcessionPossible(false);
-				game.getTurnData().setPassUsed(true);
+				if (state.kicked) {
+					game.getTurnData().setKtmUsed(true);
+				} else {
+					game.getTurnData().setPassUsed(true);
+				}
 				UtilServerDialog.hideDialog(step.getGameState());
 				Player<?> thrower = game.getActingPlayer().getPlayer();
 				boolean doRoll = true;

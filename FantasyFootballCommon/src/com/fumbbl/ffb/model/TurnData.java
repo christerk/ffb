@@ -29,6 +29,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean fHandOverUsed;
 	private boolean fPassUsed;
 	private boolean fCoachBanned;
+	private boolean ktmUsed;
 	private InducementSet fInducementSet;
 	private LeaderState fLeaderState;
 
@@ -165,6 +166,18 @@ public class TurnData implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TURN_DATA_SET_PASS_USED, fPassUsed);
 	}
 
+	public boolean isKtmUsed() {
+		return ktmUsed;
+	}
+
+	public void setKtmUsed(boolean ktmUsed) {
+		if (ktmUsed == this.ktmUsed) {
+			return;
+		}
+		this.ktmUsed = ktmUsed;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_KTM_USED, ktmUsed);
+	}
+
 	public boolean isCoachBanned() {
 		return fCoachBanned;
 	}
@@ -225,6 +238,7 @@ public class TurnData implements IJsonSerializable {
 		setPassUsed(false);
 		setFoulUsed(false);
 		setReRollUsed(false);
+		setKtmUsed(false);
 	}
 
 	public void init(TurnData pTurnData) {
@@ -243,6 +257,7 @@ public class TurnData implements IJsonSerializable {
 			fFirstTurnAfterKickoff = pTurnData.isFirstTurnAfterKickoff();
 			fTurnStarted = pTurnData.isTurnStarted();
 			fCoachBanned = pTurnData.isCoachBanned();
+			ktmUsed = pTurnData.isKtmUsed();
 		}
 	}
 
@@ -274,6 +289,7 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.HAND_OVER_USED.addTo(jsonObject, fHandOverUsed);
 		IJsonOption.PASS_USED.addTo(jsonObject, fPassUsed);
 		IJsonOption.COACH_BANNED.addTo(jsonObject, fCoachBanned);
+		IJsonOption.KTM_USED.addTo(jsonObject, ktmUsed);
 		IJsonOption.LEADER_STATE.addTo(jsonObject, fLeaderState);
 		if (fInducementSet != null) {
 			IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
@@ -295,6 +311,7 @@ public class TurnData implements IJsonSerializable {
 		fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);
 		fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(source, jsonObject);
 		fPassUsed = IJsonOption.PASS_USED.getFrom(source, jsonObject);
+		ktmUsed = IJsonOption.KTM_USED.getFrom(source, jsonObject);
 		Boolean coachBanned = IJsonOption.COACH_BANNED.getFrom(source, jsonObject);
 		fCoachBanned = (coachBanned != null) ? coachBanned : false;
 		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(source, jsonObject);

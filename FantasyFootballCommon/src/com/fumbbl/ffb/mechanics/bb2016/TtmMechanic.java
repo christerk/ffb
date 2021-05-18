@@ -6,6 +6,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -67,5 +68,10 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	@Override
 	public boolean handleKickLikeThrow() {
 		return false;
+	}
+
+	@Override
+	public boolean isKtmAvailable(TurnData turnData) {
+		return !turnData.isBlitzUsed();
 	}
 }
