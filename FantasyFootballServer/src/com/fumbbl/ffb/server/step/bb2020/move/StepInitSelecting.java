@@ -241,11 +241,12 @@ public final class StepInitSelecting extends AbstractStep {
 									throwTeamMateCommand.getTargetCoordinate().transform()));
 							}
 						}
+						PlayerAction ttmAction = throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
 						publishParameter(
 							new StepParameter(StepParameterKey.THROWN_PLAYER_ID, throwTeamMateCommand.getThrownPlayerId()));
 						publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, throwTeamMateCommand.isKicked()));
-						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.THROW_TEAM_MATE, false);
-						fDispatchPlayerAction = PlayerAction.THROW_TEAM_MATE;
+						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), ttmAction, false);
+						fDispatchPlayerAction = ttmAction;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;

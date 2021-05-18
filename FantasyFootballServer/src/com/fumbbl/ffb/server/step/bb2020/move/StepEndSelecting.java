@@ -248,6 +248,7 @@ public final class StepEndSelecting extends AbstractStep {
 				}
 				break;
 			case THROW_TEAM_MATE:
+			case KICK_TEAM_MATE:
 				if (pWithParameter) {
 					ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), fThrownPlayerId, fTargetCoordinate, kicked));
 				} else {
