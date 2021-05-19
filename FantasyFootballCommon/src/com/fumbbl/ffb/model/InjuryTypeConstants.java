@@ -16,6 +16,7 @@ import com.fumbbl.ffb.injury.EatPlayer;
 import com.fumbbl.ffb.injury.Fireball;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.KTMCrowd;
+import com.fumbbl.ffb.injury.KTMFumbleInjury;
 import com.fumbbl.ffb.injury.KTMInjury;
 import com.fumbbl.ffb.injury.Lightning;
 import com.fumbbl.ffb.injury.PilingOnArmour;
@@ -43,6 +44,7 @@ public class InjuryTypeConstants {
 	public static final InjuryType FIREBALL = new Fireball();
 	public static final InjuryType FOUL = new Foul();
 	public static final InjuryType KTM_CROWD = new KTMCrowd();
+	public static final InjuryType KTM_FUMBLE = new KTMFumbleInjury();
 	public static final InjuryType KTM_INJURY = new KTMInjury();
 	public static final InjuryType LIGHTNING = new Lightning();
 	public static final InjuryType PILING_ON_ARMOUR = new PilingOnArmour();

@@ -14,7 +14,7 @@ public class KickTeamMateFumbleMessage extends ReportMessageBase<ReportKickTeamM
 
 	@Override
 	protected void render(ReportKickTeamMateFumble report) {
-		println(getIndent() + 2, TextStyle.EXPLANATION, "Fumbled Kick Team-Mate causes at least a KO on kicked player.");
+		println(getIndent() + 2, TextStyle.EXPLANATION, "Fumbled Kick Team-Mate always removes kicked player and causes at least a KO.");
 	}
 
 }

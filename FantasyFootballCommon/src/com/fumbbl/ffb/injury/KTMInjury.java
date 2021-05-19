@@ -7,7 +7,6 @@ public class KTMInjury extends InjuryType {
 
 	public KTMInjury() {
 		super("ktmInjury", false, SendToBoxReason.KICKED);
-		// TODO Auto-generated constructor stub
 	}
 
 }

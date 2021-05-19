@@ -5,7 +5,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
-import com.fumbbl.ffb.injury.KTMInjury;
+import com.fumbbl.ffb.injury.KTMFumbleInjury;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -17,10 +17,10 @@ import com.fumbbl.ffb.server.step.IStep;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMInjury> {
+public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 
 	public InjuryTypeFumbledKtm() {
-		super(new KTMInjury());
+		super(new KTMFumbleInjury());
 	}
 
 	@Override
