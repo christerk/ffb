@@ -2,6 +2,7 @@ Behaviour Changes:
 - Cards for 2020 removed
 - New icons for vomit, blitz target and chainsaw
 - Implement Kick-off events except Cheering Fans (still uses old result)
+- Implement new TTM mechanics including changes to KTM and Swoop
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
@@ -9,6 +10,9 @@ Technical Changes:
 Areas of Testing:
 
 - Traits
+- Kick-off events
+- TTM/KTM/Swoop
 
 Bugfixes:
  - Clear chainsaw marker when deselecting multi block player
+ - Animal Savagery did not use MB on injury
