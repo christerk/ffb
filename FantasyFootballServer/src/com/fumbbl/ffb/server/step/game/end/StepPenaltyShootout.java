@@ -6,7 +6,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
-import com.fumbbl.ffb.report.ReportPenaltyShootout;
+import com.fumbbl.ffb.report.bb2016.ReportPenaltyShootout;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;

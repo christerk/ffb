@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.game.end;
+package com.fumbbl.ffb.server.step.bb2016.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -32,7 +32,7 @@ import com.fumbbl.ffb.util.StringTool;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepInitEndGame extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
