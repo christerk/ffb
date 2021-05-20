@@ -29,7 +29,7 @@ public enum ReportId implements INamedObject {
 	BLITZ_ROLL("blitzRoll"), KICKOFF_OFFICIOUIS_REF("kickoffOfficiousRef"), OFFICIOUS_REF_ROLL("officiousRefRoll"),
 	KICKOFF_THROW_A_ROCK("kickoffThrowARock"), PUSHBACK("pushback"), REFEREE("referee"),
 	KICKOFF_PITCH_INVASION("kickoffPitchInvasion"), THROW_TEAM_MATE_ROLL("throwTeamMateRoll"),
-	SCATTER_PLAYER("scatterPlayer"), SWOOP_PLAYER("swoopPlayer"), TIMEOUT_ENFORCED("timeoutEnforced"),
+	SCATTER_PLAYER("scatterPlayer"), SWOOP_PLAYER("swoopPlayer"), TIMEOUT_ENFORCED("timeoutEnforced"), WINNINGS("winnings"),
 	WINNINGS_ROLL("winningsRoll"), FUMBBL_RESULT_UPLOAD("fumbblResultUpload"), FAN_FACTOR_ROLL_POST_MATCH("fanFactorRoll"),
 	MOST_VALUABLE_PLAYERS("mostValuablePlayers"), DEFECTING_PLAYERS("defectingPlayers"), JUMP_UP_ROLL("jumpUpRoll"),
 	STAND_UP_ROLL("standUpRoll"), BRIBES_ROLL("bribesRoll"), MASTER_CHEF_ROLL("masterChefRoll"), START_HALF("startHalf"),

@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2016.end;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.report.bb2016.ReportPenaltyShootout;
@@ -57,19 +54,6 @@ public final class StepPenaltyShootout extends AbstractStep {
 			getResult().addReport(new ReportPenaltyShootout(rollHome, reRollsLeftHome, rollAway, reRollsLeftAway));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
-	}
-
-	// JSON serialization
-
-	@Override
-	public JsonObject toJsonValue() {
-		return super.toJsonValue();
-	}
-
-	@Override
-	public StepPenaltyShootout initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		return this;
 	}
 
 }

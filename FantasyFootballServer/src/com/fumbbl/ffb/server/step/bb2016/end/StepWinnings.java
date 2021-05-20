@@ -1,14 +1,11 @@
-package com.fumbbl.ffb.server.step.game.end;
+package com.fumbbl.ffb.server.step.bb2016.end;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.dialog.DialogWinningsReRollParameter;
-import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
-import com.fumbbl.ffb.report.ReportWinningsRoll;
+import com.fumbbl.ffb.report.bb2016.ReportWinningsRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -25,7 +22,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepWinnings extends AbstractStepWithReRoll {
 
 	public StepWinnings(GameState pGameState) {
@@ -135,20 +132,6 @@ public final class StepWinnings extends AbstractStepWithReRoll {
 					gameResult.getTeamResultAway().getWinnings());
 		}
 		return report;
-	}
-
-	// JSON serialization
-
-	@Override
-	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
-		return jsonObject;
-	}
-
-	@Override
-	public StepWinnings initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		return this;
 	}
 
 }

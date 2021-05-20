@@ -1,14 +1,16 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportWinningsRoll;
+import com.fumbbl.ffb.report.bb2016.ReportWinningsRoll;
 import com.fumbbl.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.WINNINGS_ROLL)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class WinningsRollMessage extends ReportMessageBase<ReportWinningsRoll> {
 
     @Override
