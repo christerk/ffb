@@ -50,6 +50,8 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_SPECTATORS = "spectators";
 	private static final String _XML_TAG_WINNINGS = "winnings";
 	private static final String _XML_TAG_FAN_FACTOR_MODIFIER = "fanFactorModifier";
+	private static final String _XML_TAG_FAN_FACTOR = "fanFactor";
+	private static final String _XML_TAG_DEDICATED_FANS_MODIFIER = "dedicatedFansModifier";
 	private static final String _XML_TAG_SPIRALLING_EXPENSES = "spirallingExpenses";
 
 	private static final String _XML_TAG_CASUALTIES_SUFFERED = "casualtiesSuffered";
@@ -155,11 +157,17 @@ public class FumbblResult implements IXmlWriteable {
 				UtilXml.addValueElement(pHandler, _XML_TAG_SPECTATORS, pTeamResult.getSpectators());
 				UtilXml.addValueElement(pHandler, _XML_TAG_FAME, pTeamResult.getFame());
 			}
+			if (pTeamResult.getFanFactor() > 0) {
+				UtilXml.addValueElement(pHandler, _XML_TAG_FAN_FACTOR, pTeamResult.getFanFactor());
+			}
 			if (pTeamResult.getWinnings() > 0) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_WINNINGS, pTeamResult.getWinnings());
 			}
 			if (pTeamResult.getFanFactorModifier() != 0) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_FAN_FACTOR_MODIFIER, pTeamResult.getFanFactorModifier());
+			}
+			if (pTeamResult.getDedicatedFansModifier() != 0) {
+				UtilXml.addValueElement(pHandler, _XML_TAG_DEDICATED_FANS_MODIFIER, pTeamResult.getDedicatedFansModifier());
 			}
 			if (pTeamResult.getSpirallingExpenses() > 0) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_SPIRALLING_EXPENSES, pTeamResult.getSpirallingExpenses());

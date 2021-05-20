@@ -59,4 +59,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean allowsTeamReRoll(TurnMode turnMode) {
 		return !modesProhibitingReRolls.contains(turnMode);
 	}
+
+	@Override
+	public int mvpSpp() {
+		return 4;
+	}
 }

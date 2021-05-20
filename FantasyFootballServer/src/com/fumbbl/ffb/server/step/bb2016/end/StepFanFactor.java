@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.game.end;
+package com.fumbbl.ffb.server.step.bb2016.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -6,7 +6,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
-import com.fumbbl.ffb.report.ReportFanFactorRollPostMatch;
+import com.fumbbl.ffb.report.bb2016.ReportFanFactorRollPostMatch;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -18,7 +18,7 @@ import com.fumbbl.ffb.server.step.StepId;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepFanFactor extends AbstractStep {
 
 	public StepFanFactor(GameState pGameState) {

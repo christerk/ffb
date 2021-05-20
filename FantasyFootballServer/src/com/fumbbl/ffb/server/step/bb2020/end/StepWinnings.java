@@ -47,7 +47,7 @@ public final class StepWinnings extends AbstractStep {
 		double attendance = gameResult.getTeamResultAway().getFanFactor() + gameResult.getTeamResultHome().getFanFactor();
 		double homeWinnings = gameResult.getTeamResultHome().getScore();
 		double awayWinnings = gameResult.getTeamResultAway().getScore();
-		
+
 		if (gameResult.getTeamResultHome().hasConceded()) {
 			awayWinnings += attendance;
 		} else if (gameResult.getTeamResultAway().hasConceded()) {

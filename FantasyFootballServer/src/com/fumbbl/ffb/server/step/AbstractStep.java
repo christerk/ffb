@@ -25,7 +25,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.EndGame;
+import com.fumbbl.ffb.server.step.generator.EndGame;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 

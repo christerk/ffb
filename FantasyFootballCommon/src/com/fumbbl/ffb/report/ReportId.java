@@ -28,7 +28,7 @@ public enum ReportId implements INamedObject {
 	KICKOFF_SEQUENCE_ACTIVATIONS_COUNT("kickoffSequenceActivationsCount"), KICKOFF_SEQUENCE_ACTIVATIONS_EXHAUSTED("kickoffSequenceActivationsExhausted"),
 	BLITZ_ROLL("blitzRoll"), KICKOFF_OFFICIOUIS_REF("kickoffOfficiousRef"), OFFICIOUS_REF_ROLL("officiousRefRoll"),
 	KICKOFF_THROW_A_ROCK("kickoffThrowARock"), PUSHBACK("pushback"), REFEREE("referee"),
-	KICKOFF_PITCH_INVASION("kickoffPitchInvasion"), THROW_TEAM_MATE_ROLL("throwTeamMateRoll"),
+	KICKOFF_PITCH_INVASION("kickoffPitchInvasion"), THROW_TEAM_MATE_ROLL("throwTeamMateRoll"), DEDICATED_FANS("dedicatedFans"),
 	SCATTER_PLAYER("scatterPlayer"), SWOOP_PLAYER("swoopPlayer"), TIMEOUT_ENFORCED("timeoutEnforced"), WINNINGS("winnings"),
 	WINNINGS_ROLL("winningsRoll"), FUMBBL_RESULT_UPLOAD("fumbblResultUpload"), FAN_FACTOR_ROLL_POST_MATCH("fanFactorRoll"),
 	MOST_VALUABLE_PLAYERS("mostValuablePlayers"), DEFECTING_PLAYERS("defectingPlayers"), JUMP_UP_ROLL("jumpUpRoll"),

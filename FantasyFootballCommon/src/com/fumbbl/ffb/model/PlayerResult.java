@@ -2,12 +2,15 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.util.StringTool;
@@ -305,7 +308,10 @@ public class PlayerResult implements IJsonSerializable {
 	}
 
 	public int totalEarnedSpps() {
-		return ((getPlayerAwards() * 5) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
+
+		GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
+		return ((getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
 				+ getCompletions() + getDeflections());
 	}
 

@@ -113,6 +113,8 @@ public interface IJsonOption {
 	JsonIntOption CURRENT_MOVE = new JsonIntOption("currentMove");
 	JsonIntOption CURRENT_SPPS = new JsonIntOption("currentSpps");
 	JsonIntOption DEDICATED_FANS = new JsonIntOption("dedicatedFans");
+	JsonIntOption DEDICATED_FANS_MODIFIER_HOME = new JsonIntOption("dedicatedFansModifierHome");
+	JsonIntOption DEDICATED_FANS_MODIFIER_AWAY = new JsonIntOption("dedicatedFansModifierAway");
 	JsonIntOption DEDICATED_FANS_ROLL = new JsonIntOption("dedicatedFansRoll");
 	JsonIntOption DEDICATED_FANS_RESULT = new JsonIntOption("dedicatedFansResult");
 	JsonBooleanOption DEFECTING = new JsonBooleanOption("defecting");

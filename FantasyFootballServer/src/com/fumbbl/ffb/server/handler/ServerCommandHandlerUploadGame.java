@@ -11,7 +11,7 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.fumbbl.ffb.server.request.ServerRequestLoadReplay;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.EndGame;
+import com.fumbbl.ffb.server.step.generator.EndGame;
 import com.fumbbl.ffb.util.StringTool;
 
 /**

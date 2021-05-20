@@ -523,6 +523,7 @@ public class ModelChangeProcessor {
 					pModelChange.getValue());
 
 			case TEAM_RESULT_SET_CONCEDED:
+			case TEAM_RESULT_SET_DEDICATED_FANS_MODIFIER:
 			case TEAM_RESULT_SET_FAME:
 			case TEAM_RESULT_SET_BADLY_HURT_SUFFERED:
 			case TEAM_RESULT_SET_FAN_FACTOR_MODIFIER:

@@ -37,6 +37,7 @@ public enum StepId implements INamedObject {
 	CLOUD_BURSTER("cloudBurster"), // action.pass
 	DAUNTLESS("dauntless"), // action.block
 	DAUNTLESS_MULTIPLE("dauntlessMultiple"), // action.multiBlock 2020
+	DEDICATED_FANS("dedicatedFans"), // game.end
 	DISPATCH_DUMP_OFF("dispatchDumpOff"),
 	DISPATCH_PASSING("dispatchPassing"), // action.pass
 	DISPATCH_SCATTER_PLAYER("dispatchScatterPlayer"), // action.ttm 2020

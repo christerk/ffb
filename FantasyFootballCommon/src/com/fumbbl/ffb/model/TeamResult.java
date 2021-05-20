@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class TeamResult implements IJsonSerializable {
@@ -39,6 +38,7 @@ public class TeamResult implements IJsonSerializable {
 	private int pettyCashFromTvDiff;
 	private int treasurySpentOnInducements;
 	private int fanFactor;
+	private int dedicatedFansModifier;
 
 	private final Map<String, PlayerResult> fPlayerResultByPlayerId;
 
@@ -90,6 +90,18 @@ public class TeamResult implements IJsonSerializable {
 
 	public int getRaisedDead() {
 		return fRaisedDead;
+	}
+
+	public int getDedicatedFansModifier() {
+		return dedicatedFansModifier;
+	}
+
+	public void setDedicatedFansModifier(int dedicatedFansModifier) {
+		if (this.dedicatedFansModifier == dedicatedFansModifier) {
+			return;
+		}
+		this.dedicatedFansModifier = dedicatedFansModifier;
+		notifyObservers(ModelChangeId.TEAM_RESULT_SET_DEDICATED_FANS_MODIFIER, dedicatedFansModifier);
 	}
 
 	public int getFame() {
@@ -155,15 +167,17 @@ public class TeamResult implements IJsonSerializable {
 	public void sufferInjury(PlayerState pPlayerState) {
 		if (pPlayerState != null) {
 			switch (pPlayerState.getBase()) {
-			case PlayerState.BADLY_HURT:
-				setBadlyHurtSuffered(getBadlyHurtSuffered() + 1);
-				break;
-			case PlayerState.SERIOUS_INJURY:
-				setSeriousInjurySuffered(getSeriousInjurySuffered() + 1);
-				break;
-			case PlayerState.RIP:
-				setRipSuffered(getRipSuffered() + 1);
-				break;
+				case PlayerState.BADLY_HURT:
+					setBadlyHurtSuffered(getBadlyHurtSuffered() + 1);
+					break;
+				case PlayerState.SERIOUS_INJURY:
+					setSeriousInjurySuffered(getSeriousInjurySuffered() + 1);
+					break;
+				case PlayerState.RIP:
+					setRipSuffered(getRipSuffered() + 1);
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -177,6 +191,7 @@ public class TeamResult implements IJsonSerializable {
 			return;
 		}
 		fBadlyHurtSuffered = pBadlyHurtSuffered;
+		notifyObservers(ModelChangeId.TEAM_RESULT_SET_BADLY_HURT_SUFFERED, fBadlyHurtSuffered);
 	}
 
 	public int getSeriousInjurySuffered() {
@@ -437,6 +452,7 @@ public class TeamResult implements IJsonSerializable {
 		IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
 		IJsonOption.TREASURY_USED_ON_INDUCEMENTS.addTo(jsonObject, treasurySpentOnInducements);
 		IJsonOption.FAN_FACTOR.addTo(jsonObject, fanFactor);
+		IJsonOption.DEDICATED_FANS.addTo(jsonObject, dedicatedFansModifier);
 		return jsonObject;
 	}
 
@@ -468,6 +484,7 @@ public class TeamResult implements IJsonSerializable {
 		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
 		treasurySpentOnInducements = IJsonOption.TREASURY_USED_ON_INDUCEMENTS.getFrom(source, jsonObject);
 		fanFactor = IJsonOption.FAN_FACTOR.getFrom(source, jsonObject);
+		dedicatedFansModifier = IJsonOption.DEDICATED_FANS.getFrom(source, jsonObject);
 		return this;
 	}
 
