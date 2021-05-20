@@ -32,11 +32,11 @@ public class DedicatedFansMessage extends ReportMessageBase<ReportDedicatedFans>
 	    StringBuilder text = new StringBuilder();
 
 	    if (modifier > 0) {
-	    	text.append(" gains ").append(modifier);
+	    	text.append(" gain ").append(modifier);
 	    } else if (modifier < 0) {
-	    	text.append(" loses ").append(Math.abs(modifier));
+	    	text.append(" lose ").append(Math.abs(modifier));
 	    } else {
-	    	text.append(" keeps their");
+	    	text.append(" keep their");
 	    }
 
 	    text.append(" Dedicated Fan");

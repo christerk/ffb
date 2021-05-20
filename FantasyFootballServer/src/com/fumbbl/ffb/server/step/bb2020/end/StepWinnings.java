@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.GameResult;
+import com.fumbbl.ffb.report.bb2020.ReportWinnings;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -63,6 +64,7 @@ public final class StepWinnings extends AbstractStep {
 		gameResult.getTeamResultAway().setWinnings((int) awayWinnings);
 		gameResult.getTeamResultHome().setWinnings((int) homeWinnings);
 
+		getResult().addReport(new ReportWinnings((int) homeWinnings, (int) awayWinnings));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 	}
