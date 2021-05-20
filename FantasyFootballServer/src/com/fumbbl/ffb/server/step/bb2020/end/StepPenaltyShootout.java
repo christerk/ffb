@@ -41,8 +41,8 @@ public final class StepPenaltyShootout extends AbstractStep {
 		GameResult gameResult = game.getGameResult();
 		if ((game.getHalf() > 2)
 				&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
-			int rollHome = 0, penaltyScoreHome = 0;
-			int rollAway = 0, penaltyScoreAway = 0;
+			int rollHome, penaltyScoreHome = 0;
+			int rollAway, penaltyScoreAway = 0;
 			while (penaltyScoreHome + penaltyScoreAway < SHOOTOUT_LIMIT) {
 				rollHome = getGameState().getDiceRoller().rollPenaltyShootout();
 				rollAway = getGameState().getDiceRoller().rollPenaltyShootout();
