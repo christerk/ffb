@@ -1,17 +1,16 @@
-package com.fumbbl.ffb.server.step.game.end;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportDefectingPlayers;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -19,14 +18,17 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Step in end game sequence to handle player loss.
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepPlayerLoss extends AbstractStep {
 
 	public StepPlayerLoss(GameState pGameState) {
@@ -47,12 +49,10 @@ public final class StepPlayerLoss extends AbstractStep {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		Team team = null;
-		if (gameResult.getTeamResultHome().hasConceded()
-				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
+		if (gameResult.getTeamResultHome().hasConceded()) {
 			team = game.getTeamHome();
 		}
-		if (gameResult.getTeamResultAway().hasConceded()
-				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
+		if (gameResult.getTeamResultAway().hasConceded()) {
 			team = game.getTeamAway();
 		}
 		if (team != null) {
@@ -61,7 +61,9 @@ public final class StepPlayerLoss extends AbstractStep {
 			List<Boolean> defectingFlags = new ArrayList<>();
 			for (Player<?> player : team.getPlayers()) {
 				PlayerResult playerResult = gameResult.getPlayerResult(player);
-				if (playerResult.getCurrentSpps() >= 51) {
+				int playerSkillCount = countAdvancements(player.getSkills());
+				int positionSkillCount = countAdvancements(player.getPosition().getSkills());
+				if (playerSkillCount - positionSkillCount > 3) {
 					defectingPlayerIds.add(player.getId());
 					int defectingRoll = getGameState().getDiceRoller().rollPlayerLoss();
 					defectingRolls.add(defectingRoll);
@@ -72,13 +74,16 @@ public final class StepPlayerLoss extends AbstractStep {
 			}
 			if (defectingPlayerIds.size() > 0) {
 				getResult()
-						.addReport(new ReportDefectingPlayers(defectingPlayerIds.toArray(new String[defectingPlayerIds.size()]),
+						.addReport(new ReportDefectingPlayers(defectingPlayerIds.toArray(new String[0]),
 								ArrayTool.toIntArray(defectingRolls), ArrayTool.toBooleanArray(defectingFlags)));
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
+	private int countAdvancements(Skill[] skills) {
+		return (int) Arrays.stream(skills).filter(skill -> skill.getCategory() != SkillCategory.STAT_DECREASE).count();
+	}
 	// JSON serialization
 
 	@Override

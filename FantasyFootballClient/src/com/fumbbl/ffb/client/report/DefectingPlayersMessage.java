@@ -19,9 +19,7 @@ public class DefectingPlayersMessage extends ReportMessageBase<ReportDefectingPl
   			int[] rolls = report.getRolls();
   			boolean[] defecting = report.getDefectings();
   			for (int i = 0; i < playerIds.length; i++) {
-  				StringBuilder status = new StringBuilder();
-  				status.append("Defecting Players Roll [ ").append(rolls[i]).append(" ]");
-  				println(getIndent(), TextStyle.ROLL, status.toString());
+				  println(getIndent(), TextStyle.ROLL, "Defecting Players Roll [ " + rolls[i] + " ]");
   				Player<?> player = game.getPlayerById(playerIds[i]);
   				print(getIndent() + 1, false, player);
   				if (defecting[i]) {
