@@ -42,6 +42,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 		fTeamId = pTeamId;
 		fPlayerChoiceMode = pPlayerChoiceMode;
 		fMaxSelects = pMaxSelects;
+		this.minSelects = minSelects;
 		addDescriptions(pDescriptions);
 		addPlayerIds(pPlayerIds);
 	}
@@ -131,6 +132,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 		IJsonOption.MAX_SELECTS.addTo(jsonObject, fMaxSelects);
 		IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
 		IJsonOption.DESCRIPTIONS.addTo(jsonObject, fDescriptions);
+		IJsonOption.MIN_SELECTS.addTo(jsonObject, minSelects);
 		return jsonObject;
 	}
 
@@ -142,6 +144,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 		fMaxSelects = IJsonOption.MAX_SELECTS.getFrom(game, jsonObject);
 		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		addDescriptions(IJsonOption.DESCRIPTIONS.getFrom(game, jsonObject));
+		minSelects = IJsonOption.MIN_SELECTS.getFrom(game, jsonObject);
 		return this;
 	}
 

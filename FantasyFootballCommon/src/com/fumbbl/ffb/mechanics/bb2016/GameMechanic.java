@@ -59,4 +59,21 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public int mvpSpp() {
 		return 5;
 	}
+
+	@Override
+	public String[] concessionDialogMessages(boolean legalConcession) {
+		String[] messages;
+		if (legalConcession) {
+			messages = new String[2];
+			messages[0] = "Do you want to concede this game?";
+			messages[1] = "The concession will have no negative consequences at this point.";
+		} else {
+			messages = new String[4];
+			messages[0] = "Do you want to concede this game?";
+			messages[1] = "Your fan factor will decrease by 1.";
+			messages[2] = "You will lose your player award and all your winnings.";
+			messages[3] = "Some valuable players (SPP 51+) may decide to leave your team.";
+		}
+		return messages;
+	}
 }

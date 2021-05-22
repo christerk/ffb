@@ -64,4 +64,14 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public int mvpSpp() {
 		return 4;
 	}
+
+	@Override
+	public String[] concessionDialogMessages(boolean legalConcession) {
+		String[] messages = new String[4];
+		messages[0] = "Do you want to concede this game?";
+		messages[1] = "Your you will D3 dedicated fans (to a minimum of 1).";
+		messages[2] = "You will lose your player award and all your winnings.";
+		messages[3] = "Some valuable players (more than 3 advancements) may decide to leave your team.";
+		return messages;
+	}
 }

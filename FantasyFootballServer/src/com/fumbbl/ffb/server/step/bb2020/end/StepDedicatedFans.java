@@ -38,33 +38,33 @@ public class StepDedicatedFans extends AbstractStep {
 		if (homeResult.hasConceded()) {
 			homeDie = 3;
 			concededTeam = teamHome.getId();
-			winningTeam = getGameState().getGame().getTeamAway();
+			winningTeam = teamAway;
 		} else {
 		 homeDie = 6;
 		}
 
 		if (awayResult.hasConceded()) {
 			awayDie = 3;
-			concededTeam = getGameState().getGame().getTeamAway().getId();
+			concededTeam = teamAway.getId();
 			winningTeam = teamHome;
 		} else {
 			awayDie = 6;
 		}
 
-		int rollHome =  getGameState().getDiceRoller().rollDice(homeDie);
-		int rollAway =  getGameState().getDiceRoller().rollDice(awayDie);
-
-		if (winningTeam == null) {
+		if (concededTeam == null) {
 			if (homeResult.getScore() > awayResult.getScore()) {
 				winningTeam = teamHome;
 			} else if (awayResult.getScore() > homeResult.getScore()) {
-				winningTeam = getGameState().getGame().getTeamAway();
+				winningTeam = teamAway;
 			}
 		}
 
 		if (winningTeam == null) {
 			getResult().addReport(new ReportDedicatedFans());
 		} else {
+			int rollHome =  getGameState().getDiceRoller().rollDice(homeDie);
+			int rollAway =  getGameState().getDiceRoller().rollDice(awayDie);
+
 			getResult().addReport(new ReportDedicatedFans(
 				rollHome,
 				modifier(rollHome, teamHome.getDedicatedFans(), winningTeam == teamHome, teamHome.getId().equals(concededTeam)),
@@ -81,7 +81,7 @@ public class StepDedicatedFans extends AbstractStep {
 
 	private int modifier(int roll, int dedicatedFans, boolean winning, boolean conceded) {
 		if (conceded) {
-			return Math.min(roll, dedicatedFans - 1);
+			return Math.max(Math.min(roll, dedicatedFans - 1), 0);
 		} else if (winning) {
 			return (roll >= dedicatedFans) ? 1 : 0;
 		} else {

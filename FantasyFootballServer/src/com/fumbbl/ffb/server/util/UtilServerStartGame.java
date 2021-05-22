@@ -163,6 +163,9 @@ public class UtilServerStartGame {
 			GameOptionInt apos = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_APOS_MAX);
 			apos.setDefault(9);
 			game.getOptions().addOption(apos);
+			GameOptionInt mvps = (GameOptionInt) optionFactory.createGameOption(GameOptionId.MVP_NOMINATIONS);
+			mvps.setValue(0);
+			game.getOptions().addOption(mvps);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
 			ruleSet.setValue("BB2016");
 			//game.getOptions().addOption(ruleSet);

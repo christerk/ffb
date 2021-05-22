@@ -30,4 +30,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean allowsTeamReRoll(TurnMode turnMode);
 
 	public abstract int mvpSpp();
+
+	public abstract String[] concessionDialogMessages(boolean legalConcession);
 }

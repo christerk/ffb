@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.game.end;
+package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -29,7 +29,6 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.ListTool;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepMvp extends AbstractStep {
 
 	private int fNrOfHomeMvps;
@@ -108,14 +107,10 @@ public final class StepMvp extends AbstractStep {
 				fNrOfHomeMvps++;
 				fNrOfAwayMvps++;
 			}
-			if (gameResult.getTeamResultHome().hasConceded()
-					&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
+			if (gameResult.getTeamResultHome().hasConceded()) {
 				fNrOfHomeMvps = 0;
-				fNrOfAwayMvps++;
 			}
-			if (gameResult.getTeamResultAway().hasConceded()
-					&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
-				fNrOfHomeMvps++;
+			if (gameResult.getTeamResultAway().hasConceded()) {
 				fNrOfAwayMvps = 0;
 			}
 		}
