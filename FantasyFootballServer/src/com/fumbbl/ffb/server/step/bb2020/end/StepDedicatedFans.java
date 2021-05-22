@@ -65,15 +65,13 @@ public class StepDedicatedFans extends AbstractStep {
 			int rollHome =  getGameState().getDiceRoller().rollDice(homeDie);
 			int rollAway =  getGameState().getDiceRoller().rollDice(awayDie);
 
-			getResult().addReport(new ReportDedicatedFans(
-				rollHome,
-				modifier(rollHome, teamHome.getDedicatedFans(), winningTeam == teamHome, teamHome.getId().equals(concededTeam)),
-				rollAway,
-				modifier(rollAway, teamAway.getDedicatedFans(), winningTeam == teamAway, teamAway.getId().equals(concededTeam)),
-				concededTeam,
-				concededTeam != null
-				)
-			);
+			int modifierHome = modifier(rollHome, teamHome.getDedicatedFans(), winningTeam == teamHome, teamHome.getId().equals(concededTeam));
+			int modifierAway = modifier(rollAway, teamAway.getDedicatedFans(), winningTeam == teamAway, teamAway.getId().equals(concededTeam));
+
+			homeResult.setDedicatedFansModifier(modifierHome);
+			awayResult.setDedicatedFansModifier(modifierAway);
+
+			getResult().addReport(new ReportDedicatedFans(rollHome, modifierHome, rollAway, modifierAway, concededTeam, concededTeam != null));
 		}
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
