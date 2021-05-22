@@ -41,14 +41,15 @@ public final class StepPenaltyShootout extends AbstractStep {
 			int rollHome, penaltyScoreHome = 0;
 			int rollAway, penaltyScoreAway = 0;
 			while (penaltyScoreHome + penaltyScoreAway < SHOOTOUT_LIMIT) {
+				int currentPenalty = penaltyScoreAway + penaltyScoreHome + 1;
 				rollHome = getGameState().getDiceRoller().rollPenaltyShootout();
 				rollAway = getGameState().getDiceRoller().rollPenaltyShootout();
-				String winningCoach = null;
+				Boolean homeTeamWonPenalty = null;
 				if (rollAway > rollHome) {
-					winningCoach = game.getTeamAway().getCoach();
+					homeTeamWonPenalty = false;
 					penaltyScoreAway++;
 				} else if (rollAway < rollHome) {
-					winningCoach = game.getTeamHome().getCoach();
+					homeTeamWonPenalty = true;
 					penaltyScoreHome++;
 				}
 
@@ -64,7 +65,7 @@ public final class StepPenaltyShootout extends AbstractStep {
 					}
 				}
 
-				getResult().addReport(new ReportPenaltyShootout(rollHome, penaltyScoreHome, rollAway, penaltyScoreAway, winningCoach, toOrdinal(penaltyScoreAway + penaltyScoreHome), teamId));
+				getResult().addReport(new ReportPenaltyShootout(rollHome, penaltyScoreHome, rollAway, penaltyScoreAway, homeTeamWonPenalty, toOrdinal(currentPenalty), teamId));
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);

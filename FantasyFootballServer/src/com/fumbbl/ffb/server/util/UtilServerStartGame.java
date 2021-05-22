@@ -169,6 +169,9 @@ public class UtilServerStartGame {
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
 			ruleSet.setValue("BB2016");
 			//game.getOptions().addOption(ruleSet);
+			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
+			overtime.setDefault(true);
+	//		game.getOptions().addOption(overtime);
 		}
 	}
 

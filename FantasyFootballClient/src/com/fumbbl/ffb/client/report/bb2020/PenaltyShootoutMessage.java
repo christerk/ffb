@@ -17,10 +17,11 @@ public class PenaltyShootoutMessage extends ReportMessageBase<ReportPenaltyShoot
     @Override
     protected void render(ReportPenaltyShootout report) {
 	    println(getIndent(), TextStyle.ROLL, report.getRollCount() + " Penalty Shootout Rolls: Home [" + report.getRollHome() + "] Away [" + report.getRollAway() + "]");
-	    if (StringTool.isProvided(report.getWinningCoach())) {
-		    TextStyle coachStyle = report.getWinningCoach().equals(game.getTeamHome().getCoach()) ? TextStyle.HOME : TextStyle.AWAY;
-		    print(getIndent() + 1, coachStyle, report.getWinningCoach());
-		    println(getIndent() + 1, TextStyle.NONE, " wins this penalty");
+	    if (report.getHomeTeamWonPenalty() != null) {
+		    TextStyle coachStyle = report.getHomeTeamWonPenalty() ? TextStyle.HOME : TextStyle.AWAY;
+		    String teamName = (report.getHomeTeamWonPenalty() ? game.getTeamHome() : game.getTeamAway()).getName();
+		    print(getIndent() + 1, coachStyle, teamName);
+		    println(getIndent() + 1, TextStyle.NONE, " win this penalty");
 		    print(getIndent() + 1, TextStyle.NONE, "Current score: ");
 		    print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
 		    print(getIndent() + 1, TextStyle.NONE, " " + report.getScoreHome() + " - " + report.getScoreAway() + " ");

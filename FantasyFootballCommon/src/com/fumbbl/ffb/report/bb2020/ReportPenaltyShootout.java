@@ -18,16 +18,17 @@ import com.fumbbl.ffb.report.UtilReport;
 public class ReportPenaltyShootout implements IReport {
 
 	private int rollHome, rollAway, scoreHome, scoreAway;
-	private String winningCoach, rollCount, winningTeam;
+	private String rollCount, winningTeam;
+	private Boolean homeTeamWonPenalty;
 
 	public ReportPenaltyShootout() {
 		super();
 	}
 
-	public ReportPenaltyShootout(int rollHome, int scoreHome, int rollAway, int scoreAway, String winningCoach, String rollCount, String winningTeam) {
+	public ReportPenaltyShootout(int rollHome, int scoreHome, int rollAway, int scoreAway, Boolean homeTeamWonPenalty, String rollCount, String winningTeam) {
 		this.rollHome = rollHome;
 		this.rollAway = rollAway;
-		this.winningCoach = winningCoach;
+		this.homeTeamWonPenalty = homeTeamWonPenalty;
 		this.rollCount = rollCount;
 		this.scoreAway = scoreAway;
 		this.scoreHome = scoreHome;
@@ -46,10 +47,6 @@ public class ReportPenaltyShootout implements IReport {
 		return rollAway;
 	}
 
-	public String getWinningCoach() {
-		return winningCoach;
-	}
-
 	public String getRollCount() {
 		return rollCount;
 	}
@@ -62,6 +59,10 @@ public class ReportPenaltyShootout implements IReport {
 		return scoreAway;
 	}
 
+	public Boolean getHomeTeamWonPenalty() {
+		return homeTeamWonPenalty;
+	}
+
 	public String getWinningTeam() {
 		return winningTeam;
 	}
@@ -69,7 +70,7 @@ public class ReportPenaltyShootout implements IReport {
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportPenaltyShootout(getRollAway(), scoreAway, getRollHome(), scoreHome, winningCoach, rollCount, winningTeam);
+		return new ReportPenaltyShootout(getRollAway(), scoreAway, getRollHome(), scoreHome, homeTeamWonPenalty == null ? null : !homeTeamWonPenalty, rollCount, winningTeam);
 	}
 
 	// JSON serialization
@@ -79,7 +80,7 @@ public class ReportPenaltyShootout implements IReport {
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.ROLL_HOME.addTo(jsonObject, rollHome);
 		IJsonOption.ROLL_AWAY.addTo(jsonObject, rollAway);
-		IJsonOption.COACH.addTo(jsonObject, winningCoach);
+		IJsonOption.HOME_TEAM.addTo(jsonObject, homeTeamWonPenalty);
 		IJsonOption.ROLL_COUNT.addTo(jsonObject, rollCount);
 		IJsonOption.PENALTY_SCORE_HOME.addTo(jsonObject, scoreHome);
 		IJsonOption.PENALTY_SCORE_AWAY.addTo(jsonObject, scoreAway);
@@ -92,7 +93,7 @@ public class ReportPenaltyShootout implements IReport {
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		rollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
 		rollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
-		winningCoach = IJsonOption.COACH.getFrom(game, jsonObject);
+		homeTeamWonPenalty = IJsonOption.HOME_TEAM.getFrom(game, jsonObject);
 		rollCount = IJsonOption.ROLL_COUNT.getFrom(game, jsonObject);
 		scoreHome = IJsonOption.PENALTY_SCORE_HOME.getFrom(game, jsonObject);
 		scoreAway = IJsonOption.PENALTY_SCORE_AWAY.getFrom(game, jsonObject);
