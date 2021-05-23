@@ -52,9 +52,9 @@ public class StepDedicatedFans extends AbstractStep {
 		}
 
 		if (concededTeam == null) {
-			if (homeResult.getScore() > awayResult.getScore()) {
+			if (homeResult.getScore() + homeResult.getPenaltyScore() > awayResult.getScore() + awayResult.getPenaltyScore()) {
 				winningTeam = teamHome;
-			} else if (awayResult.getScore() > homeResult.getScore()) {
+			} else if (awayResult.getScore() + awayResult.getPenaltyScore() > homeResult.getScore() + homeResult.getPenaltyScore()) {
 				winningTeam = teamAway;
 			}
 		}

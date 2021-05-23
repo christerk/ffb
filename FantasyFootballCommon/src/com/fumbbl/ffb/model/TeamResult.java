@@ -39,6 +39,7 @@ public class TeamResult implements IJsonSerializable {
 	private int treasurySpentOnInducements;
 	private int fanFactor;
 	private int dedicatedFansModifier;
+	private int penaltyScore;
 
 	private final Map<String, PlayerResult> fPlayerResultByPlayerId;
 
@@ -50,6 +51,7 @@ public class TeamResult implements IJsonSerializable {
 		fGameResult = pGameResult;
 		fHomeData = pHomeData;
 		fPlayerResultByPlayerId = new HashMap<>();
+		penaltyScore = -1;
 	}
 
 	public GameResult getGameResult() {
@@ -102,6 +104,18 @@ public class TeamResult implements IJsonSerializable {
 		}
 		this.dedicatedFansModifier = dedicatedFansModifier;
 		notifyObservers(ModelChangeId.TEAM_RESULT_SET_DEDICATED_FANS_MODIFIER, dedicatedFansModifier);
+	}
+
+	public int getPenaltyScore() {
+		return penaltyScore;
+	}
+
+	public void setPenaltyScore(int penaltyScore) {
+		if (this.penaltyScore == penaltyScore) {
+			return;
+		}
+		this.penaltyScore = penaltyScore;
+		notifyObservers(ModelChangeId.TEAM_RESULT_SET_PENALTY_SCORE, penaltyScore);
 	}
 
 	public int getFame() {

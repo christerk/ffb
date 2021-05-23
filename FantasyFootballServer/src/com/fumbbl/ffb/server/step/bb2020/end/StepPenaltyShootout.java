@@ -56,11 +56,11 @@ public final class StepPenaltyShootout extends AbstractStep {
 				String teamId = null;
 
 				if (penaltyScoreHome + penaltyScoreAway == SHOOTOUT_LIMIT) {
+					gameResult.getTeamResultHome().setPenaltyScore(penaltyScoreHome);
+					gameResult.getTeamResultAway().setPenaltyScore(penaltyScoreAway);
 					if (penaltyScoreHome > penaltyScoreAway) {
-						gameResult.getTeamResultHome().setScore(gameResult.getTeamResultHome().getScore() + 1);
 						teamId = game.getTeamHome().getId();
 					} else {
-						gameResult.getTeamResultAway().setScore(gameResult.getTeamResultAway().getScore() + 1);
 						teamId = game.getTeamAway().getId();
 					}
 				}

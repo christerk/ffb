@@ -53,6 +53,7 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_FAN_FACTOR = "fanFactor";
 	private static final String _XML_TAG_DEDICATED_FANS_MODIFIER = "dedicatedFansModifier";
 	private static final String _XML_TAG_SPIRALLING_EXPENSES = "spirallingExpenses";
+	private static final String _XML_TAG_PENALTY_SCORE = "penaltyScore";
 
 	private static final String _XML_TAG_CASUALTIES_SUFFERED = "casualtiesSuffered";
 	private static final String _XML_ATTRIBUTE_BADLY_HURT = "badlyHurt";
@@ -153,6 +154,9 @@ public class FumbblResult implements IXmlWriteable {
 
 			UtilXml.addValueElement(pHandler, _XML_TAG_SCORE, pTeamResult.getScore());
 			UtilXml.addValueElement(pHandler, _XML_TAG_CONCEDED, pTeamResult.hasConceded());
+			if (pTeamResult.getPenaltyScore() >= 0) {
+				UtilXml.addValueElement(pHandler, _XML_TAG_PENALTY_SCORE, pTeamResult.getPenaltyScore());
+			}
 			if (pTeamResult.getSpectators() > 0) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_SPECTATORS, pTeamResult.getSpectators());
 				UtilXml.addValueElement(pHandler, _XML_TAG_FAME, pTeamResult.getFame());

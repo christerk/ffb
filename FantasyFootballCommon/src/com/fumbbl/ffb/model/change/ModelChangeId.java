@@ -118,6 +118,7 @@ public enum ModelChangeId implements INamedObject {
 	TEAM_RESULT_SET_FAN_FACTOR("teamResultSetFanFactor", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_BADLY_HURT_SUFFERED("teamResultSetBadlyHurtSuffered", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_FAN_FACTOR_MODIFIER("teamResultSetFanFactorModifier", ModelChangeDataType.INTEGER),
+	TEAM_RESULT_SET_PENALTY_SCORE("teamResultSetPenaltyScore", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED("teamResultSetPettyCashTransferred", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_PETTY_CASH_USED("teamResultSetPettyCashUsed", ModelChangeDataType.INTEGER),
 	TEAM_RESULT_SET_RAISED_DEAD("teamResultSetRaisedDead", ModelChangeDataType.INTEGER),

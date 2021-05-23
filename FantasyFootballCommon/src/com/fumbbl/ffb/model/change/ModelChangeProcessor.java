@@ -350,6 +350,9 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_CONCEDED:
 				getTeamResult(pGame, isHomeData(pModelChange)).setConceded((Boolean) pModelChange.getValue());
 				return true;
+			case TEAM_RESULT_SET_DEDICATED_FANS_MODIFIER:
+				getTeamResult(pGame, isHomeData(pModelChange)).setDedicatedFansModifier((Integer) pModelChange.getValue());
+				return true;
 			case TEAM_RESULT_SET_FAME:
 				getTeamResult(pGame, isHomeData(pModelChange)).setFame((Integer) pModelChange.getValue());
 				return true;
@@ -358,6 +361,9 @@ public class ModelChangeProcessor {
 				return true;
 			case TEAM_RESULT_SET_FAN_FACTOR_MODIFIER:
 				getTeamResult(pGame, isHomeData(pModelChange)).setFanFactorModifier((Integer) pModelChange.getValue());
+				return true;
+			case TEAM_RESULT_SET_PENALTY_SCORE:
+				getTeamResult(pGame, isHomeData(pModelChange)).setPenaltyScore((Integer) pModelChange.getValue());
 				return true;
 			case TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED:
 				getTeamResult(pGame, isHomeData(pModelChange)).setPettyCashTransferred((Integer) pModelChange.getValue());
@@ -507,7 +513,7 @@ public class ModelChangeProcessor {
 			case GAME_SET_HOME_FIRST_OFFENSE:
 			case GAME_SET_HOME_PLAYING:
 				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(),
-					(Boolean) pModelChange.getValue() ? false : true);
+					!((Boolean) pModelChange.getValue()));
 			case GAME_SET_PASS_COORDINATE:
 				FieldCoordinate passCoordinate = (FieldCoordinate) pModelChange.getValue();
 				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(),
@@ -527,6 +533,7 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_FAME:
 			case TEAM_RESULT_SET_BADLY_HURT_SUFFERED:
 			case TEAM_RESULT_SET_FAN_FACTOR_MODIFIER:
+			case TEAM_RESULT_SET_PENALTY_SCORE:
 			case TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED:
 			case TEAM_RESULT_SET_PETTY_CASH_USED:
 			case TEAM_RESULT_SET_RAISED_DEAD:
