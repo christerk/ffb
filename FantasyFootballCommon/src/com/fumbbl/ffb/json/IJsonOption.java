@@ -279,6 +279,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption PASSING_DISTANCE = new JsonEnumWithNameOption("passingDistance", Factory.PASSING_DISTANCE);
 	JsonStringOption PASSWORD = new JsonStringOption("password");
 	JsonIntOption PASSING = new JsonIntOption("passing");
+	JsonIntOption PENALTY_SCORE = new JsonIntOption("penaltyScore");
 	JsonIntOption PENALTY_SCORE_AWAY = new JsonIntOption("penaltyScoreAway");
 	JsonIntOption PENALTY_SCORE_HOME = new JsonIntOption("penaltyScoreHome");
 	JsonIntOption PETTY_CASH = new JsonIntOption("pettyCash");

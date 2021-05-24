@@ -467,6 +467,7 @@ public class TeamResult implements IJsonSerializable {
 		IJsonOption.TREASURY_USED_ON_INDUCEMENTS.addTo(jsonObject, treasurySpentOnInducements);
 		IJsonOption.FAN_FACTOR.addTo(jsonObject, fanFactor);
 		IJsonOption.DEDICATED_FANS.addTo(jsonObject, dedicatedFansModifier);
+		IJsonOption.PENALTY_SCORE.addTo(jsonObject, penaltyScore);
 		return jsonObject;
 	}
 
@@ -499,6 +500,7 @@ public class TeamResult implements IJsonSerializable {
 		treasurySpentOnInducements = IJsonOption.TREASURY_USED_ON_INDUCEMENTS.getFrom(source, jsonObject);
 		fanFactor = IJsonOption.FAN_FACTOR.getFrom(source, jsonObject);
 		dedicatedFansModifier = IJsonOption.DEDICATED_FANS.getFrom(source, jsonObject);
+		penaltyScore = IJsonOption.PENALTY_SCORE.getFrom(source, jsonObject);
 		return this;
 	}
 
