@@ -13,6 +13,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
@@ -29,9 +30,9 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.PileDriver;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -206,7 +207,7 @@ public class StepEndBlocking extends AbstractStep {
 
 				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
 
-				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty()) {
+				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty() || game.getTurnData().isFoulUsed()) {
 					usePileDriver = false;
 				}
 
@@ -218,6 +219,10 @@ public class StepEndBlocking extends AbstractStep {
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.FOUL, actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
 					pileDriver.pushSequence(new PileDriver.SequenceParams(getGameState(), targetPlayerId));
+					PlayerResult playerResult = game.getGameResult().getPlayerResult(activePlayer);
+					playerResult.setFouls(playerResult.getFouls() + 1);
+					game.getTurnData().setFoulUsed(true);
+
 					// go-for-it
 				} else if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
 					&& !activePlayer.hasSkillProperty(NamedProperties.blocksLikeChainsaw)
