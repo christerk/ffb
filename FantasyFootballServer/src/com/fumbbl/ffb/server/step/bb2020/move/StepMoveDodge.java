@@ -1,13 +1,14 @@
-package com.fumbbl.ffb.server.step.action.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -66,7 +67,7 @@ import java.util.Set;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepMoveDodge extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
@@ -239,7 +240,10 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			status = ActionStatus.FAILURE;
 			if (!fReRollUsed && (getReRolledAction() != ReRolledActions.DODGE)) {
 				setReRolledAction(ReRolledActions.DODGE);
-				ReRollSource skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.DODGE);
+				ReRollSource skillRerollSource = null;
+				if (TurnMode.REGULAR == game.getTurnMode()) {
+					skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.DODGE);
+				}
 				if (skillRerollSource != null) {
 					Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
 					Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
