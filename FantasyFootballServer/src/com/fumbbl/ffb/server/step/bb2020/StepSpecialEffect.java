@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step in inducement sequence to handle spell effect.
@@ -106,7 +107,7 @@ public final class StepSpecialEffect extends AbstractStep {
 	private void executeStep() {
 
 		Game game = getGameState().getGame();
-
+		boolean suppressEndTurn = false;
 		Player<?> player = game.getPlayerById(fPlayerId);
 		if (player != null) {
 
@@ -150,9 +151,14 @@ public final class StepSpecialEffect extends AbstractStep {
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
+					suppressEndTurn = !game.getActingTeam().hasPlayer(player) || !UtilPlayer.hasBall(game, player);
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
 							new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
-					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true));
+					StepParameterSet parameterSet = UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true);
+					if (suppressEndTurn) {
+						parameterSet.remove(StepParameterKey.END_TURN);
+					}
+					publishParameters(parameterSet);
 				}
 
 				// check end turn
@@ -164,7 +170,7 @@ public final class StepSpecialEffect extends AbstractStep {
 					if ((TurnMode.BOMB_AWAY == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
 						actingTeam = game.getTeamAway();
 					}
-					if (actingTeam.hasPlayer(player) && (fSpecialEffect != SpecialEffect.FIREBALL)) {
+					if (actingTeam.hasPlayer(player) && (fSpecialEffect != SpecialEffect.FIREBALL) && !suppressEndTurn) {
 						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
 				}
