@@ -56,6 +56,7 @@ public interface IJsonOption {
 	JsonBooleanOption BOMB = new JsonBooleanOption("bomb");
 	JsonFieldCoordinateOption BOMB_COORDINATE = new JsonFieldCoordinateOption("bombCoordinate");
 	JsonBooleanOption BOMB_MOVING = new JsonBooleanOption("bombMoving");
+	JsonBooleanOption BOMB_USED = new JsonBooleanOption("bombUsed");
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
 	JsonBooleanOption BRAWLER_AVAILABLE = new JsonBooleanOption("brawlerAvailable");
 	JsonIntOption BRAWLER_COUNT = new JsonIntOption("brawlerCount");

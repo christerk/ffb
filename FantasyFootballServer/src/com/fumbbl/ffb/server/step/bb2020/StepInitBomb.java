@@ -131,6 +131,8 @@ public final class StepInitBomb extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		game.getTurnData().setBombUsed(true);
+
 		game.getFieldModel().setRangeRuler(null);
 		if (fPassFumble) {
 			fCatcherId = null;

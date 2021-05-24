@@ -323,6 +323,7 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null)
+			&& !game.getTurnData().isBombUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& !playerState.isProne()
 			&& pPlayer.hasSkillProperty(NamedProperties.enableThrowBombAction));

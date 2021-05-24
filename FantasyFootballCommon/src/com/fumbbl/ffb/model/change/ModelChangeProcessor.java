@@ -405,6 +405,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_BLITZ_USED:
 				getTurnData(pGame, isHomeData(pModelChange)).setBlitzUsed((Boolean) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_BOMB_USED:
+				getTurnData(pGame, isHomeData(pModelChange)).setBombUsed((Boolean) pModelChange.getValue());
+				return true;
 			case TURN_DATA_SET_FIRST_TURN_AFTER_KICKOFF:
 				getTurnData(pGame, isHomeData(pModelChange)).setFirstTurnAfterKickoff((Boolean) pModelChange.getValue());
 				return true;
@@ -547,6 +550,7 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_WINNINGS:
 			case TURN_DATA_SET_APOTHECARIES:
 			case TURN_DATA_SET_BLITZ_USED:
+			case TURN_DATA_SET_BOMB_USED:
 			case TURN_DATA_SET_FIRST_TURN_AFTER_KICKOFF:
 			case TURN_DATA_SET_FOUL_USED:
 			case TURN_DATA_SET_HAND_OVER_USED:

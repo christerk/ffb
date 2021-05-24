@@ -132,6 +132,7 @@ public enum ModelChangeId implements INamedObject {
 
 	TURN_DATA_SET_APOTHECARIES("turnDataSetApothecaries", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_BLITZ_USED("turnDataSetBlitzUsed", ModelChangeDataType.BOOLEAN),
+	TURN_DATA_SET_BOMB_USED("turnDataSetBombUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_FIRST_TURN_AFTER_KICKOFF("turnDataSetFirstTurnAfterKickoff", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_FOUL_USED("turnDataSetFoulUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_HAND_OVER_USED("turnDataSetHandOverUsed", ModelChangeDataType.BOOLEAN),
