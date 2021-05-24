@@ -33,7 +33,7 @@ public class UtilActingPlayer {
 				boolean isThrowBombAction = PlayerAction.THROW_BOMB == actingPlayer.getPlayerAction();
 				boolean isHailMaryBombAction = PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction();
 				if (actingPlayer.hasActed() && ((!isThrowBombAction && !isHailMaryBombAction)
-						|| UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.enableThrowBombAction))) {
+						|| !UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.enableThrowBombAction))) {
 					pGame.getFieldModel().setPlayerState(oldPlayer,
 							currentState.changeBase(PlayerState.STANDING).changeActive(false));
 				} else if (actingPlayer.isStandingUp()) {
