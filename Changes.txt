@@ -3,6 +3,10 @@ Behaviour Changes:
 - New icons for vomit, blitz target and chainsaw
 - Implement Kick-off events except Cheering Fans (still uses old result)
 - Implement new TTM mechanics including changes to KTM and Swoop
+- Piledriver counts as foul action
+- Bomb knock downs are only turn overs if acting team player had ball
+- No skill rerolls during Blitz turn
+- Deflected bomb scatters if not caught
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
