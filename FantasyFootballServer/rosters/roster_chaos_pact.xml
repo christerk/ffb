@@ -157,7 +157,7 @@
 		<portrait>portraits/chaospact_chaosogre.png</portrait>
 		<iconSet size="1">iconsets/chaospact_chaosogre.png</iconSet>
 		<skillList>
-			<skill>Bone-head</skill>
+			<skill>bone head</skill>
 			<skill>Loner</skill>
 			<skill>Mighty Blow</skill>
 			<skill>Thick Skull</skill>

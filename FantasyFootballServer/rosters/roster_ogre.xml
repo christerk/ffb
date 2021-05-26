@@ -50,7 +50,7 @@
 		<portrait>portraits/ogre_ogre.png</portrait>
 		<iconSet size="6">iconsets/ogre_ogre.png</iconSet>
 		<skillList>
-			<skill>Bone-head</skill>
+			<skill>bone head</skill>
 			<skill>Mighty Blow</skill>
 			<skill>Thick Skull</skill>
 			<skill>Throw Team-Mate</skill>
@@ -147,7 +147,7 @@
 		<iconSet size="1">iconsets/BerthaBigfist.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
-			<skill>Bone-Head</skill>
+			<skill>bone head</skill>
 			<skill>Break Tackle</skill>
 			<skill>Dodge</skill>
 			<skill>Mighty Blow</skill>
@@ -170,7 +170,7 @@
 		<iconSet size="1">iconsets/BrickFarth.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
-			<skill>Bone-Head</skill>
+			<skill>bone head</skill>
 			<skill>Mighty Blow</skill>
 			<skill>Nerves of Steel</skill>
 			<skill>Strong Arm</skill>

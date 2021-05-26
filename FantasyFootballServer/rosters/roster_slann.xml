@@ -100,7 +100,7 @@
 		<portrait>portraits/slann_kroxigor.png</portrait>
 		<iconSet size="1">iconsets/slann_kroxigor.png</iconSet>
 		<skillList>
-			<skill>Bone-head</skill>
+			<skill>Bone head</skill>
 			<skill>Loner</skill>
 			<skill>Mighty Blow</skill>
 			<skill>Prehensile Tail</skill>

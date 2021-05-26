@@ -16,3 +16,4 @@ Areas of Testing:
 Bugfixes:
  - Clear chainsaw marker when deselecting multi block player
  - Animal Savagery did not use MB on injury
+ - Bone Head skill was not recognized

@@ -22,7 +22,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class BoneHead extends Skill {
 
 	public BoneHead() {
-		super("Bone-Head", SkillCategory.TRAIT);
+		super("Bone Head", SkillCategory.TRAIT);
 	}
 
 	@Override
