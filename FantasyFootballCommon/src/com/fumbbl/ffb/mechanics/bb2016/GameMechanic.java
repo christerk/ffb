@@ -1,9 +1,12 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TurnData;
 
@@ -75,5 +78,20 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			messages[3] = "Some valuable players (SPP 51+) may decide to leave your team.";
 		}
 		return messages;
+	}
+
+	@Override
+	public boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player) {
+		return true;
+	}
+
+	@Override
+	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
+		return true;
+	}
+
+	@Override
+	public int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker) {
+		return 0;
 	}
 }

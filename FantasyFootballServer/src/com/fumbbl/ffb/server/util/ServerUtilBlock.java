@@ -104,9 +104,9 @@ public class ServerUtilBlock {
 				blockStrengthAttacker = Math.max(blockStrengthAttacker, defenderStrength);
 			}
 
-			blockStrengthAttacker = ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender);
+			blockStrengthAttacker = ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);
 
-			int blockStrengthDefender = ServerUtilPlayer.findBlockStrength(game, defender, defenderStrength, attacker);
+			int blockStrengthDefender = ServerUtilPlayer.findBlockStrength(game, defender, defenderStrength, attacker, usingMultiBlock);
 			if (blockStrengthAttacker > blockStrengthDefender) {
 				nrOfDice = 2;
 			}

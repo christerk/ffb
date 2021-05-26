@@ -186,6 +186,8 @@ public final class StepEndSelecting extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (fEndTurn || fEndPlayerAction) {
+			game.getFieldModel().clearMultiBlockTargets();
+
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
 				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
@@ -215,6 +217,7 @@ public final class StepEndSelecting extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 		if (pPlayerAction == null) {
+			game.getFieldModel().clearMultiBlockTargets();
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 				.pushSequence(new Select.SequenceParams(getGameState(), false));
 			return;

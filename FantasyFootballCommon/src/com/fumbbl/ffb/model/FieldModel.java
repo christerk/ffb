@@ -66,6 +66,8 @@ public class FieldModel implements IJsonSerializable {
 	private final Map<String, Set<Card>> fCardsByPlayerId;
 	private final Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
 	private BlitzState blitzState;
+	private final Set<String> multiBlockTargets = new HashSet<>();
+	private final Set<FieldCoordinate> multiBlockTargetCoordinates = new HashSet<>();
 
 	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
 																																							// reconstructed
@@ -86,6 +88,33 @@ public class FieldModel implements IJsonSerializable {
 		fPlayerMarkers = new HashSet<>();
 		fCardsByPlayerId = new HashMap<>();
 		fCardEffectsByPlayerId = new HashMap<>();
+	}
+
+	public void addMultiBlockTarget(String playerId, FieldCoordinate coordinate) {
+		multiBlockTargets.add(playerId);
+		multiBlockTargetCoordinates.add(coordinate);
+	}
+
+	public void removeMultiBlockTarget(String playerId, FieldCoordinate coordinate) {
+		multiBlockTargets.remove(playerId);
+		multiBlockTargetCoordinates.remove(coordinate);
+	}
+
+	public void clearMultiBlockTargets() {
+		multiBlockTargets.clear();
+		multiBlockTargetCoordinates.clear();
+	}
+
+	public boolean isMultiBlockTarget(String playerId) {
+		return multiBlockTargets.contains(playerId);
+	}
+
+	public boolean wasMultiBlockTargetSquare(FieldCoordinate coordinate) {
+		return multiBlockTargetCoordinates.contains(coordinate);
+	}
+
+	public int selectedMultiBlockTargets() {
+		return multiBlockTargets.size();
 	}
 
 	public Player<?> getPlayer(FieldCoordinate pPlayerPosition) {

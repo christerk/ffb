@@ -1,9 +1,12 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -73,5 +76,22 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		messages[2] = "You will lose your player award and all your winnings.";
 		messages[3] = "Some valuable players (more than 3 advancements) may decide to leave your team.";
 		return messages;
+	}
+
+	@Override
+	public boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player) {
+		return !(usingMultiBlock && fieldModel.isMultiBlockTarget(player.getId()));
+	}
+
+	@Override
+	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
+		return !(fieldModel.wasMultiBlockTargetSquare(coordinate));
+	}
+
+	@Override
+	public int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker) {
+		boolean reduceAssists = usingMultiBlock && !game.getActingTeam().hasPlayer(attacker) &&
+			(game.getFieldModel().selectedMultiBlockTargets() < 1 || game.getFieldModel().isMultiBlockTarget(attacker.getId()));
+		return reduceAssists ? 1 : 0;
 	}
 }

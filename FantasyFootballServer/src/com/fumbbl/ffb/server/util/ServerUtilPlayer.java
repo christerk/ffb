@@ -1,6 +1,9 @@
 package com.fumbbl.ffb.server.util;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -11,7 +14,7 @@ import java.util.Arrays;
 
 public class ServerUtilPlayer {
 
-	public static int findBlockStrength(Game game, Player<?> attacker, int attackerStrength, Player<?> defender) {
+	public static int findBlockStrength(Game game, Player<?> attacker, int attackerStrength, Player<?> defender, boolean isMultiBlock) {
 		Team defenderTeam = defender.getTeam();
 		boolean flipOpponentIfSameTeam = attacker.hasSkillProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
 
@@ -25,6 +28,8 @@ public class ServerUtilPlayer {
 		FieldCoordinate coordinateDefender = game.getFieldModel().getPlayerCoordinate(defender);
 		Player<?>[] offensiveAssists = UtilPlayer.findAdjacentPlayersWithTacklezones(game, attacker.getTeam(),
 				coordinateDefender, false);
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
 		for (Player<?> offensiveAssist : offensiveAssists) {
 			if (offensiveAssist != attacker) {
 				FieldCoordinate coordinateAssist = game.getFieldModel().getPlayerCoordinate(offensiveAssist);
@@ -42,13 +47,18 @@ public class ServerUtilPlayer {
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsBlocksInTacklezones));
 
-				if ((offensiveAssist.hasSkillProperty(NamedProperties.assistsBlocksInTacklezones) && !guardIsCanceled)
-					|| (defendingPlayersOtherThanBlocker == 0)) {
+				boolean isValidAssist = mechanic.isValidAssist(isMultiBlock, game.getFieldModel(), offensiveAssist);
+
+				if (((offensiveAssist.hasSkillProperty(NamedProperties.assistsBlocksInTacklezones) && !guardIsCanceled)
+					|| (defendingPlayersOtherThanBlocker == 0)) && isValidAssist) {
 					// System.out.println(offensiveAssists[i].getName() + " assists " +
 					// pAttacker.getName());
 					blockStrength++;
 				}
 			}
+		}
+		if (blockStrength > attackerStrength) {
+			blockStrength -= mechanic.assistReduction(isMultiBlock, game, attacker);
 		}
 		return blockStrength;
 	}

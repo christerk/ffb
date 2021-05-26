@@ -155,6 +155,7 @@ public class StepEndBlocking extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 		if (fEndTurn || fEndPlayerAction) {
+			game.getFieldModel().clearMultiBlockTargets();
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else {

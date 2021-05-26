@@ -368,6 +368,8 @@ public final class StepInitSelecting extends AbstractStep {
 				break;
 		}
 		fieldModel.setPlayerState(player, playerState);
+		fieldModel.addMultiBlockTarget(player.getId(), fieldModel.getPlayerCoordinate(player));
+		ServerUtilBlock.updateDiceDecorations(game);
 	}
 
 	private void handleUnsetBlockTarget(Game game, ClientCommandUnsetBlockTargetSelection command) {
@@ -375,6 +377,8 @@ public final class StepInitSelecting extends AbstractStep {
 		FieldModel fieldModel = game.getFieldModel();
 		PlayerState playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false).changeSelectedChainsawTarget(false);
 		fieldModel.setPlayerState(player, playerState);
+		fieldModel.removeMultiBlockTarget(player.getId(), fieldModel.getPlayerCoordinate(player));
+		ServerUtilBlock.updateDiceDecorations(game);
 	}
 
 	// JSON serialization

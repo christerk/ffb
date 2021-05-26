@@ -149,6 +149,7 @@ public class StepEndTurn extends AbstractStep {
 	private void executeStep() {
 
 		Game game = getGameState().getGame();
+		game.getFieldModel().clearMultiBlockTargets();
 		UtilServerDialog.hideDialog(getGameState());
 		boolean isHomeTurnEnding = game.isHomePlaying();
 
