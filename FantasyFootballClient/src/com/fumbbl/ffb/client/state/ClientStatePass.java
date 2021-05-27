@@ -201,7 +201,7 @@ public class ClientStatePass extends ClientStateMove {
 
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
 				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())
-				&& game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
+				&& !game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 					: "Use Hail Mary Pass";
 			JMenuItem hailMaryPassAction = new JMenuItem(text,

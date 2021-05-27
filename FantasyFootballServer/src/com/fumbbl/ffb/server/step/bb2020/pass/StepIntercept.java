@@ -108,7 +108,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		if (game.getThrowerId() == null) {
+		if (game.getThrowerId() == null || PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()
+			|| PlayerAction.HAIL_MARY_PASS == game.getThrowerAction()) {
+			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 			return;
 		}
 		// reset range ruler after passBlock

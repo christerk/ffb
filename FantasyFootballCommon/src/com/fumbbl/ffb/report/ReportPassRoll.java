@@ -32,17 +32,24 @@ public class ReportPassRoll extends ReportSkillRoll {
 	public ReportPassRoll(String pPlayerId, int pRoll, int pMinimumRoll, boolean pReRolled,
 	                      PassModifier[] pRollModifiers, PassingDistance pPassingDistance,
 	                      boolean pBomb, PassResult result) {
+		this(pPlayerId, pRoll, pMinimumRoll, pReRolled, pRollModifiers, pPassingDistance, pBomb, result, false);
+	}
+
+	public ReportPassRoll(String pPlayerId, int pRoll, int pMinimumRoll, boolean pReRolled,
+	                      PassModifier[] pRollModifiers, PassingDistance pPassingDistance,
+	                      boolean pBomb, PassResult result, boolean hailMaryPass) {
 		super(pPlayerId, PassResult.ACCURATE == result, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
 		this.result = result;
 		fPassingDistance = pPassingDistance;
 		fBomb = pBomb;
-		fHailMaryPass = false;
+		fHailMaryPass = hailMaryPass;
 	}
 
 	public ReportId getId() {
 		return ReportId.PASS_ROLL;
 	}
 
+	@SuppressWarnings("SuspiciousToArrayCall")
 	@Override
 	public PassModifier[] getRollModifiers() {
 		return getRollModifierList().toArray(new PassModifier[0]);
@@ -67,12 +74,8 @@ public class ReportPassRoll extends ReportSkillRoll {
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		if (isHailMaryPass()) {
-			return new ReportPassRoll(getPlayerId(), getRoll(), isReRolled(), isBomb(), result);
-		} else {
-			return new ReportPassRoll(getPlayerId(), getRoll(), getMinimumRoll(), isReRolled(),
-				getRollModifiers(), getPassingDistance(), isBomb(), result);
-		}
+		return new ReportPassRoll(getPlayerId(), getRoll(), getMinimumRoll(), isReRolled(),
+			getRollModifiers(), getPassingDistance(), isBomb(), result, isHailMaryPass());
 	}
 
 	// JSON serialization

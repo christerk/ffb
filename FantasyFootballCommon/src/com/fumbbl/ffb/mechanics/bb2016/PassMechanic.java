@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
@@ -11,6 +8,9 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
+
+import java.util.Collection;
+import java.util.Optional;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {

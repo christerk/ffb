@@ -1,15 +1,22 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
+import com.fumbbl.ffb.factory.PassModifierFactory;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.modifiers.PassContext;
+import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportPassRoll;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
@@ -25,6 +32,8 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.util.UtilCards;
+
+import java.util.Set;
 
 @RulesCollection(Rules.BB2020)
 public class PassBehaviour extends SkillBehaviour<Pass> {
@@ -67,10 +76,18 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				if (game.getThrower() == null) {
 					return false;
 				}
+
+				PassState passState = new PassState();
+				step.getGameState().setPassState(passState);
+				passState.setThrowerCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+
+				boolean bombAction;
 				if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 					game.getFieldModel().setBombMoving(true);
+					bombAction = true;
 				} else {
 					game.getFieldModel().setBallMoving(true);
+					bombAction = false;
 				}
 				boolean doRoll = true;
 				boolean doNextStep = false;
@@ -82,25 +99,35 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 					}
 				}
 				if (doRoll) {
+					PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 					int roll = step.getGameState().getDiceRoller().rollSkill();
-					state.result = (roll == 1) ? PassResult.FUMBLE : PassResult.INACCURATE;
+					PassModifierFactory factory = game.getFactory(FactoryType.Factory.PASS_MODIFIER);
+					PassingDistance passingDistance = PassingDistance.LONG_BOMB;
+					PassContext passContext = new PassContext(game, game.getThrower(), passingDistance, bombAction);
+					Set<PassModifier> modifiers = factory.findModifiers(passContext);
+					PassResult result = mechanic.evaluatePass(game.getThrower(), roll, passingDistance, modifiers, bombAction);
+					int minimumRoll = Math.max(2, 2 + passingDistance.getModifier2020() + modifiers.stream().mapToInt(PassModifier::getModifier).sum());
+					state.result = result == PassResult.ACCURATE ? PassResult.INACCURATE : result;
+					passState.setResult(state.result);
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.PASS) && (step.getReRollSource() != null));
-					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, reRolled,
-						(PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()), state.result));
+
+					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
+						modifiers.toArray(new PassModifier[0]), passingDistance, bombAction, state.result, true));
 					doNextStep = true;
-					if (PassResult.FUMBLE == state.result) {
+					if (PassResult.FUMBLE == state.result || PassResult.WILDLY_INACCURATE == state.result) {
 						if (step.getReRolledAction() != ReRolledActions.PASS) {
 							step.setReRolledAction(ReRolledActions.PASS);
 							if (UtilCards.hasSkill(game.getThrower(), skill) && !state.passSkillUsed) {
 								doNextStep = false;
 								state.passSkillUsed = true;
+								passState.setPassSkillUsed(true);
 								Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 								UtilServerDialog.showDialog(step.getGameState(),
-									new DialogSkillUseParameter(game.getThrowerId(), skill, 2),
+									new DialogSkillUseParameter(game.getThrowerId(), skill, minimumRoll),
 									actingTeam.hasPlayer(game.getThrower()));
 							} else {
 								if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(),
-										ReRolledActions.PASS, 2, false)) {
+										ReRolledActions.PASS, minimumRoll, false)) {
 									doNextStep = false;
 								}
 							}
