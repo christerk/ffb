@@ -11,6 +11,7 @@ Behaviour Changes:
 - Players blocked by Multiblock do not assist each other
 - HMP takes all modifiers into account and tests against agility
 - Deflection only gives points when ball is not caught
+- ThrowIn square count starts at 0
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
@@ -24,6 +25,7 @@ Areas of Testing:
 - HMP
 - Piledriver/Fouling
 - Bombs
+- ThrowIn
 
 Bugfixes:
  - Clear chainsaw marker when deselecting multi block player

@@ -536,7 +536,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		int directionRoll = diceRoller.rollThrowInDirection();
 		Direction direction = diceInterpreter.interpretThrowInDirectionRoll(ballCoordinateStart, directionRoll);
 		int[] distanceRoll = diceRoller.rollThrowInDistance();
-		int distance = distanceRoll[0] + distanceRoll[1];
+		int distance = distanceRoll[0] + distanceRoll[1] + 1;
 		FieldCoordinate ballCoordinateEnd = ballCoordinateStart;
 		FieldCoordinate lastValidCoordinate = ballCoordinateEnd;
 		for (int i = 0; i < distance; i++) {
