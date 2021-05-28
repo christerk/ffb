@@ -10,6 +10,7 @@ Behaviour Changes:
 - Pushbacks on Multiblock cannot end up in the starting square of a blocked player
 - Players blocked by Multiblock do not assist each other
 - HMP takes all modifiers into account and tests against agility
+- Deflection only gives points when ball is not caught
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
