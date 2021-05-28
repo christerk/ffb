@@ -526,7 +526,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 					int activePlayersOnField = (int) Arrays.stream(game.getActingTeam().getPlayers())
 						.filter(player ->
-							fKickoffBounds.isInBounds(game.getFieldModel().getPlayerCoordinate(player))
+							FieldCoordinateBounds.FIELD.isInBounds(game.getFieldModel().getPlayerCoordinate(player))
 								&& game.getFieldModel().getPlayerState(player).isActive()
 						)
 						.count();
