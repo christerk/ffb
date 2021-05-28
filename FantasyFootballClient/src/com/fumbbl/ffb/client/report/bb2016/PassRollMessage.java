@@ -1,9 +1,11 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -14,7 +16,7 @@ import com.fumbbl.ffb.report.ReportNervesOfSteel;
 import com.fumbbl.ffb.report.ReportPassRoll;
 
 @ReportMessageType(ReportId.PASS_ROLL)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class PassRollMessage extends ReportMessageBase<ReportPassRoll> {
 
     @Override

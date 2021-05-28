@@ -9,6 +9,7 @@ Behaviour Changes:
 - Deflected bomb scatters if not caught
 - Pushbacks on Multiblock cannot end up in the starting square of a blocked player
 - Players blocked by Multiblock do not assist each other
+- HMP takes all modifiers into account and tests against agility
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
@@ -18,6 +19,10 @@ Areas of Testing:
 - Traits
 - Kick-off events
 - TTM/KTM/Swoop
+- Multiblock
+- HMP
+- Piledriver/Fouling
+- Bombs
 
 Bugfixes:
  - Clear chainsaw marker when deselecting multi block player
