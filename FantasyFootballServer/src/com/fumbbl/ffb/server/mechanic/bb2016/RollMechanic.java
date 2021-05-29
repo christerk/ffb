@@ -62,7 +62,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public SeriousInjury interpretSeriousInjuryRoll(int[] roll) {
+	public SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, int[] roll) {
 
 		// 11-38 Badly Hurt No long term effect
 		// 41 Broken Ribs Miss next game
@@ -174,16 +174,16 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext) {
-		return interpretSeriousInjuryRoll(injuryContext, false);
+	public SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext) {
+		return interpretSeriousInjuryRoll(game, injuryContext, false);
 	}
 
 	@Override
-	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext, boolean useDecay) {
+	public SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, boolean useDecay) {
 		if (useDecay) {
-			return interpretSeriousInjuryRoll(injuryContext.getCasualtyRollDecay());
+			return interpretSeriousInjuryRoll(game, injuryContext, injuryContext.getCasualtyRollDecay());
 		} else {
-			return interpretSeriousInjuryRoll(injuryContext.getCasualtyRoll());
+			return interpretSeriousInjuryRoll(game, injuryContext, injuryContext.getCasualtyRoll());
 		}
 	}
 }

@@ -47,6 +47,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 	private SeriousInjury fSeriousInjury;
 	private int[] fCasualtyRollDecay;
 	private SeriousInjury fSeriousInjuryDecay;
+	private SeriousInjury originalInjury;
 	private PlayerState fInjury;
 	private PlayerState fInjuryDecay;
 	private final Set<CasualtyModifier> casualtyModifiers;
@@ -60,10 +61,10 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 	private ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
 	                     int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
 	                     SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
-	                     PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers) {
+	                     PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers, SeriousInjury originalInjury) {
 		this();
 		init(pDefenderId, pInjuryType, pArmorBroken, pArmorModifiers, pArmorRoll, pInjuryModifiers, pInjuryRoll, pCasualtyRoll,
-			pSeriousInjury, pCasualtyRollDecay, pSeriousInjuryDecay, pInjury, pInjuryDecay, pAttackerId, casualtyModifiers);
+			pSeriousInjury, pCasualtyRollDecay, pSeriousInjuryDecay, pInjury, pInjuryDecay, pAttackerId, casualtyModifiers, originalInjury);
 	}
 
 	@Override
@@ -72,14 +73,15 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 			injuryContext.isArmorBroken(), injuryContext.getArmorModifiers(), injuryContext.getArmorRoll(),
 			injuryContext.getInjuryModifiers(), injuryContext.getInjuryRoll(), injuryContext.getCasualtyRoll(),
 			injuryContext.getSeriousInjury(), injuryContext.getCasualtyRollDecay(), injuryContext.getSeriousInjuryDecay(),
-			injuryContext.getInjury(), injuryContext.getInjuryDecay(), injuryContext.getAttackerId(), injuryContext.casualtyModifiers);
+			injuryContext.getInjury(), injuryContext.getInjuryDecay(), injuryContext.getAttackerId(),
+			injuryContext.casualtyModifiers, injuryContext.originalSeriousInjury);
 		return this;
 	}
 
 	private void init(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
 	                  int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
 	                  SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
-	                  PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers) {
+	                  PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers, SeriousInjury originalInjury) {
 		fDefenderId = pDefenderId;
 		fInjuryType = pInjuryType;
 		fArmorBroken = pArmorBroken;
@@ -94,6 +96,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		fInjury = pInjury;
 		fInjuryDecay = pInjuryDecay;
 		fAttackerId = pAttackerId;
+		this.originalInjury = originalInjury;
 		add(casualtyModifiers);
 	}
 
@@ -115,6 +118,10 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 
 	public ArmorModifier[] getArmorModifiers() {
 		return fArmorModifiers.toArray(new ArmorModifier[0]);
+	}
+
+	public SeriousInjury getOriginalInjury() {
+		return originalInjury;
 	}
 
 	private void add(ArmorModifier pArmorModifier) {
@@ -200,7 +207,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 	public IReport transform(IFactorySource source) {
 		return new ReportInjury(getDefenderId(), getInjuryType(), isArmorBroken(), getArmorModifiers(), getArmorRoll(),
 				getInjuryModifiers(), getInjuryRoll(), getCasualtyRoll(), getSeriousInjury(), getCasualtyRollDecay(),
-				getSeriousInjuryDecay(), getInjury(), getInjuryDecay(), getAttackerId(), casualtyModifiers);
+				getSeriousInjuryDecay(), getInjury(), getInjuryDecay(), getAttackerId(), casualtyModifiers, originalInjury);
 	}
 
 	// JSON serialization
@@ -219,6 +226,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
 		IJsonOption.CASUALTY_ROLL_DECAY.addTo(jsonObject, fCasualtyRollDecay);
 		IJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, fSeriousInjuryDecay);
+		IJsonOption.SERIOUS_INJURY_OLD.addTo(jsonObject, originalInjury);
 		IJsonOption.INJURY.addTo(jsonObject, fInjury);
 		IJsonOption.INJURY_DECAY.addTo(jsonObject, fInjuryDecay);
 		IJsonOption.ATTACKER_ID.addTo(jsonObject, fAttackerId);
@@ -256,6 +264,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
 		fCasualtyRollDecay = IJsonOption.CASUALTY_ROLL_DECAY.getFrom(game, jsonObject);
 		fSeriousInjuryDecay = (SeriousInjury) IJsonOption.SERIOUS_INJURY_DECAY.getFrom(game, jsonObject);
+		originalInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY_OLD.getFrom(game, jsonObject);
 		fInjury = IJsonOption.INJURY.getFrom(game, jsonObject);
 		fInjuryDecay = IJsonOption.INJURY_DECAY.getFrom(game, jsonObject);
 		fAttackerId = IJsonOption.ATTACKER_ID.getFrom(game, jsonObject);

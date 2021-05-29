@@ -12,6 +12,7 @@ Behaviour Changes:
 - HMP takes all modifiers into account and tests against agility
 - Deflection only gives points when ball is not caught
 - ThrowIn square count starts at 0
+- Lasting Injury roles get rerolled if stat cannot be reduced further
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
@@ -26,6 +27,7 @@ Areas of Testing:
 - Piledriver/Fouling
 - Bombs
 - ThrowIn
+- Lasting Injuries
 
 Bugfixes:
  - Clear chainsaw marker when deselecting multi block player

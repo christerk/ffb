@@ -180,6 +180,7 @@ public class InjuryResult implements IJsonSerializable {
 		IServerJsonOption.INJURY_DECAY.addTo(jsonObject, injuryContext.fInjuryDecay);
 		IServerJsonOption.CASUALTY_ROLL.addTo(jsonObject, injuryContext.fCasualtyRoll);
 		IServerJsonOption.SERIOUS_INJURY.addTo(jsonObject, injuryContext.fSeriousInjury);
+		IServerJsonOption.SERIOUS_INJURY_OLD.addTo(jsonObject, injuryContext.originalSeriousInjury);
 		IServerJsonOption.CASUALTY_ROLL_DECAY.addTo(jsonObject, injuryContext.fCasualtyRollDecay);
 		IServerJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, injuryContext.fSeriousInjuryDecay);
 		IServerJsonOption.APOTHECARY_STATUS.addTo(jsonObject, injuryContext.fApothecaryStatus);
@@ -227,6 +228,7 @@ public class InjuryResult implements IJsonSerializable {
 		injuryContext.fCasualtyRoll = IServerJsonOption.CASUALTY_ROLL.getFrom(source, jsonObject);
 		injuryContext.fSeriousInjury = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
 		injuryContext.fCasualtyRollDecay = IServerJsonOption.CASUALTY_ROLL_DECAY.getFrom(source, jsonObject);
+		injuryContext.originalSeriousInjury = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY_OLD.getFrom(source, jsonObject);
 		injuryContext.fSeriousInjuryDecay = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY_DECAY.getFrom(source, jsonObject);
 		injuryContext.fApothecaryStatus = (ApothecaryStatus) IServerJsonOption.APOTHECARY_STATUS.getFrom(source, jsonObject);
 		injuryContext.fSendToBoxReason = (SendToBoxReason) IServerJsonOption.SEND_TO_BOX_REASON.getFrom(source, jsonObject);

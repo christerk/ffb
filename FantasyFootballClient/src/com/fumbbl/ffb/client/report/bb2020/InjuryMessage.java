@@ -169,16 +169,16 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 			          status.append(" = ").append(casualtyRoll[0] + modifiers);
 			          println(getIndent() + 1, TextStyle.NONE, status.toString());
 		          }
-		          reportInjury(defender, report.getInjury(), report.getSeriousInjury(), casualtyRoll[1]);
+		          reportInjury(defender, report.getInjury(), report.getSeriousInjury(), casualtyRoll[1], report.getOriginalInjury());
 	          }
           } else {
-            reportInjury(defender, report.getInjury(), null, 0);
+            reportInjury(defender, report.getInjury(), null, 0, null);
           }
   			}
   		}
     }
     
-  	private void reportInjury(Player<?> pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury, int siRoll) {
+  	private void reportInjury(Player<?> pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury, int siRoll, SeriousInjury originalInury) {
   		StringBuilder status = new StringBuilder();
   		print(getIndent() + 1, false, pDefender);
   		status.append(" ").append(pInjury.getDescription()).append(".");
@@ -188,6 +188,12 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 				  status = new StringBuilder();
 				  status.append("Lasting Injury Roll [ ").append(siRoll).append(" ]");
 				  println(getIndent(), TextStyle.ROLL, status.toString());
+			  }
+  			if (originalInury != null) {
+				  status = new StringBuilder().append(pDefender.getName()).append(" would have ")
+					  .append(originalInury.getDescription())
+					  .append(" but that stat cannot be reduced any further. So a different injury has been chosen randomly.");
+				  println(getIndent() + 1, TextStyle.EXPLANATION, status.toString());
 			  }
   			print(getIndent() + 1, false, pDefender);
   			status = new StringBuilder();

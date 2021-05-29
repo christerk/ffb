@@ -20,10 +20,10 @@ public abstract class RollMechanic implements Mechanic {
 
 	public abstract PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player);
 
-	public abstract SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext);
-	public abstract SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext, boolean useDecay);
+	public abstract SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext);
+	public abstract SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, boolean useDecay);
 
-	public abstract SeriousInjury interpretSeriousInjuryRoll(int[] roll);
+	public abstract SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, int[] roll);
 
 	public abstract int multiBlockAttackerModifier();
 

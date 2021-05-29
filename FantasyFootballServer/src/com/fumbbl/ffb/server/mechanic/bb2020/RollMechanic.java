@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.mechanic.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
@@ -13,14 +14,38 @@ import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
 import com.fumbbl.ffb.server.DiceRoller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
+
+	private final Map<InjuryAttribute, Integer> reductionThresholds = new HashMap<InjuryAttribute, Integer>() {{
+		put(InjuryAttribute.MA, 1);
+		put(InjuryAttribute.ST, 1);
+		put(InjuryAttribute.AG, 6);
+		put(InjuryAttribute.PA, 6);
+		put(InjuryAttribute.AV, 3);
+	}};
+
+	private final List<SeriousInjury> orderedInjuries = new ArrayList<SeriousInjury>() {{
+		add(SeriousInjury.HEAD_INJURY);
+		add(SeriousInjury.HEAD_INJURY);
+		add(SeriousInjury.SMASHED_KNEE);
+		add(SeriousInjury.BROKEN_ARM);
+		add(SeriousInjury.NECK_INJURY);
+		add(SeriousInjury.DISLOCATED_SHOULDER);
+	}};
+
 	@Override
 	public int[] rollCasualty(DiceRoller diceRoller) {
-		return new int[] { diceRoller.rollDice(16), diceRoller.rollDice(6) };
+		return new int[]{diceRoller.rollDice(16), diceRoller.rollDice(6)};
 	}
 
 	@Override
@@ -53,7 +78,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 					playerState = new PlayerState(PlayerState.STUNNED);
 					defender.getSkillWithProperty(NamedProperties.convertKOToStunOn8).getInjuryModifiers()
 						.forEach(pInjuryContext::addInjuryModifier);
-				}  else if ((total == 9) && isStunty) {
+				} else if ((total == 9) && isStunty) {
 					playerState = new PlayerState(PlayerState.BADLY_HURT);
 				} else if (total > 9) {
 					playerState = null;
@@ -81,19 +106,19 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext, boolean useDecay) {
-		return interpretSeriousInjuryRoll(injuryContext);
+	public SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, boolean useDecay) {
+		return interpretSeriousInjuryRoll(game, injuryContext);
 	}
 
 	@Override
-	public SeriousInjury interpretSeriousInjuryRoll(InjuryContext injuryContext) {
+	public SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext) {
 		int casModifier = injuryContext.casualtyModifiers.stream().mapToInt(CasualtyModifier::getModifier).sum();
-		return interpretSeriousInjuryRoll(injuryContext.getCasualtyRoll()[0] + casModifier, injuryContext.getCasualtyRoll()[1]);
+		return interpretSeriousInjuryRoll(game, injuryContext, injuryContext.getCasualtyRoll()[0] + casModifier, injuryContext.getCasualtyRoll()[1]);
 	}
 
 	@Override
-	public SeriousInjury interpretSeriousInjuryRoll(int[] roll) {
-		return interpretSeriousInjuryRoll(roll[0], roll[1]);
+	public SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, int[] roll) {
+		return interpretSeriousInjuryRoll(game, injuryContext, roll[0], roll[1]);
 	}
 
 	@Override
@@ -106,9 +131,9 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return 0;
 	}
 
-	private SeriousInjury interpretSeriousInjuryRoll(int casRoll, int siRoll) {
+	private SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, int casRoll, int siRoll) {
 		if (isSI(casRoll)) {
-			return mapSIRoll(siRoll);
+			return mapSIRoll(game, injuryContext, siRoll);
 		}
 
 		if (casRoll >= 10 && casRoll <= 12) {
@@ -122,19 +147,53 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return null;
 	}
 
-	private SeriousInjury mapSIRoll(int roll) {
-		switch (roll) {
-			case 6:
-				return SeriousInjury.DISLOCATED_SHOULDER;
-			case 5:
-				return SeriousInjury.NECK_INJURY;
-			case 4:
-				return SeriousInjury.BROKEN_ARM;
-			case 3:
-				return SeriousInjury.SMASHED_KNEE;
-			default:
-				return SeriousInjury.HEAD_INJURY;
+	private SeriousInjury mapSIRoll(Game game, InjuryContext injuryContext, int roll) {
+		Player<?> defender = game.getPlayerById(injuryContext.getDefenderId());
+		List<SeriousInjury> injuriesWithReduceableStats = orderedInjuries.stream().filter(
+			injury -> {
+				InjuryAttribute attribute = injury.getInjuryAttribute();
+				return canBeReduced(attribute, currentValue(attribute, defender));
+			}).collect(Collectors.toList());
+
+		SeriousInjury originalInjury = mapSIRoll(roll);
+
+		if (injuriesWithReduceableStats.isEmpty() || injuriesWithReduceableStats.contains(originalInjury)) {
+			return originalInjury;
 		}
+
+		injuryContext.setOriginalSeriousInjury(originalInjury);
+
+		Collections.shuffle(injuriesWithReduceableStats);
+
+		return injuriesWithReduceableStats.get(0);
+	}
+
+	/**
+	 * @return current stat value WITHOUT temporary modifiers
+	 */
+	private int currentValue(InjuryAttribute attribute, Player<?> player) {
+		switch (attribute) {
+			case MA:
+				return player.getMovement();
+			case ST:
+				return player.getStrength();
+			case AG:
+				return player.getAgility();
+			case PA:
+				return player.getPassing();
+			case AV:
+				return player.getArmour();
+			default:
+				return 0;
+		}
+	}
+
+	private boolean canBeReduced(InjuryAttribute attribute, int currentValue) {
+		return reductionThresholds.get(attribute) != currentValue;
+	}
+
+	private SeriousInjury mapSIRoll(int roll) {
+		return orderedInjuries.get(roll - 1);
 	}
 
 	private int mapCasualtyRoll(int roll) {

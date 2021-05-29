@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.report;
+package com.fumbbl.ffb.report.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -8,29 +8,33 @@ import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.UtilReport;
 
 /**
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportApothecaryRoll implements IReport {
 
 	private String fPlayerId;
 	private int[] fCasualtyRoll;
 	private PlayerState fPlayerState;
-	private SeriousInjury fSeriousInjury;
+	private SeriousInjury fSeriousInjury, originalInjury;
 
 	public ReportApothecaryRoll() {
 		super();
 	}
 
 	public ReportApothecaryRoll(String pPlayerId, int[] pCasualtyRoll, PlayerState pPlayerState,
-			SeriousInjury pSeriousInjury) {
+	                            SeriousInjury pSeriousInjury, SeriousInjury originalInjury) {
 		fPlayerId = pPlayerId;
 		fCasualtyRoll = pCasualtyRoll;
 		fPlayerState = pPlayerState;
 		fSeriousInjury = pSeriousInjury;
+		this.originalInjury = originalInjury;
 	}
 
 	public ReportId getId() {
@@ -53,10 +57,14 @@ public class ReportApothecaryRoll implements IReport {
 		return fSeriousInjury;
 	}
 
+	public SeriousInjury getOriginalInjury() {
+		return originalInjury;
+	}
+
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportApothecaryRoll(getPlayerId(), getCasualtyRoll(), getPlayerState(), getSeriousInjury());
+		return new ReportApothecaryRoll(getPlayerId(), getCasualtyRoll(), getPlayerState(), getSeriousInjury(), originalInjury);
 	}
 
 	// JSON serialization
@@ -68,6 +76,7 @@ public class ReportApothecaryRoll implements IReport {
 		IJsonOption.CASUALTY_ROLL.addTo(jsonObject, fCasualtyRoll);
 		IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+		IJsonOption.SERIOUS_INJURY_OLD.addTo(jsonObject, originalInjury);
 		return jsonObject;
 	}
 
@@ -78,6 +87,7 @@ public class ReportApothecaryRoll implements IReport {
 		fCasualtyRoll = IJsonOption.CASUALTY_ROLL.getFrom(game, jsonObject);
 		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(game, jsonObject);
 		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
+		originalInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY_OLD.getFrom(game, jsonObject);
 		return this;
 	}
 

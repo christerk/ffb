@@ -1,17 +1,19 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.report.ReportApothecaryRoll;
+import com.fumbbl.ffb.report.bb2016.ReportApothecaryRoll;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.util.ArrayTool;
 
 @ReportMessageType(ReportId.APOTHECARY_ROLL)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class ApothecaryRollMessage extends ReportMessageBase<ReportApothecaryRoll> {
 
     @Override

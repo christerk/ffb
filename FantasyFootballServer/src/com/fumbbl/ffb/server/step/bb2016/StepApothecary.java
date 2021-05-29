@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.common;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -26,7 +26,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
-import com.fumbbl.ffb.report.ReportApothecaryRoll;
+import com.fumbbl.ffb.report.bb2016.ReportApothecaryRoll;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -59,7 +59,7 @@ import com.fumbbl.ffb.util.StringTool;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepApothecary extends AbstractStep {
 
 	private ApothecaryMode fApothecaryMode;
@@ -285,7 +285,7 @@ public class StepApothecary extends AbstractStep {
 			newInjuryResult.injuryContext().setInjury(
 				rollMechanic.interpretCasualtyRollAndAddModifiers(game, newInjuryResult.injuryContext(), game.getPlayerById(fInjuryResult.injuryContext().getDefenderId())));
 			newInjuryResult.injuryContext().setSeriousInjury(
-				rollMechanic.interpretSeriousInjuryRoll(newInjuryResult.injuryContext()));
+				rollMechanic.interpretSeriousInjuryRoll(game, newInjuryResult.injuryContext()));
 			apothecaryChoice = (newInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT);
 			getResult()
 				.addReport(new ReportApothecaryRoll(defender.getId(), newInjuryResult.injuryContext().getCasualtyRoll(),

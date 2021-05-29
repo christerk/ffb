@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.handler;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SoundId;
@@ -419,7 +420,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.BADLY_HURT), "Badly Hurt", null);
 			} else if ("si".equalsIgnoreCase(commands[1])) {
 				int[] roll = mechanic.rollCasualty(gameState.getDiceRoller());
-				SeriousInjury seriousInjury = mechanic.interpretSeriousInjuryRoll(roll);
+				SeriousInjury seriousInjury = mechanic.interpretSeriousInjuryRoll(game, new InjuryContext(), roll);
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.SERIOUS_INJURY), "Serious Injury",
 						seriousInjury);
 			} else if ("rip".equalsIgnoreCase(commands[1])) {

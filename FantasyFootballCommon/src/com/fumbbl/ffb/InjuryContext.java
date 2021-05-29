@@ -1,12 +1,12 @@
 package com.fumbbl.ffb;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class InjuryContext {
 	public InjuryType fInjuryType;
@@ -24,6 +24,7 @@ public class InjuryContext {
 	public PlayerState fInjuryDecay;
 	public SeriousInjury fSeriousInjury;
 	public SeriousInjury fSeriousInjuryDecay;
+	public SeriousInjury originalSeriousInjury;
 	public SendToBoxReason fSendToBoxReason;
 	public int fSendToBoxTurn;
 	public int fSendToBoxHalf;
@@ -296,5 +297,13 @@ public class InjuryContext {
 
 	public void setCasualtyModifiers(Set<CasualtyModifier> casualtyModifiers) {
 		this.casualtyModifiers = casualtyModifiers;
+	}
+
+	public SeriousInjury getOriginalSeriousInjury() {
+		return originalSeriousInjury;
+	}
+
+	public void setOriginalSeriousInjury(SeriousInjury originalSeriousInjury) {
+		this.originalSeriousInjury = originalSeriousInjury;
 	}
 }

@@ -97,10 +97,10 @@ public class UtilServerInjury {
 		if (injuryContext.isSeriousInjury()) {
 			RollMechanic rollMechanic = ((RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 			injuryContext
-					.setSeriousInjury(rollMechanic.interpretSeriousInjuryRoll(injuryContext));
+					.setSeriousInjury(rollMechanic.interpretSeriousInjuryRoll(game, injuryContext));
 			if (pDefender.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryContext.setSeriousInjuryDecay(
-					rollMechanic.interpretSeriousInjuryRoll(injuryContext, true));
+					rollMechanic.interpretSeriousInjuryRoll(game, injuryContext, true));
 			}
 		}
 
