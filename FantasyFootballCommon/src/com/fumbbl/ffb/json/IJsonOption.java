@@ -347,6 +347,7 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
+	JsonArrayOption RE_ROLL_SOURCES = new JsonArrayOption("reRollSources");
 	JsonBooleanOption RE_ROLL_USED = new JsonBooleanOption("reRollUsed");
 	JsonIntOption RE_ROLLS = new JsonIntOption("reRolls");
 	JsonIntOption RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE = new JsonIntOption("rerollBrilliantCoachingOneDrive");

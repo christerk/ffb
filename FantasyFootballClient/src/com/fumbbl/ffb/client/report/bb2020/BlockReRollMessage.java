@@ -23,7 +23,7 @@ public class BlockReRollMessage extends ReportMessageBase<ReportBlockReRoll> {
 			BlockResult blockResult = blockResultFactory.forRoll(report.getBlockRoll()[i]);
 			status.append(" [ ").append(blockResult.getName()).append(" ]");
 		}
-		println(getIndent(), TextStyle.ROLL, status.toString());
+		println(2, TextStyle.ROLL, status.toString());
 
 		status = new StringBuilder(" re-rolled ").append(report.getBlockRoll().length)
 		.append(" block ");
@@ -34,7 +34,7 @@ public class BlockReRollMessage extends ReportMessageBase<ReportBlockReRoll> {
 		}
 		status.append(" using ").append(report.getReRollSource().getName(game)).append(".");
 
-		print(getIndent() + 1, true, player);
-		println(getIndent() + 1, TextStyle.EXPLANATION, status.toString());
+		print(3, true, player);
+		println(3, TextStyle.EXPLANATION, status.toString());
 	}
 }

@@ -1,15 +1,18 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.BlockRoll;
 import com.fumbbl.ffb.model.Player;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -39,7 +42,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 		super(pClient, pTitle, pCloseable);
 	}
 
-	protected JButton dieButton(int blockRoll) {
+	private JButton dieButton(int blockRoll, boolean markAsReRolled) {
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
 		JButton button = new JButton();
@@ -48,6 +51,9 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 		button.setFocusPainted(false);
 		button.setMargin(new Insets(5, 5, 5, 5));
 		button.setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll)));
+		if (markAsReRolled) {
+			button.setBorder(BorderFactory.createLineBorder(Color.red, 3, true));
+		}
 		return button;
 	}
 
@@ -55,7 +61,8 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 		JPanel panel = blockRollPanel();
 
 		for (int i = 0; i < blockRoll.getBlockRoll().length; i++) {
-			JButton dieButton = dieButton(blockRoll.getBlockRoll()[i]);
+			boolean markAsReRolled = blockRoll.has(ReRollSources.PRO) && blockRoll.indexWasReRolled(i);
+			JButton dieButton = dieButton(blockRoll.getBlockRoll()[i], markAsReRolled);
 
 			if (activeButtons) {
 				dieButton.setMnemonic(events.get(i));

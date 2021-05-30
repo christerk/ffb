@@ -56,7 +56,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
 			JPanel dicePanel = dicePanel(blockRoll, ownChoice && blockRoll.needsSelection(), keyEvents.remove(0));
 			targetPanel.add(dicePanel);
-			if (parameter.getReRollAvailableAgainst().contains(target)) {
+			if (blockRoll.hasReRollsLeft()) {
 				Mnemonics currentMnemonics = mnemonics.remove(0);
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -64,11 +64,11 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 				buttonPanel.add(Box.createHorizontalGlue());
 				buttonPanel.setOpaque(false);
 
-				if (parameter.isTeamReRollAvailable()) {
+				if (blockRoll.has(ReRollSources.TEAM_RE_ROLL)) {
 					buttonPanel.add(createReRollButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, currentMnemonics.team));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
-				if (parameter.isProReRollAvailable()) {
+				if (blockRoll.has(ReRollSources.PRO)) {
 					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
@@ -79,7 +79,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 
-				if (dialogParameter.isBrawlerAvailable() && blockRoll.getBrawlerOptions() > 0) {
+				if (blockRoll.has(ReRollSources.BRAWLER) && blockRoll.getBrawlerOptions() > 0) {
 					targetPanel.add(createBrawlerPanel(blockRoll.getTargetId(), blockRoll.getBrawlerOptions(), currentMnemonics.brawler));
 				}
 				targetPanel.add(Box.createVerticalStrut(3));
