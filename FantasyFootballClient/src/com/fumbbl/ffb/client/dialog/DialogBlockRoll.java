@@ -86,7 +86,7 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 			centerPanel.add(opponentChoicePanel());
 		}
 
-		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption()) {
+		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption() || pDialogParameter.getBrawlerOptions() > 0) {
 
 			JPanel reRollPanel = new JPanel();
 			reRollPanel.setOpaque(false);

@@ -217,7 +217,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 		state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
 		state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
 
-		if (!state.proReRollAvailable && !state.teamReRollAvailable) {
+		if (!state.proReRollAvailable && !state.teamReRollAvailable && !state.brawlerAvailable) {
 			state.reRollAvailableAgainst.clear();
 		}
 

@@ -28,9 +28,11 @@ Areas of Testing:
 - Bombs
 - ThrowIn
 - Lasting Injuries
+- Bugs
 
 Bugfixes:
  - Clear chainsaw marker when deselecting multi block player
  - Animal Savagery did not use MB on injury
  - Bone Head skill was not recognized
  - Game crashes on touchback with quick snap
+ - Brawler not available without team or pro reroll
