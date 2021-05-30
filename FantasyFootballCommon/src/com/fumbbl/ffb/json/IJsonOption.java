@@ -342,6 +342,7 @@ public interface IJsonOption {
 	JsonArrayOption REPORTS = new JsonArrayOption("reports");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
 	JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", Factory.RE_ROLLED_ACTION);
+	JsonIntArrayOption RE_ROLLED_DICE_INDEXES = new JsonIntArrayOption("reRolledDice");
 	JsonStringArrayOption RE_ROLL_AVAILABLE_AGAINST = new JsonStringArrayOption("reRollAvailableFor");
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");

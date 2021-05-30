@@ -21,7 +21,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
-import com.fumbbl.ffb.report.bb2020.ReportUseBrawler;
+import com.fumbbl.ffb.report.bb2020.ReportBlockReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
 public class StepBlockRoll extends AbstractStepWithReRoll {
 
 	private int fNrOfDice, fDiceIndex, brawlerCount;
-	private int[] fBlockRoll;
+	private int[] fBlockRoll, reRolledDiceIndexes = new int[0];
 	private BlockResult fBlockResult;
 	private boolean successfulDauntless;
 
@@ -124,14 +125,26 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			}
 			if (doRoll) {
 				game.getFieldModel().clearDiceDecorations();
+				getResult().addReport(new ReportBlock(game.getDefenderId()));
+				getResult().setSound(SoundId.BLOCK);
 				if (getReRollSource() == ReRollSources.BRAWLER) {
 					handleBrawler(actingPlayer.getPlayer());
 				} else {
 					fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
-						game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK), successfulDauntless);
-					fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
-					getResult().addReport(new ReportBlock(game.getDefenderId()));
-					getResult().setSound(SoundId.BLOCK);
+						game.getDefender(), false, successfulDauntless);
+					if (getReRollSource() == ReRollSources.PRO) {
+						actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
+						List<Integer> reRolledWithPro = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(fNrOfDice - reRolledDiceIndexes.length)).boxed().collect(Collectors.toList());
+						getResult().addReport(new ReportBlockReRoll(reRolledWithPro.stream().mapToInt(i -> i).toArray(), actingPlayer.getPlayerId(), getReRollSource()));
+						for (int i = 0; i < fBlockRoll.length; i++) {
+							int finalI = i;
+							if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalI)) {
+								fBlockRoll[i] = reRolledWithPro.remove(0);
+							}
+						}
+					} else {
+						fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
+					}
 				}
 				showBlockRollDialog(doRoll);
 			}
@@ -145,24 +158,27 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 	}
 
 	private void handleBrawler(Player<?> player) {
-		getResult().addReport(new ReportUseBrawler(player.getId(), brawlerCount));
 		List<Integer> rerolledDice = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(brawlerCount)).boxed().collect(Collectors.toList());
+		getResult().addReport(new ReportBlockReRoll(rerolledDice.stream().mapToInt(i -> i).toArray(), player.getId(), getReRollSource()));
+		List<Integer> rerolledIndexes = new ArrayList<>();
 		BlockResultFactory factory = getGameState().getGame().getFactory(Factory.BLOCK_RESULT);
 		for (int i = 0; i < Math.abs(fNrOfDice); i++) {
 			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN && !rerolledDice.isEmpty()) {
 				fBlockRoll[i] = rerolledDice.get(0);
 				rerolledDice.remove(0);
+				rerolledIndexes.add(i);
 			}
 		}
+		this.reRolledDiceIndexes = rerolledIndexes.stream().mapToInt(i -> i).toArray();
 	}
 
 	private void showBlockRollDialog(boolean pDoRoll) {
 		Game game = getGameState().getGame();
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		boolean teamReRollOption = (getReRollSource() == null) && !game.getTurnData().isReRollUsed()
+		boolean teamReRollOption = (getReRollSource() == null)
 			&& (game.getTurnData().getReRolls() > 0);
-		boolean proReRollOption = (getReRollSource() == null)
+		boolean proReRollOption = (getReRollSource() == null || (getReRollSource() == ReRollSources.BRAWLER && fBlockRoll.length > reRolledDiceIndexes.length))
 			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn);
 		boolean brawlerOption = actingPlayer.getPlayerAction() != PlayerAction.BLITZ
 			&& (getReRollSource() == null)
@@ -171,7 +187,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		long bothDownCount = brawlerOption ? Arrays.stream(fBlockRoll).mapToObj(factory::forRoll).filter(roll -> roll == BlockResult.BOTH_DOWN).count() : 0;
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
-		if ((fNrOfDice < 0) && (!pDoRoll || (getReRollSource() != null) || (!teamReRollOption && !proReRollOption && !brawlerOption))) {
+		if ((fNrOfDice < 0) && (!pDoRoll || (!teamReRollOption && !proReRollOption && !brawlerOption))) {
 			teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 			teamReRollOption = false;
 			proReRollOption = false;
@@ -179,7 +195,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 		getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
 		UtilServerDialog.showDialog(getGameState(),
-			new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption, (int) bothDownCount),
+			new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption, (int) bothDownCount, reRolledDiceIndexes),
 			(fNrOfDice < 0));
 	}
 
@@ -194,6 +210,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
 		IServerJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successfulDauntless);
 		IServerJsonOption.BRAWLER_COUNT.addTo(jsonObject, brawlerCount);
+		IServerJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRolledDiceIndexes);
 		return jsonObject;
 	}
 
@@ -207,6 +224,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
 		successfulDauntless = IServerJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);
 		brawlerCount = IServerJsonOption.BRAWLER_COUNT.getFrom(source, jsonObject);
+		reRolledDiceIndexes = IServerJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
 		return this;
 	}
 

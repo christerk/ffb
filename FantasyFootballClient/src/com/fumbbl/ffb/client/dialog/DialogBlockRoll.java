@@ -8,18 +8,21 @@ import com.fumbbl.ffb.dialog.DialogBlockRollParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,7 +59,7 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		int[] blockRoll = getDialogParameter().getBlockRoll();
 		fBlockDice = new JButton[blockRoll.length];
 		boolean ownChoice = ((fDialogParameter.getNrOfDice() > 0)
-			|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption()));
+			|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption() && fDialogParameter.getBrawlerOptions() == 0));
 		for (int i = 0; i < fBlockDice.length; i++) {
 			fBlockDice[i] = new JButton();
 			fBlockDice[i].setOpaque(false);
@@ -64,6 +67,10 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 			fBlockDice[i].setFocusPainted(false);
 			fBlockDice[i].setMargin(new Insets(5, 5, 5, 5));
 			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i])));
+			int finalI = i;
+			if (getDialogParameter().hasProReRollOption() && Arrays.stream(fDialogParameter.getReRolledDiceIndexes()).anyMatch(index -> index == finalI)) {
+				fBlockDice[i].setBorder(BorderFactory.createLineBorder(Color.red, 3, true));
+			}
 			blockRollPanel.add(fBlockDice[i]);
 			if (ownChoice) {
 				fBlockDice[i].addActionListener(this);
