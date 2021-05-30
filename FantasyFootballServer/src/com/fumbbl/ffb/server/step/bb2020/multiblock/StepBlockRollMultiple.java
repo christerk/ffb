@@ -189,22 +189,30 @@ public class StepBlockRollMultiple extends AbstractStep {
 			decideNextStep(game);
 
 		} else {
-			if (StringTool.isProvided(state.selectedTarget) && state.reRollSource != null) {
-				state.blockRolls.stream()
-					.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
-					.findFirst().ifPresent(roll -> {
-					Player<?> defender = game.getPlayerById(roll.getTargetId());
-					getResult().addReport(new ReportBlock(defender.getId()));
-					getResult().setSound(SoundId.BLOCK);
+			if (StringTool.isProvided(state.selectedTarget)) {
+					state.blockRolls.stream()
+						.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
+						.findFirst().ifPresent(roll -> {
+						if (state.reRollSource != null) {
 
-					if (state.reRollSource == ReRollSources.BRAWLER) {
-						handleBrawler(actingPlayer.getPlayer(), roll);
-					} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
-						roll.clearReRollSources();
-						roll(roll, true, actingPlayer);
-					}
-					getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
-				});
+							Player<?> defender = game.getPlayerById(roll.getTargetId());
+							getResult().addReport(new ReportBlock(defender.getId()));
+							getResult().setSound(SoundId.BLOCK);
+
+							if (state.reRollSource == ReRollSources.BRAWLER) {
+								handleBrawler(actingPlayer.getPlayer(), roll);
+							} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
+								roll.clearReRollSources();
+								roll(roll, true, actingPlayer);
+							} else {
+								roll.clearReRollSources();
+							}
+							getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
+						} else {
+							roll.clearReRollSources();
+						}
+					});
+
 			}
 			decideNextStep(game);
 		}
