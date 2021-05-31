@@ -78,6 +78,9 @@ public class DialogManager {
 					case BLOCK_ROLL:
 						setDialogHandler(new DialogBlockRollHandler(getClient()));
 						break;
+					case BLOCK_ROLL_PARTIAL_RE_ROLL:
+						setDialogHandler(new DialogBlockRollPartialReRollHandler(getClient()));
+						break;
 					case PLAYER_CHOICE:
 						setDialogHandler(new DialogPlayerChoiceHandler(getClient()));
 						break;

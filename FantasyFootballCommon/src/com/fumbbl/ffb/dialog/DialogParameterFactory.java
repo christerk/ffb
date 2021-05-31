@@ -31,6 +31,8 @@ public class DialogParameterFactory {
 				return new DialogUseApothecaryParameter();
 			case BLOCK_ROLL:
 				return new DialogBlockRollParameter();
+			case BLOCK_ROLL_PARTIAL_RE_ROLL:
+				return new DialogBlockRollPartialReRollParameter();
 			case PLAYER_CHOICE:
 				return new DialogPlayerChoiceParameter();
 			case INTERCEPTION:

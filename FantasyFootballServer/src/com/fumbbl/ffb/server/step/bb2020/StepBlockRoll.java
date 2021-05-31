@@ -9,7 +9,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.dialog.DialogBlockRollParameter;
+import com.fumbbl.ffb.dialog.DialogBlockRollPartialReRollParameter;
 import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -195,7 +195,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 		getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
 		UtilServerDialog.showDialog(getGameState(),
-			new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption, (int) bothDownCount, reRolledDiceIndexes),
+			new DialogBlockRollPartialReRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption, (int) bothDownCount, reRolledDiceIndexes),
 			(fNrOfDice < 0));
 	}
 

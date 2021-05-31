@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.StatusType;
@@ -8,7 +9,7 @@ import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.dialog.DialogBlockRollParameter;
+import com.fumbbl.ffb.dialog.DialogBlockRollPartialReRollParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.BlockRoll;
 import com.fumbbl.ffb.model.Game;
@@ -19,11 +20,11 @@ import java.util.Collections;
  * 
  * @author Kalimar
  */
-public class DialogBlockRollHandler extends DialogHandler {
+public class DialogBlockRollPartialReRollHandler extends DialogHandler {
 
-	private DialogBlockRollParameter fDialogParameter;
+	private DialogBlockRollPartialReRollParameter fDialogParameter;
 
-	public DialogBlockRollHandler(FantasyFootballClient pClient) {
+	public DialogBlockRollPartialReRollHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
@@ -32,7 +33,7 @@ public class DialogBlockRollHandler extends DialogHandler {
 		Game game = getClient().getGame();
 		ClientData clientData = getClient().getClientData();
 		UserInterface userInterface = getClient().getUserInterface();
-		fDialogParameter = (DialogBlockRollParameter) game.getDialogParameter();
+		fDialogParameter = (DialogBlockRollPartialReRollParameter) game.getDialogParameter();
 
 		if (fDialogParameter != null) {
 
@@ -40,7 +41,7 @@ public class DialogBlockRollHandler extends DialogHandler {
 					&& game.getTeamHome().getId().equals(fDialogParameter.getChoosingTeamId())) {
 
 				clientData.clearBlockDiceResult();
-				setDialog(new DialogBlockRoll(getClient(), fDialogParameter));
+				setDialog(new DialogBlockRollPartialReRoll(getClient(), fDialogParameter));
 				getDialog().showDialog(this);
 				if (!game.isHomePlaying()) {
 					playSound(SoundId.QUESTION);
@@ -68,9 +69,9 @@ public class DialogBlockRollHandler extends DialogHandler {
 		hideDialog();
 		Game game = getClient().getGame();
 		ClientData clientData = getClient().getClientData();
-		if (testDialogHasId(pDialog, DialogId.BLOCK_ROLL)) {
+		if (testDialogHasId(pDialog, DialogId.BLOCK_ROLL_PARTIAL_RE_ROLL)) {
 			UserInterface userInterface = getClient().getUserInterface();
-			DialogBlockRoll blockRollDialog = (DialogBlockRoll) pDialog;
+			DialogBlockRollPartialReRoll blockRollDialog = (DialogBlockRollPartialReRoll) pDialog;
 			ClientCommunication communication = getClient().getCommunication();
 			if (game.getTeamHome().getId().equals(fDialogParameter.getChoosingTeamId())) {
 				BlockRoll blockRoll = new BlockRoll();
@@ -80,7 +81,11 @@ public class DialogBlockRollHandler extends DialogHandler {
 				blockRoll.setSelectedIndex(blockRollDialog.getDiceIndex());
 				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
 				if (blockRoll.needsSelection()) {
-					communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
+					if (blockRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
+						communication.sendUseBrawler(blockRollDialog.getBrawlerCount(), null);
+					} else {
+						communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
+					}
 				} else {
 					communication.sendBlockChoice(blockRollDialog.getDiceIndex());
 				}

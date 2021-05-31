@@ -141,7 +141,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 		getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
 		UtilServerDialog.showDialog(getGameState(),
-				new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption, 0, new int[0]),
+				new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption),
 				(fNrOfDice < 0));
 	}
 
