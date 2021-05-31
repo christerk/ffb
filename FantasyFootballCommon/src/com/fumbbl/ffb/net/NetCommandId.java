@@ -60,6 +60,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
 import com.fumbbl.ffb.net.commands.ClientCommandUseFumblerooskie;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
+import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -101,7 +102,7 @@ public enum NetCommandId implements INamedObject {
 	SERVER_SOUND("serverSound"), CLIENT_COIN_CHOICE("clientCoinChoice"), CLIENT_RECEIVE_CHOICE("clientReceiveChoice"),
 	CLIENT_END_TURN("clientEndTurn"), CLIENT_KICKOFF("clientKickoff"), CLIENT_TOUCHBACK("clientTouchback"),
 	CLIENT_HAND_OVER("clientHandOver"), CLIENT_PASS("clientPass"), CLIENT_BLOCK("clientBlock"),
-	CLIENT_BLOCK_CHOICE("clientBlockChoice"), CLIENT_PUSHBACK("clientPushback"),
+	CLIENT_BLOCK_CHOICE("clientBlockChoice"), CLIENT_PUSHBACK("clientPushback"), CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK("clientUseProReRollForBlock"),
 	CLIENT_FOLLOWUP_CHOICE("clientFollowupChoice"), CLIENT_INTERCEPTOR_CHOICE("clientInterceptorChoice"),
 	CLIENT_USE_SKILL("clientUseSkill"), SERVER_TEAM_SETUP_LIST("serverTeamSetupList"),
 	CLIENT_TEAM_SETUP_LOAD("clientTeamSetupLoad"), CLIENT_TEAM_SETUP_SAVE("clientTeamSetupSave"),
@@ -317,6 +318,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandFieldCoordinate();
 			case CLIENT_USE_FUMBLEROOSKIE:
 				return new ClientCommandUseFumblerooskie();
+			case CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK:
+				return new ClientCommandUseProReRollForBlock();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

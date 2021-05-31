@@ -87,6 +87,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
 import com.fumbbl.ffb.net.commands.ClientCommandUseFumblerooskie;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
+import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -99,7 +100,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientCommunication implements Runnable, INetCommandHandler {
@@ -149,18 +149,18 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 			}
 
 			switch (netCommand.getId()) {
-			case SERVER_PONG:
-			case SERVER_TALK:
-			case SERVER_SOUND:
-			case SERVER_REPLAY:
-			case INTERNAL_SERVER_SOCKET_CLOSED:
-				break;
-			default:
-				getClient().getReplayer().add((ServerCommand) netCommand);
-				break;
+				case SERVER_PONG:
+				case SERVER_TALK:
+				case SERVER_SOUND:
+				case SERVER_REPLAY:
+				case INTERNAL_SERVER_SOCKET_CLOSED:
+					break;
+				default:
+					getClient().getReplayer().add((ServerCommand) netCommand);
+					break;
 			}
 			ClientCommandHandlerMode mode = getClient().getReplayer().isReplaying() ? ClientCommandHandlerMode.QUEUING
-					: ClientCommandHandlerMode.PLAYING;
+				: ClientCommandHandlerMode.PLAYING;
 			getClient().getCommandHandlerFactory().handleNetCommand(netCommand, mode);
 
 		}
@@ -189,7 +189,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendJoin(String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId,
-			String pTeamName) {
+	                     String pTeamName) {
 		ClientCommandJoin joinCommand = new ClientCommandJoin(getClient().getMode());
 		joinCommand.setCoach(pCoach);
 		joinCommand.setPassword(pPassword);
@@ -225,12 +225,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendPlayerMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
-			FieldCoordinate[] pCoordinatesTo) {
+	                           FieldCoordinate[] pCoordinatesTo) {
 		send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
 	}
 
 	public void sendPlayerBlitzMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
-	                           FieldCoordinate[] pCoordinatesTo) {
+	                                FieldCoordinate[] pCoordinatesTo) {
 		send(new ClientCommandBlitzMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
 	}
 
@@ -289,6 +289,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUseReRoll(ReRolledAction pReRolledAction, ReRollSource pReRollSource) {
 		send(new ClientCommandUseReRoll(pReRolledAction, pReRollSource));
+	}
+
+	public void sendUseProReRollForBlock(int proIndex) {
+		send(new ClientCommandUseProReRollForBlock(proIndex));
 	}
 
 	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
@@ -386,7 +390,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendTeamSetupSave(TeamSetup pTeamSetup) {
 		send(new ClientCommandTeamSetupSave(pTeamSetup.getName(), pTeamSetup.getPlayerNumbers(),
-				pTeamSetup.getCoordinates()));
+			pTeamSetup.getCoordinates()));
 	}
 
 	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed) {
@@ -430,9 +434,9 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet,
-			String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {
+	                               String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {
 		send(new ClientCommandBuyInducements(pTeamId, pAvailableGold, pInducementSet, pStarPlayerPositionIds,
-				pMercenaryPositionIds, pMercenarySkills));
+			pMercenaryPositionIds, pMercenarySkills));
 	}
 
 	public void sendBuyCard(CardType pType) {
@@ -451,7 +455,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandWizardSpell(pWizardSpell, pCoordinate));
 	}
 
-	public void sendCardSelection(ClientCommandSelectCardToBuy.Selection selection){
+	public void sendCardSelection(ClientCommandSelectCardToBuy.Selection selection) {
 		send(new ClientCommandSelectCardToBuy(selection));
 	}
 

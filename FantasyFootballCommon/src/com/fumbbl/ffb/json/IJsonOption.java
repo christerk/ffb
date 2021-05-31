@@ -323,6 +323,7 @@ public interface IJsonOption {
 	JsonStringOption POSITION_ID = new JsonStringOption("positionId");
 	JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds");
 	JsonStringOption POSITION_NAME = new JsonStringOption("positionName");
+	JsonIntOption PRO_INDEX = new JsonIntOption("proIndex");
 	JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
 	JsonObjectOption PUSHBACK = new JsonObjectOption("pushback");
 	JsonEnumWithNameOption PUSHBACK_MODE = new JsonEnumWithNameOption("pushbackMode", Factory.PUSHBACK_MODE);

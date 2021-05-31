@@ -35,9 +35,9 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 	private JButton fButtonTeamReRoll;
 	private JButton fButtonProReRoll;
 	private JButton fButtonNoReRoll;
-	private JButton brawlerButton1, brawlerButton2, brawlerButton3;
+	private JButton brawlerButton1, brawlerButton2, brawlerButton3, proButton1, proButton2, proButton3;
 
-	private int fDiceIndex, brawlerCount;
+	private int fDiceIndex, brawlerCount, proIndex;
 	private ReRollSource fReRollSource;
 
 	private final DialogBlockRollPartialReRollParameter fDialogParameter;
@@ -68,7 +68,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			fBlockDice[i].setMargin(new Insets(5, 5, 5, 5));
 			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i])));
 			int finalI = i;
-			if (getDialogParameter().hasProReRollOption() && Arrays.stream(fDialogParameter.getReRolledDiceIndexes()).anyMatch(index -> index == finalI)) {
+			if ((getDialogParameter().hasProReRollOption() || getDialogParameter().getBrawlerOptions() > 0) && Arrays.stream(fDialogParameter.getReRolledDiceIndexes()).anyMatch(index -> index == finalI)) {
 				fBlockDice[i].setBorder(BorderFactory.createLineBorder(Color.red, 3, true));
 			}
 			blockRollPanel.add(fBlockDice[i]);
@@ -104,11 +104,6 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			fButtonTeamReRoll.setMnemonic(KeyEvent.VK_T);
 			fButtonTeamReRoll.addKeyListener(this);
 
-			fButtonProReRoll = new JButton("Pro Re-Roll");
-			fButtonProReRoll.addActionListener(this);
-			fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
-			fButtonProReRoll.addKeyListener(this);
-
 			fButtonNoReRoll = new JButton("No Re-Roll");
 			fButtonNoReRoll.addActionListener(this);
 			fButtonNoReRoll.setMnemonic(KeyEvent.VK_N);
@@ -121,7 +116,11 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			if (getDialogParameter().hasTeamReRollOption()) {
 				reRollPanel.add(fButtonTeamReRoll);
 			}
-			if (getDialogParameter().hasProReRollOption()) {
+			if (getDialogParameter().hasProReRollOption() && getDialogParameter().getNrOfDice() == 1) {
+				fButtonProReRoll = new JButton("Pro Re-Roll");
+				fButtonProReRoll.addActionListener(this);
+				fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
+				fButtonProReRoll.addKeyListener(this);
 				reRollPanel.add(fButtonProReRoll);
 			}
 			if (getDialogParameter().getNrOfDice() < 0) {
@@ -134,6 +133,11 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 			centerPanel.add(Box.createVerticalStrut(10));
 			centerPanel.add(reRollPanel);
+
+			if (getDialogParameter().hasProReRollOption() && getDialogParameter().getNrOfDice() > 1) {
+				centerPanel.add(proPanel(pDialogParameter.getNrOfDice()));
+				centerPanel.add(Box.createVerticalStrut(3));
+			}
 
 			if (pDialogParameter.getBrawlerOptions() > 0) {
 				centerPanel.add(brawlerPanel(pDialogParameter.getBrawlerOptions()));
@@ -153,6 +157,46 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		return DialogId.BLOCK_ROLL_PARTIAL_RE_ROLL;
 	}
 
+	private JPanel proPanel(int diceCount) {
+		List<Integer> proMnemonics = new ArrayList<>();
+		proMnemonics.add(KeyEvent.VK_P);
+		proMnemonics.add(KeyEvent.VK_R);
+		proMnemonics.add(KeyEvent.VK_E);
+		JPanel proPanel = new JPanel();
+		proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
+		proPanel.setAlignmentX(CENTER_ALIGNMENT);
+		proPanel.add(proTextPanel());
+		proPanel.setOpaque(false);
+
+		JPanel proButtonPanel = new JPanel();
+		proButtonPanel.setLayout(new BoxLayout(proButtonPanel, BoxLayout.X_AXIS));
+		proButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		for (int i = 1; i <= diceCount; i++) {
+			int finalI = i;
+			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI)) {
+				JButton button = proButton(i, proMnemonics.get(0));
+				switch (i) {
+					case 1:
+						proButton1 = button;
+						break;
+					case 2:
+						proButton2 = button;
+						break;
+					default:
+						proButton3 = button;
+						break;
+				}
+				proButtonPanel.add(button);
+			}
+
+			proPanel.add(proButtonPanel);
+		}
+		proMnemonics.remove(0);
+
+		return proPanel;
+	}
+
+
 	private JPanel brawlerPanel(int brawlerOptions) {
 		List<Integer> brawlerMnemonics = new ArrayList<>();
 		brawlerMnemonics.add(KeyEvent.VK_B);
@@ -168,19 +212,23 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		brawlerButtonPanel.setLayout(new BoxLayout(brawlerButtonPanel, BoxLayout.X_AXIS));
 		brawlerButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 1; i <= brawlerOptions; i++) {
-			JButton button = brawlerButton(i, brawlerMnemonics.get(0));
-			switch (i) {
-				case 1:
-					brawlerButton1 = button;
-					break;
-				case 2:
-					brawlerButton2 = button;
-					break;
-				default:
-					brawlerButton3 = button;
-					break;
+			int finalI = i;
+			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI)) {
+
+				JButton button = brawlerButton(i, brawlerMnemonics.get(0));
+				switch (i) {
+					case 1:
+						brawlerButton1 = button;
+						break;
+					case 2:
+						brawlerButton2 = button;
+						break;
+					default:
+						brawlerButton3 = button;
+						break;
+				}
+				brawlerButtonPanel.add(button);
 			}
-			brawlerButtonPanel.add(button);
 			brawlerMnemonics.remove(0);
 		}
 
@@ -198,6 +246,15 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		return brawlerButton;
 	}
 
+	private JButton proButton(int dieNumber, int keyEvent) {
+		JButton proButton = new JButton();
+		proButton.setText("Die " + dieNumber);
+		proButton.addActionListener(this);
+		proButton.setMnemonic(keyEvent);
+		proButton.addKeyListener(this);
+		return proButton;
+	}
+
 	private void setBrawler(int brawlerCount) {
 		this.brawlerCount = brawlerCount;
 		fReRollSource = ReRollSources.BRAWLER;
@@ -211,6 +268,19 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		}
 		if (pActionEvent.getSource() == fButtonProReRoll) {
 			fReRollSource = ReRollSources.PRO;
+			proIndex = 0;
+		}
+		if (pActionEvent.getSource() == proButton1) {
+			fReRollSource = ReRollSources.PRO;
+			proIndex = 0;
+		}
+		if (pActionEvent.getSource() == proButton2) {
+			fReRollSource = ReRollSources.PRO;
+			proIndex = 1;
+		}
+		if (pActionEvent.getSource() == proButton3) {
+			fReRollSource = ReRollSources.PRO;
+			proIndex = 2;
 		}
 		if (pActionEvent.getSource() == brawlerButton1) {
 			setBrawler(1);
@@ -254,6 +324,10 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 	public int getBrawlerCount() {
 		return brawlerCount;
+	}
+
+	public int getProIndex() {
+		return proIndex;
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {

@@ -31,6 +31,10 @@ public abstract class AbstractDialogBlock extends Dialog {
 		return textPanel("Brawler Re-Rolls");
 	}
 
+	protected JPanel proTextPanel() {
+		return textPanel("Pro Re-Rolls");
+	}
+
 	private JPanel textPanel(String text) {
 		JPanel textPanel = new JPanel();
 		textPanel.setOpaque(false);

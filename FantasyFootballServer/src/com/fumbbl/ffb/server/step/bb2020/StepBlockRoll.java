@@ -19,6 +19,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
+import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBlockReRoll;
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBlockRoll extends AbstractStepWithReRoll {
 
-	private int fNrOfDice, fDiceIndex, brawlerCount;
+	private int fNrOfDice, fDiceIndex, brawlerCount, proIndex;
 	private int[] fBlockRoll, reRolledDiceIndexes = new int[0];
 	private BlockResult fBlockResult;
 	private boolean successfulDauntless;
@@ -90,6 +91,12 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					setReRolledAction(ReRolledActions.BLOCK);
 					brawlerCount = brawlerCommand.getBrawlerCount();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK:
+					ClientCommandUseProReRollForBlock command = (ClientCommandUseProReRollForBlock) pReceivedCommand.getCommand();
+					setReRolledAction(ReRolledActions.BLOCK);
+					setReRollSource(ReRollSources.PRO);
+					proIndex = command.getProIndex();
 					break;
 				default:
 					break;
@@ -134,13 +141,11 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						game.getDefender(), false, successfulDauntless);
 					if (getReRollSource() == ReRollSources.PRO) {
 						actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
-						List<Integer> reRolledWithPro = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(fNrOfDice - reRolledDiceIndexes.length)).boxed().collect(Collectors.toList());
-						getResult().addReport(new ReportBlockReRoll(reRolledWithPro.stream().mapToInt(i -> i).toArray(), actingPlayer.getPlayerId(), getReRollSource()));
-						for (int i = 0; i < fBlockRoll.length; i++) {
-							int finalI = i;
-							if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalI)) {
-								fBlockRoll[i] = reRolledWithPro.remove(0);
-							}
+						int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
+						getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), getReRollSource()));
+						fBlockRoll[proIndex] = reRolledWithPro[0];
+						if (reRolledDiceIndexes.length == 0) {
+							reRolledDiceIndexes = reRolledWithPro;
 						}
 					} else {
 						fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
@@ -163,7 +168,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		List<Integer> rerolledIndexes = new ArrayList<>();
 		BlockResultFactory factory = getGameState().getGame().getFactory(Factory.BLOCK_RESULT);
 		for (int i = 0; i < Math.abs(fNrOfDice); i++) {
-			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN && !rerolledDice.isEmpty()) {
+			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN && !rerolledDice.isEmpty() && (reRolledDiceIndexes.length == 0 || reRolledDiceIndexes[0] != i)) {
 				fBlockRoll[i] = rerolledDice.get(0);
 				rerolledDice.remove(0);
 				rerolledIndexes.add(i);
@@ -184,7 +189,16 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			&& (getReRollSource() == null)
 			&& brawlerCount == 0
 			&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
-		long bothDownCount = brawlerOption ? Arrays.stream(fBlockRoll).mapToObj(factory::forRoll).filter(roll -> roll == BlockResult.BOTH_DOWN).count() : 0;
+
+		int bothDownCount = 0;
+		if (brawlerOption) {
+			for (int i = 0; i < fBlockRoll.length; i++) {
+				int finalI = i;
+				if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalI) && factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN ) {
+					bothDownCount ++;
+				}
+			}
+		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
 		if ((fNrOfDice < 0) && (!pDoRoll || (!teamReRollOption && !proReRollOption && !brawlerOption))) {
@@ -211,6 +225,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		IServerJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successfulDauntless);
 		IServerJsonOption.BRAWLER_COUNT.addTo(jsonObject, brawlerCount);
 		IServerJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRolledDiceIndexes);
+		IServerJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
 		return jsonObject;
 	}
 
@@ -225,6 +240,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		successfulDauntless = IServerJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);
 		brawlerCount = IServerJsonOption.BRAWLER_COUNT.getFrom(source, jsonObject);
 		reRolledDiceIndexes = IServerJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
+		proIndex = IServerJsonOption.PRO_INDEX.getFrom(source, jsonObject);
 		return this;
 	}
 
