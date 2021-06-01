@@ -5,7 +5,7 @@ Behaviour Changes:
 - Implement new TTM mechanics including changes to KTM and Swoop
 - Piledriver counts as foul action
 - Bomb knock downs are only turn overs if acting team player had ball
-- No skill rerolls during Blitz turn
+- No skill re-rolls during Blitz turn
 - Deflected bomb scatters if not caught
 - Pushbacks on Multiblock cannot end up in the starting square of a blocked player
 - Players blocked by Multiblock do not assist each other

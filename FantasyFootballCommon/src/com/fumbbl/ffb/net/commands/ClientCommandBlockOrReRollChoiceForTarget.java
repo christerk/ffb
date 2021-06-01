@@ -10,7 +10,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 
 public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 	private String targetId;
-	private int selectedIndex = -1;
+	private int selectedIndex = -1, proIndex;
 	private ReRollSource reRollSource;
 
 	@Override
@@ -21,9 +21,10 @@ public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 	public ClientCommandBlockOrReRollChoiceForTarget() {
 	}
 
-	public ClientCommandBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, ReRollSource reRollSource) {
+	public ClientCommandBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, int proIndex, ReRollSource reRollSource) {
 		this.targetId = targetId;
 		this.selectedIndex = selectedIndex;
+		this.proIndex = proIndex;
 		this.reRollSource = reRollSource;
 	}
 
@@ -39,12 +40,17 @@ public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 		return reRollSource;
 	}
 
+	public int getProIndex() {
+		return proIndex;
+	}
+
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, reRollSource);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, targetId);
 		IJsonOption.DICE_INDEX.addTo(jsonObject, selectedIndex);
+		IJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
 		return jsonObject;
 	}
 
@@ -55,6 +61,7 @@ public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		targetId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		selectedIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
+		proIndex = IJsonOption.PRO_INDEX.getFrom(game, jsonObject);
 		return this;
 	}
 }

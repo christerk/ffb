@@ -14,21 +14,34 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
 	private ReRollSource reRollSource;
-	private int brawlerSelection;
+	private int brawlerSelection, proIndex;
 
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
-		add(new Mnemonics('T', 'P', 'N', new ArrayList<Character>() {{
+		add(new Mnemonics('T', 'N',
+			new ArrayList<Character>() {{
+				add('P');
+				add('o');
+				add('x');
+			}},
+			new ArrayList<Character>() {{
 			add('B');
 			add('h');
 			add('d');
 		}}));
-		add(new Mnemonics('e', 'o', 'l', new ArrayList<Character>() {{
+		add(new Mnemonics('e', 'l',
+			new ArrayList<Character>() {{
+				add('r');
+				add('y');
+				add('z');
+			}},
+			new ArrayList<Character>() {{
 			add('w');
 			add('s');
 			add('u');
@@ -68,8 +81,8 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 					buttonPanel.add(createReRollButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, currentMnemonics.team));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
-				if (blockRoll.has(ReRollSources.PRO)) {
-					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro));
+				if (blockRoll.has(ReRollSources.PRO) && blockRoll.getNrOfDice() == 1) {
+					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro.get(0)));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (!ownChoice) {
@@ -79,8 +92,12 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 
+				if (blockRoll.has(ReRollSources.PRO) && Math.abs(blockRoll.getNrOfDice()) > 1) {
+					targetPanel.add(createProPanel(blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.pro));
+				}
+
 				if (blockRoll.has(ReRollSources.BRAWLER) && blockRoll.getBrawlerOptions() > 0) {
-					targetPanel.add(createBrawlerPanel(blockRoll.getTargetId(), blockRoll.getBrawlerOptions(), currentMnemonics.brawler));
+					targetPanel.add(createBrawlerPanel(blockRoll.getTargetId(), blockRoll.getBrawlerOptions(), blockRoll.getReRollDiceIndexes(), currentMnemonics.brawler));
 				}
 				targetPanel.add(Box.createVerticalStrut(3));
 			}
@@ -102,7 +119,40 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	}
 
-	private JPanel createBrawlerPanel(String target, int brawlerOptions, List<Character> mnemonics) {
+	private JPanel createProPanel(String target, int diceCount, int[] reRolledDiceIndexes, List<Character> mnemonics) {
+		JPanel proPanel = new JPanel();
+		proPanel.setOpaque(false);
+		proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
+		proPanel.setAlignmentX(CENTER_ALIGNMENT);
+		proPanel.add(proTextPanel());
+
+		JPanel proButtonPanel = new JPanel();
+		proButtonPanel.setLayout(new BoxLayout(proButtonPanel, BoxLayout.X_AXIS));
+		proButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+
+		for (int die = 1; die <= diceCount; die++) {
+			int finalDie = die;
+			if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalDie - 1)) {
+				JButton proButton = new JButton();
+				proButton.setText("Die " + die);
+				proButton.addActionListener(e -> proAction(target, finalDie - 1));
+				proButton.setMnemonic(mnemonics.get(0));
+				this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
+					@Override
+					protected void handleKey() {
+						proAction(target, finalDie - 1);
+					}
+				});
+				proButtonPanel.add(proButton);
+			}
+			mnemonics.remove(0);
+		}
+
+		proPanel.add(proButtonPanel);
+		return proPanel;
+	}
+
+	private JPanel createBrawlerPanel(String target, int brawlerOptions, int[] reRolledDiceIndexes, List<Character> mnemonics) {
 		JPanel brawlerPanel = new JPanel();
 		brawlerPanel.setOpaque(false);
 		brawlerPanel.setLayout(new BoxLayout(brawlerPanel, BoxLayout.Y_AXIS));
@@ -114,23 +164,32 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		brawlerButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
 
 		for (int brawlerSelection = 1; brawlerSelection <= brawlerOptions; brawlerSelection++) {
-			JButton brawlerButton = new JButton();
-			brawlerButton.setText(brawlerSelection + " Both Down" + (brawlerSelection > 1 ? "s" : ""));
-			int finalSelection = brawlerSelection;
-			brawlerButton.addActionListener(e -> brawlerAction(target, finalSelection));
-			brawlerButton.setMnemonic(mnemonics.get(0));
-			this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
-				@Override
-				protected void handleKey() {
-					brawlerAction(target, finalSelection);
-				}
-			});
-			brawlerButtonPanel.add(brawlerButton);
+			int finalBrawlerSelection = brawlerSelection;
+			if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalBrawlerSelection - 1 )) {
+				JButton brawlerButton = new JButton();
+				brawlerButton.setText(brawlerSelection + " Both Down" + (brawlerSelection > 1 ? "s" : ""));
+				brawlerButton.addActionListener(e -> brawlerAction(target, finalBrawlerSelection));
+				brawlerButton.setMnemonic(mnemonics.get(0));
+				this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
+					@Override
+					protected void handleKey() {
+						brawlerAction(target, finalBrawlerSelection);
+					}
+				});
+				brawlerButtonPanel.add(brawlerButton);
+			}
 			mnemonics.remove(0);
 		}
 
 		brawlerPanel.add(brawlerButtonPanel);
 		return brawlerPanel;
+	}
+
+	private void proAction(String target, int proIndex) {
+		reRollSource = ReRollSources.PRO;
+		this.proIndex = proIndex;
+		this.selectedTarget = target;
+		close();
 	}
 
 	private void brawlerAction(String target, int brawlerSelection) {
@@ -142,9 +201,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
 		JButton button = new JButton(buttonName);
-		button.addActionListener(e -> {
-			handleReRollUse(target, reRollSource);
-		});
+		button.addActionListener(e -> handleReRollUse(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override
 			protected void handleKey() {
@@ -188,21 +245,23 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		return brawlerSelection;
 	}
 
+	public int getProIndex() {
+		return proIndex;
+	}
+
 	public DialogReRollBlockForTargetsParameter getDialogParameter() {
 		return dialogParameter;
 	}
 
 	private static class Mnemonics {
-		private final char team;
-		private final char pro;
-		private final char none;
-		private final List<Character> brawler;
+		private final char team, none;
+		private final List<Character> brawler, pro;
 
-		public Mnemonics(char team, char pro, char none, List<Character> brawler) {
+		public Mnemonics(char team, char none, List<Character> pro, List<Character> brawler) {
 			this.team = team;
-			this.pro = pro;
 			this.none = none;
 			this.brawler = brawler;
+			this.pro = pro;
 		}
 	}
 }

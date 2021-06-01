@@ -41,7 +41,7 @@ public class DialogReRollBlockForTargetsHandler extends DialogHandler {
 			if (reRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
 				getClient().getCommunication().sendUseBrawler(reRollDialog.getBrawlerSelection(), reRollDialog.getSelectedTarget());
 			} else {
-				getClient().getCommunication().sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(), reRollDialog.getReRollSource());
+				getClient().getCommunication().sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(), reRollDialog.getReRollSource(), reRollDialog.getProIndex());
 			}
 		}
 	}

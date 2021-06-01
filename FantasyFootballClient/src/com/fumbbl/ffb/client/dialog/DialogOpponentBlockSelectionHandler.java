@@ -45,7 +45,7 @@ public class DialogOpponentBlockSelectionHandler extends DialogHandler {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.OPPONENT_BLOCK_SELECTION)) {
 			DialogOpponentBlockSelection reRollDialog = (DialogOpponentBlockSelection) pDialog;
-			getClient().getCommunication().sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(), null);
+			getClient().getCommunication().sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(), null, 0);
 		}
 	}
 }

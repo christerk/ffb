@@ -23,7 +23,7 @@ public class BlockRoll implements IJsonSerializable {
 	private String targetId;
 	private PlayerState oldPlayerState;
 	private boolean successFulDauntless, ownChoice;
-	private int nrOfDice, id;
+	private int nrOfDice, id, proIndex;
 	private int[] blockRoll, reRollDiceIndexes = new int[0];
 	private int selectedIndex = -1, brawlerOptions, brawlerCount;
 	private final Set<ReRollSource> reRollSources = new HashSet<>();
@@ -147,8 +147,16 @@ public class BlockRoll implements IJsonSerializable {
 		return Arrays.stream(this.reRollDiceIndexes).anyMatch(i -> i == index);
 	}
 
-	public int nrOfReRolledDice() {
-		return this.reRollDiceIndexes.length;
+	public int[] getReRollDiceIndexes() {
+		return reRollDiceIndexes;
+	}
+
+	public int getProIndex() {
+		return proIndex;
+	}
+
+	public void setProIndex(int proIndex) {
+		this.proIndex = proIndex;
 	}
 
 	@Override
@@ -156,12 +164,12 @@ public class BlockRoll implements IJsonSerializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		BlockRoll blockRoll1 = (BlockRoll) o;
-		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice && nrOfDice == blockRoll1.nrOfDice && id == blockRoll1.id && selectedIndex == blockRoll1.selectedIndex && brawlerOptions == blockRoll1.brawlerOptions && brawlerCount == blockRoll1.brawlerCount && Objects.equals(targetId, blockRoll1.targetId) && Objects.equals(oldPlayerState, blockRoll1.oldPlayerState) && Arrays.equals(blockRoll, blockRoll1.blockRoll) && Arrays.equals(reRollDiceIndexes, blockRoll1.reRollDiceIndexes) && Objects.equals(reRollSources, blockRoll1.reRollSources);
+		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice && nrOfDice == blockRoll1.nrOfDice && id == blockRoll1.id && proIndex == blockRoll1.proIndex && selectedIndex == blockRoll1.selectedIndex && brawlerOptions == blockRoll1.brawlerOptions && brawlerCount == blockRoll1.brawlerCount && Objects.equals(targetId, blockRoll1.targetId) && Objects.equals(oldPlayerState, blockRoll1.oldPlayerState) && Arrays.equals(blockRoll, blockRoll1.blockRoll) && Arrays.equals(reRollDiceIndexes, blockRoll1.reRollDiceIndexes) && Objects.equals(reRollSources, blockRoll1.reRollSources);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(targetId, oldPlayerState, successFulDauntless, ownChoice, nrOfDice, id, selectedIndex, brawlerOptions, brawlerCount, reRollSources);
+		int result = Objects.hash(targetId, oldPlayerState, successFulDauntless, ownChoice, nrOfDice, id, proIndex, selectedIndex, brawlerOptions, brawlerCount, reRollSources);
 		result = 31 * result + Arrays.hashCode(blockRoll);
 		result = 31 * result + Arrays.hashCode(reRollDiceIndexes);
 		return result;
@@ -188,6 +196,7 @@ public class BlockRoll implements IJsonSerializable {
 				.forEach(reRollSources::add);
 		}
 		reRollDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(game, jsonObject);
+		proIndex = IJsonOption.PRO_INDEX.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -208,6 +217,7 @@ public class BlockRoll implements IJsonSerializable {
 		reRollSources.stream().map(UtilJson::toJsonValue).forEach(sourcesArray::add);
 		IJsonOption.RE_ROLL_SOURCES.addTo(jsonObject, sourcesArray);
 		IJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRollDiceIndexes);
+		IJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
 		return jsonObject;
 	}
 }

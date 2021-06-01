@@ -52,6 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
@@ -126,7 +127,10 @@ public class StepBlockRollMultiple extends AbstractStep {
 					state.reRollSource = command.getReRollSource();
 					state.selectedTarget = command.getTargetId();
 					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(command.getTargetId()))
-						.findFirst().ifPresent(roll -> roll.setSelectedIndex(command.getSelectedIndex()));
+						.findFirst().ifPresent(roll -> {
+						roll.setSelectedIndex(command.getSelectedIndex());
+						roll.setProIndex(command.getProIndex());
+					});
 					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 
@@ -190,28 +194,27 @@ public class StepBlockRollMultiple extends AbstractStep {
 
 		} else {
 			if (StringTool.isProvided(state.selectedTarget)) {
-					state.blockRolls.stream()
-						.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
-						.findFirst().ifPresent(roll -> {
-						if (state.reRollSource != null) {
+				state.blockRolls.stream()
+					.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
+					.findFirst().ifPresent(roll -> {
+					if (state.reRollSource != null) {
 
-							Player<?> defender = game.getPlayerById(roll.getTargetId());
-							getResult().addReport(new ReportBlock(defender.getId()));
-							getResult().setSound(SoundId.BLOCK);
+						Player<?> defender = game.getPlayerById(roll.getTargetId());
+						getResult().addReport(new ReportBlock(defender.getId()));
+						getResult().setSound(SoundId.BLOCK);
 
-							if (state.reRollSource == ReRollSources.BRAWLER) {
-								handleBrawler(actingPlayer.getPlayer(), roll);
-							} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
-								roll.clearReRollSources();
-								roll(roll, true, actingPlayer);
-							} else {
-								roll.clearReRollSources();
-							}
-							getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
+						if (state.reRollSource == ReRollSources.BRAWLER) {
+							handleBrawler(actingPlayer.getPlayer(), roll);
+						} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
+							roll(roll, true, actingPlayer);
 						} else {
 							roll.clearReRollSources();
 						}
-					});
+						getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
+					} else {
+						roll.clearReRollSources();
+					}
+				});
 
 			}
 			decideNextStep(game);
@@ -224,13 +227,14 @@ public class StepBlockRollMultiple extends AbstractStep {
 		List<Integer> reRolledDiceIndexes = new ArrayList<>();
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 		for (int i = 0; i < blockRoll.getNrOfDice(); i++) {
-			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN && !reRolledDice.isEmpty()) {
+			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN && !reRolledDice.isEmpty() && !blockRoll.indexWasReRolled(i)) {
 				blockRoll.getBlockRoll()[i] = reRolledDice.get(0);
 				reRolledDice.remove(0);
 				reRolledDiceIndexes.add(i);
 			}
 		}
-		blockRoll.setReRollDiceIndexes(reRolledDiceIndexes.stream().mapToInt(i -> i).toArray());
+
+		blockRoll.setReRollDiceIndexes(IntStream.concat(reRolledDiceIndexes.stream().mapToInt(i -> i), Arrays.stream(blockRoll.getReRollDiceIndexes())).toArray());
 		blockRoll.remove(ReRollSources.BRAWLER);
 		blockRoll.remove(ReRollSources.TEAM_RE_ROLL);
 		if (blockRoll.getBrawlerCount() == blockRoll.getNrOfDice()) {
@@ -281,23 +285,32 @@ public class StepBlockRollMultiple extends AbstractStep {
 
 	private void roll(BlockRoll roll, boolean reRolling, ActingPlayer actingPlayer) {
 		Game game = getGameState().getGame();
-		Player<?> defender = game.getPlayerById(roll.getTargetId());
 		if (reRolling) {
 			if (state.reRollSource == ReRollSources.PRO) {
 				actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
-				List<Integer> reRolledWithPro = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice() - roll.nrOfReRolledDice())).boxed().collect(Collectors.toList());
-				getResult().addReport(new ReportBlockReRoll(reRolledWithPro.stream().mapToInt(i -> i).toArray(), actingPlayer.getPlayerId(), ReRollSources.PRO));
-				for (int i = 0; i < roll.getBlockRoll().length; i++) {
-					if (!roll.indexWasReRolled(i)) {
-						roll.getBlockRoll()[i] = reRolledWithPro.remove(0);
-					}
+				int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
+				getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), ReRollSources.PRO));
+				roll.getBlockRoll()[roll.getProIndex()] = reRolledWithPro[0];
+				roll.setReRollDiceIndexes(add(roll.getReRollDiceIndexes(), roll.getProIndex()));
+				roll.remove(ReRollSources.PRO);
+				roll.remove(ReRollSources.TEAM_RE_ROLL);
+				BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
+				if (Arrays.stream(roll.getBlockRoll()).mapToObj(factory::forRoll).noneMatch(blockResult -> blockResult == BlockResult.BOTH_DOWN)) {
+					roll.remove(ReRollSources.BRAWLER);
 				}
 			} else {
+				roll.clearReRollSources();
 				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 			}
 		} else {
 			roll.setBlockRoll(game, getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 		}
+	}
+
+	private int[] add(int[] original, int newElement) {
+		int[] updated = Arrays.copyOf(original, original.length + 1);
+		updated[original.length] = newElement;
+		return updated;
 	}
 
 	private DialogOpponentBlockSelectionParameter createDefenderDialogParameter(Team team, List<BlockRoll> blockRolls) {
