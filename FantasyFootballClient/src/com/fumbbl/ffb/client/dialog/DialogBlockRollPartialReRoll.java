@@ -134,8 +134,8 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			centerPanel.add(Box.createVerticalStrut(10));
 			centerPanel.add(reRollPanel);
 
-			if (getDialogParameter().hasProReRollOption() && getDialogParameter().getNrOfDice() > 1) {
-				centerPanel.add(proPanel(pDialogParameter.getNrOfDice()));
+			if (getDialogParameter().hasProReRollOption() && Math.abs(getDialogParameter().getNrOfDice()) > 1) {
+				centerPanel.add(proPanel(Math.abs(pDialogParameter.getNrOfDice())));
 				centerPanel.add(Box.createVerticalStrut(3));
 			}
 
@@ -173,7 +173,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		proButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 1; i <= diceCount; i++) {
 			int finalI = i;
-			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI)) {
+			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
 				JButton button = proButton(i, proMnemonics.get(0));
 				switch (i) {
 					case 1:
@@ -213,7 +213,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		brawlerButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 1; i <= brawlerOptions; i++) {
 			int finalI = i;
-			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI)) {
+			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
 
 				JButton button = brawlerButton(i, brawlerMnemonics.get(0));
 				switch (i) {

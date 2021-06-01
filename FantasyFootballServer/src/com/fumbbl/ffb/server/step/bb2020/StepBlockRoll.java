@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Step in block sequence to handle the block roll.
@@ -97,6 +98,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					setReRolledAction(ReRolledActions.BLOCK);
 					setReRollSource(ReRollSources.PRO);
 					proIndex = command.getProIndex();
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
 					break;
@@ -144,9 +146,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
 						getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), getReRollSource()));
 						fBlockRoll[proIndex] = reRolledWithPro[0];
-						if (reRolledDiceIndexes.length == 0) {
-							reRolledDiceIndexes = reRolledWithPro;
-						}
+						reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
 					} else {
 						fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
 					}
@@ -162,19 +162,28 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 	}
 
+	private int[] add(int[] original, int newElement) {
+		int[] updated = Arrays.copyOf(original,original.length + 1);
+		updated[original.length] = newElement;
+		return updated;
+	}
+
 	private void handleBrawler(Player<?> player) {
 		List<Integer> rerolledDice = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(brawlerCount)).boxed().collect(Collectors.toList());
 		getResult().addReport(new ReportBlockReRoll(rerolledDice.stream().mapToInt(i -> i).toArray(), player.getId(), getReRollSource()));
 		List<Integer> rerolledIndexes = new ArrayList<>();
 		BlockResultFactory factory = getGameState().getGame().getFactory(Factory.BLOCK_RESULT);
 		for (int i = 0; i < Math.abs(fNrOfDice); i++) {
-			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN && !rerolledDice.isEmpty() && (reRolledDiceIndexes.length == 0 || reRolledDiceIndexes[0] != i)) {
+			int finalI = i;
+			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN
+				&& !rerolledDice.isEmpty()
+				&& Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalI)) {
 				fBlockRoll[i] = rerolledDice.get(0);
 				rerolledDice.remove(0);
 				rerolledIndexes.add(i);
 			}
 		}
-		this.reRolledDiceIndexes = rerolledIndexes.stream().mapToInt(i -> i).toArray();
+		this.reRolledDiceIndexes = IntStream.concat(Arrays.stream(this.reRolledDiceIndexes), rerolledIndexes.stream().mapToInt(i -> i)).toArray();
 	}
 
 	private void showBlockRollDialog(boolean pDoRoll) {
@@ -186,8 +195,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		boolean proReRollOption = (getReRollSource() == null || (getReRollSource() == ReRollSources.BRAWLER && fBlockRoll.length > reRolledDiceIndexes.length))
 			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn);
 		boolean brawlerOption = actingPlayer.getPlayerAction() != PlayerAction.BLITZ
-			&& (getReRollSource() == null)
 			&& brawlerCount == 0
+			&& (getReRollSource() == null || (getReRollSource() == ReRollSources.PRO && fBlockRoll.length > reRolledDiceIndexes.length))
 			&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
 
 		int bothDownCount = 0;
@@ -201,7 +210,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
-		if ((fNrOfDice < 0) && (!pDoRoll || (!teamReRollOption && !proReRollOption && !brawlerOption))) {
+		if ((fNrOfDice < 0) && (!pDoRoll || (!teamReRollOption && !proReRollOption && bothDownCount == 0))) {
 			teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 			teamReRollOption = false;
 			proReRollOption = false;

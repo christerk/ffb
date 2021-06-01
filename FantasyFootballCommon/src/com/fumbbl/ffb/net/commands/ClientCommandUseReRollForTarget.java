@@ -17,7 +17,7 @@ public class ClientCommandUseReRollForTarget extends ClientCommandUseReRoll {
 	}
 
 	public ClientCommandUseReRollForTarget(ReRolledAction pReRolledAction, ReRollSource pReRollSource, String targetId) {
-		super(pReRolledAction, pReRollSource, proIndex);
+		super(pReRolledAction, pReRollSource);
 		this.targetId = targetId;
 	}
 
