@@ -667,12 +667,14 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		List<String> affectedPlayers = new ArrayList<>();
 
+		int stunned = getGameState().getDiceRoller().rollDice(3);
+
 		if (totalHome <= totalAway) {
-			affectedPlayers.addAll(stunPlayers(game.getTeamHome(), game.getFieldModel()));
+			affectedPlayers.addAll(stunPlayers(game.getTeamHome(), game.getFieldModel(), stunned));
 		}
 
 		if (totalHome >= totalAway) {
-			affectedPlayers.addAll(stunPlayers(game.getTeamAway(), game.getFieldModel()));
+			affectedPlayers.addAll(stunPlayers(game.getTeamAway(), game.getFieldModel(), stunned));
 		}
 
 		getResult().addReport(new ReportKickoffPitchInvasion(rollHome, rollAway, affectedPlayers));
@@ -682,9 +684,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	}
 
-	private List<String> stunPlayers(Team team, FieldModel fieldModel) {
+	private List<String> stunPlayers(Team team, FieldModel fieldModel, int stunned) {
 		List<String> affectedPlayers = new ArrayList<>();
-		int stunned = getGameState().getDiceRoller().rollDice(3);
 		List<Player<?>> standing = Arrays.stream(team.getPlayers()).filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING).collect(Collectors.toList());
 		for (int i = 0; i < stunned; i++) {
 			int index = getGameState().getDiceRoller().rollDice(standing.size()) - 1;
