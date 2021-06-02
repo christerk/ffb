@@ -15,6 +15,7 @@ Behaviour Changes:
 - Lasting Injury roles get rerolled if stat cannot be reduced further
 - Pro can be used on block dice not re-rolled by Brawler
 - Pro only re-rolls one die of a block dice pool
+- Diving Catch can be used by multiple players
 
 Technical Changes:
 - Replace skill category Extraordinary with Trait in 2020
@@ -31,6 +32,8 @@ Areas of Testing:
 - ThrowIn
 - Lasting Injuries
 - Bugs
+- Pro
+- Diving Catch
 
 Bugfixes:
  - Clear chainsaw marker when deselecting multi block player

@@ -65,7 +65,11 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Step in any sequence to handle scattering the ball and throw-ins. Consumes
@@ -94,8 +98,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private FieldCoordinateBounds fScatterBounds;
 	private CatchScatterThrowInMode fCatchScatterThrowInMode;
 	private FieldCoordinate fThrowInCoordinate;
-	private Boolean fDivingCatchChoice;
 	private boolean fBombMode;
+	private DivingCatchPhase phase = DivingCatchPhase.ASK_HOME;
+	private final List<String> divingCatchers = new ArrayList<>();
+	private String divingCatchControlTeam;
 
 	public StepCatchScatterThrowIn(GameState pGameState) {
 		super(pGameState);
@@ -118,9 +124,26 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-				if (PlayerChoiceMode.DIVING_CATCH == playerChoiceCommand.getPlayerChoiceMode()) {
-					fDivingCatchChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-					fCatcherId = playerChoiceCommand.getPlayerId();
+				Game game = getGameState().getGame();
+				List<String> selected = Arrays.stream(playerChoiceCommand.getPlayerIds()).collect(Collectors.toList());
+				switch (phase) {
+					case ASK_HOME:
+						divingCatchers.addAll(selected);
+						phase = DivingCatchPhase.ASK_AWAY;
+						if (!selected.isEmpty()) {
+							divingCatchControlTeam = game.getTeamHome().getId();
+						}
+						break;
+					case ASK_AWAY:
+						divingCatchers.addAll(selected);
+						phase = DivingCatchPhase.PROCESS;
+						if (!selected.isEmpty()) {
+							divingCatchControlTeam = divingCatchControlTeam == null ? game.getTeamAway().getId() : game.getActingTeam().getId();
+						}
+						break;
+					default:
+						fCatcherId = selected.get(0);
+						break;
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
@@ -286,7 +309,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			// repeat this step until it is finished
 			if (fCatchScatterThrowInMode != null) {
 				getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "pushCurrentStepOnStack()");
-				fDivingCatchChoice = null;
 				getGameState().pushCurrentStepOnStack();
 			} else {
 				Player<?> catcher;
@@ -324,38 +346,52 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private CatchScatterThrowInMode divingCatch(FieldCoordinate pCoordinate) {
 		Game game = getGameState().getGame();
-		if (fDivingCatchChoice == null) {
-			fCatcherId = null;
-			Player<?>[] divingCatchersHome = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamHome(),
+		if (phase == DivingCatchPhase.ASK_HOME) {
+			Player<?>[] divingCatchers = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamHome(),
 				pCoordinate);
-			Player<?>[] divingCatchersAway = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(),
-				pCoordinate);
-			if (ArrayTool.isProvided(divingCatchersHome) && ArrayTool.isProvided(divingCatchersAway)) {
-				fDivingCatchChoice = false;
-				Skill skill = divingCatchersHome[0].getSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
-				getResult().addReport(new ReportSkillUse(skill, false, SkillUse.CANCEL_DIVING_CATCH));
-			} else if (ArrayTool.isProvided(divingCatchersHome)) {
+			if (ArrayTool.isProvided(divingCatchers)) {
 				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamHome().getId(),
-					PlayerChoiceMode.DIVING_CATCH, divingCatchersHome, null, 1), !game.isHomePlaying());
-			} else if (ArrayTool.isProvided(divingCatchersAway)) {
-				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamAway().getId(),
-					PlayerChoiceMode.DIVING_CATCH, divingCatchersAway, null, 1), game.isHomePlaying());
+					PlayerChoiceMode.DECLARE_DIVING_CATCH, divingCatchers, null, divingCatchers.length), !game.isHomePlaying());
 			} else {
-				fDivingCatchChoice = false;
+				phase = DivingCatchPhase.ASK_AWAY;
 			}
 		}
-		if (fDivingCatchChoice != null) {
-			if (fDivingCatchChoice) {
+		if (phase == DivingCatchPhase.ASK_AWAY) {
+			Player<?>[] divingCatchers = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(),
+				pCoordinate);
+			if (ArrayTool.isProvided(divingCatchers)) {
+				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamAway().getId(),
+					PlayerChoiceMode.DECLARE_DIVING_CATCH, divingCatchers, null, divingCatchers.length), game.isHomePlaying());
+			} else {
+				phase = DivingCatchPhase.PROCESS;
+			}
+		}
+
+		if (phase == DivingCatchPhase.PROCESS) {
+
+			if (fCatcherId != null && (getReRollSource() != null || divingCatchers.contains(fCatcherId))) {
 				Player<?> divingCatcher = game.getPlayerById(fCatcherId);
+				divingCatchers.remove(fCatcherId);
 				if (getReRollSource() == null) {
 					Skill skill = divingCatcher.getSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
 					getResult().addReport(
 						new ReportSkillUse(divingCatcher.getId(), skill, true, SkillUse.CATCH_BALL));
 				}
-				return catchBall();
-			} else {
+				CatchScatterThrowInMode mode = catchBall();
+
+				if (mode == null || mode == fCatchScatterThrowInMode) {
+					return mode;
+				}
+
+				setReRolledAction(null);
+				setReRollSource(null);
+			}
+			if (divingCatchers.isEmpty()) {
 				return CatchScatterThrowInMode.SCATTER_BALL;
 			}
+			UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(divingCatchControlTeam,
+				PlayerChoiceMode.DIVING_CATCH, divingCatchers.toArray(new String[0]), null, 1, 1), !game.getActingTeam().getId().equals(divingCatchControlTeam));
+
 		}
 		return fCatchScatterThrowInMode;
 	}
@@ -429,7 +465,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 
 		setReRolledAction(null);
-		if (catcherCoordinate != null) {
+		if (catcherCoordinate != null && phase != DivingCatchPhase.PROCESS) {
 			if (fCatchScatterThrowInMode.isBomb()) {
 				game.getFieldModel().setBombCoordinate(catcherCoordinate);
 				game.getFieldModel().setBombMoving(true);
@@ -574,8 +610,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 		IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE.addTo(jsonObject, fCatchScatterThrowInMode);
 		IServerJsonOption.THROW_IN_COORDINATE.addTo(jsonObject, fThrowInCoordinate);
-		IServerJsonOption.DIVING_CATCH_CHOICE.addTo(jsonObject, fDivingCatchChoice);
 		IServerJsonOption.BOMB_MODE.addTo(jsonObject, fBombMode);
+		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
+		IServerJsonOption.TEAM_ID.addTo(jsonObject, divingCatchControlTeam);
+		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
 		return jsonObject;
 	}
 
@@ -592,9 +630,14 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		fCatchScatterThrowInMode = (CatchScatterThrowInMode) IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE
 			.getFrom(game, jsonObject);
 		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(game, jsonObject);
-		fDivingCatchChoice = IServerJsonOption.DIVING_CATCH_CHOICE.getFrom(game, jsonObject);
 		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(game, jsonObject);
+		phase = DivingCatchPhase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(game, jsonObject));
+		divingCatchControlTeam = IServerJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		divingCatchers.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject)).collect(Collectors.toList()));
 		return this;
 	}
 
+	private enum DivingCatchPhase {
+		ASK_HOME, ASK_AWAY, PROCESS
+	}
 }

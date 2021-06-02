@@ -6,7 +6,7 @@ package com.fumbbl.ffb;
 public enum PlayerChoiceMode implements INamedObject {
 
 	TENTACLES("tentacles"), SHADOWING("shadowing"), DIVING_TACKLE("divingTackle"), FEED("feed"),
-	DIVING_CATCH("divingCatch"), CARD("card"), BLOCK("block"), MVP("mvp"),
+	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card"), BLOCK("block"), MVP("mvp"),
 	ANIMAL_SAVAGERY("animalSavagery");
 
 	private final String name;
@@ -49,6 +49,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ANIMAL_SAVAGERY:
 				header.append("Select a player to lash out against");
 				break;
+			case DECLARE_DIVING_CATCH:
+				header.append("Select ALL players that should try to catch the ball");
+				break;
 			default:
 				break;
 		}
@@ -84,6 +87,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case ANIMAL_SAVAGERY:
 				title.append("Animal Savagery");
+				break;
+			case DECLARE_DIVING_CATCH:
+				title.append("Declare Diving Catch");
 				break;
 			default:
 				break;

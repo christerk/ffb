@@ -22,6 +22,7 @@ public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModif
 				{
 					add(CatchScatterThrowInMode.CATCH_BOMB);
 					add(CatchScatterThrowInMode.CATCH_SCATTER);
+					add(CatchScatterThrowInMode.CATCH_KICKOFF);
 				}
 			};
 			@Override
