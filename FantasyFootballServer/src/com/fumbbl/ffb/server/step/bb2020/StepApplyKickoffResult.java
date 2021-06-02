@@ -623,7 +623,6 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			add(StepParameterKey.END_TURN);
 			add(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE);
 			add(StepParameterKey.FOULER_HAS_BALL);
-			add(StepParameterKey.ARGUE_THE_CALL_SUCCESSFUL);
 		}};
 
 		Sequence sequence = new Sequence(getGameState());
@@ -648,7 +647,6 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (roll == 1) {
 			getResult().setSound(SoundId.WHISTLE);
 			sequence.add(StepId.SET_ACTING_PLAYER_AND_TEAM, StepParameter.from(StepParameterKey.PLAYER_ID, playerId));
-			sequence.add(StepId.BRIBES, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
 			sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
 			sequence.add(StepId.CONSUME_PARAMETER, IStepLabel.END_FOULING, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parametersToConsume));
 		} else {
