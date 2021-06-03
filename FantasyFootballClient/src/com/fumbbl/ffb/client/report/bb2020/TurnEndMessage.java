@@ -1,21 +1,23 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.HeatExhaustion;
 import com.fumbbl.ffb.KnockoutRecovery;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportTurnEnd;
+import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.List;
 
 @ReportMessageType(ReportId.TURN_END)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class TurnEndMessage extends ReportMessageBase<ReportTurnEnd> {
 
     @Override
@@ -44,12 +46,10 @@ public class TurnEndMessage extends ReportMessageBase<ReportTurnEnd> {
   				}
   			}
   		}
+	    println(getIndent(), TextStyle.ROLL, "Heat Exhaustion Roll [ " + report.getHeatRoll() + " ] ");
   		HeatExhaustion[] heatExhaustions = report.getHeatExhaustions();
   		if (ArrayTool.isProvided(heatExhaustions)) {
   			for (HeatExhaustion heatExhaustion : heatExhaustions) {
-  				StringBuilder status = new StringBuilder();
-  				status.append("Heat Exhaustion Roll [ ").append(heatExhaustion.getRoll()).append(" ] ");
-  				println(getIndent(), TextStyle.ROLL, status.toString());
   				Player<?> player = game.getPlayerById(heatExhaustion.getPlayerId());
   				print(getIndent() + 1, false, player);
   				if (heatExhaustion.isExhausted()) {

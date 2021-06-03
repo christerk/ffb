@@ -1,16 +1,15 @@
 package com.fumbbl.ffb.util;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 /**
- * 
  * @author Kalimar
  */
 public class UtilBox {
@@ -18,27 +17,27 @@ public class UtilBox {
 	public static PlayerState findPlayerStateForCoordinate(FieldCoordinate pCoordinate) {
 		if ((pCoordinate != null) && pCoordinate.isBoxCoordinate()) {
 			switch (pCoordinate.getX()) {
-			case FieldCoordinate.RSV_HOME_X:
-			case FieldCoordinate.RSV_AWAY_X:
-				return new PlayerState(PlayerState.RESERVE);
-			case FieldCoordinate.KO_HOME_X:
-			case FieldCoordinate.KO_AWAY_X:
-				return new PlayerState(PlayerState.KNOCKED_OUT);
-			case FieldCoordinate.BH_HOME_X:
-			case FieldCoordinate.BH_AWAY_X:
-				return new PlayerState(PlayerState.BADLY_HURT);
-			case FieldCoordinate.SI_HOME_X:
-			case FieldCoordinate.SI_AWAY_X:
-				return new PlayerState(PlayerState.SERIOUS_INJURY);
-			case FieldCoordinate.RIP_HOME_X:
-			case FieldCoordinate.RIP_AWAY_X:
-				return new PlayerState(PlayerState.RIP);
-			case FieldCoordinate.MNG_HOME_X:
-			case FieldCoordinate.MNG_AWAY_X:
-				return new PlayerState(PlayerState.MISSING);
-			case FieldCoordinate.BAN_HOME_X:
-			case FieldCoordinate.BAN_AWAY_X:
-				return new PlayerState(PlayerState.BANNED);
+				case FieldCoordinate.RSV_HOME_X:
+				case FieldCoordinate.RSV_AWAY_X:
+					return new PlayerState(PlayerState.RESERVE);
+				case FieldCoordinate.KO_HOME_X:
+				case FieldCoordinate.KO_AWAY_X:
+					return new PlayerState(PlayerState.KNOCKED_OUT);
+				case FieldCoordinate.BH_HOME_X:
+				case FieldCoordinate.BH_AWAY_X:
+					return new PlayerState(PlayerState.BADLY_HURT);
+				case FieldCoordinate.SI_HOME_X:
+				case FieldCoordinate.SI_AWAY_X:
+					return new PlayerState(PlayerState.SERIOUS_INJURY);
+				case FieldCoordinate.RIP_HOME_X:
+				case FieldCoordinate.RIP_AWAY_X:
+					return new PlayerState(PlayerState.RIP);
+				case FieldCoordinate.MNG_HOME_X:
+				case FieldCoordinate.MNG_AWAY_X:
+					return new PlayerState(PlayerState.MISSING);
+				case FieldCoordinate.BAN_HOME_X:
+				case FieldCoordinate.BAN_AWAY_X:
+					return new PlayerState(PlayerState.BANNED);
 			}
 		}
 		return null;
@@ -63,28 +62,30 @@ public class UtilBox {
 			boolean homePlayer = pGame.getTeamHome().hasPlayer(pPlayer);
 			PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
 			switch (playerState.getBase()) {
-			case PlayerState.RESERVE:
-			case PlayerState.EXHAUSTED:
-				boxX = homePlayer ? FieldCoordinate.RSV_HOME_X : FieldCoordinate.RSV_AWAY_X;
-				break;
-			case PlayerState.KNOCKED_OUT:
-				boxX = homePlayer ? FieldCoordinate.KO_HOME_X : FieldCoordinate.KO_AWAY_X;
-				break;
-			case PlayerState.BADLY_HURT:
-				boxX = homePlayer ? FieldCoordinate.BH_HOME_X : FieldCoordinate.BH_AWAY_X;
-				break;
-			case PlayerState.SERIOUS_INJURY:
-				boxX = homePlayer ? FieldCoordinate.SI_HOME_X : FieldCoordinate.SI_AWAY_X;
-				break;
-			case PlayerState.RIP:
-				boxX = homePlayer ? FieldCoordinate.RIP_HOME_X : FieldCoordinate.RIP_AWAY_X;
-				break;
-			case PlayerState.BANNED:
-				boxX = homePlayer ? FieldCoordinate.BAN_HOME_X : FieldCoordinate.BAN_AWAY_X;
-				break;
-			case PlayerState.MISSING:
-				boxX = homePlayer ? FieldCoordinate.MNG_HOME_X : FieldCoordinate.MNG_AWAY_X;
-				break;
+				case PlayerState.RESERVE:
+				case PlayerState.EXHAUSTED:
+					boxX = homePlayer ? FieldCoordinate.RSV_HOME_X : FieldCoordinate.RSV_AWAY_X;
+					break;
+				case PlayerState.KNOCKED_OUT:
+					boxX = homePlayer ? FieldCoordinate.KO_HOME_X : FieldCoordinate.KO_AWAY_X;
+					break;
+				case PlayerState.BADLY_HURT:
+					boxX = homePlayer ? FieldCoordinate.BH_HOME_X : FieldCoordinate.BH_AWAY_X;
+					break;
+				case PlayerState.SERIOUS_INJURY:
+					boxX = homePlayer ? FieldCoordinate.SI_HOME_X : FieldCoordinate.SI_AWAY_X;
+					break;
+				case PlayerState.RIP:
+					boxX = homePlayer ? FieldCoordinate.RIP_HOME_X : FieldCoordinate.RIP_AWAY_X;
+					break;
+				case PlayerState.BANNED:
+					boxX = homePlayer ? FieldCoordinate.BAN_HOME_X : FieldCoordinate.BAN_AWAY_X;
+					break;
+				case PlayerState.MISSING:
+					boxX = homePlayer ? FieldCoordinate.MNG_HOME_X : FieldCoordinate.MNG_AWAY_X;
+					break;
+				default:
+					break;
 			}
 			if (boxX != 0) {
 				pGame.getFieldModel().remove(pPlayer);

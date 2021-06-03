@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.report;
+package com.fumbbl.ffb.report.bb2020;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -10,6 +10,9 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.UtilReport;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
@@ -19,13 +22,14 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportTurnEnd implements IReport {
 
 	private String fPlayerIdTouchdown;
-	private List<KnockoutRecovery> fKnockoutRecoveries;
-	private List<HeatExhaustion> fHeatExhaustions;
-	private List<Player<?>> unzappedPlayers;
+	private final List<KnockoutRecovery> fKnockoutRecoveries;
+	private final List<HeatExhaustion> fHeatExhaustions;
+	private final List<Player<?>> unzappedPlayers;
+	private int heatRoll;
 
 	public ReportTurnEnd() {
 		fKnockoutRecoveries = new ArrayList<>();
@@ -34,7 +38,7 @@ public class ReportTurnEnd implements IReport {
 	}
 
 	public ReportTurnEnd(String pPlayerIdTouchdown, KnockoutRecovery[] pKnockoutRecoveries,
-			HeatExhaustion[] pHeatExhaustions, List<Player<?>> unzappedPlayers) {
+	                     HeatExhaustion[] pHeatExhaustions, List<Player<?>> unzappedPlayers, int heatRoll) {
 		this();
 		fPlayerIdTouchdown = pPlayerIdTouchdown;
 		add(pKnockoutRecoveries);
@@ -51,7 +55,7 @@ public class ReportTurnEnd implements IReport {
 	}
 
 	public KnockoutRecovery[] getKnockoutRecoveries() {
-		return fKnockoutRecoveries.toArray(new KnockoutRecovery[fKnockoutRecoveries.size()]);
+		return fKnockoutRecoveries.toArray(new KnockoutRecovery[0]);
 	}
 
 	private void add(KnockoutRecovery pKnockoutRecovery) {
@@ -73,7 +77,11 @@ public class ReportTurnEnd implements IReport {
 	}
 
 	public HeatExhaustion[] getHeatExhaustions() {
-		return fHeatExhaustions.toArray(new HeatExhaustion[fHeatExhaustions.size()]);
+		return fHeatExhaustions.toArray(new HeatExhaustion[0]);
+	}
+
+	public int getHeatRoll() {
+		return heatRoll;
 	}
 
 	private void add(HeatExhaustion pHeatExhaustion) {
@@ -94,7 +102,7 @@ public class ReportTurnEnd implements IReport {
 
 	public IReport transform(IFactorySource source) {
 		return new ReportTurnEnd(getPlayerIdTouchdown(), getKnockoutRecoveries(), getHeatExhaustions(),
-				getUnzappedPlayers());
+				getUnzappedPlayers(), heatRoll);
 	}
 
 	// JSON serialization
@@ -118,6 +126,7 @@ public class ReportTurnEnd implements IReport {
 			unzappedArray.add(unzappedPlayer.toJsonValue());
 		}
 		IJsonOption.UNZAP_ARRAY.addTo(jsonObject, unzappedArray);
+		IJsonOption.HEAT_ROLL.addTo(jsonObject, heatRoll);
 		return jsonObject;
 	}
 
@@ -145,6 +154,7 @@ public class ReportTurnEnd implements IReport {
 			}
 		}
 
+		heatRoll = IJsonOption.HEAT_ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

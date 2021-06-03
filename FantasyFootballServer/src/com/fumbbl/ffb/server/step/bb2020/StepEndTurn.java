@@ -39,7 +39,7 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
-import com.fumbbl.ffb.report.ReportTurnEnd;
+import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -56,8 +56,8 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.EndGame;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
 import com.fumbbl.ffb.server.step.generator.common.Kickoff;
 import com.fumbbl.ffb.server.util.UtilServerCards;
@@ -70,8 +70,10 @@ import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Step in any sequence to end a turn.
@@ -257,6 +259,7 @@ public class StepEndTurn extends AbstractStep {
 				List<KnockoutRecovery> knockoutRecoveries = new ArrayList<>();
 				List<HeatExhaustion> heatExhaustions = new ArrayList<>();
 				List<Player<?>> unzappedPlayers = new ArrayList<>();
+				int faintingCount = 0;
 				if (fNewHalf || fTouchdown) {
 					for (Player<?> player : game.getPlayers()) {
 						if (player instanceof ZappedPlayer) {
@@ -282,17 +285,26 @@ public class StepEndTurn extends AbstractStep {
 						if (playerState.getBase() == PlayerState.EXHAUSTED) {
 							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
 						}
-						if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
-							if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-								HeatExhaustion heatExhaustion = heatExhaust(player);
-								heatExhaustions.add(heatExhaustion);
-								if (heatExhaustion.isExhausted()) {
-									game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
-									UtilBox.putPlayerIntoBox(game, player);
-								}
+					}
+
+					if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
+						faintingCount = getGameState().getDiceRoller().rollDice(3);
+						for (Team team: new Team[] {game.getTeamHome(), game.getTeamAway()}) {
+							List<Player<?>> onPitch = Arrays.stream(team.getPlayers()).filter(player -> {
+								FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+								return (playerCoordinate != null) && !playerCoordinate.isBoxCoordinate();
+							}).collect(Collectors.toList());
+							for (int i = 0; i < faintingCount && !onPitch.isEmpty(); i++) {
+								int index = getGameState().getDiceRoller().rollDice(onPitch.size()) - 1;
+								Player<?> player = onPitch.remove(index);
+								PlayerState playerState = game.getFieldModel().getPlayerState(player);
+								game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
+								UtilBox.putPlayerIntoBox(game, player);
+								heatExhaustions.add(new HeatExhaustion(player.getId(), true, 0));
 							}
 						}
 					}
+
 					UtilBox.putAllPlayersIntoBox(game);
 				}
 				if (fNewHalf) {
@@ -341,7 +353,7 @@ public class StepEndTurn extends AbstractStep {
 				HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[0]);
 				String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
 				getResult().addReport(
-						new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers));
+						new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers, faintingCount));
 
 				if (game.isTurnTimeEnabled()) {
 					UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
@@ -519,13 +531,6 @@ public class StepEndTurn extends AbstractStep {
 		} else {
 			return null;
 		}
-	}
-
-	private HeatExhaustion heatExhaust(Player<?> pPlayer) {
-		String playerId = (pPlayer != null) ? pPlayer.getId() : null;
-		int exhaustionRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
-		boolean isExhausted = DiceInterpreter.getInstance().isExhausted(exhaustionRoll);
-		return new HeatExhaustion(playerId, isExhausted, exhaustionRoll);
 	}
 
 	private static void updateFumbblGame(GameState pGameState, boolean pNewHalf, boolean pTouchdown) {
