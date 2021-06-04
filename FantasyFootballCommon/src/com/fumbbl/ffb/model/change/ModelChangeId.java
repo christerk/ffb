@@ -88,8 +88,10 @@ public enum ModelChangeId implements INamedObject {
 	INDUCEMENT_SET_ADD_INDUCEMENT("inducementSetAddInducement", ModelChangeDataType.INDUCEMENT),
 	INDUCEMENT_SET_CARD_CHOICES("inducementSetCardChoices", ModelChangeDataType.CARD_CHOICES),
 	INDUCEMENT_SET_DEACTIVATE_CARD("inducementSetDeactivateCard", ModelChangeDataType.CARD),
+	INDUCEMENT_SET_ADD_PRAYER("inducementSetAddPrayer", ModelChangeDataType.PRAYER),
 	INDUCEMENT_SET_REMOVE_AVAILABLE_CARD("inducementSetRemoveAvailableCard", ModelChangeDataType.CARD),
 	INDUCEMENT_SET_REMOVE_INDUCEMENT("inducementSetRemoveInducement", ModelChangeDataType.INDUCEMENT),
+	INDUCEMENT_SET_REMOVE_PRAYER("inducementSetRemovePrayer", ModelChangeDataType.PRAYER),
 
 	PLAYER_RESULT_SET_BLOCKS("playerResultSetBlocks", ModelChangeDataType.INTEGER),
 	PLAYER_RESULT_SET_CASUALTIES("playerResultSetCasualties", ModelChangeDataType.INTEGER),

@@ -88,6 +88,7 @@ public interface IIconProperty {
 	String RESOURCE_BLOODWEISER_KEG = "resource.bloodweiserKeg";
 	String RESOURCE_BRIBE = "resource.bribe";
 	String RESOURCE_CARD = "resource.card";
+	String RESOURCE_PRAYER = "resource.prayer";
 	String RESOURCE_MASTER_CHEF = "resource.masterChef";
 	String RESOURCE_RE_ROLL = "resource.reRoll";
 	String RESOURCE_IGOR = "resource.igor";

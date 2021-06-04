@@ -6,9 +6,11 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -18,18 +20,19 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -45,14 +48,18 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_CARD_SET = "cardSet";
 	private static final String _XML_TAG_CARD = "card";
 
+	private static final String _XML_TAG_PRAYER_SET = "prayerSet";
+	private static final String _XML_TAG_PRAYER = "prayer";
+
 	private static final String _XML_ATTRIBUTE_POSITION_ID = "positionId";
 	private static final String _XML_ATTRIBUTE_NAME = "name";
 
-	private Map<InducementType, Inducement> fInducements;
-	private Set<Card> fCardsAvailable;
-	private Set<Card> fCardsActive;
-	private Set<Card> fCardsDeactivated;
-	private Set<String> fStarPlayerPositionIds;
+	private final Map<InducementType, Inducement> fInducements;
+	private final Set<Card> fCardsAvailable;
+	private final Set<Card> fCardsActive;
+	private final Set<Card> fCardsDeactivated;
+	private final Set<String> fStarPlayerPositionIds;
+	private final Set<Prayer> prayers;
 
 	private transient TurnData fTurnData;
 
@@ -62,6 +69,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		fCardsActive = new HashSet<>();
 		fCardsDeactivated = new HashSet<>();
 		fStarPlayerPositionIds = new HashSet<>();
+		prayers = new HashSet<>();
 	}
 
 	public InducementSet(TurnData pTurnData) {
@@ -90,7 +98,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public Inducement[] getInducements() {
-		return fInducements.values().toArray(new Inducement[fInducements.size()]);
+		return fInducements.values().toArray(new Inducement[0]);
 	}
 
 	public void addInducement(Inducement pInducement) {
@@ -114,6 +122,26 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		return ((inducement != null) && (inducement.getUsesLeft() > 0));
 	}
 
+	public void addPrayer(Prayer prayer) {
+		if (prayer == null || prayers.contains(prayer)) {
+			return;
+		}
+		prayers.add(prayer);
+		notifyObservers(ModelChangeId.INDUCEMENT_SET_ADD_PRAYER, prayer);
+	}
+
+	public void removePrayer(Prayer prayer) {
+		if (prayer == null || !prayers.contains(prayer)) {
+			return;
+		}
+		prayers.remove(prayer);
+		notifyObservers(ModelChangeId.INDUCEMENT_SET_REMOVE_PRAYER, prayer);
+	}
+
+	public Set<Prayer> getPrayers() {
+		return prayers;
+	}
+
 	public void addAvailableCard(Card pCard) {
 		if (pCard == null) {
 			return;
@@ -122,53 +150,50 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		notifyObservers(ModelChangeId.INDUCEMENT_SET_ADD_AVAILABLE_CARD, pCard);
 	}
 
-	public boolean removeAvailableCard(Card pCard) {
+	public void removeAvailableCard(Card pCard) {
 		if (pCard == null) {
-			return false;
+			return;
 		}
-		boolean removed = fCardsAvailable.remove(pCard);
+		fCardsAvailable.remove(pCard);
 		notifyObservers(ModelChangeId.INDUCEMENT_SET_REMOVE_AVAILABLE_CARD, pCard);
-		return removed;
 	}
 
 	public Card[] getAvailableCards() {
-		return fCardsAvailable.toArray(new Card[fCardsAvailable.size()]);
+		return fCardsAvailable.toArray(new Card[0]);
 	}
 
 	public boolean isAvailable(Card pCard) {
 		return fCardsAvailable.contains(pCard);
 	}
 
-	public boolean activateCard(Card pCard) {
+	public void activateCard(Card pCard) {
 		if (pCard == null) {
-			return false;
+			return;
 		}
 		boolean removed = fCardsAvailable.remove(pCard);
 		if (removed) {
 			fCardsActive.add(pCard);
 		}
 		notifyObservers(ModelChangeId.INDUCEMENT_SET_ACTIVATE_CARD, pCard);
-		return removed;
 	}
 
-	public boolean deactivateCard(Card pCard) {
+	public void deactivateCard(Card pCard) {
 		if (pCard == null) {
-			return false;
+			return;
 		}
 		boolean removed = fCardsActive.remove(pCard);
 		if (removed) {
 			fCardsDeactivated.add(pCard);
 		}
 		notifyObservers(ModelChangeId.INDUCEMENT_SET_DEACTIVATE_CARD, pCard);
-		return removed;
 	}
 
 	public Card[] getActiveCards() {
-		return fCardsActive.toArray(new Card[fCardsActive.size()]);
+		return fCardsActive.toArray(new Card[0]);
 	}
 
 	public Card[] getDeactivatedCards() {
-		return fCardsDeactivated.toArray(new Card[fCardsDeactivated.size()]);
+		return fCardsDeactivated.toArray(new Card[0]);
 	}
 
 	public boolean isDeactivated(Card pCard) {
@@ -177,16 +202,10 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 
 	public Card[] getAllCards() {
 		List<Card> allCards = new ArrayList<>();
-		for (Card card : getAvailableCards()) {
-			allCards.add(card);
-		}
-		for (Card card : getActiveCards()) {
-			allCards.add(card);
-		}
-		for (Card card : getDeactivatedCards()) {
-			allCards.add(card);
-		}
-		return allCards.toArray(new Card[allCards.size()]);
+		Collections.addAll(allCards, getAvailableCards());
+		Collections.addAll(allCards, getActiveCards());
+		Collections.addAll(allCards, getDeactivatedCards());
+		return allCards.toArray(new Card[0]);
 	}
 
 	public boolean isActive(Card pCard) {
@@ -218,10 +237,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		fCardsActive.clear();
 		fCardsAvailable.clear();
 		fCardsDeactivated.clear();
-	}
-
-	public int getNrOfInducements() {
-		return fInducements.size();
+		prayers.clear();
 	}
 
 	public int totalInducements() {
@@ -235,7 +251,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 
 	// no change tracking (Fumbbl communication only)
 	public String[] getStarPlayerPositionIds() {
-		return fStarPlayerPositionIds.toArray(new String[fStarPlayerPositionIds.size()]);
+		return fStarPlayerPositionIds.toArray(new String[0]);
 	}
 
 	// no change tracking (Fumbbl communication only)
@@ -280,6 +296,14 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		}
 		UtilXml.endElement(pHandler, _XML_TAG_CARD_SET);
 
+		UtilXml.startElement(pHandler, _XML_TAG_PRAYER_SET);
+		for (Prayer prayer : prayers) {
+			AttributesImpl attributes = new AttributesImpl();
+			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, prayer.getName());
+			UtilXml.addEmptyElement(pHandler, _XML_TAG_PRAYER, attributes);
+		}
+		UtilXml.endElement(pHandler, _XML_TAG_PRAYER_SET);
+
 		UtilXml.endElement(pHandler, XML_TAG);
 
 	}
@@ -307,6 +331,9 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 			fCardsAvailable.clear();
 			fCardsActive.clear();
 			fCardsDeactivated.clear();
+		}
+		if (_XML_TAG_CARD_SET.equals(pXmlTag)) {
+			prayers.clear();
 		}
 		if (_XML_TAG_CARD.equals(pXmlTag)) {
 			String cardName = pXmlAttributes.getValue(_XML_ATTRIBUTE_NAME).trim();
@@ -350,6 +377,8 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
 			IJsonOption.STAR_PLAYER_POSTION_IDS.addTo(jsonObject, starPlayerPositionIds);
 		}
+
+		IJsonOption.PRAYERS.addTo(jsonObject, prayers.stream().map(Prayer::getName).collect(Collectors.toList()));
 		return jsonObject;
 	}
 
@@ -363,7 +392,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 				addInducement(inducement);
 			}
 		}
-		CardFactory cardFactory = source.<CardFactory>getFactory(Factory.CARD);
+		CardFactory cardFactory = source.getFactory(Factory.CARD);
 		String[] cardsAvailable = IJsonOption.CARDS_AVAILABLE.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(cardsAvailable)) {
 			for (String cardName : cardsAvailable) {
@@ -385,6 +414,12 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
 			fStarPlayerPositionIds.addAll(Arrays.asList(starPlayerPositionIds));
+		}
+
+		String[] prayersArray = IJsonOption.PRAYERS.getFrom(source, jsonObject);
+		if (ArrayTool.isProvided(prayersArray)) {
+			PrayerFactory prayerFactory = source.getFactory(Factory.PRAYER);
+			prayers.addAll(Arrays.stream(prayersArray).map(prayerFactory::forName).collect(Collectors.toSet()));
 		}
 		return this;
 	}

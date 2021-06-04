@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
@@ -24,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -197,12 +199,14 @@ public class ResourceComponent extends JPanel {
 		fRefreshNecessary |= (availableCards.length != fCurrentCards);
 		fCurrentCards = availableCards.length;
 		if (fCurrentCards > 0) {
-			ResourceSlot bribesSlot = fSlots[slotIndex.getAndIncrement()];
-			bribesSlot.setPlural("Cards");
-			bribesSlot.setSingular("Card");
-			bribesSlot.setValue(fCurrentCards);
-			bribesSlot.setIconProperty(IIconProperty.RESOURCE_CARD);
+			ResourceSlot cardsSlot = fSlots[slotIndex.getAndIncrement()];
+			cardsSlot.setPlural("Cards");
+			cardsSlot.setSingular("Card");
+			cardsSlot.setValue(fCurrentCards);
+			cardsSlot.setIconProperty(IIconProperty.RESOURCE_CARD);
 		}
+
+		Set<Prayer> prayers = turnData.getInducementSet().getPrayers();
 
 		fNrOfSlots = slotIndex.get();
 

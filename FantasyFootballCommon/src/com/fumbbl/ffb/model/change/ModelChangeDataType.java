@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.IDialogParameter;
@@ -20,7 +21,6 @@ import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogParameterFactory;
 import com.fumbbl.ffb.factory.CardEffectFactory;
@@ -37,6 +37,7 @@ import com.fumbbl.ffb.factory.WeatherFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -56,7 +57,7 @@ public enum ModelChangeDataType implements INamedObject {
 	PUSHBACK_SQUARE("pushbackSquare"), MOVE_SQUARE("moveSquare"), WEATHER("weather"), RANGE_RULER("rangeRuler"),
 	DICE_DECORATION("diceDecoration"), INDUCEMENT("inducement"), FIELD_MARKER("fieldMarker"),
 	PLAYER_MARKER("playerMarker"), GAME_OPTION("gameOption"), CARD("card"), LEADER_STATE("leaderState"),
-	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices"), BLITZ_STATE("blitzState");
+	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices"), BLITZ_STATE("blitzState"), PRAYER("prayer");
 
 	private final String fName;
 
@@ -123,6 +124,8 @@ public enum ModelChangeDataType implements INamedObject {
 				return ((PlayerMarker) pValue).toJsonValue();
 			case PLAYER_STATE:
 				return UtilJson.toJsonValue((PlayerState) pValue);
+			case PRAYER:
+				return UtilJson.toJsonValue((Prayer) pValue);
 			case PUSHBACK_SQUARE:
 				return ((PushbackSquare) pValue).toJsonValue();
 			case RANGE_RULER:
@@ -195,6 +198,8 @@ public enum ModelChangeDataType implements INamedObject {
 				return new PlayerMarker().initFrom(source, pJsonValue);
 			case PLAYER_STATE:
 				return UtilJson.toPlayerState(pJsonValue);
+			case PRAYER:
+				return UtilJson.toEnumWithName(source.getFactory(Factory.PRAYER), pJsonValue);
 			case PUSHBACK_SQUARE:
 				return new PushbackSquare().initFrom(source, pJsonValue);
 			case RANGE_RULER:

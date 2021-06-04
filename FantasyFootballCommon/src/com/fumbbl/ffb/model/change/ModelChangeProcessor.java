@@ -22,6 +22,7 @@ import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
@@ -270,6 +271,9 @@ public class ModelChangeProcessor {
 			case INDUCEMENT_SET_ADD_INDUCEMENT:
 				getInducementSet(pGame, isHomeData(pModelChange)).addInducement((Inducement) pModelChange.getValue());
 				return true;
+			case INDUCEMENT_SET_ADD_PRAYER:
+				getInducementSet(pGame, isHomeData(pModelChange)).addPrayer((Prayer) pModelChange.getValue());
+				return true;
 			case INDUCEMENT_SET_CARD_CHOICES:
 				IDialogParameter dialogParameter = pGame.getDialogParameter();
 				if (dialogParameter instanceof DialogBuyCardsAndInducementsParameter) {
@@ -285,7 +289,9 @@ public class ModelChangeProcessor {
 			case INDUCEMENT_SET_REMOVE_INDUCEMENT:
 				getInducementSet(pGame, isHomeData(pModelChange)).removeInducement((Inducement) pModelChange.getValue());
 				return true;
-
+			case INDUCEMENT_SET_REMOVE_PRAYER:
+				getInducementSet(pGame, isHomeData(pModelChange)).removePrayer((Prayer) pModelChange.getValue());
+				return true;
 			case PLAYER_RESULT_SET_BLOCKS:
 				getPlayerResult(pGame, pModelChange.getKey()).setBlocks((Integer) pModelChange.getValue());
 				return true;
