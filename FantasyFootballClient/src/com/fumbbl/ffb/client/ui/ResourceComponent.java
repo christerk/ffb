@@ -39,11 +39,8 @@ public class ResourceComponent extends JPanel {
 	private final SideBarComponent fSideBar;
 	private final BufferedImage fImage;
 	private boolean fRefreshNecessary;
-	private int fNrOfSlots;
+	private int fNrOfSlots, fCurrentReRolls, fCurrentApothecaries, fCurrentCards, currentPrayers;
 	private final ResourceSlot[] fSlots;
-	private int fCurrentReRolls = 0;
-	private int fCurrentApothecaries = 0;
-	private int fCurrentCards = 0;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
@@ -206,7 +203,18 @@ public class ResourceComponent extends JPanel {
 			cardsSlot.setIconProperty(IIconProperty.RESOURCE_CARD);
 		}
 
-		Set<Prayer> prayers = turnData.getInducementSet().getPrayers();
+		if (slotIndex.get() < fSlots.length - 1) {
+			Set<Prayer> prayers = turnData.getInducementSet().getPrayers();
+			fRefreshNecessary |= (prayers.size() != currentPrayers);
+			currentPrayers = prayers.size();
+			if (currentPrayers > 0) {
+				ResourceSlot cardsSlot = fSlots[slotIndex.getAndIncrement()];
+				cardsSlot.setPlural("Prayers");
+				cardsSlot.setSingular("Prayer");
+				cardsSlot.setValue(currentPrayers);
+				cardsSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
+			}
+		}
 
 		fNrOfSlots = slotIndex.get();
 
