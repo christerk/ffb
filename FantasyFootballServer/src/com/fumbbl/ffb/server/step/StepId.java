@@ -146,6 +146,7 @@ public enum StepId implements INamedObject {
 	TENTACLES("tentacles"), // action.move
 	TEST("test"), // test
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
+	TRAP_DOOR("trapDoor"), // action.common
 	TOUCHBACK("touchback"), // phase.kickoff
 	UNCHANNELLED_FURY("unchannelledFury"), // action.common
 	WEATHER("weather"), // game.start

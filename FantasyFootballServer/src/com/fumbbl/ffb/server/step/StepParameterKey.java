@@ -91,6 +91,7 @@ public enum StepParameterKey {
 	PASS_FUMBLE, // Boolean
 	PASS_RESULT, // PassResult
 	PASSING_DISTANCE, // PassingDistance
+	PLAYER_ENTERING_SQUARE, // String
 	PLAYER_ID, // String
 	PLAYER_IDS, // List<String>
 	PLAYER_ID_TO_REMOVE, // String

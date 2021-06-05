@@ -106,6 +106,10 @@ public class FieldModel implements IJsonSerializable {
 		return new HashSet<>(trapDoors);
 	}
 
+	public Set<TrapDoor> getTrapDoors() {
+		return new HashSet<>(trapDoors);
+	}
+
 	public void addMultiBlockTarget(String playerId, FieldCoordinate coordinate) {
 		multiBlockTargets.add(playerId);
 		multiBlockTargetCoordinates.add(coordinate);
