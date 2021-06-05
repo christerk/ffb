@@ -60,6 +60,7 @@ public interface IIconProperty {
 	String GAME_BOMB = "game.bomb";
 	String GAME_BOMB_BIG = "game.bomb.big";
 	String GAME_SPLASH_SCREEN = "game.splashscreen";
+	String GAME_TRAP_DOOR = "game.trapdoor";
 
 	// Sidebar
 	String SIDEBAR_BOX_BUTTON = "sidebar.box.button";

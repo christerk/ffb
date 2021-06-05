@@ -6,6 +6,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.FieldMarker;
@@ -16,7 +17,6 @@ import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.CardEffectFactory;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -28,10 +28,13 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
+import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
+import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -68,10 +71,10 @@ public class FieldModel implements IJsonSerializable {
 	private BlitzState blitzState;
 	private final Set<String> multiBlockTargets = new HashSet<>();
 	private final Set<FieldCoordinate> multiBlockTargetCoordinates = new HashSet<>();
+	private final Set<TrapDoor> trapDoors = new HashSet<>();
 
 	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
-																																							// reconstructed
-
+	// reconstructed
 	private transient Game fGame;
 
 	public FieldModel(Game pGame) {
@@ -88,6 +91,18 @@ public class FieldModel implements IJsonSerializable {
 		fPlayerMarkers = new HashSet<>();
 		fCardsByPlayerId = new HashMap<>();
 		fCardEffectsByPlayerId = new HashMap<>();
+	}
+
+	public void add(Collection<TrapDoor> trapDoors) {
+		this.trapDoors.addAll(trapDoors);
+	}
+
+	public void clearTrapDoors() {
+		trapDoors.clear();
+	}
+
+	public Set<OnPitchEnhancement> getOnPitchEnhancements() {
+		return new HashSet<>(trapDoors);
 	}
 
 	public void addMultiBlockTarget(String playerId, FieldCoordinate coordinate) {
@@ -867,6 +882,10 @@ public class FieldModel implements IJsonSerializable {
 			IJsonOption.BLITZ_STATE.addTo(jsonObject, blitzState.toJsonValue());
 		}
 
+		JsonArray trapDoorArray = new JsonArray();
+		trapDoors.stream().map(TrapDoor::toJsonValue).forEach(trapDoorArray::add);
+		IJsonOption.TRAP_DOORS.addTo(jsonObject, trapDoorArray);
+
 		return jsonObject;
 
 	}
@@ -928,6 +947,7 @@ public class FieldModel implements IJsonSerializable {
 		fCoordinateByPlayerId.clear();
 		fStateByPlayerId.clear();
 		fCardsByPlayerId.clear();
+		trapDoors.clear();
 
 		CardFactory cardFactory = source.getFactory(Factory.CARD);
 		CardEffectFactory cardEffectFactory = source.getFactory(Factory.CARD_EFFECT);
@@ -963,6 +983,11 @@ public class FieldModel implements IJsonSerializable {
 			blitzState = new BlitzState().initFrom(source, blitzStateObject);
 		}
 
+		JsonArray trapDoorArray = IJsonOption.TRAP_DOORS.getFrom(source, jsonObject);
+
+		if (trapDoorArray != null) {
+			trapDoorArray.values().stream().map(value -> new TrapDoor().initFrom(source, value)).forEach(trapDoors::add);
+		}
 		return this;
 
 	}

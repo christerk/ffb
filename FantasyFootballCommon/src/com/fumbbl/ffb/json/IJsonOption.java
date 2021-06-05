@@ -474,6 +474,7 @@ public interface IJsonOption {
 	JsonIntOption TOTAL_NR_OF_COMMANDS = new JsonIntOption("totalNrOfCommands");
 	JsonIntOption TOUCHDOWNS = new JsonIntOption("touchdowns");
 	JsonArrayOption TRACK_NUMBER_ARRAY = new JsonArrayOption("trackNumberArray");
+	JsonArrayOption TRAP_DOORS = new JsonArrayOption("trapDoors");
 	JsonIntOption TREASURY = new JsonIntOption("treasury");
 	JsonIntOption TREASURY_USED_ON_INDUCEMENTS = new JsonIntOption("treasuryUsedOnInducements");
 	JsonObjectOption TURN_DATA_AWAY = new JsonObjectOption("turnDataAway");
