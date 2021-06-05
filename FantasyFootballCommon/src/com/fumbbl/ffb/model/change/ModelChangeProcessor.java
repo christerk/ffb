@@ -30,6 +30,7 @@ import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.option.IGameOption;
 
 import java.util.Date;
@@ -127,6 +128,9 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_ADD_TRACK_NUMBER:
 				pGame.getFieldModel().add((TrackNumber) pModelChange.getValue());
 				return true;
+			case FIELD_MODEL_ADD_TRAP_DOOR:
+				pGame.getFieldModel().add((TrapDoor) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_KEEP_DEACTIVATED_CARD:
 				pGame.getFieldModel().keepDeactivatedCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
 				return true;
@@ -157,6 +161,9 @@ public class ModelChangeProcessor {
 				return true;
 			case FIELD_MODEL_REMOVE_TRACK_NUMBER:
 				pGame.getFieldModel().remove((TrackNumber) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_REMOVE_TRAP_DOOR:
+				pGame.getFieldModel().remove((TrapDoor) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_BALL_COORDINATE:
 				pGame.getFieldModel().setBallCoordinate((FieldCoordinate) pModelChange.getValue());
@@ -498,6 +505,10 @@ public class ModelChangeProcessor {
 				TrackNumber trackNumber = (TrackNumber) pModelChange.getValue();
 				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(),
 					(trackNumber != null) ? trackNumber.transform() : null);
+			case FIELD_MODEL_ADD_TRAP_DOOR:
+			case FIELD_MODEL_REMOVE_TRAP_DOOR:
+				TrapDoor trapDoor = (TrapDoor) pModelChange.getValue();
+				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), trapDoor);
 			case FIELD_MODEL_SET_BALL_COORDINATE:
 				FieldCoordinate ballCoordinate = (FieldCoordinate) pModelChange.getValue();
 				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(),

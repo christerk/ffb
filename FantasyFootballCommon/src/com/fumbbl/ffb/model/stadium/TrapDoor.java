@@ -9,6 +9,8 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 
+import java.util.Objects;
+
 public class TrapDoor implements OnPitchEnhancement, IJsonSerializable {
 	private FieldCoordinate coordinate;
 
@@ -28,6 +30,25 @@ public class TrapDoor implements OnPitchEnhancement, IJsonSerializable {
 	public String getIconProperty() {
 		return IIconProperty.GAME_TRAP_DOOR;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TrapDoor trapDoor = (TrapDoor) o;
+		return Objects.equals(coordinate, trapDoor.coordinate);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(coordinate);
+	}
+
+	@Override
+	public TrapDoor transform() {
+		return new TrapDoor(coordinate.transform());
+	}
+
 
 	@Override
 	public TrapDoor initFrom(IFactorySource game, JsonValue pJsonValue) {

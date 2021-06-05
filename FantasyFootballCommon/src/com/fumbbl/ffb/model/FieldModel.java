@@ -34,7 +34,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -93,12 +92,14 @@ public class FieldModel implements IJsonSerializable {
 		fCardEffectsByPlayerId = new HashMap<>();
 	}
 
-	public void add(Collection<TrapDoor> trapDoors) {
-		this.trapDoors.addAll(trapDoors);
+	public void add(TrapDoor trapDoor) {
+		this.trapDoors.add(trapDoor);
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_TRAP_DOOR, null, trapDoor);
 	}
 
-	public void clearTrapDoors() {
-		trapDoors.clear();
+	public void remove(TrapDoor trapDoor) {
+		trapDoors.remove(trapDoor);
+		notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_TRAP_DOOR, null, trapDoor);
 	}
 
 	public Set<OnPitchEnhancement> getOnPitchEnhancements() {
@@ -784,6 +785,8 @@ public class FieldModel implements IJsonSerializable {
 		for (PlayerMarker playerMarker : getPlayerMarkers()) {
 			transformedModel.add(playerMarker.transform());
 		}
+
+		trapDoors.stream().map(TrapDoor::transform).forEach(transformedModel::add);
 
 		return transformedModel;
 

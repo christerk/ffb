@@ -6,4 +6,6 @@ public interface OnPitchEnhancement {
 	FieldCoordinate getCoordinate();
 
 	String getIconProperty();
+
+	OnPitchEnhancement transform();
 }

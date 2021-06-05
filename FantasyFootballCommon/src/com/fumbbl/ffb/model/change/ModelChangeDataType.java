@@ -41,6 +41,7 @@ import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.option.IGameOption;
 
 import java.util.Date;
@@ -57,7 +58,8 @@ public enum ModelChangeDataType implements INamedObject {
 	PUSHBACK_SQUARE("pushbackSquare"), MOVE_SQUARE("moveSquare"), WEATHER("weather"), RANGE_RULER("rangeRuler"),
 	DICE_DECORATION("diceDecoration"), INDUCEMENT("inducement"), FIELD_MARKER("fieldMarker"),
 	PLAYER_MARKER("playerMarker"), GAME_OPTION("gameOption"), CARD("card"), LEADER_STATE("leaderState"),
-	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices"), BLITZ_STATE("blitzState"), PRAYER("prayer");
+	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices"), BLITZ_STATE("blitzState"), PRAYER("prayer"),
+	TRAP_DOOR("trapDoor");
 
 	private final String fName;
 
@@ -140,6 +142,8 @@ public enum ModelChangeDataType implements INamedObject {
 				return JsonValue.valueOf((String) pValue);
 			case TRACK_NUMBER:
 				return ((TrackNumber) pValue).toJsonValue();
+			case TRAP_DOOR:
+				return ((TrapDoor) pValue).toJsonValue();
 			case TURN_MODE:
 				return UtilJson.toJsonValue((TurnMode) pValue);
 			case WEATHER:
@@ -214,6 +218,8 @@ public enum ModelChangeDataType implements INamedObject {
 				return pJsonValue.asString();
 			case TRACK_NUMBER:
 				return new TrackNumber().initFrom(source, pJsonValue);
+			case TRAP_DOOR:
+				return new TrapDoor().initFrom(source, pJsonValue);
 			case TURN_MODE:
 				return UtilJson.toEnumWithName(new TurnModeFactory(), pJsonValue);
 			case WEATHER:
