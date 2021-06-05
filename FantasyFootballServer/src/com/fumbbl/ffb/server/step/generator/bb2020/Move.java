@@ -60,7 +60,11 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 		sequence.add(StepId.FALL_DOWN);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
+
+		sequence.add(StepId.TRAP_DOOR, IStepLabel.SCATTER_BALL);
+		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.TRAP_DOOR));
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+
 		sequence.add(StepId.END_MOVING, IStepLabel.END_MOVING);
 		// may insert endTurn or block sequence add this point
 

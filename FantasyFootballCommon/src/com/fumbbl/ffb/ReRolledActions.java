@@ -50,6 +50,7 @@ public class ReRolledActions {
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
 	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);
 	public static final ReRolledAction PROJECTILE_VOMIT = new ReRolledAction(ProjectileVomit.class);
+	public static final ReRolledAction TRAP_DOOR = new ReRolledAction("Trap Door");
 
 	private final Map<String, ReRolledAction> values;
 

@@ -20,6 +20,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -110,6 +111,7 @@ public class StepMove extends AbstractStep {
 			}
 			ServerUtilBlock.updateDiceDecorations(game);
 			getResult().setSound(actingPlayer.isDodging() ? SoundId.DODGE : SoundId.STEP);
+			publishParameter(StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, actingPlayer.getPlayerId()));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

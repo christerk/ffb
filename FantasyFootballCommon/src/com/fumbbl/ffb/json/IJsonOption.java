@@ -137,6 +137,7 @@ public interface IJsonOption {
 	JsonBooleanOption DODGING = new JsonBooleanOption("dodging");
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
+	JsonBooleanOption ESCAPED = new JsonBooleanOption("escaped");
 	JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
 	JsonBooleanOption EXPLODES = new JsonBooleanOption("explodes");
 	JsonIntOption FAME = new JsonIntOption("fame");
