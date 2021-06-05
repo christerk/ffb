@@ -41,6 +41,9 @@ public class ResourceComponent extends JPanel {
 	private boolean fRefreshNecessary;
 	private int fNrOfSlots;
 	private final ResourceSlot[] fSlots;
+	private int fCurrentReRolls = 0;
+	private int fCurrentApothecaries = 0;
+	private int fCurrentCards = 0;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
@@ -144,9 +147,6 @@ public class ResourceComponent extends JPanel {
 	}
 
 	private void updateSlots() {
-		int fCurrentReRolls = 0;
-		int fCurrentApothecaries = 0;
-		int fCurrentCards = 0;
 
 		AtomicInteger slotIndex = new AtomicInteger(0);
 		Game game = getSideBar().getClient().getGame();
