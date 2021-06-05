@@ -68,7 +68,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				}
 
 				if (!game.getTurnMode().checkNegatraits()) {
-					step.getResult().setNextAction(StepAction.NEXT_STEP);
+					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
 					return false;
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
