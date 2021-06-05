@@ -508,7 +508,7 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_ADD_TRAP_DOOR:
 			case FIELD_MODEL_REMOVE_TRAP_DOOR:
 				TrapDoor trapDoor = (TrapDoor) pModelChange.getValue();
-				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), trapDoor);
+				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), trapDoor.transform());
 			case FIELD_MODEL_SET_BALL_COORDINATE:
 				FieldCoordinate ballCoordinate = (FieldCoordinate) pModelChange.getValue();
 				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(),
