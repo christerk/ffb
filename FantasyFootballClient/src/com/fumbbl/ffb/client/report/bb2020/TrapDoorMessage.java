@@ -15,6 +15,7 @@ public class TrapDoorMessage extends ReportMessageBase<ReportTrapDoor> {
 	protected void render(ReportTrapDoor report) {
 		Player<?> player = game.getPlayerById(report.getPlayerId());
 
+		println(getIndent(), TextStyle.ROLL, "Trap Door Roll [ " + report.getRoll() + " ]");
 		print(getIndent(), false, player);
 		if (report.isEscaped()) {
 			println(getIndent(), TextStyle.NONE, " escapes the trap door.");

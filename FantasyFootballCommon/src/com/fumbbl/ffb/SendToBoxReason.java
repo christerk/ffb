@@ -19,7 +19,7 @@ public enum SendToBoxReason implements INamedObject {
 	LIGHTNING("lightning", "has been hit by a lightning bolt"), FIREBALL("fireball", "has been hit by a fireball"),
 	KO_ON_PILING_ON("koOnPilingOn", "has been knocked out while Piling On"), BOMB("bomb", "has been hit by a bomb"),
 	BALL_AND_CHAIN("ballAndChain", "has been hit by a ball and chain"), PLAGUE_RIDDEN("plagueRidden", "is now plague ridden"),
-	PROJECTILE_VOMIT("projectileVomit", "has been hit by projectile vomit");
+	PROJECTILE_VOMIT("projectileVomit", "has been hit by projectile vomit"), TRAP_DOOR_FALL("trapDoorFall", "fell down a trap door");
 
 	private final String fName;
 	private final String fReason;

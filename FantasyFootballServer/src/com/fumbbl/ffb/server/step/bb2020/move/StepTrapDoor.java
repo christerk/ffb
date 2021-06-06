@@ -7,6 +7,7 @@ import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.FieldModel;
@@ -16,9 +17,11 @@ import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.report.bb2020.ReportTrapDoor;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPush;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeTrapDoorFall;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
@@ -27,13 +30,25 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepTrapDoor extends AbstractStepWithReRoll {
 
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.TRAP_DOOR;
 	private String playerId;
 
-	protected StepTrapDoor(GameState pGameState) {
+	public StepTrapDoor(GameState pGameState) {
 		super(pGameState);
+	}
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus status = super.handleCommand(pReceivedCommand);
+
+		if (status == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+
+		return status;
 	}
 
 	@Override
@@ -54,6 +69,10 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 
 	@Override
 	public void start() {
+		executeStep();
+	}
+
+	private void executeStep() {
 		if (!StringTool.isProvided(playerId)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -75,24 +94,27 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 
 			int roll = getGameState().getDiceRoller().rollDice(6);
 			boolean escaped = roll != 1;
-			getResult().addReport(new ReportTrapDoor(playerId, escaped));
+			getResult().addReport(new ReportTrapDoor(playerId, roll, escaped));
 			if (escaped) {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else if (getReRolledAction() != null || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), player, RE_ROLLED_ACTION, 2, false)) {
 				trapDoorTriggered(game, player, playerCoordinate, hasBall);
 			}
+		} else {
+			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
 
 	private void trapDoorTriggered(Game game, Player<?> player, FieldCoordinate playerCoordinate, boolean hasBall) {
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-			UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, player,
+			UtilServerInjury.handleInjury(this, new InjuryTypeTrapDoorFall(), null, player,
 				playerCoordinate, null, null, ApothecaryMode.TRAP_DOOR)));
 		game.getFieldModel().remove(player);
 		if (hasBall) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, playerCoordinate));
 		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 

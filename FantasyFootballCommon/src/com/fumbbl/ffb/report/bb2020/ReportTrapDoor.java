@@ -15,13 +15,15 @@ public class ReportTrapDoor implements IReport {
 
 	private String playerId;
 	private boolean escaped;
+	private int roll;
 
 	public ReportTrapDoor() {
 	}
 
-	public ReportTrapDoor(String playerId, boolean escaped) {
+	public ReportTrapDoor(String playerId, int roll, boolean escaped) {
 		this.playerId = playerId;
 		this.escaped = escaped;
+		this.roll = roll;
 	}
 
 	public String getPlayerId() {
@@ -32,11 +34,16 @@ public class ReportTrapDoor implements IReport {
 		return escaped;
 	}
 
+	public int getRoll() {
+		return roll;
+	}
+
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.ESCAPED.addTo(jsonObject, escaped);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IJsonOption.ROLL.addTo(jsonObject, roll);
 		return jsonObject;
 	}
 
@@ -45,6 +52,7 @@ public class ReportTrapDoor implements IReport {
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		escaped = IJsonOption.ESCAPED.getFrom(game, jsonObject);
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		roll = IJsonOption.ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -56,6 +64,6 @@ public class ReportTrapDoor implements IReport {
 
 	@Override
 	public IReport transform(IFactorySource source) {
-		return new ReportTrapDoor(playerId, escaped);
+		return new ReportTrapDoor(playerId, roll, escaped);
 	}
 }
