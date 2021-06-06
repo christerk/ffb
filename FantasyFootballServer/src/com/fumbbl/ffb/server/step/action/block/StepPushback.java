@@ -1,9 +1,5 @@
 package com.fumbbl.ffb.server.step.action.block;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
@@ -40,6 +36,10 @@ import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
 /**
  * Step in block sequence to handle pushbacks.
  * 
@@ -73,7 +73,7 @@ public class StepPushback extends AbstractStep {
 		public PushbackSquare[] pushbackSquares;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepPushback(GameState pGameState) {
 		super(pGameState);
@@ -228,8 +228,9 @@ public class StepPushback extends AbstractStep {
 		UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
 		if (fieldModel.isBallMoving() && pCoordinate.equals(fieldModel.getBallCoordinate())) {
 			publishParameter(
-					new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 		}
+		publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, pPlayer.getId()));
 	}
 
 	// JSON serialization

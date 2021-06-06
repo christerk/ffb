@@ -174,8 +174,9 @@ public class StepFollowup extends AbstractStep {
 			if (followupChoice) {
 				followupCoordinate = defenderPosition;
 				publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM,
-						game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
+					game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
 				game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), followupCoordinate);
+				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, actingPlayer.getPlayerId()));
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 					trackNumber = new TrackNumber(coordinateFrom, actingPlayer.getCurrentMove() - 1);

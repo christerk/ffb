@@ -123,6 +123,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		if (hasBall) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, playerCoordinate));
+			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
