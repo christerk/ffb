@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -27,14 +27,14 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step in move sequence to update player position (actually move).
- * 
+ * <p>
  * Expects stepParameter COORDINATE_FROM to be set by a preceding step. Expects
  * stepParameter COORDINATE_TO to be set by a preceding step. Expects
  * stepParameter MOVE_STACK to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepMove extends AbstractStep {
 
 	private FieldCoordinate fCoordinateFrom;
@@ -53,18 +53,18 @@ public class StepMove extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case COORDINATE_FROM:
-				fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
-				return true;
-			case COORDINATE_TO:
-				fCoordinateTo = (FieldCoordinate) pParameter.getValue();
-				return true;
-			case MOVE_STACK:
-				FieldCoordinate[] moveStack = (FieldCoordinate[]) pParameter.getValue();
-				fMoveStackSize = ((moveStack != null) ? moveStack.length : 0);
-				return true;
-			default:
-				break;
+				case COORDINATE_FROM:
+					fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+					return true;
+				case COORDINATE_TO:
+					fCoordinateTo = (FieldCoordinate) pParameter.getValue();
+					return true;
+				case MOVE_STACK:
+					FieldCoordinate[] moveStack = (FieldCoordinate[]) pParameter.getValue();
+					fMoveStackSize = ((moveStack != null) ? moveStack.length : 0);
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -94,7 +94,7 @@ public class StepMove extends AbstractStep {
 			actingPlayer.setCurrentMove(game.getActingPlayer().getCurrentMove() + (actingPlayer.isJumping() ? 2 : 1));
 			game.getFieldModel().add(trackNumber);
 			boolean ballPositionUpdated = game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(),
-					fCoordinateTo);
+				fCoordinateTo);
 			if (ballPositionUpdated) {
 				PlayerResult playerResult = game.getGameResult().getPlayerResult(game.getActingPlayer().getPlayer());
 				int deltaX = 0;
