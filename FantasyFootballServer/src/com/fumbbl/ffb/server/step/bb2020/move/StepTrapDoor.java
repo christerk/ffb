@@ -54,7 +54,13 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if (parameter != null && parameter.getKey() == StepParameterKey.PLAYER_ENTERING_SQUARE) {
-			playerId = (String) parameter.getValue();
+			Game game = getGameState().getGame();
+			FieldModel fieldModel = game.getFieldModel();
+			Player<?> player = game.getPlayerById((String) parameter.getValue());
+			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+			if (isOnTrapDoor(fieldModel, playerCoordinate)) {
+				playerId = (String) parameter.getValue();
+			}
 			consume(parameter);
 			return true;
 		}
@@ -83,7 +89,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
 		boolean hasBall = UtilPlayer.hasBall(game, player);
 
-		if (fieldModel.getTrapDoors().stream().map(TrapDoor::getCoordinate).anyMatch(playerCoordinate::equals)) {
+		if (isOnTrapDoor(fieldModel, playerCoordinate)) {
 
 			if (getReRolledAction() == RE_ROLLED_ACTION) {
 				if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
@@ -103,6 +109,10 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+	}
+
+	private boolean isOnTrapDoor(FieldModel fieldModel, FieldCoordinate playerCoordinate) {
+		return fieldModel.getTrapDoors().stream().map(TrapDoor::getCoordinate).anyMatch(playerCoordinate::equals);
 	}
 
 	private void trapDoorTriggered(Game game, Player<?> player, FieldCoordinate playerCoordinate, boolean hasBall) {

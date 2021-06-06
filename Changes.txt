@@ -1,6 +1,7 @@
 Behaviour Changes:
 
 Technical Changes:
+- new FieldLayer
 
 Areas of Testing:
 
@@ -8,3 +9,4 @@ Areas of Testing:
 Bugfixes:
  - On the Ball move was skipped
  - Some inducement counts did not go down to 0
+ - Diving Tackle caused game crash
