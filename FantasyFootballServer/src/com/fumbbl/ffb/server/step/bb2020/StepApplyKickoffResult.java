@@ -516,6 +516,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	}
 
 	private void handleQuickSnap() {
+		if (fEndKickoff) {
+			return;
+		}
 		Game game = getGameState().getGame();
 		if (game.getTurnMode() == TurnMode.QUICK_SNAP) {
 			if (StringTool.isProvided(movedPlayer) && toCoordinate != null) {
@@ -540,6 +543,14 @@ public final class StepApplyKickoffResult extends AbstractStep {
 						fEndKickoff = true;
 						getResult().addReport(new ReportKickoffSequenceActivationsExhausted(false));
 					}
+
+					getGameState().getStepStack().push(this);
+					Sequence sequence = new Sequence(getGameState());
+					sequence.add(StepId.TRAP_DOOR);
+					sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.TRAP_DOOR));
+					getGameState().getStepStack().push(sequence.getSequence());
+					publishParameter(StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, movedPlayer));
+					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					// In case of lag we might get more requests to move a player than are allowed, so we reset the coordinate also in the client
 					Player<?> player = game.getPlayerById(movedPlayer);
@@ -547,6 +558,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				}
 				movedPlayer = null;
 				toCoordinate = null;
+			} else {
+				getResult().setNextAction(StepAction.CONTINUE);
 			}
 			if (fEndKickoff) {
 				endQuickSnap(game);
