@@ -523,6 +523,14 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (game.getTurnMode() == TurnMode.QUICK_SNAP) {
 			if (StringTool.isProvided(movedPlayer) && toCoordinate != null) {
 				if (nrOfMovedPlayers < nrOfPlayersAllowed) {
+
+					FieldCoordinate normalizedToCoordinate = game.getTeamHome().hasPlayer(game.getPlayerById(movedPlayer)) ? toCoordinate : toCoordinate.transform();
+
+					if (game.getFieldModel().getPlayerCoordinate(game.getPlayerById(movedPlayer)).equals(normalizedToCoordinate)) {
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
+					}
+
 					nrOfMovedPlayers++;
 					UtilServerSetup.setupPlayer(getGameState(), movedPlayer,
 						toCoordinate);
