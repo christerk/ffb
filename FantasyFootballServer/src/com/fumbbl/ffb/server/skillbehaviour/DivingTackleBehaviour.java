@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.server.skillbehaviour;
 
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
@@ -107,11 +107,11 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						// Implicitly, a DT use is normally only triggered if it makes the dodge fail.
 
 						// Check if the dodge is successful with BT (ie. DT was used only to trigger BT)
-						DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+						DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 						Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
-								state.coordinateTo, false));
+							state.coordinateTo, false));
 						int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
-								dodgeModifiers);
+							dodgeModifiers);
 
 						Optional<DodgeModifier> strengthModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
 

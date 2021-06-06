@@ -1,13 +1,5 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -21,6 +13,14 @@ import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilDisturbingPresence;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public abstract class GenerifiedModifierFactory<
 	C extends ModifierContext,

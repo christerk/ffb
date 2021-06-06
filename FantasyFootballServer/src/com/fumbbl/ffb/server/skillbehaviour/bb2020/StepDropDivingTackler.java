@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.move;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -16,21 +16,22 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
  * Step in move sequence to drop a player using the DIVING_TACKLE skill.
- * 
+ * <p>
  * Expects stepParameter COORDINATE_FROM to be set by a preceding step. Expects
  * stepParameter USING_DIVING_TACKLE to be set by a preceding step.
- * 
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepDropDivingTackler extends AbstractStep {
 
 	private boolean fUsingDivingTackle;
@@ -48,14 +49,14 @@ public class StepDropDivingTackler extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case COORDINATE_FROM:
-				fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
-				return true;
-			case USING_DIVING_TACKLE:
-				fUsingDivingTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				return true;
-			default:
-				break;
+				case COORDINATE_FROM:
+					fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+					return true;
+				case USING_DIVING_TACKLE:
+					fUsingDivingTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -82,6 +83,7 @@ public class StepDropDivingTackler extends AbstractStep {
 			game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), fCoordinateFrom);
 			publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
+			publishParameter(StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, game.getDefender().getId()));
 		}
 		// reset DivingTackle & Shadowing attributes
 		game.setDefenderId(null);

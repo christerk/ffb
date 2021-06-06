@@ -3,8 +3,8 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -17,6 +17,8 @@ import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.common.StepShadowing;
 import com.fumbbl.ffb.server.step.action.common.StepShadowing.StepState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
@@ -118,6 +120,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 						game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), state.coordinateFrom);
 						UtilServerPlayerMove.updateMoveSquares(step.getGameState(), actingPlayer.isJumping());
 						ServerUtilBlock.updateDiceDecorations(game);
+						step.publishParameter(StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, game.getDefender().getId()));
 					}
 				}
 				if (doNextStep) {
