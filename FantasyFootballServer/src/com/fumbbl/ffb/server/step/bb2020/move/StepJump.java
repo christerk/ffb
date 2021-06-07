@@ -50,6 +50,7 @@ public class StepJump extends AbstractStepWithReRoll {
 
 	private String goToLabelOnFailure;
 	private FieldCoordinate moveStart;
+	private int roll;
 
 	public StepJump(GameState pGameState) {
 		super(pGameState);
@@ -115,9 +116,7 @@ public class StepJump extends AbstractStepWithReRoll {
 			if (ReRolledActions.JUMP == getReRolledAction()) {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
-					publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, moveStart));
-					getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
+					handleFailure(game);
 					doLeap = false;
 				}
 			}
@@ -130,12 +129,7 @@ public class StepJump extends AbstractStepWithReRoll {
 						getResult().setNextAction(StepAction.NEXT_STEP);
 						break;
 					case FAILURE:
-						actingPlayer.setJumping(false);
-						actingPlayer.setHasJumped(true);
-						actingPlayer.markSkillUsed(NamedProperties.canLeap);
-						publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
-						publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, moveStart));
-						getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
+						handleFailure(game);
 						break;
 					default:
 						break;
@@ -146,9 +140,23 @@ public class StepJump extends AbstractStepWithReRoll {
 		}
 	}
 
+	private void handleFailure(Game game) {
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		actingPlayer.setJumping(false);
+		actingPlayer.setHasJumped(true);
+		actingPlayer.markSkillUsed(NamedProperties.canLeap);
+		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
+		if (roll > 1) {
+			publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, moveStart));
+		} else {
+			publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, null));
+			game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), moveStart);
+		}
+		getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
+	}
 
 	private ActionStatus leap() {
-		ActionStatus status = null;
+		ActionStatus status;
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
@@ -157,7 +165,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer(), moveStart, to));
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
-		int roll = getGameState().getDiceRoller().rollSkill();
+		roll = getGameState().getDiceRoller().rollSkill();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.JUMP) && (getReRollSource() != null));
 		getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll,
@@ -183,6 +191,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
 		IServerJsonOption.MOVE_START.addTo(jsonObject, moveStart);
+		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		return jsonObject;
 	}
 
@@ -192,6 +201,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
 		moveStart = IServerJsonOption.MOVE_START.getFrom(game, jsonObject);
+		roll = IServerJsonOption.ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

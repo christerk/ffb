@@ -188,6 +188,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				case CLIENT_END_TURN:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						fEndKickoff = true;
+						if (TurnMode.QUICK_SNAP == getGameState().getGame().getTurnMode()) {
+							endQuickSnap(getGameState().getGame());
+						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;

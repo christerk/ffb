@@ -11,3 +11,4 @@ Bugfixes:
  - Some inducement counts did not go down to 0
  - Diving Tackle caused game crash
  - Players replaced in original square during quick snap did count towards limit
+ - Natural 1 on Jump did move player to target square
