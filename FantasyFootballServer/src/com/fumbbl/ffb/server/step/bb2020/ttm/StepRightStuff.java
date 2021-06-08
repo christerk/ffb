@@ -39,6 +39,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -131,8 +132,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
-		// skip right stuff step when player has been thrown out of bounds
-		if ((thrownPlayer != null) && game.getFieldModel().getPlayerState(thrownPlayer).getBase() == PlayerState.FALLING) {
+		// skip right stuff step when player has been thrown out of bounds or fell down a trap door
+		List<Integer> playerOffPitch = Arrays.asList(PlayerState.FALLING, PlayerState.RESERVE);
+		if ((thrownPlayer != null) && playerOffPitch.contains(game.getFieldModel().getPlayerState(thrownPlayer).getBase())) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, fThrownPlayerHasBall));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 			getResult().setNextAction(StepAction.NEXT_STEP);

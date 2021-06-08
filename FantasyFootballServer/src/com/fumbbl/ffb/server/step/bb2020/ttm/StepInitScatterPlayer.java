@@ -214,12 +214,14 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
 				publishParameter(new StepParameter(StepParameterKey.CRASH_LANDING, crashLanding));
+				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));
 
-			} else if (crashLanding)  {
+			} else if (crashLanding) {
 				crashLanding = false;
 				publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
 				publishParameter(new StepParameter(StepParameterKey.CRASH_LANDING, crashLanding));
+				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));
 			} else {
 				// put thrown player in target coordinate (ball we be handled in right stuff
 				// step), end loop
@@ -227,6 +229,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
 				game.setDefenderId(null);
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
+				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));
 			}
 		} else {
 			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate,

@@ -35,6 +35,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.TRAP_DOOR;
 	private String playerId;
+	private Boolean thrownPlayerHasBall;
 
 	public StepTrapDoor(GameState pGameState) {
 		super(pGameState);
@@ -53,18 +54,25 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
-		if (parameter != null && parameter.getKey() == StepParameterKey.PLAYER_ENTERING_SQUARE) {
-			Game game = getGameState().getGame();
-			FieldModel fieldModel = game.getFieldModel();
-			Player<?> player = game.getPlayerById((String) parameter.getValue());
-			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
-			if (isOnTrapDoor(fieldModel, playerCoordinate)) {
-				playerId = (String) parameter.getValue();
+		if (parameter != null) {
+			switch (parameter.getKey()) {
+				case PLAYER_ENTERING_SQUARE:
+					Game game = getGameState().getGame();
+					FieldModel fieldModel = game.getFieldModel();
+					Player<?> player = game.getPlayerById((String) parameter.getValue());
+					FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+					if (isOnTrapDoor(fieldModel, playerCoordinate)) {
+						playerId = (String) parameter.getValue();
+					}
+					consume(parameter);
+					return true;
+				case THROWN_PLAYER_HAS_BALL:
+					thrownPlayerHasBall = (Boolean) parameter.getValue();
+					return true;
+				default:
+					break;
 			}
-			consume(parameter);
-			return true;
 		}
-
 		return super.setParameter(parameter);
 	}
 
@@ -87,7 +95,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		FieldModel fieldModel = game.getFieldModel();
 		Player<?> player = game.getPlayerById(playerId);
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
-		boolean hasBall = UtilPlayer.hasBall(game, player);
+		boolean hasBall = thrownPlayerHasBall == null ? UtilPlayer.hasBall(game, player) : thrownPlayerHasBall;
 
 		if (isOnTrapDoor(fieldModel, playerCoordinate)) {
 
@@ -125,6 +133,11 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, playerCoordinate));
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
+		// we are in ttm context so we need to break the scatter loop
+		if (thrownPlayerHasBall != null) {
+			game.setDefenderId(null);
+			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
+		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
@@ -133,13 +146,16 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, thrownPlayerHasBall);
 		return jsonObject;
 	}
 
 	@Override
 	public StepTrapDoor initFrom(IFactorySource source, JsonValue pJsonValue) {
 		super.initFrom(source, pJsonValue);
-		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, UtilJson.toJsonObject(pJsonValue));
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		return this;
 	}
 }
