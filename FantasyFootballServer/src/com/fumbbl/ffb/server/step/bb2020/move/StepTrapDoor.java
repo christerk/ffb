@@ -130,13 +130,15 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		game.getFieldModel().remove(player);
 		if (hasBall) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, playerCoordinate));
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		// we are in ttm context so we need to break the scatter loop
 		if (thrownPlayerHasBall != null) {
 			game.setDefenderId(null);
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
+			if (thrownPlayerHasBall) {
+				game.getFieldModel().setBallCoordinate(playerCoordinate);
+			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
