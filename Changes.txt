@@ -2,6 +2,11 @@ Behaviour Changes:
 
 Technical Changes:
 - new FieldLayer
+- new GameOptions
+    + inducementPrayersCost -> int, cost of a prayer during inducement phase, default 50k
+    + inducementPrayersMax -> int, max allowed prayers during inducement phase, default 0 == unlimited
+    + inducementPrayersUseLeagueTable -> boolean, use league or exhibition table, default true
+    + inducementPrayersAvailableForUnderdog -> boolean, grant prayers for underdog during inducement phase, default true
 
 Areas of Testing:
 

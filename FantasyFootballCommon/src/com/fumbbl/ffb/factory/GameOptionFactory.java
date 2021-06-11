@@ -11,7 +11,6 @@ import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.option.GameOptionString;
 import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 
 /**
@@ -229,6 +228,20 @@ public class GameOptionFactory {
 			case INDUCEMENT_RIOTOUS_ROOKIES_COST:
 				return new GameOptionInt(pOptionId).setDefault(100000)
 					.setMessage("Groups of Riotous Rookies can be purchased for $1 gps each.");
+			case INDUCEMENT_PRAYERS_MAX:
+				return new GameOptionInt(pOptionId).setDefault(50000)
+					.setMessage("Prayers cost $1 gps each.");
+			case INDUCEMENT_PRAYERS_COST:
+				return new GameOptionInt(pOptionId).setDefault(0)
+					.setMessage("Prayers are limited to $1.");
+			case INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Use Prayers from exhibition table.")
+					.setMessageTrue("Use Prayers from league table.");
+			case INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Underdog will not get Prayers during inducement phase.")
+					.setMessageTrue("Underdog will get Prayers during inducement phase.");
 			default:
 				return null;
 		}
