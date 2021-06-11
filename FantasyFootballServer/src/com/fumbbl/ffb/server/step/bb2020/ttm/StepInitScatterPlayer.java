@@ -198,6 +198,11 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		Player<?> playerLandedUpon = null;
 		if (scatterResult.isInBounds()) {
 			playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
+
+			if (playerLandedUpon != null && playerLandedUpon.getId().equals(thrownPlayerId)) {
+				playerLandedUpon = null;
+			}
+
 			if (playerLandedUpon != null) {
 				publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
 				InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null,
@@ -211,7 +216,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				crashLanding = false;
 
 				// continue loop in end step
-				game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
 				publishParameter(new StepParameter(StepParameterKey.CRASH_LANDING, crashLanding));
 				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));

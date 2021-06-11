@@ -12,3 +12,4 @@ Bugfixes:
  - Diving Tackle caused game crash
  - Players replaced in original square during quick snap did count towards limit
  - Natural 1 on Jump did move player to target square
+ - Player hit by ttm was not visible anymore during apo selection

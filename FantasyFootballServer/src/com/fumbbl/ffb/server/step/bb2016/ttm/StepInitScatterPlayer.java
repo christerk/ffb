@@ -175,13 +175,18 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		Player<?> playerLandedUpon = null;
 		if (scatterResult.isInBounds()) {
 			playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
+
+			if (playerLandedUpon != null && playerLandedUpon.getId().equals(fThrownPlayerId)) {
+				playerLandedUpon = null;
+			}
+
 			if (playerLandedUpon != null) {
 				publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
 				InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null,
-						playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
 				if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon))
-						|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon))) {
+					|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon))) {
 					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
 				// continue loop in end step
@@ -190,7 +195,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			} else {
 				// put thrown player in target coordinate (ball we be handled in right stuff
 				// step), end loop
-				game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 				game.getFieldModel().setPlayerState(thrownPlayer, fThrownPlayerState);
 				game.setDefenderId(null);
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
