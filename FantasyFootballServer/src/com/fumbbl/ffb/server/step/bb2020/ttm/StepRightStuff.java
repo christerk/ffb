@@ -39,7 +39,6 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -132,9 +131,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
 		// skip right stuff step when player has been thrown out of bounds or fell down a trap door
-		List<Integer> playerOffPitch = Arrays.asList(PlayerState.FALLING, PlayerState.RESERVE);
-		if ((thrownPlayer != null) && playerOffPitch.contains(game.getFieldModel().getPlayerState(thrownPlayer).getBase())) {
+		if ((thrownPlayer != null) && (game.getFieldModel().getPlayerState(thrownPlayer).getBase() == PlayerState.FALLING || playerCoordinate.isBoxCoordinate())) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, fThrownPlayerHasBall));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 			getResult().setNextAction(StepAction.NEXT_STEP);
@@ -185,7 +184,6 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			}
 		}
 		if (!doRoll) {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
 			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, fumbledKtm ? new InjuryTypeFumbledKtm() : new InjuryTypeTTMLanding(),
 				game.getActingPlayer().getPlayer(), thrownPlayer, playerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
 			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
