@@ -5,7 +5,7 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
-import com.fumbbl.ffb.inducement.Prayer;
+import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;

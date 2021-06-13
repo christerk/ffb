@@ -22,7 +22,7 @@ import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
-import com.fumbbl.ffb.inducement.Prayer;
+import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
