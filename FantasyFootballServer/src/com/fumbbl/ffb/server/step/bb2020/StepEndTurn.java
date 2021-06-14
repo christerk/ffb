@@ -39,8 +39,8 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
-import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
+import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
@@ -353,7 +353,7 @@ public class StepEndTurn extends AbstractStep {
 				HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[0]);
 				String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
 				getResult().addReport(
-						new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers, faintingCount));
+					new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers, faintingCount));
 
 				if (game.isTurnTimeEnabled()) {
 					UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
@@ -362,6 +362,10 @@ public class StepEndTurn extends AbstractStep {
 
 				deactivateCards(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
 				deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
+
+				if (fNewHalf) {
+					deactivateCards(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
+				}
 
 				if (fNewHalf || fTouchdown) {
 					deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
@@ -606,6 +610,7 @@ public class StepEndTurn extends AbstractStep {
 	}
 
 	private void deactivateCards(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
+		// TODO Prayers
 		if (pDuration == null) {
 			return;
 		}

@@ -51,6 +51,8 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Kickoff;
@@ -500,13 +502,16 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		int newTvHome = getGameState().getGame().getTeamHome().getTeamValue() + spentMoneyHome;
 		int newTvAway = getGameState().getGame().getTeamAway().getTeamValue() + spentMoneyAway;
 
+		publishParameter(StepParameter.from(StepParameterKey.TV_HOME, newTvHome));
+		publishParameter(StepParameter.from(StepParameterKey.TV_AWAY, newTvAway));
+
 		getResult().addReport(generateReport(getGameState().getGame().getTeamHome(), usedInducementGoldHome, newTvHome));
 		getResult().addReport(generateReport(getGameState().getGame().getTeamAway(), usedInducementGoldAway, newTvAway));
 
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-		((Kickoff)factory.forName(SequenceGenerator.Type.Kickoff.name()))
-				.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
+		((Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name()))
+			.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
 
 		com.fumbbl.ffb.server.step.generator.common.Inducement generator =
 			((com.fumbbl.ffb.server.step.generator.common.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()));

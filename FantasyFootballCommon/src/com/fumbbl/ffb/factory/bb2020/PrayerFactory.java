@@ -45,7 +45,7 @@ public class PrayerFactory implements INamedObjectFactory<Prayer> {
 
 	@Override
 	public void initialize(Game game) {
-		boolean useLeagueTable = ((GameOptionBoolean) game.getOptions().getOption(GameOptionId.INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE)).isEnabled();
+		boolean useLeagueTable = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE)).isEnabled();
 		Prayers allPrayers = new Prayers();
 		prayers = new HashMap<>(allPrayers.getExhibitionPrayers());
 		if (useLeagueTable) {
