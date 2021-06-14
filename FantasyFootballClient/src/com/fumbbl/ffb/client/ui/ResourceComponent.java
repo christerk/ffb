@@ -208,11 +208,11 @@ public class ResourceComponent extends JPanel {
 			fRefreshNecessary |= (prayers.size() != currentPrayers);
 			currentPrayers = prayers.size();
 			if (currentPrayers > 0) {
-				ResourceSlot cardsSlot = fSlots[slotIndex.getAndIncrement()];
-				cardsSlot.setPlural("Prayers");
-				cardsSlot.setSingular("Prayer");
-				cardsSlot.setValue(currentPrayers);
-				cardsSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
+				ResourceSlot prayerSlot = fSlots[slotIndex.getAndIncrement()];
+				prayerSlot.setPlural("Prayers");
+				prayerSlot.setSingular("Prayer");
+				prayerSlot.setValue(currentPrayers);
+				prayerSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
 			}
 		}
 

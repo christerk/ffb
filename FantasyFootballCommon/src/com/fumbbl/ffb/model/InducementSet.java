@@ -332,14 +332,22 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 			fCardsActive.clear();
 			fCardsDeactivated.clear();
 		}
-		if (_XML_TAG_CARD_SET.equals(pXmlTag)) {
-			prayers.clear();
-		}
 		if (_XML_TAG_CARD.equals(pXmlTag)) {
 			String cardName = pXmlAttributes.getValue(_XML_ATTRIBUTE_NAME).trim();
 			Card card = game.<CardFactory>getFactory(Factory.CARD).forName(cardName);
 			if (card != null) {
 				fCardsAvailable.add(card);
+			}
+		}
+		if (_XML_TAG_PRAYER_SET.equals(pXmlTag)) {
+			prayers.clear();
+		}
+
+		if (_XML_TAG_PRAYER.equals(pXmlTag)) {
+			String prayerName = pXmlAttributes.getValue(_XML_ATTRIBUTE_NAME).trim();
+			Prayer prayer = game.<PrayerFactory>getFactory(Factory.PRAYER).forName(prayerName);
+			if (prayer != null) {
+				prayers.add(prayer);
 			}
 		}
 		return xmlElement;
