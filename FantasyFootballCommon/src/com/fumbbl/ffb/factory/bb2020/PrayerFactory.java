@@ -7,11 +7,14 @@ import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.inducement.bb2020.Prayers;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @FactoryType(FactoryType.Factory.PRAYER)
 @RulesCollection(Rules.BB2020)
@@ -29,6 +32,15 @@ public class PrayerFactory implements INamedObjectFactory<Prayer> {
 
 	public Prayer forRoll(int roll) {
 		return prayers.get(roll);
+	}
+
+	public List<Integer> availablePrayerRolls(InducementSet teamInducements, InducementSet opponentInducements) {
+		return prayers.entrySet().stream().filter(entry ->
+		{
+			Prayer prayer = entry.getValue();
+			return !teamInducements.getPrayers().contains(prayer)
+				&& !(prayer.affectsBothTeams() && opponentInducements.getPrayers().contains(prayer));
+		}).map(Map.Entry::getKey).collect(Collectors.toList());
 	}
 
 	@Override
