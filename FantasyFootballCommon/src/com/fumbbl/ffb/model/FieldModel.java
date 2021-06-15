@@ -102,6 +102,10 @@ public class FieldModel implements IJsonSerializable {
 		notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_TRAP_DOOR, null, trapDoor);
 	}
 
+	public void clearTrapdoors() {
+		trapDoors.forEach(this::remove);
+	}
+
 	public Set<OnPitchEnhancement> getOnPitchEnhancements() {
 		return new HashSet<>(trapDoors);
 	}
