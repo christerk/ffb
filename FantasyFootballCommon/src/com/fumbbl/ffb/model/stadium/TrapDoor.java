@@ -49,7 +49,6 @@ public class TrapDoor implements OnPitchEnhancement, IJsonSerializable {
 		return new TrapDoor(coordinate.transform());
 	}
 
-
 	@Override
 	public TrapDoor initFrom(IFactorySource game, JsonValue pJsonValue) {
 		coordinate = IJsonOption.COORDINATE.getFrom(game, UtilJson.toJsonObject(pJsonValue));

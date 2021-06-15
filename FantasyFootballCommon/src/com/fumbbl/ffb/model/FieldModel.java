@@ -70,7 +70,7 @@ public class FieldModel implements IJsonSerializable {
 	private BlitzState blitzState;
 	private final Set<String> multiBlockTargets = new HashSet<>();
 	private final Set<FieldCoordinate> multiBlockTargetCoordinates = new HashSet<>();
-	private final Set<TrapDoor> trapDoors = new HashSet<>();
+	private final List<TrapDoor> trapDoors = new ArrayList<>();
 
 	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
 	// reconstructed
@@ -103,7 +103,9 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public void clearTrapdoors() {
-		trapDoors.forEach(this::remove);
+		while (!trapDoors.isEmpty()) {
+			remove(trapDoors.get(0));
+		}
 	}
 
 	public Set<OnPitchEnhancement> getOnPitchEnhancements() {

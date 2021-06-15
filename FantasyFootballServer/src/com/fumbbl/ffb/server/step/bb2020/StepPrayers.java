@@ -8,6 +8,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.report.bb2020.ReportPrayerAmount;
@@ -79,11 +80,16 @@ public class StepPrayers extends AbstractStep {
 			prayerAmount = Math.min(prayerAmount, availablePrayerRolls.size());
 			getResult().addReport(new ReportPrayerAmount(tvHome, tvAway, prayerAmount, homeTeamReceivesPrayers));
 
+			Team prayingTeam = homeTeamReceivesPrayers ? game.getTeamHome() : game.getTeamAway();
+
 			Sequence sequence = new Sequence(getGameState());
 			while (prayerAmount-- > 0) {
 				Collections.shuffle(availablePrayerRolls);
 				int roll = availablePrayerRolls.remove(0);
-				sequence.add(StepId.PRAYER, StepParameter.from(StepParameterKey.PRAYER_ROLL, roll));
+				sequence.add(StepId.PRAYER,
+					StepParameter.from(StepParameterKey.PRAYER_ROLL, roll),
+					StepParameter.from(StepParameterKey.TEAM_ID, prayingTeam.getId())
+				);
 			}
 
 			getGameState().getStepStack().push(sequence.getSequence());

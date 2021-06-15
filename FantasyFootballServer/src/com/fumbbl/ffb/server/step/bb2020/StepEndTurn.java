@@ -21,6 +21,7 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -46,6 +47,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.ServerMode;
+import com.fumbbl.ffb.server.factory.PrayerHandlerFactory;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
@@ -360,15 +362,15 @@ public class StepEndTurn extends AbstractStep {
 					game.setTurnTime(0);
 				}
 
-				deactivateCards(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
-				deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
+				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
+				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
 
 				if (fNewHalf) {
-					deactivateCards(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
+					deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
 				}
 
 				if (fNewHalf || fTouchdown) {
-					deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
+					deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
 					reportSecretWeaponsUsed();
 					removeBrilliantCoachingReRolls(true);
 					removeBrilliantCoachingReRolls(false);
@@ -609,11 +611,42 @@ public class StepEndTurn extends AbstractStep {
 		return allSuccessful;
 	}
 
-	private void deactivateCards(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
-		// TODO Prayers
+	private void deactivateCardsAndPrayers(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
 		if (pDuration == null) {
 			return;
 		}
+		deactivateCards(pDuration, pIsHomeTurnEnding);
+		deactivatePrayers(pDuration, pIsHomeTurnEnding);
+	}
+
+	private void deactivatePrayers(InducementDuration duration, boolean isHomeTurnEnding) {
+		Game game = getGameState().getGame();
+		for (Prayer prayer : game.getTurnDataHome().getInducementSet().getPrayers()) {
+			if (duration == prayer.getDuration()) {
+				if (duration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && isHomeTurnEnding) {
+					continue;
+				}
+				deactivatePrayer(prayer, game.getTurnDataHome().getInducementSet());
+			}
+		}
+		for (Prayer prayer : game.getTurnDataAway().getInducementSet().getPrayers()) {
+			if (duration == prayer.getDuration()) {
+				if (duration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && !isHomeTurnEnding) {
+					continue;
+				}
+				deactivatePrayer(prayer, game.getTurnDataAway().getInducementSet());
+			}
+		}
+	}
+
+	private void deactivatePrayer(Prayer prayer, InducementSet inducementSet) {
+		inducementSet.removePrayer(prayer);
+		PrayerHandlerFactory handlerFactory = getGameState().getGame().getFactory(FactoryType.Factory.PRAYER_HANDLER);
+		handlerFactory.forPrayer(prayer).ifPresent(handler -> handler.removeEffect(getGameState().getGame()));
+	}
+
+	private void deactivateCards(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
+
 		Game game = getGameState().getGame();
 		for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
 			if (pDuration == card.getDuration()) {
