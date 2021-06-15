@@ -117,8 +117,9 @@ public enum StepId implements INamedObject {
 	PLACE_BALL("placeBall"), // skill.safePairOfHands
 	PLAY_CARD("playCard"), // phase.inducement
 	PLAYER_LOSS("playerLoss"), // game.end
+	PRAYER("prayer"), // phase.kickoff
 	PRAYERS("prayers"), // phase.kickoff
-	PROJECILE_VOMIT("projectileVomit"),
+	PROJECTILE_VOMIT("projectileVomit"),
 	PUSHBACK("pushback"), // action.block
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start

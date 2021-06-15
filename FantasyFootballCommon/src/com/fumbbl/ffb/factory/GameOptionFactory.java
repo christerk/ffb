@@ -228,10 +228,10 @@ public class GameOptionFactory {
 			case INDUCEMENT_RIOTOUS_ROOKIES_COST:
 				return new GameOptionInt(pOptionId).setDefault(100000)
 					.setMessage("Groups of Riotous Rookies can be purchased for $1 gps each.");
-			case INDUCEMENT_PRAYERS_MAX:
+			case INDUCEMENT_PRAYERS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Prayers cost $1 gps each.");
-			case INDUCEMENT_PRAYERS_COST:
+			case INDUCEMENT_PRAYERS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(0)
 					.setMessage("Prayers are limited to $1.");
 			case INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE:

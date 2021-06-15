@@ -24,7 +24,7 @@ public class ReportPrayerRoll implements IReport {
 	}
 
 	public ReportId getId() {
-		return ReportId.PRAYER_AMOUNT;
+		return ReportId.PRAYER_ROLL;
 	}
 
 	public int getRoll() {

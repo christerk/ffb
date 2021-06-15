@@ -2,14 +2,26 @@ package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.GameOptionInt;
+import com.fumbbl.ffb.report.bb2020.ReportPrayerAmount;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.generator.Sequence;
+
+import java.util.Collections;
+import java.util.List;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepPrayers extends AbstractStep {
@@ -47,6 +59,37 @@ public class StepPrayers extends AbstractStep {
 	@Override
 	public void start() {
 
+		Game game = getGameState().getGame();
+		int maxPrayers = ((GameOptionInt) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_MAX)).getValue();
+		int prayerAmount = Math.abs(tvAway - tvHome) / ((GameOptionInt) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_COST)).getValue();
+
+		if (maxPrayers > 0) {
+			prayerAmount = Math.min(maxPrayers, prayerAmount);
+		}
+
+		if (prayerAmount > 0) {
+			boolean homeTeamReceivesPrayers = tvHome < tvAway;
+			PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
+			List<Integer> availablePrayerRolls;
+			if (homeTeamReceivesPrayers) {
+				availablePrayerRolls = prayerFactory.availablePrayerRolls(game.getTurnDataHome().getInducementSet(), game.getTurnDataAway().getInducementSet());
+			} else {
+				availablePrayerRolls = prayerFactory.availablePrayerRolls(game.getTurnDataAway().getInducementSet(), game.getTurnDataHome().getInducementSet());
+			}
+			prayerAmount = Math.min(prayerAmount, availablePrayerRolls.size());
+			getResult().addReport(new ReportPrayerAmount(tvHome, tvAway, prayerAmount, homeTeamReceivesPrayers));
+
+			Sequence sequence = new Sequence(getGameState());
+			while (prayerAmount-- > 0) {
+				Collections.shuffle(availablePrayerRolls);
+				int roll = availablePrayerRolls.remove(0);
+				sequence.add(StepId.PRAYER, StepParameter.from(StepParameterKey.PRAYER_ROLL, roll));
+			}
+
+			getGameState().getStepStack().push(sequence.getSequence());
+		}
+
+		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	@Override

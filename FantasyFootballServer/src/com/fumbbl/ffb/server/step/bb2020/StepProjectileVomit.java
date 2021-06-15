@@ -43,7 +43,7 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 	}
 
 	public StepId getId() {
-		return StepId.PROJECILE_VOMIT;
+		return StepId.PROJECTILE_VOMIT;
 	}
 
 	@Override

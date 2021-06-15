@@ -36,6 +36,7 @@ import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
+import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDoubleHiredStarPlayer;
@@ -54,6 +55,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Kickoff;
 import com.fumbbl.ffb.server.step.generator.common.RiotousRookies;
@@ -502,9 +504,6 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		int newTvHome = getGameState().getGame().getTeamHome().getTeamValue() + spentMoneyHome;
 		int newTvAway = getGameState().getGame().getTeamAway().getTeamValue() + spentMoneyAway;
 
-		publishParameter(StepParameter.from(StepParameterKey.TV_HOME, newTvHome));
-		publishParameter(StepParameter.from(StepParameterKey.TV_AWAY, newTvAway));
-
 		getResult().addReport(generateReport(getGameState().getGame().getTeamHome(), usedInducementGoldHome, newTvHome));
 		getResult().addReport(generateReport(getGameState().getGame().getTeamAway(), usedInducementGoldAway, newTvAway));
 
@@ -528,6 +527,17 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		}
 		((RiotousRookies) factory.forName(SequenceGenerator.Type.RiotousRookies.name()))
 			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+
+		boolean usePrayers = ((GameOptionBoolean) getGameState().getGame().getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG)).isEnabled();
+
+		if (usePrayers) {
+			Sequence prayerSequence = new Sequence(getGameState());
+			prayerSequence.add(StepId.PRAYERS);
+			getGameState().getStepStack().push(prayerSequence.getSequence());
+			publishParameter(StepParameter.from(StepParameterKey.TV_HOME, newTvHome));
+			publishParameter(StepParameter.from(StepParameterKey.TV_AWAY, newTvAway));
+		}
+
 		Game game = getGameState().getGame();
 		int unspentMoneyHome = availableInducementGoldHome - usedInducementGoldHome;
 		int spentTreasuryHome = Math.max(0, game.getTeamHome().getTreasury() - unspentMoneyHome);
