@@ -1,5 +1,6 @@
 Behaviour Changes:
 - Prayer are available
+- Added /prayer <roll> command to add prayers
 
 Technical Changes:
 - new FieldLayer

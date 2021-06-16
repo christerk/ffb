@@ -1,16 +1,15 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.Dimension;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.model.Game;
 
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.InternalFrameEvent;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.model.Game;
+import java.awt.Dimension;
 
 public class DialogChatCommands extends Dialog {
 
@@ -177,24 +176,30 @@ public class DialogChatCommands extends Dialog {
 			html.append("</tr>\n");
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/pitch &lt;name&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
+				.append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN).append("changes the pitch (all weather conditions).").append(_FONT_CLOSE)
-					.append("</td>\n");
+				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/pitches").append(_FONT_BOLD_CLOSE).append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN).append("lists all available pitches.").append(_FONT_CLOSE)
-					.append("</td>\n");
+				.append("</td>\n");
+			html.append("</tr>\n");
+			html.append("<tr>\n");
+			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prayer &lt;roll&gt;").append(_FONT_BOLD_CLOSE)
+				.append("</td>\n");
+			html.append("<td>").append(_FONT_OPEN).append("adds the prayer for this roll to your team.").append(_FONT_CLOSE)
+				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prone &lt;playerlist&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
+				.append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN).append("places players on your team prone.").append(_FONT_CLOSE)
-					.append("</td>\n");
+				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/roll &lt;roll1&gt; &lt;roll2&gt; &lt;roll3&gt; &lt;...&gt;")
-					.append(_FONT_BOLD_CLOSE).append("</td>\n");
+				.append(_FONT_BOLD_CLOSE).append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN).append("determines the next dicerolls (separated by space).")
 					.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");

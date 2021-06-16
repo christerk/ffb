@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
+import com.sun.istack.internal.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,10 +28,12 @@ public class TreacherousTrapdoorHandler extends PrayerHandler {
 	}
 
 	@Override
-	public void add(IStep step, Game game, Team prayingTeam) {
+	public void add(@Nullable IStep step, Game game, Team prayingTeam) {
 		FieldModel fieldModel = game.getFieldModel();
 		trapdoorCoordinates.stream().map(TrapDoor::new).forEach(fieldModel::add);
-		step.getResult().setNextAction(StepAction.NEXT_STEP);
+		if (step != null) {
+			step.getResult().setNextAction(StepAction.NEXT_STEP);
+		}
 	}
 
 	@Override

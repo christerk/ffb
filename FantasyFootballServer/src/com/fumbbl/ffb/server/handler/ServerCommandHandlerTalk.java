@@ -16,7 +16,9 @@ import com.fumbbl.ffb.factory.GameOptionIdFactory;
 import com.fumbbl.ffb.factory.SeriousInjuryFactory;
 import com.fumbbl.ffb.factory.SoundIdFactory;
 import com.fumbbl.ffb.factory.WeatherFactory;
+import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
+import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
@@ -34,6 +36,7 @@ import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.factory.PrayerHandlerFactory;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.ServerCommunication;
@@ -101,6 +104,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					handlePitchesCommand(gameState, talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/pitch")) {
 					handlePitchCommand(gameState, talkCommand);
+				} else if (isTestMode(gameState) && talk.startsWith("/prayer")) {
+					handlePrayerCommand(gameState, talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/prone")) {
 					handleProneOrStunCommand(gameState, talkCommand, false, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/roll")) {
@@ -448,8 +453,43 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		UtilServerGame.syncGameModel(gameState, null, null, null);
 	}
 
+	private void handlePrayerCommand(GameState gameState, ClientCommandTalk talkCommand, Session session) {
+		Game game = gameState.getGame();
+		SessionManager sessionManager = getServer().getSessionManager();
+		String talk = talkCommand.getTalk();
+		String[] commands = talk.split(" +");
+		if (commands.length < 2) {
+			return;
+		}
+
+		int roll;
+		try {
+			roll = Integer.parseInt(commands[1]);
+		} catch (NumberFormatException ex) {
+			return;
+		}
+
+		Prayer prayer = gameState.getGame().<PrayerFactory>getFactory(Factory.PRAYER).forRoll(roll);
+		if (prayer == null) {
+			return;
+		}
+		boolean homeCoach = (sessionManager.getSessionOfHomeCoach(game.getId()) == session);
+
+		PrayerHandlerFactory handlerFactory = game.getFactory(FactoryType.Factory.PRAYER_HANDLER);
+
+		handlerFactory.forPrayer(prayer).ifPresent(handler ->
+			handler.addEffect(null, game, homeCoach ? game.getTeamHome().getId() : game.getTeamAway().getId()));
+
+
+		String info = "Added prayer " + prayer.getName() + " for coach " +
+			(homeCoach ? game.getTeamHome().getCoach() : game.getTeamAway().getCoach()) + ".";
+		getServer().getCommunication().sendPlayerTalk(gameState, null, info);
+
+		UtilServerGame.syncGameModel(gameState, null, null, null);
+	}
+
 	private void handleProneOrStunCommand(GameState gameState, ClientCommandTalk talkCommand, boolean stun,
-			Session session) {
+	                                      Session session) {
 		Game game = gameState.getGame();
 		SessionManager sessionManager = getServer().getSessionManager();
 		String talk = talkCommand.getTalk();
