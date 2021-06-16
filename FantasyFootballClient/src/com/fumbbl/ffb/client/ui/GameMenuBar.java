@@ -97,22 +97,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem fIconsRosterBoth;
 	private final JRadioButtonMenuItem fIconsTeam;
 
-	private final JMenu fAutomoveMenu;
 	private final JRadioButtonMenuItem fAutomoveOnMenuItem;
 	private final JRadioButtonMenuItem fAutomoveOffMenuItem;
 
-	private final JMenu fPitchMenu;
-
-	private final JMenu fPitchCustomizationMenu;
 	private final JRadioButtonMenuItem fCustomPitchMenuItem;
 	private final JRadioButtonMenuItem fDefaultPitchMenuItem;
 	private final JRadioButtonMenuItem fBasicPitchMenuItem;
 
-	private final JMenu fPitchMarkingsMenu;
 	private final JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
 	private final JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
 
-	private final JMenu fTeamLogoMenu;
 	private final JRadioButtonMenuItem fTeamLogoBothMenuItem;
 	private final JRadioButtonMenuItem fTeamLogoOwnMenuItem;
 	private final JRadioButtonMenuItem fTeamLogoNoneMenuItem;
@@ -120,23 +114,17 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem fPitchWeatherOnMenuItem;
 	private final JRadioButtonMenuItem fPitchWeatherOffMenuItem;
 
-	private final JMenu fRangeGridMenu;
 	private final JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
 	private final JRadioButtonMenuItem fRangeGridToggleMenuItem;
 
 	private final JMenu fMissingPlayersMenu;
 
 	private final JMenu fInducementsMenu;
-	private JMenu fInducementsHomeMenu;
-	private JMenu fInducementsAwayMenu;
 
 	private final JMenu fActiveCardsMenu;
-	private JMenu fActiveCardsHomeMenu;
-	private JMenu fActiveCardsAwayMenu;
 
 	private final JMenu fGameOptionsMenu;
 
-	private final JMenu fHelpMenu;
 	private final JMenuItem fAboutMenuItem;
 	private final JMenuItem fChatCommandsMenuItem;
 	private final JMenuItem fKeyBindingsMenuItem;
@@ -280,7 +268,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		iconsGroup.add(fIconsAbstract);
 		fIconsMenu.add(fIconsAbstract);
 
-		fAutomoveMenu = new JMenu("Automove");
+		JMenu fAutomoveMenu = new JMenu("Automove");
 		fAutomoveMenu.setMnemonic(KeyEvent.VK_A);
 		fUserSettingsMenu.add(fAutomoveMenu);
 
@@ -296,11 +284,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		automoveGroup.add(fAutomoveOffMenuItem);
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
 
-		fPitchMenu = new JMenu("Pitch");
+		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		fUserSettingsMenu.add(fPitchMenu);
 
-		fPitchCustomizationMenu = new JMenu("Pitch Customization");
+		JMenu fPitchCustomizationMenu = new JMenu("Pitch Customization");
 		fPitchCustomizationMenu.setMnemonic(KeyEvent.VK_C);
 		fPitchMenu.add(fPitchCustomizationMenu);
 
@@ -321,7 +309,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		pitchCustomGroup.add(fBasicPitchMenuItem);
 		fPitchCustomizationMenu.add(fBasicPitchMenuItem);
 
-		fPitchMarkingsMenu = new JMenu("Pitch Markings");
+		JMenu fPitchMarkingsMenu = new JMenu("Pitch Markings");
 		fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_M);
 		fPitchMenu.add(fPitchMarkingsMenu);
 
@@ -337,7 +325,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		tdDistanceGroup.add(fPitchMarkingsOffMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOffMenuItem);
 
-		fTeamLogoMenu = new JMenu("Team Logo");
+		JMenu fTeamLogoMenu = new JMenu("Team Logo");
 		fTeamLogoMenu.setMnemonic(KeyEvent.VK_T);
 		fPitchMenu.add(fTeamLogoMenu);
 
@@ -374,7 +362,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		pitchWeatherGroup.add(fPitchWeatherOffMenuItem);
 		fPitchWeatherMenu.add(fPitchWeatherOffMenuItem);
 
-		fRangeGridMenu = new JMenu("Range Grid");
+		JMenu fRangeGridMenu = new JMenu("Range Grid");
 		fRangeGridMenu.setMnemonic(KeyEvent.VK_R);
 		fUserSettingsMenu.add(fRangeGridMenu);
 
@@ -417,7 +405,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fGameOptionsMenu.setEnabled(false);
 		add(fGameOptionsMenu);
 
-		fHelpMenu = new JMenu("Help");
+		JMenu fHelpMenu = new JMenu("Help");
 		fHelpMenu.setMnemonic(KeyEvent.VK_H);
 		add(fHelpMenu);
 
@@ -634,21 +622,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void changeState(ClientStateId pStateId) {
 		Game game = getClient().getGame();
-		switch (pStateId) {
-		case SETUP:
+		if (pStateId == ClientStateId.SETUP) {
 			boolean setupEnabled = (game.getTurnMode() != TurnMode.QUICK_SNAP);
 			fLoadSetupMenuItem.setEnabled(setupEnabled);
 			fSaveSetupMenuItem.setEnabled(setupEnabled);
 			fRestoreDefaultsMenuItem.setEnabled(true);
-			break;
-		default:
+		} else {
 			fLoadSetupMenuItem.setEnabled(false);
 			fSaveSetupMenuItem.setEnabled(false);
 			fSoundOnMenuItem.setEnabled(true);
 			fSoundMuteSpectatorsMenuItem.setEnabled(true);
 			fSoundOffMenuItem.setEnabled(true);
 			fRestoreDefaultsMenuItem.setEnabled(true);
-			break;
 		}
 	}
 
@@ -685,24 +670,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	public void updateGameOptions() {
 		fGameOptionsMenu.removeAll();
 		IGameOption[] gameOptions = getClient().getGame().getOptions().getOptions();
-		Arrays.sort(gameOptions, new Comparator<IGameOption>() {
-			public int compare(IGameOption pO1, IGameOption pO2) {
-				return pO1.getId().getName().compareTo(pO2.getId().getName());
-			}
-		});
+		Arrays.sort(gameOptions, Comparator.comparing(pO -> pO.getId().getName()));
 		int optionsAdded = 0;
 		if (getClient().getGame().isTesting()) {
 			JMenuItem optionItem = new JMenuItem(
-					"* Game is in TEST mode. No results will be uploaded. See help for available test commands.");
+				"* Game is in TEST mode. No results will be uploaded. See help for available test commands.");
 			fGameOptionsMenu.add(optionItem);
 			optionsAdded++;
 		}
 		for (IGameOption option : gameOptions) {
 			if (option.isChanged() && (option.getId() != GameOptionId.TEST_MODE)
-					&& StringTool.isProvided(option.getDisplayMessage())) {
-				StringBuilder optionText = new StringBuilder();
-				optionText.append("* ").append(option.getDisplayMessage());
-				JMenuItem optionItem = new JMenuItem(optionText.toString());
+				&& StringTool.isProvided(option.getDisplayMessage())) {
+				JMenuItem optionItem = new JMenuItem("* " + option.getDisplayMessage());
 				fGameOptionsMenu.add(optionItem);
 				optionsAdded++;
 			}
@@ -753,13 +732,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		if (refreshNecessary) {
 
-			fInducementsHomeMenu = null;
-			fInducementsAwayMenu = null;
+			JMenu fInducementsHomeMenu;
+			JMenu fInducementsAwayMenu;
 			fInducementsMenu.removeAll();
 
 			if (fCurrentInducementTotalHome > 0) {
-				StringBuilder menuText = new StringBuilder().append(totalInducementHome).append(" Home Team");
-				fInducementsHomeMenu = new JMenu(menuText.toString());
+				fInducementsHomeMenu = new JMenu(totalInducementHome + " Home Team");
 				fInducementsHomeMenu.setForeground(Color.RED);
 				fInducementsHomeMenu.setMnemonic(KeyEvent.VK_H);
 				fInducementsMenu.add(fInducementsHomeMenu);
@@ -767,8 +745,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 
 			if (fCurrentInducementTotalAway > 0) {
-				StringBuilder menuText = new StringBuilder().append(totalInducementAway).append(" Away Team");
-				fInducementsAwayMenu = new JMenu(menuText.toString());
+				fInducementsAwayMenu = new JMenu(totalInducementAway + " Away Team");
 				fInducementsAwayMenu.setForeground(Color.BLUE);
 				fInducementsAwayMenu.setMnemonic(KeyEvent.VK_A);
 				fInducementsMenu.add(fInducementsAwayMenu);
@@ -815,8 +792,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			fActiveCardsMenu.removeAll();
 
 			if (ArrayTool.isProvided(fCurrentActiveCardsHome)) {
-				StringBuilder menuText = new StringBuilder().append(fCurrentActiveCardsHome.length).append(" Home Team");
-				fActiveCardsHomeMenu = new JMenu(menuText.toString());
+				JMenu fActiveCardsHomeMenu = new JMenu(fCurrentActiveCardsHome.length + " Home Team");
 				fActiveCardsHomeMenu.setForeground(Color.RED);
 				fActiveCardsHomeMenu.setMnemonic(KeyEvent.VK_H);
 				fActiveCardsMenu.add(fActiveCardsHomeMenu);
@@ -824,8 +800,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 
 			if (ArrayTool.isProvided(fCurrentActiveCardsAway)) {
-				StringBuilder menuText = new StringBuilder().append(fCurrentActiveCardsAway.length).append(" Away Team");
-				fActiveCardsAwayMenu = new JMenu(menuText.toString());
+				JMenu fActiveCardsAwayMenu = new JMenu(fCurrentActiveCardsAway.length + " Away Team");
 				fActiveCardsAwayMenu.setForeground(Color.BLUE);
 				fActiveCardsAwayMenu.setMnemonic(KeyEvent.VK_A);
 				fActiveCardsMenu.add(fActiveCardsAwayMenu);
@@ -973,12 +948,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 						userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
 				for (Card card : cardList) {
 					if (pInducementSet.isAvailable(card)) {
-						StringBuilder cardText = new StringBuilder();
-						cardText.append("<html>");
-						cardText.append("<b>").append(card.getName()).append("</b>");
-						cardText.append("<br>").append(card.getHtmlDescriptionWithPhases());
-						cardText.append("</html>");
-						JMenuItem cardItem = new JMenuItem(cardText.toString(), cardIcon);
+						String cardText = "<html>" +
+							"<b>" + card.getName() + "</b>" +
+							"<br>" + card.getHtmlDescriptionWithPhases() +
+							"</html>";
+						JMenuItem cardItem = new JMenuItem(cardText, cardIcon);
 						cardMenu.add(cardItem);
 					}
 				}
