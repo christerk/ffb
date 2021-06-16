@@ -41,6 +41,7 @@ import com.fumbbl.ffb.report.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
+import com.fumbbl.ffb.report.bb2020.ReportPrayerEnd;
 import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -643,6 +644,7 @@ public class StepEndTurn extends AbstractStep {
 		inducementSet.removePrayer(prayer);
 		PrayerHandlerFactory handlerFactory = getGameState().getGame().getFactory(FactoryType.Factory.PRAYER_HANDLER);
 		handlerFactory.forPrayer(prayer).ifPresent(handler -> handler.removeEffect(getGameState().getGame()));
+		getResult().addReport(new ReportPrayerEnd(prayer));
 	}
 
 	private void deactivateCards(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
