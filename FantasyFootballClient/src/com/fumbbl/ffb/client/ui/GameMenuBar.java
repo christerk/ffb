@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.ui;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.ConcedeGameStatus;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -24,10 +25,12 @@ import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
@@ -59,6 +62,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -123,6 +127,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final JMenu fActiveCardsMenu;
 
+	private final JMenu prayersMenu;
+
 	private final JMenu fGameOptionsMenu;
 
 	private final JMenuItem fAboutMenuItem;
@@ -138,6 +144,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private Card[] fCurrentActiveCardsHome;
 	private Card[] fCurrentActiveCardsAway;
+
+	private final List<Prayer> currentPrayersHome = new ArrayList<>();
+	private final List<Prayer> currentPrayersAway = new ArrayList<>();
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
@@ -400,6 +409,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fActiveCardsMenu.setEnabled(false);
 		add(fActiveCardsMenu);
 
+		prayersMenu = new JMenu("Prayers");
+		prayersMenu.setMnemonic(KeyEvent.VK_P);
+		prayersMenu.setEnabled(false);
+		add(prayersMenu);
+
 		fGameOptionsMenu = new JMenu("Game Options");
 		fGameOptionsMenu.setMnemonic(KeyEvent.VK_O);
 		fGameOptionsMenu.setEnabled(false);
@@ -479,13 +493,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
 		fGameConcessionMenuItem.setEnabled(gameStarted && game.isHomePlaying()
-				&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
+			&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
 
 		fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
 
 		updateMissingPlayers();
 		updateInducements();
 		updateActiveCards();
+		updatePrayers();
 		updateGameOptions();
 
 	}
@@ -770,7 +785,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	public void updateActiveCards() {
+	private void updateActiveCards() {
 
 		boolean refreshNecessary = false;
 		Game game = getClient().getGame();
@@ -855,6 +870,76 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				JMenuItem cardMenuItem = new JMenuItem(cardText.toString(), cardIcon);
 				pCardsMenu.add(cardMenuItem);
 			}
+		}
+	}
+
+	private void updatePrayers() {
+
+		boolean refreshNecessary = false;
+		Game game = getClient().getGame();
+
+		Set<Prayer> prayersHome = game.getTurnDataHome().getInducementSet().getPrayers();
+		if (prayersHome.size() != currentPrayersHome.size()) {
+			PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
+			currentPrayersHome.clear();
+			currentPrayersHome.addAll(prayerFactory.sort(prayersHome));
+			refreshNecessary = true;
+		}
+
+		Set<Prayer> prayersAway = game.getTurnDataAway().getInducementSet().getPrayers();
+		if (prayersAway.size() != currentPrayersAway.size()) {
+			PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
+			currentPrayersAway.clear();
+			currentPrayersAway.addAll(prayerFactory.sort(prayersAway));
+			refreshNecessary = true;
+		}
+
+		if (refreshNecessary) {
+
+			prayersMenu.removeAll();
+
+			if (!currentPrayersHome.isEmpty()) {
+				JMenu prayersHomeMenu = new JMenu(currentPrayersHome.size() + " Home Team");
+				prayersHomeMenu.setForeground(Color.RED);
+				prayersHomeMenu.setMnemonic(KeyEvent.VK_H);
+				prayersMenu.add(prayersHomeMenu);
+				addPrayers(prayersHomeMenu, currentPrayersHome);
+			}
+
+			if (!currentPrayersAway.isEmpty()) {
+				JMenu prayersAwayMenu = new JMenu(currentPrayersAway.size() + " Away Team");
+				prayersAwayMenu.setForeground(Color.BLUE);
+				prayersAwayMenu.setMnemonic(KeyEvent.VK_A);
+				prayersMenu.add(prayersAwayMenu);
+				addPrayers(prayersAwayMenu, currentPrayersAway);
+			}
+
+			int totalPrayers = currentPrayersHome.size() + currentPrayersAway.size();
+			if (totalPrayers > 0) {
+				StringBuilder menuText = new StringBuilder()
+					.append(totalPrayers);
+				if (totalPrayers > 1) {
+					menuText.append(" Prayers");
+				} else {
+					menuText.append(" Prayer");
+				}
+				prayersMenu.setText(menuText.toString());
+				prayersMenu.setEnabled(true);
+			} else {
+				prayersMenu.setText("No Prayers");
+				prayersMenu.setEnabled(false);
+			}
+		}
+	}
+
+	private void addPrayers(JMenu prayerMenu, List<Prayer> prayers) {
+		for (Prayer prayer : prayers) {
+			String text = "<html>" +
+				"<b>" + prayer.getName() + "</b>" +
+				"<br>" + prayer.getDuration().getDescription() + ": " + prayer.getDescription() +
+				"</html>";
+			JMenuItem menuItem = new JMenuItem(text);
+			prayerMenu.add(menuItem);
 		}
 	}
 

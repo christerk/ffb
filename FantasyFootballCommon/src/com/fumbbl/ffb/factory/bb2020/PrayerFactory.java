@@ -11,9 +11,11 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @FactoryType(FactoryType.Factory.PRAYER)
@@ -41,6 +43,14 @@ public class PrayerFactory implements INamedObjectFactory<Prayer> {
 			return !teamInducements.getPrayers().contains(prayer)
 				&& !(prayer.affectsBothTeams() && opponentInducements.getPrayers().contains(prayer));
 		}).map(Map.Entry::getKey).collect(Collectors.toList());
+	}
+
+	public List<Prayer> sort(Set<Prayer> unsortedPrayers) {
+		return prayers.entrySet().stream()
+			.sorted(Comparator.comparingInt(Map.Entry::getKey))
+			.map(Map.Entry::getValue)
+			.filter(unsortedPrayers::contains)
+			.collect(Collectors.toList());
 	}
 
 	@Override
