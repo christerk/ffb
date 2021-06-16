@@ -32,7 +32,7 @@ public class PlayerResult implements IJsonSerializable {
 	private int fPassing;
 	private int fTurnsPlayed;
 	private int fCurrentSpps;
-	private int deflections;
+	private final transient TeamResult fTeamResult;
 
 	private boolean fDefecting;
 	private SeriousInjury fSeriousInjury;
@@ -42,8 +42,7 @@ public class PlayerResult implements IJsonSerializable {
 	private int fSendToBoxHalf;
 	private String fSendToBoxByPlayerId;
 	private boolean fHasUsedSecretWeapon;
-
-	private transient TeamResult fTeamResult;
+	private int deflections, completionsWithAdditionalSpp, casualtiesWithAdditionalSpp;
 	private transient Player<?> fPlayer;
 
 	public PlayerResult(TeamResult pTeamResult) {
@@ -175,6 +174,18 @@ public class PlayerResult implements IJsonSerializable {
 		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS, fCompletions);
 	}
 
+	public int getCompletionsWithAdditionalSpp() {
+		return completionsWithAdditionalSpp;
+	}
+
+	public void setCompletionsWithAdditionalSpp(int pCompletions) {
+		if (pCompletions == completionsWithAdditionalSpp) {
+			return;
+		}
+		completionsWithAdditionalSpp = pCompletions;
+		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS_WITH_ADDITIONAL_SPP, casualtiesWithAdditionalSpp);
+	}
+
 	public int getTouchdowns() {
 		return fTouchdowns;
 	}
@@ -221,6 +232,18 @@ public class PlayerResult implements IJsonSerializable {
 		}
 		fCasualties = pCasualties;
 		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES, fCasualties);
+	}
+
+	public int getCasualtiesWithAdditionalSpp() {
+		return casualtiesWithAdditionalSpp;
+	}
+
+	public void setCasualtiesWithAdditionalSpp(int pCasualties) {
+		if (pCasualties == casualtiesWithAdditionalSpp) {
+			return;
+		}
+		casualtiesWithAdditionalSpp = pCasualties;
+		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES_WITH_ADDITIONAL_SPP, casualtiesWithAdditionalSpp);
 	}
 
 	public int getPlayerAwards() {
@@ -312,7 +335,7 @@ public class PlayerResult implements IJsonSerializable {
 		GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
 		return ((getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
-				+ getCompletions() + getDeflections());
+			+ getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCompletionsWithAdditionalSpp());
 	}
 
 	public Game getGame() {
@@ -323,10 +346,12 @@ public class PlayerResult implements IJsonSerializable {
 		if (pPlayerResult != null) {
 			fPlayer = pPlayerResult.getPlayer();
 			fCompletions = pPlayerResult.getCompletions();
+			completionsWithAdditionalSpp = pPlayerResult.getCompletionsWithAdditionalSpp();
 			fTouchdowns = pPlayerResult.getTouchdowns();
 			fInterceptions = pPlayerResult.getInterceptions();
 			deflections = pPlayerResult.getDeflections();
 			fCasualties = pPlayerResult.getCasualties();
+			casualtiesWithAdditionalSpp = pPlayerResult.getCasualtiesWithAdditionalSpp();
 			fPlayerAwards = pPlayerResult.getPlayerAwards();
 			fBlocks = pPlayerResult.getBlocks();
 			fFouls = pPlayerResult.getFouls();
@@ -360,9 +385,11 @@ public class PlayerResult implements IJsonSerializable {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.PLAYER_ID.addTo(jsonObject, getPlayerId());
 		IJsonOption.COMPLETIONS.addTo(jsonObject, fCompletions);
+		IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.addTo(jsonObject, completionsWithAdditionalSpp);
 		IJsonOption.TOUCHDOWNS.addTo(jsonObject, fTouchdowns);
 		IJsonOption.INTERCEPTIONS.addTo(jsonObject, fInterceptions);
 		IJsonOption.CASUALTIES.addTo(jsonObject, fCasualties);
+		IJsonOption.CASUALTIES_WITH_ADDITIONAL_SPP.addTo(jsonObject, casualtiesWithAdditionalSpp);
 		IJsonOption.PLAYER_AWARDS.addTo(jsonObject, fPlayerAwards);
 		IJsonOption.BLOCKS.addTo(jsonObject, fBlocks);
 		IJsonOption.FOULS.addTo(jsonObject, fFouls);
@@ -385,9 +412,11 @@ public class PlayerResult implements IJsonSerializable {
 		String playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
 		fCompletions = IJsonOption.COMPLETIONS.getFrom(source, jsonObject);
+		completionsWithAdditionalSpp = IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.getFrom(source, jsonObject);
 		fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(source, jsonObject);
 		fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(source, jsonObject);
 		fCasualties = IJsonOption.CASUALTIES.getFrom(source, jsonObject);
+		casualtiesWithAdditionalSpp = IJsonOption.CASUALTIES_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
 		fPlayerAwards = IJsonOption.PLAYER_AWARDS.getFrom(source, jsonObject);
 		fBlocks = IJsonOption.BLOCKS.getFrom(source, jsonObject);
 		fFouls = IJsonOption.FOULS.getFrom(source, jsonObject);

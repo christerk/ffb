@@ -12,6 +12,7 @@ import com.fumbbl.ffb.json.JsonIntArrayOption;
 import com.fumbbl.ffb.json.JsonIntOption;
 import com.fumbbl.ffb.json.JsonObjectOption;
 import com.fumbbl.ffb.json.JsonPlayerStateOption;
+import com.fumbbl.ffb.json.JsonStringArrayOption;
 import com.fumbbl.ffb.json.JsonStringOption;
 
 /**
@@ -56,6 +57,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption END_TURN = new JsonBooleanOption("endTurn");
 	JsonBooleanOption FEED_ON_PLAYER_CHOICE = new JsonBooleanOption("feedOnPlayerChoice");
 	JsonBooleanOption FEEDING_ALLOWED = new JsonBooleanOption("feedingAllowed");
+	JsonStringArrayOption FRIENDS_WITH_REF = new JsonStringArrayOption("friendsWithRef");
 	JsonBooleanOption FORCE_GOTO_ON_DISPATCH = new JsonBooleanOption("forceGotoOnDispatch");
 	JsonBooleanOption FOLLOWUP_CHOICE = new JsonBooleanOption("followupChoice");
 	JsonStringOption FOUL_DEFENDER_ID = new JsonStringOption("foulDefenderId");
@@ -64,6 +66,8 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
 	JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);
 	JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
+	JsonStringArrayOption GET_ADDITIONAL_CASUALTY_SPP = new JsonStringArrayOption("getAdditionalCasualtySpp");
+	JsonStringArrayOption GET_ADDITIONAL_COMPLETION_SPP = new JsonStringArrayOption("getAdditionalCompletionSpp");
 	JsonIntOption GOLD_USED_AWAY = new JsonIntOption("goldUsedAway");
 	JsonIntOption GOLD_USED_HOME = new JsonIntOption("goldUsedHome");
 	JsonStringOption GOTO_LABEL = new JsonStringOption("gotoLabel");
@@ -120,6 +124,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonObjectOption PASS_STATE = new JsonObjectOption("passState");
 	JsonBooleanOption PETTY_CASH_SELECTED_AWAY = new JsonBooleanOption("pettyCashSelectedAway");
 	JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
+	JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
 	JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
 	JsonBooleanOption REPLAY = new JsonBooleanOption("replay");
 	JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");

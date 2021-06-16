@@ -80,6 +80,7 @@ public interface IJsonOption {
 	JsonStringOption CARD_SELECTION = new JsonStringOption("cardSelection");
 	JsonEnumWithNameOption CARD_TYPE = new JsonEnumWithNameOption("cardType", Factory.CARD_TYPE);
 	JsonIntOption CASUALTIES = new JsonIntOption("casualties");
+	JsonIntOption CASUALTIES_WITH_ADDITIONAL_SPP = new JsonIntOption("casualtiesWithAdditionalSpp");
 	JsonArrayOption CASUALTY_MODIFIERS = new JsonArrayOption("casualtyModifiers");
 	JsonIntArrayOption CASUALTY_ROLL = new JsonIntArrayOption("casualtyRoll");
 	JsonIntArrayOption CASUALTY_ROLL_DECAY = new JsonIntArrayOption("casualtyRollDecay");
@@ -102,6 +103,7 @@ public interface IJsonOption {
 	JsonArrayOption COMMAND_ARRAY = new JsonArrayOption("commandArray");
 	JsonIntOption COMMAND_NR = new JsonIntOption("commandNr");
 	JsonIntOption COMPLETIONS = new JsonIntOption("completions");
+	JsonIntOption COMPLETIONS_WITH_ADDITONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
 	JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", Factory.CONCEDE_GAME_STATUS);
 	JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
 	JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");

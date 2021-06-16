@@ -58,6 +58,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private StepFactory stepFactory;
 	private PassState passState;
 	private BlitzTurnState blitzTurnState;
+	private PrayerState prayerState = new PrayerState();
 
 	private enum StepExecutionMode {
 		Start, HandleCommand
@@ -335,6 +336,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			IServerJsonOption.BLITZ_TURN_STATE.addTo(jsonObject, blitzTurnState.toJsonValue());
 		}
 
+		if (prayerState != null) {
+			IServerJsonOption.PRAYER_STATE.addTo(jsonObject, prayerState.toJsonValue());
+		}
 		return jsonObject;
 	}
 
@@ -379,6 +383,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		JsonObject blitzTurnStateObject = IServerJsonOption.BLITZ_TURN_STATE.getFrom(source, jsonObject);
 		if (blitzTurnStateObject != null) {
 			blitzTurnState = new BlitzTurnState().initFrom(source, blitzTurnStateObject);
+		}
+
+		JsonObject prayerStateObject = IServerJsonOption.PRAYER_STATE.getFrom(source, jsonObject);
+		if (prayerStateObject != null) {
+			prayerState = new PrayerState().initFrom(source, prayerStateObject);
 		}
 		return this;
 	}

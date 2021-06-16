@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.inducement.Card;
@@ -19,6 +17,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.xml.IXmlWriteable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
@@ -92,10 +91,12 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_ATTRIBUTE_EARNED = "earned";
 
 	private static final String _XML_TAG_COMPLETIONS = "completions";
+	private static final String _XML_TAG_COMPLETIONS_WITH_ADDITIONAL_SPP = "completionsWithAdditionalSpp";
 	private static final String _XML_TAG_TOUCHDOWNS = "touchdowns";
 	private static final String _XML_TAG_DEFLECTIONS = "deflections";
 	private static final String _XML_TAG_INTERCEPTIONS = "interceptions";
 	private static final String _XML_TAG_CASUALTIES = "casualties";
+	private static final String _XML_TAG_CASUALTIES_WITH_ADDITIONAL_SPP = "casualtiesWithAdditionalSpp";
 	private static final String _XML_TAG_PLAYER_AWARDS = "playerAwards";
 
 	private static final String _XML_TAG_STATISTICS = "statistics";
@@ -109,7 +110,7 @@ public class FumbblResult implements IXmlWriteable {
 
 	private static final String _XML_TAG_INJURY = "injury";
 
-	private Game fGame;
+	private final Game fGame;
 
 	public FumbblResult(Game pGame) {
 		fGame = pGame;
@@ -326,6 +327,9 @@ public class FumbblResult implements IXmlWriteable {
 				if (pPlayerResult.getCompletions() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_COMPLETIONS, pPlayerResult.getCompletions());
 				}
+				if (pPlayerResult.getCompletionsWithAdditionalSpp() > 0) {
+					UtilXml.addValueElement(pHandler, _XML_TAG_COMPLETIONS_WITH_ADDITIONAL_SPP, pPlayerResult.getCompletionsWithAdditionalSpp());
+				}
 				if (pPlayerResult.getTouchdowns() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_TOUCHDOWNS, pPlayerResult.getTouchdowns());
 				}
@@ -337,6 +341,9 @@ public class FumbblResult implements IXmlWriteable {
 				}
 				if (pPlayerResult.getCasualties() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_CASUALTIES, pPlayerResult.getCasualties());
+				}
+				if (pPlayerResult.getCasualtiesWithAdditionalSpp() > 0) {
+					UtilXml.addValueElement(pHandler, _XML_TAG_CASUALTIES_WITH_ADDITIONAL_SPP, pPlayerResult.getCasualtiesWithAdditionalSpp());
 				}
 				if (pPlayerResult.getPlayerAwards() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_PLAYER_AWARDS, pPlayerResult.getPlayerAwards());
