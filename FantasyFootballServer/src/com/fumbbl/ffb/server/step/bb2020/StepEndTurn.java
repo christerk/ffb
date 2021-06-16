@@ -643,7 +643,7 @@ public class StepEndTurn extends AbstractStep {
 	private void deactivatePrayer(Prayer prayer, InducementSet inducementSet) {
 		inducementSet.removePrayer(prayer);
 		PrayerHandlerFactory handlerFactory = getGameState().getGame().getFactory(FactoryType.Factory.PRAYER_HANDLER);
-		handlerFactory.forPrayer(prayer).ifPresent(handler -> handler.removeEffect(getGameState().getGame()));
+		handlerFactory.forPrayer(prayer).ifPresent(handler -> handler.removeEffect(getGameState()));
 		getResult().addReport(new ReportPrayerEnd(prayer));
 	}
 

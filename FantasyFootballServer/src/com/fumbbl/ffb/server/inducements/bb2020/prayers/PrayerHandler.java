@@ -5,6 +5,7 @@ import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.sun.istack.internal.Nullable;
 
@@ -21,14 +22,15 @@ public abstract class PrayerHandler implements INamedObject {
 
 	abstract Prayer handledPrayer();
 
-	public void addEffect(@Nullable IStep step, Game game, String prayingTeamId) {
+	public void addEffect(@Nullable IStep step, GameState gameState, String prayingTeamId) {
+		Game game = gameState.getGame();
 		Team prayingTeam = game.getTeamById(prayingTeamId);
 		InducementSet inducementSet = game.getTeamHome() == prayingTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 		inducementSet.addPrayer(handledPrayer());
-		add(step, game, prayingTeam);
+		add(step, gameState, prayingTeam);
 	}
 
-	abstract void add(@Nullable IStep step, Game game, Team prayingTeam);
+	abstract void add(@Nullable IStep step, GameState gameState, Team prayingTeam);
 
-	public abstract void removeEffect(Game game);
+	public abstract void removeEffect(GameState gameState);
 }

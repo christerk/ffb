@@ -478,7 +478,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		PrayerHandlerFactory handlerFactory = game.getFactory(FactoryType.Factory.PRAYER_HANDLER);
 
 		handlerFactory.forPrayer(prayer).ifPresent(handler ->
-			handler.addEffect(null, game, homeCoach ? game.getTeamHome().getId() : game.getTeamAway().getId()));
+			handler.addEffect(null, gameState, homeCoach ? game.getTeamHome().getId() : game.getTeamAway().getId()));
 
 
 		String info = "Added prayer " + prayer.getName() + " for coach " +
