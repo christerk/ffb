@@ -326,6 +326,7 @@ public interface IJsonOption {
 	JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds");
 	JsonStringOption POSITION_NAME = new JsonStringOption("positionName");
 	JsonStringOption PRAYER = new JsonStringOption("prayer");
+	JsonBooleanOption PRAYER_AVAILABLE = new JsonBooleanOption("prayerAvailable");
 	JsonStringArrayOption PRAYERS = new JsonStringArrayOption("prayers");
 	JsonIntOption PRO_INDEX = new JsonIntOption("proIndex");
 	JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");

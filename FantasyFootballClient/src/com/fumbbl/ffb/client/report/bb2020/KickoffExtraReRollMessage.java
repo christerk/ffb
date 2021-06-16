@@ -5,7 +5,6 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
-import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffExtraReRoll;
 
@@ -15,19 +14,16 @@ public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffEx
 
 	@Override
 	protected void render(ReportKickoffExtraReRoll report) {
-		GameResult gameResult = game.getGameResult();
-
 		StringBuilder status = new StringBuilder();
 		boolean homeBanned = game.getTurnDataHome().isCoachBanned();
 		boolean awayBanned = game.getTurnDataAway().isCoachBanned();
 
 		status.append("Brilliant Coaching Roll Home Team [ ").append(report.getRollHome()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
-		int totalHome = report.getRollHome() + gameResult.getTeamResultHome().getFanFactor()
+		int totalHome = report.getRollHome()
 			+ game.getTeamHome().getAssistantCoaches() - (homeBanned ? 1 : 0);
 		status = new StringBuilder();
 		status.append("Rolled ").append(report.getRollHome());
-		status.append(" + ").append(gameResult.getTeamResultHome().getFanFactor()).append(" Fan Factor");
 		status.append(" + ").append(game.getTeamHome().getAssistantCoaches()).append(" Assistant Coaches");
 		status.append(" ").append(homeBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
 		status.append(" = ").append(totalHome).append(".");
@@ -35,11 +31,10 @@ public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffEx
 		status = new StringBuilder();
 		status.append("Brilliant Coaching Roll Away Team [ ").append(report.getRollAway()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
-		int totalAway = report.getRollAway() + gameResult.getTeamResultAway().getFanFactor()
+		int totalAway = report.getRollAway()
 			+ game.getTeamAway().getAssistantCoaches() - (awayBanned ? 1 : 0);
 		status = new StringBuilder();
 		status.append("Rolled ").append(report.getRollAway());
-		status.append(" + ").append(gameResult.getTeamResultAway().getFanFactor()).append(" Fan Factor");
 		status.append(" + ").append(game.getTeamAway().getAssistantCoaches()).append(" Assistant Coaches");
 		status.append(" ").append(awayBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
 		status.append(" = ").append(totalAway).append(".");
