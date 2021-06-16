@@ -22,6 +22,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -150,6 +151,8 @@ public class ResourceComponent extends JPanel {
 		TurnData turnData = getSideBar().isHomeSide() ? game.getTurnDataHome() : game.getTurnDataAway();
 		Team team = getSideBar().isHomeSide() ? game.getTeamHome() : game.getTeamAway();
 
+		Arrays.stream(fSlots).forEach(ResourceSlot::clearDetails);
+
 		fRefreshNecessary |= (turnData.getReRolls() != fCurrentReRolls);
 		fCurrentReRolls = turnData.getReRolls();
 		if ((team.getReRolls() > 0) || (turnData.getReRolls() > 0)) {
@@ -213,6 +216,7 @@ public class ResourceComponent extends JPanel {
 				prayerSlot.setSingular("Prayer");
 				prayerSlot.setValue(currentPrayers);
 				prayerSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
+				prayers.stream().map(Prayer::getName).forEach(prayerSlot::addDetail);
 			}
 		}
 

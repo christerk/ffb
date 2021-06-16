@@ -1,11 +1,12 @@
 package com.fumbbl.ffb.client.ui;
 
-import java.awt.Rectangle;
-
 import com.fumbbl.ffb.util.StringTool;
 
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- *
  * @author Kalimar
  */
 public class ResourceSlot {
@@ -14,6 +15,7 @@ public class ResourceSlot {
 	private int fValue;
 	private boolean fEnabled;
 	private String fIconProperty, singular, plural;
+	private final List<String> details = new ArrayList<>();
 
 	public ResourceSlot(Rectangle pLocation) {
 		fLocation = pLocation;
@@ -50,6 +52,11 @@ public class ResourceSlot {
 				toolTip.append("No ");
 			}
 			toolTip.append((getValue() == 1) ? singular : plural);
+			if (!details.isEmpty()) {
+				toolTip.insert(0, "<html>");
+				details.forEach(detail -> toolTip.append("<br/> - ").append(detail));
+				toolTip.append("</html>");
+			}
 			return toolTip.toString();
 		} else {
 			return null;
@@ -70,5 +77,17 @@ public class ResourceSlot {
 
 	public void setPlural(String plural) {
 		this.plural = plural;
+	}
+
+	public List<String> getDetails() {
+		return details;
+	}
+
+	public void addDetail(String detail) {
+		details.add(detail);
+	}
+
+	public void clearDetails() {
+		details.clear();
 	}
 }
