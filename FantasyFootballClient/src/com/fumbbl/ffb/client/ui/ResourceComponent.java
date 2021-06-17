@@ -1,7 +1,9 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
@@ -216,7 +218,8 @@ public class ResourceComponent extends JPanel {
 				prayerSlot.setSingular("Prayer");
 				prayerSlot.setValue(currentPrayers);
 				prayerSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
-				prayers.stream().map(Prayer::getName).forEach(prayerSlot::addDetail);
+				PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
+				prayerFactory.sort(prayers).stream().map(Prayer::getName).forEach(prayerSlot::addDetail);
 			}
 		}
 

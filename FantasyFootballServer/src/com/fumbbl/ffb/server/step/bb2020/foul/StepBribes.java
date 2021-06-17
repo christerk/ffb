@@ -16,8 +16,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
-import com.fumbbl.ffb.report.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.ReportBribesRoll;
+import com.fumbbl.ffb.report.bb2020.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -146,10 +146,12 @@ public class StepBribes extends AbstractStep {
 		}
 		if ((fBribesChoice != null) && (fArgueTheCallChoice != null) && fArgueTheCallChoice) {
 			int roll = getGameState().getDiceRoller().rollArgueTheCall();
-			fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
-			boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
+			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam().getId());
+			int modifiedRoll = friendsWithTheRef ? roll + 1 : roll;
+			fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
+			boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
 			getResult().addReport(
-				new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true));
+				new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef));
 			if (coachBanned) {
 				game.getTurnData().setCoachBanned(true);
 			}

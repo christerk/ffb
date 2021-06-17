@@ -16,8 +16,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
-import com.fumbbl.ffb.report.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.ReportBribesRoll;
+import com.fumbbl.ffb.report.bb2016.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -149,7 +149,7 @@ public class StepBribes extends AbstractStep {
 			fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
 			boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
 			getResult().addReport(
-				new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, false));
+				new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll));
 			if (coachBanned) {
 				game.getTurnData().setCoachBanned(true);
 			}

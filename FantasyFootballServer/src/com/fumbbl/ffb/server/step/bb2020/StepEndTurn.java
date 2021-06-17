@@ -37,9 +37,9 @@ import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
-import com.fumbbl.ffb.report.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
+import com.fumbbl.ffb.report.bb2020.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
 import com.fumbbl.ffb.report.bb2020.ReportPrayerEnd;
 import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
@@ -565,9 +565,12 @@ public class StepEndTurn extends AbstractStep {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if ((player != null) && !turnData.isCoachBanned()) {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
-					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
-					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
-					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false));
+					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam().getId());
+					int modifiedRoll = friendsWithTheRef ? roll + 1 : roll;
+
+					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
+					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
+					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false, friendsWithTheRef));
 					if (successful) {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);

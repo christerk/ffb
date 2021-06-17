@@ -28,7 +28,7 @@ public class PrayerAmountMessage extends ReportMessageBase<ReportPrayerAmount> {
 	}
 
 	private String getTvText(int tv) {
-		return " has a TV of" +
+		return " has a TV of " +
 			StringTool.formatThousands(tv) +
 			" after buying inducements.";
 	}
