@@ -186,7 +186,7 @@ public class ResourceComponent extends JPanel {
 					Inducement inducement = entry.getValue();
 
 					int newValue = inducement.getValue() - inducement.getUses();
-					fRefreshNecessary |= inducementValues.get(type) != null && (newValue != inducementValues.get(type));
+					fRefreshNecessary |= (inducementValues.get(type) != null && (newValue != inducementValues.get(type))) || newValue > 0;
 					inducementValues.put(type, newValue);
 					if (newValue > 0) {
 						ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
