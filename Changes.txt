@@ -21,3 +21,4 @@ Bugfixes:
  - Natural 1 on Jump did move player to target square
  - Player hit by ttm was not visible anymore during apo selection
  - Brilliant Coaching added Fan Factor to roll
+ - Bribes did not show up after Get the Ref result if no bribes where bought during start sequence
