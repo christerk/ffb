@@ -26,10 +26,10 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Bomb;
-import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
@@ -167,7 +167,7 @@ public final class StepEndPassing extends AbstractStep {
 			&& game.getThrower().getTeam().hasPlayer(catcher)) {
 			PlayerResult throwerResult = game.getGameResult().getPlayerResult(game.getThrower());
 			if (fPassAccurate) {
-				throwerResult.setCompletions(throwerResult.getCompletions() + 1);
+				getGameState().getPrayerState().addCompletion(throwerResult);
 			}
 			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			FieldCoordinate endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);

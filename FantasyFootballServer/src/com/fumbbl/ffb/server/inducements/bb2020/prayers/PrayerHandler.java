@@ -7,6 +7,7 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
+import com.fumbbl.ffb.server.step.StepAction;
 import com.sun.istack.internal.Nullable;
 
 public abstract class PrayerHandler implements INamedObject {
@@ -27,10 +28,15 @@ public abstract class PrayerHandler implements INamedObject {
 		Team prayingTeam = game.getTeamById(prayingTeamId);
 		InducementSet inducementSet = game.getTeamHome() == prayingTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 		inducementSet.addPrayer(handledPrayer());
-		add(step, gameState, prayingTeam);
+		if (add(gameState, prayingTeam) && step != null) {
+			step.getResult().setNextAction(StepAction.NEXT_STEP);
+		}
 	}
 
-	abstract void add(@Nullable IStep step, GameState gameState, Team prayingTeam);
+	/**
+	 * @return true if handler logic is complete
+	 */
+	abstract boolean add(GameState gameState, Team prayingTeam);
 
-	public abstract void removeEffect(GameState gameState);
+	public abstract void removeEffect(GameState gameState, Team team);
 }

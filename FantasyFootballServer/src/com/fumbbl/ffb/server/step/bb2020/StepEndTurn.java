@@ -627,7 +627,7 @@ public class StepEndTurn extends AbstractStep {
 				if (duration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && isHomeTurnEnding) {
 					continue;
 				}
-				deactivatePrayer(prayer, game.getTurnDataHome().getInducementSet());
+				deactivatePrayer(prayer, game.getTurnDataHome().getInducementSet(), game.getTeamHome());
 			}
 		}
 		for (Prayer prayer : game.getTurnDataAway().getInducementSet().getPrayers()) {
@@ -635,15 +635,15 @@ public class StepEndTurn extends AbstractStep {
 				if (duration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && !isHomeTurnEnding) {
 					continue;
 				}
-				deactivatePrayer(prayer, game.getTurnDataAway().getInducementSet());
+				deactivatePrayer(prayer, game.getTurnDataAway().getInducementSet(), game.getTeamAway());
 			}
 		}
 	}
 
-	private void deactivatePrayer(Prayer prayer, InducementSet inducementSet) {
+	private void deactivatePrayer(Prayer prayer, InducementSet inducementSet, Team team) {
 		inducementSet.removePrayer(prayer);
 		PrayerHandlerFactory handlerFactory = getGameState().getGame().getFactory(FactoryType.Factory.PRAYER_HANDLER);
-		handlerFactory.forPrayer(prayer).ifPresent(handler -> handler.removeEffect(getGameState()));
+		handlerFactory.forPrayer(prayer).ifPresent(handler -> handler.removeEffect(getGameState(), team));
 		getResult().addReport(new ReportPrayerEnd(prayer));
 	}
 

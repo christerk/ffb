@@ -7,9 +7,6 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.step.IStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.sun.istack.internal.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,16 +25,14 @@ public class TreacherousTrapdoorHandler extends PrayerHandler {
 	}
 
 	@Override
-	public void add(@Nullable IStep step, GameState gameState, Team prayingTeam) {
+	boolean add(GameState gameState, Team prayingTeam) {
 		FieldModel fieldModel = gameState.getGame().getFieldModel();
 		trapdoorCoordinates.stream().map(TrapDoor::new).forEach(fieldModel::add);
-		if (step != null) {
-			step.getResult().setNextAction(StepAction.NEXT_STEP);
-		}
+		return true;
 	}
 
 	@Override
-	public void removeEffect(GameState gameState) {
+	public void removeEffect(GameState gameState, Team team) {
 		gameState.getGame().getFieldModel().clearTrapdoors();
 	}
 }

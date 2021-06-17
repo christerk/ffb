@@ -313,7 +313,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return stepFactory;
 	}
 
-	// JSON serialization
+	public PrayerState getPrayerState() {
+		return prayerState;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();

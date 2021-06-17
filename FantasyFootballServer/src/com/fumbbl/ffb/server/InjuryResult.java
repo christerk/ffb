@@ -13,6 +13,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.factory.ReportFactory;
@@ -25,7 +26,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
-import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
@@ -143,7 +143,7 @@ public class InjuryResult implements IJsonSerializable {
 				if (injuryContext.getSufferedInjury().isCasualty() && injuryContext.getInjuryType().isWorthSpps()
 						&& (attacker.getTeam() != defender.getTeam())) {
 					PlayerResult attackerResult = gameResult.getPlayerResult(attacker);
-					attackerResult.setCasualties(attackerResult.getCasualties() + 1);
+					pStep.getGameState().getPrayerState().addCasualty(attackerResult);
 				}
 			}
 			game.getFieldModel().add(new BloodSpot(injuryContext.getDefenderPosition(), injuryContext.getSufferedInjury()));

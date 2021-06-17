@@ -183,7 +183,7 @@ public class PlayerResult implements IJsonSerializable {
 			return;
 		}
 		completionsWithAdditionalSpp = pCompletions;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS_WITH_ADDITIONAL_SPP, casualtiesWithAdditionalSpp);
+		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS_WITH_ADDITIONAL_SPP, completionsWithAdditionalSpp);
 	}
 
 	public int getTouchdowns() {
@@ -335,7 +335,7 @@ public class PlayerResult implements IJsonSerializable {
 		GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
 		return ((getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
-			+ getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCompletionsWithAdditionalSpp());
+			+ getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCasualtiesWithAdditionalSpp());
 	}
 
 	public Game getGame() {

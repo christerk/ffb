@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.PlayerResult;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,6 +50,20 @@ public class PrayerState implements IJsonSerializable {
 
 	public boolean getsAdditionCompletionSpp(String teamId) {
 		return getAdditionalCompletionSpp.contains(teamId);
+	}
+
+	public void addCompletion(PlayerResult playerResult) {
+		playerResult.setCompletions(playerResult.getCompletions() + 1);
+		if (getAdditionalCompletionSpp.contains(playerResult.getPlayer().getTeam().getId())) {
+			playerResult.setCompletionsWithAdditionalSpp(playerResult.getCompletionsWithAdditionalSpp() + 1);
+		}
+	}
+
+	public void addCasualty(PlayerResult playerResult) {
+		playerResult.setCasualties(playerResult.getCasualties() + 1);
+		if (getAdditionalCasSpp.contains(playerResult.getPlayer().getTeam().getId())) {
+			playerResult.setCasualtiesWithAdditionalSpp(playerResult.getCasualtiesWithAdditionalSpp() + 1);
+		}
 	}
 
 	@Override
