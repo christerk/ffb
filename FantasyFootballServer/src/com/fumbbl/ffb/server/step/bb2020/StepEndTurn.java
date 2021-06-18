@@ -565,7 +565,7 @@ public class StepEndTurn extends AbstractStep {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if ((player != null) && !turnData.isCoachBanned()) {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
-					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam().getId());
+					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam());
 					int modifiedRoll = friendsWithTheRef ? roll + 1 : roll;
 
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);

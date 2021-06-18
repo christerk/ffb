@@ -6,6 +6,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.Team;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,40 +17,32 @@ public class PrayerState implements IJsonSerializable {
 	private final Set<String> getAdditionalCompletionSpp = new HashSet<>();
 	private final Set<String> getAdditionalCasSpp = new HashSet<>();
 
-	public void addFriendsWithRef(String teamId) {
-		friendsWithRef.add(teamId);
+	public void addFriendsWithRef(Team team) {
+		friendsWithRef.add(team.getId());
 	}
 
-	public void addGetAdditionalCasSpp(String teamId) {
-		getAdditionalCasSpp.add(teamId);
+	public void addGetAdditionalCasSpp(Team team) {
+		getAdditionalCasSpp.add(team.getId());
 	}
 
-	public void addGetAdditionalCompletionSpp(String teamId) {
-		getAdditionalCompletionSpp.add(teamId);
+	public void addGetAdditionalCompletionSpp(Team team) {
+		getAdditionalCompletionSpp.add(team.getId());
 	}
 
-	public void removeFriendsWithRef(String teamId) {
-		friendsWithRef.remove(teamId);
+	public void removeFriendsWithRef(Team team) {
+		friendsWithRef.remove(team.getId());
 	}
 
-	public void removeGetAdditionalCasSpp(String teamId) {
-		getAdditionalCasSpp.remove(teamId);
+	public void removeGetAdditionalCasSpp(Team team) {
+		getAdditionalCasSpp.remove(team.getId());
 	}
 
-	public void removeGetAdditionalCompletionSpp(String teamId) {
-		getAdditionalCompletionSpp.remove(teamId);
+	public void removeGetAdditionalCompletionSpp(Team team) {
+		getAdditionalCompletionSpp.remove(team.getId());
 	}
 
-	public boolean isFriendsWithRef(String teamId) {
-		return friendsWithRef.contains(teamId);
-	}
-
-	public boolean getsAdditionCasSpp(String teamId) {
-		return getAdditionalCasSpp.contains(teamId);
-	}
-
-	public boolean getsAdditionCompletionSpp(String teamId) {
-		return getAdditionalCompletionSpp.contains(teamId);
+	public boolean isFriendsWithRef(Team team) {
+		return friendsWithRef.contains(team.getId());
 	}
 
 	public void addCompletion(PlayerResult playerResult) {

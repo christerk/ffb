@@ -14,12 +14,12 @@ public class PerfectPassingHandler extends PrayerHandler {
 
 	@Override
 	boolean add(GameState gameState, Team prayingTeam) {
-		gameState.getPrayerState().addGetAdditionalCompletionSpp(prayingTeam.getId());
+		gameState.getPrayerState().addGetAdditionalCompletionSpp(prayingTeam);
 		return true;
 	}
 
 	@Override
 	public void removeEffect(GameState gameState, Team team) {
-		gameState.getPrayerState().removeGetAdditionalCompletionSpp(team.getId());
+		gameState.getPrayerState().removeGetAdditionalCompletionSpp(team);
 	}
 }

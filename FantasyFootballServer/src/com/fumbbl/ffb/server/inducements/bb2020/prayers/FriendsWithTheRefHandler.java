@@ -15,12 +15,12 @@ public class FriendsWithTheRefHandler extends PrayerHandler {
 
 	@Override
 	boolean add(GameState gameState, Team prayingTeam) {
-		gameState.getPrayerState().addFriendsWithRef(prayingTeam.getId());
+		gameState.getPrayerState().addFriendsWithRef(prayingTeam);
 		return true;
 	}
 
 	@Override
 	public void removeEffect(GameState gameState, Team team) {
-		gameState.getPrayerState().removeFriendsWithRef(team.getId());
+		gameState.getPrayerState().removeFriendsWithRef(team);
 	}
 }

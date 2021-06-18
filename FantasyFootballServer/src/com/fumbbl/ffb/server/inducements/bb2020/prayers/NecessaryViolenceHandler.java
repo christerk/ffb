@@ -14,12 +14,12 @@ public class NecessaryViolenceHandler extends PrayerHandler {
 
 	@Override
 	boolean add(GameState gameState, Team prayingTeam) {
-		gameState.getPrayerState().addGetAdditionalCasSpp(prayingTeam.getId());
+		gameState.getPrayerState().addGetAdditionalCasSpp(prayingTeam);
 		return true;
 	}
 
 	@Override
 	public void removeEffect(GameState gameState, Team team) {
-		gameState.getPrayerState().removeGetAdditionalCasSpp(team.getId());
+		gameState.getPrayerState().removeGetAdditionalCasSpp(team);
 	}
 }
