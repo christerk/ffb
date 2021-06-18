@@ -158,13 +158,13 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		GoForItModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GO_FOR_IT_MODIFIER);
-		Set<GoForItModifier> goForItModifiers = modifierFactory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer()));
+		Set<GoForItModifier> goForItModifiers = modifierFactory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer(), getGameState().getPrayerState().getMolesUnderThePitch()));
 		int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
 		int roll = getGameState().getDiceRoller().rollGoingForIt();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.GO_FOR_IT) && (getReRollSource() != null));
 		getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
-				minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
+			minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
 		if (successful) {
 			return ActionStatus.SUCCESS;
 		} else {

@@ -108,6 +108,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonObjectOption KICKOFF_BOUNDS = new JsonObjectOption("kickoffBounds");
 	JsonFieldCoordinateOption KICKOFF_START_COORDINATE = new JsonFieldCoordinateOption("kickoffStartCoordinate");
 	JsonStringOption LABEL = new JsonStringOption("label");
+	JsonStringArrayOption MOLES_UNDER_THE_PITCH = new JsonStringArrayOption("molesUnderThePitch");
 	JsonFieldCoordinateOption MOVE_START = new JsonFieldCoordinateOption("moveStart");
 	JsonFieldCoordinateArrayOption MOVE_STACK = new JsonFieldCoordinateArrayOption("moveStack");
 	JsonIntOption MOVE_STACK_SIZE = new JsonIntOption("moveStackSize");

@@ -19,6 +19,7 @@ public class PrayerState implements IJsonSerializable {
 	private final Set<String> underScrutiny = new HashSet<>();
 	private final Set<String> foulingFrenzy = new HashSet<>();
 	private final Set<String> fanInteraction = new HashSet<>();
+	private final Set<String> molesUnderThePitch = new HashSet<>();
 
 	public void addFriendsWithRef(Team team) {
 		friendsWithRef.add(team.getId());
@@ -98,6 +99,17 @@ public class PrayerState implements IJsonSerializable {
 		return foulingFrenzy.contains(team.getId());
 	}
 
+	public void addMolesUnderThePitch(Team team) {
+		molesUnderThePitch.add(team.getId());
+	}
+
+	public void removeMolesUnderThePitch(Team team) {
+		molesUnderThePitch.remove(team.getId());
+	}
+
+	public Set<String> getMolesUnderThePitch() {
+		return molesUnderThePitch;
+	}
 
 	@Override
 	public PrayerState initFrom(IFactorySource game, JsonValue pJsonValue) {
@@ -108,6 +120,7 @@ public class PrayerState implements IJsonSerializable {
 		underScrutiny.addAll(Arrays.asList(IServerJsonOption.TEAM_UNDER_SCRUTINY.getFrom(game, jsonObject)));
 		fanInteraction.addAll(Arrays.asList(IServerJsonOption.FAN_INTERACTION.getFrom(game, jsonObject)));
 		foulingFrenzy.addAll(Arrays.asList(IServerJsonOption.FOULING_FRENZY.getFrom(game, jsonObject)));
+		molesUnderThePitch.addAll(Arrays.asList(IServerJsonOption.MOLES_UNDER_THE_PITCH.getFrom(game, jsonObject)));
 		return this;
 	}
 
@@ -120,6 +133,7 @@ public class PrayerState implements IJsonSerializable {
 		IServerJsonOption.TEAM_UNDER_SCRUTINY.addTo(jsonObject, underScrutiny);
 		IServerJsonOption.FAN_INTERACTION.addTo(jsonObject, fanInteraction);
 		IServerJsonOption.FOULING_FRENZY.addTo(jsonObject, foulingFrenzy);
+		IServerJsonOption.MOLES_UNDER_THE_PITCH.addTo(jsonObject, molesUnderThePitch);
 		return jsonObject;
 	}
 }

@@ -166,7 +166,7 @@ public class UtilServerPlayerMove {
 		int minimumRollGoForIt = 0;
 		if (goForIt) {
 			GoForItModifierFactory factory = game.getFactory(Factory.GO_FOR_IT_MODIFIER);
-			Set<GoForItModifier> goForItModifiers = factory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer()));
+			Set<GoForItModifier> goForItModifiers = factory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer(), pGameState.getPrayerState().getMolesUnderThePitch()));
 			minimumRollGoForIt = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
 		}
 		MoveSquare moveSquare = new MoveSquare(pCoordinate, minimumRollDodge, minimumRollGoForIt);
