@@ -74,6 +74,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -625,7 +626,7 @@ public class StepEndTurn extends AbstractStep {
 
 	private void deactivatePrayers(InducementDuration duration, boolean isHomeTurnEnding) {
 		Game game = getGameState().getGame();
-		for (Prayer prayer : game.getTurnDataHome().getInducementSet().getPrayers()) {
+		for (Prayer prayer : new HashSet<>(game.getTurnDataHome().getInducementSet().getPrayers())) {
 			if (duration == prayer.getDuration()) {
 				if (duration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && isHomeTurnEnding) {
 					continue;
@@ -633,7 +634,7 @@ public class StepEndTurn extends AbstractStep {
 				deactivatePrayer(prayer, game.getTurnDataHome().getInducementSet(), game.getTeamHome());
 			}
 		}
-		for (Prayer prayer : game.getTurnDataAway().getInducementSet().getPrayers()) {
+		for (Prayer prayer : new HashSet<>(game.getTurnDataAway().getInducementSet().getPrayers())) {
 			if (duration == prayer.getDuration()) {
 				if (duration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && !isHomeTurnEnding) {
 					continue;

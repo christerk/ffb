@@ -16,6 +16,7 @@ public class PrayerState implements IJsonSerializable {
 	private final Set<String> friendsWithRef = new HashSet<>();
 	private final Set<String> getAdditionalCompletionSpp = new HashSet<>();
 	private final Set<String> getAdditionalCasSpp = new HashSet<>();
+	private final Set<String> underScrutiny = new HashSet<>();
 
 	public void addFriendsWithRef(Team team) {
 		friendsWithRef.add(team.getId());
@@ -59,12 +60,25 @@ public class PrayerState implements IJsonSerializable {
 		}
 	}
 
+	public void addUnderScrutiny(Team team) {
+		underScrutiny.add(team.getId());
+	}
+
+	public void removeUnderScrutiny(Team team) {
+		underScrutiny.remove(team.getId());
+	}
+
+	public boolean isUnderScrutiny(Team team) {
+		return underScrutiny.contains(team.getId());
+	}
+
 	@Override
 	public PrayerState initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		friendsWithRef.addAll(Arrays.asList(IServerJsonOption.FRIENDS_WITH_REF.getFrom(game, jsonObject)));
 		getAdditionalCasSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_CASUALTY_SPP.getFrom(game, jsonObject)));
 		getAdditionalCompletionSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_COMPLETION_SPP.getFrom(game, jsonObject)));
+		underScrutiny.addAll(Arrays.asList(IServerJsonOption.TEAM_UNDER_SCRUTINY.getFrom(game, jsonObject)));
 		return this;
 	}
 
@@ -74,6 +88,7 @@ public class PrayerState implements IJsonSerializable {
 		IServerJsonOption.FRIENDS_WITH_REF.addTo(jsonObject, friendsWithRef);
 		IServerJsonOption.GET_ADDITIONAL_COMPLETION_SPP.addTo(jsonObject, getAdditionalCompletionSpp);
 		IServerJsonOption.GET_ADDITIONAL_CASUALTY_SPP.addTo(jsonObject, getAdditionalCasSpp);
+		IServerJsonOption.TEAM_UNDER_SCRUTINY.addTo(jsonObject, underScrutiny);
 		return jsonObject;
 	}
 }

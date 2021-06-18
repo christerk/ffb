@@ -2,9 +2,9 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -13,14 +13,14 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
-import com.fumbbl.ffb.report.ReportReferee;
+import com.fumbbl.ffb.report.bb2020.ReportReferee;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.action.foul.StepEjectPlayer;
-import com.fumbbl.ffb.server.step.action.foul.StepReferee;
 import com.fumbbl.ffb.server.step.action.foul.StepEjectPlayer.StepState;
+import com.fumbbl.ffb.server.step.action.foul.StepReferee;
 import com.fumbbl.ffb.skill.bb2020.SneakyGit;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -79,9 +79,9 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean refereeSpotsFoul = false;
 				if (!game.isActive(NamedProperties.foulBreaksArmourWithoutRoll) && (!UtilCards.hasSkill(actingPlayer, skill)
-						|| state.injuryResultDefender.injuryContext().isArmorBroken()
-						|| ((UtilCards.hasSkill(actingPlayer, skill)
-								&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
+					|| state.injuryResultDefender.injuryContext().isArmorBroken()
+					|| ((UtilCards.hasSkill(actingPlayer, skill)
+					&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
 					int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
 					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
 				}
@@ -89,7 +89,9 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 					int[] injuryRoll = state.injuryResultDefender.injuryContext().getInjuryRoll();
 					refereeSpotsFoul = (injuryRoll[0] == injuryRoll[1]);
 				}
-				step.getResult().addReport(new ReportReferee(refereeSpotsFoul));
+				boolean underScrutiny = step.getGameState().getPrayerState().isUnderScrutiny(actingPlayer.getPlayer().getTeam());
+				refereeSpotsFoul |= underScrutiny;
+				step.getResult().addReport(new ReportReferee(refereeSpotsFoul, underScrutiny));
 				if (refereeSpotsFoul) {
 					step.getResult().setSound(SoundId.WHISTLE);
 					step.getResult().setNextAction(StepAction.NEXT_STEP);

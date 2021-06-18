@@ -148,6 +148,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonArrayOption STEPS = new JsonArrayOption("steps");
 	JsonIntOption SWARMING_PLAYER_AMOUT = new JsonIntOption("swarmingPlayerAmount");
 	JsonBooleanOption SYNCHRONIZE = new JsonBooleanOption("synchronize");
+	JsonStringArrayOption TEAM_UNDER_SCRUTINY = new JsonStringArrayOption("underScrutiny");
 	JsonFieldCoordinateOption THROW_IN_COORDINATE = new JsonFieldCoordinateOption("throwInCoordinate");
 	JsonBooleanOption THROW_SCATTER = new JsonBooleanOption("throwScatter");
 	JsonFieldCoordinateOption THROWN_PLAYER_COORDINATE = new JsonFieldCoordinateOption("thrownPlayerCoordinate");

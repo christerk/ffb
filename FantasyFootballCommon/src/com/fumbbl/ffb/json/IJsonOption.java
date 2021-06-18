@@ -492,6 +492,7 @@ public interface IJsonOption {
 	JsonLongOption TURN_TIME = new JsonLongOption("turnTime");
 	JsonIntOption TURNS_PLAYED = new JsonIntOption("turnsPlayed");
 	JsonBooleanOption UNDEAD = new JsonBooleanOption("undead");
+	JsonBooleanOption UNDER_SCRUTINY = new JsonBooleanOption("underScrutiny");
 	JsonArrayOption UNZAP_ARRAY = new JsonArrayOption("unzapArray");
 	JsonStringOption UPLOAD_STATUS = new JsonStringOption("uploadStatus");
 	JsonStringOption URL_ICON_SET = new JsonStringOption("urlIconSet");
