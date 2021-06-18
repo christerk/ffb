@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.foul;
+package com.fumbbl.ffb.server.step.bb2020.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -16,6 +16,8 @@ import com.fumbbl.ffb.report.ReportFoul;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.InjuryType.InjuryTypeFoul;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeFoulForSpp;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -28,12 +30,12 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 
 /**
  * Step in foul sequence to handle the actual foul.
- * 
+ * <p>
  * Sets stepParameter INJURY_RESULT for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepFoul extends AbstractStep {
 
 	private boolean usingChainsaw;
@@ -83,8 +85,10 @@ public class StepFoul extends AbstractStep {
 		}
 		UtilServerGame.syncGameModel(this);
 		FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeFoul(usingChainsaw),
-				actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
+		InjuryTypeServer<?> injuryTypeServer = getGameState().getPrayerState().hasFoulingFrenzy(game.getActingTeam())
+			? new InjuryTypeFoulForSpp(usingChainsaw) : new InjuryTypeFoul(usingChainsaw);
+		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, injuryTypeServer,
+			actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

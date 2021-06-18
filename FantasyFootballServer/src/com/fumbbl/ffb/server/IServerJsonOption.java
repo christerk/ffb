@@ -55,6 +55,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption END_INDUCEMENT_PHASE = new JsonBooleanOption("endInducementPhase");
 	JsonBooleanOption END_KICKOFF = new JsonBooleanOption("endKickoff");
 	JsonBooleanOption END_TURN = new JsonBooleanOption("endTurn");
+	JsonStringArrayOption FAN_INTERACTION = new JsonStringArrayOption("fanInteraction");
 	JsonBooleanOption FEED_ON_PLAYER_CHOICE = new JsonBooleanOption("feedOnPlayerChoice");
 	JsonBooleanOption FEEDING_ALLOWED = new JsonBooleanOption("feedingAllowed");
 	JsonStringArrayOption FRIENDS_WITH_REF = new JsonStringArrayOption("friendsWithRef");
@@ -62,6 +63,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption FOLLOWUP_CHOICE = new JsonBooleanOption("followupChoice");
 	JsonStringOption FOUL_DEFENDER_ID = new JsonStringOption("foulDefenderId");
 	JsonBooleanOption FOULER_HAS_BALL = new JsonBooleanOption("foulerHasBall");
+	JsonStringArrayOption FOULING_FRENZY = new JsonStringArrayOption("foulingFrenzy");
 	JsonBooleanOption FUMBBL_GAME_CREATED = new JsonBooleanOption("fumbblGameCreated");
 	JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
 	JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);

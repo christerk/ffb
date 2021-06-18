@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class InjuryResult implements IJsonSerializable {
@@ -126,7 +125,7 @@ public class InjuryResult implements IJsonSerializable {
 		if (injuryContext.getSufferedInjury() != null && updateStats) {
 			if (isCausedByOpponent) {
 				if ((injuryContext.fApothecaryStatus == ApothecaryStatus.RESULT_CHOICE)
-						&& (injuryContext.getPlayerState().getBase() == PlayerState.RESERVE)) {
+					&& (injuryContext.getPlayerState().getBase() == PlayerState.RESERVE)) {
 					if (game.getTeamHome().hasPlayer(defender)) {
 						gameResult.getTeamResultHome().sufferInjury(new PlayerState(PlayerState.BADLY_HURT));
 					} else {
@@ -140,8 +139,10 @@ public class InjuryResult implements IJsonSerializable {
 					}
 				}
 				Player<?> attacker = game.getPlayerById(injuryContext.getAttackerId());
-				if (injuryContext.getSufferedInjury().isCasualty() && injuryContext.getInjuryType().isWorthSpps()
-						&& (attacker.getTeam() != defender.getTeam())) {
+				if (attacker != null
+					&& injuryContext.getSufferedInjury().isCasualty()
+					&& injuryContext.getInjuryType().isWorthSpps()
+					&& (attacker.getTeam() != defender.getTeam())) {
 					PlayerResult attackerResult = gameResult.getPlayerResult(attacker);
 					pStep.getGameState().getPrayerState().addCasualty(attackerResult);
 				}
@@ -203,7 +204,7 @@ public class InjuryResult implements IJsonSerializable {
 		IServerJsonOption.INJURY_MODIFIERS.addTo(jsonObject, injuryModifiers);
 
 		JsonArray casualtyModifiers = new JsonArray();
-		injuryContext.getCasualtyModifiers().forEach(modifier ->  casualtyModifiers.add(UtilJson.toJsonValue(modifier)));
+		injuryContext.getCasualtyModifiers().forEach(modifier -> casualtyModifiers.add(UtilJson.toJsonValue(modifier)));
 		IServerJsonOption.CASUALTY_MODIFIERS.addTo(jsonObject, casualtyModifiers);
 
 		return jsonObject;
@@ -242,7 +243,7 @@ public class InjuryResult implements IJsonSerializable {
 		JsonArray armorModifiers = IServerJsonOption.ARMOR_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < armorModifiers.size(); i++) {
 			injuryContext.fArmorModifiers
-					.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));
+				.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));
 		}
 
 		injuryContext.fInjuryModifiers.clear();
@@ -250,7 +251,7 @@ public class InjuryResult implements IJsonSerializable {
 		JsonArray injuryModifiers = IServerJsonOption.INJURY_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < injuryModifiers.size(); i++) {
 			injuryContext.fInjuryModifiers
-					.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));
+				.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));
 		}
 
 		injuryContext.casualtyModifiers.clear();

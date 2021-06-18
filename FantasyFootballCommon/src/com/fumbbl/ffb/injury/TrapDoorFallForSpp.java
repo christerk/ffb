@@ -4,10 +4,10 @@ import com.fumbbl.ffb.InjuryType;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.model.Player;
 
-public class TrapDoorFall extends InjuryType {
+public class TrapDoorFallForSpp extends InjuryType {
 
-	public TrapDoorFall() {
-		super("trapdoorFall", false, SendToBoxReason.TRAP_DOOR_FALL);
+	public TrapDoorFallForSpp() {
+		super("trapdoorFallForSpp", true, SendToBoxReason.TRAP_DOOR_FALL);
 	}
 
 	@Override
@@ -26,4 +26,8 @@ public class TrapDoorFall extends InjuryType {
 		string.append("  is injured by the fall.");
 	}
 
+	@Override
+	public boolean isCausedByOpponent() {
+		return true;
+	}
 }

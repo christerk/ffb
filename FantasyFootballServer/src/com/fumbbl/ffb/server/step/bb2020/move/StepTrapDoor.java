@@ -18,6 +18,7 @@ import com.fumbbl.ffb.report.bb2020.ReportTrapDoor;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryType.InjuryTypeTrapDoorFall;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeTrapDoorFallForSpp;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -36,6 +37,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.TRAP_DOOR;
 	private String playerId;
 	private Boolean thrownPlayerHasBall;
+	private boolean playerWasPushed;
 
 	public StepTrapDoor(GameState pGameState) {
 		super(pGameState);
@@ -68,6 +70,10 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 					return true;
 				case THROWN_PLAYER_HAS_BALL:
 					thrownPlayerHasBall = (Boolean) parameter.getValue();
+					return true;
+				case PLAYER_WAS_PUSHED:
+					playerWasPushed = (boolean) parameter.getValue();
+					consume(parameter);
 					return true;
 				default:
 					break;
@@ -124,8 +130,10 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 	}
 
 	private void trapDoorTriggered(Game game, Player<?> player, FieldCoordinate playerCoordinate, boolean hasBall) {
+		Player<?> attacker = game.getActingPlayer().getPlayer();
+		boolean eligibleForSpp = playerWasPushed && attacker != null && getGameState().getPrayerState().hasFanInteraction(attacker.getTeam());
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-			UtilServerInjury.handleInjury(this, new InjuryTypeTrapDoorFall(), null, player,
+			UtilServerInjury.handleInjury(this, eligibleForSpp ? new InjuryTypeTrapDoorFallForSpp() : new InjuryTypeTrapDoorFall(), eligibleForSpp ? attacker : null, player,
 				playerCoordinate, null, null, ApothecaryMode.TRAP_DOOR)));
 		game.getFieldModel().remove(player);
 		if (hasBall) {
@@ -149,6 +157,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, thrownPlayerHasBall);
+		IServerJsonOption.PLAYER_WAS_PUSHED.addTo(jsonObject, playerWasPushed);
 		return jsonObject;
 	}
 
@@ -158,6 +167,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
+		playerWasPushed = IServerJsonOption.PLAYER_WAS_PUSHED.getFrom(source, jsonObject);
 		return this;
 	}
 }

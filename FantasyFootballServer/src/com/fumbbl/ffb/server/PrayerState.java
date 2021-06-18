@@ -17,6 +17,8 @@ public class PrayerState implements IJsonSerializable {
 	private final Set<String> getAdditionalCompletionSpp = new HashSet<>();
 	private final Set<String> getAdditionalCasSpp = new HashSet<>();
 	private final Set<String> underScrutiny = new HashSet<>();
+	private final Set<String> foulingFrenzy = new HashSet<>();
+	private final Set<String> fanInteraction = new HashSet<>();
 
 	public void addFriendsWithRef(Team team) {
 		friendsWithRef.add(team.getId());
@@ -72,6 +74,31 @@ public class PrayerState implements IJsonSerializable {
 		return underScrutiny.contains(team.getId());
 	}
 
+	public void addFanInteraction(Team team) {
+		fanInteraction.add(team.getId());
+	}
+
+	public void removeFanInteraction(Team team) {
+		fanInteraction.remove(team.getId());
+	}
+
+	public boolean hasFanInteraction(Team team) {
+		return fanInteraction.contains(team.getId());
+	}
+
+	public void addFoulingFrenzy(Team team) {
+		foulingFrenzy.add(team.getId());
+	}
+
+	public void removeFoulingFrenzy(Team team) {
+		foulingFrenzy.remove(team.getId());
+	}
+
+	public boolean hasFoulingFrenzy(Team team) {
+		return foulingFrenzy.contains(team.getId());
+	}
+
+
 	@Override
 	public PrayerState initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
@@ -79,6 +106,8 @@ public class PrayerState implements IJsonSerializable {
 		getAdditionalCasSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_CASUALTY_SPP.getFrom(game, jsonObject)));
 		getAdditionalCompletionSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_COMPLETION_SPP.getFrom(game, jsonObject)));
 		underScrutiny.addAll(Arrays.asList(IServerJsonOption.TEAM_UNDER_SCRUTINY.getFrom(game, jsonObject)));
+		fanInteraction.addAll(Arrays.asList(IServerJsonOption.FAN_INTERACTION.getFrom(game, jsonObject)));
+		foulingFrenzy.addAll(Arrays.asList(IServerJsonOption.FOULING_FRENZY.getFrom(game, jsonObject)));
 		return this;
 	}
 
@@ -89,6 +118,8 @@ public class PrayerState implements IJsonSerializable {
 		IServerJsonOption.GET_ADDITIONAL_COMPLETION_SPP.addTo(jsonObject, getAdditionalCompletionSpp);
 		IServerJsonOption.GET_ADDITIONAL_CASUALTY_SPP.addTo(jsonObject, getAdditionalCasSpp);
 		IServerJsonOption.TEAM_UNDER_SCRUTINY.addTo(jsonObject, underScrutiny);
+		IServerJsonOption.FAN_INTERACTION.addTo(jsonObject, fanInteraction);
+		IServerJsonOption.FOULING_FRENZY.addTo(jsonObject, foulingFrenzy);
 		return jsonObject;
 	}
 }

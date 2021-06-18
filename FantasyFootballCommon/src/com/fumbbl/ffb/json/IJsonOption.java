@@ -319,6 +319,7 @@ public interface IJsonOption {
 	JsonPlayerStateOption PLAYER_STATE_NEW = new JsonPlayerStateOption("playerStateNew");
 	JsonPlayerStateOption PLAYER_STATE_OLD = new JsonPlayerStateOption("playerStateOld");
 	JsonEnumWithNameOption PLAYER_TYPE = new JsonEnumWithNameOption("playerType", Factory.PLAYER_TYPE);
+	JsonBooleanOption PLAYER_WAS_PUSHED = new JsonBooleanOption("playerWasPushed");
 	JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
 	JsonBooleanArrayOption PLAYERS_AFFECTED_HOME = new JsonBooleanArrayOption("playersAffectedHome");
 	JsonFieldCoordinateMapOption PLAYERS_AT_COORDINATES = new JsonFieldCoordinateMapOption("playersAtCoordinates");

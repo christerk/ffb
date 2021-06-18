@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.block;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -22,6 +22,8 @@ import com.fumbbl.ffb.report.ReportPushback;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPush;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPushForSpp;
+import com.fumbbl.ffb.server.InjuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -42,36 +44,20 @@ import java.util.Stack;
 
 /**
  * Step in block sequence to handle pushbacks.
- * 
+ * <p>
  * Expects stepParameter STARTING_PUSHBACK_SQUARE to be set by a preceding step.
  * Expects stepParameter OLD_DEFENDER_STATE to be set by a preceding step.
- * 
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
  * Sets stepParameter DEFENDER_PUSHED for all steps on the stack. Sets
  * stepParameter FOLLOWUP_CHOICE for all steps on the stack. Sets stepParameter
  * STARTING_PUSHBACK_SQUARE for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepPushback extends AbstractStep {
-
-	public static class StepState {
-		public PlayerState oldDefenderState;
-		public PushbackSquare startingPushbackSquare;
-		public Boolean grabbing;
-		public Map<String, Boolean> sideStepping;
-		public Map<String, Boolean> standingFirm;
-		public Stack<Pushback> pushbackStack;
-
-		// Transients
-		public Player<?> defender;
-		public boolean doPush;
-		public boolean freeSquareAroundDefender;
-		public PushbackMode pushbackMode;
-		public PushbackSquare[] pushbackSquares;
-	}
 
 	private final StepState state;
 
@@ -99,20 +85,20 @@ public class StepPushback extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_USE_SKILL:
-				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
-				break;
-			case CLIENT_PUSHBACK:
-				ClientCommandPushback pushbackCommand = (ClientCommandPushback) pReceivedCommand.getCommand();
-				if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-					state.pushbackStack.push(pushbackCommand.getPushback());
-				} else {
-					state.pushbackStack.push(pushbackCommand.getPushback().transform());
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
+				case CLIENT_USE_SKILL:
+					commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
+					break;
+				case CLIENT_PUSHBACK:
+					ClientCommandPushback pushbackCommand = (ClientCommandPushback) pReceivedCommand.getCommand();
+					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+						state.pushbackStack.push(pushbackCommand.getPushback());
+					} else {
+						state.pushbackStack.push(pushbackCommand.getPushback().transform());
+					}
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -125,14 +111,14 @@ public class StepPushback extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case OLD_DEFENDER_STATE:
-				state.oldDefenderState = (PlayerState) pParameter.getValue();
-				return true;
-			case STARTING_PUSHBACK_SQUARE:
-				state.startingPushbackSquare = (PushbackSquare) pParameter.getValue();
-				return true;
-			default:
-				break;
+				case OLD_DEFENDER_STATE:
+					state.oldDefenderState = (PlayerState) pParameter.getValue();
+					return true;
+				case STARTING_PUSHBACK_SQUARE:
+					state.startingPushbackSquare = (PushbackSquare) pParameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -171,11 +157,11 @@ public class StepPushback extends AbstractStep {
 			}
 			state.pushbackMode = PushbackMode.REGULAR;
 			state.pushbackSquares = UtilServerPushback.findPushbackSquares(game, state.startingPushbackSquare,
-					state.pushbackMode);
+				state.pushbackMode);
 			fieldModel.add(state.pushbackSquares);
 			state.freeSquareAroundDefender = false;
 			FieldCoordinate[] adjacentSquares = fieldModel
-					.findAdjacentCoordinates(state.startingPushbackSquare.getCoordinate(), FieldCoordinateBounds.FIELD, 1, false);
+				.findAdjacentCoordinates(state.startingPushbackSquare.getCoordinate(), FieldCoordinateBounds.FIELD, 1, false);
 			for (int i = 0; !state.freeSquareAroundDefender && (i < adjacentSquares.length); i++) {
 				if (fieldModel.getPlayer(adjacentSquares[i]) == null) {
 					state.freeSquareAroundDefender = true;
@@ -187,14 +173,25 @@ public class StepPushback extends AbstractStep {
 			if (!stopProcessing) {
 				if (!ArrayTool.isProvided(state.pushbackSquares)) {
 					// Crowdpush
+					Player<?> attacker;
+					InjuryTypeServer<?> injuryTypeServer;
+
+					if (getGameState().getPrayerState().hasFanInteraction(game.getActingTeam())) {
+						attacker = game.getActingPlayer().getPlayer();
+						injuryTypeServer = new InjuryTypeCrowdPushForSpp();
+					} else {
+						attacker = null;
+						injuryTypeServer = new InjuryTypeCrowdPush();
+					}
+
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-							UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, state.defender,
-									state.startingPushbackSquare.getCoordinate(), null, null, ApothecaryMode.CROWD_PUSH)));
+						UtilServerInjury.handleInjury(this, injuryTypeServer, attacker, state.defender,
+							state.startingPushbackSquare.getCoordinate(), null, null, ApothecaryMode.CROWD_PUSH)));
 					game.getFieldModel().remove(state.defender);
 					if (defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
 						game.getFieldModel().setBallCoordinate(null);
 						publishParameter(
-								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 						publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, defenderCoordinate));
 					}
 					publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
@@ -231,9 +228,8 @@ public class StepPushback extends AbstractStep {
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 		}
 		publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, pPlayer.getId()));
+		publishParameter(new StepParameter(StepParameterKey.PLAYER_WAS_PUSHED, true));
 	}
-
-	// JSON serialization
 
 	@Override
 	public JsonObject toJsonValue() {
@@ -247,6 +243,8 @@ public class StepPushback extends AbstractStep {
 		IServerJsonOption.USING_STAND_FIRM.addTo(jsonObject, state.standingFirm);
 		return jsonObject;
 	}
+
+	// JSON serialization
 
 	@Override
 	public StepPushback initFrom(IFactorySource game, JsonValue pJsonValue) {
@@ -262,5 +260,21 @@ public class StepPushback extends AbstractStep {
 		state.sideStepping = IServerJsonOption.USING_SIDE_STEP.getFrom(game, jsonObject);
 		state.standingFirm = IServerJsonOption.USING_STAND_FIRM.getFrom(game, jsonObject);
 		return this;
+	}
+
+	public static class StepState {
+		public PlayerState oldDefenderState;
+		public PushbackSquare startingPushbackSquare;
+		public Boolean grabbing;
+		public Map<String, Boolean> sideStepping;
+		public Map<String, Boolean> standingFirm;
+		public Stack<Pushback> pushbackStack;
+
+		// Transients
+		public Player<?> defender;
+		public boolean doPush;
+		public boolean freeSquareAroundDefender;
+		public PushbackMode pushbackMode;
+		public PushbackSquare[] pushbackSquares;
 	}
 }
