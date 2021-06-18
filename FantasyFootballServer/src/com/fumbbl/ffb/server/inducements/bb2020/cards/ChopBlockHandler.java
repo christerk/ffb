@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.server.inducements.bb2020;
-
-import static com.fumbbl.ffb.inducement.bb2020.CardHandlerKey.CHOP_BLOCK;
+package com.fumbbl.ffb.server.inducements.bb2020.cards;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -12,6 +10,8 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.inducements.CardHandler;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import static com.fumbbl.ffb.inducement.bb2020.CardHandlerKey.CHOP_BLOCK;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class ChopBlockHandler extends CardHandler {

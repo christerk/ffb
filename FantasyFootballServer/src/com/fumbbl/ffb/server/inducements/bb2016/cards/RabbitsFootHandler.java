@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.server.inducements.bb2020;
-
-import static com.fumbbl.ffb.inducement.bb2020.CardHandlerKey.RABBITS_FOOT;
+package com.fumbbl.ffb.server.inducements.bb2016.cards;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.inducement.Card;
@@ -10,7 +8,9 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.inducements.CardHandler;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
+import static com.fumbbl.ffb.inducement.bb2016.CardHandlerKey.RABBITS_FOOT;
+
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class RabbitsFootHandler extends CardHandler {
 	@Override
 	protected CardHandlerKey handlerKey() {

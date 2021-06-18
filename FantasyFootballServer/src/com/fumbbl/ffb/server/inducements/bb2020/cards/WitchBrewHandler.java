@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.server.inducements.bb2020;
-
-import static com.fumbbl.ffb.inducement.bb2020.CardHandlerKey.WITCH_BREW;
+package com.fumbbl.ffb.server.inducements.bb2020.cards;
 
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.RulesCollection;
@@ -12,6 +10,8 @@ import com.fumbbl.ffb.report.ReportCardEffectRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.inducements.CardHandler;
 import com.fumbbl.ffb.server.step.IStep;
+
+import static com.fumbbl.ffb.inducement.bb2020.CardHandlerKey.WITCH_BREW;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class WitchBrewHandler extends CardHandler {

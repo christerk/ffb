@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.server.inducements.bb2016;
-
-import static com.fumbbl.ffb.inducement.bb2016.CardHandlerKey.CUSTARD_PIE;
+package com.fumbbl.ffb.server.inducements.bb2020.cards;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -14,7 +12,9 @@ import com.fumbbl.ffb.server.inducements.CardHandler;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-@RulesCollection(RulesCollection.Rules.BB2016)
+import static com.fumbbl.ffb.inducement.bb2020.CardHandlerKey.CUSTARD_PIE;
+
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class CustardPieHandler extends CardHandler {
 	@Override
 	protected CardHandlerKey handlerKey() {
