@@ -2,6 +2,7 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
@@ -19,8 +20,6 @@ import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 
-import static com.fumbbl.ffb.model.skill.SkillValueEvaluator.ANIMOSITY_TO_ALL;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -31,6 +30,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.fumbbl.ffb.model.skill.SkillValueEvaluator.ANIMOSITY_TO_ALL;
 
 /**
  * @author Kalimar
@@ -259,10 +260,14 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract void removeTemporaryProperties(String source);
 
-	public void removeEnhancements(Card card) {
-		removeTemporaryModifiers(card.getName());
-		removeTemporaryProperties(card.getName());
-		removeTemporarySkills(card.getName());
+	public void removeEnhancements(INamedObject namedObject) {
+		removeEnhancements(namedObject.getName());
+	}
+
+	public void removeEnhancements(String sourceName) {
+		removeTemporaryModifiers(sourceName);
+		removeTemporaryProperties(sourceName);
+		removeTemporarySkills(sourceName);
 	}
 
 	public void addActivationEnhancements(Card card, SkillFactory factory) {

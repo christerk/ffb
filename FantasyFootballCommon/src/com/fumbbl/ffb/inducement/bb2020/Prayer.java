@@ -2,6 +2,11 @@ package com.fumbbl.ffb.inducement.bb2020;
 
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.inducement.InducementDuration;
+import com.fumbbl.ffb.model.skill.SkillClassWithValue;
+import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
+import com.fumbbl.ffb.skill.bb2020.Stab;
+
+import java.util.HashSet;
 
 public enum Prayer implements INamedObject {
 	TREACHEROUS_TRAPDOOR("Treacherous Trapdoor",
@@ -9,8 +14,19 @@ public enum Prayer implements INamedObject {
 		InducementDuration.UNTIL_END_OF_HALF, true),
 	FRIENDS_WITH_THE_REF("Friends with the Ref", "Argue the call succeeds on 5+"),
 	STILETTO("Stiletto",
-		"One random player available to play during this drive without Loner gains Stab",
-		InducementDuration.UNTIL_END_OF_GAME),
+		"One random player available to play during this drive without Loner gains Stab") {
+		@Override
+		public TemporaryEnhancements enhancements() {
+			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
+				add(new SkillClassWithValue(Stab.class));
+			}});
+		}
+
+		@Override
+		public String eventMessage() {
+			return " gains Stab";
+		}
+	},
 	IRON_MAN("Iron Man",
 		"One chosen player available to play during this drive without Loner improves AV by 1 (Max 11+)"),
 	KNUCKLE_DUSTERS("Knuckle Dusters",
@@ -73,5 +89,13 @@ public enum Prayer implements INamedObject {
 
 	public InducementDuration getDuration() {
 		return duration;
+	}
+
+	public TemporaryEnhancements enhancements() {
+		return new TemporaryEnhancements();
+	}
+
+	public String eventMessage() {
+		return "";
 	}
 }

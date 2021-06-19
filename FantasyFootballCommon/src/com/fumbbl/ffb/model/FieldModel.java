@@ -22,6 +22,7 @@ import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
+import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -346,6 +347,17 @@ public class FieldModel implements IJsonSerializable {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
 		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
+	}
+
+	public void addPrayerEnhancements(Player<?> player, Prayer prayer) {
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		player.addEnhancement(prayer.getName(), prayer.enhancements(), factory);
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
+	}
+
+	public void removePrayerEnhancements(Player<?> player, Prayer prayer) {
+		player.removeEnhancements(prayer);
+		notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_PRAYER, player.getId(), prayer.name());
 	}
 
 	public boolean removeCardEffect(Player<?> pPlayer, CardEffect pCardEffect) {

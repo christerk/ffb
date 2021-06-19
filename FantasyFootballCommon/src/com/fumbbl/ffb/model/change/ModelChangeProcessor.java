@@ -122,6 +122,9 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_ADD_PLAYER_MARKER:
 				pGame.getFieldModel().add((PlayerMarker) pModelChange.getValue());
 				return true;
+			case FIELD_MODEL_ADD_PRAYER:
+				pGame.getFieldModel().addPrayerEnhancements(pGame.getPlayerById(pModelChange.getKey()), Prayer.valueOf((String) pModelChange.getValue()));
+				return true;
 			case FIELD_MODEL_ADD_PUSHBACK_SQUARE:
 				pGame.getFieldModel().add((PushbackSquare) pModelChange.getValue());
 				return true;
@@ -155,6 +158,9 @@ public class ModelChangeProcessor {
 				return true;
 			case FIELD_MODEL_REMOVE_PLAYER_MARKER:
 				pGame.getFieldModel().remove((PlayerMarker) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_REMOVE_PRAYER:
+				pGame.getFieldModel().removePrayerEnhancements(pGame.getPlayerById(pModelChange.getKey()), Prayer.valueOf((String) pModelChange.getValue()));
 				return true;
 			case FIELD_MODEL_REMOVE_PUSHBACK_SQUARE:
 				pGame.getFieldModel().remove((PushbackSquare) pModelChange.getValue());

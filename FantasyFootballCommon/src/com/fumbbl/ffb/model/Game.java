@@ -3,11 +3,11 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.dialog.DialogParameterFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
@@ -63,14 +63,14 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private FieldModel fFieldModel;
 	private Team fTeamHome;
 	private Team fTeamAway;
-	private TurnData fTurnDataHome;
-	private TurnData fTurnDataAway;
+	private final TurnData fTurnDataHome;
+	private final TurnData fTurnDataAway;
 	private ActingPlayer fActingPlayer;
 	private GameResult fGameResult;
-	private GameOptions fOptions;
+	private final GameOptions fOptions;
 	private GameRules rules;
-	private FactoryManager factoryManager;
-	private IFactorySource applicationSource;
+	private final FactoryManager factoryManager;
+	private final IFactorySource applicationSource;
 	private ModifierAggregator modifierAggregator;
 
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
@@ -533,7 +533,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	// change tracking
 
-	private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
+	public void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
 		if (pChangeId == null) {
 			return;
 		}
