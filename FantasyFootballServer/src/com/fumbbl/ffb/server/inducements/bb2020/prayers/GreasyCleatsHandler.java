@@ -5,10 +5,10 @@ import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.server.GameState;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class StilettoHandler extends RandomSelectionPrayerHandler {
+public class GreasyCleatsHandler extends RandomSelectionPrayerHandler {
 	@Override
 	Prayer handledPrayer() {
-		return Prayer.STILETTO;
+		return Prayer.GREASY_CLEATS;
 	}
 
 	@Override
@@ -18,6 +18,6 @@ public class StilettoHandler extends RandomSelectionPrayerHandler {
 
 	@Override
 	protected PlayerSelector selector() {
-		return PlayerSelector.INSTANCE;
+		return OpponentPlayerSelector.INSTANCE;
 	}
 }

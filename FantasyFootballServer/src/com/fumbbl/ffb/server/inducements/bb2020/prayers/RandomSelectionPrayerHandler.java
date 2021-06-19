@@ -11,13 +11,13 @@ import java.util.List;
 
 public abstract class RandomSelectionPrayerHandler extends PrayerHandler {
 
-	protected abstract int affectedPlayers(Game game);
+	protected abstract int affectedPlayers(GameState gameState);
 
 	protected abstract PlayerSelector selector();
 
 	@Override
 	boolean initEffect(GameState gameState, Team prayingTeam) {
-		List<Player<?>> players = selector().selectPlayers(prayingTeam, gameState.getGame(), affectedPlayers(gameState.getGame()));
+		List<Player<?>> players = selector().selectPlayers(prayingTeam, gameState.getGame(), affectedPlayers(gameState));
 		applyEffect(players, gameState.getGame());
 		return true;
 	}

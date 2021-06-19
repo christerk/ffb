@@ -5,19 +5,19 @@ import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.server.GameState;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class StilettoHandler extends RandomSelectionPrayerHandler {
+public class BadHabitsHandler extends RandomSelectionPrayerHandler {
 	@Override
 	Prayer handledPrayer() {
-		return Prayer.STILETTO;
+		return Prayer.BAD_HABITS;
 	}
 
 	@Override
 	protected int affectedPlayers(GameState gameState) {
-		return 1;
+		return gameState.getDiceRoller().rollDice(3);
 	}
 
 	@Override
 	protected PlayerSelector selector() {
-		return PlayerSelector.INSTANCE;
+		return OpponentPlayerSelector.INSTANCE;
 	}
 }

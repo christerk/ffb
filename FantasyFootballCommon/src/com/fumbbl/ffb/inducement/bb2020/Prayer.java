@@ -4,6 +4,9 @@ import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
+import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
+import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
+import com.fumbbl.ffb.skill.bb2020.Loner;
 import com.fumbbl.ffb.skill.bb2020.Stab;
 
 import java.util.HashSet;
@@ -32,9 +35,33 @@ public enum Prayer implements INamedObject {
 	KNUCKLE_DUSTERS("Knuckle Dusters",
 		"One chosen player available to play during this drive without Loner gains Mighty Blow (+1)"),
 	BAD_HABITS("Bad Habits",
-		"D3 random opponent players available to play during this drive without Loner gain Loner (2+)"),
+		"D3 random opponent players available to play during this drive without Loner gain Loner (2+)") {
+		@Override
+		public TemporaryEnhancements enhancements() {
+			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
+				add(new SkillClassWithValue(Loner.class, "2"));
+			}});
+		}
+
+		@Override
+		public String eventMessage() {
+			return " gains Loner (2+)";
+		}
+	},
 	GREASY_CLEATS("Greasy Cleats",
-		"One random opponent player available to play during this drive has his MA reduced by 1"),
+		"One random opponent player available to play during this drive has his MA reduced by 1") {
+		@Override
+		public TemporaryEnhancements enhancements() {
+			return new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
+				add(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStat.MA));
+			}});
+		}
+
+		@Override
+		public String eventMessage() {
+			return " loses 1 MA";
+		}
+	},
 	BLESSED_STATUE_OF_NUFFLE("Blessed Statue of Nuffle",
 		"One chosen player available to play during this drive without Loner gains Pro"),
 	MOLES_UNDER_THE_PITCH("Moles under the Pitch",
