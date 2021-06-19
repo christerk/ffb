@@ -13,7 +13,7 @@ public class FoulingFrenzyHandler extends PrayerHandler {
 	}
 
 	@Override
-	boolean add(GameState gameState, Team prayingTeam) {
+	boolean initEffect(GameState gameState, Team prayingTeam) {
 		gameState.getPrayerState().addFoulingFrenzy(prayingTeam);
 		return true;
 	}

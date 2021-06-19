@@ -86,7 +86,7 @@ public class StepPrayer extends AbstractStep {
 		PrayerHandlerFactory handlerFactory = getGameState().getGame().getFactory(FactoryType.Factory.PRAYER_HANDLER);
 
 		handlerFactory.forPrayer(prayerFactory.forRoll(roll)).ifPresent(handler ->
-			handler.addEffect(this, getGameState(), teamId));
+			handler.initEffect(this, getGameState(), teamId));
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

@@ -14,7 +14,7 @@ public class FriendsWithTheRefHandler extends PrayerHandler {
 	}
 
 	@Override
-	boolean add(GameState gameState, Team prayingTeam) {
+	boolean initEffect(GameState gameState, Team prayingTeam) {
 		gameState.getPrayerState().addFriendsWithRef(prayingTeam);
 		return true;
 	}

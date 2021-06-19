@@ -25,7 +25,7 @@ public class TreacherousTrapdoorHandler extends PrayerHandler {
 	}
 
 	@Override
-	boolean add(GameState gameState, Team prayingTeam) {
+	boolean initEffect(GameState gameState, Team prayingTeam) {
 		FieldModel fieldModel = gameState.getGame().getFieldModel();
 		trapdoorCoordinates.stream().map(TrapDoor::new).forEach(fieldModel::add);
 		return true;

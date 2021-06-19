@@ -13,7 +13,7 @@ public class MolesUnderThePitchHandler extends PrayerHandler {
 	}
 
 	@Override
-	boolean add(GameState gameState, Team prayingTeam) {
+	boolean initEffect(GameState gameState, Team prayingTeam) {
 		gameState.getPrayerState().addMolesUnderThePitch(prayingTeam);
 		return true;
 	}

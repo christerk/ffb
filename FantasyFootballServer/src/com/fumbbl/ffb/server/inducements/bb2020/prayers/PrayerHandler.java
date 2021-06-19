@@ -32,12 +32,12 @@ public abstract class PrayerHandler implements INamedObject {
 
 	abstract Prayer handledPrayer();
 
-	public void addEffect(@Nullable IStep step, GameState gameState, String prayingTeamId) {
+	public void initEffect(@Nullable IStep step, GameState gameState, String prayingTeamId) {
 		Game game = gameState.getGame();
 		Team prayingTeam = game.getTeamById(prayingTeamId);
 		InducementSet inducementSet = game.getTeamHome() == prayingTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 		inducementSet.addPrayer(handledPrayer());
-		if (add(gameState, prayingTeam) && step != null) {
+		if (initEffect(gameState, prayingTeam) && step != null) {
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
@@ -56,7 +56,7 @@ public abstract class PrayerHandler implements INamedObject {
 	/**
 	 * @return true if handler logic is complete
 	 */
-	abstract boolean add(GameState gameState, Team prayingTeam);
+	abstract boolean initEffect(GameState gameState, Team prayingTeam);
 
 	public abstract void removeEffect(GameState gameState, Team team);
 }

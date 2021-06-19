@@ -13,7 +13,7 @@ public class UnderScrutinyHandler extends PrayerHandler {
 	}
 
 	@Override
-	boolean add(GameState gameState, Team prayingTeam) {
+	boolean initEffect(GameState gameState, Team prayingTeam) {
 		gameState.getPrayerState().addUnderScrutiny(gameState.getGame().getOtherTeam(prayingTeam));
 		return true;
 	}
