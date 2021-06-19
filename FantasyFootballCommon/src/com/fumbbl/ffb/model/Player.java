@@ -224,8 +224,17 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	private int getStatWithModifiers(TemporaryStatModifier.PlayerStat stat, int baseValue) {
-		return getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
+		int sum = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
 			.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
+
+		if (stat.getMax() != 0) {
+			sum = Math.min(stat.getMax(), sum);
+		}
+
+		if (stat.getMin() != 0) {
+			sum = Math.max(stat.getMin(), sum);
+		}
+		return sum;
 	}
 
 	protected abstract Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers();

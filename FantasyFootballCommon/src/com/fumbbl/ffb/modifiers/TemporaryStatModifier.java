@@ -23,6 +23,26 @@ public abstract class TemporaryStatModifier implements INamedObject {
 	public abstract int apply(int value);
 
 	public enum PlayerStat {
-		MA, ST, AG, PA, AV;
+		MA(1, 9), ST(1, 8), AG(1, 6), PA(1, 6), AV(3, 11);
+
+		private final int max;
+		private final int min;
+
+		PlayerStat() {
+			this(0, 0);
+		}
+
+		PlayerStat(int min, int max) {
+			this.max = max;
+			this.min = min;
+		}
+
+		public int getMax() {
+			return max;
+		}
+
+		public int getMin() {
+			return min;
+		}
 	}
 }
