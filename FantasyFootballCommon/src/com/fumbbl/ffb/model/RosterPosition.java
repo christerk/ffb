@@ -3,10 +3,10 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SkillCategory;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PlayerGenderFactory;
 import com.fumbbl.ffb.factory.PlayerTypeFactory;
@@ -19,7 +19,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -184,9 +183,9 @@ public class RosterPosition implements Position {
 	@Override
 	public SkillCategory[] getSkillCategories(boolean pOnDouble) {
 		if (pOnDouble) {
-			return fSkillCategoriesOnDoubleRoll.toArray(new SkillCategory[fSkillCategoriesOnDoubleRoll.size()]);
+			return fSkillCategoriesOnDoubleRoll.toArray(new SkillCategory[0]);
 		} else {
-			return fSkillCategoriesOnNormalRoll.toArray(new SkillCategory[fSkillCategoriesOnNormalRoll.size()]);
+			return fSkillCategoriesOnNormalRoll.toArray(new SkillCategory[0]);
 		}
 	}
 

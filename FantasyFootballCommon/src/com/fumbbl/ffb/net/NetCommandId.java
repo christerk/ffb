@@ -35,6 +35,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandPing;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandPrayerSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
@@ -134,7 +135,8 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_SET_BLOCK_TARGET_SELECTION("clientSetBlockTargetSelection"), CLIENT_UNSET_BLOCK_TARGET_SELECTION("clientUnsetBlockTargetSelection"),
 	CLIENT_SYNCHRONOUS_MULTI_BLOCK("clientSynchronousMultiBlock"), CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET("clientBlockOrReRollChoiceForTarget"),
 	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler"),
-	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie");
+	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie"),
+	CLIENT_PRAYER_SELECTION("clientPrayerSelection");
 
 	private final String fName;
 
@@ -320,6 +322,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseFumblerooskie();
 			case CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK:
 				return new ClientCommandUseProReRollForBlock();
+			case CLIENT_PRAYER_SELECTION:
+				return new ClientCommandPrayerSelection();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

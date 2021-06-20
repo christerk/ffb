@@ -18,6 +18,8 @@ public abstract class PrayerHandler implements INamedObject {
 
 	protected List<IReport> reports = new ArrayList<>();
 
+	protected EnhancementRemover enhancementRemover = new EnhancementRemover();
+
 	@Override
 	public String getName() {
 		return getClass().getSimpleName();
@@ -29,7 +31,7 @@ public abstract class PrayerHandler implements INamedObject {
 
 	abstract Prayer handledPrayer();
 
-	public void initEffect(@Nullable IStep step, GameState gameState, String prayingTeamId) {
+	public final void initEffect(@Nullable IStep step, GameState gameState, String prayingTeamId) {
 		Game game = gameState.getGame();
 		Team prayingTeam = game.getTeamById(prayingTeamId);
 		InducementSet inducementSet = game.getTeamHome() == prayingTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
@@ -38,6 +40,9 @@ public abstract class PrayerHandler implements INamedObject {
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
 			reports.forEach(report -> step.getResult().addReport(report));
 		}
+	}
+
+	public void applySelection(Game game, PrayerDialogSelection selection) {
 	}
 
 	/**

@@ -113,6 +113,9 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_ADD_DICE_DECORATION:
 				pGame.getFieldModel().add((DiceDecoration) pModelChange.getValue());
 				return true;
+			case FIELD_MODEL_ADD_INTENSIVE_TRAINING:
+				pGame.getFieldModel().addIntensiveTrainingSkill(pModelChange.getKey(), (Skill) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_ADD_FIELD_MARKER:
 				pGame.getFieldModel().add((FieldMarker) pModelChange.getValue());
 				return true;

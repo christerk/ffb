@@ -107,6 +107,8 @@ public class DialogParameterFactory {
 				return new DialogUseChainsawParameter();
 			case INVALID_SOLID_DEFENCE:
 				return new DialogInvalidSolidDefenceParameter();
+			case SELECT_SKILL:
+				return new DialogSelectSkillParameter();
 			default:
 				return null;
 		}

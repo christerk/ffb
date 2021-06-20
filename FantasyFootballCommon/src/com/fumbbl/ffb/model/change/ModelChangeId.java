@@ -32,6 +32,7 @@ public enum ModelChangeId implements INamedObject {
 	FIELD_MODEL_ADD_CARD("fieldModelAddCard", ModelChangeDataType.CARD),
 	FIELD_MODEL_ADD_CARD_EFFECT("fieldModelAddCardEffect", ModelChangeDataType.CARD_EFFECT),
 	FIELD_MODEL_ADD_DICE_DECORATION("fieldModelAddDiceDecoration", ModelChangeDataType.DICE_DECORATION),
+	FIELD_MODEL_ADD_INTENSIVE_TRAINING("fieldModelAddIntensiveTraining", ModelChangeDataType.SKILL),
 	FIELD_MODEL_ADD_FIELD_MARKER("fieldModelAddFieldMarker", ModelChangeDataType.FIELD_MARKER),
 	FIELD_MODEL_ADD_MOVE_SQUARE("fieldModelAddMoveSquare", ModelChangeDataType.MOVE_SQUARE),
 	FIELD_MODEL_ADD_PLAYER_MARKER("fieldModelAddPlayerMarker", ModelChangeDataType.PLAYER_MARKER),

@@ -28,6 +28,7 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
@@ -35,6 +36,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -353,6 +355,12 @@ public class FieldModel implements IJsonSerializable {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
 		player.addEnhancement(prayer.getName(), prayer.enhancements(), factory);
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
+	}
+
+	public void addIntensiveTrainingSkill(String playerId, Skill skill) {
+		Player<?> player = getGame().getPlayerById(playerId);
+		player.addTemporarySkills(Prayer.INTENSIVE_TRAINING.getName(), Collections.singleton(new SkillWithValue(skill, String.valueOf(skill.getDefaultSkillValue()))));
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, playerId, skill);
 	}
 
 	public void removePrayerEnhancements(Player<?> player, Prayer prayer) {
