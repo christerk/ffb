@@ -172,7 +172,7 @@ public class DialogManager {
 						setDialogHandler(new DialogInvalidSolidDefenceHandler(getClient()));
 						break;
 					case SELECT_SKILL:
-						setDialogHandler(new DialogSkillChoiceHandler(getClient()));
+						setDialogHandler(new DialogSelectSkillHandler(getClient()));
 						break;
 					default:
 						break;

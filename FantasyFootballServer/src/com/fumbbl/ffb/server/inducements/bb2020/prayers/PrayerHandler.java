@@ -42,7 +42,14 @@ public abstract class PrayerHandler implements INamedObject {
 		}
 	}
 
-	public void applySelection(Game game, PrayerDialogSelection selection) {
+	public final void applySelection(@Nullable IStep step, Game game, PrayerDialogSelection selection) {
+		applySelection(game, selection);
+		if (step != null) {
+			reports.forEach(report -> step.getResult().addReport(report));
+		}
+	}
+
+	void applySelection(Game game, PrayerDialogSelection selection) {
 	}
 
 	/**

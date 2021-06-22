@@ -360,7 +360,7 @@ public class FieldModel implements IJsonSerializable {
 	public void addIntensiveTrainingSkill(String playerId, Skill skill) {
 		Player<?> player = getGame().getPlayerById(playerId);
 		player.addTemporarySkills(Prayer.INTENSIVE_TRAINING.getName(), Collections.singleton(new SkillWithValue(skill, String.valueOf(skill.getDefaultSkillValue()))));
-		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, playerId, skill);
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_INTENSIVE_TRAINING, playerId, skill);
 	}
 
 	public void removePrayerEnhancements(Player<?> player, Prayer prayer) {

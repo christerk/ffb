@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class DialogSkillChoice extends Dialog implements ActionListener {
+public class DialogSelectSkill extends Dialog implements ActionListener {
 
 	private final SkillCheckList fList;
 	private final JButton fButtonSelect;
@@ -25,7 +25,7 @@ public class DialogSkillChoice extends Dialog implements ActionListener {
 	private final int minSelects;
 	private Skill[] selectedSkills;
 
-	public DialogSkillChoice(FantasyFootballClient client, String header, List<Skill> skills,
+	public DialogSelectSkill(FantasyFootballClient client, String header, List<Skill> skills,
 	                         int minSelects, int maxSelects, boolean preSelected) {
 
 		super(client, "Skill Choice", false);
@@ -80,11 +80,11 @@ public class DialogSkillChoice extends Dialog implements ActionListener {
 		getContentPane().add(centerPane, BorderLayout.CENTER);
 
 		pack();
+		setLocationToCenter();
 
 		addMouseListener(this);
 
 		fList.setSelectedIndex(0);
-
 	}
 
 	public DialogId getId() {

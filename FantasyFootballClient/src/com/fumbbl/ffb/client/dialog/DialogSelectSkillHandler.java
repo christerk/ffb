@@ -11,11 +11,11 @@ import com.fumbbl.ffb.model.skill.Skill;
 
 import java.util.List;
 
-public class DialogSkillChoiceHandler extends DialogHandler {
+public class DialogSelectSkillHandler extends DialogHandler {
 
 	private DialogSelectSkillParameter dialogParameter;
 
-	public DialogSkillChoiceHandler(FantasyFootballClient pClient) {
+	public DialogSelectSkillHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
@@ -32,7 +32,7 @@ public class DialogSkillChoiceHandler extends DialogHandler {
 				String dialogHeader = dialogParameter.getSkillChoiceMode().getDialogHeader(player.getName());
 				List<Skill> skills = dialogParameter.getSkills();
 
-				setDialog(new DialogSkillChoice(getClient(), dialogHeader, skills,
+				setDialog(new DialogSelectSkill(getClient(), dialogHeader, skills,
 					1, 1, false));
 				getDialog().showDialog(this);
 
@@ -48,7 +48,7 @@ public class DialogSkillChoiceHandler extends DialogHandler {
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
-			DialogSkillChoice skillChoiceDialog = (DialogSkillChoice) pDialog;
+			DialogSelectSkill skillChoiceDialog = (DialogSelectSkill) pDialog;
 			getClient().getCommunication().sendPrayerSelection(dialogParameter.getPlayerId(), skillChoiceDialog.getSelectedSkills()[0]);
 		}
 	}
