@@ -9,6 +9,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.dialog.DialogSelectSkillParameter;
 import com.fumbbl.ffb.factory.AnimationTypeFactory;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.GameOptionFactory;
@@ -37,10 +38,12 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.factory.PrayerHandlerFactory;
+import com.fumbbl.ffb.server.inducements.bb2020.prayers.PrayerDialogSelection;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -56,7 +59,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  */
 public class ServerCommandHandlerTalk extends ServerCommandHandler {
@@ -85,7 +87,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
 			String coach = sessionManager.getCoachForSession(receivedCommand.getSession());
 			if ((gameState != null) && (sessionManager.getSessionOfHomeCoach(gameId) == receivedCommand.getSession())
-					|| (sessionManager.getSessionOfAwayCoach(gameId) == receivedCommand.getSession())) {
+				|| (sessionManager.getSessionOfAwayCoach(gameId) == receivedCommand.getSession())) {
 				if (isTestMode(gameState) && talk.startsWith("/animations")) {
 					handleAnimationsCommand(gameState, talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/animation")) {
@@ -170,7 +172,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		String testSetting = getServer().getProperty(IServerProperty.SERVER_TEST);
 		return (pGameState.getGame().isTesting()
-				|| (StringTool.isProvided(testSetting) && Boolean.parseBoolean(testSetting)));
+			|| (StringTool.isProvided(testSetting) && Boolean.parseBoolean(testSetting)));
 	}
 
 	private String[] findSpectators(GameState gameState) {
@@ -412,7 +414,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				int[] roll = mechanic.rollCasualty(gameState.getDiceRoller());
 				SeriousInjury seriousInjury = mechanic.interpretSeriousInjuryRoll(game, new InjuryContext(), roll);
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.SERIOUS_INJURY), "Serious Injury",
-						seriousInjury);
+					seriousInjury);
 			} else if ("rip".equalsIgnoreCase(commands[1])) {
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.RIP), "RIP", ((SeriousInjuryFactory) game.getFactory(FactoryType.Factory.SERIOUS_INJURY)).dead());
 			} else if ("ban".equalsIgnoreCase(commands[1])) {
@@ -477,8 +479,29 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
 		PrayerHandlerFactory handlerFactory = game.getFactory(FactoryType.Factory.PRAYER_HANDLER);
 
-		handlerFactory.forPrayer(prayer).ifPresent(handler ->
-			handler.initEffect(null, gameState, homeCoach ? game.getTeamHome().getId() : game.getTeamAway().getId()));
+		handlerFactory.forPrayer(prayer).ifPresent(handler -> {
+			handler.initEffect(null, gameState, homeCoach ? game.getTeamHome().getId() : game.getTeamAway().getId());
+			if (commands.length == 3) {
+				int index;
+				try {
+					index = Integer.parseInt(commands[2]);
+					Skill skill = null;
+					String playerId = null;
+					if (game.getDialogParameter() instanceof DialogSelectSkillParameter) {
+						DialogSelectSkillParameter dialogParameter = (DialogSelectSkillParameter) game.getDialogParameter();
+						skill = dialogParameter.getSkills().get(index);
+						playerId = dialogParameter.getPlayerId();
+					}
+
+					handler.applySelection(null, game, new PrayerDialogSelection(playerId, skill));
+
+				} catch (NumberFormatException ignored) {
+				}
+
+			}
+			UtilServerDialog.hideDialog(gameState);
+
+		});
 
 
 		String info = "Added prayer " + prayer.getName() + " for coach " +
@@ -538,7 +561,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 	}
 
 	private void putPlayerIntoBox(GameState pGameState, Player<?> pPlayer, PlayerState pPlayerState, String pBoxName,
-			SeriousInjury pSeriousInjury) {
+	                              SeriousInjury pSeriousInjury) {
 		Game game = pGameState.getGame();
 		PlayerResult playerResult = game.getGameResult().getPlayerResult(pPlayer);
 		playerResult.setSeriousInjury(pSeriousInjury);
@@ -646,9 +669,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 			if ((player instanceof RosterPlayer) && (lastingInjury != null)) {
 				((RosterPlayer) player).addLastingInjury(lastingInjury);
 				getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
-						game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
+					game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
 				String info = "Player " + player.getName() + " suffers injury " + lastingInjury.getName() +
-						".";
+					".";
 				getServer().getCommunication().sendPlayerTalk(gameState, null, info);
 			}
 		}

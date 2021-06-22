@@ -35,10 +35,10 @@ class PlayerSelector {
 
 	List<Player<?>> eligiblePlayers(Team team, Game game) {
 		return Arrays.stream(team.getPlayers()).filter(player -> {
-				if (game.getTurnMode() == TurnMode.KICKOFF) {
-					return FieldCoordinateBounds.FIELD.isInBounds(game.getFieldModel().getPlayerCoordinate(player));
-				} else {
+				if (game.getTurnMode() == TurnMode.START_GAME) {
 					return game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE;
+				} else {
+					return FieldCoordinateBounds.FIELD.isInBounds(game.getFieldModel().getPlayerCoordinate(player));
 				}
 			}
 		).filter(player -> !player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)).collect(Collectors.toList());

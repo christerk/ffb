@@ -186,9 +186,9 @@ public class DialogChatCommands extends Dialog {
 				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prayer &lt;roll&gt;").append(_FONT_BOLD_CLOSE)
+			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prayer &lt;roll&gt; &lt;index&gt;").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("adds the prayer for this roll to your team.").append(_FONT_CLOSE)
+			html.append("<td>").append(_FONT_OPEN).append("adds the prayer for this roll to your team. &lt;index&gt; is needed for prayers that require player or skill selection, the element at the given index is selected.").append(_FONT_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
