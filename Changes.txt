@@ -9,6 +9,7 @@ Technical Changes:
     + inducementPrayersMax -> int, max allowed prayers during inducement phase, default 0 == unlimited
     + inducementPrayersUseLeagueTable -> boolean, use league or exhibition table, default true
     + inducementPrayersAvailableForUnderdog -> boolean, grant prayers for underdog during inducement phase, default true
+    + enableStallingCheck -> boolean, toggles stalling check for throw a rock prayer, default true
 
 Areas of Testing:
 - Prayers

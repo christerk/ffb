@@ -57,6 +57,8 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_RIOTOUS_ROOKIES_MAX("inducementRiotousRookiesMax"), INDUCEMENT_STARS_MAX("inducementStarsMax"),
 	INDUCEMENT_WIZARDS_COST("inducementWizardsCost"), INDUCEMENT_WIZARDS_MAX("inducementWizardsMax"),
 
+	ENABLE_STALLING_CHECK("enableStallingCheck"),
+
 	PITCH_URL("pitchUrl");
 
 	private final String fName;

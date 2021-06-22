@@ -242,6 +242,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Underdog will not get Prayers during inducement phase.")
 					.setMessageTrue("Underdog will get Prayers during inducement phase.");
+			case ENABLE_STALLING_CHECK:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Stalling check is disabled")
+					.setMessageTrue("Stalling check is enabled");
 			default:
 				return null;
 		}
