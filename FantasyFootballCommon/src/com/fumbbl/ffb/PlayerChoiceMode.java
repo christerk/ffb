@@ -6,17 +6,28 @@ package com.fumbbl.ffb;
 public enum PlayerChoiceMode implements INamedObject {
 
 	TENTACLES("tentacles"), SHADOWING("shadowing"), DIVING_TACKLE("divingTackle"), FEED("feed"),
-	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card"), BLOCK("block"), MVP("mvp"),
-	ANIMAL_SAVAGERY("animalSavagery");
+	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card", false), BLOCK("block"), MVP("mvp"),
+	ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
+	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false);
 
 	private final String name;
+	private final boolean usePlayerPosition;
 
 	PlayerChoiceMode(String pName) {
+		this(pName, true);
+	}
+
+	PlayerChoiceMode(String pName, boolean usePlayerPosition) {
 		name = pName;
+		this.usePlayerPosition = usePlayerPosition;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public boolean isUsePlayerPosition() {
+		return usePlayerPosition;
 	}
 
 	public String getDialogHeader(int nrOfPlayers) {
@@ -51,6 +62,15 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case DECLARE_DIVING_CATCH:
 				header.append("Select ALL players that should try to catch the ball");
+				break;
+			case IRON_MAN:
+				header.append("Select a player to become Iron Man");
+				break;
+			case KNUCKLE_DUSTERS:
+				header.append("Select a player to obtain Knuckle Dusters");
+				break;
+			case BLESSED_STATUE_OF_NUFFLE:
+				header.append("Select a player to receive the Blessed Statue of Nuffle");
 				break;
 			default:
 				break;
@@ -91,6 +111,15 @@ public enum PlayerChoiceMode implements INamedObject {
 			case DECLARE_DIVING_CATCH:
 				title.append("Declare Diving Catch");
 				break;
+			case IRON_MAN:
+				title.append("Iron Man");
+				break;
+			case KNUCKLE_DUSTERS:
+				title.append("Knuckle Dusters");
+				break;
+			case BLESSED_STATUE_OF_NUFFLE:
+				title.append("Blessed Statue of Nuffle");
+				break;
 			default:
 				break;
 		}
@@ -126,6 +155,18 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case ANIMAL_SAVAGERY:
 				message.append("Waiting for coach to choose a player to lash out against.");
+				break;
+			case DECLARE_DIVING_CATCH:
+				message.append("Waiting for coach to choose all players to use Diving Catch.");
+				break;
+			case IRON_MAN:
+				message.append("Waiting for coach to choose a player to become Iron Man.");
+				break;
+			case KNUCKLE_DUSTERS:
+				message.append("Waiting for coach to choose a player to obtain Knuckle Dusters.");
+				break;
+			case BLESSED_STATUE_OF_NUFFLE:
+				message.append("Waiting for coach to choose a player to receive the Blessed Statue of Nuffle.");
 				break;
 			default:
 				break;

@@ -16,11 +16,11 @@ public abstract class DialogPrayerHandler extends PrayerHandler {
 		if (players.isEmpty()) {
 			return true;
 		}
-		createDialog(players, gameState);
+		createDialog(players, gameState, prayingTeam);
 		return false;
 	}
 
-	protected abstract void createDialog(List<Player<?>> players, GameState gameState);
+	protected abstract void createDialog(List<Player<?>> players, GameState gameState, Team prayingTeam);
 
 	@Override
 	public final void removeEffect(GameState gameState, Team team) {

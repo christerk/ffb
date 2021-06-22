@@ -24,14 +24,14 @@ import java.util.List;
 
 public class DialogPlayerChoice extends Dialog implements ActionListener {
 
-	private PlayerCheckList fList;
-	private JButton fButtonSelect;
-	private JButton fButtonCancel;
+	private final PlayerCheckList fList;
+	private final JButton fButtonSelect;
+	private final JButton fButtonCancel;
 	private Player<?>[] fSelectedPlayers;
-	private int fMinSelects;
+	private final int fMinSelects;
 
 	public DialogPlayerChoice(FantasyFootballClient client, String header, String[] playerIds, String[] descriptions,
-			int minSelects, int maxSelects, FieldCoordinate playerCoordinate, boolean preSelected) {
+	                          int minSelects, int maxSelects, FieldCoordinate playerCoordinate, boolean preSelected) {
 
 		super(client, "Player Choice", false);
 		fMinSelects = minSelects;
@@ -101,7 +101,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 		pack();
 
-		if (playerCoordinate != null) {
+		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
 			int x = SideBarComponent.WIDTH + ((playerCoordinate.getX() + 1) * FieldLayer.FIELD_SQUARE_SIZE);
 			int y = (playerCoordinate.getY() + 1) * FieldLayer.FIELD_SQUARE_SIZE;
 			setLocation(x, y);

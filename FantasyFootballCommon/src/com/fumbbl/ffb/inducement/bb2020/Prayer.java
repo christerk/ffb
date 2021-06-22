@@ -5,8 +5,11 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
+import com.fumbbl.ffb.modifiers.TemporaryStatIncrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
+import com.fumbbl.ffb.skill.Pro;
 import com.fumbbl.ffb.skill.bb2020.Loner;
+import com.fumbbl.ffb.skill.bb2020.MightyBlow;
 import com.fumbbl.ffb.skill.bb2020.Stab;
 
 import java.util.HashSet;
@@ -31,9 +34,33 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	IRON_MAN("Iron Man",
-		"One chosen player available to play during this drive without Loner improves AV by 1 (Max 11+)"),
+		"One chosen player available to play during this drive without Loner improves AV by 1 (Max 11+)") {
+		@Override
+		public TemporaryEnhancements enhancements() {
+			return new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
+				add(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStat.AV));
+			}});
+		}
+
+		@Override
+		public String eventMessage() {
+			return " gains 1 AV";
+		}
+	},
 	KNUCKLE_DUSTERS("Knuckle Dusters",
-		"One chosen player available to play during this drive without Loner gains Mighty Blow (+1)"),
+		"One chosen player available to play during this drive without Loner gains Mighty Blow (+1)") {
+		@Override
+		public TemporaryEnhancements enhancements() {
+			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
+				add(new SkillClassWithValue(MightyBlow.class));
+			}});
+		}
+
+		@Override
+		public String eventMessage() {
+			return " gains Mighty Blow (+1)";
+		}
+	},
 	BAD_HABITS("Bad Habits",
 		"D3 random opponent players available to play during this drive without Loner gain Loner (2+)") {
 		@Override
@@ -63,7 +90,19 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	BLESSED_STATUE_OF_NUFFLE("Blessed Statue of Nuffle",
-		"One chosen player available to play during this drive without Loner gains Pro"),
+		"One chosen player available to play during this drive without Loner gains Pro") {
+		@Override
+		public TemporaryEnhancements enhancements() {
+			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
+				add(new SkillClassWithValue(Pro.class));
+			}});
+		}
+
+		@Override
+		public String eventMessage() {
+			return " gains Pro";
+		}
+	},
 	MOLES_UNDER_THE_PITCH("Moles under the Pitch",
 		"Rushes have a -1 modifier (-2 if both coaches rolled this result)"),
 	PERFECT_PASSING("Perfect Passing",

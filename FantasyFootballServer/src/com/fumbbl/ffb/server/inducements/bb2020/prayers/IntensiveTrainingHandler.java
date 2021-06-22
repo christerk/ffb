@@ -9,6 +9,7 @@ import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
@@ -29,7 +30,7 @@ public class IntensiveTrainingHandler extends DialogPrayerHandler {
 	}
 
 	@Override
-	protected void createDialog(List<Player<?>> players, GameState gameState) {
+	protected void createDialog(List<Player<?>> players, GameState gameState, Team team) {
 		Collections.shuffle(players);
 		Player<?> player = players.get(0);
 		List<SkillCategory> categories = Arrays.asList(player.getPosition().getSkillCategories(false));

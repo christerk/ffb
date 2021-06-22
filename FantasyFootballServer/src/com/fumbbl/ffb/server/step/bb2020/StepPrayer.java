@@ -8,6 +8,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandPrayerSelection;
 import com.fumbbl.ffb.report.bb2020.ReportPrayerRoll;
 import com.fumbbl.ffb.server.GameState;
@@ -70,6 +71,11 @@ public class StepPrayer extends AbstractStep {
 					ClientCommandPrayerSelection clientCommandPrayerSelection = (ClientCommandPrayerSelection) pReceivedCommand.getCommand();
 					playerId = clientCommandPrayerSelection.getPlayerId();
 					skill = clientCommandPrayerSelection.getSkill();
+					status = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_PLAYER_CHOICE:
+					ClientCommandPlayerChoice clientCommandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+					playerId = clientCommandPlayerChoice.getPlayerId();
 					status = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:

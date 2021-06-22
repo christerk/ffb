@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -34,7 +33,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 				FieldCoordinate dialogCoordinate = null;
 				String[] playerIds = fDialogParameter.getPlayerIds();
 
-				if (fDialogParameter.getPlayerChoiceMode() != PlayerChoiceMode.CARD) {
+				if (fDialogParameter.getPlayerChoiceMode().isUsePlayerPosition()) {
 					int maxX = 0, maxY = 0;
 					for (String playerId : playerIds) {
 						Player<?> player = game.getPlayerById(playerId);

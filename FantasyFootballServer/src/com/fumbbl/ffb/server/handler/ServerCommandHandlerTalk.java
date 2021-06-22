@@ -9,6 +9,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSelectSkillParameter;
 import com.fumbbl.ffb.factory.AnimationTypeFactory;
 import com.fumbbl.ffb.factory.CardFactory;
@@ -491,6 +492,11 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 						DialogSelectSkillParameter dialogParameter = (DialogSelectSkillParameter) game.getDialogParameter();
 						skill = dialogParameter.getSkills().get(index);
 						playerId = dialogParameter.getPlayerId();
+					} else if (
+						game.getDialogParameter() instanceof DialogPlayerChoiceParameter
+					) {
+						DialogPlayerChoiceParameter dialogPlayerChoiceParameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+						playerId = dialogPlayerChoiceParameter.getPlayerIds()[index];
 					}
 
 					handler.applySelection(null, game, new PrayerDialogSelection(playerId, skill));
