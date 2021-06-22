@@ -139,6 +139,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption SECOND_GO_FOR_IT = new JsonBooleanOption("secondGoForIt");
 	JsonFieldCoordinateOption SETUP_PLAYER_COORDINATE = new JsonFieldCoordinateOption("setupPlayerCoordinate");
 	JsonStringOption SETUP_PLAYER_ID = new JsonStringOption("setupPlayerId");
+	JsonStringArrayOption SHOULD_NOT_STALL = new JsonStringArrayOption("shouldNotStall");
 	JsonBooleanOption SHOW_REPORT = new JsonBooleanOption("showReport");
 	JsonBooleanOption STARTED_AWAY = new JsonBooleanOption("startedAway");
 	JsonBooleanOption STARTED_HOME = new JsonBooleanOption("startedHome");

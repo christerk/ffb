@@ -20,6 +20,7 @@ public class PrayerState implements IJsonSerializable {
 	private final Set<String> foulingFrenzy = new HashSet<>();
 	private final Set<String> fanInteraction = new HashSet<>();
 	private final Set<String> molesUnderThePitch = new HashSet<>();
+	private final Set<String> shouldNotStall = new HashSet<>();
 
 	public void addFriendsWithRef(Team team) {
 		friendsWithRef.add(team.getId());
@@ -111,6 +112,18 @@ public class PrayerState implements IJsonSerializable {
 		return molesUnderThePitch;
 	}
 
+	public void addShouldNotStall(Team team) {
+		shouldNotStall.add(team.getId());
+	}
+
+	public void removeShouldNotStall(Team team) {
+		shouldNotStall.remove(team.getId());
+	}
+
+	public boolean shouldNotStall(Team team) {
+		return shouldNotStall.contains(team.getId());
+	}
+
 	@Override
 	public PrayerState initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
@@ -121,6 +134,7 @@ public class PrayerState implements IJsonSerializable {
 		fanInteraction.addAll(Arrays.asList(IServerJsonOption.FAN_INTERACTION.getFrom(game, jsonObject)));
 		foulingFrenzy.addAll(Arrays.asList(IServerJsonOption.FOULING_FRENZY.getFrom(game, jsonObject)));
 		molesUnderThePitch.addAll(Arrays.asList(IServerJsonOption.MOLES_UNDER_THE_PITCH.getFrom(game, jsonObject)));
+		shouldNotStall.addAll(Arrays.asList(IServerJsonOption.SHOULD_NOT_STALL.getFrom(game, jsonObject)));
 		return this;
 	}
 
@@ -134,6 +148,7 @@ public class PrayerState implements IJsonSerializable {
 		IServerJsonOption.FAN_INTERACTION.addTo(jsonObject, fanInteraction);
 		IServerJsonOption.FOULING_FRENZY.addTo(jsonObject, foulingFrenzy);
 		IServerJsonOption.MOLES_UNDER_THE_PITCH.addTo(jsonObject, molesUnderThePitch);
+		IServerJsonOption.SHOULD_NOT_STALL.addTo(jsonObject, shouldNotStall);
 		return jsonObject;
 	}
 }
