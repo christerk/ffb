@@ -30,7 +30,7 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 			from(StepParameterKey.END_PLAYER_ACTION, params.isEndPlayerAction()), from(StepParameterKey.END_TURN, params.isEndTurn()));
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.FEEDING));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.CHECK_STALLING, IStepLabel.END_FEEDING);
+		sequence.add(StepId.CHECK_STALLING, IStepLabel.END_FEEDING, from(StepParameterKey.IGNORE_ACTED_FLAG, false));
 		sequence.add(StepId.END_FEEDING);
 		// inserts select or inducement sequence at this point
 

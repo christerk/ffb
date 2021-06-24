@@ -15,10 +15,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.bb2020.StepCheckStalling;
+import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
-import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
@@ -93,14 +94,15 @@ public final class StepEndInducement extends AbstractStep {
 			endTurnGenerator.pushSequence(endTurnParams);
 		} else if (fEndInducementPhase) {
 			switch (fInducementPhase) {
-			case END_OF_OWN_TURN:
-				endTurnGenerator.pushSequence(endTurnParams);
-				break;
-			case START_OF_OWN_TURN:
-				((Select)factory.forName(SequenceGenerator.Type.Select.name())).pushSequence(new Select.SequenceParams(getGameState(), true));
-				break;
-			default:
-				break;
+				case END_OF_OWN_TURN:
+					endTurnGenerator.pushSequence(endTurnParams);
+					break;
+				case START_OF_OWN_TURN:
+					((Select) factory.forName(SequenceGenerator.Type.Select.name())).pushSequence(new Select.SequenceParams(getGameState(), true));
+					getGameState().getStepStack().push(new StepCheckStalling(getGameState()));
+					break;
+				default:
+					break;
 			}
 		} else {
 			((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name())).pushSequence(new Inducement.SequenceParams(getGameState(), fInducementPhase, fHomeTeam));

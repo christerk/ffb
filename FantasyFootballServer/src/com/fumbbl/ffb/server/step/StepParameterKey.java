@@ -63,6 +63,7 @@ public enum StepParameterKey {
 	HAIL_MARY_PASS, // Boolean
 	HANDLE_RECEIVING_TEAM, // Boolean
 	HOME_TEAM, // Boolean
+	IGNORE_ACTED_FLAG, // Boolean
 	INCREMENT, // int
 	INDUCEMENT_GOLD_AWAY, // Integer
 	INDUCEMENT_GOLD_HOME, // Integer
