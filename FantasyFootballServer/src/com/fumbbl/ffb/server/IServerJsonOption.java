@@ -142,6 +142,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonStringOption SETUP_PLAYER_ID = new JsonStringOption("setupPlayerId");
 	JsonStringArrayOption SHOULD_NOT_STALL = new JsonStringArrayOption("shouldNotStall");
 	JsonBooleanOption SHOW_REPORT = new JsonBooleanOption("showReport");
+	JsonStringArrayOption STALLERS = new JsonStringArrayOption("stallers");
 	JsonBooleanOption STARTED_AWAY = new JsonBooleanOption("startedAway");
 	JsonBooleanOption STARTED_HOME = new JsonBooleanOption("startedHome");
 	JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");

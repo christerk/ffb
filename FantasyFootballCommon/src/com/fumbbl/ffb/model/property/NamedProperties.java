@@ -19,13 +19,14 @@ public class NamedProperties {
 	public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
 	public static final ISkillProperty assistsBlocksInTacklezones = new NamedProperty("Assists Blocks in Tacklezones");
 	public static final ISkillProperty assistsFoulsInTacklezones = new NamedProperty("Assists Fouls in Tacklezones");
+	public static final ISkillProperty becomesImmovable = new NamedProperty("Becomes Immovable");
 	public static final ISkillProperty blocksDuringMove = new NamedProperty("Blocks During Move");
 	public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
 	public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty(
-			"Can Attempt Catch In Adjacent Squares");
+		"Can Attempt Catch In Adjacent Squares");
 	public static final ISkillProperty canAttemptToTackleDodgingPlayer = new NamedProperty(
-			"Can Attempt To Tackle Dodging Player");
+		"Can Attempt To Tackle Dodging Player");
 	public static final ISkillProperty canBeThrown = new NamedProperty("Can Be Thrown");
 	public static final ISkillProperty canBeThrownIfStrengthIs1or2 = new NamedProperty("Can Be Thrown If Strength is 1 or 2");
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");

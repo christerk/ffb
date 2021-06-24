@@ -81,7 +81,7 @@ import java.util.stream.Collectors;
 
 /**
  * Step in any sequence to end a turn.
- *
+ * <p>
  * May push another sequence on the stack (endGame, startGame or kickoff)
  *
  * @author Kalimar
@@ -120,30 +120,30 @@ public class StepEndTurn extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
 			Team team = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand) ? game.getTeamHome()
-					: game.getTeamAway();
+				: game.getTeamAway();
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_ARGUE_THE_CALL:
-				ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand.getCommand();
-				argueTheCall(team, argueTheCallCommand.getPlayerIds());
-				fWithinSecretWeaponHandling = true;
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			case CLIENT_USE_INDUCEMENT:
-				ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-				if (inducementCommand.getInducementType().getUsage() == Usage.AVOID_BAN) {
+				case CLIENT_ARGUE_THE_CALL:
+					ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand.getCommand();
+					argueTheCall(team, argueTheCallCommand.getPlayerIds());
 					fWithinSecretWeaponHandling = true;
-					if (!useSecretWeaponBribes(team, inducementCommand.getPlayerIds())) {
-						if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-							fBribesChoiceHome = null;
-						} else {
-							fBribesChoiceHome = null;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_USE_INDUCEMENT:
+					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+					if (inducementCommand.getInducementType().getUsage() == Usage.AVOID_BAN) {
+						fWithinSecretWeaponHandling = true;
+						if (!useSecretWeaponBribes(team, inducementCommand.getPlayerIds())) {
+							if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+								fBribesChoiceHome = null;
+							} else {
+								fBribesChoiceHome = null;
+							}
 						}
 					}
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -166,8 +166,8 @@ public class StepEndTurn extends AbstractStep {
 		if (!fWithinSecretWeaponHandling) {
 
 			if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN)
-					|| (game.getTurnMode() == TurnMode.PASS_BLOCK) || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)
-					|| game.getTurnMode() == TurnMode.SWARMING) {
+				|| (game.getTurnMode() == TurnMode.PASS_BLOCK) || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)
+				|| game.getTurnMode() == TurnMode.SWARMING) {
 				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 				return;
@@ -224,31 +224,32 @@ public class StepEndTurn extends AbstractStep {
 
 					switch (game.getTurnMode()) {
 						case NO_PLAYERS_TO_FIELD:
-						game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
-						game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
-						fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
-						game.setTurnMode(TurnMode.SETUP);
-						game.setSetupOffense(false);
-						fTouchdown = true;
-						break;
-						case KICKOFF:
-						game.setHomePlaying(!game.isHomePlaying());
-						game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
-						game.getTurnData().setTurnStarted(false);
-						game.getTurnData().setFirstTurnAfterKickoff(true);
-						game.setTurnMode(TurnMode.REGULAR);
-						break;
-						case REGULAR:
-						if (fNewHalf) {
+							game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
+							game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
+							fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
 							game.setTurnMode(TurnMode.SETUP);
 							game.setSetupOffense(false);
-						} else {
+							fTouchdown = true;
+							break;
+						case KICKOFF:
 							game.setHomePlaying(!game.isHomePlaying());
 							game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
-						}
-						game.getTurnData().setTurnStarted(false);
-						game.getTurnData().setFirstTurnAfterKickoff(false);
-						break;
+							game.getTurnData().setTurnStarted(false);
+							game.getTurnData().setFirstTurnAfterKickoff(true);
+							game.setTurnMode(TurnMode.REGULAR);
+							break;
+						case REGULAR:
+							handleStallers();
+							if (fNewHalf) {
+								game.setTurnMode(TurnMode.SETUP);
+								game.setSetupOffense(false);
+							} else {
+								game.setHomePlaying(!game.isHomePlaying());
+								game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
+							}
+							game.getTurnData().setTurnStarted(false);
+							game.getTurnData().setFirstTurnAfterKickoff(false);
+							break;
 						default:
 							break;
 					}
@@ -293,7 +294,7 @@ public class StepEndTurn extends AbstractStep {
 
 					if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
 						faintingCount = getGameState().getDiceRoller().rollDice(3);
-						for (Team team: new Team[] {game.getTeamHome(), game.getTeamAway()}) {
+						for (Team team : new Team[]{game.getTeamHome(), game.getTeamAway()}) {
 							List<Player<?>> onPitch = Arrays.stream(team.getPlayers()).filter(player -> {
 								FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 								return (playerCoordinate != null) && !playerCoordinate.isBoxCoordinate();
@@ -317,7 +318,7 @@ public class StepEndTurn extends AbstractStep {
 					} else if (game.getHalf() > 1) {
 						GameResult gameResult = game.getGameResult();
 						if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
-								&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
+							&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
 							UtilServerGame.startHalf(this, game.getHalf() + 1);
 							kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
 							fRemoveUsedSecretWeapons = true;
@@ -404,7 +405,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 
 		if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceHome == null)
-				&& (fArgueTheCallChoiceAway != null)) {
+			&& (fArgueTheCallChoiceAway != null)) {
 			fArgueTheCallChoiceHome = false;
 			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome())) {
 				fArgueTheCallChoiceHome = null;
@@ -412,7 +413,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 
 		if (fEndGame || ((fArgueTheCallChoiceHome != null) && (fArgueTheCallChoiceAway != null)
-				&& (fBribesChoiceHome != null) && (fBribesChoiceAway != null))) {
+			&& (fBribesChoiceHome != null) && (fBribesChoiceAway != null))) {
 
 			if (!fEndGame && fRemoveUsedSecretWeapons) {
 				removeUsedSecretWeapons();
@@ -435,6 +436,10 @@ public class StepEndTurn extends AbstractStep {
 
 		}
 
+	}
+
+	private void handleStallers() {
+		getGameState().getPrayerState().clearStallers();
 	}
 
 	private void removeBrilliantCoachingReRolls(boolean homeTeam) {
@@ -473,7 +478,7 @@ public class StepEndTurn extends AbstractStep {
 						playerResult.setHasUsedSecretWeapon(true);
 					}
 					if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(player))
-							|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(player))) {
+						|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(player))) {
 						playerResult.setTurnsPlayed(playerResult.getTurnsPlayed() + 1);
 					}
 				}
@@ -531,8 +536,8 @@ public class StepEndTurn extends AbstractStep {
 			int recoveryRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
 			Game game = getGameState().getGame();
 			InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome())
-					? game.getTurnDataHome().getInducementSet()
-					: game.getTurnDataAway().getInducementSet();
+				? game.getTurnDataHome().getInducementSet()
+				: game.getTurnDataAway().getInducementSet();
 			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.KNOCKOUT_RECOVERY).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
 			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserKegValue);
 			return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue);
@@ -593,11 +598,11 @@ public class StepEndTurn extends AbstractStep {
 			fBribesChoiceAway = ArrayTool.isProvided(pPlayerIds);
 		}
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
-				: game.getTurnDataAway().getInducementSet();
+			: game.getTurnDataAway().getInducementSet();
 		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN).findFirst();
 
 		if (bribesType.isPresent() && ArrayTool.isProvided(pPlayerIds)
-				&& UtilServerInducementUse.useInducement(getGameState(), pTeam, bribesType.get(), pPlayerIds.length)) {
+			&& UtilServerInducementUse.useInducement(getGameState(), pTeam, bribesType.get(), pPlayerIds.length)) {
 			for (String playerId : pPlayerIds) {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if (player != null) {
@@ -677,15 +682,15 @@ public class StepEndTurn extends AbstractStep {
 		List<String> playerIds = getPlayerIds(team, game);
 		if (playerIds.size() > 0) {
 			InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet()
-					: game.getTurnDataAway().getInducementSet();
+				: game.getTurnDataAway().getInducementSet();
 			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN).findFirst();
 			if (bribesType.isPresent() && inducementSet.hasUsesLeft(bribesType.get())) {
 				Inducement bribes = inducementSet.get(bribesType.get());
 				DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), bribes.getUsesLeft());
 				dialogParameter.addPlayerIds(playerIds.toArray(new String[0]));
 				UtilServerDialog.showDialog(getGameState(), dialogParameter,
-						(game.isHomePlaying() && (team != game.getTeamHome()))
-								|| (!game.isHomePlaying() && (team != game.getTeamAway())));
+					(game.isHomePlaying() && (team != game.getTeamHome()))
+						|| (!game.isHomePlaying() && (team != game.getTeamAway())));
 				return true;
 			}
 		}
@@ -704,8 +709,8 @@ public class StepEndTurn extends AbstractStep {
 				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false);
 				dialogParameter.addPlayerIds(playerIds.toArray(new String[0]));
 				UtilServerDialog.showDialog(getGameState(), dialogParameter,
-						(game.isHomePlaying() && (team != game.getTeamHome()))
-								|| (!game.isHomePlaying() && (team != game.getTeamAway())));
+					(game.isHomePlaying() && (team != game.getTeamHome()))
+						|| (!game.isHomePlaying() && (team != game.getTeamAway())));
 				return true;
 			}
 		}

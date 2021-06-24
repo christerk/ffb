@@ -311,6 +311,7 @@ public class PathFinderWithPassBlockSupport {
 		return list.toArray(result);
 	}
 
+
 	/**
 	 * Gets the shortest path from the player in the start square to the end square.
 	 * The start square must contain a player. The path will not leave or pass
@@ -321,20 +322,36 @@ public class PathFinderWithPassBlockSupport {
 	 * @return Shortest path to target square
 	 */
 	public static FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate pEndCoord) {
-		if (pGame == null)
-			return null;
+		Set<FieldCoordinate> pEndCoords = new HashSet<>(1);
+		pEndCoords.add(pEndCoord);
 
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
-		if (actingPlayer == null || actingPlayer.getPlayer() == null)
+		if (actingPlayer == null || actingPlayer.getPlayer() == null) {
 			return null;
+		}
 
-		Team movingTeam = actingPlayer.getPlayer().getTeam();
-		int maxDistance = actingPlayer.getPlayer().getMovementWithModifiers() - actingPlayer.getCurrentMove();
+		return getShortestPath(pGame, pEndCoords, actingPlayer.getPlayer(), actingPlayer.getCurrentMove());
+	}
 
-		Set<FieldCoordinate> pEndCoords = new HashSet<>(1);
-		pEndCoords.add(pEndCoord);
-		FieldCoordinate start = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+	/**
+	 * Gets the shortest path from the player in the start square to the end square.
+	 * The start square must contain a player. The path will not leave or pass
+	 * through a tackle zone, but it may end in one. The path will also avoid going
+	 * through or landing on a player.
+	 *
+	 * @param pEndCoords Target squares.
+	 * @return Shortest path to a target square
+	 */
+	public static FieldCoordinate[] getShortestPath(Game pGame, Set<FieldCoordinate> pEndCoords, Player<?> player, int currentMove) {
+		if (pGame == null || player == null) {
+			return null;
+		}
+
+		Team movingTeam = player.getTeam();
+		int maxDistance = player.getMovementWithModifiers() - currentMove;
+
+		FieldCoordinate start = pGame.getFieldModel().getPlayerCoordinate(player);
 
 		return getShortestPath(pGame, start, pEndCoords, maxDistance, movingTeam, normalMoveContext, false);
 	}
