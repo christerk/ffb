@@ -7,7 +7,6 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.kickoff.bb2016.KickoffResult;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
@@ -17,6 +16,7 @@ import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.kickoff.bb2016.KickoffResult;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
@@ -27,12 +27,12 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
+import com.fumbbl.ffb.report.ReportScatterBall;
+import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffPitchInvasion;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffRiot;
 import com.fumbbl.ffb.report.bb2016.ReportKickoffThrowARock;
-import com.fumbbl.ffb.report.ReportScatterBall;
-import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -492,7 +492,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			Player<?> player = game.getPlayerById(hitPlayerIdHome);
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 
-			FieldCoordinate startCoordinate = null;
+			FieldCoordinate startCoordinate;
 			if (FieldCoordinateBounds.UPPER_HALF.isInBounds(playerCoordinate)) {
 				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 0);
 			} else {

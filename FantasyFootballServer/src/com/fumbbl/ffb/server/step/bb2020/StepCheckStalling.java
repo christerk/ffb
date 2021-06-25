@@ -69,8 +69,6 @@ public class StepCheckStalling extends AbstractStep {
 			if (stallingPlayer != null) {
 				getResult().addReport(new ReportStallerDetected(stallingPlayer.getId()));
 				getGameState().getPrayerState().addStaller(stallingPlayer);
-			} else {
-				getResult().addReport(new ReportStallerDetected(null));
 			}
 		}
 
