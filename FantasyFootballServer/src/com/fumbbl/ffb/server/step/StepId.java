@@ -142,6 +142,7 @@ public enum StepId implements INamedObject {
 	SPECTATORS("spectators"), // game.start
 	SPECIAL_EFFECT("specialEffect"), // phase.special
 	STAB("stab"), // action.block
+	STALLING_PLAYER("stallingPlayer"), // action.common
 	STAND_UP("standUp"), // action.select
 	SWARMING("swarming"), // phase.kickoff
 	SWOOP("swoop"), // action.ttm

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.HeatExhaustion;
@@ -23,6 +24,7 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.InducementSet;
@@ -47,6 +49,7 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.PrayerState;
 import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.factory.PrayerHandlerFactory;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -60,6 +63,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndGame;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
 import com.fumbbl.ffb.server.step.generator.common.Kickoff;
@@ -78,6 +82,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 /**
  * Step in any sequence to end a turn.
@@ -177,6 +183,10 @@ public class StepEndTurn extends AbstractStep {
 				fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
 			}
 
+			if (handleStallers()) {
+				return;
+			}
+
 			markPlayedAndSecretWeapons();
 
 			fEndGame = false;
@@ -239,7 +249,6 @@ public class StepEndTurn extends AbstractStep {
 							game.setTurnMode(TurnMode.REGULAR);
 							break;
 						case REGULAR:
-							handleStallers();
 							if (fNewHalf) {
 								game.setTurnMode(TurnMode.SETUP);
 								game.setSetupOffense(false);
@@ -438,8 +447,31 @@ public class StepEndTurn extends AbstractStep {
 
 	}
 
-	private void handleStallers() {
-		getGameState().getPrayerState().clearStallers();
+
+	private boolean handleStallers() {
+		PrayerState prayerState = getGameState().getPrayerState();
+		if (!fTouchdown) {
+			Game game = getGameState().getGame();
+			FieldModel fieldModel = game.getFieldModel();
+
+			Optional<? extends Player<?>> staller = prayerState.getStallerIds().stream().map(game::getPlayerById)
+				.filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING).findFirst();
+
+			if (staller.isPresent()) {
+				prayerState.removeStaller(staller.get());
+				getGameState().pushCurrentStepOnStack();
+				Sequence sequence = new Sequence(getGameState());
+				sequence.add(StepId.STALLING_PLAYER, from(StepParameterKey.PLAYER_ID, staller.get().getId()));
+				sequence.add(StepId.PLACE_BALL);
+				sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
+				sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+				getGameState().getStepStack().push(sequence.getSequence());
+				getResult().setNextAction(StepAction.NEXT_STEP);
+				return true;
+			}
+		}
+		prayerState.clearStallers();
+		return false;
 	}
 
 	private void removeBrilliantCoachingReRolls(boolean homeTeam) {

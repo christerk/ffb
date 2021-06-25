@@ -130,12 +130,20 @@ public class PrayerState implements IJsonSerializable {
 		stallers.add(player.getId());
 	}
 
+	public void removeStaller(Player<?> player) {
+		stallers.remove(player.getId());
+	}
+
 	public void clearStallers() {
 		stallers.clear();
 	}
 
 	public boolean isStalling(Player<?> player) {
 		return stallers.contains(player.getId());
+	}
+
+	public Set<String> getStallerIds() {
+		return stallers;
 	}
 
 	@Override
