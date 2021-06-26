@@ -26,6 +26,10 @@ public enum SpecialRule {
 		this.ruleName = ruleName;
 	}
 
+	public String getRuleName() {
+		return ruleName;
+	}
+
 	public static SpecialRule from(String name) {
 		return Arrays.stream(values()).filter(rule -> rule.ruleName.equals(name)).findFirst().orElse(null);
 	}

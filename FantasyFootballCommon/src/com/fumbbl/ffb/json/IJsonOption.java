@@ -420,6 +420,7 @@ public interface IJsonOption {
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
+	JsonStringArrayOption SPECIAL_RULES = new JsonStringArrayOption("specialRules");
 	JsonIntArrayOption SPECTATOR_ROLL_AWAY = new JsonIntArrayOption("spectatorRollAway");
 	JsonIntArrayOption SPECTATOR_ROLL_HOME = new JsonIntArrayOption("spectatorRollHome");
 	JsonIntOption SPECTATORS = new JsonIntOption("spectators");

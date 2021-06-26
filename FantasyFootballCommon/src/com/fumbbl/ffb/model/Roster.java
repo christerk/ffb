@@ -1,13 +1,5 @@
 package com.fumbbl.ffb.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -18,6 +10,16 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -41,6 +43,8 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_UNDEAD = "undead";
 	private static final String _XML_TAG_RIOTOUS_POSITION_ID = "riotousPositionId";
 	private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
+	private static final String _XML_TAG_SPECIAL_RULES = "specialRule";
+	private static final String _XML_TAG_RULE = "rule";
 
 	private String fId;
 	private String fName;
@@ -54,15 +58,17 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private boolean fUndead;
 	private String riotousPositionId;
 	private String nameGenerator;
+	private final Set<SpecialRule> specialRules;
 
 	private RosterPosition fCurrentlyParsedRosterPosition;
 
-	private Map<String, RosterPosition> fRosterPositionById;
-	private Map<String, RosterPosition> fRosterPositionByName;
+	private final Map<String, RosterPosition> fRosterPositionById;
+	private final Map<String, RosterPosition> fRosterPositionByName;
 
 	public Roster() {
 		fRosterPositionById = new HashMap<>();
 		fRosterPositionByName = new HashMap<>();
+		specialRules = new HashSet<>();
 		fApothecary = true;
 	}
 
@@ -83,7 +89,11 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public RosterPosition[] getPositions() {
-		return fRosterPositionById.values().toArray(new RosterPosition[fRosterPositionById.size()]);
+		return fRosterPositionById.values().toArray(new RosterPosition[0]);
+	}
+
+	public Set<SpecialRule> getSpecialRules() {
+		return specialRules;
 	}
 
 	public RosterPosition getPositionById(String pPositionId) {
@@ -204,6 +214,12 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			position.addToXml(pHandler);
 		}
 
+		if (!specialRules.isEmpty()) {
+			UtilXml.startElement(pHandler, _XML_TAG_SPECIAL_RULES);
+			specialRules.forEach(rule -> UtilXml.addValueElement(pHandler, _XML_TAG_RULE, rule.getRuleName()));
+			UtilXml.endElement(pHandler, _XML_TAG_SPECIAL_RULES);
+		}
+
 		UtilXml.endElement(pHandler, XML_TAG);
 
 	}
@@ -269,6 +285,9 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			if (_XML_TAG_NAME_GENERATOR.equals(pXmlTag)) {
 				nameGenerator = pValue;
 			}
+			if (_XML_TAG_RULE.equals(pXmlTag)) {
+				specialRules.add(SpecialRule.from(pValue));
+			}
 		}
 		return complete;
 	}
@@ -291,6 +310,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
 		IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
 		IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
+		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().map(SpecialRule::name).collect(Collectors.toSet()));
 
 		JsonArray positionArray = new JsonArray();
 		for (RosterPosition position : getPositions()) {
@@ -327,6 +347,8 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 				addPosition(new RosterPosition().initFrom(game, positionArray.get(i)));
 			}
 		}
+
+		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).map(SpecialRule::from).collect(Collectors.toSet()));
 
 		return this;
 
