@@ -1,8 +1,11 @@
 package com.fumbbl.ffb.server.step.action.block;
 
 import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -31,29 +34,28 @@ public class UtilBlockSequence {
 	public static StepParameterSet initPushback(IStep pStep) {
 		StepParameterSet parameterSet = new StepParameterSet();
 		Game game = pStep.getGameState().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 		game.getFieldModel().clearPushbackSquares();
 		parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE,
-				UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
+			UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
 
 		Skill skillCanForceOpponentToDropBall = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.forceOpponentToDropBallOnPushback);
-		if (skillCanForceOpponentToDropBall != null && defenderCoordinate != null
-				&& defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())
-				&& (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {
+		if (skillCanForceOpponentToDropBall != null && defenderCoordinate.equals(game.getFieldModel().getBallCoordinate()) && game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam()) {
 
 			Skill skillCanCounterOpponentForcingDropBall = UtilCards.getSkillCancelling(game.getDefender(),
-					skillCanForceOpponentToDropBall);
+				skillCanForceOpponentToDropBall);
 
-			if ((game.getDefender() != null) && skillCanCounterOpponentForcingDropBall != null) {
+			if ((game.getDefender() != null) && skillCanCounterOpponentForcingDropBall != null && mechanic.canPreventStripBall(game.getFieldModel().getPlayerState(game.getDefender()))) {
 				pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillCanCounterOpponentForcingDropBall,
-						true, SkillUse.CANCEL_STRIP_BALL));
+					true, SkillUse.CANCEL_STRIP_BALL));
 			} else {
 				pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
-						skillCanCounterOpponentForcingDropBall, true, SkillUse.STEAL_BALL));
+					skillCanCounterOpponentForcingDropBall, true, SkillUse.STEAL_BALL));
 				parameterSet
-						.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+					.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 				actingPlayer.markSkillUsed(skillCanCounterOpponentForcingDropBall);
 			}
 		}

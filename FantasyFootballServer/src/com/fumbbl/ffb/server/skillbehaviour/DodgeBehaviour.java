@@ -7,8 +7,8 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackMode;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -21,8 +21,8 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.action.block.StepBlockDodge;
-import com.fumbbl.ffb.server.step.action.block.UtilBlockSequence;
 import com.fumbbl.ffb.server.step.action.block.StepBlockDodge.StepState;
+import com.fumbbl.ffb.server.step.action.block.UtilBlockSequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.skill.Dodge;
@@ -47,12 +47,19 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 				findDodgeChoice(step, state);
 				UtilServerDialog.hideDialog(step.getGameState());
 				Game game = step.getGameState().getGame();
+				boolean addReport = true;
+				if (!game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones()) {
+					state.usingDodge = false;
+					addReport = false;
+				}
 				if (state.usingDodge == null) {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
-							true);
+						true);
 				} else {
-					step.getResult()
+					if (addReport) {
+						step.getResult()
 							.addReport(new ReportSkillUse(game.getDefenderId(), skill, state.usingDodge, SkillUse.AVOID_FALLING));
+					}
 					if (state.usingDodge) {
 						game.getFieldModel().setPlayerState(game.getDefender(), state.oldDefenderState);
 					} else {

@@ -24,7 +24,7 @@ public class Titchy extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.hasNoTacklezone);
+		registerProperty(NamedProperties.hasNoTacklezoneForDodging);
 		registerModifier(new DodgeModifier("Titchy", -1, ModifierType.REGULAR));
 	}
 

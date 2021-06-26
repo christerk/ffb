@@ -152,7 +152,7 @@ public class UtilPlayer {
 			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
 			if ((player != null) && (player.getTeam() == pTeam)) {
 				PlayerState playerState = fieldModel.getPlayerState(player);
-				if (playerState.hasTacklezones() && !player.hasSkillProperty(NamedProperties.hasNoTacklezone)) {
+				if (playerState.hasTacklezones()) {
 					adjacentPlayers.add(player);
 				}
 			}

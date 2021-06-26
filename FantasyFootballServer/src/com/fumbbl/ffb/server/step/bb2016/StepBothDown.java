@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.block;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -25,7 +25,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepBothDown extends AbstractStep {
 
 	private PlayerState fOldDefenderState;

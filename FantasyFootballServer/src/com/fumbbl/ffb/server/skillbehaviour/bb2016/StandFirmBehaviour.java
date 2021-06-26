@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2016;
 
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.skill.StandFirm;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 	public StandFirmBehaviour() {
 		super();
@@ -45,14 +45,14 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 				PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);
 				if (playerState.isRooted()) {
 					state.standingFirm.put(state.defender.getId(), true);
-				} else if (playerState.isProne() || ((state.oldDefenderState != null) && state.oldDefenderState.isProne())) {
+				} else if ((playerState.isProne() || playerState.isStunned()) || ((state.oldDefenderState != null) && (state.oldDefenderState.isProne() || state.oldDefenderState.isStunned()))) {
 					state.standingFirm.put(state.defender.getId(), false);
 				} else if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && cancellingSkill != null
-						&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
-								.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender))) {
+					&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
+					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender))) {
 					state.standingFirm.put(state.defender.getId(), false);
 					step.getResult().addReport(
-							new ReportSkillUse(actingPlayer.getPlayerId(), cancellingSkill, true, SkillUse.CANCEL_STAND_FIRM));
+						new ReportSkillUse(actingPlayer.getPlayerId(), cancellingSkill, true, SkillUse.CANCEL_STAND_FIRM));
 				}
 
 				// handle stand firm

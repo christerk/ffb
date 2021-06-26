@@ -99,16 +99,16 @@ public class NamedProperties {
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
 	public static final ISkillProperty grantsTeamRerollWhenOnPitch = new NamedProperty(
-			"Grants Team Reroll When On Pitch");
-	public static final ISkillProperty hasNoTacklezone = new NamedProperty("Has No Tacklezone");
+		"Grants Team Reroll When On Pitch");
+	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");
 	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
 	public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty(
-			"Ignore Defender Stumbles Result");
+		"Ignore Defender Stumbles Result");
 	public static final ISkillProperty ignoreFirstArmourBreak = new NamedProperty("Ignore First Armour Break");
 	public static final ISkillProperty ignoreTackleWhenBlocked = new NamedProperty("Ignore Tackle When Blocked");
 	public static final ISkillProperty ignoreTacklezonesWhenCatching = new NamedProperty(
-			"Ignore Tacklezones when Catching");
+		"Ignore Tacklezones when Catching");
 	public static final ISkillProperty ignoreTacklezonesWhenDodging = new NamedProperty("Ignore Tacklezones When Dodging");
 	public static final ISkillProperty ignoreTacklezonesWhenJumping = new NamedProperty("Ignore Tacklezones When Jumping");
 	public static final ISkillProperty ignoreTacklezonesWhenMoving = new NamedProperty("Ignore Tacklezones When Moving");

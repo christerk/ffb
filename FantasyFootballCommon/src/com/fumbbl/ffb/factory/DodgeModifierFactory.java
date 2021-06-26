@@ -1,11 +1,5 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
@@ -24,6 +18,13 @@ import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -118,6 +119,9 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 	@Override
 	protected int numberOfTacklezones(DodgeContext context) {
 		Team team = UtilPlayer.findOtherTeam(context.getGame(), context.getActingPlayer().getPlayer());
-		return UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), team, context.getTargetCoordinate(), false).length;
+		Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), team, context.getTargetCoordinate(), false);
+
+		return (int) Arrays.stream(adjacentPlayers)
+			.filter(player -> !player.hasSkillProperty(NamedProperties.hasNoTacklezoneForDodging)).count();
 	}
 }

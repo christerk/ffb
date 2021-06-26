@@ -47,10 +47,10 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 				FieldModel fieldModel = game.getFieldModel();
 
 				if (state.sideStepping.getOrDefault(state.defender.getId(), true) && state.freeSquareAroundDefender
-						&& UtilCards.hasSkill(state.defender, skill)
-						&& !(cancellingSkill != null && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
-								.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender)))
-						&& !playerState.isProne() && ((state.oldDefenderState == null) || !state.oldDefenderState.isProne())) {
+					&& UtilCards.hasSkill(state.defender, skill) && playerState.hasTacklezones()
+					&& !(cancellingSkill != null && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
+					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender)))
+					&& !playerState.isProne() && ((state.oldDefenderState == null) || !state.oldDefenderState.isProne())) {
 					if (!state.sideStepping.containsKey(state.defender.getId())) {
 						UtilServerDialog.showDialog(step.getGameState(),
 								new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);

@@ -46,7 +46,7 @@ public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 		Skill avOrInjModifierSkill = null;
 
 		if (fromCoordinate != null) {
-			Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(pDefender.getTeam()), fromCoordinate))
+			Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(pDefender.getTeam()), fromCoordinate, false))
 				.collect(Collectors.toSet());
 
 			Player<?> shadowingOrDtPlayer = game.getFieldModel().getPlayer(fromCoordinate);
@@ -55,7 +55,8 @@ public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 				players.add(shadowingOrDtPlayer);
 			}
 
-			avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge))
+			avOrInjModifierSkill = players.stream().filter(player -> game.getFieldModel().getPlayerState(player).hasTacklezones())
+				.map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge))
 				.filter(Objects::nonNull).findFirst().orElse(null);
 		}
 

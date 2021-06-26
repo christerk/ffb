@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
@@ -24,7 +24,7 @@ public class Titchy extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.hasNoTacklezone);
+		registerProperty(NamedProperties.hasNoTacklezoneForDodging);
 		registerModifier(new DodgeModifier("Titchy", -1, ModifierType.REGULAR));
 	}
 

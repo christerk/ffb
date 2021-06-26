@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.mechanics;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -44,4 +45,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker);
 
 	public abstract boolean canRaiseDead(Roster roster);
+
+	public abstract boolean canPreventStripBall(PlayerState playerState);
 }

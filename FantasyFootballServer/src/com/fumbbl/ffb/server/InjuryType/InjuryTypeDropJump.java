@@ -45,7 +45,7 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 		Skill avOrInjModifierSkill = null;
 
 		if (fromCoordinate != null) {
-			Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(pDefender.getTeam()), fromCoordinate))
+			Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(pDefender.getTeam()), fromCoordinate, false))
 				.collect(Collectors.toSet());
 
 			Player<?> shadowingOrDtPlayer = game.getFieldModel().getPlayer(fromCoordinate);

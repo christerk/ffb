@@ -8,6 +8,7 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
@@ -171,7 +172,11 @@ public class StepPlaceBall extends AbstractStep {
 
 	private void setup(Game game, Player<?> ballCarrier) {
 		Skill skill = ballCarrier.getSkillWithProperty(NamedProperties.canPlaceBallWhenKnockedDownOrPlacedProne);
-		if (skill == null) {
+
+		PlayerState playerState = game.getFieldModel().getPlayerState(ballCarrier);
+		boolean cannotUseSkill = playerState.isHypnotized() || playerState.isConfused();
+
+		if (skill == null || cannotUseSkill) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}

@@ -1,6 +1,7 @@
 Behaviour Changes:
 - Prayer are available
 - Added /prayer <roll> command to add prayers
+- Skills take into account if they can only be used when player has a tacklezone
 
 Technical Changes:
 - new FieldLayer
@@ -13,6 +14,7 @@ Technical Changes:
 - new PlayerResult fields
     + casualtiesWithAdditionalSpp -> counts cas which give additional points, only gets displayed for values > 0, is included in regular cas count
     + completionsWithAdditionalSpp -> counts completions which give additional points, only gets displayed for values > 0, is included in regular completions count
+- special rules use to determine inducement costs and raise dead capability
 
 Areas of Testing:
 - Prayers
@@ -26,3 +28,4 @@ Bugfixes:
  - Player hit by ttm was not visible anymore during apo selection
  - Brilliant Coaching added Fan Factor to roll
  - Bribes did not show up after Get the Ref result if no bribes where bought during start sequence
+ - Titchy caused tacklezones to be ignored for various checks

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -27,16 +27,17 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.skill.Wrestle;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 	public WrestleBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepWrestle, StepWrestle.StepState>() {
+		registerModifier(new StepModifier<StepWrestle, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepWrestle step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
+
 				if (state.usingWrestleAttacker == null) {
 					state.usingWrestleAttacker = useSkillCommand.isSkillUsed();
 				} else {
@@ -46,9 +47,9 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			}
 
 			@Override
-			public boolean handleExecuteStepHook(StepWrestle step, StepWrestle.StepState state) {
+			public boolean handleExecuteStepHook(StepWrestle step, StepState state) {
 				StepAction nextAction;
-				
+
 				if (state.usingWrestleAttacker == null) {
 					nextAction = askAttackerForWrestleUse(step, state);
 				} else if (state.usingWrestleDefender == null) {
@@ -56,27 +57,27 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				} else {
 					nextAction = performWrestle(step, state);
 				}
-				
+
 				step.getResult().setNextAction(nextAction);
 				return false;
 			}
 
-			private StepAction performWrestle(StepWrestle step, StepWrestle.StepState state) {
+			private StepAction performWrestle(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				
+
 				if (state.usingWrestleAttacker) {
 					step.getResult()
-							.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
+						.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
 				} else if (state.usingWrestleDefender) {
 					step.getResult()
-							.addReport(new ReportSkillUse(game.getDefenderId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
+						.addReport(new ReportSkillUse(game.getDefenderId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
 				} else {
 					if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
 						step.getResult().addReport(new ReportSkillUse(null, skill, false, null));
 					}
 				}
-				
+
 				if (state.usingWrestleAttacker || state.usingWrestleDefender) {
 					step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
 					step.publishParameters(UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
@@ -84,23 +85,23 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 					if (game.getDefender().hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
 						FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-								UtilServerInjury.handleInjury(step, new InjuryTypeBallAndChain(), actingPlayer.getPlayer(),
-										game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER)));
+							UtilServerInjury.handleInjury(step, new InjuryTypeBallAndChain(), actingPlayer.getPlayer(),
+								game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER)));
 					}
 				}
 				return StepAction.NEXT_STEP;
 			}
 
-			private StepAction askDefenderForWrestleUse(StepWrestle step, StepWrestle.StepState state) {
+			private StepAction askDefenderForWrestleUse(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-				boolean defenderCanUseSkill = UtilCards.hasSkill(game.getDefender(), skill) && !defenderState.isRooted();
+				boolean defenderCanUseSkill = UtilCards.hasSkill(game.getDefender(), skill) && !defenderState.isRooted() && defenderState.hasTacklezones();
 				boolean actingPlayerIsBlitzing = actingPlayer.getPlayerAction() == PlayerAction.BLITZ;
 				if (!state.usingWrestleAttacker && defenderCanUseSkill
-						&& !(actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill))) {
+					&& !(actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill))) {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
-							true);
+						true);
 					return StepAction.CONTINUE;
 				} else {
 					state.usingWrestleDefender = false;
@@ -108,14 +109,14 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				}
 			}
 
-			private StepAction askAttackerForWrestleUse(StepWrestle step, StepWrestle.StepState state) {
+			private StepAction askAttackerForWrestleUse(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				boolean attackerCanUseSkill = UtilCards.hasSkill(actingPlayer, skill) && !attackerState.isRooted();
 				if (attackerCanUseSkill) {
 					UtilServerDialog.showDialog(step.getGameState(),
-							new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), skill, 0), false);
+						new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), skill, 0), false);
 					return StepAction.CONTINUE;
 				} else {
 					state.usingWrestleAttacker = false;
