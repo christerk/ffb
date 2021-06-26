@@ -1,16 +1,16 @@
 package com.fumbbl.ffb.inducement.bb2016;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.option.GameOptionId;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCollection {
@@ -30,6 +30,15 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			@Override
 			protected boolean useReducedCostId(Roster roster) {
 				return ROSTERS_WITH_CHEAP_BRIBES.contains(roster.getName());
+			}
+		});
+
+		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
+			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,
+			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, IIconProperty.RESOURCE_MASTER_CHEF, Usage.STEAL_REROLL) {
+			@Override
+			protected boolean useReducedCostId(Roster roster) {
+				return "Halfling".equals(roster.getName());
 			}
 		});
 

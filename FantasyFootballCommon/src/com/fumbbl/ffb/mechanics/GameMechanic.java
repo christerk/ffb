@@ -7,6 +7,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.TurnData;
 
 public abstract class GameMechanic implements Mechanic {
@@ -41,4 +42,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate);
 
 	public abstract int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker);
+
+	public abstract boolean canRaiseDead(Roster roster);
 }

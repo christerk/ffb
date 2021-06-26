@@ -8,6 +8,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.TurnData;
 
 import java.util.HashSet;
@@ -93,5 +94,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker) {
 		return 0;
+	}
+
+	@Override
+	public boolean canRaiseDead(Roster roster) {
+		return roster.hasNecromancer();
 	}
 }

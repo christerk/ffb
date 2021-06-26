@@ -197,22 +197,23 @@ public class UtilServerInjury {
 		boolean nurglesRot = false;
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		Player<?> deadPlayer = game.getPlayerById(pInjuryResult.injuryContext().getDefenderId());
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
 		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome()
-				: game.getGameResult().getTeamResultAway();
+			: game.getGameResult().getTeamResultAway();
 		boolean deadPlayerPreventsRaisedFromDead = deadPlayer.hasSkillProperty(NamedProperties.preventRaiseFromDead);
 
 		if (pInjuryResult.injuryContext().getPlayerState() != null && PlayerState.RIP == pInjuryResult.injuryContext().getPlayerState().getBase()) {
-			if (necroTeam.getRoster().hasNecromancer() && (necroTeamResult.getRaisedDead() == 0)
-					&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead) {
+			if (mechanic.canRaiseDead(necroTeam.getRoster()) && (necroTeamResult.getRaisedDead() == 0)
+				&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead) {
 				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
-						deadPlayer.getId());
+					deadPlayer.getId());
 			} else {
 				Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
 				if ((attacker != null) && attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman)
-						&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
-						&& !deadPlayer.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
+					&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
+					&& !deadPlayer.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
 						nurglesRot = true;

@@ -8,6 +8,8 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 
@@ -94,5 +96,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		boolean reduceAssists = usingMultiBlock && !game.getActingTeam().hasPlayer(attacker) &&
 			(game.getFieldModel().selectedMultiBlockTargets() < 1 || game.getFieldModel().isMultiBlockTarget(attacker.getId()));
 		return reduceAssists ? 1 : 0;
+	}
+
+	@Override
+	public boolean canRaiseDead(Roster roster) {
+		return roster.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
 	}
 }

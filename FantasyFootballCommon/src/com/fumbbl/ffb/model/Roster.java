@@ -348,7 +348,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			}
 		}
 
-		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).map(SpecialRule::from).collect(Collectors.toSet()));
+		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).map(SpecialRule::valueOf).collect(Collectors.toSet()));
 
 		return this;
 

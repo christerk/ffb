@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.inducement;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.SpecialEffect;
@@ -14,6 +9,11 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.StringTool;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class InducementCollection implements IKeyedItem {
 	private final Set<InducementType> types = new HashSet<InducementType>() {{
@@ -57,16 +57,6 @@ public abstract class InducementCollection implements IKeyedItem {
 					return 0;
 				}
 				return super.availability(roster, options);
-			}
-		});
-
-		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
-			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,
-			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, IIconProperty.RESOURCE_MASTER_CHEF, Usage.STEAL_REROLL) {
-			@Override
-			protected boolean useReducedCostId(Roster roster) {
-				//TODO this might need change for the new rules depending on how the site will handle Halfling Thimble Cup
-				return "Halfling".equals(roster.getName());
 			}
 		});
 
