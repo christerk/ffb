@@ -4,11 +4,13 @@
 
 	<name>Halfling</name>
 	<type>Regular</type>
-	<reRollCost>60000</reRollCost>	
+	<reRollCost>60000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<nameGenerator>default</nameGenerator>
-
+	<specialRules>
+		<rule>Halfling Thimble Cup</rule>
+	</specialRules>
 	<position id="halfling.treeman">
 		<quantity>2</quantity>
 		<name>Treeman</name>
