@@ -19,6 +19,7 @@ import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
+import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -395,8 +396,10 @@ public class ClientStateMove extends ClientState {
 
 	private boolean isHypnoticGazeActionAvailable() {
 		Game game = getClient().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
+			&& mechanic.isGazeActionAllowed(game.getTurnMode())
 			&& UtilPlayer.canGaze(game, actingPlayer.getPlayer()));
 	}
 

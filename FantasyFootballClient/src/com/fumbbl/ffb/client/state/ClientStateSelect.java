@@ -14,6 +14,7 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
+import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.FieldModel;
@@ -321,8 +322,10 @@ public class ClientStateSelect extends ClientState {
 
 	private boolean isThrowBombActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return ((playerState != null)
+			&& mechanic.isBombActionAllowed(game.getTurnMode())
 			&& !game.getTurnData().isBombUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& !playerState.isProne()
@@ -346,8 +349,10 @@ public class ClientStateSelect extends ClientState {
 
 	private boolean isFoulActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& mechanic.isFoulActionAllowed(game.getTurnMode())
 			&& playerState.isActive() && !game.getTurnData().isFoulUsed()
 			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {

@@ -106,4 +106,19 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean canPreventStripBall(PlayerState playerState) {
 		return true;
 	}
+
+	@Override
+	public boolean isFoulActionAllowed(TurnMode turnMode) {
+		return true;
+	}
+
+	@Override
+	public boolean isBombActionAllowed(TurnMode turnMode) {
+		return true;
+	}
+
+	@Override
+	public boolean isGazeActionAllowed(TurnMode turnMode) {
+		return true;
+	}
 }

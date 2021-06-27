@@ -47,4 +47,10 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean canRaiseDead(Roster roster);
 
 	public abstract boolean canPreventStripBall(PlayerState playerState);
+
+	public abstract boolean isFoulActionAllowed(TurnMode turnMode);
+
+	public abstract boolean isBombActionAllowed(TurnMode turnMode);
+
+	public abstract boolean isGazeActionAllowed(TurnMode turnMode);
 }
