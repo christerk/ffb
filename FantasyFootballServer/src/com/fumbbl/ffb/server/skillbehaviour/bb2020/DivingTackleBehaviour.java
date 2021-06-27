@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerChoiceMode;
@@ -30,23 +30,23 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.move.StepDivingTackle;
 import com.fumbbl.ffb.server.step.action.move.StepDivingTackle.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.skill.DivingTackle;
+import com.fumbbl.ffb.skill.bb2020.DivingTackle;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Optional;
 import java.util.Set;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 	public DivingTackleBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepDivingTackle, StepDivingTackle.StepState>() {
+		registerModifier(new StepModifier<StepDivingTackle, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepDivingTackle step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -60,7 +60,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 					state.usingDivingTackle = false;
 					if (game.getFieldModel().getPlayer(state.coordinateFrom) == null) {
 						Player<?>[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, state.coordinateFrom,
-								NamedProperties.canAttemptToTackleDodgingPlayer, true);
+							NamedProperties.canAttemptToTackleDodgingPlayer, true);
 						divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
 						if (game.getTurnMode() == TurnMode.DUMP_OFF) {
 							divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
@@ -68,32 +68,32 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
 							DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
-									state.coordinateTo, state.usingBreakTackle));
+								state.coordinateTo, state.usingBreakTackle));
 							dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 							int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
-									dodgeModifiers);
+								dodgeModifiers);
 							int minimumRollWithoutBreakTackle = minimumRoll;
 							Optional<DodgeModifier> strengthModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
 							if (strengthModifier.isPresent() && dodgeModifiers.remove(strengthModifier.get())) {
 								minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game,
-										actingPlayer.getPlayer(), dodgeModifiers);
+									actingPlayer.getPlayer(), dodgeModifiers);
 								dodgeModifiers.add(strengthModifier.get());
 							}
 							if (!DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRoll)) {
 								String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 								UtilServerDialog.showDialog(step.getGameState(),
-										new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1),
-										true);
+									new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1),
+									true);
 								state.usingDivingTackle = null;
 							} else if (!DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll,
-									minimumRollWithoutBreakTackle)) {
+								minimumRollWithoutBreakTackle)) {
 								// Ask if Diving tackle is going to be used strictly to trigger Break Tackle.
 								// The dodge will still succeed.
 								String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-								String[] descriptions = new String[] {
-										"This will NOT trip the dodger, but will force the use of BREAK TACKLE." };
+								String[] descriptions = new String[]{
+									"This will NOT trip the dodger, but will force the use of BREAK TACKLE."};
 								UtilServerDialog.showDialog(step.getGameState(), new DialogPlayerChoiceParameter(teamId,
-										PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1), true);
+									PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1), true);
 								state.usingDivingTackle = null;
 							} else {
 								step.getResult().addReport(new ReportSkillUse(null, skill, false, SkillUse.WOULD_NOT_HELP));
@@ -128,7 +128,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						}
 
 						step.getResult()
-								.addReport(new ReportSkillUse(game.getDefender().getId(), skill, true, SkillUse.STOP_OPPONENT));
+							.addReport(new ReportSkillUse(game.getDefender().getId(), skill, true, SkillUse.STOP_OPPONENT));
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
 					} else {
 						step.getResult().setNextAction(StepAction.NEXT_STEP);

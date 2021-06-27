@@ -1,12 +1,14 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
+import com.fumbbl.ffb.modifiers.JumpContext;
+import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 
 /**
@@ -21,7 +23,7 @@ import com.fumbbl.ffb.modifiers.ModifierType;
  * addition, if Diving Tackle is used on the 1st Dodge roll, both the -2
  * modifier and tackle zone still apply to the Dodge re-roll.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class DivingTackle extends Skill {
 
 	public DivingTackle() {
@@ -31,9 +33,18 @@ public class DivingTackle extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canAttemptToTackleDodgingPlayer);
+		registerProperty(NamedProperties.canAttemptToTackleJumpingPlayer);
+
 		registerModifier(new DodgeModifier("Diving Tackle", 2, ModifierType.DIVING_TACKLE) {
 			@Override
 			public boolean appliesToContext(Skill skill, DodgeContext context) {
+				return false;
+			}
+		});
+
+		registerModifier(new JumpModifier("Diving Tackle", 2, ModifierType.DIVING_TACKLE) {
+			@Override
+			public boolean appliesToContext(Skill skill, JumpContext context) {
 				return false;
 			}
 		});

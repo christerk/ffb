@@ -27,6 +27,8 @@ public class NamedProperties {
 		"Can Attempt Catch In Adjacent Squares");
 	public static final ISkillProperty canAttemptToTackleDodgingPlayer = new NamedProperty(
 		"Can Attempt To Tackle Dodging Player");
+	public static final ISkillProperty canAttemptToTackleJumpingPlayer = new NamedProperty(
+		"Can Attempt To Tackle Jumping Player");
 	public static final ISkillProperty canBeThrown = new NamedProperty("Can Be Thrown");
 	public static final ISkillProperty canBeThrownIfStrengthIs1or2 = new NamedProperty("Can Be Thrown If Strength is 1 or 2");
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
@@ -35,7 +37,7 @@ public class NamedProperties {
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
 	public static final ISkillProperty canCancelInterceptions = new NamedProperty("Can Force Interception Reroll");
 	public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty(
-			"Can Choose Own Pushed Back Square");
+		"Can Choose Own Pushed Back Square");
 	public static final ISkillProperty canDropBall = new NamedProperty("Can Drop Ball");
 	public static final ISkillProperty canFollowPlayerLeavingTacklezones = new NamedProperty("Can Follow Player Leaving Tacklezones");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
