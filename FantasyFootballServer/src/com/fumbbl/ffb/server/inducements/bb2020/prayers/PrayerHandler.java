@@ -39,6 +39,7 @@ public abstract class PrayerHandler implements INamedObject {
 		if (initEffect(gameState, prayingTeam) && step != null) {
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
 			reports.forEach(report -> step.getResult().addReport(report));
+			reports.clear();
 		}
 	}
 
@@ -46,6 +47,7 @@ public abstract class PrayerHandler implements INamedObject {
 		applySelection(game, selection);
 		if (step != null) {
 			reports.forEach(report -> step.getResult().addReport(report));
+			reports.clear();
 		}
 	}
 
