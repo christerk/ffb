@@ -1,11 +1,5 @@
 package com.fumbbl.ffb.factory.bb2020;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
@@ -24,6 +18,12 @@ import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  *
@@ -93,8 +93,8 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 		modifiers.addAll(super.findModifiers(context));
 
 		int sum = modifiers.stream().mapToInt(JumpModifier::getModifier).sum();
-		context.setAccumulatedModifiers(sum);
-		for (Skill skill: context.getPlayer().getSkills()) {
+		context.setAccumulatedModifiers(sum + context.getAccumulatedModifiers());
+		for (Skill skill : context.getPlayer().getSkills()) {
 			skill.getJumpModifiers().stream()
 				.filter(modifier -> modifier.getType() == ModifierType.DEPENDS_ON_SUM_OF_OTHERS
 					&& modifier.appliesToContext(skill, context))

@@ -4,8 +4,12 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -14,10 +18,14 @@ import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
+import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportJumpRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -32,8 +40,15 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -51,6 +66,10 @@ public class StepJump extends AbstractStepWithReRoll {
 	private String goToLabelOnFailure;
 	private FieldCoordinate moveStart;
 	private int roll;
+	private Boolean usingDivingTackle;
+	private boolean alreadyReported;
+	private ActionStatus status;
+
 
 	public StepJump(GameState pGameState) {
 		super(pGameState);
@@ -92,6 +111,20 @@ public class StepJump extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_PLAYER_CHOICE:
+					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+					if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.DIVING_TACKLE) {
+						usingDivingTackle = StringTool.isProvided(playerChoiceCommand.getPlayerId());
+						getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
+			}
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -156,22 +189,48 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private ActionStatus leap() {
-		ActionStatus status;
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
+
+		boolean reRolled = ((getReRolledAction() == ReRolledActions.JUMP) && (getReRollSource() != null));
 		FieldCoordinate to = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
-		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer(), moveStart, to));
+		JumpContext context = new JumpContext(game, actingPlayer.getPlayer(), moveStart, to);
+		List<JumpModifier> divingTackleModifiers = new ArrayList<>();
+		if (usingDivingTackle != null && usingDivingTackle) {
+			Optional<Skill> skill = game.getDefender().getSkillsIncludingTemporaryOnes().stream().filter(s -> s.getSkillProperties().contains(NamedProperties.canAttemptToTackleJumpingPlayer))
+				.findFirst();
+			if (skill.isPresent()) {
+
+				skill.get().getJumpModifiers().forEach(modifier -> {
+					context.addModififerValue(modifier.getModifier());
+					divingTackleModifiers.add(modifier);
+				});
+				if (!alreadyReported) {
+					publishParameter(new StepParameter(StepParameterKey.USING_DIVING_TACKLE, true));
+					alreadyReported = true;
+					getResult()
+						.addReport(new ReportSkillUse(game.getDefender().getId(), skill.get(), true, SkillUse.STOP_OPPONENT));
+				}
+			}
+		}
+		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
+		jumpModifiers.addAll(divingTackleModifiers);
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
-		roll = getGameState().getDiceRoller().rollSkill();
+		if (status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) {
+			roll = getGameState().getDiceRoller().rollSkill();
+		}
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-		boolean reRolled = ((getReRolledAction() == ReRolledActions.JUMP) && (getReRollSource() != null));
 		getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll,
 			minimumRoll, reRolled, jumpModifiers.toArray(new JumpModifier[0])));
 		if (successful) {
-			status = ActionStatus.SUCCESS;
+			if (usingDivingTackle == null) {
+				status = checkDivingTackle(game, new JumpContext(game, actingPlayer.getPlayer(), moveStart, to), modifierFactory, mechanic);
+			} else {
+				status = ActionStatus.SUCCESS;
+			}
 		} else {
 			status = ActionStatus.FAILURE;
 			if (getReRolledAction() != ReRolledActions.JUMP) {
@@ -184,6 +243,43 @@ public class StepJump extends AbstractStepWithReRoll {
 		}
 		return status;
 	}
+
+	private ActionStatus checkDivingTackle(Game game, JumpContext context, JumpModifierFactory modifierFactory, AgilityMechanic mechanic) {
+		Player<?>[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, context.getFrom(),
+			NamedProperties.canAttemptToTackleJumpingPlayer, true);
+		divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
+		if (game.getTurnMode() == TurnMode.DUMP_OFF) {
+			divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
+		}
+
+		if (ArrayTool.isProvided(divingTacklers)) {
+			Optional<Skill> skill = divingTacklers[0].getSkillsIncludingTemporaryOnes().stream().filter(s -> s.getSkillProperties().contains(NamedProperties.canAttemptToTackleJumpingPlayer))
+				.findFirst();
+			if (skill.isPresent()) {
+				skill.get().getJumpModifiers().forEach(modifier -> context.addModififerValue(modifier.getModifier()));
+				Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
+				jumpModifiers.addAll(skill.get().getJumpModifiers());
+				int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);
+
+				if (DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll)) {
+					getResult().addReport(new ReportSkillUse(null, skill.get(), false, SkillUse.WOULD_NOT_HELP));
+				} else {
+
+					String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
+					UtilServerDialog.showDialog(getGameState(),
+						new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1),
+						true);
+					usingDivingTackle = null;
+
+					return ActionStatus.WAITING_FOR_SKILL_USE;
+				}
+			}
+		}
+
+
+		return ActionStatus.SUCCESS;
+	}
+
 	// JSON serialization
 
 	@Override
@@ -192,6 +288,11 @@ public class StepJump extends AbstractStepWithReRoll {
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
 		IServerJsonOption.MOVE_START.addTo(jsonObject, moveStart);
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
+		IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, usingDivingTackle);
+		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
+		if (status != null) {
+			IServerJsonOption.STATUS.addTo(jsonObject, status.name());
+		}
 		return jsonObject;
 	}
 
@@ -202,6 +303,12 @@ public class StepJump extends AbstractStepWithReRoll {
 		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
 		moveStart = IServerJsonOption.MOVE_START.getFrom(game, jsonObject);
 		roll = IServerJsonOption.ROLL.getFrom(game, jsonObject);
+		usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
+		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(game, jsonObject);
+		String statusString = IServerJsonOption.STATUS.getFrom(game, jsonObject);
+		if (StringTool.isProvided(statusString)) {
+			status = ActionStatus.valueOf(statusString);
+		}
 		return this;
 	}
 
