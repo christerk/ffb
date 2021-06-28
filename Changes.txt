@@ -3,6 +3,7 @@ Behaviour Changes:
 - Added /prayer <roll> command to add prayers
 - Skills take into account if they can only be used when player has a tacklezone
 - Foul, Bomb and Gaze explicitly disabled during blitz kick off event
+- Diving Tackle affects jumps
 
 Technical Changes:
 - new FieldLayer
