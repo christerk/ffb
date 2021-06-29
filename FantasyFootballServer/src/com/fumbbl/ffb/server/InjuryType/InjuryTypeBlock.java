@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.model.Game;
@@ -12,7 +13,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
-import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
@@ -24,15 +24,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
-	private boolean useModifiersVsTeamMates;
+	private final Mode mode;
 
 	public InjuryTypeBlock() {
-		super(new Block());
+		this(Mode.REGULAR);
 	}
 
-	public InjuryTypeBlock(boolean useModifiersVsTeamMates) {
-		this();
-		this.useModifiersVsTeamMates = useModifiersVsTeamMates;
+	public InjuryTypeBlock(Mode mode) {
+		super(new Block());
+		this.mode = mode;
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 			if (chainsaw != null) {
 				chainsaw.getArmorModifiers().forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			} else if (!injuryContext.isArmorBroken() && (useModifiersVsTeamMates || pAttacker.getTeam() != pDefender.getTeam())) {
+			} else if (!injuryContext.isArmorBroken() && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 					isFoul());
 				if (!armorModifiers.isEmpty()) {
@@ -78,9 +78,9 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 			injuryContext.addInjuryModifier(factory.getNigglingInjuryModifier(pDefender));
 
 			// do not use injuryModifiers on blocking own team-mate with b&c
-			if (useModifiersVsTeamMates || pAttacker.getTeam() != pDefender.getTeam()) {
+			if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
 				Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-						pDefender, isStab(), isFoul());
+					pDefender, isStab(), isFoul());
 				injuryContext.addInjuryModifiers(armorModifiers);
 			}
 
@@ -89,5 +89,9 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 		}
 		return injuryContext;
+	}
+
+	public enum Mode {
+		REGULAR, USE_MODIFIERS_AGAINST_TEAM_MATES, DO_NOT_USE_MODIFIERS
 	}
 }

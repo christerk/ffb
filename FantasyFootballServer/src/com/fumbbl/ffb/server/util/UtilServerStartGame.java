@@ -24,7 +24,6 @@ import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestResumeGamestate;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.StartGame;
 import com.fumbbl.ffb.util.StringTool;
-
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
@@ -171,7 +170,10 @@ public class UtilServerStartGame {
 			//game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
 			overtime.setDefault(true);
-	//		game.getOptions().addOption(overtime);
+			//		game.getOptions().addOption(overtime);
+			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
+			claw.setDefault(true);
+			//		game.getOptions().addOption(claw);
 		}
 	}
 

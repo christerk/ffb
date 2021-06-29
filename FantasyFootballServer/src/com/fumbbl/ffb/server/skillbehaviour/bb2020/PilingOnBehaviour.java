@@ -162,12 +162,12 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 							&& (attackerCoordinate != null)) {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 						step.publishParameters(
-								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
+							UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
 
-						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
-								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS),
+							game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 						if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
-								&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
+							&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
 							boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);
 							if (success) {
 								step.publishParameter(new StepParameter(StepParameterKey.ATTACKER_POISONED, true));
