@@ -33,3 +33,4 @@ Bugfixes:
  - Brilliant Coaching added Fan Factor to roll
  - Bribes did not show up after Get the Ref result if no bribes where bought during start sequence
  - Titchy caused tacklezones to be ignored for various checks
+ - Failed Bone Head roll froze client
