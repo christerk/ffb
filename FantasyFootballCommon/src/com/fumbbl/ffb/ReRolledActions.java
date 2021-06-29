@@ -26,7 +26,8 @@ public class ReRolledActions {
 	public static final ReRolledAction FOUL_APPEARANCE = new ReRolledAction(FoulAppearance.class);
 	public static final ReRolledAction BLOCK = new ReRolledAction("Block");
 	public static final ReRolledAction REALLY_STUPID = new ReRolledAction("Really Stupid");
-	public static final ReRolledAction BONE_HEAD = new ReRolledAction("Bone-Head");
+	public static final ReRolledAction BONE_HEAD = new ReRolledAction("Bone Head");
+	public static final ReRolledAction BONEHEAD = new ReRolledAction("Bone-Head");
 	public static final ReRolledAction WILD_ANIMAL = new ReRolledAction(WildAnimal.class);
 	public static final ReRolledAction ANIMAL_SAVAGERY = new ReRolledAction(AnimalSavagery.class);
 	public static final ReRolledAction TAKE_ROOT = new ReRolledAction("Take Root");
