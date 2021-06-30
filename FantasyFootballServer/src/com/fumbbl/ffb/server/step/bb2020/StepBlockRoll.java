@@ -183,8 +183,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		boolean teamReRollOption = (getReRollSource() == null)
-			&& (game.getTurnData().getReRolls() > 0);
+		boolean teamReRollOption = getReRollSource() == null && UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		boolean proReRollOption = (getReRollSource() == null || (getReRollSource() == ReRollSources.BRAWLER && fBlockRoll.length > reRolledDiceIndexes.length))
 			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn);
 		boolean brawlerOption = actingPlayer.getPlayerAction() != PlayerAction.BLITZ

@@ -37,4 +37,5 @@ Bugfixes:
  - Brawler allowed to reroll more than one die
  - Players on Blitz turn were also counted if they did not perform an action
  - Agility decreases suffered from in game injuries were not displayed properly
- - Special action were still possible during Blitz: KTM, Stab, Chainsaw, Vomit, B&C
+ - Special action were still possible during Blitz turn: KTM, Stab, Chainsaw, Vomit, B&C
+ - Team reroll was available for block during Blitz turn
