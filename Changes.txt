@@ -35,3 +35,5 @@ Bugfixes:
  - Titchy caused tacklezones to be ignored for various checks
  - Failed Bone Head roll froze client
  - Brawler allowed to reroll more than one die
+ - Players on Blitz turn were also counted if they did not perform an action
+ - Agility decreases suffered from in game injuries were not displayed properly

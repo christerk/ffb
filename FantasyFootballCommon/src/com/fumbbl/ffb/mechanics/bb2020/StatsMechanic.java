@@ -26,4 +26,9 @@ public class StatsMechanic extends com.fumbbl.ffb.mechanics.StatsMechanic {
 	public StatsDrawingModifier agilityModifier(int modifier) {
 		return StatsDrawingModifier.positiveImpairs(modifier);
 	}
+
+	@Override
+	public int applyAgilityDecreases(int agility, int decreases) {
+		return agility + decreases;
+	}
 }

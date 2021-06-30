@@ -17,4 +17,6 @@ public abstract class StatsMechanic implements Mechanic {
 	public abstract boolean armourIsBroken(int armour, int[] roll, InjuryContext context, Game game);
 
 	public abstract StatsDrawingModifier agilityModifier(int modifier);
+
+	public abstract int applyAgilityDecreases(int agility, int decreases);
 }

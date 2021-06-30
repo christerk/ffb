@@ -73,9 +73,9 @@ public class PlayerDetailComponent extends JPanel {
 	private static final int _DISPLAY_DEFENDING_PLAYER = 2;
 	private static final int _DISPLAY_SELECTED_PLAYER = 3;
 
-	private SideBarComponent fSideBar;
+	private final SideBarComponent fSideBar;
 	private Player<?> fPlayer;
-	private BufferedImage fImage;
+	private final BufferedImage fImage;
 	private boolean fRefreshNecessary;
 
 	public PlayerDetailComponent(SideBarComponent pSideBar) {
@@ -204,6 +204,9 @@ public class PlayerDetailComponent extends JPanel {
 			int x = 3, y = 179;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
+			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
+				.forName(Mechanic.Type.STAT.name());
+
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			boolean moveIsRed = false;
 			int movement = getPlayer().getMovementWithModifiers()
@@ -211,7 +214,7 @@ public class PlayerDetailComponent extends JPanel {
 			int moveLeft = movement;
 			int strength = getPlayer().getStrengthWithModifiers()
 				- findNewStatDecreases(playerResult, InjuryAttribute.ST);
-			int agility = getPlayer().getAgilityWithModifiers() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
+			int agility = mechanic.applyAgilityDecreases(getPlayer().getAgilityWithModifiers(), findNewStatDecreases(playerResult, InjuryAttribute.AG));
 			int armour = getPlayer().getArmourWithModifiers() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
 			ActingPlayer actingPlayer = getSideBar().getClient().getGame().getActingPlayer();
 			if (fPlayer == actingPlayer.getPlayer()) {
@@ -226,8 +229,7 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
-			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
-				.forName(Mechanic.Type.STAT.name());
+
 			Player<?> player = getPlayer();
 			Position position = player.getPosition();
 			int movementModifier = movement - position.getMovement();
