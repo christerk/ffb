@@ -139,7 +139,7 @@ public class StepInitFeeding extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
-		if (fEndPlayerAction && game.getTurnMode() == TurnMode.BLITZ && getGameState().getBlitzTurnState() != null) {
+		if (fEndPlayerAction && game.getTurnMode() == TurnMode.BLITZ && getGameState().getBlitzTurnState() != null && actingPlayer.hasActed()) {
 			BlitzTurnState blitzTurnState = getGameState().getBlitzTurnState();
 			blitzTurnState.addActivation();
 			getResult().addReport(new ReportKickoffSequenceActivationsCount(blitzTurnState.getAvailable(), blitzTurnState.getAmount(), blitzTurnState.getLimit()));
