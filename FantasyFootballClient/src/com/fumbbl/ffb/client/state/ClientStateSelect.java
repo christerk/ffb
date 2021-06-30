@@ -425,8 +425,9 @@ public class ClientStateSelect extends ClientState {
 
 	private boolean isKickTeamMateActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
+		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventKickTeamMateAction)) {
+		if (!gameMechanic.isKickTeamMateActionAllowed(game.getTurnMode()) || playerState == null || pPlayer.hasSkillProperty(NamedProperties.preventKickTeamMateAction)) {
 			return false;
 		}
 		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());

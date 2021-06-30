@@ -107,7 +107,7 @@ public class UtilKickoffSequence {
 		}
 		if (messageList.size() > 0) {
 			UtilServerDialog.showDialog(pGameState,
-					new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[0])), false);
+				new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[0])), false);
 			return false;
 		} else {
 			return true;
@@ -115,13 +115,18 @@ public class UtilKickoffSequence {
 	}
 
 	public static void pinPlayersInTacklezones(GameState pGameState, Team pTeam) {
+		pinPlayersInTacklezones(pGameState, pTeam, false);
+	}
+
+	public static void pinPlayersInTacklezones(GameState pGameState, Team pTeam, boolean pinBallAndChain) {
 		Game game = pGameState.getGame();
 		Team otherTeam = (pTeam == game.getTeamHome()) ? game.getTeamAway() : game.getTeamHome();
 		for (Player<?> player : pTeam.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.isActive()) {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-				if (UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, playerCoordinate, false).length > 0) {
+				if (UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, playerCoordinate, false).length > 0
+					|| (pinBallAndChain && player.hasSkillProperty(NamedProperties.movesRandomly))) {
 					game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
 				}
 			}

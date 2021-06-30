@@ -1,11 +1,14 @@
 package com.fumbbl.ffb.client.util;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -91,10 +94,12 @@ public class UtilClientStateBlocking {
 		boolean handled = false;
 		Game game = pClientState.getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
 		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || UtilPlayer.isNextMovePossible(game, false))) {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
-			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative)) {
+			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && gameMechanic.areSpecialBlockActionsAllowed(game.getTurnMode())) {
 				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false);

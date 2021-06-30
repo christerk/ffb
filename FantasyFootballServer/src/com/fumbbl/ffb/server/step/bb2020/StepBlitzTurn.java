@@ -95,9 +95,8 @@ public final class StepBlitzTurn extends AbstractStep {
 		} else {
 
 
-
 			Team blitzingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam);
+			UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam, true);
 
 			int availablePlayers = (int) Arrays.stream(blitzingTeam.getPlayers())
 				.filter(player -> game.getFieldModel().getPlayerState(player).isActive()).count();
