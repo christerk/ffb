@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackMode;
@@ -16,24 +16,24 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2016.StepPushback;
-import com.fumbbl.ffb.server.step.bb2016.StepPushback.StepState;
+import com.fumbbl.ffb.server.step.bb2020.StepPushback;
+import com.fumbbl.ffb.server.step.bb2020.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.skill.SideStep;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 	public SideStepBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepPushback, StepPushback.StepState>(2) {
+		registerModifier(new StepModifier<StepPushback, StepState>(2) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				state.sideStepping.put(useSkillCommand.getPlayerId(), useSkillCommand.isSkillUsed());
 				return StepCommandStatus.EXECUTE_STEP;
 			}
@@ -47,13 +47,13 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 				FieldModel fieldModel = game.getFieldModel();
 
 				if (state.sideStepping.getOrDefault(state.defender.getId(), true) && state.freeSquareAroundDefender
-					&& UtilCards.hasSkill(state.defender, skill) && playerState.hasTacklezones()
+					&& UtilCards.hasSkill(state.defender, skill)
 					&& !(cancellingSkill != null && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
 					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender)))
-					&& !playerState.isProne() && ((state.oldDefenderState == null) || !state.oldDefenderState.isProne())) {
+					&& !playerState.isProne() && ((state.oldDefenderState == null) || state.oldDefenderState.hasTacklezones())) {
 					if (!state.sideStepping.containsKey(state.defender.getId())) {
 						UtilServerDialog.showDialog(step.getGameState(),
-								new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
+							new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
 					} else {
 						if (state.sideStepping.get(state.defender.getId())) {
 							state.pushbackMode = PushbackMode.SIDE_STEP;
@@ -63,7 +63,7 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 								}
 							}
 							state.pushbackSquares = UtilServerPushback.findPushbackSquares(game, state.startingPushbackSquare,
-									state.pushbackMode);
+								state.pushbackMode);
 							boolean sideStepHomePlayer = game.getTeamHome().hasPlayer(state.defender);
 							for (PushbackSquare pushbackSquare : state.pushbackSquares) {
 								pushbackSquare.setHomeChoice(sideStepHomePlayer);

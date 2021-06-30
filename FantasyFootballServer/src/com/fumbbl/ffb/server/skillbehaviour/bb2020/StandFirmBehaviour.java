@@ -16,7 +16,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2016.StepPushback;
+import com.fumbbl.ffb.server.step.bb2020.StepPushback;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.skill.StandFirm;
 import com.fumbbl.ffb.util.UtilCards;
@@ -45,7 +45,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 				PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);
 				if (playerState.isRooted()) {
 					state.standingFirm.put(state.defender.getId(), true);
-				} else if (!playerState.hasTacklezones() || ((state.oldDefenderState != null) && !state.oldDefenderState.hasTacklezones())) {
+				} else if ((state.oldDefenderState != null) && !state.oldDefenderState.hasTacklezones()) {
 					state.standingFirm.put(state.defender.getId(), false);
 				} else if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && cancellingSkill != null
 					&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())

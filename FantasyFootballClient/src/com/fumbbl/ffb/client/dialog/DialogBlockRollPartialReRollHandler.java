@@ -82,7 +82,7 @@ public class DialogBlockRollPartialReRollHandler extends DialogHandler {
 				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
 				if (blockRoll.needsSelection()) {
 					if (blockRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
-						communication.sendUseBrawler(blockRollDialog.getBrawlerCount(), null);
+						communication.sendUseBrawler(null);
 					} else if (blockRollDialog.getReRollSource() == ReRollSources.PRO) {
 						communication.sendUseProReRollForBlock(blockRollDialog.getProIndex());
 					} else {

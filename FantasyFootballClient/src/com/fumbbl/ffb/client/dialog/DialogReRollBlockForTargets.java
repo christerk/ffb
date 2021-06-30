@@ -21,32 +21,21 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
 	private ReRollSource reRollSource;
-	private int brawlerSelection, proIndex;
-
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
-		add(new Mnemonics('T', 'N',
+		add(new Mnemonics('T', 'N', 'B',
 			new ArrayList<Character>() {{
 				add('P');
 				add('o');
 				add('x');
-			}},
-			new ArrayList<Character>() {{
-			add('B');
-			add('h');
-			add('d');
-		}}));
-		add(new Mnemonics('e', 'l',
+			}}));
+		add(new Mnemonics('e', 'l', 'r',
 			new ArrayList<Character>() {{
 				add('r');
 				add('y');
 				add('z');
-			}},
-			new ArrayList<Character>() {{
-			add('w');
-			add('s');
-			add('u');
-		}}));
+			}}));
 	}};
+	private int proIndex;
 
 	public DialogReRollBlockForTargets(FantasyFootballClient pClient, DialogReRollBlockForTargetsParameter parameter) {
 
@@ -85,6 +74,10 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro.get(0)));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
+				if (blockRoll.has(ReRollSources.BRAWLER)) {
+					buttonPanel.add(createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
 				if (!ownChoice) {
 					buttonPanel.add(createReRollButton(target, "No Re-Roll", null, currentMnemonics.none));
 					buttonPanel.add(Box.createHorizontalGlue());
@@ -96,9 +89,6 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 					targetPanel.add(createProPanel(blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.pro));
 				}
 
-				if (blockRoll.has(ReRollSources.BRAWLER) && blockRoll.getBrawlerOptions() > 0) {
-					targetPanel.add(createBrawlerPanel(blockRoll.getTargetId(), blockRoll.getBrawlerOptions(), blockRoll.getReRollDiceIndexes(), currentMnemonics.brawler));
-				}
 				targetPanel.add(Box.createVerticalStrut(3));
 			}
 
@@ -152,49 +142,9 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		return proPanel;
 	}
 
-	private JPanel createBrawlerPanel(String target, int brawlerOptions, int[] reRolledDiceIndexes, List<Character> mnemonics) {
-		JPanel brawlerPanel = new JPanel();
-		brawlerPanel.setOpaque(false);
-		brawlerPanel.setLayout(new BoxLayout(brawlerPanel, BoxLayout.Y_AXIS));
-		brawlerPanel.setAlignmentX(CENTER_ALIGNMENT);
-		brawlerPanel.add(brawlerTextPanel());
-
-		JPanel brawlerButtonPanel = new JPanel();
-		brawlerButtonPanel.setLayout(new BoxLayout(brawlerButtonPanel, BoxLayout.X_AXIS));
-		brawlerButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
-
-		for (int brawlerSelection = 1; brawlerSelection <= brawlerOptions; brawlerSelection++) {
-			int finalBrawlerSelection = brawlerSelection;
-			if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalBrawlerSelection - 1 )) {
-				JButton brawlerButton = new JButton();
-				brawlerButton.setText(brawlerSelection + " Both Down" + (brawlerSelection > 1 ? "s" : ""));
-				brawlerButton.addActionListener(e -> brawlerAction(target, finalBrawlerSelection));
-				brawlerButton.setMnemonic(mnemonics.get(0));
-				this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
-					@Override
-					protected void handleKey() {
-						brawlerAction(target, finalBrawlerSelection);
-					}
-				});
-				brawlerButtonPanel.add(brawlerButton);
-			}
-			mnemonics.remove(0);
-		}
-
-		brawlerPanel.add(brawlerButtonPanel);
-		return brawlerPanel;
-	}
-
 	private void proAction(String target, int proIndex) {
 		reRollSource = ReRollSources.PRO;
 		this.proIndex = proIndex;
-		this.selectedTarget = target;
-		close();
-	}
-
-	private void brawlerAction(String target, int brawlerSelection) {
-		reRollSource = ReRollSources.BRAWLER;
-		this.brawlerSelection = brawlerSelection;
 		this.selectedTarget = target;
 		close();
 	}
@@ -241,10 +191,6 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		return selectedIndex;
 	}
 
-	public int getBrawlerSelection() {
-		return brawlerSelection;
-	}
-
 	public int getProIndex() {
 		return proIndex;
 	}
@@ -254,10 +200,10 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 	}
 
 	private static class Mnemonics {
-		private final char team, none;
-		private final List<Character> brawler, pro;
+		private final char team, brawler, none;
+		private final List<Character> pro;
 
-		public Mnemonics(char team, char none, List<Character> pro, List<Character> brawler) {
+		public Mnemonics(char team, char none, char brawler, List<Character> pro) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;

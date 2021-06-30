@@ -9,19 +9,13 @@ import com.fumbbl.ffb.net.NetCommandId;
 
 public class ClientCommandUseBrawler extends ClientCommand {
 
-	private int brawlerCount;
 	private String targetId;
 
 	public ClientCommandUseBrawler() {
 	}
 
-	public ClientCommandUseBrawler(int brawlerCount, String targetId) {
-		this.brawlerCount = brawlerCount;
+	public ClientCommandUseBrawler(String targetId) {
 		this.targetId = targetId;
-	}
-
-	public int getBrawlerCount() {
-		return brawlerCount;
 	}
 
 	public String getTargetId() {
@@ -36,7 +30,6 @@ public class ClientCommandUseBrawler extends ClientCommand {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IJsonOption.BRAWLER_OPTIONS.addTo(jsonObject, brawlerCount);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, targetId);
 		return jsonObject;
 	}
@@ -45,7 +38,6 @@ public class ClientCommandUseBrawler extends ClientCommand {
 	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		brawlerCount = IJsonOption.BRAWLER_OPTIONS.getFrom(game, jsonObject);
 		targetId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}

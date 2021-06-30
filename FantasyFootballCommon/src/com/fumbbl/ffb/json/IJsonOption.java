@@ -59,8 +59,7 @@ public interface IJsonOption {
 	JsonBooleanOption BOMB_USED = new JsonBooleanOption("bombUsed");
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
 	JsonBooleanOption BRAWLER_AVAILABLE = new JsonBooleanOption("brawlerAvailable");
-	JsonIntOption BRAWLER_COUNT = new JsonIntOption("brawlerCount");
-	JsonIntOption BRAWLER_OPTIONS = new JsonIntOption("brawlerOptions");
+	JsonBooleanOption BRAWLER_OPTION = new JsonBooleanOption("brawlerOption");
 	JsonBooleanOption CAN_BUY_CARDS = new JsonBooleanOption("canBuyCards");
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);
 	JsonStringArrayOption CARDS = new JsonStringArrayOption("cards");

@@ -488,8 +488,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseChainsaw(useChainsaw));
 	}
 
-	public void sendUseBrawler(int brawlerCount, String targetId) {
-		send(new ClientCommandUseBrawler(brawlerCount, targetId));
+	public void sendUseBrawler(String targetId) {
+		send(new ClientCommandUseBrawler(targetId));
 	}
 
 	public void sendFieldCoordinate(FieldCoordinate fieldCoordinate) {

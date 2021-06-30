@@ -7,30 +7,25 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
-/**
- * 
- * @author Kalimar
- */
 public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 
 	private String fChoosingTeamId;
-	private int fNrOfDice, brawlerOptions;
+	private int fNrOfDice;
 	private int[] fBlockRoll, reRolledDiceIndexes;
-	private boolean fTeamReRollOption;
-	private boolean fProReRollOption;
+	private boolean fTeamReRollOption, fProReRollOption, brawlerOption;
 
 	public DialogBlockRollPartialReRollParameter() {
 		super();
 	}
 
 	public DialogBlockRollPartialReRollParameter(String pChoosingTeamId, int pNrOfDice, int[] pBlockRoll, boolean pTeamReRollOption,
-	                                             boolean pProReRollOption, int brawlerOptions, int[] reRolledDiceIndexes) {
+	                                             boolean pProReRollOption, boolean brawlerOption, int[] reRolledDiceIndexes) {
 		fChoosingTeamId = pChoosingTeamId;
 		fNrOfDice = pNrOfDice;
 		fBlockRoll = pBlockRoll;
 		fTeamReRollOption = pTeamReRollOption;
 		fProReRollOption = pProReRollOption;
-		this.brawlerOptions = brawlerOptions;
+		this.brawlerOption = brawlerOption;
 		this.reRolledDiceIndexes = reRolledDiceIndexes;
 	}
 
@@ -58,8 +53,8 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		return fProReRollOption;
 	}
 
-	public int getBrawlerOptions() {
-		return brawlerOptions;
+	public boolean hasBrawlerOption() {
+		return brawlerOption;
 	}
 
 	public int[] getReRolledDiceIndexes() {
@@ -69,7 +64,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 
 	public IDialogParameter transform() {
 		return new DialogBlockRollPartialReRollParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(), hasTeamReRollOption(),
-				hasProReRollOption(), brawlerOptions, reRolledDiceIndexes);
+			hasProReRollOption(), brawlerOption, reRolledDiceIndexes);
 	}
 
 	// JSON serialization
@@ -83,7 +78,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		IJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRolledDiceIndexes);
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
-		IJsonOption.BRAWLER_OPTIONS.addTo(jsonObject, brawlerOptions);
+		IJsonOption.BRAWLER_OPTION.addTo(jsonObject, brawlerOption);
 		return jsonObject;
 	}
 
@@ -96,7 +91,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		reRolledDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(game, jsonObject);
 		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		brawlerOptions = IJsonOption.BRAWLER_OPTIONS.getFrom(game, jsonObject);
+		brawlerOption = IJsonOption.BRAWLER_OPTION.getFrom(game, jsonObject);
 		return this;
 	}
 

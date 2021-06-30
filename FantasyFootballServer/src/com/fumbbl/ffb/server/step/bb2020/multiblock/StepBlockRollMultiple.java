@@ -138,11 +138,6 @@ public class StepBlockRollMultiple extends AbstractStep {
 					ClientCommandUseBrawler brawlerCommand = (ClientCommandUseBrawler) pReceivedCommand.getCommand();
 					state.reRollSource = ReRollSources.BRAWLER;
 					state.selectedTarget = brawlerCommand.getTargetId();
-					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(brawlerCommand.getTargetId()))
-						.findFirst().ifPresent(roll -> {
-						roll.setBrawlerCount(brawlerCommand.getBrawlerCount());
-						roll.setBrawlerOptions(0);
-					});
 					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
@@ -222,25 +217,26 @@ public class StepBlockRollMultiple extends AbstractStep {
 	}
 
 	private void handleBrawler(Player<?> player, BlockRoll blockRoll) {
-		List<Integer> reRolledDice = Arrays.stream(getGameState().getDiceRoller().rollBlockDice(blockRoll.getBrawlerCount())).boxed().collect(Collectors.toList());
-		getResult().addReport(new ReportBlockReRoll(reRolledDice.stream().mapToInt(i -> i).toArray(), player.getId(), ReRollSources.BRAWLER));
-		List<Integer> reRolledDiceIndexes = new ArrayList<>();
+		int reRolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
+		getResult().addReport(new ReportBlockReRoll(new int[]{reRolledDie}, player.getId(), ReRollSources.BRAWLER));
+		int brawlerIndex = -1;
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 		for (int i = 0; i < blockRoll.getNrOfDice(); i++) {
-			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN && !reRolledDice.isEmpty() && !blockRoll.indexWasReRolled(i)) {
-				blockRoll.getBlockRoll()[i] = reRolledDice.get(0);
-				reRolledDice.remove(0);
-				reRolledDiceIndexes.add(i);
+			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN && !blockRoll.indexWasReRolled(i)) {
+				blockRoll.getBlockRoll()[i] = reRolledDie;
+				brawlerIndex = i;
+				break;
 			}
 		}
 
-		blockRoll.setReRollDiceIndexes(IntStream.concat(reRolledDiceIndexes.stream().mapToInt(i -> i), Arrays.stream(blockRoll.getReRollDiceIndexes())).toArray());
-		blockRoll.remove(ReRollSources.BRAWLER);
-		blockRoll.remove(ReRollSources.TEAM_RE_ROLL);
-		if (blockRoll.getBrawlerCount() == blockRoll.getNrOfDice()) {
-			blockRoll.remove(ReRollSources.PRO);
+		if (brawlerIndex >= 0) {
+			blockRoll.setReRollDiceIndexes(IntStream.concat(IntStream.of(brawlerIndex), Arrays.stream(blockRoll.getReRollDiceIndexes())).toArray());
+			blockRoll.remove(ReRollSources.BRAWLER);
+			blockRoll.remove(ReRollSources.TEAM_RE_ROLL);
+			if (blockRoll.getReRollDiceIndexes().length == blockRoll.getNrOfDice()) {
+				blockRoll.remove(ReRollSources.PRO);
+			}
 		}
-
 	}
 
 	private void decideNextStep(Game game) {
@@ -253,6 +249,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 
 		boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
 		boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
+		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 
 		state.blockRolls.forEach(roll -> {
 			if (!teamReRollAvailable) {
@@ -260,6 +257,19 @@ public class StepBlockRollMultiple extends AbstractStep {
 			}
 			if (!proReRollAvailable) {
 				roll.remove(ReRollSources.PRO);
+			}
+
+			boolean bothDownPresent = false;
+
+			for (int i = 0; i < roll.getBlockRoll().length; i++) {
+				if (!roll.indexWasReRolled(i) && factory.forRoll(roll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN) {
+					bothDownPresent = true;
+					break;
+				}
+			}
+
+			if (!bothDownPresent) {
+				roll.remove(ReRollSources.BRAWLER);
 			}
 		});
 
