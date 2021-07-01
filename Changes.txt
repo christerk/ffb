@@ -50,3 +50,4 @@ Bugfixes:
  - Lashing out of Animal Savagery stopped actions and did not bounce balls
  - Safe Pass did not work for players without PA stat
  - Stats with value 0 were set to 1
+ - Pass player menu after running pass still had grid and move option showing
