@@ -45,3 +45,4 @@ Bugfixes:
  - Defensive was usable on Blitz turns
  - Players in tacklezones could be moved during solid defence
  - Fumblerooskie was not reset properly when player did not leave the square
+ - Pitch Invasion was not reported properly for away team
