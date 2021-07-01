@@ -16,5 +16,6 @@ public class SolidDefenceRollMessage extends ReportMessageBase<ReportSolidDefenc
 		TextStyle teamStyle = game.getTeamHome().getId().equals(report.getTeamId()) ? TextStyle.HOME : TextStyle.AWAY;
 		print(getIndent() + 1, teamStyle, game.getTeamById(report.getTeamId()).getName());
 		println(getIndent() + 1, TextStyle.NONE, " may reorganize " + report.getAmount() + " players");
+		println(getIndent() + 2, TextStyle.EXPLANATION, "Numbers mark original player positions.");
 	}
 }

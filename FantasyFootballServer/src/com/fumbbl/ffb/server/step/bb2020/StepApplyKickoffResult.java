@@ -297,8 +297,12 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			for (Player<?> player : actingTeam.getPlayers()) {
 				FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
-					playersAtCoordinates.put(player.getId(), fieldCoordinate);
-					game.getFieldModel().add(new FieldMarker(fieldCoordinate, String.valueOf(player.getNr()), String.valueOf(player.getNr())));
+					if (ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()), fieldCoordinate, false))) {
+						game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false));
+					} else {
+						playersAtCoordinates.put(player.getId(), fieldCoordinate);
+						game.getFieldModel().add(new FieldMarker(fieldCoordinate, String.valueOf(player.getNr()), String.valueOf(player.getNr())));
+					}
 				} else {
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					if (playerState.getBase() == PlayerState.RESERVE) {

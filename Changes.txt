@@ -5,6 +5,7 @@ Behaviour Changes:
 - Foul, Bomb and Gaze explicitly disabled during blitz kick off event
 - Diving Tackle affects jumps
 - Skill based AV and INJ modifiers are not used on skull/both down results when the defender has them (i.e. are only used when the player with MB/Claw actively blocks)
+- Add explanation to solid defence message
 
 Technical Changes:
 - new FieldLayer
@@ -42,3 +43,4 @@ Bugfixes:
  - Sent off from Officious Ref when away team is kicking resulted in a touchback even if ball landed on the pitch
  - Claws was not added as skill and did remove av 7 instead of 8
  - Defensive was usable on Blitz turns
+ - Players in tacklezones could be moved during solid defence
