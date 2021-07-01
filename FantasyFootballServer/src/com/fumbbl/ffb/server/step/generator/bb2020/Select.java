@@ -25,14 +25,14 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 
 		sequence.add(StepId.INIT_SELECTING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_SELECTING),
 			from(StepParameterKey.UPDATE_PERSISTENCE, params.isUpdatePersistence()));
-		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.ANIMAL_SAVAGERY_AVOIDED),
+		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
-		sequence.jump(IStepLabel.END_SELECTING);
-		sequence.add(StepId.BONE_HEAD, IStepLabel.ANIMAL_SAVAGERY_AVOIDED, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));

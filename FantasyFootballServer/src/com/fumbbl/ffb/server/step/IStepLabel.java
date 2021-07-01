@@ -6,7 +6,6 @@ package com.fumbbl.ffb.server.step;
  */
 public interface IStepLabel {
 
-	String ANIMAL_SAVAGERY_AVOIDED = "animalSavageryAvoided";
 	String APOTHECARY_ATTACKER = "apothecaryAttacker";
 	String APOTHECARY_DEFENDER = "apothecaryDefender";
 	String APOTHECARY_HIT_PLAYER = "apothecaryHitPlayer";

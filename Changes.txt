@@ -47,3 +47,4 @@ Bugfixes:
  - Fumblerooskie was not reset properly when player did not leave the square
  - Pitch Invasion was not reported properly for away team
  - Failed Unchanneled Fury on blitz did not end player action
+ - Lashing out of Animal Savagery stopped actions and did not bounce balls
