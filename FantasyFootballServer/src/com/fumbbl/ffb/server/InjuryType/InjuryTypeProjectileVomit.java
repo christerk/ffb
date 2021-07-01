@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.InjuryType;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryContext;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.injury.ProjectileVomit;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -34,7 +33,7 @@ public class InjuryTypeProjectileVomit extends InjuryTypeServer<ProjectileVomit>
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			setInjury(pDefender, gameState, diceRoller);
 		} else {
-			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+			injuryContext.setInjury(null);
 		}
 
 		return injuryContext;

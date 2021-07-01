@@ -51,3 +51,4 @@ Bugfixes:
  - Safe Pass did not work for players without PA stat
  - Stats with value 0 were set to 1
  - Pass player menu after running pass still had grid and move option showing
+ - Projectile Vomit not breaking armour put players prone
