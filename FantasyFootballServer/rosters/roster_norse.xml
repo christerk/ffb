@@ -147,6 +147,7 @@
 		<iconSet size="1">iconsets/norse_snowtroll.png</iconSet>
 		<skillList>
 			<skill>Claw</skill>
+			<skill>Claws</skill>
 			<skill>Disturbing Presence</skill>
 			<skill>Frenzy</skill>
 			<skill>Loner</skill>

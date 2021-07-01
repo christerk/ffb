@@ -20,7 +20,6 @@ import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -216,11 +215,6 @@ public class DiceInterpreter {
 		int armour = defender.getArmourWithModifiers();
 		if (defender.hasSkillProperty(NamedProperties.preventArmourModifications)) {
 			pInjuryContext.clearArmorModifiers();
-		}
-		if ((armour > 7) &&
-			Arrays.stream(pInjuryContext.getArmorModifiers())
-				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue))) {
-			armour = 7;
 		}
 		return mechanic.armourIsBroken(armour, armourRoll, pInjuryContext, pGameState.getGame());
 	}

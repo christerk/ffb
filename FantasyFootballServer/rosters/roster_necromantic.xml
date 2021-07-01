@@ -30,6 +30,7 @@
 		<iconSet size="2">iconsets/necromantic_werewolf.png</iconSet>
 		<skillList>
 			<skill>Claw</skill>
+			<skill>Claws</skill>
 			<skill>Frenzy</skill>
 			<skill>Regeneration</skill>
 		</skillList>
