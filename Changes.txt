@@ -41,3 +41,4 @@ Bugfixes:
  - Team reroll was available for block during Blitz turn
  - Sent off from Officious Ref when away team is kicking resulted in a touchback even if ball landed on the pitch
  - Claws was not added as skill and did remove av 7 instead of 8
+ - Defensive was usable on Blitz turns
