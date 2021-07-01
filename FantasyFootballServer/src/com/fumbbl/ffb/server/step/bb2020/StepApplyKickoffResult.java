@@ -669,6 +669,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			insertSteps(game, playerIdAway, parametersToConsume, sequence, ApothecaryMode.AWAY);
 		}
 
+		sequence.add(StepId.SET_ACTING_TEAM, StepParameter.from(StepParameterKey.TEAM_ID, game.getActingTeam().getId()));
+
+
 		getGameState().getStepStack().push(sequence.getSequence());
 
 		getResult().setNextAction(StepAction.NEXT_STEP);

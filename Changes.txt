@@ -39,3 +39,4 @@ Bugfixes:
  - Agility decreases suffered from in game injuries were not displayed properly
  - Special action were still possible during Blitz turn: KTM, Stab, Chainsaw, Vomit, B&C
  - Team reroll was available for block during Blitz turn
+ - Sent off from Officious Ref when away team is kicking resulted in a touchback even if ball landed on the pitch
