@@ -47,22 +47,19 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 
  	@Override
 	public PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction) {
-		if (thrower.getPassingWithModifiers() <= 0) {
-			return PassResult.FUMBLE;
-		}
 
-		int resultAfterModifiers = roll - calculateModifiers(modifiers) - distance.getModifier2020();
-		if (roll == 1) {
-			if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles) && !bombAction) {
-				return PassResult.SAVED_FUMBLE;
-			} else {
-				return PassResult.FUMBLE;
-			}
-		} else if (roll == 6 || resultAfterModifiers >= thrower.getPassingWithModifiers()) {
-			return PassResult.ACCURATE;
-		} else if (resultAfterModifiers <= 1) {
-			return PassResult.WILDLY_INACCURATE;
-		} else {
+	  int resultAfterModifiers = roll - calculateModifiers(modifiers) - distance.getModifier2020();
+	  if (thrower.getPassingWithModifiers() <= 0 || roll == 1) {
+		  if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles) && !bombAction) {
+			  return PassResult.SAVED_FUMBLE;
+		  } else {
+			  return PassResult.FUMBLE;
+		  }
+	  } else if (roll == 6 || resultAfterModifiers >= thrower.getPassingWithModifiers()) {
+		  return PassResult.ACCURATE;
+	  } else if (resultAfterModifiers <= 1) {
+		  return PassResult.WILDLY_INACCURATE;
+	  } else {
 			return PassResult.INACCURATE;
 		}
 	}

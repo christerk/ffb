@@ -48,3 +48,5 @@ Bugfixes:
  - Pitch Invasion was not reported properly for away team
  - Failed Unchanneled Fury on blitz did not end player action
  - Lashing out of Animal Savagery stopped actions and did not bounce balls
+ - Safe Pass did not work for players without PA stat
+ - Stats with value 0 were set to 1
