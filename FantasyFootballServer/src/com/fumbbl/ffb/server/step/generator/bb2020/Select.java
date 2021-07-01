@@ -39,7 +39,6 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING,
-			from(StepParameterKey.CHECK_PLAYER_ACTION, true),
 			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false));
 		sequence.add(StepId.END_SELECTING);
 		// may insert endTurn, pass, throwTeamMate, block, foul or moveSequence add

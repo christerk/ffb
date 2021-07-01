@@ -44,3 +44,4 @@ Bugfixes:
  - Claws was not added as skill and did remove av 7 instead of 8
  - Defensive was usable on Blitz turns
  - Players in tacklezones could be moved during solid defence
+ - Fumblerooskie was not reset properly when player did not leave the square
