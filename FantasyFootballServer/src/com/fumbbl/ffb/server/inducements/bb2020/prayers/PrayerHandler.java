@@ -9,10 +9,10 @@ import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
-import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public abstract class PrayerHandler implements INamedObject {
 
@@ -31,7 +31,7 @@ public abstract class PrayerHandler implements INamedObject {
 
 	abstract Prayer handledPrayer();
 
-	public final void initEffect(@Nullable IStep step, GameState gameState, String prayingTeamId) {
+	public final void initEffect(IStep step, GameState gameState, String prayingTeamId) {
 		Game game = gameState.getGame();
 		Team prayingTeam = game.getTeamById(prayingTeamId);
 		InducementSet inducementSet = game.getTeamHome() == prayingTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
@@ -43,7 +43,7 @@ public abstract class PrayerHandler implements INamedObject {
 		}
 	}
 
-	public final void applySelection(@Nullable IStep step, Game game, PrayerDialogSelection selection) {
+	public final void applySelection(IStep step, Game game, PrayerDialogSelection selection) {
 		applySelection(game, selection);
 		if (step != null) {
 			reports.forEach(report -> step.getResult().addReport(report));
