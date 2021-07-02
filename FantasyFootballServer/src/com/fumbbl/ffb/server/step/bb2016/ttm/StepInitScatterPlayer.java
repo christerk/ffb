@@ -195,6 +195,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			} else {
 				// put thrown player in target coordinate (ball we be handled in right stuff
 				// step), end loop
+				game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 				game.getFieldModel().setPlayerState(thrownPlayer, fThrownPlayerState);
 				game.setDefenderId(null);
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
