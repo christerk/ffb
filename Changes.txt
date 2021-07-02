@@ -1,3 +1,4 @@
 Bugfixes:
  - Foul crashed game
  - Right Stuff only worked for ST 2 or less
+ - Pass on TTM froze game
