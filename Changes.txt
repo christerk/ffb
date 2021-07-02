@@ -5,6 +5,7 @@ Behaviour Changes:
 - Foul, Bomb and Gaze explicitly disabled during blitz kick off event
 - Diving Tackle affects jumps
 - Skill based AV and INJ modifiers are not used on skull/both down results when the defender has them (i.e. are only used when the player with MB/Claw actively blocks)
+- Add explanation to solid defence message
 
 Technical Changes:
 - new FieldLayer
@@ -40,3 +41,14 @@ Bugfixes:
  - Special action were still possible during Blitz turn: KTM, Stab, Chainsaw, Vomit, B&C
  - Team reroll was available for block during Blitz turn
  - Sent off from Officious Ref when away team is kicking resulted in a touchback even if ball landed on the pitch
+ - Claws was not added as skill and did remove av 7 instead of 8
+ - Defensive was usable on Blitz turns
+ - Players in tacklezones could be moved during solid defence
+ - Fumblerooskie was not reset properly when player did not leave the square
+ - Pitch Invasion was not reported properly for away team
+ - Failed Unchanneled Fury on blitz did not end player action
+ - Lashing out of Animal Savagery stopped actions and did not bounce balls
+ - Safe Pass did not work for players without PA stat
+ - Stats with value 0 were set to 1
+ - Pass player menu after running pass still had grid and move option showing
+ - Projectile Vomit not breaking armour put players prone

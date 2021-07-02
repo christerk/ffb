@@ -133,4 +133,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean areSpecialBlockActionsAllowed(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
 	}
+
+	@Override
+	public boolean allowesCancellingGuard(TurnMode turnMode) {
+		return TurnMode.BLITZ != turnMode;
+	}
 }

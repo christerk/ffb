@@ -232,7 +232,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		}
 
 		if (stat.getMin() != 0) {
-			sum = Math.max(stat.getMin(), sum);
+			sum = Math.max(baseValue == 0 ? 0 : stat.getMin(), sum);
 		}
 		return sum;
 	}

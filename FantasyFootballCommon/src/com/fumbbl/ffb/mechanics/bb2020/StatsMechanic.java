@@ -19,7 +19,7 @@ public class StatsMechanic extends com.fumbbl.ffb.mechanics.StatsMechanic {
 
 	@Override
 	public boolean armourIsBroken(int armour, int[] roll, InjuryContext context, Game game) {
-		return (armour <= (roll[0] + roll[1] + context.getArmorModifierTotal(game)));
+		return (reduceArmour(context, armour, 8) <= (roll[0] + roll[1] + context.getArmorModifierTotal(game)));
 	}
 
 	@Override

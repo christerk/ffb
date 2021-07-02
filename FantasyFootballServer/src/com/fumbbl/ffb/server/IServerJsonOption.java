@@ -37,7 +37,6 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption CARDS_SELECTED_HOME = new JsonBooleanOption("cardsSelectedHome");
 	JsonEnumWithNameOption CATCH_SCATTER_THROW_IN_MODE = new JsonEnumWithNameOption("catchScatterThrowInMode",
 			Factory.CATCH_SCATTER_THROWIN_MODE);
-	JsonBooleanOption CHECK_PLAYER_ACTION = new JsonBooleanOption("checkPlayerAction");
 	JsonFieldCoordinateOption COORDINATE_TO = new JsonFieldCoordinateOption("coordinateTo");
 	JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
 	JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");

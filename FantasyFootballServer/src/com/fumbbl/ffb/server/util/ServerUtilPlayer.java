@@ -43,7 +43,8 @@ public class ServerUtilPlayer {
 						defendingPlayersOtherThanBlocker++;
 				}
 
-				boolean guardIsCanceled = game.getActingTeam().hasPlayer(attacker) && Arrays.stream(defensiveAssists)
+				boolean guardIsCanceled = mechanic.allowesCancellingGuard(game.getTurnMode())
+					&& game.getActingTeam().hasPlayer(attacker) && Arrays.stream(defensiveAssists)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsBlocksInTacklezones));
 
@@ -51,8 +52,6 @@ public class ServerUtilPlayer {
 
 				if (((offensiveAssist.hasSkillProperty(NamedProperties.assistsBlocksInTacklezones) && !guardIsCanceled)
 					|| (defendingPlayersOtherThanBlocker == 0)) && isValidAssist) {
-					// System.out.println(offensiveAssists[i].getName() + " assists " +
-					// pAttacker.getName());
 					blockStrength++;
 				}
 			}

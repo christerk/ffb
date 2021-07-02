@@ -25,7 +25,8 @@ import java.util.Arrays;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepResetFumblerooskie extends AbstractStep {
 
-	private boolean checkPlayerAction, resetForFailedBlock;
+	private final boolean checkPlayerAction = false;
+	private boolean resetForFailedBlock;
 
 	public StepResetFumblerooskie(GameState pGameState) {
 		super(pGameState);
@@ -40,15 +41,8 @@ public class StepResetFumblerooskie extends AbstractStep {
 	public void init(StepParameterSet parameterSet) {
 		if (parameterSet != null) {
 			Arrays.stream(parameterSet.values()).forEach(parameter -> {
-				switch (parameter.getKey()) {
-					case CHECK_PLAYER_ACTION:
-						checkPlayerAction = parameter.getValue() != null && (boolean) parameter.getValue();
-						break;
-					case RESET_FOR_FAILED_BLOCK:
-						resetForFailedBlock = parameter.getValue() != null && (boolean) parameter.getValue();
-						break;
-					default:
-						break;
+				if (parameter.getKey() == StepParameterKey.RESET_FOR_FAILED_BLOCK) {
+					resetForFailedBlock = parameter.getValue() != null && (boolean) parameter.getValue();
 				}
 			});
 		}
@@ -66,7 +60,6 @@ public class StepResetFumblerooskie extends AbstractStep {
 		if (actingPlayer.isFumblerooskiePending()
 			&& fieldModel.isBallMoving()
 			&& fieldModel.getBallCoordinate().equals(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()))
-			&& (!checkPlayerAction || actingPlayer.getPlayerAction() == null)
 		) {
 
 			boolean ballCarrierStanding = fieldModel.getPlayerState(actingPlayer.getPlayer()).canBeBlocked();
@@ -98,7 +91,6 @@ public class StepResetFumblerooskie extends AbstractStep {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.CHECK_PLAYER_ACTION.addTo(jsonObject, checkPlayerAction);
 		IServerJsonOption.RESET_FOR_FAILED_BLOCK.addTo(jsonObject, resetForFailedBlock);
 		return jsonObject;
 	}
@@ -107,7 +99,6 @@ public class StepResetFumblerooskie extends AbstractStep {
 	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
 		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		checkPlayerAction = IServerJsonOption.CHECK_PLAYER_ACTION.getFrom(source, jsonObject);
 		resetForFailedBlock = IServerJsonOption.RESET_FOR_FAILED_BLOCK.getFrom(source, jsonObject);
 		return this;
 	}

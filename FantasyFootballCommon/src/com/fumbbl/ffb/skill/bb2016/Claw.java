@@ -1,8 +1,8 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
@@ -14,7 +14,7 @@ import com.fumbbl.ffb.modifiers.StaticArmourModifier;
  * player during a block, any Armour roll of 8 or more after modifications
  * automatically breaks armour.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class Claw extends Skill {
 
 	public Claw() {

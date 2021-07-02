@@ -53,7 +53,7 @@ public class ReportKickoffPitchInvasion implements IReport {
 	// transformation
 
 	public ReportKickoffPitchInvasion transform(IFactorySource source) {
-		return new ReportKickoffPitchInvasion();
+		return new ReportKickoffPitchInvasion(rollAway, rollHome, affectedPlayers);
 	}
 
 	// JSON serialization

@@ -220,30 +220,34 @@ public class ClientStatePass extends ClientStateMove {
 				menuItemList.add(jumpAction);
 			} else {
 				JMenuItem jumpAction = new JMenuItem("Jump",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
 			}
 		}
 
-		JMenuItem toggleRangeGridAction = new JMenuItem("Range Grid on/off",
+		if (!actingPlayer.hasPassed()) {
+			JMenuItem toggleRangeGridAction = new JMenuItem("Range Grid on/off",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
-		toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
-		toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
-		menuItemList.add(toggleRangeGridAction);
+			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
+			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
+			menuItemList.add(toggleRangeGridAction);
+		}
 
-		if (!actingPlayer.isSufferingAnimosity()) {
-			JMenuItem moveAction = new JMenuItem("Move",
+		if (!actingPlayer.hasPassed()) {
+			if (!actingPlayer.isSufferingAnimosity()) {
+				JMenuItem moveAction = new JMenuItem("Move",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
-			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
-			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
-			menuItemList.add(moveAction);
+				moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
+				moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
+				menuItemList.add(moveAction);
+			}
 		}
 
 		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
