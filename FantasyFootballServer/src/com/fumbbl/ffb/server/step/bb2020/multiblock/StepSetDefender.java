@@ -35,12 +35,20 @@ public class StepSetDefender extends AbstractStep {
 	public void init(StepParameterSet parameterSet) {
 		super.init(parameterSet);
 		if (parameterSet != null) {
-			for (StepParameter parameter: parameterSet.values()) {
+			for (StepParameter parameter : parameterSet.values()) {
 				if (parameter.getKey() == StepParameterKey.BLOCK_DEFENDER_ID) {
 					defenderId = (String) parameter.getValue();
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if (pParameter != null && pParameter.getKey() == StepParameterKey.BLOCK_DEFENDER_ID) {
+			defenderId = (String) pParameter.getValue();
+		}
+		return super.setParameter(pParameter);
 	}
 
 	@Override

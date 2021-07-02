@@ -145,6 +145,7 @@ public class StepInitFouling extends AbstractStep {
 				playerResult.setFouls(playerResult.getFouls() + 1);
 				game.getTurnData().setFoulUsed(true);
 				publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, usingChainsaw));
+				publishParameter(new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, fFoulDefenderId));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		}
