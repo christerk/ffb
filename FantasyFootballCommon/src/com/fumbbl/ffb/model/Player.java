@@ -331,6 +331,6 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	public boolean canBeThrown(){
-		return hasSkillProperty(NamedProperties.canBeThrown) || (hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs1or2) && getStrengthWithModifiers() < 3);
+		return hasSkillProperty(NamedProperties.canBeThrown) || (hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs3orLess) && getStrengthWithModifiers() <= 3);
 	}
 }
