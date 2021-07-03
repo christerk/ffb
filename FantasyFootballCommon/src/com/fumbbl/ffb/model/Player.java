@@ -330,7 +330,12 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
 	}
 
-	public boolean canBeThrown(){
+	public boolean canBeThrown() {
 		return hasSkillProperty(NamedProperties.canBeThrown) || (hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs3orLess) && getStrengthWithModifiers() <= 3);
 	}
+
+	public abstract boolean isUsed(Skill skill);
+
+	public abstract void markUsed(Skill skill);
+
 }
