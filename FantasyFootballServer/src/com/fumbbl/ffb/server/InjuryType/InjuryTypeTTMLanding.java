@@ -39,7 +39,7 @@ public class InjuryTypeTTMLanding extends InjuryTypeServer<TTMLanding> {
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-			factory.findInjuryModifiers(game, injuryContext, pAttacker,
+			factory.findInjuryModifiers(game, injuryContext, null,
 				pDefender, isStab(), isFoul()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 
 			setInjury(pDefender, gameState, diceRoller);
