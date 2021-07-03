@@ -29,10 +29,12 @@ public class InjuryTypeBitten extends InjuryTypeServer<Bitten> {
 
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
+			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
+			factory.findInjuryModifiers(game, injuryContext, pAttacker,
+				pDefender, isStab(), isFoul()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 
 			injuryContext
-					.setInjury(interpretInjury(gameState));
+				.setInjury(interpretInjury(gameState));
 
 			if (injuryContext.getPlayerState() == null) {
 				injuryContext.setInjury(new PlayerState(PlayerState.BADLY_HURT));

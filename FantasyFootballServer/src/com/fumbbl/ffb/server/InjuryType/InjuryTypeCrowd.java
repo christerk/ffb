@@ -29,7 +29,9 @@ public abstract class InjuryTypeCrowd<T extends InjuryType> extends InjuryTypeSe
 		}
 
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
-		injuryContext.addInjuryModifier(((InjuryModifierFactory) game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
+		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
+		factory.findInjuryModifiers(game, injuryContext, pAttacker,
+			pDefender, isStab(), isFoul()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 		setInjury(pDefender, gameState, diceRoller);
 
 		// crowdpush to reserve
