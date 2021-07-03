@@ -3,11 +3,11 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PlayerGenderFactory;
 import com.fumbbl.ffb.factory.PlayerTypeFactory;
@@ -22,13 +22,13 @@ import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +74,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private Map<String, Set<TemporaryStatModifier>> temporaryModifiers = new HashMap<>();
 	private Map<String, Set<SkillWithValue>> temporarySkills = new HashMap<>();
 	private Map<String, Set<ISkillProperty>> temporaryProperties = new HashMap<>();
-	private Map<Skill, String> skillValues;
+	private final Set<Skill> usedSkills = new HashSet<>();
+	private Map<Skill, String> skillValues = new LinkedHashMap<>();
 
 	// attributes used for parsing
 	private transient boolean fInsideSkillList;
@@ -89,7 +90,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 		setGender(PlayerGender.MALE);
 		fIconSetIndex = 0;
 		fPosition = new RosterPosition(null);
-		skillValues = new LinkedHashMap<>();
 	}
 
 	@Override
@@ -745,5 +745,15 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	public void removeTemporaryProperties(String source) {
 		temporaryProperties.remove(source);
+	}
+
+	@Override
+	public boolean isUsed(Skill skill) {
+		return false;
+	}
+
+	@Override
+	public void markUsed(Skill skill) {
+
 	}
 }

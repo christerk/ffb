@@ -52,18 +52,29 @@ public abstract class Skill implements INamedObject {
 	private final List<ISkillProperty> skillProperties = new ArrayList<>();
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
 	private final int defaultSkillValue;
+	private final boolean singleUse;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
 	}
 
+	public Skill(String name, SkillCategory category, boolean singleUse) {
+		this(name, category, 0, singleUse);
+	}
+
 	public Skill(String name, SkillCategory category, int defaultSkillValue) {
+		this(name, category, defaultSkillValue, false);
+	}
+
+	public Skill(String name, SkillCategory category, int defaultSkillValue, boolean singleUse) {
 		this.name = name;
 		this.category = category;
 		this.defaultSkillValue = defaultSkillValue;
+		this.singleUse = singleUse;
 	}
 
-	public void postConstruct() {}
+	public void postConstruct() {
+	}
 
 	@Override
 	public String getName() {
@@ -198,6 +209,10 @@ public abstract class Skill implements INamedObject {
 
 	public List<CasualtyModifier> getCasualtyModifiers() {
 		return casualtyModifiers;
+	}
+
+	public boolean isSingleUse() {
+		return singleUse;
 	}
 
 	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {

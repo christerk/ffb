@@ -13,7 +13,6 @@ import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -361,5 +360,15 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	@Override
 	public String toXml(boolean pIndent) {
 		return UtilXml.toXml(this, pIndent);
+	}
+
+	@Override
+	public boolean isUsed(Skill skill) {
+		return originalPlayer.isUsed(skill);
+	}
+
+	@Override
+	public void markUsed(Skill skill) {
+		originalPlayer.markUsed(skill);
 	}
 }
