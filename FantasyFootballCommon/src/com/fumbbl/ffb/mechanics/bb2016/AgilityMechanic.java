@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
-import java.util.Arrays;
-import java.util.Set;
-
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.Wording;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -13,9 +10,13 @@ import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpModifier;
+import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
+
+import java.util.Arrays;
+import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
@@ -25,8 +26,12 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-	public int minimumRollJumpUp(Player<?> pPlayer) {
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) - 2);
+	public int minimumRollJumpUp(Player<?> pPlayer, Set<JumpUpModifier> modifiers) {
+		int modifierTotal = 0;
+		for (JumpUpModifier modifier : modifiers) {
+			modifierTotal += modifier.getModifier();
+		}
+		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + modifierTotal);
 	}
 
 	@Override

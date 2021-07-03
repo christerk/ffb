@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
-import java.util.Collections;
-import java.util.Set;
-
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.Wording;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -13,17 +10,21 @@ import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpModifier;
+import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 
+import java.util.Collections;
+import java.util.Set;
+
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 
 	@Override
-	public int minimumRollJumpUp(Player<?> pPlayer) {
-		return minimumRoll(pPlayer.getAgilityWithModifiers(), Collections.emptySet());
+	public int minimumRollJumpUp(Player<?> pPlayer, Set<JumpUpModifier> modifiers) {
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), modifiers);
 	}
 
 	@Override

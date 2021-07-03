@@ -1,15 +1,15 @@
 package com.fumbbl.ffb.modifiers;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.util.UtilCards;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ModifierAggregator {
 	private SkillFactory skillFactory;
@@ -73,12 +73,22 @@ public class ModifierAggregator {
 
 	public Set<JumpModifier> getJumpModifiers() {
 		return Stream.concat(
-				skillFactory.getSkills().stream().flatMap(skill -> skill.getJumpModifiers().stream()),
-				Arrays.stream(UtilCards.findAllActiveCards(game))
-						.flatMap(card -> card.rollModifiers().stream())
-						.filter(modifier -> modifier instanceof JumpModifier)
-						.map(modifier -> (JumpModifier)modifier))
-				.collect(Collectors.toSet());
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getJumpModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.rollModifiers().stream())
+				.filter(modifier -> modifier instanceof JumpModifier)
+				.map(modifier -> (JumpModifier) modifier))
+			.collect(Collectors.toSet());
+	}
+
+	public Set<JumpUpModifier> getJumpUpModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getJumpUpModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.rollModifiers().stream())
+				.filter(modifier -> modifier instanceof JumpUpModifier)
+				.map(modifier -> (JumpUpModifier) modifier))
+			.collect(Collectors.toSet());
 	}
 
 	public Set<GazeModifier> getGazeModifiers() {
@@ -87,7 +97,7 @@ public class ModifierAggregator {
 			Arrays.stream(UtilCards.findAllActiveCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof GazeModifier)
-				.map(modifier -> (GazeModifier)modifier))
+				.map(modifier -> (GazeModifier) modifier))
 			.collect(Collectors.toSet());
 	}
 
