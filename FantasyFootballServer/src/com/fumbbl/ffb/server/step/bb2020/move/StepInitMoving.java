@@ -291,7 +291,6 @@ public class StepInitMoving extends AbstractStep {
 					game.getTurnData().setTurnStarted(true);
 					switch (actingPlayer.getPlayerAction()) {
 						case BLITZ_MOVE:
-						case KICK_TEAM_MATE_MOVE:
 							game.getTurnData().setBlitzUsed(true);
 							break;
 						case FOUL_MOVE:
@@ -303,6 +302,9 @@ public class StepInitMoving extends AbstractStep {
 						case PASS_MOVE:
 						case THROW_TEAM_MATE_MOVE:
 							game.getTurnData().setPassUsed(true);
+							break;
+						case KICK_TEAM_MATE_MOVE:
+							game.getTurnData().setKtmUsed(true);
 							break;
 						default:
 							break;
