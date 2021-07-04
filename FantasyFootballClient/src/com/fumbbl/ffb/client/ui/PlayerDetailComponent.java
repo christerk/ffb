@@ -397,7 +397,7 @@ public class PlayerDetailComponent extends JPanel {
 				}
 				Skill unusedProSkill = getPlayer().getSkillWithProperty(NamedProperties.canRerollOncePerTurn);
 				if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skillInfo.getSkill()))
-					|| ((skillInfo.getSkill() == unusedProSkill) && playerState.hasUsedPro())) {
+					|| ((skillInfo.getSkill() == unusedProSkill) && playerState.hasUsedPro()) || getPlayer().isUsed(skillInfo.getSkill())) {
 					usedSkills.add(skillInfo.getInfo());
 				}
 			}
