@@ -138,11 +138,11 @@ public class StepFollowup extends AbstractStep {
 				Skill skillCancelsSkillPreventingFollow = UtilCards.getSkillCancelling(actingPlayer.getPlayer(),
 						skillPreventsFollowingUp);
 				if (usingSkillPreventingFollowUp == null) {
-					if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && skillCancelsSkillPreventingFollow != null) {
+					if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction() || (PlayerAction.MOVE == actingPlayer.getPlayerAction() && actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksDuringMove))) && skillCancelsSkillPreventingFollow != null) {
 						usingSkillPreventingFollowUp = false;
 						cancelSkillUsed = true;
 						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillCancelsSkillPreventingFollow,
-								true, SkillUse.CANCEL_FEND));
+							true, SkillUse.CANCEL_FEND));
 					}
 				}
 				if (usingSkillPreventingFollowUp == null) {
