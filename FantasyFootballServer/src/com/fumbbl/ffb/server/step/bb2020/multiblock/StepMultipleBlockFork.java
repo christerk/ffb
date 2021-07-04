@@ -106,23 +106,6 @@ public class StepMultipleBlockFork extends AbstractStep {
 			getGameState().getStepStack().push(sequence.getSequence());
 		}
 
-		List<BlockTarget> chainsawGroup = groupedTargets.get(BlockKind.CHAINSAW);
-		if (chainsawGroup != null && !chainsawGroup.isEmpty()) {
-			List<BlockTarget> reversed = new ArrayList<>(chainsawGroup);
-			reversed.forEach(target -> {
-				Sequence sequence = new Sequence(getGameState());
-				sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
-				sequence.add(StepId.DROP_FALLING_PLAYERS);
-				sequence.add(StepId.CONSUME_PARAMETER, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
-				getGameState().getStepStack().push(sequence.getSequence());
-				publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
-
-			});
-			Sequence sequence = new Sequence(getGameState());
-			sequence.add(StepId.BLOCK_CHAINSAW_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, chainsawGroup));
-			getGameState().getStepStack().push(sequence.getSequence());
-		}
-
 		List<BlockTarget> stabGroup = groupedTargets.get(BlockKind.STAB);
 		if (stabGroup != null && !stabGroup.isEmpty()) {
 			Collections.reverse(stabGroup);

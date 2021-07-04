@@ -10,6 +10,7 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -356,16 +357,10 @@ public final class StepInitSelecting extends AbstractStep {
 		Player<?> player = game.getPlayerById(command.getPlayerId());
 		FieldModel fieldModel = game.getFieldModel();
 		PlayerState playerState = fieldModel.getPlayerState(player);
-		switch (command.getKind()) {
-			case STAB:
-				playerState = playerState.changeSelectedStabTarget(true);
-				break;
-			case CHAINSAW:
-				playerState = playerState.changeSelectedChainsawTarget(true);
-				break;
-			default:
-				playerState = playerState.changeSelectedBlockTarget(true);
-				break;
+		if (command.getKind() == BlockKind.STAB) {
+			playerState = playerState.changeSelectedStabTarget(true);
+		} else {
+			playerState = playerState.changeSelectedBlockTarget(true);
 		}
 		fieldModel.setPlayerState(player, playerState);
 		fieldModel.addMultiBlockTarget(player.getId(), fieldModel.getPlayerCoordinate(player));
@@ -375,7 +370,7 @@ public final class StepInitSelecting extends AbstractStep {
 	private void handleUnsetBlockTarget(Game game, ClientCommandUnsetBlockTargetSelection command) {
 		Player<?> player = game.getPlayerById(command.getPlayerId());
 		FieldModel fieldModel = game.getFieldModel();
-		PlayerState playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false).changeSelectedChainsawTarget(false);
+		PlayerState playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false);
 		fieldModel.setPlayerState(player, playerState);
 		fieldModel.removeMultiBlockTarget(player.getId(), fieldModel.getPlayerCoordinate(player));
 		ServerUtilBlock.updateDiceDecorations(game);

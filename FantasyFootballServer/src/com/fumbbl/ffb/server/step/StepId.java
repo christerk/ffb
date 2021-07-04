@@ -17,7 +17,6 @@ public enum StepId implements INamedObject {
 	BLITZ_TURN("blitzTurn"), // phase.kickoff
 	BLOCK_BALL_AND_CHAIN("blockBallAndChain"), // action.block
 	BLOCK_CHAINSAW("blockChainsaw"), // action.block
-	BLOCK_CHAINSAW_MULTIPLE("blockChainsawMultiple"), // action.multiBlock 2020
 	BLOCK_CHOICE("blockChoice"), // action.block
 	BLOCK_DODGE("blockDodge"), // action.block
 	BLOCK_ROLL("blockRoll"), // action.block

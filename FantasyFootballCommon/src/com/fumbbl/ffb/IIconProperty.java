@@ -27,7 +27,6 @@ public interface IIconProperty {
 	String DECORATION_BLITZ_TARGET_SELECTED = "decoration.selected.blitz.target";
 	String DECORATION_BLOCK_TARGET = "decoration.block.target";
 	String DECORATION_STAB_TARGET = "decoration.stab.target";
-	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
