@@ -336,6 +336,6 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract boolean isUsed(Skill skill);
 
-	public abstract void markUsed(Skill skill);
+	public abstract void markUsed(Skill skill, Game game);
 
 }

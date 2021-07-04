@@ -308,6 +308,11 @@ public class ModelChangeProcessor {
 			case INDUCEMENT_SET_REMOVE_PRAYER:
 				getInducementSet(pGame, isHomeData(pModelChange)).removePrayer((Prayer) pModelChange.getValue());
 				return true;
+
+			case PLAYER_MARK_SKILL_USED:
+				pGame.getPlayerById(pModelChange.getKey()).markUsed((Skill) pModelChange.getValue(), pGame);
+				return true;
+
 			case PLAYER_RESULT_SET_BLOCKS:
 				getPlayerResult(pGame, pModelChange.getKey()).setBlocks((Integer) pModelChange.getValue());
 				return true;

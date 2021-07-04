@@ -368,7 +368,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void markUsed(Skill skill) {
-		originalPlayer.markUsed(skill);
+	public void markUsed(Skill skill, Game game) {
+		originalPlayer.markUsed(skill, game);
 	}
 }

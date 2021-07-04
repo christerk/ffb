@@ -15,6 +15,8 @@ import com.fumbbl.ffb.factory.SeriousInjuryFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
@@ -762,7 +764,11 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void markUsed(Skill skill) {
+	public void markUsed(Skill skill, Game game) {
+		if ((skill == null) || isUsed(skill)) {
+			return;
+		}
 		usedSkills.add(skill);
+		game.notifyObservers(new ModelChange(ModelChangeId.PLAYER_MARK_SKILL_USED, fId, skill));
 	}
 }
