@@ -643,6 +643,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 		IJsonOption.TEMPORARY_MODIFIERS_MAP.addTo(jsonObject, temporaryModifiers);
 		IJsonOption.TEMPORARY_PROPERTIES_MAP.addTo(jsonObject, temporaryProperties);
 		IJsonOption.SKILL_VALUES_MAP.addTo(jsonObject, skillValues);
+		JsonArray usedSkillsArray = new JsonArray();
+		usedSkills.stream().map(UtilJson::toJsonValue).forEach(usedSkillsArray::add);
+		IJsonOption.USED_SKILLS.addTo(jsonObject, usedSkillsArray);
 		return jsonObject;
 
 	}
@@ -698,6 +701,12 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 		skillValues = IJsonOption.SKILL_VALUES_MAP.getFrom(source, jsonObject);
 
+		JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(source, jsonObject);
+
+		if (usedSkillsArray != null) {
+			usedSkillsArray.values().stream().map(value -> (Skill) UtilJson.toEnumWithName(skillFactory, value)).forEach(usedSkills::add);
+		}
+
 		return this;
 
 	}
@@ -749,11 +758,11 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public boolean isUsed(Skill skill) {
-		return false;
+		return usedSkills.contains(skill);
 	}
 
 	@Override
 	public void markUsed(Skill skill) {
-
+		usedSkills.add(skill);
 	}
 }
