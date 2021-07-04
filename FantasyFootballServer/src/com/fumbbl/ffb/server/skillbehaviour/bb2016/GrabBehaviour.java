@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2016;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
@@ -25,7 +25,7 @@ import com.fumbbl.ffb.skill.Grab;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class GrabBehaviour extends SkillBehaviour<Grab> {
 	public GrabBehaviour() {
 		super();
