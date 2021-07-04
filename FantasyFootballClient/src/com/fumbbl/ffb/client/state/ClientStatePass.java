@@ -60,9 +60,9 @@ public class ClientStatePass extends ClientStateMove {
 		if (pPlayer == actingPlayer.getPlayer()) {
 			super.clickOnPlayer(pPlayer);
 		} else {
-			if ((PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())
-					|| (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
-							&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer)))) {
+			if (!actingPlayer.hasPassed() && (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()
+				|| (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
+				&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer))))) {
 				game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(pPlayer));
 				getClient().getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
@@ -191,17 +191,17 @@ public class ClientStatePass extends ClientStateMove {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
-				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()) {
 			JMenuItem passAction = new JMenuItem("Pass Ball (any square)",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
 		}
 
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
-				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())
-				&& !game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
+			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()
+			&& !game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 					: "Use Hail Mary Pass";
 			JMenuItem hailMaryPassAction = new JMenuItem(text,
