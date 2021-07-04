@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -332,6 +333,12 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public boolean canBeThrown() {
 		return hasSkillProperty(NamedProperties.canBeThrown) || (hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs3orLess) && getStrengthWithModifiers() <= 3);
+	}
+
+	public boolean isUsed(ISkillProperty property) {
+		Optional<Skill> skill = getSkillsIncludingTemporaryOnes().stream().filter(s -> s.hasSkillProperty(property)).findFirst();
+
+		return skill.isPresent() && isUsed(skill.get());
 	}
 
 	public abstract boolean isUsed(Skill skill);
