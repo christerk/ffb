@@ -69,4 +69,11 @@ public class OnTheBallMechanic extends com.fumbbl.ffb.mechanics.OnTheBallMechani
 	public String displayStringKickOffInterference() {
 		return "Kick-Off Return";
 	}
+
+	@Override
+	public boolean hasReachedValidPosition(Game game, Player<?> player) {
+		Set<FieldCoordinate> validEndCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+		return validEndCoordinates.contains(playerCoordinate);
+	}
 }
