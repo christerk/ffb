@@ -16,7 +16,9 @@ import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.report.ReportRightStuffRoll;
@@ -160,6 +162,11 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
 				minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			if (successful) {
+				if (passResult == PassResult.ACCURATE) {
+					GameResult gameResult = getGameState().getGame().getGameResult();
+					TeamResult teamResult = game.getActingTeam() == game.getTeamHome() ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
+					getGameState().getPrayerState().addCompletion(teamResult.getPlayerResult(game.getActingPlayer().getPlayer()));
+				}
 				if (fThrownPlayerHasBall) {
 					if (UtilServerSteps.checkTouchdown(getGameState())) {
 						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));

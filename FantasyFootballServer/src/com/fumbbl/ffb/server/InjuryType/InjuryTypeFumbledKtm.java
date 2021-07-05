@@ -32,7 +32,6 @@ public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
-		injuryContext.addInjuryModifier(factory.getNigglingInjuryModifier(pDefender));
 
 		Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 			pDefender, isStab(), isFoul()).stream().filter(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).collect(Collectors.toSet());

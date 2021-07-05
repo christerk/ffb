@@ -6,10 +6,13 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.factory.JumpUpModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.modifiers.JumpUpContext;
+import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportJumpUpRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -24,6 +27,8 @@ import com.fumbbl.ffb.server.step.action.select.StepJumpUp.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.JumpUp;
 import com.fumbbl.ffb.util.UtilCards;
+
+import java.util.Set;
 
 @RulesCollection(Rules.COMMON)
 public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
@@ -53,22 +58,24 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 							|| (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
 						if (ReRolledActions.JUMP_UP == step.getReRolledAction()) {
 							if ((step.getReRollSource() == null)
-									|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-										playerState.changeBase(PlayerState.PRONE).changeActive(false));
+									playerState.changeBase(PlayerState.PRONE).changeActive(false));
 								step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 								return false;
 							}
 						}
+						JumpUpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_UP_MODIFIER);
 						AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-						int minimumRoll = mechanic.minimumRollJumpUp(actingPlayer.getPlayer());
+						Set<JumpUpModifier> modifiers = modifierFactory.findModifiers(new JumpUpContext(game.getActingPlayer(), game));
+						int minimumRoll = mechanic.minimumRollJumpUp(actingPlayer.getPlayer(), modifiers);
 						int roll = step.getGameState().getDiceRoller().rollSkill();
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.JUMP_UP)
-								&& (step.getReRollSource() != null));
+							&& (step.getReRollSource() != null));
 						step.getResult().addReport(new ReportJumpUpRoll(actingPlayer.getPlayerId(),
-								successful, roll, minimumRoll, reRolled, null));
+							successful, roll, minimumRoll, reRolled, modifiers.toArray(new JumpUpModifier[0])));
 						if (successful) {
 							actingPlayer.setStandingUp(false);
 							step.getResult().setNextAction(StepAction.NEXT_STEP);

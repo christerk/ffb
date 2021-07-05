@@ -26,4 +26,6 @@ public abstract class OnTheBallMechanic implements Mechanic {
 	public abstract String passInterferenceStatusDescription();
 
 	public abstract String displayStringKickOffInterference();
+
+	public abstract boolean hasReachedValidPosition(Game game, Player<?> player);
 }

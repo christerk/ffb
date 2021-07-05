@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -29,7 +29,7 @@ public class RightStuff extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canBeThrownIfStrengthIs1or2);
+		registerProperty(NamedProperties.canBeThrownIfStrengthIs3orLess);
 		registerProperty(NamedProperties.ignoreTackleWhenBlocked);
 	}
 

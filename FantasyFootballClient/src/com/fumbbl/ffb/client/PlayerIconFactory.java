@@ -1,13 +1,5 @@
 package com.fumbbl.ffb.client;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -25,6 +17,14 @@ import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
+
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Kalimar
@@ -226,9 +226,6 @@ public class PlayerIconFactory {
 		}
 		if (playerState.isSelectedStabTarget()) {
 			decorationProperty2 = IIconProperty.DECORATION_STAB_TARGET;
-		}
-		if (playerState.isSelectedChainsawTarget()) {
-			decorationProperty2 = IIconProperty.DECORATION_CHAINSAW_TARGET;
 		}
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((actingPlayer.getPlayer() == pPlayer) && actingPlayer.isSufferingBloodLust()) {

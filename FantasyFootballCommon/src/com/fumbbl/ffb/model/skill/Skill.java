@@ -18,6 +18,7 @@ import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpModifier;
+import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
@@ -38,6 +39,7 @@ public abstract class Skill implements INamedObject {
 	private final List<PickupModifier> pickupModifiers = new ArrayList<>();
 	private final List<DodgeModifier> dodgeModifiers = new ArrayList<>();
 	private final List<JumpModifier> jumpModifiers = new ArrayList<>();
+	private final List<JumpUpModifier> jumpUpModifiers = new ArrayList<>();
 	private final List<InterceptionModifier> interceptionModifiers = new ArrayList<>();
 	private final List<InjuryModifier> injuryModifiers = new ArrayList<>();
 	private final List<ArmorModifier> armorModifiers = new ArrayList<>();
@@ -82,6 +84,10 @@ public abstract class Skill implements INamedObject {
 
 	protected void registerModifier(JumpModifier modifier) {
 		jumpModifiers.add(modifier);
+	}
+
+	protected void registerModifier(JumpUpModifier modifier) {
+		jumpUpModifiers.add(modifier);
 	}
 
 	protected void registerModifier(PassModifier modifier) {
@@ -156,6 +162,10 @@ public abstract class Skill implements INamedObject {
 
 	public List<JumpModifier> getJumpModifiers() {
 		return jumpModifiers;
+	}
+
+	public List<JumpUpModifier> getJumpUpModifiers() {
+		return jumpUpModifiers;
 	}
 
 	public List<InterceptionModifier> getInterceptionModifiers() {

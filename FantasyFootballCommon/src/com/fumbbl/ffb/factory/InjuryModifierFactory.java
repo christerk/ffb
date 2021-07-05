@@ -1,16 +1,11 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
@@ -19,6 +14,11 @@ import com.fumbbl.ffb.modifiers.ModifierAggregator;
 import com.fumbbl.ffb.modifiers.SpecialEffectInjuryModifier;
 import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -36,14 +36,23 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 		return Stream.concat(injuryModifiers.values(), modifierAggregator.getInjuryModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
-			.orElse(null);	}
+			.orElse(null);
+	}
 
-	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
-			Player<?> defender, boolean isStab, boolean isFoul) {
+	public Set<InjuryModifier> findInjuryModifiersWithoutNiggling(Game game, InjuryContext injuryContext, Player<?> attacker,
+	                                                              Player<?> defender, boolean isStab, boolean isFoul) {
 
 		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
 
 		return getInjuryModifiers(context);
+	}
+
+	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
+	                                               Player<?> defender, boolean isStab, boolean isFoul) {
+		Set<InjuryModifier> modifiers = findInjuryModifiersWithoutNiggling(game, injuryContext, attacker, defender, isStab, isFoul);
+
+		modifiers.add(getNigglingInjuryModifier(defender));
+		return modifiers;
 	}
 
 	public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {

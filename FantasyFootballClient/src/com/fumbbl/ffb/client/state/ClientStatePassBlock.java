@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
@@ -16,17 +17,17 @@ import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.util.UtilPassing;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -116,8 +117,8 @@ public class ClientStatePassBlock extends ClientStateMove {
 			if (!actingPlayer.hasActed()) {
 				endMoveActionLabel = "Deselect Player";
 			} else {
-				Set<FieldCoordinate> validEndCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
-				if (validEndCoordinates.contains(game.getFieldModel().getPlayerCoordinate(pPlayer))) {
+				OnTheBallMechanic mechanic = (OnTheBallMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
+				if (mechanic.hasReachedValidPosition(game, actingPlayer.getPlayer())) {
 					endMoveActionLabel = "End Move";
 				}
 			}
@@ -185,12 +186,11 @@ public class ClientStatePassBlock extends ClientStateMove {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer() != null) {
-			Set<FieldCoordinate> validEndCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-			if (!validEndCoordinates.contains(playerCoordinate)) {
+			OnTheBallMechanic mechanic = (OnTheBallMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
+			if (!mechanic.hasReachedValidPosition(game, actingPlayer.getPlayer())) {
 				fInfoDialog = new DialogInformation(getClient(), "End Turn not possible",
-						new String[] { "You cannot end the turn before the acting player has reached a valid destination!" },
-						DialogInformation.OK_DIALOG, IIconProperty.GAME_REF);
+					new String[]{"You cannot end the turn before the acting player has reached a valid destination!"},
+					DialogInformation.OK_DIALOG, IIconProperty.GAME_REF);
 				fInfoDialog.showDialog(new IDialogCloseListener() {
 					public void dialogClosed(IDialog pDialog) {
 						fInfoDialog.hideDialog();

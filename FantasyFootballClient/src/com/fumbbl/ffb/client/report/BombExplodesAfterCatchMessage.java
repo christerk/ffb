@@ -13,15 +13,15 @@ public class BombExplodesAfterCatchMessage extends ReportMessageBase<ReportBombE
 
     @Override
     protected void render(ReportBombExplodesAfterCatch report) {
-  		println(getIndent() + 1, TextStyle.ROLL, "Bomb Roll [" + report.getRoll() + "]");
-  		Player<?> catcher = game.getPlayerById(report.getCatcherId());
-  		TextStyle teamStyle = game.getTeamHome().hasPlayer(catcher) ? TextStyle.HOME : TextStyle.AWAY;
-  		print(getIndent() + 2 , teamStyle, catcher.getName());
-  		print(getIndent() + 2, " caught the bomb" );
-  		if (report.explodes()) {
-  			println(getIndent() + 2, " but it explodes in " + catcher.getPlayerGender().getGenitive() + " hands.");
-  		} else {
-  			println(getIndent() + 2, " and it does not explode");
-  		}
+	    println(getIndent() + 1, TextStyle.ROLL, "Bomb Roll [ " + report.getRoll() + " ]");
+	    Player<?> catcher = game.getPlayerById(report.getCatcherId());
+	    TextStyle teamStyle = game.getTeamHome().hasPlayer(catcher) ? TextStyle.HOME : TextStyle.AWAY;
+	    print(getIndent() + 2, teamStyle, catcher.getName());
+	    print(getIndent() + 2, " caught the bomb");
+	    if (report.explodes()) {
+		    println(getIndent() + 2, " but it explodes in " + catcher.getPlayerGender().getGenitive() + " hands.");
+	    } else {
+		    println(getIndent() + 2, " and it does not explode");
+	    }
     }
 }

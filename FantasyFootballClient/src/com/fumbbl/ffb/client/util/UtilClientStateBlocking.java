@@ -100,7 +100,7 @@ public class UtilClientStateBlocking {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && gameMechanic.areSpecialBlockActionsAllowed(game.getTurnMode())) {
-				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender);
+				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender, false);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false);
 			} else {
@@ -110,7 +110,7 @@ public class UtilClientStateBlocking {
 		return handled;
 	}
 
-	public static void createAndShowBlockOptionsPopupMenu(ClientState pClientState, Player<?> attacker, Player<?> defender) {
+	public static void createAndShowBlockOptionsPopupMenu(ClientState pClientState, Player<?> attacker, Player<?> defender, boolean multiBlock) {
 		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
@@ -120,7 +120,7 @@ public class UtilClientStateBlocking {
 			stabAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAB, 0));
 			menuItemList.add(stabAction);
 		}
-		if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative)) {
+		if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative) && !multiBlock) {
 			JMenuItem chainsawAction = new JMenuItem("Chainsaw",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW)));
 			chainsawAction.setMnemonic(IPlayerPopupMenuKeys.KEY_CHAINSAW);

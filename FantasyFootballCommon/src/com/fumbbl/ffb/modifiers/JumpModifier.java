@@ -44,7 +44,7 @@ public class JumpModifier extends RollModifier<JumpContext> {
 	}
 
 	public boolean isModifierIncluded() {
-		return type == ModifierType.TACKLEZONE;
+		return type == ModifierType.TACKLEZONE || type == ModifierType.PREHENSILE_TAIL;
 	}
 
 	@Override

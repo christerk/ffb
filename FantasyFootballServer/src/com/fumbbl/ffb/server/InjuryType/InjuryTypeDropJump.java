@@ -66,7 +66,9 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
+			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
+			factory.findInjuryModifiers(game, injuryContext, pAttacker,
+				pDefender, isStab(), isFoul()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 			if (avOrInjModifierSkill != null) {
 				avOrInjModifierSkill.getInjuryModifiers().forEach(injuryContext::addInjuryModifier);
 			}

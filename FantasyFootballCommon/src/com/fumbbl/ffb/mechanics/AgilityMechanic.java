@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.mechanics;
 
-import java.util.Set;
-
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -10,11 +8,14 @@ import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpModifier;
+import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 import com.fumbbl.ffb.util.ArrayTool;
+
+import java.util.Set;
 
 public abstract class AgilityMechanic implements Mechanic {
 	@Override
@@ -22,7 +23,7 @@ public abstract class AgilityMechanic implements Mechanic {
 		return Type.AGILITY;
 	}
 
-	public abstract int minimumRollJumpUp(Player<?> pPlayer);
+	public abstract int minimumRollJumpUp(Player<?> pPlayer, Set<JumpUpModifier> modifiers);
 
 	public abstract int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers);
 

@@ -52,4 +52,9 @@ public class OnTheBallMechanic extends com.fumbbl.ffb.mechanics.OnTheBallMechani
 	public String displayStringKickOffInterference() {
 		return displayStringPassInterference();
 	}
+
+	@Override
+	public boolean hasReachedValidPosition(Game game, Player<?> player) {
+		return true;
+	}
 }

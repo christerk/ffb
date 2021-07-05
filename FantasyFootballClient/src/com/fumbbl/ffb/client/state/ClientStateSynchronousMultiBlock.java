@@ -77,7 +77,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		if (UtilPlayer.isBlockable(game, defender)) {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(defender);
 			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesMultipleBlockAlternative)) {
-				UtilClientStateBlocking.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), defender);
+				UtilClientStateBlocking.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), defender, true);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				selectPlayer(defender, BlockKind.BLOCK);
 			}
@@ -147,9 +147,6 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case PLAYER_ACTION_STAB:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_STAB);
 					break;
-				case PLAYER_ACTION_CHAINSAW:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_CHAINSAW);
-					break;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition,
@@ -185,9 +182,6 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					break;
 				case IPlayerPopupMenuKeys.KEY_STAB:
 					selectPlayer(player, BlockKind.STAB);
-					break;
-				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
-					selectPlayer(player, BlockKind.CHAINSAW);
 					break;
 				default:
 					break;
