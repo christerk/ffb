@@ -49,6 +49,8 @@ public class StepPileDriver extends AbstractStep {
 						case GOTO_LABEL_ON_END:
 							gotoLabelEnd = (String) parameter.getValue();
 							break;
+						default:
+							break;
 					}
 				}
 			}
