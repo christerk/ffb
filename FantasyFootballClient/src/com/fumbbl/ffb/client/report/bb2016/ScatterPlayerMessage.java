@@ -1,28 +1,24 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportScatterBall;
+import com.fumbbl.ffb.report.ReportScatterPlayer;
 import com.fumbbl.ffb.util.ArrayTool;
 
-@ReportMessageType(ReportId.SCATTER_BALL)
-@RulesCollection(Rules.COMMON)
-public class ScatterBallMessage extends ReportMessageBase<ReportScatterBall> {
+@ReportMessageType(ReportId.SCATTER_PLAYER)
+@RulesCollection(Rules.BB2016)
+public class ScatterPlayerMessage extends ReportMessageBase<ReportScatterPlayer> {
 
     @Override
-    protected void render(ReportScatterBall report) {
-  		StringBuilder status = new StringBuilder();
-  		if (report.isGustOfWind()) {
-  			setIndent(getIndent() + 1);
-  			status.append("A gust of wind scatters the ball.");
-  			println(getIndent(), status.toString());
-  			status = new StringBuilder();
-  		}
+    protected void render(ReportScatterPlayer report) {
   		int[] rolls = report.getRolls();
   		if (ArrayTool.isProvided(rolls)) {
+  			StringBuilder status = new StringBuilder();
   			if (rolls.length > 1) {
   				status.append("Scatter Rolls [ ");
   			} else {
@@ -43,9 +39,13 @@ public class ScatterBallMessage extends ReportMessageBase<ReportScatterBall> {
   				status.append(directions[i].getName());
   			}
   			println(getIndent(), TextStyle.ROLL, status.toString());
+  			status = new StringBuilder();
+  			status.append("Player scatters from square (");
+  			status.append(report.getStartCoordinate().getX()).append(",").append(report.getStartCoordinate().getY());
+  			status.append(") to square (");
+  			status.append(report.getEndCoordinate().getX()).append(",").append(report.getEndCoordinate().getY());
+  			status.append(").");
+  			println(getIndent() + 1, status.toString());
   		}
-  		if (report.isGustOfWind()) {
-  			setIndent(getIndent() - 1);
-  		}
-		}
+    }
 }

@@ -194,6 +194,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 		Player<?> playerUnderBall = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 		boolean deflectedBomb = false;
+		boolean deflectedPass = false;
 		switch (fCatchScatterThrowInMode) {
 			case DEFLECTED_BOMB:
 				deflectedBomb = true;
@@ -229,10 +230,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					}
 				}
 				break;
+			case DEFLECTED:
+				deflectedPass = true;
+				// fall through
 			case CATCH_ACCURATE_PASS:
 			case CATCH_HAND_OFF:
 			case CATCH_SCATTER:
-			case DEFLECTED:
 				fBombMode = false;
 				if (!StringTool.isProvided(fCatcherId)) {
 					fCatcherId = (playerUnderBall != null) ? playerUnderBall.getId() : null;
@@ -242,8 +245,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					if ((catcherState != null) && catcherState.hasTacklezones() && game.getFieldModel().isBallInPlay()
 						&& game.getFieldModel().isBallMoving()) {
 						fCatchScatterThrowInMode = catchBall();
-						if (fCatchScatterThrowInMode == null && getGameState().getPassState().isDeflectionSuccessful()) {
+						if (fCatchScatterThrowInMode == null && deflectedPass && getGameState().getPassState().isDeflectionSuccessful()) {
 							getGameState().getPassState().setInterceptionSuccessful(true);
+						} else if (fCatchScatterThrowInMode == CatchScatterThrowInMode.FAILED_CATCH && deflectedPass) {
+							fCatchScatterThrowInMode = CatchScatterThrowInMode.FAILED_DEFLECTION_CONVERSION;
 						}
 					} else {
 						fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
@@ -271,6 +276,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 				}
 				break;
+			case FAILED_DEFLECTION_CONVERSION:
+				deflectedPass = true;
+				// fall through
 			case FAILED_CATCH:
 			case FAILED_PICK_UP:
 				fBombMode = false;
@@ -283,16 +291,27 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
 					((SpikedBallApo) factory.forName(SequenceGenerator.Type.SpikedBallApo.name()))
 						.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
-					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
+					fCatchScatterThrowInMode = deflectedPass ? CatchScatterThrowInMode.THREE_SQUARE_SCATTER : CatchScatterThrowInMode.SCATTER_BALL;
 					getResult().setNextAction(StepAction.NEXT_STEP);
 					if (injuryResultCatcher.injuryContext().isArmorBroken()) {
 						publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall, ApothecaryMode.CATCHER));
 					}
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
 					return;
+				} else if (deflectedPass) {
+					fCatchScatterThrowInMode = CatchScatterThrowInMode.THREE_SQUARE_SCATTER;
+					break;
 				}
 				// drop through to regular scatter
 			case SCATTER_BALL:
+				fBombMode = false;
+				if (game.getFieldModel().isBallInPlay()) {
+					fCatchScatterThrowInMode = bounceBall();
+				} else {
+					fCatchScatterThrowInMode = null;
+				}
+				break;
+			case THREE_SQUARE_SCATTER:
 				fBombMode = false;
 				if (game.getFieldModel().isBallInPlay()) {
 					fCatchScatterThrowInMode = scatterBall();
@@ -487,6 +506,59 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		setReRollSource(null);
 		state = new StepState();
 
+		List<FieldCoordinate> scatterCoordinates = new ArrayList<>();
+		List<Integer> rolls = new ArrayList<>();
+		List<Direction> directions = new ArrayList<>();
+
+		boolean inBounds = true;
+
+		FieldCoordinate lastValidCoordinate = game.getFieldModel().getBallCoordinate();
+
+		while (inBounds && scatterCoordinates.size() < 3) {
+			int roll = getGameState().getDiceRoller().rollScatterDirection();
+			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
+			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate,
+				direction, 1);
+			if (fScatterBounds.isInBounds(ballCoordinateEnd)) {
+				lastValidCoordinate = ballCoordinateEnd;
+				scatterCoordinates.add(lastValidCoordinate);
+				rolls.add(roll);
+				directions.add(direction);
+			} else {
+				inBounds = false;
+			}
+		}
+
+		getResult().addReport(new ReportScatterBall(directions.toArray(new Direction[0]), rolls.stream().mapToInt(i -> i).toArray(), false));
+
+		game.getFieldModel().setBallCoordinate(lastValidCoordinate);
+		game.getFieldModel().setBallMoving(true);
+
+		if (inBounds) {
+			Player<?> player = game.getFieldModel().getPlayer(lastValidCoordinate);
+			if (player != null) {
+				PlayerState playerState = game.getFieldModel().getPlayerState(player);
+				if (playerState.hasTacklezones()) {
+					fCatcherId = player.getId();
+					return CatchScatterThrowInMode.CATCH_SCATTER;
+				}
+			}
+			return CatchScatterThrowInMode.SCATTER_BALL;
+		} else {
+			fThrowInCoordinate = lastValidCoordinate;
+			return CatchScatterThrowInMode.THROW_IN;
+		}
+	}
+
+	private CatchScatterThrowInMode bounceBall() {
+
+		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "bounceBall()");
+
+		Game game = getGameState().getGame();
+		setReRolledAction(null);
+		setReRollSource(null);
+		state = new StepState();
+
 		int roll = getGameState().getDiceRoller().rollScatterDirection();
 		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
 		FieldCoordinate ballCoordinateStart = game.getFieldModel().getBallCoordinate();
@@ -524,26 +596,45 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	}
 
-
 	private CatchScatterThrowInMode scatterBomb() {
 
 		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "scatterBomb()");
 
 		Game game = getGameState().getGame();
+		setReRolledAction(null);
+		setReRollSource(null);
+		state = new StepState();
 
-		int roll = getGameState().getDiceRoller().rollScatterDirection();
-		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
-		FieldCoordinate bombCoordinateStart = game.getFieldModel().getBombCoordinate();
-		FieldCoordinate bombCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(bombCoordinateStart,
-			direction, 1);
+		List<FieldCoordinate> scatterCoordinates = new ArrayList<>();
+		List<Integer> rolls = new ArrayList<>();
+		List<Direction> directions = new ArrayList<>();
 
-		getResult().addReport(new ReportScatterBall(new Direction[]{direction}, new int[]{roll}, false));
-		getResult().setSound(SoundId.BOUNCE);
+		boolean inBounds = true;
 
-		if (fScatterBounds.isInBounds(bombCoordinateEnd)) {
-			game.getFieldModel().setBombCoordinate(bombCoordinateEnd);
-			game.getFieldModel().setBombMoving(true);
-			Player<?> player = game.getFieldModel().getPlayer(bombCoordinateEnd);
+		FieldCoordinate lastValidCoordinate = game.getFieldModel().getBombCoordinate();
+
+		while (inBounds && scatterCoordinates.size() < 3) {
+			int roll = getGameState().getDiceRoller().rollScatterDirection();
+			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
+			FieldCoordinate bombCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate,
+				direction, 1);
+			if (fScatterBounds.isInBounds(bombCoordinateEnd)) {
+				lastValidCoordinate = bombCoordinateEnd;
+				scatterCoordinates.add(lastValidCoordinate);
+				rolls.add(roll);
+				directions.add(direction);
+			} else {
+				inBounds = false;
+			}
+		}
+
+		getResult().addReport(new ReportScatterBall(directions.toArray(new Direction[0]), rolls.stream().mapToInt(i -> i).toArray(), false));
+
+		game.getFieldModel().setBombCoordinate(lastValidCoordinate);
+		game.getFieldModel().setBombMoving(true);
+
+		if (inBounds) {
+			Player<?> player = game.getFieldModel().getPlayer(lastValidCoordinate);
 			if (player != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if (playerState.hasTacklezones()) {
@@ -556,7 +647,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			game.getFieldModel().setBombMoving(false);
 		}
 		return null;
-
 	}
 
 	private CatchScatterThrowInMode throwInBall() {
