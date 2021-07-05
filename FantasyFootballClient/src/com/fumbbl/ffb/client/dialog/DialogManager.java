@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IClientProperty;
+import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsAndInducementsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyInducementsHandler;
@@ -145,7 +147,11 @@ public class DialogManager {
 						setDialogHandler(new DialogSwarmingErrorParameterHandler(getClient()));
 						break;
 					case SELECT_BLITZ_TARGET:
-						setDialogHandler(new DialogSelectBlitzTargetHandler(getClient()));
+						String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
+						if(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON.equals(blitzTargetPanelSetting))
+						{
+							setDialogHandler(new DialogSelectBlitzTargetHandler(getClient()));
+						}
 						break;
 					case RE_ROLL_FOR_TARGETS:
 						setDialogHandler(new DialogReRollForTargetsHandler(getClient()));

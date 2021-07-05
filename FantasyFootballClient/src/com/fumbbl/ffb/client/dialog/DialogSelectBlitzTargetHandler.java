@@ -20,9 +20,9 @@ public class DialogSelectBlitzTargetHandler extends DialogHandler {
 		Game game = getClient().getGame();
 
 		if ((ClientMode.PLAYER == getClient().getMode()) && game.isHomePlaying()) {
-			setDialog(new DialogInformation(getClient(), "Select Blitz target",
+			setDialog(new DialogBlitz(getClient(), "Select Blitz target",
 					new String[] { "Select the player you intend to blitz or active player again to cancel.", "Once you select an opposing player the action is used." },
-					DialogInformation.OK_DIALOG, IIconProperty.ACTION_BLITZ));
+					DialogBlitz.OK_DIALOG, IIconProperty.ACTION_BLITZ));
 			getDialog().showDialog(this);
 
 		}
