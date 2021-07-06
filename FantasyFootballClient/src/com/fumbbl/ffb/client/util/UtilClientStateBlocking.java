@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.util;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.state.ClientState;
@@ -96,7 +97,9 @@ public class UtilClientStateBlocking {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || UtilPlayer.isNextMovePossible(game, false))) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+		// rooted players can not move but still spend movement for the blitz action
+		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && gameMechanic.areSpecialBlockActionsAllowed(game.getTurnMode())) {

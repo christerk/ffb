@@ -49,7 +49,7 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doRoll = false;
 							state.status = ActionStatus.FAILURE;
-							state.continueOnFailure = step.cancelPlayerAction();
+							step.cancelPlayerAction();
 						}
 					} else {
 						doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
@@ -66,7 +66,7 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 											reRolledAction, minimumRoll, false)) {
 								state.status = ActionStatus.WAITING_FOR_RE_ROLL;
 							} else {
-								state.continueOnFailure = step.cancelPlayerAction();
+								step.cancelPlayerAction();
 							}
 						}
 						boolean reRolled = ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())

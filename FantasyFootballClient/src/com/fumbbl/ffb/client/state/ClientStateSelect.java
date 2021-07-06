@@ -347,7 +347,7 @@ public class ClientStateSelect extends ClientState {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return (!game.getTurnData().isBlitzUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED) && (playerState != null)
-			&& playerState.isActive() && playerState.isAbleToMove()
+			&& playerState.isActive() && (playerState.isAbleToMove() || playerState.isRooted())
 			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlitzAction));
 	}
 
