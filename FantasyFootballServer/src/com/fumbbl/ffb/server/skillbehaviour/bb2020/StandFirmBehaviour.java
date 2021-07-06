@@ -26,7 +26,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 	public StandFirmBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepPushback, StepPushback.StepState>(1) {
+		registerModifier(new StepModifier<StepPushback, StepPushback.StepState>(2) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepPushback.StepState state,
@@ -61,19 +61,14 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 					if (!state.standingFirm.containsKey(state.defender.getId())) {
 						UtilServerDialog.showDialog(step.getGameState(),
 							new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
+					} else {
+						state.doPush = true;
+						state.pushbackStack.clear();
+						step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
+						step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
+						step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, true, SkillUse.AVOID_PUSH));
 					}
-					if (state.standingFirm.containsKey(state.defender.getId())) {
-						if (state.standingFirm.containsKey(state.defender.getId())) {
-							state.doPush = true;
-							state.pushbackStack.clear();
-							step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
-							step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
-							step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, true, SkillUse.AVOID_PUSH));
-						} else {
-							step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, false, null));
-						}
 
-					}
 					return true;
 				}
 				return false;

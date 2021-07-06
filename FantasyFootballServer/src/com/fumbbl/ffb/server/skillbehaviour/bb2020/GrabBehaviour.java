@@ -30,7 +30,7 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 	public GrabBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepPushback, StepState>(3) {
+		registerModifier(new StepModifier<StepPushback, StepState>(4) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepState state,

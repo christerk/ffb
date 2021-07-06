@@ -29,7 +29,7 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 	public SideStepBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepPushback, StepState>(2) {
+		registerModifier(new StepModifier<StepPushback, StepState>(3) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepState state,
