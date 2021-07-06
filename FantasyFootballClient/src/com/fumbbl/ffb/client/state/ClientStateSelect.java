@@ -290,9 +290,11 @@ public class ClientStateSelect extends ClientState {
 
 	private boolean isBlockActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& playerState.isActive() && !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlockAction)
+			&& mechanic.isBlockActionAllowed(game.getTurnMode())
 			&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
 			&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
@@ -304,9 +306,11 @@ public class ClientStateSelect extends ClientState {
 
 	private boolean isMultiBlockActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& playerState.isActive()
+			&& mechanic.areSpecialBlockActionsAllowed(game.getTurnMode())
 			&& ((UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
 			&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockMoreThanOnce))
 			|| (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockTwoAtOnce)
