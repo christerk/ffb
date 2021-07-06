@@ -15,8 +15,8 @@ import java.util.Set;
 public class TreacherousTrapdoorHandler extends PrayerHandler {
 
 	private final Set<FieldCoordinate> trapdoorCoordinates = new HashSet<FieldCoordinate>() {{
-		add(new FieldCoordinate(5, 1));
-		add(new FieldCoordinate(20, 13));
+		add(new FieldCoordinate(6, 1));
+		add(new FieldCoordinate(19, 13));
 	}};
 
 	@Override
