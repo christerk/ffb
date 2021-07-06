@@ -148,8 +148,12 @@ public class DialogManager {
 						break;
 					case SELECT_BLITZ_TARGET:
 						String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
-						if(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON.equals(blitzTargetPanelSetting))
+						if(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting))
 						{
+							setDialogHandler(null);
+						}
+						else
+						{						
 							setDialogHandler(new DialogSelectBlitzTargetHandler(getClient()));
 						}
 						break;
