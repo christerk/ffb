@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.action.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -15,25 +16,33 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
 
 /**
  * Step in block sequence to handle skill WRESTLE.
- * 
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepWrestle extends AbstractStep {
 
-	public static class StepState {
-		public ActionStatus status;
+	private final StepState state;
 
-		public Boolean usingWrestleDefender;
-		public Boolean usingWrestleAttacker;
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+				case OLD_DEFENDER_STATE:
+					state.oldDefenderState = (PlayerState) pParameter.getValue();
+					return true;
+				default:
+					break;
+			}
+		}
+		return false;
 	}
-
-	private StepState state;
 
 	public StepWrestle(GameState pGameState) {
 		super(pGameState, StepAction.NEXT_STEP);
@@ -57,10 +66,19 @@ public class StepWrestle extends AbstractStep {
 	}
 
 	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.USING_WRESTLE_ATTACKER.addTo(jsonObject, state.usingWrestleAttacker);
+		IServerJsonOption.USING_WRESTLE_DEFENDER.addTo(jsonObject, state.usingWrestleDefender);
+		IServerJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, state.oldDefenderState);
+		return jsonObject;
+	}
+
+	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
-				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
+			commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
@@ -75,20 +93,21 @@ public class StepWrestle extends AbstractStep {
 	// JSON serialization
 
 	@Override
-	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.USING_WRESTLE_ATTACKER.addTo(jsonObject, state.usingWrestleAttacker);
-		IServerJsonOption.USING_WRESTLE_DEFENDER.addTo(jsonObject, state.usingWrestleDefender);
-		return jsonObject;
-	}
-
-	@Override
 	public StepWrestle initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.usingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(game, jsonObject);
 		state.usingWrestleDefender = IServerJsonOption.USING_WRESTLE_DEFENDER.getFrom(game, jsonObject);
+		state.oldDefenderState = IServerJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
 		return this;
+	}
+
+	public static class StepState {
+		public ActionStatus status;
+		public PlayerState oldDefenderState;
+
+		public Boolean usingWrestleDefender;
+		public Boolean usingWrestleAttacker;
 	}
 
 }
