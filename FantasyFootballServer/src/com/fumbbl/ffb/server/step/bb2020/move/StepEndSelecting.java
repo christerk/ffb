@@ -6,6 +6,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -35,6 +36,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -216,7 +218,9 @@ public final class StepEndSelecting extends AbstractStep {
 		Game game = getGameState().getGame();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-		if (pPlayerAction == null) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
+
+		if (pPlayerAction == null || (pPlayerAction == PlayerAction.MOVE && playerState.isRooted() && UtilPlayer.canGaze(game, game.getActingPlayer().getPlayer()))) {
 			game.getFieldModel().clearMultiBlockTargets();
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 				.pushSequence(new Select.SequenceParams(getGameState(), false));
@@ -287,6 +291,11 @@ public final class StepEndSelecting extends AbstractStep {
 				}
 				break;
 			case MOVE:
+				if (game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).isRooted()) {
+					endGenerator.pushSequence(endParams);
+					break;
+				}
+				// fall through
 			case FOUL_MOVE:
 			case PASS_MOVE:
 			case THROW_TEAM_MATE_MOVE:
