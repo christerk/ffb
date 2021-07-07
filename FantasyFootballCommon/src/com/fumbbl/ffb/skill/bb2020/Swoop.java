@@ -36,7 +36,6 @@ public class Swoop extends Skill {
 		registerProperty(NamedProperties.preventStuntyDodgeModifier);
 		registerProperty(NamedProperties.ttmScattersInSingleDirection);
 		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
-		registerModifier(new RightStuffModifier("Swoop", -1, ModifierType.REGULAR));
 	}
 
 }

@@ -185,7 +185,7 @@ public class PathFinderWithPassBlockSupport {
 			data.setNode(ballCoord, new PathFindNode(normalState, ballCoord, 1000, true, pEndCoords, null));
 		}
 
-		// Treat trap door fields as tackle zones to avoid paths crossing them
+		// Treat trapdoor fields as tackle zones to avoid paths crossing them
 		fieldModel.getOnPitchEnhancements().stream().map(OnPitchEnhancement::getCoordinate).forEach(coord ->
 			data.setNode(coord, new PathFindNode(normalState, coord, 1000, true, pEndCoords, null))
 		);
