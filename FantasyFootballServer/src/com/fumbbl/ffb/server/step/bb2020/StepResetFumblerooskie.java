@@ -25,7 +25,6 @@ import java.util.Arrays;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepResetFumblerooskie extends AbstractStep {
 
-	private final boolean checkPlayerAction = false;
 	private boolean resetForFailedBlock;
 
 	public StepResetFumblerooskie(GameState pGameState) {

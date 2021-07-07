@@ -285,7 +285,6 @@ public class StepEndTurn extends AbstractStep {
 							getGameState().removeZappedPlayer(player);
 						}
 						PlayerState playerState = game.getFieldModel().getPlayerState(player);
-						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 						if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
 							KnockoutRecovery knockoutRecovery = recoverKnockout(player);
 							if (knockoutRecovery != null) {
