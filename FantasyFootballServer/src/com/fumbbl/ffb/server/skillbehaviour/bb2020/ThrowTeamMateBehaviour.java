@@ -3,11 +3,9 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
-import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -31,8 +29,6 @@ import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.ThrowTeamMate;
-import com.fumbbl.ffb.util.UtilCards;
-
 import java.util.Set;
 
 @RulesCollection(Rules.BB2020)
@@ -89,17 +85,10 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					} else {
 						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE) {
 							step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
-
-							ReRollSource unusedPassingReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PASS);
-							if (unusedPassingReroll != null) {
-								UtilServerDialog.showDialog(step.getGameState(),
-									new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(game), minimumRoll), false);
-							} else {
-								if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-									ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
-									handlePassResult(state.passResult, step);
-								}
-							}
+							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+								ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
+								handlePassResult(state.passResult, step);
+							}	
 						} else {
 							handlePassResult(state.passResult, step);
 						}
