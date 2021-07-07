@@ -134,7 +134,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
-		// skip right stuff step when player has been thrown out of bounds or fell down a trap door
+		// skip right stuff step when player has been thrown out of bounds or fell down a trapdoor
 		if ((thrownPlayer != null) && (game.getFieldModel().getPlayerState(thrownPlayer).getBase() == PlayerState.FALLING || playerCoordinate.isBoxCoordinate())) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, fThrownPlayerHasBall));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step

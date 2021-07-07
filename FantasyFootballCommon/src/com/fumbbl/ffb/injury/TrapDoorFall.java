@@ -23,7 +23,7 @@ public class TrapDoorFall extends InjuryType {
 	@Override
 	public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender) {
 		string.append(defender.getName());
-		string.append("  is injured by the fall.");
+		string.append(" is injured by the fall.");
 	}
 
 }
