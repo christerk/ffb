@@ -112,7 +112,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 		if (doGaze && gazeSkill.isPresent()) {
 			actingPlayer.markSkillUsed(gazeSkill.get());
 			int roll = getGameState().getDiceRoller().rollSkill();
-			GazeModifierFactory modifierFactory = new GazeModifierFactory();
+			GazeModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GAZE_MODIFIER);
 			Set<GazeModifier> gazeModifiers = modifierFactory.findModifiers(new GazeModifierContext(game, actingPlayer.getPlayer()));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollHypnoticGaze(actingPlayer.getPlayer(), gazeModifiers);
@@ -122,7 +122,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 				getResult().setSound(SoundId.HYPNO);
 			}
 			getResult().addReport(new ReportHypnoticGazeRoll(actingPlayer.getPlayerId(), successful,
-					roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0])));
+				roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0])));
 			if (successful) {
 				PlayerState oldVictimState = game.getFieldModel().getPlayerState(game.getDefender());
 				if (!oldVictimState.isConfused() && !oldVictimState.isHypnotized()) {

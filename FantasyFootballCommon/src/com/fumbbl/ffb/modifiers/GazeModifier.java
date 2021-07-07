@@ -1,21 +1,24 @@
 package com.fumbbl.ffb.modifiers;
 
 /**
- * 
  * @author Kalimar
  */
 public class GazeModifier extends RollModifier<GazeModifierContext> {
 
-
-
-	private final String fName;
-	private final int fModifier;
+	private final String fName, reportString;
+	private final int fModifier, multiplier;
 	private final ModifierType type;
 
-	GazeModifier(String pName, int pModifier, ModifierType type) {
+	public GazeModifier(String pName, int pModifier, ModifierType type) {
+		this(pName, pName, pModifier, pModifier, type);
+	}
+
+	public GazeModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type) {
 		fName = pName;
+		this.reportString = reportString;
 		fModifier = pModifier;
 		this.type = type;
+		this.multiplier = multiplier;
 	}
 
 	@Override
@@ -37,8 +40,11 @@ public class GazeModifier extends RollModifier<GazeModifierContext> {
 
 	@Override
 	public String getReportString() {
-		return getName();
+		return reportString;
 	}
 
-
+	@Override
+	public int getMultiplier() {
+		return multiplier;
+	}
 }
