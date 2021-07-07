@@ -30,6 +30,8 @@ public interface Position extends IXmlSerializable, IJsonSerializable {
 
 	String getSkillValue(Skill pSkill);
 
+	String getDisplayValue(Skill pSkill);
+
 	int getSkillIntValue(Skill skill);
 
 	String getUrlPortrait();

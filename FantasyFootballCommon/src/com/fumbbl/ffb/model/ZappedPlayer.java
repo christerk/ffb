@@ -13,7 +13,6 @@ import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -130,6 +129,11 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 
 	@Override
 	public String getSkillValueExcludingTemporaryOnes(Skill pSkill) {
+		return null;
+	}
+
+	@Override
+	public String getDisplayValueExcludingTemporaryOnes(Skill skill) {
 		return null;
 	}
 

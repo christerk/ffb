@@ -412,6 +412,8 @@ public interface IJsonOption {
 	JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");
 	JsonArrayOption SKILL_CATEGORIES_NORMAL = new JsonArrayOption("skillCategoriesNormal");
 	JsonStringOption SKILL_CHOICE_MODE = new JsonStringOption("skillChoiceMode");
+	JsonLegacySkillValuesOption SKILL_DISPLAY_VALUES = new JsonLegacySkillValuesOption("skillDisplayValues");
+	JsonSkillValuesMapOption SKILL_DISPLAY_VALUES_MAP = new JsonSkillValuesMapOption("skillDisplayValuesMap");
 	JsonEnumWithNameOption SKILL_USE = new JsonEnumWithNameOption("skillUse", Factory.SKILL_USE);
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");

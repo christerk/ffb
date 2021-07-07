@@ -26,7 +26,7 @@
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
 			<skill>Stunty</skill>
-			<skill value="Skaven">Animosity</skill>
+			<skill displayValueAs="Rats" value="Skaven">Animosity</skill>
 		</skillList>
 		<skillCategoryList>
 			<normal>Agility</normal>
@@ -52,7 +52,9 @@
 		<portrait>portraits/underworld_skavenlineman.png</portrait>
 		<iconSet size="3">iconsets/underworld_skavenlineman.png</iconSet>
 		<skillList>
-			<skill value="underworld.skaven.thrower;underworld.troll.warpstone">Animosity</skill>
+			<skill displayValueAs="Positions with T" value="underworld.skaven.thrower;underworld.troll.warpstone">
+				Animosity
+			</skill>
 		</skillList>
 		<skillCategoryList>
 			<normal>General</normal>
