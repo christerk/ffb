@@ -25,15 +25,15 @@ public class ZappedPosition implements Position {
 
 	public static final String XML_TAG = "zappedPosition";
 
-	private int move = 5;
-	private int strength = 1;
-	private int agility = 4;
-	private int passing = 0;
-	private int armour = 4;
-	private List<Skill> skills = new ArrayList<>();
+	private final int move = 5;
+	private final int strength = 1;
+	private final int agility = 4;
+	private final int passing = 0;
+	private final int armour = 4;
+	private final List<Skill> skills = new ArrayList<>();
 
-	private String race = "Transmogrified Frog";
-	private String shortHand = "zf";
+	private final String race = "Transmogrified Frog";
+	private final String shortHand = "zf";
 
 	private RosterPosition originalPosition;
 
@@ -110,6 +110,11 @@ public class ZappedPosition implements Position {
 
 	@Override
 	public String getSkillValue(Skill pSkill) {
+		return null;
+	}
+
+	@Override
+	public String getDisplayValue(Skill pSkill) {
 		return null;
 	}
 

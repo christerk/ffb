@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  */
 public class RosterPosition implements Position {
@@ -39,6 +38,7 @@ public class RosterPosition implements Position {
 	public static final String XML_TAG = "position";
 
 	private static final String _XML_ATTRIBUTE_ID = "id";
+	private static final String _XML_ATTRIBUTE_DISPLAY_VALUE = "displayValueAs";
 	private static final String _XML_ATTRIBUTE_VALUE = "value";
 	private static final String _XML_ATTRIBUTE_SIZE = "size";
 
@@ -98,6 +98,7 @@ public class RosterPosition implements Position {
 	private String nameGenerator;
 
 	private final Map<Skill, String> fSkillValues;
+	private final Map<Skill, String> displayValues;
 	private final Set<SkillCategory> fSkillCategoriesOnNormalRoll;
 	private final Set<SkillCategory> fSkillCategoriesOnDoubleRoll;
 
@@ -105,6 +106,7 @@ public class RosterPosition implements Position {
 	private transient boolean fInsideSkillListTag;
 	private transient boolean fInsideSkillCategoryListTag;
 	private transient String fCurrentSkillValue;
+	private transient String currentDisplayValue;
 
 	public RosterPosition() {
 		this(null);
@@ -115,6 +117,7 @@ public class RosterPosition implements Position {
 		fSkillValues = new LinkedHashMap<>();
 		fSkillCategoriesOnNormalRoll = new HashSet<>();
 		fSkillCategoriesOnDoubleRoll = new HashSet<>();
+		displayValues = new LinkedHashMap<>();
 		fCurrentIconSetIndex = -1;
 	}
 
@@ -201,12 +204,17 @@ public class RosterPosition implements Position {
 
 	@Override
 	public Skill[] getSkills() {
-		return fSkillValues.keySet().toArray(new Skill[fSkillValues.size()]);
+		return fSkillValues.keySet().toArray(new Skill[0]);
 	}
 
 	@Override
 	public String getSkillValue(Skill pSkill) {
 		return fSkillValues.get(pSkill);
+	}
+
+	@Override
+	public String getDisplayValue(Skill pSkill) {
+		return displayValues.get(pSkill);
 	}
 
 	@Override
@@ -414,6 +422,9 @@ public class RosterPosition implements Position {
 			if (StringTool.isProvided(getSkillValue(skill))) {
 				UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSkillValue(skill));
 			}
+			if (StringTool.isProvided(getDisplayValue(skill))) {
+				UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DISPLAY_VALUE, getDisplayValue(skill));
+			}
 			UtilXml.startElement(pHandler, _XML_TAG_SKILL, attributes);
 			UtilXml.addCharacters(pHandler, skill.getName());
 			UtilXml.endElement(pHandler, _XML_TAG_SKILL);
@@ -437,6 +448,12 @@ public class RosterPosition implements Position {
 					fCurrentSkillValue = skillValue;
 				} else {
 					fCurrentSkillValue = null;
+				}
+				String displayValue = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_DISPLAY_VALUE);
+				if (StringTool.isProvided(displayValue)) {
+					currentDisplayValue = displayValue;
+				} else {
+					currentDisplayValue = null;
 				}
 			}
 		} else {
@@ -471,6 +488,7 @@ public class RosterPosition implements Position {
 				Skill skill = game.getRules().<SkillFactory>getFactory(Factory.SKILL).forName(pValue);
 				if (skill != null) {
 					fSkillValues.put(skill, fCurrentSkillValue);
+					displayValues.put(skill, currentDisplayValue);
 				}
 			}
 		} else if (fInsideSkillCategoryListTag) {
@@ -597,15 +615,20 @@ public class RosterPosition implements Position {
 
 		JsonArray skillArray = new JsonArray();
 		List<String> skillValues = new ArrayList<>();
+		List<String> displayValues = new ArrayList<>();
 		for (Skill skill : getSkills()) {
 			skillArray.add(UtilJson.toJsonValue(skill));
 			skillValues.add(fSkillValues.get(skill));
+			displayValues.add(this.displayValues.get(skill));
 		}
 		if (skillArray.size() > 0) {
 			IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
 		}
 		if (skillValues.size() > 0) {
 			IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
+		}
+		if (displayValues.size() > 0) {
+			IJsonOption.SKILL_DISPLAY_VALUES.addTo(jsonObject, displayValues);
 		}
 
 		return jsonObject;
@@ -645,23 +668,26 @@ public class RosterPosition implements Position {
 		JsonArray skillCategoriesNormal = IJsonOption.SKILL_CATEGORIES_NORMAL.getFrom(source, jsonObject);
 		for (int i = 0; i < skillCategoriesNormal.size(); i++) {
 			fSkillCategoriesOnNormalRoll
-					.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesNormal.get(i)));
+				.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesNormal.get(i)));
 		}
 		fSkillCategoriesOnDoubleRoll.clear();
 		JsonArray skillCategoriesDouble = IJsonOption.SKILL_CATEGORIES_DOUBLE.getFrom(source, jsonObject);
 		for (int i = 0; i < skillCategoriesDouble.size(); i++) {
 			fSkillCategoriesOnDoubleRoll
-					.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesDouble.get(i)));
+				.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesDouble.get(i)));
 		}
 
 		fSkillValues.clear();
+		displayValues.clear();
 		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
 		String[] skillValues = IJsonOption.SKILL_VALUES.getFrom(source, jsonObject);
+		String[] displayValues = IJsonOption.SKILL_DISPLAY_VALUES.getFrom(source, jsonObject);
 		if ((skillArray != null) && (skillArray.size() > 0) && ArrayTool.isProvided(skillValues)) {
 			SkillFactory skillFactory = source.getFactory(Factory.SKILL);
 			for (int i = 0; i < skillArray.size(); i++) {
 				Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
 				fSkillValues.put(skill, skillValues[i]);
+				this.displayValues.put(skill, displayValues[i]);
 			}
 		}
 

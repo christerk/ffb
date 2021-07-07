@@ -124,6 +124,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return getSkillIntValue(getSkillWithProperty(property));
 	}
 
+	public abstract String getDisplayValueExcludingTemporaryOnes(Skill skill);
+
 	public abstract String getUrlPortrait();
 
 	abstract void setUrlPortrait(String pUrlPortrait);

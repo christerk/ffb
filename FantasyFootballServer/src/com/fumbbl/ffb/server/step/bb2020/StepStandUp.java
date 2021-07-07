@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.select;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -30,12 +30,12 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step in select sequence to stand up a prone player.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepStandUp extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
@@ -53,12 +53,12 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
-					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_FAILURE:
+						fGotoLabelOnFailure = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -88,15 +88,16 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved())
-				|| (ReRolledActions.STAND_UP == getReRolledAction())) {
+			|| (ReRolledActions.STAND_UP == getReRolledAction())) {
 			actingPlayer.setHasMoved(true);
 			game.setConcessionPossible(false);
 			boolean rollStandUp = (actingPlayer.getPlayer().getMovementWithModifiers() < IServerConstant.MINIMUM_MOVE_TO_STAND_UP);
 			if (rollStandUp) {
 				if (ReRolledActions.STAND_UP == getReRolledAction()) {
 					if ((getReRollSource() == null)
-							|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 						rollStandUp = false;
+						handleFailedStandUp(game, actingPlayer);
 					}
 				}
 				if (rollStandUp) {
@@ -110,7 +111,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 					boolean successful = DiceInterpreter.getInstance().isStandUpSuccessful(roll, modifier);
 					boolean reRolled = ((getReRolledAction() == ReRolledActions.STAND_UP) && (getReRollSource() != null));
 					getResult()
-							.addReport(new ReportStandUpRoll(actingPlayer.getPlayerId(), successful, roll, modifier, reRolled));
+						.addReport(new ReportStandUpRoll(actingPlayer.getPlayerId(), successful, roll, modifier, reRolled));
 					if (successful) {
 						actingPlayer.setStandingUp(false);
 						if (playerState.isRooted()) {
@@ -120,39 +121,16 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 						}
 					} else {
 						if ((getReRolledAction() == ReRolledActions.STAND_UP)
-								|| !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-										ReRolledActions.STAND_UP, Math.max(2, 4 - modifier), false)) {
+							|| !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+							ReRolledActions.STAND_UP, Math.max(2, 4 - modifier), false)) {
 							rollStandUp = false;
-							switch (actingPlayer.getPlayerAction()) {
-							case BLITZ:
-							case BLITZ_MOVE:
-							case KICK_TEAM_MATE:
-							case KICK_TEAM_MATE_MOVE:
-								game.getTurnData().setBlitzUsed(true);
-								break;
-							case PASS:
-							case PASS_MOVE:
-							case THROW_TEAM_MATE:
-							case THROW_TEAM_MATE_MOVE:
-								game.getTurnData().setPassUsed(true);
-								break;
-							case HAND_OVER:
-							case HAND_OVER_MOVE:
-								game.getTurnData().setHandOverUsed(true);
-								break;
-							case FOUL:
-							case FOUL_MOVE:
-								game.getTurnData().setFoulUsed(true);
-								break;
-							default:
-								break;
-							}
+							handleFailedStandUp(game, actingPlayer);
 						}
 					}
 				}
 				if (!rollStandUp) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-							playerState.changeBase(PlayerState.PRONE).changeActive(false));
+						playerState.changeBase(PlayerState.PRONE).changeActive(false));
 					publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 				}
@@ -161,6 +139,36 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 			}
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
+		}
+	}
+
+	private void handleFailedStandUp(Game game, ActingPlayer actingPlayer) {
+		switch (actingPlayer.getPlayerAction()) {
+			case BLITZ:
+			case BLITZ_MOVE:
+				game.getTurnData().setBlitzUsed(true);
+				game.getFieldModel().getBlitzState().failed();
+				break;
+			case KICK_TEAM_MATE:
+			case KICK_TEAM_MATE_MOVE:
+				game.getTurnData().setKtmUsed(true);
+				break;
+			case PASS:
+			case PASS_MOVE:
+			case THROW_TEAM_MATE:
+			case THROW_TEAM_MATE_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
+			case HAND_OVER:
+			case HAND_OVER_MOVE:
+				game.getTurnData().setHandOverUsed(true);
+				break;
+			case FOUL:
+			case FOUL_MOVE:
+				game.getTurnData().setFoulUsed(true);
+				break;
+			default:
+				break;
 		}
 	}
 
