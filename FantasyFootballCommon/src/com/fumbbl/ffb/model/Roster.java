@@ -310,7 +310,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
 		IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
 		IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
-		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().map(SpecialRule::name).collect(Collectors.toSet()));
+		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().filter(s -> s != null).map(SpecialRule::name).collect(Collectors.toSet()));
 
 		JsonArray positionArray = new JsonArray();
 		for (RosterPosition position : getPositions()) {
