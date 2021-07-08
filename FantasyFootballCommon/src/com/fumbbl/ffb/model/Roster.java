@@ -286,7 +286,10 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 				nameGenerator = pValue;
 			}
 			if (_XML_TAG_RULE.equals(pXmlTag)) {
-				specialRules.add(SpecialRule.from(pValue));
+				SpecialRule rule = SpecialRule.from(pValue);
+				if (rule != null) {
+					specialRules.add(rule);
+				}
 			}
 		}
 		return complete;
@@ -348,7 +351,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			}
 		}
 
-		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).map(SpecialRule::valueOf).collect(Collectors.toSet()));
+		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).filter(s -> s != null).map(SpecialRule::valueOf).collect(Collectors.toSet()));
 
 		return this;
 
