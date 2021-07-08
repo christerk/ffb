@@ -112,6 +112,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		modifierAggregator.init(this);
 	}
 
+	public IFactorySource getApplicationSource() {
+		return applicationSource;
+	}
+
 	public ModifierAggregator getModifierAggregator() {
 		return modifierAggregator;
 	}

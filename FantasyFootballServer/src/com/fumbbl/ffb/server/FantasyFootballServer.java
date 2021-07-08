@@ -1,24 +1,10 @@
 package com.fumbbl.ffb.server;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Timer;
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-
 import com.fumbbl.ffb.FactoryManager;
-import com.fumbbl.ffb.FantasyFootballConstants;
-import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
+import com.fumbbl.ffb.FantasyFootballConstants;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.server.admin.AdminServlet;
@@ -43,18 +29,30 @@ import com.fumbbl.ffb.server.util.rng.Fortuna;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.DateTool;
 import com.fumbbl.ffb.util.StringTool;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Timer;
 
 /**
- * 
  * @author Kalimar
  */
 public class FantasyFootballServer implements IFactorySource {
 
 	private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
-			+ "java -jar FantasyFootballServer.jar standalone initDb\n" + "java -jar FantasyFootballServer.jar fumbbl\n"
-			+ "java -jar FantasyFootballServer.jar fumbbl initDb\n";
+		+ "java -jar FantasyFootballServer.jar standalone initDb\n" + "java -jar FantasyFootballServer.jar fumbbl\n"
+		+ "java -jar FantasyFootballServer.jar fumbbl initDb\n";
 
-	private ServerMode fMode;
+	private final ServerMode fMode;
 	private DbQueryFactory fDbQueryFactory;
 	private DbUpdateFactory fDbUpdateFactory;
 	private DbUpdater fDbUpdater;
@@ -64,7 +62,7 @@ public class FantasyFootballServer implements IFactorySource {
 	private ServerCommandHandlerFactory fCommandHandlerFactory;
 	private GameCache fGameCache;
 	private SessionManager fSessionManager;
-	private Properties fProperties;
+	private final Properties fProperties;
 	private Fortuna fFortuna;
 	private DebugLog fDebugLog;
 	private ServerReplayer fReplayer;
@@ -75,18 +73,18 @@ public class FantasyFootballServer implements IFactorySource {
 	private Timer fDbKeepAliveTimer;
 	private Timer fNetworkEntropyTimer;
 	private Timer sessionTimeoutTimer;
-	
-	private FactoryManager factoryManager;
 
-	private Map<Factory, INamedObjectFactory> factories;
+	private final FactoryManager factoryManager;
+
+	private final Map<Factory, INamedObjectFactory> factories;
 
 	public FantasyFootballServer(ServerMode pMode, Properties pProperties) {
 		fMode = pMode;
 		fProperties = pProperties;
 		factoryManager = new FactoryManager();
-		
+
 		factories = factoryManager.getFactoriesForContext(getContext());
-		
+
 		for (INamedObjectFactory factory : factories.values()) {
 			factory.initialize(null);
 		}
@@ -382,11 +380,16 @@ public class FantasyFootballServer implements IFactorySource {
 	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
 		return (T) factories.get(factory);
 	}
-	
+
+	@Override
+	public void logError(String message) {
+		fDebugLog.log(IServerLogLevel.ERROR, message);
+	}
+
 	public IFactorySource getFactorySource() {
 		return this;
 	}
-	
+
 	@Override
 	public IFactorySource forContext(FactoryContext context) {
 		if (context == getContext()) {
