@@ -31,6 +31,7 @@ public class SelectBlitzTarget extends com.fumbbl.ffb.server.step.generator.Sele
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
 		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
 		sequence.add(StepId.DUMP_OFF);
+		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
 		sequence.add(StepId.SELECT_BLITZ_TARGET_END, IStepLabel.END_BLITZING);
 		// might add END_MOVING here
 		gameState.getStepStack().push(sequence.getSequence());

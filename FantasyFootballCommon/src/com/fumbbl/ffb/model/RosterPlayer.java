@@ -3,11 +3,11 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PlayerGenderFactory;
 import com.fumbbl.ffb.factory.PlayerTypeFactory;
@@ -22,7 +22,6 @@ import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -37,13 +36,13 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 
  * @author Kalimar
  */
 public class RosterPlayer extends Player<RosterPosition> {
 
 	static final String XML_TAG = "player";
 	private static final String KIND = "rosterPlayer";
+	private static final String _XML_ATTRIBUTE_DISPLAY_VALUE = "displayValueAs";
 	private static final String _XML_ATTRIBUTE_VALUE = "value";
 
 	private String fId;
@@ -75,6 +74,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private Map<String, Set<SkillWithValue>> temporarySkills = new HashMap<>();
 	private Map<String, Set<ISkillProperty>> temporaryProperties = new HashMap<>();
 	private Map<Skill, String> skillValues;
+	private Map<Skill, String> displayValues;
 
 	// attributes used for parsing
 	private transient boolean fInsideSkillList;
@@ -82,6 +82,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private transient boolean fInjuryCurrent;
 	private transient boolean fInsidePlayerStatistics;
 	private transient String fCurrentSkillValue;
+	private transient String currentDisplayValue;
 
 	public RosterPlayer() {
 		fLastingInjuries = new ArrayList<>();
@@ -90,6 +91,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fIconSetIndex = 0;
 		fPosition = new RosterPosition(null);
 		skillValues = new LinkedHashMap<>();
+		displayValues = new LinkedHashMap<>();
 	}
 
 	@Override
@@ -195,6 +197,11 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	public String getSkillValueExcludingTemporaryOnes(Skill skill) {
 		return Optional.ofNullable(skillValues.get(skill)).orElse(getPosition().getSkillValue(skill));
+	}
+
+	@Override
+	public String getDisplayValueExcludingTemporaryOnes(Skill skill) {
+		return Optional.ofNullable(displayValues.get(skill)).orElse(getPosition().getDisplayValue(skill));
 	}
 
 	@Override
@@ -429,6 +436,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 				if (StringTool.isProvided(getSkillValueExcludingTemporaryOnes(skill))) {
 					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSkillValueExcludingTemporaryOnes(skill));
 				}
+				if (StringTool.isProvided(getDisplayValueExcludingTemporaryOnes(skill))) {
+					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DISPLAY_VALUE, getDisplayValueExcludingTemporaryOnes(skill));
+				}
 				UtilXml.startElement(pHandler, _XML_TAG_SKILL, attributes);
 				UtilXml.addCharacters(pHandler, skill.getName());
 				UtilXml.endElement(pHandler, _XML_TAG_SKILL);
@@ -461,6 +471,12 @@ public class RosterPlayer extends Player<RosterPosition> {
 					fCurrentSkillValue = skillValue;
 				} else {
 					fCurrentSkillValue = null;
+				}
+				String displayValue = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_DISPLAY_VALUE);
+				if (StringTool.isProvided(displayValue)) {
+					currentDisplayValue = displayValue;
+				} else {
+					currentDisplayValue = null;
 				}
 			}
 		} else if (fInsideInjuryList) {
@@ -501,6 +517,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					if (skill != null) {
 						fSkills.add(skill);
 						skillValues.put(skill, fCurrentSkillValue);
+						displayValues.put(skill, currentDisplayValue);
 					}
 				}
 			} else if (fInsideInjuryList) {
@@ -643,6 +660,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		IJsonOption.TEMPORARY_MODIFIERS_MAP.addTo(jsonObject, temporaryModifiers);
 		IJsonOption.TEMPORARY_PROPERTIES_MAP.addTo(jsonObject, temporaryProperties);
 		IJsonOption.SKILL_VALUES_MAP.addTo(jsonObject, skillValues);
+		IJsonOption.SKILL_DISPLAY_VALUES_MAP.addTo(jsonObject, displayValues);
 		return jsonObject;
 
 	}
@@ -697,7 +715,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		temporaryProperties = IJsonOption.TEMPORARY_PROPERTIES_MAP.getFrom(source, jsonObject);
 
 		skillValues = IJsonOption.SKILL_VALUES_MAP.getFrom(source, jsonObject);
-
+		displayValues = IJsonOption.SKILL_DISPLAY_VALUES_MAP.getFrom(source, jsonObject);
 		return this;
 
 	}

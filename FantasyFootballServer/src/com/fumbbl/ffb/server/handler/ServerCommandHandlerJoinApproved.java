@@ -127,7 +127,13 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 			if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
 					pJoinApprovedCommand.getCoach(), homeTeam)) {
 				if (getServer().getMode() == ServerMode.FUMBBL) {
-					getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
+					if (game.getStarted() != null) {
+						// Game is already initialized, so we just need to kickstart it
+						UtilServerStartGame.startGame(pGameState);
+					} else {
+						// This is a new game and we need to get options from FUMBBL
+						getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
+					}
 				} else {
 					UtilServerStartGame.addDefaultGameOptions(pGameState);
 					UtilServerStartGame.startGame(pGameState);

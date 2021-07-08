@@ -13,6 +13,7 @@ import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 
 /**
@@ -106,6 +107,9 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 			case FOUL_MOVE:
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.FOUL,
 					actingPlayer.isJumping());
+				break;
+			case MOVE:
+				UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
 				break;
 			default:
 				break;

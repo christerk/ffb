@@ -1,16 +1,16 @@
 package com.fumbbl.ffb.model.skill;
 
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Position;
+import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.util.StringTool;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Position;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.util.StringTool;
 
 public interface SkillValueEvaluator {
 	Set<SkillDisplayInfo> info(Skill skill, Player<?> player);
@@ -73,6 +73,10 @@ public interface SkillValueEvaluator {
 		@Override
 		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
 			Roster roster = player.getPosition().getRoster();
+			String displayValue = player.getDisplayValueExcludingTemporaryOnes(skill);
+			if (StringTool.isProvided(displayValue)) {
+				return Collections.singleton(new SkillDisplayInfo(format(displayValue, roster), SkillDisplayInfo.Category.ROSTER, skill));
+			}
 			Set<String> skillValues = split(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse(ANIMOSITY_TO_ALL));
 			Set<String> tempSkillValues = split(player.temporarySkillValues(skill).toArray(new String[0]));
 			tempSkillValues.removeAll(skillValues);
