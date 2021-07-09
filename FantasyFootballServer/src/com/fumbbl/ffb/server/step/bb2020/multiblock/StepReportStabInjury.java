@@ -35,7 +35,6 @@ public class StepReportStabInjury extends AbstractStep {
 		return StepId.REPORT_STAB_INJURY;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void init(StepParameterSet parameterSet) {
 		if (parameterSet != null) {

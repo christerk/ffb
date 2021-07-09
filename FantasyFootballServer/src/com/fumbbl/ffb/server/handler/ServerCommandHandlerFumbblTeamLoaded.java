@@ -30,7 +30,7 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
 			return false;
 		}
 		if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(),
-				teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
+				teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam(), teamLoadedCommand.getAccountProperties())) {
 			getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
 		}
 		return true;

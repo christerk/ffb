@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.net;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,12 +26,14 @@ public class SessionManager {
 		private String fCoach;
 		private ClientMode fMode;
 		private boolean fHomeCoach;
+		private List<String> fAccountProperties;
 
-		JoinedClient(long pGameId, String pCoach, ClientMode pMode, boolean pHomeCoach) {
+		JoinedClient(long pGameId, String pCoach, ClientMode pMode, boolean pHomeCoach, List<String> pAccountProperties) {
 			fGameId = pGameId;
 			fCoach = pCoach;
 			fMode = pMode;
 			fHomeCoach = pHomeCoach;
+			fAccountProperties = pAccountProperties;
 		}
 
 		public long getGameId() {
@@ -49,6 +52,10 @@ public class SessionManager {
 			return fHomeCoach;
 		}
 
+		public boolean hasProperty(String property) {
+			return fAccountProperties.contains(property);
+		}
+		
 	}
 
 	public SessionManager() {
@@ -75,6 +82,11 @@ public class SessionManager {
 		}
 	}
 
+	public synchronized boolean isSessionAdmin(Session pSession) {
+		JoinedClient client = fClientBySession.get(pSession);
+		return client != null && client.hasProperty("ADMIN");
+	}
+	
 	public synchronized ClientMode getModeForSession(Session pSession) {
 		JoinedClient client = fClientBySession.get(pSession);
 		if (client != null) {
@@ -112,7 +124,7 @@ public class SessionManager {
 		JoinedClient clientHomeCoach = fClientBySession.get(getSessionOfHomeCoach(gameId));
 		return ((clientHomeCoach != null) && clientHomeCoach.getCoach().equals(pCoach));
 	}
-
+	
 	public synchronized Session getSessionOfAwayCoach(long gameId) {
 		Session sessionAwayCoach = null;
 		Set<Session> sessions = fSessionsByGameId.get(gameId);
@@ -176,8 +188,8 @@ public class SessionManager {
 		return filteredSessions.toArray(new Session[0]);
 	}
 
-	public synchronized void addSession(Session pSession, long gameId, String pCoach, ClientMode pMode, boolean pHomeCoach) {
-		JoinedClient client = new JoinedClient(gameId, pCoach, pMode, pHomeCoach);
+	public synchronized void addSession(Session pSession, long gameId, String pCoach, ClientMode pMode, boolean pHomeCoach, List<String> pAccountProperties) {
+		JoinedClient client = new JoinedClient(gameId, pCoach, pMode, pHomeCoach, pAccountProperties);
 		fClientBySession.put(pSession, client);
 		Set<Session> sessions = fSessionsByGameId.computeIfAbsent(gameId, k -> new HashSet<>());
 		sessions.add(pSession);

@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +84,8 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 	@Override
 	public void process(ServerRequestProcessor pRequestProcessor) {
 		boolean passwordOk = false;
+		List<String> accountProperties = new ArrayList<String>();
+
 		FantasyFootballServer server = pRequestProcessor.getServer();
 		try {
 			if (getCoach() != null && getPassword() != null) {
@@ -101,6 +106,8 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 							}
 						}
 						passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
+						String[] segments = response.split(" ");
+						Arrays.stream(segments).skip(1).map(accountProperties::add);
 					}
 				}
 			}
@@ -109,7 +116,7 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 		}
 		if (passwordOk) {
 			InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(getGameId(),
-					getGameName(), getCoach(), getTeamId(), getMode());
+					getGameName(), getCoach(), getTeamId(), getMode(), accountProperties);
 			server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSession()));
 		} else {
 			server.getCommunication().sendStatus(getSession(), ServerStatus.ERROR_WRONG_PASSWORD, null);

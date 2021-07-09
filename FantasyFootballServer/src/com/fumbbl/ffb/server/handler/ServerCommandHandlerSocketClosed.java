@@ -33,6 +33,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 		String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
 		ClientMode mode = sessionManager.getModeForSession(pReceivedCommand.getSession());
 		long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
+		boolean isAdmin = sessionManager.isSessionAdmin(pReceivedCommand.getSession());
 		sessionManager.removeSession(pReceivedCommand.getSession());
 
 		Session[] sessions = sessionManager.getSessionsForGameId(gameId);
@@ -44,7 +45,9 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 			int spectators = 0;
 			for (int i = 0; i < sessions.length; i++) {
 				if (sessionManager.getModeForSession(sessions[i]) == ClientMode.SPECTATOR) {
-					spectators++;
+					if (!sessionManager.isSessionAdmin(sessions[i])) {
+						spectators++;
+					}
 				}
 			}
 
@@ -65,7 +68,10 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 			}
 
 			if (ArrayTool.isProvided(sessions)) {
-				getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
+				boolean hideLeaveCommand = mode == ClientMode.SPECTATOR && isAdmin;
+				if (!hideLeaveCommand) {
+					getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
+				}
 			} else {
 				getServer().getGameCache().closeGame(gameState.getId());
 			}

@@ -37,12 +37,17 @@ public class ClientCommandHandlerTalk extends ClientCommandHandler {
 				TextStyle style = TextStyle.NONE;
 				if (StringTool.isProvided(coach)) {
 					status.append("<");
+					if (talkCommand.isAdminMode()) {
+						status.append("Staff ");
+					}
 					status.append(coach);
 					status.append("> ");
 					if (coach.equals(game.getTeamHome().getCoach())) {
 						style = TextStyle.HOME;
 					} else if (coach.equals(game.getTeamAway().getCoach())) {
 						style = TextStyle.AWAY;
+					} else if (talkCommand.isAdminMode()) {
+						style = TextStyle.ADMIN;
 					} else {
 						style = TextStyle.SPECTATOR;
 					}

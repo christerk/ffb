@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillUse;
@@ -111,7 +110,6 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			private StepAction askAttackerForWrestleUse(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				boolean attackerCanUseSkill = UtilCards.hasSkill(actingPlayer, skill);
 				if (attackerCanUseSkill) {
 					UtilServerDialog.showDialog(step.getGameState(),

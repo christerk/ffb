@@ -76,6 +76,11 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setFontSize(spectator, DEFAULT_FONT_SIZE);
 		StyleConstants.setForeground(spectator, new Color(0, 128, 0));
 
+		Style admin = addStyle(TextStyle.ADMIN.getName(), defaultStyle);
+		StyleConstants.setFontFamily(admin, DEFAULT_FONT_FAMILY);
+		StyleConstants.setFontSize(admin, DEFAULT_FONT_SIZE);
+		StyleConstants.setForeground(admin, new Color(128, 128, 0));
+		
 		Style turn = addStyle(TextStyle.TURN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turn, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(turn, DEFAULT_FONT_SIZE + 2);

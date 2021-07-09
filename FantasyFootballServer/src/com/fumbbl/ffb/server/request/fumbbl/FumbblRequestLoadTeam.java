@@ -2,6 +2,8 @@ package com.fumbbl.ffb.server.request.fumbbl;
 
 import static com.fumbbl.ffb.server.util.UtilServerGame.handleInvalidTeam;
 
+import java.util.List;
+
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.fumbbl.ffb.FantasyFootballException;
@@ -27,16 +29,18 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 	private String fTeamId;
 	private boolean fHomeTeam;
 	private GameState fGameState;
+	private List<String> fAccountProperties;
 
 	private transient Session fSession;
 
 	public FumbblRequestLoadTeam(GameState pGameState, String pCoach, String pTeamId, boolean pHomeTeam,
-			Session pSession) {
+			Session pSession, List<String> pAccountProperties) {
 		fGameState = pGameState;
 		fCoach = pCoach;
 		fTeamId = pTeamId;
 		fHomeTeam = pHomeTeam;
 		fSession = pSession;
+		fAccountProperties = pAccountProperties;
 	}
 
 	public GameState getGameState() {
@@ -57,6 +61,10 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 
 	public Session getSession() {
 		return fSession;
+	}
+	
+	public List<String> getAccountProperties() {
+		return fAccountProperties;
 	}
 
 	@Override
@@ -88,7 +96,7 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 			}
 		} else {
 			InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(
-					getGameState().getId(), getCoach(), isHomeTeam());
+					getGameState().getId(), getCoach(), isHomeTeam(), getAccountProperties());
 			server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
 		}
 	}
