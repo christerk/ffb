@@ -40,11 +40,7 @@ public class CatchRollMessage extends ReportMessageBase<ReportCatchRoll> {
   				neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(report.getMinimumRoll()).append("+");
   			}
   		} else {
-  			if (report.isBomb()) {
-  				println(getIndent() + 2, " drops the bomb.");
-  			} else {
-  				println(getIndent() + 2, " drops the ball.");
-  			}
+  			println(getIndent() + 2, " fails the catch.");
   			if (!report.isReRolled()) {
   				neededRoll = new StringBuilder().append("Roll a ").append(report.getMinimumRoll()).append("+ to succeed");
   			}
