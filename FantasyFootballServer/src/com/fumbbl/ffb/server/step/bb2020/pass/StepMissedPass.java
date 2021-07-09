@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2020.pass;
 
-import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.ReportPassDeviate;
@@ -103,9 +99,14 @@ public class StepMissedPass extends AbstractStep {
 		RangeRuler rangeRuler = new RangeRuler(game.getThrowerId(), lastValidCoordinate, -1, false);
 
 		game.getFieldModel().setRangeRuler(rangeRuler);
-		game.getFieldModel().setBallCoordinate(lastValidCoordinate);
-		game.getFieldModel().setBallMoving(true);
+		if (PlayerAction.THROW_BOMB == game.getThrowerAction() || PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+			game.getFieldModel().setBombCoordinate(lastValidCoordinate);
+			game.getFieldModel().setBombMoving(true);
 
+		} else {
+			game.getFieldModel().setBallCoordinate(lastValidCoordinate);
+			game.getFieldModel().setBallMoving(true);
+		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 	}

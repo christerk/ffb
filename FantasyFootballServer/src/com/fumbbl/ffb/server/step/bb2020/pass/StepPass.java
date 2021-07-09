@@ -164,7 +164,8 @@ public class StepPass extends AbstractStepWithReRoll {
 		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
 		int minimumRoll = minimumRollO.orElse(0);
 		int roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
-		state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, PlayerAction.THROW_BOMB == game.getThrowerAction()));
+		boolean isBomb = PlayerAction.THROW_BOMB == game.getThrowerAction() || PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction();
+		state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb));
 		if (PassResult.FUMBLE == state.getResult()) {
 			publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, false));
 		} else if (PassResult.SAVED_FUMBLE == state.getResult()) {
@@ -172,7 +173,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		}
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
-			passModifiers.toArray(new PassModifier[0]), passingDistance, (PlayerAction.THROW_BOMB == game.getThrowerAction()), state.getResult()));
+			passModifiers.toArray(new PassModifier[0]), passingDistance, isBomb, state.getResult()));
 		if (PassResult.ACCURATE == state.getResult()) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		} else {
