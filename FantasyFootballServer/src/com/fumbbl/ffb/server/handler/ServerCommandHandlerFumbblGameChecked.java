@@ -46,10 +46,8 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 		gameState.getGame().initializeRules();
 		UtilSkillBehaviours.registerBehaviours(gameState.getGame(), getServer().getDebugLog());
 
-		TeamSkeleton homeSkeleton = (TeamSkeleton) gameState.getGame().getTeamHome();
-		TeamSkeleton awaySkeleton = (TeamSkeleton) gameState.getGame().getTeamAway();
-		Team home = inflateTeam(homeSkeleton, gameState);
-		Team away = inflateTeam(awaySkeleton, gameState);
+		Team home = inflateIfNeeded(gameState.getGame().getTeamHome(), gameState);
+		Team away = inflateIfNeeded(gameState.getGame().getTeamAway(), gameState);
 
 		if (home == null || away == null) {
 			return false;
@@ -81,6 +79,13 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 		} catch (IOException e) {
 			UtilServerGame.handleInvalidTeam(skeleton.getId(), gameState, getServer(), e);
 			return null;
+		}
+		return team;
+	}
+
+	private Team inflateIfNeeded(Team team, GameState gameState) {
+		if (team instanceof TeamSkeleton) {
+			return inflateTeam((TeamSkeleton) team, gameState);
 		}
 		return team;
 	}
