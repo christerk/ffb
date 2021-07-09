@@ -28,7 +28,6 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.bb2020.pass.StepPass;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
-import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.Pass;
@@ -56,20 +55,6 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				return false;
 			}
 
-		});
-
-		registerModifier(new StepModifier<StepThrowTeamMate, StepThrowTeamMate.StepState>() {
-			@Override
-			public StepCommandStatus handleCommandHook(StepThrowTeamMate step, StepThrowTeamMate.StepState state, ClientCommandUseSkill useSkillCommand) {
-				step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
-				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
-				return StepCommandStatus.EXECUTE_STEP;
-			}
-
-			@Override
-			public boolean handleExecuteStepHook(StepThrowTeamMate step, StepThrowTeamMate.StepState state) {
-				return false;
-			}
 		});
 
 		registerModifier(new StepModifier<StepHailMaryPass, StepHailMaryPass.StepState>() {
