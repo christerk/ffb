@@ -44,6 +44,7 @@ public class ReportTurnEnd implements IReport {
 		add(pKnockoutRecoveries);
 		add(pHeatExhaustions);
 		this.unzappedPlayers.addAll(unzappedPlayers);
+		this.heatRoll = heatRoll;
 	}
 
 	public ReportId getId() {
