@@ -137,7 +137,6 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
 					publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
