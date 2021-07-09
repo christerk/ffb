@@ -99,9 +99,9 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 
 				closeOtherSessionWithThisCoach(gameState, joinApprovedCommand.getCoach(), session);
 				sessionManager.addSession(session, gameState.getId(), joinApprovedCommand.getCoach(),
-						joinApprovedCommand.getClientMode(), false);
+						joinApprovedCommand.getClientMode(), false, joinApprovedCommand.getAccountProperties());
 				UtilServerStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false,
-						ClientMode.SPECTATOR);
+						ClientMode.SPECTATOR, joinApprovedCommand.getAccountProperties());
 				if (gameState.getGame().getStarted() != null) {
 					UtilServerTimer.syncTime(gameState, System.currentTimeMillis());
 					communication.sendGameState(session, gameState);
@@ -125,7 +125,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 			}
 			boolean homeTeam = pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach());
 			if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
-					pJoinApprovedCommand.getCoach(), homeTeam)) {
+					pJoinApprovedCommand.getCoach(), homeTeam, pJoinApprovedCommand.getAccountProperties())) {
 				if (getServer().getMode() == ServerMode.FUMBBL) {
 					if (game.getStarted() != null) {
 						// Game is already initialized, so we just need to kickstart it
@@ -153,12 +153,12 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 					|| pJoinApprovedCommand.getTeamId().equals(game.getTeamHome().getId()));
 			if (getServer().getMode() == ServerMode.FUMBBL) {
 				getServer().getRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(),
-						pJoinApprovedCommand.getTeamId(), homeTeam, pSession));
+						pJoinApprovedCommand.getTeamId(), homeTeam, pSession, pJoinApprovedCommand.getAccountProperties()));
 			} else {
 				Team teamSkeleton = getServer().getGameCache().getTeamSkeleton(pJoinApprovedCommand.getTeamId());
 				getServer().getGameCache().addTeamToGame(pGameState, teamSkeleton, homeTeam);
 				if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
-						pJoinApprovedCommand.getCoach(), homeTeam)) {
+						pJoinApprovedCommand.getCoach(), homeTeam, pJoinApprovedCommand.getAccountProperties())) {
 					UtilServerStartGame.addDefaultGameOptions(pGameState);
 					pGameState.initRulesDependentMembers();
 					pGameState.getGame().initializeRules();

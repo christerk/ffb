@@ -439,14 +439,19 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendPlayerTalk(GameState gameState, String pCoach, String pTalk) {
-		ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
+		ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk, false);
 		sendAllSessions(gameState, talkCommand, true);
 		// not logged in Game Log
 	}
 
-	public void sendSpectatorTalk(GameState gameState, String pCoach, String pTalk) {
-		ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
-		sendSpectatorSessions(gameState, talkCommand); // not logged in Game Log
+	public void sendSpectatorTalk(GameState gameState, String pCoach, String pTalk, boolean adminMode) {
+		ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk, adminMode);
+		
+		if (adminMode) {
+			sendAllSessions(gameState, talkCommand, true);
+		} else {
+			sendSpectatorSessions(gameState, talkCommand); // not logged in Game Log
+		}
 	}
 
 	public void sendTeamSetupList(Session pSession, String[] pSetupNames) {

@@ -134,6 +134,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				}
 
 			} else {
+				// Spectator
 				if (talk.startsWith("/aah")) {
 					playSoundAfterCooldown(gameState, coach, SoundId.SPEC_AAH);
 				} else if (talk.startsWith("/boo")) {
@@ -157,7 +158,13 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				} else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
 					handleSpectatorsCommand(gameState, receivedCommand.getSession(), true);
 				} else {
-					getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk);
+					// Spectator chat
+					boolean adminMode = talk.startsWith("!") && sessionManager.isSessionAdmin(receivedCommand.getSession());
+					if (adminMode) {
+						// Strip the initial exclamation point
+						talk = talk.substring(1);
+					}
+					getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk, adminMode);
 				}
 			}
 
@@ -182,7 +189,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		Session[] sessions = sessionManager.getSessionsOfSpectators(gameState.getId());
 		for (Session session : sessions) {
 			String spectator = sessionManager.getCoachForSession(session);
-			if (spectator != null) {
+			if (spectator != null && !sessionManager.isSessionAdmin(session)) {
 				spectatorList.add(spectator);
 			}
 		}

@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.model;
 
-import java.util.Map;
-
 import com.fumbbl.ffb.FactoryManager;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
@@ -9,17 +7,19 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 
+import java.util.Map;
+
 public class GameRules implements IFactorySource {
 
 	private Map<Factory, INamedObjectFactory> factories;
-	private FactoryManager manager;
-	private IFactorySource applicationSource;
-	
+	private final FactoryManager manager;
+	private final IFactorySource applicationSource;
+
 	public GameRules(IFactorySource applicationSource, FactoryManager manager) {
 		this.manager = manager;
 		this.applicationSource = applicationSource;
 	}
-	
+
 	public void initialize(Game game) {
 		factories = manager.getFactoriesForContext(getContext(), game.getOptions());
 		for (INamedObjectFactory factory : factories.values()) {
@@ -28,7 +28,7 @@ public class GameRules implements IFactorySource {
 	}
 
 	public SkillFactory getSkillFactory() {
-		return this.<SkillFactory>getFactory(Factory.SKILL);
+		return this.getFactory(Factory.SKILL);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -36,7 +36,12 @@ public class GameRules implements IFactorySource {
 	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
 		return (T) factories.get(factory);
 	}
-	
+
+	@Override
+	public void logError(String message) {
+		applicationSource.logError(message);
+	}
+
 	@Override
 	public FactoryContext getContext() {
 		return FactoryContext.GAME;

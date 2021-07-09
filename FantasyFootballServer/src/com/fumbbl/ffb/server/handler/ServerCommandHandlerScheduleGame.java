@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.server.handler;
 
+import java.util.ArrayList;
+
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -32,10 +34,10 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
 		GameState gameState = gameCache.createGameState(GameStartMode.SCHEDULE_GAME);
 		if (ServerMode.FUMBBL == getServer().getMode()) {
 			FumbblRequestLoadTeam requestHomeTeam = new FumbblRequestLoadTeam(gameState, null,
-					scheduleGameCommand.getTeamHomeId(), true, null);
+					scheduleGameCommand.getTeamHomeId(), true, null, new ArrayList<String>());
 			getServer().getRequestProcessor().add(requestHomeTeam);
 			FumbblRequestLoadTeam requestAwayTeam = new FumbblRequestLoadTeam(gameState, null,
-					scheduleGameCommand.getTeamAwayId(), false, null);
+					scheduleGameCommand.getTeamAwayId(), false, null, new ArrayList<String>());
 			getServer().getRequestProcessor().add(requestAwayTeam);
 		} else {
 			Team teamHome = gameCache.getTeamById(scheduleGameCommand.getTeamHomeId(), gameState.getGame());

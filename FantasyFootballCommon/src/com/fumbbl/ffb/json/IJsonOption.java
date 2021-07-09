@@ -8,8 +8,10 @@ import com.fumbbl.ffb.FactoryType.Factory;
  */
 public interface IJsonOption {
 
+	JsonStringArrayOption ACCOUNT_PROPERTIES = new JsonStringArrayOption("accountProperties");
 	JsonObjectOption ACTING_PLAYER = new JsonObjectOption("actingPlayer");
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
+	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
 	JsonObjectOption ANIMATION = new JsonObjectOption("animation");
 	JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", Factory.ANIMATION_TYPE);

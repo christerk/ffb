@@ -7,8 +7,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
-import com.fumbbl.ffb.util.UtilActingPlayer;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
