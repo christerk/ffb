@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -8,13 +8,14 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 
 /**
  * The player ignores modifiers for enemy tackle zones when he attempts to pass,
  * catch or intercept.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class NervesOfSteel extends Skill {
 
 	public NervesOfSteel() {
@@ -27,6 +28,10 @@ public class NervesOfSteel extends Skill {
 			@Override
 			public boolean isModifierIncluded() {
 				return true;
+			}
+			@Override
+			public boolean appliesToContext(Skill skill, PassContext context) {
+				return !context.isDuringThrowTeamMate();
 			}
 		});
 		registerModifier(new InterceptionModifier("Nerves of Steel", "0 tackle zones due to Nerves of Steel", 0, ModifierType.REGULAR) {
@@ -43,7 +48,6 @@ public class NervesOfSteel extends Skill {
 		});
 
 		registerProperty(NamedProperties.ignoreTacklezonesWhenPassing);
-		registerProperty(NamedProperties.ignoreTacklezonesWhenCatching);
+		registerProperty(NamedProperties.ignoreTacklezonesWhenCatching);	
 	}
-
 }
