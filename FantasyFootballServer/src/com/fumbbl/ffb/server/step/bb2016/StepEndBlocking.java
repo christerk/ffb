@@ -21,10 +21,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.Block;
-import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.Move;
+import com.fumbbl.ffb.server.step.generator.*;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -107,6 +104,7 @@ public class StepEndBlocking extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
 		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
+		BlitzBlock blitzBlockGenerator = (BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name());
 		Block blockGenerator = (Block) factory.forName(SequenceGenerator.Type.Block.name());
 		if (fEndTurn || fEndPlayerAction) {
 			game.setDefenderId(null); // clear defender for next multi block
@@ -144,7 +142,11 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.markSkillUsed(canBlockMultipleTimesSkill);
 				actingPlayer.setHasBlocked(false);
 				ServerUtilBlock.updateDiceDecorations(game);
-				blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), null, false, game.getDefenderId()));
+				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(),  game.getDefenderId(), fUsingStab, null));
+				} else {
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), null, false, game.getDefenderId()));
+				}
 				game.setDefenderId(null);
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else if ((unusedPlayerMustMakeSecondBlockSkill != null) && (defenderState != null)
