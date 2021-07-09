@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -107,7 +108,7 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 						}
 						passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
 						String[] segments = response.split(" ");
-						Arrays.stream(segments).skip(1).map(accountProperties::add);
+						accountProperties = Arrays.stream(segments).skip(1).collect(Collectors.toList());
 					}
 				}
 			}
