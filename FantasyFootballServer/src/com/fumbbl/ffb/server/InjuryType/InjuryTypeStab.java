@@ -16,6 +16,7 @@ import com.fumbbl.ffb.server.step.IStep;
 public class InjuryTypeStab extends InjuryTypeServer<Stab> {
 	public InjuryTypeStab() {
 		super(new Stab());
+		super.setFailedArmourPlacesProne(false);
 	}
 
 	@Override

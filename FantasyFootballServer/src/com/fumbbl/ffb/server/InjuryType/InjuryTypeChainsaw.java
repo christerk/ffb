@@ -18,6 +18,7 @@ import com.fumbbl.ffb.server.step.IStep;
 public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 	public InjuryTypeChainsaw() {
 		super(new Chainsaw());
+		super.setFailedArmourPlacesProne(false);
 	}
 
 	@Override

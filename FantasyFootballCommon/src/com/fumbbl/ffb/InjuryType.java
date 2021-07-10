@@ -11,6 +11,7 @@ public abstract class InjuryType implements INamedObject {
 	private String name;
 	private boolean worthSpps;
 	private SendToBoxReason sendToBoxReason = null;
+	private boolean failedArmourPlacesProne = true;
 
 	protected InjuryContext injuryContext;
 
@@ -57,6 +58,10 @@ public abstract class InjuryType implements INamedObject {
 		return true;
 	}
 
+	public boolean failedArmourPlacesProne() {
+		return failedArmourPlacesProne;
+	}
+	
 	public boolean isStab() {
 		return false;
 	}
@@ -71,6 +76,10 @@ public abstract class InjuryType implements INamedObject {
 
 	public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender) {
 
+	}
+
+	public void setFailedArmourPlacesProne(boolean flag) {
+		this.failedArmourPlacesProne = flag;
 	}
 
 }

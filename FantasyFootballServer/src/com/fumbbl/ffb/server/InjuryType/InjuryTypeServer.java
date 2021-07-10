@@ -52,6 +52,10 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		return injuryType.fallingDownCausesTurnover();
 	}
 
+	public void setFailedArmourPlacesProne(boolean flag) {
+		injuryType.setFailedArmourPlacesProne(flag);
+	}
+	
 	public boolean isStab() {
 		return injuryType.isStab();
 	}

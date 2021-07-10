@@ -70,7 +70,7 @@ public class UtilServerInjury {
 		injuryContext.setApothecaryMode(pApothecaryMode);
 
 		// ball and chain always breaks armor on being knocked down
-		if (pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
+		if (injuryContext.getInjuryType().failedArmourPlacesProne() && pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
 			injuryContext.setArmorBroken(true);
 		}
 

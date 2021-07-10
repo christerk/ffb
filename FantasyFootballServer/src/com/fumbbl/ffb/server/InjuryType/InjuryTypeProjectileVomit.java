@@ -15,6 +15,7 @@ public class InjuryTypeProjectileVomit extends InjuryTypeServer<ProjectileVomit>
 
 	public InjuryTypeProjectileVomit() {
 		super(new ProjectileVomit());
+		super.setFailedArmourPlacesProne(false);
 	}
 
 	@Override
