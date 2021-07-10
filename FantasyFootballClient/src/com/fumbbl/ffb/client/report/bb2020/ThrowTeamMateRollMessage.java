@@ -24,17 +24,14 @@ public class ThrowTeamMateRollMessage extends ReportMessageBase<ReportThrowTeamM
   		StringBuilder neededRoll = null;
   		Player<?> thrower = game.getActingPlayer().getPlayer();
   		Player<?> thrownPlayer = game.getPlayerById(report.getThrownPlayerId());
+  		boolean canThrow =  thrower.getPassing() > 0;
   		if (!report.isReRolled()) {
   			print(getIndent(), true, thrower);
   			print(getIndent(), TextStyle.BOLD, " tries to throw ");
   			print(getIndent(), true, thrownPlayer);
   			println(getIndent(), TextStyle.BOLD, ":");
   		}
-  		PassModifierFactory pmf = game.getFactory(Factory.PASS_MODIFIER);
-  		if (report.hasRollModifier(pmf.forName("Nerves of Steel"))) {
-  			Player<?> player = game.getActingPlayer().getPlayer();
-  			statusReport.report(new ReportNervesOfSteel(player.getId(), "pass"));
-  		}
+  		
   		status.append("Throw Team-Mate Roll [ ").append(report.getRoll()).append(" ]");
   		println(getIndent() + 1, TextStyle.ROLL, status.toString());
   		print(getIndent() + 2, false, thrower);
@@ -58,14 +55,14 @@ public class ThrowTeamMateRollMessage extends ReportMessageBase<ReportThrowTeamM
 			  print(getIndent() + 2, false, thrownPlayer);
 			  println(getIndent() + 2, ".");
   		}
-  		if (report.isSuccessful() && !report.isReRolled()) {
+  		if (report.isSuccessful() && !report.isReRolled() && canThrow) {
   			neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(report.getMinimumRoll())
   				.append("+ to avoid a fumble or terrible throw");
   		}
-  		if (!report.isSuccessful() && !report.isReRolled()) {
+  		if (!report.isSuccessful() && !report.isReRolled() && canThrow) {
   			neededRoll = new StringBuilder().append("Roll a ").append(report.getMinimumRoll()).append("+ to have at least a successful throw");
   		}
-  		if (neededRoll != null) {
+  		if (neededRoll != null && canThrow) {
   			neededRoll.append(" (Roll ");
   			PassingDistance passingDistance = report.getPassingDistance();
  				neededRoll.append(" - ");
