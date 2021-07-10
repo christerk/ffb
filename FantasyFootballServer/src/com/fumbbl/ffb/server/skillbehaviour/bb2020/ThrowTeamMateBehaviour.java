@@ -74,16 +74,18 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					TtmMechanic ttmMechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 					int minimumRoll = ttmMechanic.minimumRoll(passingDistance, passModifiers);
 					int roll = step.getGameState().getDiceRoller().rollSkill();
-					state.passResult = evaluatePass(thrower.getPassingWithModifiers(), roll, ttmMechanic.modifierSum(passingDistance, passModifiers));
+					boolean playerCanPass = thrower.getPassing() != 0;
+					state.passResult = evaluatePass(playerCanPass, thrower.getPassingWithModifiers(), roll, ttmMechanic.modifierSum(passingDistance, passModifiers));
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
 						&& (step.getReRollSource() != null));
 					boolean successful = state.passResult == PassResult.ACCURATE || state.passResult == PassResult.INACCURATE;
+					
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
 						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult));
 					if (successful) {
 						handlePassResult(state.passResult, step);
 					} else {
-						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE) {
+						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE && playerCanPass) {
 							step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
 							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 								ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
@@ -103,11 +105,13 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				step.getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 
-			private PassResult evaluatePass(int passValue, int roll, int modifierSum) {
+			private PassResult evaluatePass(boolean playerCanPass, int passValue, int roll, int modifierSum) {
+				if(!playerCanPass) {
+					return  PassResult.FUMBLE;
+				}
 				if (passValue <= 0) {
 					return PassResult.FUMBLE;
 				}
-
 				int resultAfterModifiers = roll - modifierSum;
 				if (roll == 1) {
 					return PassResult.FUMBLE;

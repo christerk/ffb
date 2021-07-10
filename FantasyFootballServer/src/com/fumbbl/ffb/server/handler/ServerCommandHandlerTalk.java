@@ -97,6 +97,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					handleBoxCommand(gameState, talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/card")) {
 					handleCardCommand(gameState, talkCommand, receivedCommand.getSession());
+				} else if (isTestMode(gameState) && talk.startsWith("/gameid")) {
+					handleGameIdCommand(gameState);
 				} else if (isTestMode(gameState) && talk.startsWith("/injury")) {
 					handleInjuryCommand(gameState, talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/options")) {
@@ -571,6 +573,12 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 			}
 		}
 		return players.toArray(new Player[0]);
+	}
+	
+	private void handleGameIdCommand(GameState pGameState)
+	{
+		Game game = pGameState.getGame();
+		getServer().getCommunication().sendPlayerTalk(pGameState, null, "Game Id: " + game.getId() +".");
 	}
 
 	private void putPlayerIntoBox(GameState pGameState, Player<?> pPlayer, PlayerState pPlayerState, String pBoxName,

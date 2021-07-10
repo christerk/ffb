@@ -157,6 +157,11 @@ public class DialogChatCommands extends Dialog {
 					.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
+			html.append("<td>").append(_FONT_BOLD_OPEN).append("/gameid").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			html.append("<td>").append(_FONT_OPEN).append("outputs the current game id.")
+					.append(_FONT_CLOSE).append("</td>\n");
+			html.append("</tr>\n");
+			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/injury &lt;injury&gt; &lt;playerlist&gt; ")
 					.append(_FONT_BOLD_CLOSE).append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN)
@@ -164,6 +169,7 @@ public class DialogChatCommands extends Dialog {
 					.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
+			
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/option &lt;name&gt; &lt;value&gt;").append(_FONT_BOLD_CLOSE)
 					.append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN).append("sets option with given name to given value.").append(_FONT_CLOSE)

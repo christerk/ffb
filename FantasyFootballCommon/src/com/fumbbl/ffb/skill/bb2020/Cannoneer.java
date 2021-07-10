@@ -32,7 +32,7 @@ public class Cannoneer extends Skill {
 			}};
 			@Override
 			public boolean appliesToContext(Skill skill, PassContext context) {
-				return longDistances.contains(context.getDistance());
+				return longDistances.contains(context.getDistance())  && !context.isDuringThrowTeamMate();
 			}
 		});
 	}
