@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.factory;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.step.StepId;
@@ -10,6 +11,7 @@ import com.fumbbl.ffb.server.step.StepId;
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.STEP_ID)
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepIdFactory implements INamedObjectFactory {
 
 	public StepId forName(String pName) {

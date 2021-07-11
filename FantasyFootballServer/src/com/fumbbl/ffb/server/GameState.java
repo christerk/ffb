@@ -345,16 +345,18 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameState initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public GameState initFrom(IFactorySource emptySource, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		
 		// Preinitialize the game so we can get the correct factories later.
 		setGame(null);
-		JsonObject gameObject = IServerJsonOption.GAME.getFrom(source, jsonObject);
+		JsonObject gameObject = IServerJsonOption.GAME.getFrom(emptySource, jsonObject);
 		fCurrentStep = null;
+		IFactorySource source = null;
 		if (gameObject != null) {
 			Game newGame = new Game(getServer().getFactorySource(), getServer().getFactoryManager());
-			newGame.initFrom(source, gameObject);
+			newGame.initFrom(emptySource, gameObject);
+			source = newGame.getRules();
 			setGame(newGame);
 			initRulesDependentMembers();
 			JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
@@ -362,7 +364,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 				fCurrentStep = stepFactory.forJsonValue(source, currentStepObject);
 			}
 		}
-		
+
+		if (source == null) {
+			source = emptySource;
+		}
+
 		fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(source, jsonObject);
 		fStepStack.clear();
 		JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(source, jsonObject);

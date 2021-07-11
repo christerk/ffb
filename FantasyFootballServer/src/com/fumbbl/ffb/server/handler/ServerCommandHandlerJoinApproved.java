@@ -129,6 +129,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 				if (getServer().getMode() == ServerMode.FUMBBL) {
 					if (game.getStarted() != null) {
 						// Game is already initialized, so we just need to kickstart it
+						UtilSkillBehaviours.registerBehaviours(pGameState.getGame(), getServer().getDebugLog());
 						UtilServerStartGame.startGame(pGameState);
 					} else {
 						// This is a new game and we need to get options from FUMBBL
@@ -136,6 +137,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 					}
 				} else {
 					UtilServerStartGame.addDefaultGameOptions(pGameState);
+					UtilSkillBehaviours.registerBehaviours(pGameState.getGame(), getServer().getDebugLog());
 					UtilServerStartGame.startGame(pGameState);
 				}
 			}
