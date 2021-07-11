@@ -75,7 +75,7 @@ import java.util.stream.Stream;
 
 /**
  * Step in start game sequence to buy cards.
- *
+ * <p>
  * Sets stepParameter INDUCEMENT_GOLD_AWAY for all steps on the stack. Sets
  * stepParameter INDUCEMENT_GOLD_HOME for all steps on the stack.
  *
@@ -123,9 +123,12 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_SELECT_CARD_TO_BUY:
-					ClientCommandSelectCardToBuy buyCardCommand = (ClientCommandSelectCardToBuy) pReceivedCommand.getCommand();
-					currentSelection = buyCardCommand.getSelection();
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					// Some testers where able to click the button and that left the system in a broken state. As cards
+					// are currently not supported we just ignore the command for now
+
+					//	ClientCommandSelectCardToBuy buyCardCommand = (ClientCommandSelectCardToBuy) pReceivedCommand.getCommand();
+					//	currentSelection = buyCardCommand.getSelection();
+					//	commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_BUY_INDUCEMENTS:
 					ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
@@ -153,14 +156,14 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 							int cardCost = cardCost(game.getTurnDataAway().getInducementSet());
 							throw new FantasyFootballException("Team " + game.getTeamAway().getName() + " with id "
 								+ game.getTeamAway().getId() + " spent more gold than should be available, spent "
-								+ (usedInducementGoldAway + cardCost) + " vs available " + ( availableInducementGoldAway + cardCost));
+								+ (usedInducementGoldAway + cardCost) + " vs available " + (availableInducementGoldAway + cardCost));
 						}
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
-					default:
-						// Ignore other commands. This removes warnings.
-						break;
+				default:
+					// Ignore other commands. This removes warnings.
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -190,9 +193,9 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 					phase = Phase.DONE;
 				}
 				break;
-		default:
-			// Removes warning.
-			break;
+			default:
+				// Removes warning.
+				break;
 		}
 
 		if (phase == Phase.DONE) {
@@ -336,7 +339,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 	private void buildDecks() {
 		Game game = getGameState().getGame();
 		fDeckByType.clear();
-		((CardTypeFactory)game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(type -> {
+		((CardTypeFactory) game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(type -> {
 			CardDeck deck = new CardDeck(type);
 			deck.build(game);
 			fDeckByType.put(type, deck);
