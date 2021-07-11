@@ -123,12 +123,10 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_SELECT_CARD_TO_BUY:
-					// Some testers where able to click the button and that left the system in a broken state. As cards
-					// are currently not supported we just ignore the command for now
 
-					//	ClientCommandSelectCardToBuy buyCardCommand = (ClientCommandSelectCardToBuy) pReceivedCommand.getCommand();
-					//	currentSelection = buyCardCommand.getSelection();
-					//	commandStatus = StepCommandStatus.EXECUTE_STEP;
+					ClientCommandSelectCardToBuy buyCardCommand = (ClientCommandSelectCardToBuy) pReceivedCommand.getCommand();
+					currentSelection = buyCardCommand.getSelection();
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_BUY_INDUCEMENTS:
 					ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
