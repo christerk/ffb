@@ -164,7 +164,9 @@ public final class StepEndPassing extends AbstractStep {
 		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
 		if ((game.getThrower() != null) && UtilPlayer.hasBall(game, catcher)
-			&& game.getThrower().getTeam().hasPlayer(catcher)) {
+			&& game.getThrower().getTeam().hasPlayer(catcher)
+			&& game.getFieldModel().getPlayerCoordinate(catcher).equals(game.getPassCoordinate())
+		) {
 			PlayerResult throwerResult = game.getGameResult().getPlayerResult(game.getThrower());
 			if (fPassAccurate) {
 				getGameState().getPrayerState().addCompletion(throwerResult);
