@@ -136,7 +136,7 @@ public class StepPassBlock extends AbstractStep {
 
 		Team opposingTeam = UtilPlayer.findOtherTeam(game, game.getThrower());
 		Set<Player<?>> passBlockers = mechanic.findPassBlockers(game, opposingTeam, false);
-		if (passBlockers.size() == 0) {
+		if (passBlockers.size() == 0 && fOldTurnMode == null) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
