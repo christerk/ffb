@@ -4,7 +4,6 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -26,7 +25,7 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract int minimumProRoll();
 
-	public abstract boolean eligibleForPro(ActingPlayer actingPlayer, Player<?> player);
+	public abstract boolean eligibleForPro(Game game, Player<?> player);
 
 	public abstract SendToBoxReason raisedByNurgleReason();
 
