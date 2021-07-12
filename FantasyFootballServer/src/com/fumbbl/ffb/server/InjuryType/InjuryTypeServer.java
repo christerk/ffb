@@ -55,13 +55,17 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	public void setFailedArmourPlacesProne(boolean flag) {
 		injuryType.setFailedArmourPlacesProne(flag);
 	}
-	
+
 	public boolean isStab() {
 		return injuryType.isStab();
 	}
 
 	public boolean isFoul() {
 		return injuryType.isFoul();
+	}
+
+	public boolean isVomit() {
+		return injuryType.isVomit();
 	}
 
 	public boolean stunIsTreatedAsKo() {

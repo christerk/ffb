@@ -3,13 +3,12 @@ package com.fumbbl.ffb;
 import com.fumbbl.ffb.model.Player;
 
 /**
- * 
  * @author Kalimar
  */
 public abstract class InjuryType implements INamedObject {
 
-	private String name;
-	private boolean worthSpps;
+	private final String name;
+	private final boolean worthSpps;
 	private SendToBoxReason sendToBoxReason = null;
 	private boolean failedArmourPlacesProne = true;
 
@@ -61,12 +60,16 @@ public abstract class InjuryType implements INamedObject {
 	public boolean failedArmourPlacesProne() {
 		return failedArmourPlacesProne;
 	}
-	
+
 	public boolean isStab() {
 		return false;
 	}
 
 	public boolean isFoul() {
+		return false;
+	}
+
+	public boolean isVomit() {
 		return false;
 	}
 

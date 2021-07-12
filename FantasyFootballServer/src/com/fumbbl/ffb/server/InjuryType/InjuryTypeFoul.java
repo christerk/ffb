@@ -74,7 +74,7 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul());
+				pDefender, isStab(), isFoul(), isVomit());
 			injuryContext.addInjuryModifiers(injuryModifiers);
 
 			setInjury(pDefender, gameState, diceRoller);

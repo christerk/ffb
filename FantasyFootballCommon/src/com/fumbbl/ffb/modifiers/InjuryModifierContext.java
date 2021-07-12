@@ -11,15 +11,17 @@ public class InjuryModifierContext {
 	private final Player<?> defender;
 	private final boolean isStab;
 	private final boolean isFoul;
+	private final boolean isVomit;
 
 	public InjuryModifierContext(Game game, InjuryContext injuryContext, Player<?> attacker, Player<?> defender,
-	                             boolean isStab, boolean isFoul) {
+	                             boolean isStab, boolean isFoul, boolean isVomit) {
 		this.game = game;
 		this.injuryContext = injuryContext;
 		this.attacker = attacker;
 		this.defender = defender;
 		this.isStab = isStab;
 		this.isFoul = isFoul;
+		this.isVomit = isVomit;
 	}
 
 	public Game getGame() {
@@ -44,5 +46,9 @@ public class InjuryModifierContext {
 
 	public boolean isFoul() {
 		return isFoul;
+	}
+
+	public boolean isVomit() {
+		return isVomit;
 	}
 }

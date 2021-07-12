@@ -41,16 +41,16 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 	}
 
 	public Set<InjuryModifier> findInjuryModifiersWithoutNiggling(Game game, InjuryContext injuryContext, Player<?> attacker,
-	                                                              Player<?> defender, boolean isStab, boolean isFoul) {
+	                                                              Player<?> defender, boolean isStab, boolean isFoul, boolean isVomit) {
 
-		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
+		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul, isVomit);
 
 		return getInjuryModifiers(context);
 	}
 
 	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
-	                                               Player<?> defender, boolean isStab, boolean isFoul) {
-		Set<InjuryModifier> modifiers = findInjuryModifiersWithoutNiggling(game, injuryContext, attacker, defender, isStab, isFoul);
+	                                               Player<?> defender, boolean isStab, boolean isFoul, boolean isVomit) {
+		Set<InjuryModifier> modifiers = findInjuryModifiersWithoutNiggling(game, injuryContext, attacker, defender, isStab, isFoul, isVomit);
 
 		getNigglingInjuryModifier(defender).ifPresent(modifiers::add);
 

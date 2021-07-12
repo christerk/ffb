@@ -34,7 +34,7 @@ public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
 		Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-			pDefender, isStab(), isFoul()).stream().filter(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).collect(Collectors.toSet());
+			pDefender, isStab(), isFoul(), isVomit()).stream().filter(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).collect(Collectors.toSet());
 		injuryContext.addInjuryModifiers(injuryModifiers);
 
 		setInjury(pDefender, gameState, diceRoller);

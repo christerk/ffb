@@ -285,7 +285,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay()
 					&& (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL)
 					|| game.isActive(NamedProperties.droppedBallCausesArmourRoll))) {
-					InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(), null,
+					InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(true), null,
 						playerUnderBall, game.getFieldModel().getBallCoordinate(), null, null, ApothecaryMode.CATCHER);
 					getGameState().pushCurrentStepOnStack();
 					SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
