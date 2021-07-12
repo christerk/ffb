@@ -153,7 +153,7 @@ public class StepPassBlock extends AbstractStep {
 			// check if actingPlayer has dropped (failed dodge)
 			if (actingPlayer.getPlayer() != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (!playerState.hasTacklezones() || fEndPlayerAction) {
+				if (!playerState.hasTacklezones() || (fEndPlayerAction && actingPlayer.hasActed())) {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
 					fEndTurn = true;
 					fEndPlayerAction = false;
@@ -161,21 +161,27 @@ public class StepPassBlock extends AbstractStep {
 			}
 
 			if (fEndPlayerAction) {
-				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				if (validEndCoordinates.contains(playerCoordinate) || !actingPlayer.hasActed()) {
-					UtilServerSteps.changePlayerAction(this, null, null, false);
-					if (checkNoPlayerActive(passBlockers)) {
-						fEndTurn = true;
+				if (actingPlayer.hasActed()) {
+					FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+					if (validEndCoordinates.contains(playerCoordinate) || !actingPlayer.hasActed()) {
+						UtilServerSteps.changePlayerAction(this, null, null, false);
+						if (checkNoPlayerActive(passBlockers)) {
+							fEndTurn = true;
+						} else {
+							fEndPlayerAction = false;
+							getGameState().pushCurrentStepOnStack();
+
+							selectGenerator.pushSequence(selectParams);
+						}
 					} else {
 						fEndPlayerAction = false;
 						getGameState().pushCurrentStepOnStack();
-
-						selectGenerator.pushSequence(selectParams);
+						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 					}
 				} else {
-					fEndPlayerAction = false;
+					UtilServerSteps.changePlayerAction(this, null, null, false);
 					getGameState().pushCurrentStepOnStack();
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+					selectGenerator.pushSequence(selectParams);
 				}
 			}
 
