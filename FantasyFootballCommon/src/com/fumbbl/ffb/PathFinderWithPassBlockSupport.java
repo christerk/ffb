@@ -7,6 +7,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -342,11 +343,11 @@ public class PathFinderWithPassBlockSupport {
 	 * @param targetPlayer Target player.
 	 * @return Shortest path to target square
 	 */
-	public static FieldCoordinate[] getShortestPathToPlayer(Game pGame, Player targetPlayer) {
+	public static FieldCoordinate[] getShortestPathToPlayer(Game pGame, Player<?> targetPlayer) {
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentSquares = fieldModel.findAdjacentCoordinates(
-				fieldModel.getPlayerCoordinate(targetPlayer), FieldCoordinateBounds.FIELD, 1, false);
-		
+			fieldModel.getPlayerCoordinate(targetPlayer), FieldCoordinateBounds.FIELD, 1, false);
+
 		Set<FieldCoordinate> pEndCoords = Arrays.stream(adjacentSquares).filter(s -> fieldModel.getPlayer(s) == null).collect(Collectors.toSet());
 
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
@@ -357,10 +358,10 @@ public class PathFinderWithPassBlockSupport {
 
 		FieldCoordinate start = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 
-		int maxDistance = actingPlayer.getPlayer().getMovementWithModifiers();
-		
+		int maxDistance = actingPlayer.getPlayer().getMovementWithModifiers() - actingPlayer.getCurrentMove();
+
 		return getShortestPath(pGame, start, pEndCoords, maxDistance, actingPlayer.getPlayer().getTeam(),
-				normalMoveContext, false);
+			normalMoveContext, false);
 	}
 
 	/**

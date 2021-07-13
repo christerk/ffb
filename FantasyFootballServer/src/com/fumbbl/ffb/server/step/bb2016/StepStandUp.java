@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -13,7 +14,6 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportStandUpRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerConstant;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -91,11 +91,11 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 				|| (ReRolledActions.STAND_UP == getReRolledAction())) {
 			actingPlayer.setHasMoved(true);
 			game.setConcessionPossible(false);
-			boolean rollStandUp = (actingPlayer.getPlayer().getMovementWithModifiers() < IServerConstant.MINIMUM_MOVE_TO_STAND_UP);
+			boolean rollStandUp = (actingPlayer.getPlayer().getMovementWithModifiers() < Constant.MINIMUM_MOVE_TO_STAND_UP);
 			if (rollStandUp) {
 				if (ReRolledActions.STAND_UP == getReRolledAction()) {
 					if ((getReRollSource() == null)
-							|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 						rollStandUp = false;
 					}
 				}

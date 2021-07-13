@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
@@ -82,11 +83,19 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 			&& game.getTurnMode() != TurnMode.SWARMING
 			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)
 		) {
-			
-			FieldCoordinate[] shortestPath = null;
-			
-			Player playerInTarget = game.getFieldModel().getPlayer(pCoordinate);
-			
+
+			FieldCoordinate[] shortestPath;
+
+			Player<?> playerInTarget = game.getFieldModel().getPlayer(pCoordinate);
+
+			if (actingPlayer.isStandingUp()
+				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
+				actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,
+					actingPlayer.getPlayer().getMovementWithModifiers()));
+				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
+				// go-for-it
+			}
+
 			if (playerInTarget != null && playerInTarget.getTeam() != actingPlayer.getPlayer().getTeam()) {
 				shortestPath = PathFinderWithPassBlockSupport.getShortestPathToPlayer(game, playerInTarget);
 			} else {
