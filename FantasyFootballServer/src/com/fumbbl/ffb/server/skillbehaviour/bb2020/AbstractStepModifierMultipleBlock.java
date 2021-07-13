@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -44,7 +45,11 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 				.filter(opponentPlayer -> requiresRoll(actingPlayer.getPlayer(), opponentPlayer))
 				.map(Player::getId).collect(Collectors.toList());
 
-			for (String targetId: new ArrayList<>(state.blockTargets)) {
+			if (!state.blockTargets.isEmpty()) {
+				actingPlayer.setHasBlocked(true);
+			}
+
+			for (String targetId : new ArrayList<>(state.blockTargets)) {
 				roll(step, actingPlayer, targetId, false, state.minimumRolls, state);
 			}
 			state.reRollAvailableAgainst.addAll(state.blockTargets);
@@ -83,6 +88,13 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 	private void nextStep(T step, V state) {
 		if (StringTool.isProvided(state.goToLabelOnFailure) && state.blockTargets.size() == state.initialCount) {
 			step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+			state.blockTargets.forEach(target -> {
+					Game game = step.getGameState().getGame();
+					Player<?> player = game.getPlayerById(target);
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					game.getFieldModel().setPlayerState(player, playerState.changeSelectedStabTarget(false).changeSelectedBlockTarget(false));
+				}
+			);
 		} else {
 			unhandledTargetsCallback(step, state);
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
@@ -111,10 +123,10 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		Player<?> defender = game.getPlayerById(currentTargetId);
 		int actualRoll = skillRoll(step);
 		int minimumRoll = minimumRoll(game, actingPlayer.getPlayer(), defender);
-		boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(actualRoll, minimumRoll);
+		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(actualRoll, minimumRoll);
 		minimumRolls.put(currentTargetId, minimumRoll);
-		step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), mayBlock, actualRoll, minimumRoll, reRolling, currentTargetId));
-		if (mayBlock) {
+		step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), successful, actualRoll, minimumRoll, reRolling, currentTargetId));
+		if (successful) {
 			state.blockTargets.remove(currentTargetId);
 			successFulRollCallback(step, currentTargetId);
 		} else if (!reRolling) {

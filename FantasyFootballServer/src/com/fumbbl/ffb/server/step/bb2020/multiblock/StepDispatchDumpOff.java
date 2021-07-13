@@ -60,7 +60,6 @@ public class StepDispatchDumpOff extends AbstractStep {
 			if (parameter.getKey() == StepParameterKey.PLAYER_ID_TO_REMOVE) {
 				targets.stream().filter(target -> target.equals(parameter.getValue()))
 					.findFirst().ifPresent(targets::remove);
-				consume(parameter);
 				return true;
 			}
 		}

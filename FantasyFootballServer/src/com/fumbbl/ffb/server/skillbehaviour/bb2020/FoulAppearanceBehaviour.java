@@ -1,10 +1,11 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
@@ -36,7 +37,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepFoulAppearance step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -52,11 +53,11 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				}
 
 				if (UtilCards.hasSkill(defender, skill)
-						&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
+					&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
 					boolean doRoll = true;
 					if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)
-								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+							|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doRoll = false;
 							handleFailure(step, state, game, actingPlayer);
 						}
@@ -66,14 +67,14 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
 						boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
 						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE)
-								&& (step.getReRollSource() != null));
+							&& (step.getReRollSource() != null));
 						step.getResult().addReport(new ReportFoulAppearanceRoll(actingPlayer.getPlayerId(),
-								mayBlock, foulAppearanceRoll, minimumRoll, reRolled, null));
+							mayBlock, foulAppearanceRoll, minimumRoll, reRolled, null));
 						if (mayBlock) {
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-									ReRolledActions.FOUL_APPEARANCE, minimumRoll, false)) {
+								ReRolledActions.FOUL_APPEARANCE, minimumRoll, false)) {
 								handleFailure(step, state, game, actingPlayer);
 							}
 						}
@@ -128,7 +129,13 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 
 			@Override
 			protected void unhandledTargetsCallback(StepFoulAppearanceMultiple step, StepStateMultipleRolls state) {
-				state.blockTargets.forEach(target -> step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, target)));
+				state.blockTargets.forEach(target -> {
+					Game game = step.getGameState().getGame();
+					Player<?> player = game.getPlayerById(target);
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					game.getFieldModel().setPlayerState(player, playerState.changeSelectedStabTarget(false).changeSelectedBlockTarget(false));
+					step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, target));
+				});
 			}
 
 			@Override
