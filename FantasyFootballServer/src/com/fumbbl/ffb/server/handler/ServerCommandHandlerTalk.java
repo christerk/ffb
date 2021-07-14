@@ -1,7 +1,15 @@
 package com.fumbbl.ffb.server.handler;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IDialogParameter;
+import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.InjuryContext;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSelectSkillParameter;
 import com.fumbbl.ffb.factory.AnimationTypeFactory;
@@ -45,7 +53,15 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import org.eclipse.jetty.websocket.api.Session;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Kalimar
@@ -547,7 +563,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
                             "Adding effect of " + prayer.getName() + " to player " + foundPlayer.get().getName() + ".");
 
                 } else {
-                    getServer().getCommunication().sendPlayerTalk(gameState, null, "Player with #" + commands[2] + " is eligible for selection.");
+                    getServer().getCommunication().sendPlayerTalk(gameState, null, "Player with #" + commands[2] + " is not eligible for selection.");
                     return;
                 }
             }
