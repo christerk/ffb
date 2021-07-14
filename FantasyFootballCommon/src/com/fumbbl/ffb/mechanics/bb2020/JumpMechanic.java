@@ -27,8 +27,8 @@ public class JumpMechanic extends com.fumbbl.ffb.mechanics.JumpMechanic {
 
 	@Override
 	public boolean canStillJump(Game game, ActingPlayer actingPlayer) {
-		return UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-			|| (!actingPlayer.hasJumped() && hasProneOrStunnedPlayersAdjacent(game, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
+		return (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
+			|| (!actingPlayer.hasJumped() && hasProneOrStunnedPlayersAdjacent(game, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())))) && !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.movesRandomly);
 	}
 
 	@Override
