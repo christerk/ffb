@@ -41,8 +41,6 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate);
 
-	public abstract int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker);
-
 	public abstract boolean canRaiseDead(Roster roster);
 
 	public abstract boolean canPreventStripBall(PlayerState playerState);

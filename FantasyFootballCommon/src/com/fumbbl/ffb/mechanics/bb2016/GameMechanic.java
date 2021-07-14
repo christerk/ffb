@@ -92,11 +92,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker) {
-		return 0;
-	}
-
-	@Override
 	public boolean canRaiseDead(Roster roster) {
 		return roster.hasNecromancer();
 	}

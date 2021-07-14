@@ -92,13 +92,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker) {
-		boolean reduceAssists = usingMultiBlock && !game.getActingTeam().hasPlayer(attacker) &&
-			(game.getFieldModel().selectedMultiBlockTargets() < 1 || game.getFieldModel().isMultiBlockTarget(attacker.getId()));
-		return reduceAssists ? 1 : 0;
-	}
-
-	@Override
 	public boolean canRaiseDead(Roster roster) {
 		return roster.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
 	}
