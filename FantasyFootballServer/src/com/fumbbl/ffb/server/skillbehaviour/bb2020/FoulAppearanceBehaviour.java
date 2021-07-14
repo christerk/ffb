@@ -90,6 +90,11 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			}
 
 			private void handleFailure(StepFoulAppearance step, StepState state, Game game, ActingPlayer actingPlayer) {
+				if (actingPlayer.isStandingUp()) {
+					Player<?> player = actingPlayer.getPlayer();
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));
+				}
 				actingPlayer.setHasBlocked(true);
 				game.getTurnData().setTurnStarted(true);
 				step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
