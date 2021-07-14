@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
@@ -96,6 +97,10 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				if (blitzState != null) {
 					blitzState.failed();
 					game.getTurnData().setBlitzUsed(true);
+				}
+
+				if (actingPlayer.getPlayerAction() == PlayerAction.GAZE) {
+					step.publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				}
 			}
 		});

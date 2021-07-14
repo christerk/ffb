@@ -21,8 +21,6 @@ public class BlitzMove extends com.fumbbl.ffb.server.step.generator.BlitzMove {
 
 		sequence.add(StepId.INIT_MOVING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
 			from(StepParameterKey.MOVE_STACK, params.getMoveStack()), from(StepParameterKey.GAZE_VICTIM_ID, params.getGazeVictimId()));
-		sequence.add(StepId.HYPNOTIC_GAZE, IStepLabel.HYPNOTIC_GAZE,
-			from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING));
 		sequence.add(StepId.MOVE_BALL_AND_CHAIN, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
 			from(StepParameterKey.GOTO_LABEL_ON_FALL_DOWN, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.MOVE);
