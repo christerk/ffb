@@ -20,7 +20,7 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 		status.append("Argue the Call Roll [ ").append(report.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		if (report.isFriendsWithRef()) {
-			println(getIndent() + 1, TextStyle.EXPLANATION, "Adding +1 to the roll for being friends with the ref.");
+			println(getIndent() + 1, TextStyle.EXPLANATION, "Being friends with the ref allows argue to succeed on 5+.");
 		}
 		if (report.isSuccessful()) {
 			print(getIndent() + 1, TextStyle.NONE, "The ref refrains from banning ");

@@ -373,18 +373,8 @@ public class StepEndTurn extends AbstractStep {
 					game.setTurnTime(0);
 				}
 
-				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
-				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
-
-				if (fNewHalf) {
-					deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
-				}
-
 				if (fNewHalf || fTouchdown) {
-					deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
 					reportSecretWeaponsUsed();
-					removeBrilliantCoachingReRolls(true);
-					removeBrilliantCoachingReRolls(false);
 				}
 
 			}
@@ -425,6 +415,18 @@ public class StepEndTurn extends AbstractStep {
 
 			if (!fEndGame && fRemoveUsedSecretWeapons) {
 				removeUsedSecretWeapons();
+			}
+
+			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
+			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
+
+			if (fNewHalf) {
+				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
+			}
+			if (fNewHalf || fTouchdown) {
+				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
+				removeBrilliantCoachingReRolls(true);
+				removeBrilliantCoachingReRolls(false);
 			}
 
 			game.startTurn();
@@ -602,8 +604,8 @@ public class StepEndTurn extends AbstractStep {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if ((player != null) && !turnData.isCoachBanned()) {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
-					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam());
-					int modifiedRoll = friendsWithTheRef ? roll + 1 : roll;
+					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.findTeam(player));
+					int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
 
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
 					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
