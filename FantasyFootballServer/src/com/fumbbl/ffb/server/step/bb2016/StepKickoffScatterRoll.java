@@ -1,7 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -34,6 +31,9 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Step in kickoff sequence to scatter the kick.
  *
@@ -45,7 +45,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepKickoffScatterRoll extends AbstractStep {
 
 	private FieldCoordinate fKickoffStartCoordinate;
