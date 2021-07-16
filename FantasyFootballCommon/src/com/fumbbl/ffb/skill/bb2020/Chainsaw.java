@@ -3,6 +3,7 @@ package com.fumbbl.ffb.skill.bb2020;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
+import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
@@ -44,6 +45,9 @@ public class Chainsaw extends Skill {
 		registerProperty(NamedProperties.providesChainsawBlockAlternative);
 		registerProperty(NamedProperties.providesChainsawFoulingAlternative);
 		registerProperty(NamedProperties.providesFoulingAlternative);
+		
+		registerProperty(NamedProperties.preventStuntyDodgeModifier);
+		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
 
 		registerModifier(new StaticArmourModifier("Chainsaw", 3, false) {
 			@Override

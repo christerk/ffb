@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -17,7 +17,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * adjacent to this player. Note that the coach may choose which square the
  * player is moved to even if the player is Knocked Down after the push back.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class SideStep extends Skill {
 
 	public SideStep() {
