@@ -203,7 +203,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		}
 
 		return playersOnField.stream().filter(player -> player.hasSkillProperty(NamedProperties.canReduceKickDistance))
-			.findFirst().orElseGet(() -> getGameState().getDiceRoller().randomPlayer(playersOnField.toArray(new Player[0])));
+			.findFirst().orElseGet(() -> playersOnField.get(0));
 
 	}
 
