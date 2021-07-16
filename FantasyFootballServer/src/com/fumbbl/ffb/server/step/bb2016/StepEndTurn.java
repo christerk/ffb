@@ -92,6 +92,7 @@ public class StepEndTurn extends AbstractStep {
 	private boolean fNewHalf;
 	private boolean fEndGame;
 	private boolean fWithinSecretWeaponHandling;
+	private int turnNr, half;
 
 	public StepEndTurn(GameState pGameState) {
 		super(pGameState);
@@ -150,6 +151,11 @@ public class StepEndTurn extends AbstractStep {
 		Game game = getGameState().getGame();
 		UtilServerDialog.hideDialog(getGameState());
 		boolean isHomeTurnEnding = game.isHomePlaying();
+		if (turnNr == 0) {
+			// work around as UtilServer#startHalf is currently called before weapons are removed and we need these values for sendToBoxReason
+			turnNr = game.getTurnData().getTurnNr();
+			half = game.getHalf();
+		}
 
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
@@ -158,8 +164,8 @@ public class StepEndTurn extends AbstractStep {
 		if (!fWithinSecretWeaponHandling) {
 
 			if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN)
-					|| (game.getTurnMode() == TurnMode.PASS_BLOCK) || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)
-					|| game.getTurnMode() == TurnMode.SWARMING) {
+				|| (game.getTurnMode() == TurnMode.PASS_BLOCK) || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)
+				|| game.getTurnMode() == TurnMode.SWARMING) {
 				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 				return;
@@ -471,8 +477,8 @@ public class StepEndTurn extends AbstractStep {
 				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.BANNED));
 				playerResult.setSendToBoxByPlayerId(null);
 				playerResult.setSendToBoxReason(SendToBoxReason.SECRET_WEAPON_BAN);
-				playerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
-				playerResult.setSendToBoxHalf(game.getHalf());
+				playerResult.setSendToBoxTurn(turnNr);
+				playerResult.setSendToBoxHalf(half);
 				UtilBox.putPlayerIntoBox(game, player);
 				playerResult.setHasUsedSecretWeapon(false);
 			}
@@ -665,6 +671,8 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.NEW_HALF.addTo(jsonObject, fNewHalf);
 		IServerJsonOption.END_GAME.addTo(jsonObject, fEndGame);
 		IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.addTo(jsonObject, fWithinSecretWeaponHandling);
+		IServerJsonOption.HALF.addTo(jsonObject, half);
+		IServerJsonOption.TURN_NR.addTo(jsonObject, turnNr);
 		return jsonObject;
 	}
 
@@ -683,6 +691,8 @@ public class StepEndTurn extends AbstractStep {
 		fEndGame = IServerJsonOption.END_GAME.getFrom(source, jsonObject);
 		Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(source, jsonObject);
 		fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
+		half = IServerJsonOption.HALF.getFrom(source, jsonObject);
+		turnNr = IServerJsonOption.TURN_NR.getFrom(source, jsonObject);
 		return this;
 	}
 
