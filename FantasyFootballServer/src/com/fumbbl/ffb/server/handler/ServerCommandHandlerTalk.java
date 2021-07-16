@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.handler;
 
+import com.fumbbl.ffb.DiceCategory;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -58,7 +59,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -118,7 +121,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
                 } else if (isTestMode(gameState) && talk.startsWith("/prone")) {
                     handleProneOrStunCommand(gameState, talkCommand, false, receivedCommand.getSession());
                 } else if (isTestMode(gameState) && talk.startsWith("/roll")) {
-                    handleRollCommand(gameState, talkCommand);
+                    handleRollCommand(gameState, talkCommand, receivedCommand.getSession());
                 } else if (isTestMode(gameState) && talk.startsWith("/skill")) {
                     handleSkillCommand(gameState, talkCommand, receivedCommand.getSession());
                 } else if (isTestMode(gameState) && talk.startsWith("/sounds")) {
@@ -656,33 +659,42 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         getServer().getCommunication().sendPlayerTalk(pGameState, null, "Player " + pPlayer.getName() + " moved into box " + pBoxName + ".");
     }
 
-    private void handleRollCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+    private void handleRollCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session session) {
         String talk = pTalkCommand.getTalk();
         String[] commands = talk.split(" +");
+        Game game = pGameState.getGame();
+        SessionManager sessionManager = getServer().getSessionManager();
+        Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome(): game.getTeamAway();
         if (commands.length > 1) {
             if ("clear".equals(commands[1])) {
                 pGameState.getDiceRoller().clearTestRolls();
             } else {
                 for (int i = 1; i < commands.length; i++) {
                     try {
-                        int testRoll = Integer.parseInt(commands[i]);
-                        pGameState.getDiceRoller().addTestRoll(testRoll);
+                        pGameState.getDiceRoller().addTestRoll(commands[i], game, team);
                     } catch (NumberFormatException ignored) {
                     }
                 }
             }
         }
-        int[] testRolls = pGameState.getDiceRoller().getTestRolls();
-        if (ArrayTool.isProvided(testRolls)) {
-            StringBuilder diceRolls = new StringBuilder();
-            diceRolls.append("Next dice rolls will be ");
-            for (int i = 0; i < testRolls.length; i++) {
-                if (i > 0) {
-                    diceRolls.append(", ");
-                }
-                diceRolls.append(testRolls[i]);
-            }
-            getServer().getCommunication().sendPlayerTalk(pGameState, null, diceRolls.toString());
+        
+        Map<String, ArrayList<DiceCategory>> testRolls = pGameState.getDiceRoller().getTestRolls();
+        if (testRolls.size() > 0) {
+        	
+        	Iterator<String> itr = testRolls.keySet().iterator(); 
+        	while (itr.hasNext()) {
+        		String key = itr.next();
+        		ArrayList<DiceCategory> rolls = testRolls.get(key);
+        		StringBuilder diceRolls = new StringBuilder();
+        		diceRolls.append("Next " + key +" rolls will be ");
+        		for (int i = 0; i < rolls.size(); i++) {
+        			if (i > 0) {
+        				diceRolls.append(", ");
+        			}
+        			diceRolls.append(rolls.get(i).Text(pGameState.getGame()));
+        		}
+        		getServer().getCommunication().sendPlayerTalk(pGameState, null, diceRolls.toString());
+        	}  
         } else {
             getServer().getCommunication().sendPlayerTalk(pGameState, null, "Next dice rolls will be random.");
         }
