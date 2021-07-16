@@ -3,7 +3,6 @@ package com.fumbbl.ffb.skill.bb2020;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
-import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -27,9 +26,7 @@ public class SecretWeapon extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.preventStuntyDodgeModifier);
 		registerProperty(NamedProperties.getsSentOffAtEndOfDrive);
-		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
 	}
 
 }

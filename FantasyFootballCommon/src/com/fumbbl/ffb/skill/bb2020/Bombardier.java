@@ -3,6 +3,7 @@ package com.fumbbl.ffb.skill.bb2020;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
+import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -38,6 +39,8 @@ public class Bombardier extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.enableThrowBombAction);
+		registerProperty(NamedProperties.preventStuntyDodgeModifier);
+		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
 	}
 
 }
