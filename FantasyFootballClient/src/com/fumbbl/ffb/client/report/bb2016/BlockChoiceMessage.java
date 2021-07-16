@@ -1,9 +1,9 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportBlockChoice;
@@ -11,7 +11,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.util.UtilCards;
 
 @ReportMessageType(ReportId.BLOCK_CHOICE)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class BlockChoiceMessage extends ReportMessageBase<ReportBlockChoice> {
 
     @Override
@@ -42,22 +42,12 @@ public class BlockChoiceMessage extends ReportMessageBase<ReportBlockChoice> {
   				if (defender.hasSkillProperty(NamedProperties.preventFallOnBothDown)) {
   					print(getIndent() + 1, false, defender);
   					status = new StringBuilder();
-  					PlayerState playerState = game.getFieldModel().getPlayerState(defender);
-  					if(playerState.hasTacklezones()) {
-  						status
-  							.append(" has been saved by ")
-  							.append(defender.getPlayerGender().getGenitive())
-  							.append(" ")
-  							.append(defender.getSkillWithProperty(NamedProperties.preventFallOnBothDown))
-  							.append(" skill.");
-  					} else {
-  						status
-							.append(" has not been saved by ")
-							.append(defender.getPlayerGender().getGenitive())
-							.append(" ")
-							.append(defender.getSkillWithProperty(NamedProperties.preventFallOnBothDown))
-							.append(" skill, due to having no tacklezones.");
-  					}
+ 					status
+  						.append(" has been saved by ")
+  						.append(defender.getPlayerGender().getGenitive())
+  						.append(" ")
+  						.append(defender.getSkillWithProperty(NamedProperties.preventFallOnBothDown))
+  						.append(" skill.");
   					println(getIndent() + 1, status.toString());
   				}
   				break;
