@@ -233,14 +233,6 @@ public class StepEndTurn extends AbstractStep {
 				} else {
 
 					switch (game.getTurnMode()) {
-						case NO_PLAYERS_TO_FIELD:
-							game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
-							game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
-							fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
-							game.setTurnMode(TurnMode.SETUP);
-							game.setSetupOffense(false);
-							fTouchdown = true;
-							break;
 						case KICKOFF:
 							game.setHomePlaying(!game.isHomePlaying());
 							game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);

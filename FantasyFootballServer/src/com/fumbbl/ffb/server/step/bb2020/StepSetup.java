@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -10,12 +10,10 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
-import com.fumbbl.ffb.report.ReportNoPlayersToField;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -31,18 +29,17 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
+import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerSetup;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step in kickoff sequence to setup the playing team.
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepSetup extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -66,12 +63,12 @@ public final class StepSetup extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_END:
-					fGotoLabelOnEnd = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_END:
+						fGotoLabelOnEnd = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -85,36 +82,36 @@ public final class StepSetup extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_TEAM_SETUP_LOAD:
-				ClientCommandTeamSetupLoad loadSetupCommand = (ClientCommandTeamSetupLoad) pReceivedCommand.getCommand();
-				UtilServerSetup.loadTeamSetup(getGameState(), loadSetupCommand.getSetupName());
-				commandStatus = StepCommandStatus.SKIP_STEP;
-				break;
-			case CLIENT_TEAM_SETUP_SAVE:
-				ClientCommandTeamSetupSave saveSetupCommand = (ClientCommandTeamSetupSave) pReceivedCommand.getCommand();
-				UtilServerSetup.saveTeamSetup(getGameState(), saveSetupCommand.getSetupName(),
+				case CLIENT_TEAM_SETUP_LOAD:
+					ClientCommandTeamSetupLoad loadSetupCommand = (ClientCommandTeamSetupLoad) pReceivedCommand.getCommand();
+					UtilServerSetup.loadTeamSetup(getGameState(), loadSetupCommand.getSetupName());
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					break;
+				case CLIENT_TEAM_SETUP_SAVE:
+					ClientCommandTeamSetupSave saveSetupCommand = (ClientCommandTeamSetupSave) pReceivedCommand.getCommand();
+					UtilServerSetup.saveTeamSetup(getGameState(), saveSetupCommand.getSetupName(),
 						saveSetupCommand.getPlayerNumbers(), saveSetupCommand.getPlayerCoordinates());
-				commandStatus = StepCommandStatus.SKIP_STEP;
-				break;
-			case CLIENT_TEAM_SETUP_DELETE:
-				ClientCommandTeamSetupDelete deleteSetupCommand = (ClientCommandTeamSetupDelete) pReceivedCommand.getCommand();
-				UtilServerSetup.deleteTeamSetup(getGameState(), deleteSetupCommand.getSetupName());
-				commandStatus = StepCommandStatus.SKIP_STEP;
-				break;
-			case CLIENT_SETUP_PLAYER:
-				ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-				UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(),
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					break;
+				case CLIENT_TEAM_SETUP_DELETE:
+					ClientCommandTeamSetupDelete deleteSetupCommand = (ClientCommandTeamSetupDelete) pReceivedCommand.getCommand();
+					UtilServerSetup.deleteTeamSetup(getGameState(), deleteSetupCommand.getSetupName());
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					break;
+				case CLIENT_SETUP_PLAYER:
+					ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
+					UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(),
 						setupPlayerCommand.getCoordinate());
-				commandStatus = StepCommandStatus.SKIP_STEP;
-				break;
-			case CLIENT_END_TURN:
-				if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
-					fEndSetup = true;
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-				}
-				break;
-			default:
-				break;
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					break;
+				case CLIENT_END_TURN:
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						fEndSetup = true;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -125,11 +122,6 @@ public final class StepSetup extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		if (checkNoPlayersInBoxOrField()) {
-			game.setTurnMode(TurnMode.NO_PLAYERS_TO_FIELD);
-			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-			return;
-		}
 		if (fEndSetup) {
 			getResult().setSound(SoundId.DING);
 			if (UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying())) {
@@ -142,9 +134,9 @@ public final class StepSetup extends AbstractStep {
 				} else {
 					game.setSetupOffense(true);
 					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-					((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
+					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_SETUP, game.isHomePlaying()));
-					((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
+					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_SETUP, !game.isHomePlaying()));
 				}
 				getResult().setNextAction(StepAction.NEXT_STEP);
@@ -152,36 +144,6 @@ public final class StepSetup extends AbstractStep {
 				fEndSetup = false;
 			}
 		}
-	}
-
-	// In the rare event that one team has no players to set up after
-	// KO'd rolls, both teams' turn markers are moved forward along
-	// the turn track two spaces and if one team could field at least one
-	// player then that team is awarded a touchdown (however no
-	// player receives Star Player points (see page 25) for this.) If this
-	// takes the number of turns to 8 or more for both teams, then the
-	// half ends. If there are still turns left in the half, then continue
-	// playing as if a drive has just ended (i.e. clear the pitch and roll for
-	// KO'd players).
-	private boolean checkNoPlayersInBoxOrField() {
-		Game game = getGameState().getGame();
-		Player<?>[] playersInBoxHome = UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome());
-		Player<?>[] playersInBoxAway = UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway());
-		if (!ArrayTool.isProvided(playersInBoxHome) || !ArrayTool.isProvided(playersInBoxAway)) {
-			if (ArrayTool.isProvided(playersInBoxHome) && !ArrayTool.isProvided(playersInBoxAway)) {
-				game.setHomePlaying(true);
-				game.getGameResult().getTeamResultHome().setScore(game.getGameResult().getTeamResultHome().getScore() + 1);
-				getResult().addReport(new ReportNoPlayersToField(game.getTeamAway().getId()));
-			} else if (!ArrayTool.isProvided(playersInBoxHome) && ArrayTool.isProvided(playersInBoxAway)) {
-				game.setHomePlaying(false);
-				game.getGameResult().getTeamResultAway().setScore(game.getGameResult().getTeamResultAway().getScore() + 1);
-				getResult().addReport(new ReportNoPlayersToField(game.getTeamHome().getId()));
-			} else {
-				getResult().addReport(new ReportNoPlayersToField(null));
-			}
-			return true;
-		}
-		return false;
 	}
 
 	// JSON serialization
