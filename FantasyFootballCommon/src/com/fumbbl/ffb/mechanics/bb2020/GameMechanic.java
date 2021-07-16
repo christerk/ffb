@@ -8,6 +8,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.TurnData;
@@ -134,5 +135,35 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isBlockActionAllowed(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
+	}
+
+	@Override
+	public PlayerStats zappedPlayerStats() {
+		return new PlayerStats() {
+			@Override
+			public int move() {
+				return 5;
+			}
+
+			@Override
+			public int strength() {
+				return 1;
+			}
+
+			@Override
+			public int agility() {
+				return 2;
+			}
+
+			@Override
+			public int passing() {
+				return 0;
+			}
+
+			@Override
+			public int armour() {
+				return 5;
+			}
+		};
 	}
 }

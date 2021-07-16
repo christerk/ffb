@@ -7,6 +7,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.TurnData;
 
@@ -58,4 +59,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean allowesCancellingGuard(TurnMode turnMode);
 
 	public abstract boolean isBlockActionAllowed(TurnMode turnMode);
+
+	public abstract PlayerStats zappedPlayerStats();
 }
