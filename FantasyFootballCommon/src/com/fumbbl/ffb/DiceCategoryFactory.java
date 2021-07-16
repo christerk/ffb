@@ -1,31 +1,24 @@
 package com.fumbbl.ffb;
 
-import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 
-public class DiceCategoryFactory implements INamedObjectFactory {
-
-	@Override
-	public INamedObject forName(String pName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public class DiceCategoryFactory {
 	
 	public static DiceCategory forCommandString(String command, Game game, Team team) {
 		DiceCategory diceCategory = null;
-		if(DiceCategory.IsCommandValid(command, game, team))
+		if(DiceCategory.isCommandValid(command, game, team))
 		{
 			diceCategory = new DiceCategory();
-			diceCategory.ParseCommand(command, game, team);
+			diceCategory.parseCommand(command, game, team);
 		}
-		else if (DirectionDiceCategory.IsCommandValid(command, game, team)) {
+		else if (DirectionDiceCategory.isCommandValid(command, game, team)) {
 			diceCategory = new DirectionDiceCategory();
-			diceCategory.ParseCommand(command, game, team);
+			diceCategory.parseCommand(command, game, team);
 		}
-		else if (BlockDiceCategory.IsCommandValid(command, game, team)) {
+		else if (BlockDiceCategory.isCommandValid(command, game, team)) {
 			diceCategory = new BlockDiceCategory();
-			diceCategory.ParseCommand(command, game, team);
+			diceCategory.parseCommand(command, game, team);
 		}
 
 		return diceCategory;
@@ -36,9 +29,4 @@ public class DiceCategoryFactory implements INamedObjectFactory {
 		return new DiceCategory(diceSize);
 	}
 
-	@Override
-	public void initialize(Game game) {
-		// TODO Auto-generated method stub	
-	}
-	
 }

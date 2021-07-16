@@ -1,5 +1,9 @@
 package com.fumbbl.ffb;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 
@@ -11,70 +15,58 @@ public class BlockDiceCategory extends DiceCategory {
 	}
 	
 	@Override
-	public String Text(Game game) {
-		return BlockEnums.FindNameFromRoll(testRoll);
+	public String text(Game game) {
+		return BlockEnums.findNameFromRoll(testRoll);
 	}
 	
 	
-	static Integer CommandToDiceRoll(String command, Game game, Team team) {
-		return BlockEnums.FindRollFromName(command);
+	static Integer commandToDiceRoll(String command, Game game, Team team) {
+		return BlockEnums.findRollFromName(command);
 	}
 	
-	public static boolean IsCommandValid(String command, Game game, Team team) {
-		return CommandToDiceRoll(command, game, team) != -1;
+	public static boolean isCommandValid(String command, Game game, Team team) {
+		return commandToDiceRoll(command, game, team) != -1;
 	}	
 	
 	@Override
-	public boolean ParseCommand(String command, Game game, Team team) {
-		super.testRoll = CommandToDiceRoll(command, game, team);
-		return super.testRoll != -1;
+	public boolean parseCommand(String command, Game game, Team team) {
+		super.testRoll = commandToDiceRoll(command, game, team);
+		return super.testRoll != 0;
 	}
 	
 	private enum BlockEnums {
 		
-		PLAYERDOWN(1, "playerdown"),
-		SKULL(1, "skull"),
-		DOWN(1, "down"),
-		
-		BOTHDOWN(2, "bothdown"),
-		BD(2, "bd"),
-		BOTH(2, "both"),
-		
-		PUSHBACK1(3, "pushback"),
-		PUSHBACK2(4, "pushback"),
-		PB(4, "pb"),
-		PUSH(4, "push"),
-	
-		STUMBLE(5, "stumble"),
-		PBP(5, "pbp"),
-		PBPOW(5, "pbpow"),
-		
-		POW(6, "pow");
+		PLAYERDOWN(1, new ArrayList<>(Arrays.asList("playerdown", "skull", "down"))),
+		BOTHDOWN(2, new ArrayList<>(Arrays.asList("bothdown", "bd", "both"))),
+		PUSHBACK1(3, new ArrayList<>(Arrays.asList("pushback", "pb", "push"))),
+		PUSHBACK2(4, new ArrayList<>(Arrays.asList("pushback"))),
+		STUMBLE(5,  new ArrayList<>(Arrays.asList("stumble", "pbp", "pbpow"))),
+		POW(6, new ArrayList<>(Arrays.asList("pow")));
 		
 		private final int roll;
-		private final String text;
+		private final List<String> text;
 		
-		BlockEnums(Integer roll, String text){
+		BlockEnums(Integer roll, List<String> text){
 			this.roll = roll;
 			this.text = text;
 		}
 		
-		public static String FindNameFromRoll(int roll) {
+		public static String findNameFromRoll(int roll) {
 			for(BlockEnums e : values()) {
 				if(e.roll == roll) {
-					return e.text;
+					return e.text.get(0);
 				}
 			}
 			return "Invalid";
 		}
 		
-		public static int FindRollFromName(String name) {
+		public static int findRollFromName(String name) {
 			for(BlockEnums e : values()) {
-				if(e.text.equals(name)) {
+				if(e.text.contains(name.toLowerCase())) {
 					return e.roll;
 				}
 			}
-			return -1;	
+			return 0;	
 		}	
 	}
 }

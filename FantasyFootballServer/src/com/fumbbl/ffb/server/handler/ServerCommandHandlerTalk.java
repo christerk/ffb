@@ -53,13 +53,13 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import org.eclipse.jetty.websocket.api.Session;
+import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -677,26 +677,19 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
                 }
             }
         }
-        
-        Map<String, ArrayList<DiceCategory>> testRolls = pGameState.getDiceRoller().getTestRolls();
-        if (testRolls.size() > 0) {
-        	
-        	Iterator<String> itr = testRolls.keySet().iterator(); 
-        	while (itr.hasNext()) {
-        		String key = itr.next();
-        		ArrayList<DiceCategory> rolls = testRolls.get(key);
-        		StringBuilder diceRolls = new StringBuilder();
-        		diceRolls.append("Next " + key +" rolls will be ");
-        		for (int i = 0; i < rolls.size(); i++) {
-        			if (i > 0) {
-        				diceRolls.append(", ");
+                   
+        Map<String, List<DiceCategory>> testRolls = pGameState.getDiceRoller().getTestRolls();
+        if(testRolls.size() > 0) {
+        testRolls.entrySet().stream().forEach(e -> {
+        			List<DiceCategory> rolls = e.getValue();
+        			List<String> strings = rolls.stream().map(x -> x.text(pGameState.getGame())).collect(Collectors.toList());
+        			String result = "Next " + e.getKey() +" rolls will be: " + String.join(", ", strings);
+            		getServer().getCommunication().sendPlayerTalk(pGameState, null, result);
         			}
-        			diceRolls.append(rolls.get(i).Text(pGameState.getGame()));
-        		}
-        		getServer().getCommunication().sendPlayerTalk(pGameState, null, diceRolls.toString());
-        	}  
+        		);
         } else {
             getServer().getCommunication().sendPlayerTalk(pGameState, null, "Next dice rolls will be random.");
+
         }
     }
 

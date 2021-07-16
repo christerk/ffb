@@ -13,6 +13,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +23,7 @@ import java.util.Map;
 public class DiceRoller {
 
 	private final GameState fGameState;
-	private final Map<String, ArrayList<DiceCategory>> testRolls;
+	private final Map<String, List<DiceCategory>> testRolls;
 
 
 
@@ -37,12 +38,12 @@ public class DiceRoller {
 
 	public int rollDice(int pType) {
 		Fortuna fortuna = getGameState().getServer().getFortuna();
-		ArrayList<DiceCategory> testRollList = testRolls.get("General");
+		List<DiceCategory> testRollList = testRolls.get("General");
 		if(testRollList != null){
 			while (testRollList.size() > 0) {
 				DiceCategory testRoll = testRollList.remove(0);
-				if (testRoll.TestRoll() <= pType) {
-					return testRoll.TestRoll();
+				if (testRoll.testRoll() <= pType) {
+					return testRoll.testRoll();
 				}
 			}
 		}
@@ -51,16 +52,16 @@ public class DiceRoller {
 	
 	public int rollDice(DiceCategory category) {	
 		
-		ArrayList<DiceCategory> testRollList = testRolls.get(category.Name());
+		List<DiceCategory> testRollList = testRolls.get(category.name());
 		if(testRollList != null){
 			while (testRollList.size() > 0) {
 				DiceCategory testRoll = testRollList.remove(0);
-				if (testRoll.TestRoll() <= category.DiceType()) {
-					return testRoll.TestRoll();
+				if (testRoll.testRoll() <= category.diceType()) {
+					return testRoll.testRoll();
 				}
 			}
 		}
-		return rollDice(category.DiceType());
+		return rollDice(category.diceType());
 	}
 
 	private int[] rollDice(int pNumber, DiceCategory diceCat) {
@@ -264,23 +265,15 @@ public class DiceRoller {
 	}
 	
 	public void addTestRoll(int roll) {
-		ArrayList<DiceCategory> testRollList = testRolls.get("General");
-		
-		if(testRollList == null){
-			testRollList = new ArrayList<DiceCategory>();
-		}
-		
+		List<DiceCategory> testRollList = testRolls.computeIfAbsent("General", s ->  new ArrayList<DiceCategory>());		
 		testRollList.add(new DiceCategory(roll));
 		testRolls.putIfAbsent("General", testRollList);
 	}
 
 	public void addTestRoll(DiceCategory category) {
-		ArrayList<DiceCategory> testRollList = testRolls.get(category.Name());
-		if(testRollList == null){
-			testRollList = new ArrayList<DiceCategory>();
-		}		
+		List<DiceCategory> testRollList = testRolls.computeIfAbsent(category.name(), s ->  new ArrayList<DiceCategory>());
 		testRollList.add(category);
-		testRolls.putIfAbsent(category.Name(), testRollList);
+		testRolls.putIfAbsent(category.name(), testRollList);
 	}
 	
 	public void addTestRoll(String command, Game game, Team team) {
@@ -290,7 +283,7 @@ public class DiceRoller {
 		}
 	}
 
-	public Map<String, ArrayList<DiceCategory>> getTestRolls() {
+	public Map<String, List<DiceCategory>> getTestRolls() {
 		return testRolls;
 	}
 
