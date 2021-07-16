@@ -98,6 +98,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 		Optional<Skill> gazeSkill = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
 		if (!doGaze) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
+			game.setDefenderId(null);
 			return;
 		}
 		boolean gotoEndLabel = true;
@@ -138,6 +139,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 		if (gotoEndLabel) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+			game.setDefenderId(null);
 		}
 	}
 
