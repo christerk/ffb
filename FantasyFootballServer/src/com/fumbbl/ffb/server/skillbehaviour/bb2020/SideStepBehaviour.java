@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.bb2020.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
-import com.fumbbl.ffb.skill.SideStep;
+import com.fumbbl.ffb.skill.bb2020.SideStep;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)

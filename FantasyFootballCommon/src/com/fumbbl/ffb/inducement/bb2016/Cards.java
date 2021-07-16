@@ -32,7 +32,7 @@ import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.Pro;
 import com.fumbbl.ffb.skill.bb2016.SecretWeapon;
 import com.fumbbl.ffb.skill.Shadowing;
-import com.fumbbl.ffb.skill.SideStep;
+import com.fumbbl.ffb.skill.bb2016.SideStep;
 import com.fumbbl.ffb.skill.SureHands;
 import com.fumbbl.ffb.skill.bb2016.Accurate;
 import com.fumbbl.ffb.skill.bb2016.Bombardier;
