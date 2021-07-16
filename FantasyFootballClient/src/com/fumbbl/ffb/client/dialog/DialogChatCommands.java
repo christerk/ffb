@@ -211,7 +211,11 @@ public class DialogChatCommands extends Dialog {
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/roll &lt;roll1&gt; &lt;roll2&gt; &lt;roll3&gt; &lt;...&gt;")
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("determines the next dicerolls (separated by space).")
+			html.append("<td>").append(_FONT_OPEN).append("determines the next dicerolls (separated by space).<br>" +
+				"General roll values 1 2 3 4..... etc<br>" +
+				"Directional roll values n ne e se s sw w nw<br>" +
+				"Block roll values skull bothdown push stumble pow."
+					)
 					.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
