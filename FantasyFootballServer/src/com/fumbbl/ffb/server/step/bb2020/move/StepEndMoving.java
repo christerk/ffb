@@ -59,7 +59,7 @@ public class StepEndMoving extends AbstractStep {
 	private FieldCoordinate[] fMoveStack;
 	private FieldCoordinate moveStart;
 	private PlayerAction fDispatchPlayerAction;
-	private String fBlockDefenderId;
+	private String fBlockDefenderId, thrownPlayerId;
 
 	public StepEndMoving(GameState pGameState) {
 		super(pGameState);
@@ -111,6 +111,10 @@ public class StepEndMoving extends AbstractStep {
 					return true;
 				case USING_CHAINSAW:
 					usingChainsaw = pParameter.getValue() != null && (boolean) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case THROWN_PLAYER_ID:
+					thrownPlayerId = (String) pParameter.getValue();
 					consume(pParameter);
 					return true;
 				default:
@@ -238,12 +242,12 @@ public class StepEndMoving extends AbstractStep {
 				case THROW_TEAM_MATE:
 				case THROW_TEAM_MATE_MOVE:
 					((ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name()))
-						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState()));
+						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), thrownPlayerId, false));
 					return true;
 				case KICK_TEAM_MATE:
 				case KICK_TEAM_MATE_MOVE:
 					((ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name()))
-						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), true));
+						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), thrownPlayerId, true));
 					return true;
 				case GAZE:
 					((Move) factory.forName(SequenceGenerator.Type.Move.name()))
@@ -268,6 +272,7 @@ public class StepEndMoving extends AbstractStep {
 		IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, fDispatchPlayerAction);
 		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
+		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, thrownPlayerId);
 		return jsonObject;
 	}
 
@@ -282,6 +287,7 @@ public class StepEndMoving extends AbstractStep {
 		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
 		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
 		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
+		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -197,6 +197,8 @@ public class StepInitMoving extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
 						&& (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE || actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)) {
 
+						publishParameter(
+							new StepParameter(StepParameterKey.THROWN_PLAYER_ID, throwTeamMateCommand.getThrownPlayerId()));
 						PlayerAction ttmAction = throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
 						commandStatus = dispatchPlayerAction(ttmAction);
 					}
