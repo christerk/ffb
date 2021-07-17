@@ -20,7 +20,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
  * Step in block sequence to handle skill DODGE.
  *
  * Expects stepParameter OLD_DEFENDER_STATE to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
@@ -31,7 +31,7 @@ public class StepBlockDodge extends AbstractStep {
 		public PlayerState oldDefenderState;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepBlockDodge(GameState pGameState) {
 		super(pGameState);
@@ -46,7 +46,6 @@ public class StepBlockDodge extends AbstractStep {
 	@Override
 	public void start() {
 		super.start();
-		state = new StepState();
 		executeStep();
 	}
 
