@@ -1,12 +1,20 @@
 package com.fumbbl.ffb.server;
 
+import com.fumbbl.ffb.BlockDiceCategory;
+import com.fumbbl.ffb.DiceCategory;
+import com.fumbbl.ffb.DiceCategoryFactory;
+import com.fumbbl.ffb.DirectionDiceCategory;
 import com.fumbbl.ffb.inducement.Card;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.util.rng.Fortuna;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -15,11 +23,13 @@ import java.util.List;
 public class DiceRoller {
 
 	private final GameState fGameState;
-	private final List<Integer> fTestRolls;
+	private final Map<String, List<DiceCategory>> testRolls;
+
+
 
 	public DiceRoller(GameState pGameState) {
 		fGameState = pGameState;
-		fTestRolls = new ArrayList<>();
+		testRolls = new HashMap<>();
 	}
 
 	public GameState getGameState() {
@@ -28,15 +38,40 @@ public class DiceRoller {
 
 	public int rollDice(int pType) {
 		Fortuna fortuna = getGameState().getServer().getFortuna();
-		while (fTestRolls.size() > 0) {
-			int testRoll = fTestRolls.remove(0);
-			if (testRoll <= pType) {
-				return testRoll;
+		List<DiceCategory> testRollList = testRolls.get("General");
+		if(testRollList != null){
+			while (testRollList.size() > 0) {
+				DiceCategory testRoll = testRollList.remove(0);
+				if (testRoll.testRoll() <= pType) {
+					return testRoll.testRoll();
+				}
 			}
 		}
 		return fortuna.getDieRoll(pType);
 	}
+	
+	public int rollDice(DiceCategory category) {	
+		
+		List<DiceCategory> testRollList = testRolls.get(category.name());
+		if(testRollList != null){
+			while (testRollList.size() > 0) {
+				DiceCategory testRoll = testRollList.remove(0);
+				if (testRoll.testRoll() <= category.diceType()) {
+					return testRoll.testRoll();
+				}
+			}
+		}
+		return rollDice(category.diceType());
+	}
 
+	private int[] rollDice(int pNumber, DiceCategory diceCat) {
+		int[] result = new int[pNumber];
+		for (int i = 0; i < pNumber; i++) {
+			result[i] = rollDice(diceCat);
+		}
+		return result;
+	}
+	
 	private int[] rollDice(int pNumber, int pType) {
 		int[] result = new int[pNumber];
 		for (int i = 0; i < pNumber; i++) {
@@ -122,7 +157,7 @@ public class DiceRoller {
 	}
 
 	public int[] rollBlockDice(int pNrOfDice) {
-		return rollDice(Math.abs(pNrOfDice), 6);
+		return rollDice(Math.abs(pNrOfDice), new BlockDiceCategory());
 	}
 
 	public int[] rollArmour() {
@@ -166,7 +201,7 @@ public class DiceRoller {
 	}
 
 	public int rollScatterDirection() {
-		return rollDice(8);
+		return rollDice(new DirectionDiceCategory());
 	}
 
 	public int rollThrowInDirection() {
@@ -226,23 +261,34 @@ public class DiceRoller {
 	}
 
 	public Card drawCard(CardDeck pDeck) {
-		return pDeck.draw(rollDice(pDeck.size()) - 1);
+		return pDeck.draw(rollDice(DiceCategoryFactory.forDiceSize(pDeck.size())) - 1);
+	}
+	
+	public void addTestRoll(int roll) {
+		List<DiceCategory> testRollList = testRolls.computeIfAbsent("General", s ->  new ArrayList<DiceCategory>());		
+		testRollList.add(new DiceCategory(roll));
+		testRolls.putIfAbsent("General", testRollList);
 	}
 
-	public void addTestRoll(int pRoll) {
-		fTestRolls.add(pRoll);
+	public void addTestRoll(DiceCategory category) {
+		List<DiceCategory> testRollList = testRolls.computeIfAbsent(category.name(), s ->  new ArrayList<DiceCategory>());
+		testRollList.add(category);
+		testRolls.putIfAbsent(category.name(), testRollList);
 	}
-
-	public int[] getTestRolls() {
-		int[] testRolls = new int[fTestRolls.size()];
-		for (int i = 0; i < fTestRolls.size(); i++) {
-			testRolls[i] = fTestRolls.get(i).intValue();
+	
+	public void addTestRoll(String command, Game game, Team team) {
+		DiceCategory category = DiceCategoryFactory.forCommandString(command, game, team);
+		if(category != null) {
+			addTestRoll(category);
 		}
+	}
+
+	public Map<String, List<DiceCategory>> getTestRolls() {
 		return testRolls;
 	}
 
 	public void clearTestRolls() {
-		fTestRolls.clear();
+		testRolls.clear();
 	}
 
 }
