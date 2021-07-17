@@ -14,7 +14,6 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -23,17 +22,19 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 	private String fThrownPlayerId;
 	private PassingDistance fPassingDistance;
 	private PassResult passResult;
+	private boolean isKick;
 
 	public ReportThrowTeamMateRoll() {
 	}
 
 	public ReportThrowTeamMateRoll(String pThrowerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled,
 	                               PassModifier[] pPassModifiers, PassingDistance pPassingDistance, String pThrownPlayerId,
-	                               PassResult passResult) {
+	                               PassResult passResult, boolean isKick) {
 		super(pThrowerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pPassModifiers);
 		fThrownPlayerId = pThrownPlayerId;
 		fPassingDistance = pPassingDistance;
 		this.passResult = passResult;
+		this.isKick = isKick;
 	}
 
 	public String getThrownPlayerId() {
@@ -46,6 +47,10 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 
 	public PassResult getPassResult() {
 		return passResult;
+	}
+
+	public boolean isKick() {
+		return isKick;
 	}
 
 	@Override
@@ -63,7 +68,7 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 
 	public IReport transform(IFactorySource source) {
 		return new ReportThrowTeamMateRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
-				getRollModifiers(), getPassingDistance(), getThrownPlayerId(), passResult);
+			getRollModifiers(), getPassingDistance(), getThrownPlayerId(), passResult, isKick);
 	}
 
 	// JSON serialization
@@ -74,6 +79,7 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 		IJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
 		IJsonOption.PASSING_DISTANCE.addTo(jsonObject, fPassingDistance);
 		IJsonOption.PASS_RESULT.addTo(jsonObject, passResult);
+		IJsonOption.KICKED.addTo(jsonObject, isKick);
 		return jsonObject;
 	}
 
@@ -84,6 +90,7 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
 		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(game, jsonObject);
 		passResult = (PassResult) IJsonOption.PASS_RESULT.getFrom(game, jsonObject);
+		isKick = IJsonOption.KICKED.getFrom(game, jsonObject);
 		return this;
 	}
 

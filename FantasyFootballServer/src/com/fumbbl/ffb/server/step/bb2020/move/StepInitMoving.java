@@ -2,7 +2,6 @@ package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
@@ -26,7 +25,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -37,8 +35,6 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.KickTeamMate;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -72,9 +68,6 @@ public class StepInitMoving extends AbstractStep {
 	private FieldCoordinate[] fMoveStack;
 	private String fGazeVictimId;
 	private boolean fEndTurn, fEndPlayerAction;
-
-	private String fKickedPlayerId;
-	private int fNumDice;
 
 	public StepInitMoving(GameState pGameState) {
 		super(pGameState);
@@ -202,8 +195,10 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_THROW_TEAM_MATE:
 					ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
-							&& (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)) {
-						commandStatus = dispatchPlayerAction(PlayerAction.THROW_TEAM_MATE);
+						&& (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE || actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)) {
+
+						PlayerAction ttmAction = throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
+						commandStatus = dispatchPlayerAction(ttmAction);
 					}
 					break;
 				case CLIENT_GAZE:
@@ -261,13 +256,6 @@ public class StepInitMoving extends AbstractStep {
 		} else if (StringTool.isProvided(fGazeVictimId)) {
 			game.setDefenderId(fGazeVictimId);
 			actingPlayer.setPlayerAction(PlayerAction.GAZE);
-			getResult().setNextAction(StepAction.NEXT_STEP);
-		} else if (StringTool.isProvided(fKickedPlayerId)) {
-			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-			((KickTeamMate) factory.forName(SequenceGenerator.Type.KickTeamMate.name()))
-					.pushSequence(new KickTeamMate.SequenceParams(getGameState(), fNumDice, fKickedPlayerId));
-			publishParameter(new StepParameter(StepParameterKey.KICKED_PLAYER_ID, fKickedPlayerId));
-			publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNumDice));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			if (ArrayTool.isProvided(fMoveStack)) {

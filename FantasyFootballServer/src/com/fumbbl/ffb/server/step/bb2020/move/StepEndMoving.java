@@ -25,7 +25,6 @@ import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Foul;
-import com.fumbbl.ffb.server.step.generator.KickTeamMate;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
@@ -147,6 +146,7 @@ public class StepEndMoving extends AbstractStep {
 					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
 					break;
 				case CLIENT_THROW_TEAM_MATE:
+				case CLIENT_KICK_TEAM_MATE:
 					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
 					break;
 				default:
@@ -242,8 +242,8 @@ public class StepEndMoving extends AbstractStep {
 					return true;
 				case KICK_TEAM_MATE:
 				case KICK_TEAM_MATE_MOVE:
-					((KickTeamMate) factory.forName(SequenceGenerator.Type.KickTeamMate.name()))
-						.pushSequence(new KickTeamMate.SequenceParams(getGameState()));
+					((ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name()))
+						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), true));
 					return true;
 				case GAZE:
 					((Move) factory.forName(SequenceGenerator.Type.Move.name()))

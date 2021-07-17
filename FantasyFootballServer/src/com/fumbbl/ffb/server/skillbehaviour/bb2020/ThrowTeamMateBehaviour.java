@@ -29,6 +29,7 @@ import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.ThrowTeamMate;
+
 import java.util.Set;
 
 @RulesCollection(Rules.BB2020)
@@ -79,9 +80,9 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
 						&& (step.getReRollSource() != null));
 					boolean successful = state.passResult == PassResult.ACCURATE || state.passResult == PassResult.INACCURATE;
-					
+
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
-						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult));
+						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult, state.kicked));
 					if (successful) {
 						handlePassResult(state.passResult, step);
 					} else {
