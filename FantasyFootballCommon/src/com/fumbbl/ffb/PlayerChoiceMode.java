@@ -6,9 +6,10 @@ package com.fumbbl.ffb;
 public enum PlayerChoiceMode implements INamedObject {
 
 	TENTACLES("tentacles"), SHADOWING("shadowing"), DIVING_TACKLE("divingTackle"), FEED("feed"),
-	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card", false), BLOCK("block"), MVP("mvp"),
-	ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
-	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false);
+	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card", false), BLOCK("block"),
+	MVP("mvp"), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
+	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
+	ASSIGN_TOUCHDOWN("assignTouchdown", false);
 
 	private final String name;
 	private final boolean usePlayerPosition;
@@ -72,6 +73,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case BLESSED_STATUE_OF_NUFFLE:
 				header.append("Select a player to receive the Blessed Statue of Nuffle");
 				break;
+			case ASSIGN_TOUCHDOWN:
+				header.append("Assign a touchdown from the conceding team to one your players");
+				break;
 			default:
 				break;
 		}
@@ -120,6 +124,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case BLESSED_STATUE_OF_NUFFLE:
 				title.append("Blessed Statue of Nuffle");
 				break;
+			case ASSIGN_TOUCHDOWN:
+				title.append("Touchdown from Concession");
+				break;
 			default:
 				break;
 		}
@@ -167,6 +174,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case BLESSED_STATUE_OF_NUFFLE:
 				message.append("Waiting for coach to choose a player to receive the Blessed Statue of Nuffle.");
+				break;
+			case ASSIGN_TOUCHDOWN:
+				message.append("Waiting for coach to assign touchdown");
 				break;
 			default:
 				break;

@@ -79,8 +79,12 @@ public final class StepInitEndGame extends AbstractStep {
 		}
 		GameResult gameResult = game.getGameResult();
 		if (gameResult.getTeamResultHome().hasConceded()) {
+			publishParameter(StepParameter.from(StepParameterKey.TOUCHDOWNS, gameResult.getTeamResultHome().getScore()));
+			publishParameter(StepParameter.from(StepParameterKey.TEAM_ID, game.getTeamAway().getId()));
 			adjustScore(gameResult.getTeamResultAway(), gameResult.getTeamResultHome());
 		} else if (gameResult.getTeamResultAway().hasConceded()) {
+			publishParameter(StepParameter.from(StepParameterKey.TOUCHDOWNS, gameResult.getTeamResultAway().getScore()));
+			publishParameter(StepParameter.from(StepParameterKey.TEAM_ID, game.getTeamHome().getId()));
 			adjustScore(gameResult.getTeamResultHome(), gameResult.getTeamResultAway());
 		}
 		game.setTurnMode(TurnMode.END_GAME);

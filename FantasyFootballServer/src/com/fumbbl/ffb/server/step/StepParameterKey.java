@@ -117,6 +117,7 @@ public enum StepParameterKey {
 	THROWN_PLAYER_STATE, // PlayerState
 	THROW_SCATTER, // Boolean
 	TOUCHBACK, // Boolean
+	TOUCHDOWNS, // Integer
 	TV_AWAY, // Integer
 	TV_HOME, // Integer
 	UPDATE_PERSISTENCE, // Boolean
