@@ -59,6 +59,8 @@ public class DirectionDiceCategory extends DiceCategory {
 		DirectionEnums transform() {
 			if(this.direction == Direction.NORTHEAST) { return fromDirection(Direction.NORTHWEST);}
 			else if(this.direction == Direction.SOUTHEAST) { return fromDirection(Direction.SOUTHWEST);}
+			else if(this.direction == Direction.EAST) { return fromDirection(Direction.WEST);}
+			else if(this.direction == Direction.WEST) { return fromDirection(Direction.EAST);}
 			else if(this.direction == Direction.NORTHWEST) { return fromDirection(Direction.NORTHEAST);}
 			else if(this.direction == Direction.SOUTHWEST) { return fromDirection(Direction.SOUTHEAST);}
 			return this;
