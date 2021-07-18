@@ -3,8 +3,8 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2016;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -23,7 +23,7 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Shadowing;
+import com.fumbbl.ffb.skill.bb2016.Shadowing;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 

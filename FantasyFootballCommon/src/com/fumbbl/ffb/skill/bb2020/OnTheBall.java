@@ -17,6 +17,7 @@ public class OnTheBall extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canMoveDuringKickOffScatter);
 		registerProperty(NamedProperties.canMoveWhenOpponentPasses);
+		registerConflictingProperty(NamedProperties.movesRandomly);
 
 	}
 

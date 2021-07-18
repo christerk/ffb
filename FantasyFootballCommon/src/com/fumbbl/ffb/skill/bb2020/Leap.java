@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.JumpContext;
@@ -34,6 +34,7 @@ public class Leap extends Skill {
 				return false;
 			}
 		});
+		registerConflictingProperty(NamedProperties.movesRandomly);
 	}
 
 }
