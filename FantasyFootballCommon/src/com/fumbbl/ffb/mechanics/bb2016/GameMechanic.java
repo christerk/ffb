@@ -8,6 +8,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.TurnData;
@@ -165,5 +166,26 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return 4;
 			}
 		};
+	}
+
+	@Override
+	public String calculatePlayerLevel(Game game, Player<?> player) {
+		PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
+		int oldSpps = playerResult.getCurrentSpps();
+		if (oldSpps > 175) {
+			return "Legend";
+		} else if (oldSpps > 75) {
+			return "Super Star";
+		} else if (oldSpps > 50) {
+			return "Star";
+		} else if (oldSpps > 30) {
+			return "Emerging";
+		} else if (oldSpps > 15) {
+			return "Veteran";
+		} else if (oldSpps > 5) {
+			return "Experienced";
+		} else {
+			return "Rookie";
+		}
 	}
 }
