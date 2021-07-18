@@ -24,8 +24,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
+	private final Player<?> divingTackler;
+
 	public InjuryTypeDropDodge() {
+		this(null);
+	}
+
+	public InjuryTypeDropDodge(Player<?> divingTackler) {
 		super(new DropDodge());
+		this.divingTackler = divingTackler;
 	}
 
 	@Override
@@ -57,7 +64,14 @@ public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 
 			avOrInjModifierSkill = players.stream().filter(player -> game.getFieldModel().getPlayerState(player).hasTacklezones())
 				.map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge))
-				.filter(Objects::nonNull).findFirst().orElse(null);
+				.filter(Objects::nonNull).findFirst().orElseGet(() -> {
+
+					if (divingTackler != null && game.getFieldModel().getPlayerCoordinate(divingTackler).equals(fromCoordinate)) {
+						return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
+					}
+
+					return null;
+				});
 		}
 
 		if (!injuryContext.isArmorBroken() && avOrInjModifierSkill != null) {

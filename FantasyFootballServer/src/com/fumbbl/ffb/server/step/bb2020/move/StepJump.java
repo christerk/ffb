@@ -178,7 +178,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		actingPlayer.setJumping(false);
 		actingPlayer.setHasJumped(true);
 		actingPlayer.markSkillUsed(NamedProperties.canLeap);
-		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump()));
+		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropJump(game.getDefender())));
 		if (roll > 1) {
 			publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, moveStart));
 		} else {

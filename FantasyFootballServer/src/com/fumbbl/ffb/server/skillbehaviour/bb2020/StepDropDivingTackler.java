@@ -88,6 +88,7 @@ public class StepDropDivingTackler extends AbstractStep {
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
 		}
 		// reset DivingTackle & Shadowing attributes
+		publishParameter(StepParameter.from(StepParameterKey.PLAYER_ID, game.getDefenderId()));
 		game.setDefenderId(null);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
