@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.inducement;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -15,7 +15,6 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.bb2020.StepCheckStalling;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.EndTurn;
@@ -24,15 +23,15 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
  * Last step in the inducement sequence. Consumes all expected stepParameters.
- * 
+ * <p>
  * Expects stepParameter END_INDUCEMENT_PHASE to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step. Expects
  * stepParameter HOME_TEAM to be set by a preceding step. Expects stepParameter
  * INDUCEMENT_PHASE to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepEndInducement extends AbstractStep {
 
 	private boolean fEndInducementPhase;
@@ -52,24 +51,24 @@ public final class StepEndInducement extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case HOME_TEAM:
-				fHomeTeam = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case INDUCEMENT_PHASE:
-				fInducementPhase = (InducementPhase) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case END_INDUCEMENT_PHASE:
-				fEndInducementPhase = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			default:
-				break;
+				case HOME_TEAM:
+					fHomeTeam = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case INDUCEMENT_PHASE:
+					fInducementPhase = (InducementPhase) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case END_INDUCEMENT_PHASE:
+					fEndInducementPhase = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case END_TURN:
+					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -88,13 +87,13 @@ public final class StepEndInducement extends AbstractStep {
 		}
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		EndTurn endTurnGenerator = ((EndTurn)factory.forName(SequenceGenerator.Type.EndTurn.name()));
+		EndTurn endTurnGenerator = ((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()));
 		SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
 		if (fEndTurn) {
 			endTurnGenerator.pushSequence(endTurnParams);
 		} else if (fEndInducementPhase) {
 			switch (fInducementPhase) {
-				case END_OF_OWN_TURN:
+				case END_OF_OPPONENT_TURN:
 					endTurnGenerator.pushSequence(endTurnParams);
 					break;
 				case START_OF_OWN_TURN:
@@ -105,7 +104,7 @@ public final class StepEndInducement extends AbstractStep {
 					break;
 			}
 		} else {
-			((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name())).pushSequence(new Inducement.SequenceParams(getGameState(), fInducementPhase, fHomeTeam));
+			((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name())).pushSequence(new Inducement.SequenceParams(getGameState(), fInducementPhase, fHomeTeam));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

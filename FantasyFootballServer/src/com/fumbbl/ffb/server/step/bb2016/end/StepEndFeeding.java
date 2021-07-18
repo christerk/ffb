@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.end;
+package com.fumbbl.ffb.server.step.bb2016.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -19,10 +19,10 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
-import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
@@ -33,7 +33,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepEndFeeding extends AbstractStep {
 
 	private boolean fEndPlayerAction;
@@ -90,7 +90,7 @@ public class StepEndFeeding extends AbstractStep {
 			}
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
 			((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
-				.pushSequence(new com.fumbbl.ffb.server.step.generator.Pass.SequenceParams(getGameState(), game.getPassCoordinate()));
+				.pushSequence(new Pass.SequenceParams(getGameState(), game.getPassCoordinate()));
 		} else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 		} else {

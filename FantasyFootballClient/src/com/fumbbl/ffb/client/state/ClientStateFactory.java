@@ -273,7 +273,7 @@ public class ClientStateFactory {
 					}
 					break;
 				case WIZARD:
-					if (game.isHomePlaying()) {
+					if (game.isHomePlaying() || getClient().getClientData().getWizardSpell() != null) {
 						clientStateId = ClientStateId.WIZARD;
 					} else {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
