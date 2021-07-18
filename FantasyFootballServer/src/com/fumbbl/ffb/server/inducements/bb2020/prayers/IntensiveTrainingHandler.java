@@ -37,7 +37,9 @@ public class IntensiveTrainingHandler extends DialogPrayerHandler {
 		List<SkillCategory> categories = Arrays.asList(player.getPosition().getSkillCategories(false));
 		SkillFactory skillFactory = gameState.getGame().getFactory(FactoryType.Factory.SKILL);
 		List<Skill> skills = skillFactory.getSkills().stream()
-				.filter(skill -> categories.contains(skill.getCategory()))
+			.filter(skill -> categories.contains(skill.getCategory())
+				&& !Arrays.asList(player.getSkills()).contains(skill)
+				&& skill.canBeAssignedTo(player))
 				.sorted(Comparator.comparing(Skill::getName))
 				.collect(Collectors.toList());
 		if (!skills.isEmpty()) {

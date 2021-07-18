@@ -245,11 +245,15 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract void removeTemporaryModifiers(String source);
 
-	public Set<Skill> getSkillsIncludingTemporaryOnes() {
+	public List<Skill> getSkillsIncludingTemporaryOnesWithDuplicates() {
 		return Stream.concat(
 			getTemporarySkills().values().stream().flatMap(Collection::stream).map(SkillWithValue::getSkill),
 			Arrays.stream(getSkills())
-		).collect(Collectors.toSet());
+		).collect(Collectors.toList());
+	}
+
+	public Set<Skill> getSkillsIncludingTemporaryOnes() {
+		return new HashSet<>(getSkillsIncludingTemporaryOnesWithDuplicates());
 	}
 
 	protected abstract Map<String, Set<SkillWithValue>> getTemporarySkills();
@@ -259,6 +263,13 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract void removeTemporarySkills(String source);
 
 	public boolean hasSkillProperty(ISkillProperty property) {
+		return Stream.concat(
+			getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),
+			getTemporaryProperties().values().stream().flatMap(Collection::stream)
+		).anyMatch(prop -> prop.equals(property));
+	}
+
+	public boolean hasSkill(ISkillProperty property) {
 		return Stream.concat(
 			getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),
 			getTemporaryProperties().values().stream().flatMap(Collection::stream)
@@ -301,7 +312,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	public List<SkillDisplayInfo> skillInfos() {
-		return getSkillsIncludingTemporaryOnes().stream()
+		return getSkillsIncludingTemporaryOnesWithDuplicates().stream()
 			.flatMap(s -> skillInfo(s).stream())
 			.sorted(Comparator.comparing(SkillDisplayInfo::getInfo))
 			.collect(Collectors.toList());

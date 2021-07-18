@@ -52,6 +52,7 @@ public abstract class Skill implements INamedObject {
 	private final List<ISkillProperty> skillProperties = new ArrayList<>();
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
 	private final int defaultSkillValue;
+	private final List<ISkillProperty> conflictingProperties = new ArrayList<>();
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
@@ -130,7 +131,9 @@ public abstract class Skill implements INamedObject {
 
 	protected void registerModifier(RightStuffModifier modifier) { rightStuffModifiers.add(modifier); }
 
-	protected void registerModifier(CasualtyModifier modifier) { casualtyModifiers.add(modifier); }
+	protected void registerModifier(CasualtyModifier modifier) {
+		casualtyModifiers.add(modifier);
+	}
 
 	protected void registerProperty(ISkillProperty property) {
 		skillProperties.add(property);
@@ -138,6 +141,10 @@ public abstract class Skill implements INamedObject {
 
 	protected void registerRerollSource(ReRolledAction action, ReRollSource source) {
 		rerollSources.put(action, source);
+	}
+
+	protected void registerConflictingProperty(ISkillProperty property) {
+		conflictingProperties.add(property);
 	}
 
 	public ISkillBehaviour<? extends Skill> getSkillBehaviour() {
@@ -266,9 +273,17 @@ public abstract class Skill implements INamedObject {
 	public SkillValueEvaluator evaluator() {
 		return SkillValueEvaluator.DEFAULT;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	protected boolean meetsRequirements(Player<?> player) {
+		return true;
+	}
+
+	public boolean canBeAssignedTo(Player<?> player) {
+		return meetsRequirements(player) && conflictingProperties.stream().noneMatch(player::hasSkillProperty);
 	}
 }

@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -13,6 +14,7 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -165,5 +167,29 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return 5;
 			}
 		};
+	}
+
+	@Override
+	public String calculatePlayerLevel(Game game, Player<?> player) {
+		int gainedSkills = (int) player.skillInfos().stream()
+			.filter(info -> info.getCategory() == SkillDisplayInfo.Category.PLAYER
+				&& info.getSkill().getCategory() != SkillCategory.STAT_DECREASE).count();
+
+		switch (gainedSkills) {
+			case 0:
+				return "Rookie";
+			case 1:
+				return "Experienced";
+			case 2:
+				return "Veteran";
+			case 3:
+				return "Emerging";
+			case 4:
+				return "Star";
+			case 5:
+				return "Super Star";
+			default:
+				return "Legend";
+		}
 	}
 }

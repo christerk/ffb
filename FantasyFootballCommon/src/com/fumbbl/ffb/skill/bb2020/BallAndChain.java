@@ -65,6 +65,13 @@ public class BallAndChain extends Skill {
 		registerProperty(new CancelSkillProperty(NamedProperties.forceRollBeforeBeingBlocked));
 		registerProperty(new CancelSkillProperty(NamedProperties.inflictsConfusion));
 		registerProperty(new CancelSkillProperty(NamedProperties.preventOpponentFollowingUp));
+		registerConflictingProperty(NamedProperties.forceSecondBlock);
+		registerConflictingProperty(NamedProperties.canPushBackToAnySquare);
+		registerConflictingProperty(NamedProperties.canAttemptToTackleDodgingPlayer);
+		registerConflictingProperty(NamedProperties.canLeap);
+		registerConflictingProperty(NamedProperties.canBlockTwoAtOnce);
+		registerConflictingProperty(NamedProperties.canMoveDuringKickOffScatter);
+		registerConflictingProperty(NamedProperties.canFollowPlayerLeavingTacklezones);
 	}
 
 }

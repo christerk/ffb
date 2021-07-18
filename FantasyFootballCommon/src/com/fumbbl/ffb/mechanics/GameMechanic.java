@@ -61,4 +61,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean isBlockActionAllowed(TurnMode turnMode);
 
 	public abstract PlayerStats zappedPlayerStats();
+
+	public abstract String calculatePlayerLevel(Game game, Player<?> player);
 }

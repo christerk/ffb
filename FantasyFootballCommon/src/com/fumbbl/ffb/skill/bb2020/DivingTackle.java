@@ -48,5 +48,6 @@ public class DivingTackle extends Skill {
 				return false;
 			}
 		});
+		registerConflictingProperty(NamedProperties.movesRandomly);
 	}
 }
