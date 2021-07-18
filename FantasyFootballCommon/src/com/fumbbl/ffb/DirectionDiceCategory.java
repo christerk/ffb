@@ -24,7 +24,7 @@ public class DirectionDiceCategory extends DiceCategory {
 	@Override
 	public boolean parseCommand(String command, Game game, Team team) {
 		super.testRoll = commandToDieRoll(command, game, team);
-		return super.testRoll != -1;
+		return super.testRoll != 0;
 	}
 	
 	static Integer commandToDieRoll(String command, Game game, Team team) {

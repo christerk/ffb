@@ -25,7 +25,7 @@ public class BlockDiceCategory extends DiceCategory {
 	}
 	
 	public static boolean isCommandValid(String command, Game game, Team team) {
-		return commandToDiceRoll(command, game, team) != -1;
+		return commandToDiceRoll(command, game, team) != 0;
 	}	
 	
 	@Override
