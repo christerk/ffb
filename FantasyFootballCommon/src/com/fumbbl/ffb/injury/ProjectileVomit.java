@@ -9,4 +9,8 @@ public class ProjectileVomit extends InjuryType {
 		super("projectileVomit", false, SendToBoxReason.PROJECTILE_VOMIT);
 	}
 
+	@Override
+	public boolean isVomit() {
+		return true;
+	}
 }

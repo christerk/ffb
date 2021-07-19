@@ -41,6 +41,8 @@ public class MightyBlow extends Skill {
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)
 					&& !context.isFoul()
+					&& !context.isStab()
+					&& !context.isVomit()
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
 					.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)
 						|| modifier.isRegisteredToSkillWithProperty(NamedProperties.blocksLikeChainsaw));

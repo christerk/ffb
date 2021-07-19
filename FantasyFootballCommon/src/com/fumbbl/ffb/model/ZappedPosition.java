@@ -10,6 +10,8 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.skill.Dodge;
 import com.fumbbl.ffb.xml.IXmlReadable;
@@ -25,15 +27,9 @@ public class ZappedPosition implements Position {
 
 	public static final String XML_TAG = "zappedPosition";
 
-	private int move = 5;
-	private int strength = 1;
-	private int agility = 4;
-	private int passing = 0;
-	private int armour = 4;
-	private List<Skill> skills = new ArrayList<>();
 
-	private String race = "Transmogrified Frog";
-	private String shortHand = "zf";
+	private PlayerStats playerStats;
+	private final List<Skill> skills = new ArrayList<>();
 
 	private RosterPosition originalPosition;
 
@@ -46,6 +42,7 @@ public class ZappedPosition implements Position {
 		skills.add(factory.forName("Stunty"));
 		skills.add(factory.forName("Very Long Legs"));
 		skills.add(factory.forName("Leap"));
+		playerStats = ((GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name())).zappedPlayerStats();
 	}
 
 	@Override
@@ -60,27 +57,27 @@ public class ZappedPosition implements Position {
 
 	@Override
 	public int getMovement() {
-		return move;
+		return playerStats.move();
 	}
 
 	@Override
 	public int getStrength() {
-		return strength;
+		return playerStats.strength();
 	}
 	
 	@Override
 	public int getAgility() {
-		return agility;
+		return playerStats.agility();
 	}
 	
 	@Override
 	public int getPassing() {
-		return passing;
+		return playerStats.passing();
 	}
 
 	@Override
 	public int getArmour() {
-		return armour;
+		return playerStats.armour();
 	}
 
 	@Override
@@ -95,7 +92,7 @@ public class ZappedPosition implements Position {
 
 	@Override
 	public String getShorthand() {
-		return shortHand;
+		return "zf";
 	}
 
 	@Override
@@ -110,6 +107,11 @@ public class ZappedPosition implements Position {
 
 	@Override
 	public String getSkillValue(Skill pSkill) {
+		return null;
+	}
+
+	@Override
+	public String getDisplayValue(Skill pSkill) {
 		return null;
 	}
 
@@ -165,7 +167,7 @@ public class ZappedPosition implements Position {
 
 	@Override
 	public String getRace() {
-		return race;
+		return "Transmogrified Frog";
 	}
 
 	@Override
@@ -227,6 +229,7 @@ public class ZappedPosition implements Position {
 	public ZappedPosition initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		originalPosition = new RosterPosition().initFrom(game, IJsonOption.ROSTER_POSITION.getFrom(game, jsonObject));
+		playerStats = ((GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name())).zappedPlayerStats();
 		return this;
 	}
 }

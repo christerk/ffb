@@ -157,6 +157,11 @@ public class DialogChatCommands extends Dialog {
 					.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
+			html.append("<td>").append(_FONT_BOLD_OPEN).append("/gameid").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			html.append("<td>").append(_FONT_OPEN).append("outputs the current game id.")
+					.append(_FONT_CLOSE).append("</td>\n");
+			html.append("</tr>\n");
+			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/injury &lt;injury&gt; &lt;playerlist&gt; ")
 					.append(_FONT_BOLD_CLOSE).append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN)
@@ -164,6 +169,7 @@ public class DialogChatCommands extends Dialog {
 					.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
+			
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/option &lt;name&gt; &lt;value&gt;").append(_FONT_BOLD_CLOSE)
 					.append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN).append("sets option with given name to given value.").append(_FONT_CLOSE)
@@ -186,9 +192,14 @@ public class DialogChatCommands extends Dialog {
 				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prayer &lt;roll&gt; &lt;index&gt;").append(_FONT_BOLD_CLOSE)
+			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prayer &lt;roll&gt; [&lt;playerNr|skillName&gt;]").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("adds the prayer for this roll to your team.<br>&lt;index&gt; is needed for prayers that require player or skill selection,<br>the element at the given index is selected.").append(_FONT_CLOSE)
+			html.append("<td>").append(_FONT_OPEN).append("adds the prayer for this roll to your team.<br>" +
+				"&lt;playerNumber|skillName&gt; is needed for prayers that require player or skill selection (would show a dialog during the game).<br>" +
+				"For a playerNumber the player with the corresponding roster number gains the prayer effect, if they are eligible for selection.<br>" +
+				"For the skillName that skill will be assigned to a random player if it is a primary skill.<br>" +
+				"skillName has the same format when adding removing skills<br>" +
+				"Should the prayer, player or the skill not be available for any reason there will be no effect.").append(_FONT_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
@@ -200,7 +211,11 @@ public class DialogChatCommands extends Dialog {
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/roll &lt;roll1&gt; &lt;roll2&gt; &lt;roll3&gt; &lt;...&gt;")
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("determines the next dicerolls (separated by space).")
+			html.append("<td>").append(_FONT_OPEN).append("determines the next dicerolls (separated by space).<br>" +
+				"General roll values 1 2 3 4..... etc<br>" +
+				"Directional roll values n ne e se s sw w nw<br>" +
+				"Block roll values skull bothdown push stumble pow."
+					)
 					.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");

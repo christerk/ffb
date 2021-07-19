@@ -37,7 +37,7 @@ import java.util.List;
 public class UtilServerStartGame {
 
 	public static boolean joinGameAsPlayerAndCheckIfReadyToStart(GameState pGameState, Session pSession, String pCoach,
-			boolean pHomeTeam) {
+			boolean pHomeTeam, List<String> pAccountProperties) {
 		Game game = pGameState.getGame();
 		FantasyFootballServer server = pGameState.getServer();
 		if ((game.getTeamAway() != null) && (game.getTeamHome() != null)
@@ -45,20 +45,21 @@ public class UtilServerStartGame {
 				&& game.getTeamAway().getId().equals(game.getTeamHome().getId())) {
 			server.getCommunication().sendStatus(pSession, ServerStatus.ERROR_SAME_TEAM, null);
 		} else {
-			return sendServerJoin(pGameState, pSession, pCoach, pHomeTeam, ClientMode.PLAYER) > 1;
+			return sendServerJoin(pGameState, pSession, pCoach, pHomeTeam, ClientMode.PLAYER, pAccountProperties) > 1;
 		}
 		return false;
 	}
 
 	public static int sendServerJoin(GameState pGameState, Session pSession, String pCoach, boolean pHomeTeam,
-			ClientMode pMode) {
+			ClientMode pMode, List<String> pAccountProperties) {
 
 		FantasyFootballServer server = pGameState.getServer();
 		SessionManager sessionManager = server.getSessionManager();
-		sessionManager.addSession(pSession, pGameState.getId(), pCoach, pMode, pHomeTeam);
+		sessionManager.addSession(pSession, pGameState.getId(), pCoach, pMode, pHomeTeam, pAccountProperties);
 
 		List<String> playerList = new ArrayList<>();
 
+		int numVisibleSpectators = 0;
 		Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
 		for (Session session : sessions) {
 			String coach = sessionManager.getCoachForSession(session);
@@ -69,11 +70,16 @@ public class UtilServerStartGame {
 				} else {
 					playerList.add(coach);
 				}
+			} else if (!sessionManager.isSessionAdmin(session)) {
+				numVisibleSpectators++;
 			}
 		}
 		String[] players = playerList.toArray(new String[0]);
 
-		server.getCommunication().sendJoin(sessions, pCoach, pMode, players, sessions.length - playerList.size());
+		boolean silentJoin = pMode == ClientMode.SPECTATOR && pAccountProperties.contains("ADMIN");
+		if (!silentJoin) {
+			server.getCommunication().sendJoin(sessions, pCoach, pMode, players, numVisibleSpectators);
+		}
 
 		sendUserSettings(pGameState, pCoach, pSession);
 

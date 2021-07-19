@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.generator.bb2016;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -10,6 +8,8 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class Pass extends com.fumbbl.ffb.server.step.generator.Pass {
@@ -25,7 +25,7 @@ public class Pass extends com.fumbbl.ffb.server.step.generator.Pass {
 			from(StepParameterKey.TARGET_COORDINATE, params.getTargetCoordinate()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
-		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
 		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
 		sequence.add(StepId.BOMBARDIER);

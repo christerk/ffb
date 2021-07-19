@@ -25,6 +25,10 @@ public abstract class ThrowTeamMate extends SequenceGenerator<ThrowTeamMate.Sequ
 			this(gameState, null, null, false);
 		}
 
+		public SequenceParams(GameState gameState, String thrownPlayerId, boolean kicked) {
+			this(gameState, thrownPlayerId, null, kicked);
+		}
+
 		public String getThrownPlayerId() {
 			return thrownPlayerId;
 		}

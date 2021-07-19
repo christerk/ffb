@@ -6,6 +6,7 @@ import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerChoiceMode;
@@ -15,7 +16,6 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.CatchModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -244,8 +244,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay()
 					&& (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL)
 							|| game.isActive(NamedProperties.droppedBallCausesArmourRoll))) {
-				InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(), null,
-						playerUnderBall, game.getFieldModel().getBallCoordinate(), null, null, ApothecaryMode.CATCHER);
+				InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(false), null,
+					playerUnderBall, game.getFieldModel().getBallCoordinate(), null, null, ApothecaryMode.CATCHER);
 				getGameState().pushCurrentStepOnStack();
 				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 				((SpikedBallApo) factory.forName(SequenceGenerator.Type.SpikedBallApo.name()))

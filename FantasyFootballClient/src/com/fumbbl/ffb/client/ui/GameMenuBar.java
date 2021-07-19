@@ -73,7 +73,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private static final String[] _SAVED_USER_SETTINGS = { IClientProperty.SETTING_SOUND_MODE,
 			IClientProperty.SETTING_SOUND_VOLUME, IClientProperty.SETTING_ICONS, IClientProperty.SETTING_CHATLOG,
-			IClientProperty.SETTING_AUTOMOVE, IClientProperty.SETTING_PITCH_CUSTOMIZATION,
+			IClientProperty.SETTING_AUTOMOVE, IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientProperty.SETTING_PITCH_CUSTOMIZATION,
 			IClientProperty.SETTING_PITCH_MARKINGS, IClientProperty.SETTING_TEAM_LOGOS, IClientProperty.SETTING_PITCH_WEATHER,
 			IClientProperty.SETTING_RANGEGRID };
 
@@ -103,6 +103,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final JRadioButtonMenuItem fAutomoveOnMenuItem;
 	private final JRadioButtonMenuItem fAutomoveOffMenuItem;
+	
+	private final JRadioButtonMenuItem fBlitzPanelOnMenuItem;
+	private final JRadioButtonMenuItem fBlitzPanelOffMenuItem;
+
+
 
 	private final JRadioButtonMenuItem fCustomPitchMenuItem;
 	private final JRadioButtonMenuItem fDefaultPitchMenuItem;
@@ -283,16 +288,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		ButtonGroup automoveGroup = new ButtonGroup();
 
-		fAutomoveOnMenuItem = new JRadioButtonMenuItem("Automove on");
+		fAutomoveOnMenuItem = new JRadioButtonMenuItem("Enable");
 		fAutomoveOnMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOnMenuItem);
 		fAutomoveMenu.add(fAutomoveOnMenuItem);
 
-		fAutomoveOffMenuItem = new JRadioButtonMenuItem("Automove off");
+		fAutomoveOffMenuItem = new JRadioButtonMenuItem("Disable");
 		fAutomoveOffMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOffMenuItem);
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
+		
+		ButtonGroup blitzTargetPanelGroup = new ButtonGroup();
+		JMenu blitzTargetPanelMenu = new JMenu("Blitz Target Panel");
+		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_P);
+		fUserSettingsMenu.add(blitzTargetPanelMenu);
 
+		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem("Enable");
+		fBlitzPanelOnMenuItem.addActionListener(this);
+		blitzTargetPanelGroup.add(fBlitzPanelOnMenuItem);
+		blitzTargetPanelMenu.add(fBlitzPanelOnMenuItem);
+
+		fBlitzPanelOffMenuItem = new JRadioButtonMenuItem("Disable");
+		fBlitzPanelOffMenuItem.addActionListener(this);
+		blitzTargetPanelGroup.add(fBlitzPanelOffMenuItem);
+		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
+		
 		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		fUserSettingsMenu.add(fPitchMenu);
@@ -467,6 +487,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String automoveSetting = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
+		
+		String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
+		fBlitzPanelOnMenuItem.setSelected(true);
+		fBlitzPanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting));
 
 		String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
@@ -569,6 +593,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(IClientProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_ON);
 			saveUserSettings(false);
 		}
+		if (source == fBlitzPanelOffMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
+			saveUserSettings(false);
+		}
+		if (source == fBlitzPanelOnMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON);
+			saveUserSettings(false);
+		}
 		if (source == fCustomPitchMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
 			saveUserSettings(true);
@@ -652,7 +684,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 	}
 
-	private void saveUserSettings(boolean pUserinterfaceInit) {
+	public void saveUserSettings(boolean pUserinterfaceInit) {
 		String[] settingValues = new String[_SAVED_USER_SETTINGS.length];
 		for (int i = 0; i < _SAVED_USER_SETTINGS.length; i++) {
 			settingValues[i] = getClient().getProperty(_SAVED_USER_SETTINGS[i]);

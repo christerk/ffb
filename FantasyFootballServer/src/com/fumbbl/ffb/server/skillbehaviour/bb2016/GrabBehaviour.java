@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.bb2016.StepPushback;
 import com.fumbbl.ffb.server.step.bb2016.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
-import com.fumbbl.ffb.skill.Grab;
+import com.fumbbl.ffb.skill.bb2016.Grab;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 

@@ -1,12 +1,5 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -18,6 +11,13 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class JumpMechanic extends com.fumbbl.ffb.mechanics.JumpMechanic {
 	@Override
@@ -27,13 +27,13 @@ public class JumpMechanic extends com.fumbbl.ffb.mechanics.JumpMechanic {
 
 	@Override
 	public boolean canStillJump(Game game, ActingPlayer actingPlayer) {
-		return UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-			|| (!actingPlayer.hasJumped() && hasProneOrStunnedPlayersAdjacent(game, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
+		return (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
+			|| (!actingPlayer.hasJumped() && hasProneOrStunnedPlayersAdjacent(game, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())))) && !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.movesRandomly);
 	}
 
 	@Override
 	public boolean canJump(Game game, Player<?> player, FieldCoordinate coordinate) {
-		return player.hasSkillProperty(NamedProperties.canLeap) || hasProneOrStunnedPlayersAdjacent(game, coordinate);
+		return (player.hasSkillProperty(NamedProperties.canLeap) || hasProneOrStunnedPlayersAdjacent(game, coordinate)) && !player.hasSkillProperty(NamedProperties.movesRandomly);
 	}
 
 	@Override

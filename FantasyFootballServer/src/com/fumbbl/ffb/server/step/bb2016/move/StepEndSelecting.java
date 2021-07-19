@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -23,14 +24,15 @@ import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.BlitzMove;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.Pass;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.Foul;
 import com.fumbbl.ffb.server.step.generator.KickTeamMate;
 import com.fumbbl.ffb.server.step.generator.Move;
+import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Last step in select sequence. Consumes all expected stepParameters.
@@ -181,10 +183,11 @@ public final class StepEndSelecting extends AbstractStep {
 	private void dispatchPlayerAction(PlayerAction pPlayerAction, boolean pWithParameter) {
 		Game game = getGameState().getGame();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
 
-		if (pPlayerAction == null) {
+		if (pPlayerAction == null || (pPlayerAction == PlayerAction.MOVE && playerState.isRooted() && UtilPlayer.canGaze(game, game.getActingPlayer().getPlayer()))) {
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-					.pushSequence(new Select.SequenceParams(getGameState(), false));
+				.pushSequence(new Select.SequenceParams(getGameState(), false));
 			return;
 		}
 		Pass passGenerator = (Pass) factory.forName(SequenceGenerator.Type.Pass.name());
@@ -248,6 +251,11 @@ public final class StepEndSelecting extends AbstractStep {
 				}
 				break;
 			case MOVE:
+				if (game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).isRooted()) {
+					endGenerator.pushSequence(endParams);
+					break;
+				}
+				// fall through
 			case FOUL_MOVE:
 			case PASS_MOVE:
 			case THROW_TEAM_MATE_MOVE:

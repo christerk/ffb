@@ -16,6 +16,7 @@ public interface IClientProperty {
 	String SETTING_ICONS = "setting.icons";
 	String SETTING_CHATLOG = "setting.chatlog";
 	String SETTING_AUTOMOVE = "setting.automove";
+	String SETTING_BLITZ_TARGET_PANEL = "setting.blitzTargetPanel";
 	String SETTING_PITCH_CUSTOMIZATION = "setting.pitch.customization";
 	String SETTING_PITCH_MARKINGS = "setting.pitch.markings";
 	String SETTING_TEAM_LOGOS = "setting.pitch.teamLogos";

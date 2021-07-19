@@ -37,7 +37,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		typeLabel = new JLabel();
 	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel,
 		cardsListPanel = new JPanel(), cardsSummaryPanel = new JPanel();
-	private final JButton addCardButton = new JButton(), rerollChoiceButton= new JButton(), selectChoiceButton = new JButton(),
+	private final JButton addCardButton = new JButton(), rerollChoiceButton = new JButton(), selectChoiceButton = new JButton(),
 		choiceOneButton = new JButton(), choiceTwoButton = new JButton();
 	private final Map<CardType, Integer> nrOfCardsPerType;
 	private final int cardPrice;
@@ -45,10 +45,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private CardChoices cardChoices;
 	private CardChoice currentChoice;
 	private final boolean superInitialized;
+	private final DialogBuyCardsAndInducementsParameter parameter;
 
 	public DialogBuyCardsAndInducements(FantasyFootballClient pClient, DialogBuyCardsAndInducementsParameter pParameter) {
 
 		super(pClient, "Buy Cards And Inducements", pParameter.getTeamId(), pParameter.getAvailableGold(), false);
+		this.parameter = pParameter;
 		superInitialized = true;
 		this.cardChoices = pParameter.getCardChoices();
 
@@ -338,7 +340,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		this.availableGold = availableGold;
 		pettyCash = availableGold - treasury;
 		if (superInitialized) {
-			addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0);
+			addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0 && parameter.isCanBuyCards());
 		}
 		updateGoldValue();
 	}

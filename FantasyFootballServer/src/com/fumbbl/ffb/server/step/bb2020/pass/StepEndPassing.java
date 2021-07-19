@@ -164,7 +164,9 @@ public final class StepEndPassing extends AbstractStep {
 		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
 		if ((game.getThrower() != null) && UtilPlayer.hasBall(game, catcher)
-			&& game.getThrower().getTeam().hasPlayer(catcher)) {
+			&& game.getThrower().getTeam().hasPlayer(catcher)
+			&& game.getFieldModel().getPlayerCoordinate(catcher).equals(game.getPassCoordinate())
+		) {
 			PlayerResult throwerResult = game.getGameResult().getPlayerResult(game.getThrower());
 			if (fPassAccurate) {
 				getGameState().getPrayerState().addCompletion(throwerResult);
@@ -203,20 +205,23 @@ public final class StepEndPassing extends AbstractStep {
 				catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 			}
 			if (game.getThrower() == actingPlayer.getPlayer()) {
-				if (PassingDistance.QUICK_PASS == passingDistance
+				fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
+					|| (catcher == null)
+					|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
+					|| (fPassFumble && !dontDropFumble));
+
+				fEndPlayerAction |= !(PassingDistance.QUICK_PASS == passingDistance
 					&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterQuickPass)
 					&& !fPassFumble
-					&& UtilPlayer.isNextMovePossible(game, false)) {
+					&& UtilPlayer.isNextMovePossible(game, false));
+
+				if (fEndTurn || fEndPlayerAction) {
+					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
+				} else {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.PASS_MOVE, actingPlayer.isJumping());
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-				} else {
-					fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
-						|| (catcher == null)
-						|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
-						|| (fPassFumble && !dontDropFumble));
-					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 				}
 			} else {
 				game.setDefenderAction(null); // reset dump-off action

@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -35,15 +35,9 @@ public class Stunty extends Skill {
 		registerModifier(new StaticInjuryModifier("Stunty", 0, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
-				boolean applies = false;
 
-				if (!context.isStab() &&
-					!context.getDefender().hasSkillProperty(NamedProperties.preventDamagingInjuryModifications) &&
-					context.getDefender().hasSkillProperty(NamedProperties.isHurtMoreEasily)) {
-					applies = true;
-				}
-
-				return applies;
+				return !context.getDefender().hasSkillProperty(NamedProperties.preventDamagingInjuryModifications) &&
+					context.getDefender().hasSkillProperty(NamedProperties.isHurtMoreEasily);
 			}
 		});
 

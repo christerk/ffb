@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.bb2016.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
@@ -23,7 +24,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerConstant;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -306,7 +306,7 @@ public final class StepInitSelecting extends AbstractStep {
 			if (actingPlayer.getPlayerAction().isMoving()) {
 				if (actingPlayer.isStandingUp()
 					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
-					actingPlayer.setCurrentMove(Math.min(IServerConstant.MINIMUM_MOVE_TO_STAND_UP,
+					actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,
 						actingPlayer.getPlayer().getMovementWithModifiers()));
 					actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 					// go-for-it

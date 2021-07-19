@@ -16,6 +16,7 @@ import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,29 +41,30 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 	}
 
 	public Set<InjuryModifier> findInjuryModifiersWithoutNiggling(Game game, InjuryContext injuryContext, Player<?> attacker,
-	                                                              Player<?> defender, boolean isStab, boolean isFoul) {
+	                                                              Player<?> defender, boolean isStab, boolean isFoul, boolean isVomit) {
 
-		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
+		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul, isVomit);
 
 		return getInjuryModifiers(context);
 	}
 
 	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
-	                                               Player<?> defender, boolean isStab, boolean isFoul) {
-		Set<InjuryModifier> modifiers = findInjuryModifiersWithoutNiggling(game, injuryContext, attacker, defender, isStab, isFoul);
+	                                               Player<?> defender, boolean isStab, boolean isFoul, boolean isVomit) {
+		Set<InjuryModifier> modifiers = findInjuryModifiersWithoutNiggling(game, injuryContext, attacker, defender, isStab, isFoul, isVomit);
 
-		modifiers.add(getNigglingInjuryModifier(defender));
+		getNigglingInjuryModifier(defender).ifPresent(modifiers::add);
+
 		return modifiers;
 	}
 
-	public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {
+	public Optional<? extends InjuryModifier> getNigglingInjuryModifier(Player<?> pPlayer) {
 		if (pPlayer != null) {
 			long nigglingInjuries = Arrays.stream(pPlayer.getLastingInjuries()).filter(seriousInjury -> seriousInjury.getInjuryAttribute() == InjuryAttribute.NI).count();
 
 			return injuryModifiers.values().filter(modifier -> modifier.isNigglingInjuryModifier()
-				&& (modifier.getModifier(null, null) == nigglingInjuries)).findFirst().orElse(null);
+				&& (modifier.getModifier(null, null) == nigglingInjuries)).findFirst();
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public Set<SpecialEffectInjuryModifier> specialEffectInjuryModifiers(SpecialEffect specialEffect) {

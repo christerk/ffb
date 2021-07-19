@@ -27,7 +27,6 @@ public interface IIconProperty {
 	String DECORATION_BLITZ_TARGET_SELECTED = "decoration.selected.blitz.target";
 	String DECORATION_BLOCK_TARGET = "decoration.block.target";
 	String DECORATION_STAB_TARGET = "decoration.stab.target";
-	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
@@ -175,6 +174,7 @@ public interface IIconProperty {
 	String CURSOR_DODGE = "cursor.dodge";
 	String CURSOR_GFI_DODGE = "cursor.gfidodge";
 	String CURSOR_BLOCK = "cursor.block";
+	String CURSOR_INVALID_BLOCK = "cursor.invalidblock";
 	String CURSOR_PASS = "cursor.pass";
 	String CURSOR_FOUL = "cursor.foul";
 	String CURSOR_GAZE = "cursor.gaze";

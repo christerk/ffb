@@ -4,10 +4,10 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.TurnData;
 
@@ -26,7 +26,7 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract int minimumProRoll();
 
-	public abstract boolean eligibleForPro(ActingPlayer actingPlayer, Player<?> player);
+	public abstract boolean eligibleForPro(Game game, Player<?> player);
 
 	public abstract SendToBoxReason raisedByNurgleReason();
 
@@ -41,8 +41,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player);
 
 	public abstract boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate);
-
-	public abstract int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker);
 
 	public abstract boolean canRaiseDead(Roster roster);
 
@@ -59,4 +57,10 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean areSpecialBlockActionsAllowed(TurnMode turnMode);
 
 	public abstract boolean allowesCancellingGuard(TurnMode turnMode);
+
+	public abstract boolean isBlockActionAllowed(TurnMode turnMode);
+
+	public abstract PlayerStats zappedPlayerStats();
+
+	public abstract String calculatePlayerLevel(Game game, Player<?> player);
 }

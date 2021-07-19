@@ -24,9 +24,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
+
+	private final Player<?> divingTackler;
+
 	public InjuryTypeDropJump() {
-		super(new DropJump());
+		this(null);
 	}
+
+	public InjuryTypeDropJump(Player<?> divingTackler) {
+		super(new DropJump());
+		this.divingTackler = divingTackler;
+	}
+
 
 	@Override
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
@@ -55,7 +64,14 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 			}
 
 			avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump))
-				.filter(Objects::nonNull).findFirst().orElse(null);
+				.filter(Objects::nonNull).findFirst().orElseGet(() -> {
+
+					if (divingTackler != null && game.getFieldModel().getPlayerCoordinate(divingTackler).equals(fromCoordinate)) {
+						return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
+					}
+
+					return null;
+				});
 		}
 
 		if (!injuryContext.isArmorBroken() && avOrInjModifierSkill != null) {
@@ -68,7 +84,7 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 			if (avOrInjModifierSkill != null) {
 				avOrInjModifierSkill.getInjuryModifiers().forEach(injuryContext::addInjuryModifier);
 			}

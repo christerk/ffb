@@ -16,6 +16,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -28,11 +29,7 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.Block;
-import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.Move;
-import com.fumbbl.ffb.server.step.generator.PileDriver;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.*;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -82,15 +79,11 @@ public class StepEndBlocking extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), receivedCommand)) {
-			switch (receivedCommand.getId()) {
-				case CLIENT_PILE_DRIVER:
-					ClientCommandPileDriver commandPileDriver = (ClientCommandPileDriver) receivedCommand.getCommand();
-					targetPlayerId = commandPileDriver.getPlayerId();
-					usePileDriver = StringTool.isProvided(targetPlayerId);
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-					break;
-				default:
-					break;
+			if (receivedCommand.getId() == NetCommandId.CLIENT_PILE_DRIVER) {
+				ClientCommandPileDriver commandPileDriver = (ClientCommandPileDriver) receivedCommand.getCommand();
+				targetPlayerId = commandPileDriver.getPlayerId();
+				usePileDriver = StringTool.isProvided(targetPlayerId);
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -150,6 +143,7 @@ public class StepEndBlocking extends AbstractStep {
 		EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
 		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
 		Block blockGenerator = (Block) factory.forName(SequenceGenerator.Type.Block.name());
+		BlitzBlock blitzBlockGenerator = (BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name());
 		PileDriver pileDriver = (PileDriver) factory.forName(SequenceGenerator.Type.PileDriver.name());
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -190,7 +184,11 @@ public class StepEndBlocking extends AbstractStep {
 				&& UtilPlayer.isNextMovePossible(game, false)) {
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
-				blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null));
+				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(),  game.getDefenderId(), fUsingStab, null));
+				} else {
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null));
+				}
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
 				game.getFieldModel().clearDiceDecorations();

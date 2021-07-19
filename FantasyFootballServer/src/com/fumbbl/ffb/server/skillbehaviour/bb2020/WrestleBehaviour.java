@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillUse;
@@ -65,6 +64,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			private StepAction performWrestle(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
+				boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
 
 				if (state.usingWrestleAttacker) {
 					step.getResult()
@@ -73,7 +73,10 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 					step.getResult()
 						.addReport(new ReportSkillUse(game.getDefenderId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
 				} else {
-					if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
+					if(!defenderHasTacklezones && UtilCards.hasSkill(game.getDefender(), skill)) {
+						step.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skill, false, SkillUse.NO_TACKLEZONE));
+					}
+					else if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
 						step.getResult().addReport(new ReportSkillUse(null, skill, false, null));
 					}
 				}
@@ -95,8 +98,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			private StepAction askDefenderForWrestleUse(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-				boolean defenderCanUseSkill = UtilCards.hasSkill(game.getDefender(), skill) && !defenderState.isRooted() && defenderState.hasTacklezones();
+				boolean defenderCanUseSkill = UtilCards.hasSkill(game.getDefender(), skill) && state.oldDefenderState.hasTacklezones();
 				boolean actingPlayerIsBlitzing = actingPlayer.getPlayerAction() == PlayerAction.BLITZ;
 				if (!state.usingWrestleAttacker && defenderCanUseSkill
 					&& !(actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill))) {
@@ -112,8 +114,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			private StepAction askAttackerForWrestleUse(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				boolean attackerCanUseSkill = UtilCards.hasSkill(actingPlayer, skill) && !attackerState.isRooted();
+				boolean attackerCanUseSkill = UtilCards.hasSkill(actingPlayer, skill);
 				if (attackerCanUseSkill) {
 					UtilServerDialog.showDialog(step.getGameState(),
 						new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), skill, 0), false);

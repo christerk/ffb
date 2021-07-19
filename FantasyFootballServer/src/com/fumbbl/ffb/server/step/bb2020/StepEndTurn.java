@@ -105,6 +105,7 @@ public class StepEndTurn extends AbstractStep {
 	private boolean fNewHalf;
 	private boolean fEndGame;
 	private boolean fWithinSecretWeaponHandling;
+	private int turnNr, half;
 
 	public StepEndTurn(GameState pGameState) {
 		super(pGameState);
@@ -164,6 +165,11 @@ public class StepEndTurn extends AbstractStep {
 		game.getFieldModel().clearMultiBlockTargets();
 		UtilServerDialog.hideDialog(getGameState());
 		boolean isHomeTurnEnding = game.isHomePlaying();
+		if (turnNr == 0) {
+			// work around as UtilServer#startHalf is currently called before weapons are removed and we need these values for sendToBoxReason
+			turnNr = game.getTurnData().getTurnNr();
+			half = game.getHalf();
+		}
 
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
@@ -233,14 +239,6 @@ public class StepEndTurn extends AbstractStep {
 				} else {
 
 					switch (game.getTurnMode()) {
-						case NO_PLAYERS_TO_FIELD:
-							game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
-							game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
-							fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
-							game.setTurnMode(TurnMode.SETUP);
-							game.setSetupOffense(false);
-							fTouchdown = true;
-							break;
 						case KICKOFF:
 							game.setHomePlaying(!game.isHomePlaying());
 							game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
@@ -285,7 +283,6 @@ public class StepEndTurn extends AbstractStep {
 							getGameState().removeZappedPlayer(player);
 						}
 						PlayerState playerState = game.getFieldModel().getPlayerState(player);
-						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 						if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
 							KnockoutRecovery knockoutRecovery = recoverKnockout(player);
 							if (knockoutRecovery != null) {
@@ -374,18 +371,8 @@ public class StepEndTurn extends AbstractStep {
 					game.setTurnTime(0);
 				}
 
-				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
-				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
-
-				if (fNewHalf) {
-					deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
-				}
-
 				if (fNewHalf || fTouchdown) {
-					deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
 					reportSecretWeaponsUsed();
-					removeBrilliantCoachingReRolls(true);
-					removeBrilliantCoachingReRolls(false);
 				}
 
 			}
@@ -426,6 +413,18 @@ public class StepEndTurn extends AbstractStep {
 
 			if (!fEndGame && fRemoveUsedSecretWeapons) {
 				removeUsedSecretWeapons();
+			}
+
+			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
+			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
+
+			if (fNewHalf) {
+				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
+			}
+			if (fNewHalf || fTouchdown) {
+				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
+				removeBrilliantCoachingReRolls(true);
+				removeBrilliantCoachingReRolls(false);
 			}
 
 			game.startTurn();
@@ -553,8 +552,8 @@ public class StepEndTurn extends AbstractStep {
 				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.BANNED));
 				playerResult.setSendToBoxByPlayerId(null);
 				playerResult.setSendToBoxReason(SendToBoxReason.SECRET_WEAPON_BAN);
-				playerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
-				playerResult.setSendToBoxHalf(game.getHalf());
+				playerResult.setSendToBoxTurn(turnNr);
+				playerResult.setSendToBoxHalf(half);
 				UtilBox.putPlayerIntoBox(game, player);
 				playerResult.setHasUsedSecretWeapon(false);
 			}
@@ -603,8 +602,8 @@ public class StepEndTurn extends AbstractStep {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if ((player != null) && !turnData.isCoachBanned()) {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
-					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam());
-					int modifiedRoll = friendsWithTheRef ? roll + 1 : roll;
+					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.findTeam(player));
+					int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
 
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
 					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
@@ -776,6 +775,8 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.NEW_HALF.addTo(jsonObject, fNewHalf);
 		IServerJsonOption.END_GAME.addTo(jsonObject, fEndGame);
 		IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.addTo(jsonObject, fWithinSecretWeaponHandling);
+		IServerJsonOption.HALF.addTo(jsonObject, half);
+		IServerJsonOption.TURN_NR.addTo(jsonObject, turnNr);
 		return jsonObject;
 	}
 
@@ -794,6 +795,8 @@ public class StepEndTurn extends AbstractStep {
 		fEndGame = IServerJsonOption.END_GAME.getFrom(source, jsonObject);
 		Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(source, jsonObject);
 		fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
+		half = IServerJsonOption.HALF.getFrom(source, jsonObject);
+		turnNr = IServerJsonOption.TURN_NR.getFrom(source, jsonObject);
 		return this;
 	}
 

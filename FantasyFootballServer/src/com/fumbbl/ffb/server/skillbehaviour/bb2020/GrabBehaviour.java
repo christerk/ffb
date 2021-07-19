@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.bb2020.StepPushback;
 import com.fumbbl.ffb.server.step.bb2020.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
-import com.fumbbl.ffb.skill.Grab;
+import com.fumbbl.ffb.skill.bb2020.Grab;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -30,7 +30,7 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 	public GrabBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepPushback, StepState>(3) {
+		registerModifier(new StepModifier<StepPushback, StepState>(4) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepState state,

@@ -133,6 +133,11 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
+	public String getDisplayValueExcludingTemporaryOnes(Skill skill) {
+		return null;
+	}
+
+	@Override
 	public String getUrlPortrait() {
 		return originalPlayer.getUrlPortrait();
 	}

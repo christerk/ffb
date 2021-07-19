@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -94,25 +95,25 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		boolean doGaze = ((actingPlayer.getPlayerAction() == PlayerAction.GAZE) && (game.getDefender() != null));
-		Skill gazeSkill = null;
+		Optional<Skill> gazeSkill = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
 		if (!doGaze) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
+			game.setDefenderId(null);
 			return;
 		}
 		boolean gotoEndLabel = true;
 		if (ReRolledActions.HYPNOTIC_GAZE == getReRolledAction()) {
 			if ((getReRollSource() == null)
-					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+				|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 				doGaze = false;
 			}
 		} else {
-			gazeSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
-			doGaze = gazeSkill != null && !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
+			doGaze = gazeSkill.isPresent() && !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
 		}
-		if (doGaze && gazeSkill != null) {
-			actingPlayer.markSkillUsed(gazeSkill);
+		if (doGaze && gazeSkill.isPresent()) {
+			actingPlayer.markSkillUsed(gazeSkill.get());
 			int roll = getGameState().getDiceRoller().rollSkill();
-			GazeModifierFactory modifierFactory = new GazeModifierFactory();
+			GazeModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GAZE_MODIFIER);
 			Set<GazeModifier> gazeModifiers = modifierFactory.findModifiers(new GazeModifierContext(game, actingPlayer.getPlayer()));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollHypnoticGaze(actingPlayer.getPlayer(), gazeModifiers);
@@ -122,7 +123,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 				getResult().setSound(SoundId.HYPNO);
 			}
 			getResult().addReport(new ReportHypnoticGazeRoll(actingPlayer.getPlayerId(), successful,
-					roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0])));
+				roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0])));
 			if (successful) {
 				PlayerState oldVictimState = game.getFieldModel().getPlayerState(game.getDefender());
 				if (!oldVictimState.isConfused() && !oldVictimState.isHypnotized()) {
@@ -138,6 +139,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 		if (gotoEndLabel) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+			game.setDefenderId(null);
 		}
 	}
 

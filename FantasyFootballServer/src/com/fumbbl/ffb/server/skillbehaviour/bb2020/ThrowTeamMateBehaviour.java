@@ -3,11 +3,9 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
-import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -31,7 +29,6 @@ import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.ThrowTeamMate;
-import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
 
@@ -78,28 +75,23 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					TtmMechanic ttmMechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 					int minimumRoll = ttmMechanic.minimumRoll(passingDistance, passModifiers);
 					int roll = step.getGameState().getDiceRoller().rollSkill();
-					state.passResult = evaluatePass(thrower.getPassingWithModifiers(), roll, ttmMechanic.modifierSum(passingDistance, passModifiers));
+					boolean playerCanPass = thrower.getPassing() != 0;
+					state.passResult = evaluatePass(playerCanPass, thrower.getPassingWithModifiers(), roll, ttmMechanic.modifierSum(passingDistance, passModifiers));
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
 						&& (step.getReRollSource() != null));
 					boolean successful = state.passResult == PassResult.ACCURATE || state.passResult == PassResult.INACCURATE;
+
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
-						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult));
+						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult, state.kicked));
 					if (successful) {
 						handlePassResult(state.passResult, step);
 					} else {
-						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE) {
+						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE && playerCanPass) {
 							step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
-
-							ReRollSource unusedPassingReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PASS);
-							if (unusedPassingReroll != null) {
-								UtilServerDialog.showDialog(step.getGameState(),
-									new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(game), minimumRoll), false);
-							} else {
-								if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-									ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
-									handlePassResult(state.passResult, step);
-								}
-							}
+							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+								ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
+								handlePassResult(state.passResult, step);
+							}	
 						} else {
 							handlePassResult(state.passResult, step);
 						}
@@ -114,11 +106,13 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				step.getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 
-			private PassResult evaluatePass(int passValue, int roll, int modifierSum) {
+			private PassResult evaluatePass(boolean playerCanPass, int passValue, int roll, int modifierSum) {
+				if(!playerCanPass) {
+					return  PassResult.FUMBLE;
+				}
 				if (passValue <= 0) {
 					return PassResult.FUMBLE;
 				}
-
 				int resultAfterModifiers = roll - modifierSum;
 				if (roll == 1) {
 					return PassResult.FUMBLE;

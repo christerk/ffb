@@ -111,7 +111,11 @@ public class ClientStateFactory {
 		} else {
 			switch (game.getTurnMode()) {
 				case SELECT_BLITZ_TARGET:
-					clientStateId = ClientStateId.SELECT_BLITZ_TARGET;
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.SELECT_BLITZ_TARGET;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
 					break;
 				case BLITZ:
 				case REGULAR:
@@ -269,7 +273,7 @@ public class ClientStateFactory {
 					}
 					break;
 				case WIZARD:
-					if (game.isHomePlaying()) {
+					if (game.isHomePlaying() || getClient().getClientData().getWizardSpell() != null) {
 						clientStateId = ClientStateId.WIZARD;
 					} else {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;

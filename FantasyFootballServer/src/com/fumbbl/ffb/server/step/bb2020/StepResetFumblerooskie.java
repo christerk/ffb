@@ -25,7 +25,6 @@ import java.util.Arrays;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepResetFumblerooskie extends AbstractStep {
 
-	private final boolean checkPlayerAction = false;
 	private boolean resetForFailedBlock;
 
 	public StepResetFumblerooskie(GameState pGameState) {
@@ -57,34 +56,37 @@ public class StepResetFumblerooskie extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldModel fieldModel = game.getFieldModel();
 
-		if (actingPlayer.isFumblerooskiePending()
-			&& fieldModel.isBallMoving()
-			&& fieldModel.getBallCoordinate().equals(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()))
-		) {
+		if (!actingPlayer.isJumping()) {
 
-			boolean ballCarrierStanding = fieldModel.getPlayerState(actingPlayer.getPlayer()).canBeBlocked();
-
-			if (resetForFailedBlock && !ballCarrierStanding) {
-				// we have to publish this here since during drop players the player did not have the ball
-				publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, actingPlayer.getPlayer().getId()));
-			}
-
-			if (!resetForFailedBlock
-				|| !ballCarrierStanding // reset if player fell down to trigger bounce
-				|| !UtilPlayer.isNextMovePossible(game, actingPlayer.isJumping()) // do not reset if player can move on
+			if (actingPlayer.isFumblerooskiePending()
+				&& fieldModel.isBallMoving()
+				&& fieldModel.getBallCoordinate().equals(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()))
 			) {
-				fieldModel.setBallMoving(false);
+
+				boolean ballCarrierStanding = fieldModel.getPlayerState(actingPlayer.getPlayer()).canBeBlocked();
+
+				if (resetForFailedBlock && !ballCarrierStanding) {
+					// we have to publish this here since during drop players the player did not have the ball
+					publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, actingPlayer.getPlayer().getId()));
+				}
+
+				if (!resetForFailedBlock
+					|| !ballCarrierStanding // reset if player fell down to trigger bounce
+					|| !UtilPlayer.isNextMovePossible(game, actingPlayer.isJumping()) // do not reset if player can move on
+				) {
+					fieldModel.setBallMoving(false);
+				}
+
+				if ((!resetForFailedBlock)
+					|| (ballCarrierStanding && !UtilPlayer.isNextMovePossible(game, actingPlayer.isJumping()))
+				) {
+					getResult().setSound(SoundId.PICKUP);
+					getResult().addReport(new ReportFumblerooskie(actingPlayer.getPlayerId(), false));
+				}
 			}
 
-			if (!resetForFailedBlock
-				|| (ballCarrierStanding && !UtilPlayer.isNextMovePossible(game, actingPlayer.isJumping()))
-			) {
-				getResult().setSound(SoundId.PICKUP);
-				getResult().addReport(new ReportFumblerooskie(actingPlayer.getPlayerId(), false));
-			}
+			actingPlayer.setFumblerooskiePending(false);
 		}
-
-		actingPlayer.setFumblerooskiePending(false);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

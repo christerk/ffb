@@ -18,6 +18,7 @@ import com.fumbbl.ffb.server.step.IStep;
 public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 	public InjuryTypeChainsaw() {
 		super(new Chainsaw());
+		super.setFailedArmourPlacesProne(false);
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 			setInjury(pDefender, gameState, diceRoller);
 		} else {
 			injuryContext.setInjury(null);

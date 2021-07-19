@@ -32,7 +32,7 @@ public class Accurate extends Skill {
 			}};
 			@Override
 			public boolean appliesToContext(Skill skill, PassContext context) {
-				return shortDistances.contains(context.getDistance());
+				return shortDistances.contains(context.getDistance()) && !context.isDuringThrowTeamMate();
 			}
 		});
 	}

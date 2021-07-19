@@ -28,4 +28,9 @@ public abstract class SelectPlayerPrayerHandler extends DialogPrayerHandler {
 		game.getFieldModel().addPrayerEnhancements(player, handledPrayer());
 		reports.add(new ReportPlayerEvent(player.getId(), handledPrayer().eventMessage()));
 	}
+
+	@Override
+	protected boolean handled(Game game) {
+		return false;
+	}
 }

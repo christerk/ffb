@@ -80,10 +80,9 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				boolean refereeSpotsFoul = false;
 				if (!game.isActive(NamedProperties.foulBreaksArmourWithoutRoll) && (!UtilCards.hasSkill(actingPlayer, skill)
 					|| state.injuryResultDefender.injuryContext().isArmorBroken()
-					|| ((UtilCards.hasSkill(actingPlayer, skill)
-					&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
+					|| ((UtilCards.hasSkill(actingPlayer, skill) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
 					int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
-					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
+					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]) && !UtilCards.hasSkill(actingPlayer, skill);//Sneaky Git no longer gets sent off on AV roll
 				}
 				if (!refereeSpotsFoul && state.injuryResultDefender.injuryContext().isArmorBroken()) {
 					int[] injuryRoll = state.injuryResultDefender.injuryContext().getInjuryRoll();

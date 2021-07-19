@@ -4,15 +4,17 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,8 +50,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean eligibleForPro(ActingPlayer actingPlayer, Player<?> player) {
-		return actingPlayer.getPlayer() == player;
+	public boolean eligibleForPro(Game game, Player<?> player) {
+		return game.getActingPlayer().getPlayer() == player && game.getTurnMode() == TurnMode.REGULAR;
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public String[] concessionDialogMessages(boolean legalConcession) {
 		String[] messages = new String[4];
 		messages[0] = "Do you want to concede this game?";
-		messages[1] = "Your you will D3 dedicated fans (to a minimum of 1).";
+		messages[1] = "You will lose D3 dedicated fans (to a minimum of 1).";
 		messages[2] = "You will lose your player award and all your winnings.";
 		messages[3] = "Some valuable players (more than 3 advancements) may decide to leave your team.";
 		return messages;
@@ -90,13 +92,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
 		return !(fieldModel.wasMultiBlockTargetSquare(coordinate));
-	}
-
-	@Override
-	public int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker) {
-		boolean reduceAssists = usingMultiBlock && !game.getActingTeam().hasPlayer(attacker) &&
-			(game.getFieldModel().selectedMultiBlockTargets() < 1 || game.getFieldModel().isMultiBlockTarget(attacker.getId()));
-		return reduceAssists ? 1 : 0;
 	}
 
 	@Override
@@ -137,5 +132,64 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean allowesCancellingGuard(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
+	}
+
+	@Override
+	public boolean isBlockActionAllowed(TurnMode turnMode) {
+		return TurnMode.BLITZ != turnMode;
+	}
+
+	@Override
+	public PlayerStats zappedPlayerStats() {
+		return new PlayerStats() {
+			@Override
+			public int move() {
+				return 5;
+			}
+
+			@Override
+			public int strength() {
+				return 1;
+			}
+
+			@Override
+			public int agility() {
+				return 2;
+			}
+
+			@Override
+			public int passing() {
+				return 0;
+			}
+
+			@Override
+			public int armour() {
+				return 5;
+			}
+		};
+	}
+
+	@Override
+	public String calculatePlayerLevel(Game game, Player<?> player) {
+		int gainedSkills = (int) player.skillInfos().stream()
+			.filter(info -> info.getCategory() == SkillDisplayInfo.Category.PLAYER
+				&& info.getSkill().getCategory() != SkillCategory.STAT_DECREASE).count();
+
+		switch (gainedSkills) {
+			case 0:
+				return "Rookie";
+			case 1:
+				return "Experienced";
+			case 2:
+				return "Veteran";
+			case 3:
+				return "Emerging";
+			case 4:
+				return "Star";
+			case 5:
+				return "Super Star";
+			default:
+				return "Legend";
+		}
 	}
 }

@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.generator.bb2016;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -10,6 +8,8 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class Block extends com.fumbbl.ffb.server.step.generator.Block {
@@ -27,7 +27,7 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 			from(StepParameterKey.MULTI_BLOCK_DEFENDER_ID, params.getMultiBlockDefenderId()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));

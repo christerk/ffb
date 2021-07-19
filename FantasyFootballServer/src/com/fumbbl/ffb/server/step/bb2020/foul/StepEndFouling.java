@@ -76,7 +76,7 @@ public class StepEndFouling extends AbstractStep {
 		boolean isOnPitch = FieldCoordinateBounds.FIELD.isInBounds(getGameState().getGame().getFieldModel().getPlayerCoordinate(player));
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-		if (isOnPitch && player.hasSkillProperty(NamedProperties.canMoveAfterFoul)) {
+		if (!fEndTurn && isOnPitch && player.hasSkillProperty(NamedProperties.canMoveAfterFoul)) {
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 				.pushSequence(new Select.SequenceParams(getGameState(), true));
 			UtilServerSteps.changePlayerAction(this, player.getId(),

@@ -75,12 +75,12 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 		if (injuryContext.isArmorBroken()) {
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(factory.getNigglingInjuryModifier(pDefender));
+			factory.getNigglingInjuryModifier(pDefender).ifPresent(injuryContext::addInjuryModifier);
 
 			// do not use injuryModifiers on blocking own team-mate with b&c
 			if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
 				Set<InjuryModifier> armorModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
-					pDefender, isStab(), isFoul());
+					pDefender, isStab(), isFoul(), isVomit());
 				injuryContext.addInjuryModifiers(armorModifiers);
 			}
 

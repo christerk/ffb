@@ -25,7 +25,7 @@ public class Foul extends com.fumbbl.ffb.server.step.generator.Foul {
 			from(StepParameterKey.FOUL_DEFENDER_ID, params.getFouledDefenderId()), from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
-		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
+		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.BLOOD_LUST);
 		sequence.add(StepId.FOUL_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER));

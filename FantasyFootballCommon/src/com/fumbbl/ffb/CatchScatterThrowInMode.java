@@ -20,7 +20,9 @@ public enum CatchScatterThrowInMode implements INamedObject {
 	DEFLECTED_BOMB("deflectedBomb", true),
 	FAILED_CATCH("failedCatch", false),
 	FAILED_PICK_UP("failedPickUp", false),
+	FAILED_DEFLECTION_CONVERSION("failedDeflectionConversion", false),
 	SCATTER_BALL("scatterBall", false),
+	THREE_SQUARE_SCATTER("threeSquareScatter", false),
 	THROW_IN("throwIn", false);
 
 	private final String fName;

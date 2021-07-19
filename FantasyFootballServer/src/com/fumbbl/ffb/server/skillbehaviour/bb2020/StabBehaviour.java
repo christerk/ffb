@@ -3,8 +3,8 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -42,8 +42,8 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 				if (UtilCards.hasSkill(actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
 					step.getResult().setSound(SoundId.STAB);
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(),
-							actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
+					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(true),
+						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 					if (injuryResultDefender.injuryContext().isArmorBroken()) {
 						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
 					}

@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -286,7 +287,12 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 				nameGenerator = pValue;
 			}
 			if (_XML_TAG_RULE.equals(pXmlTag)) {
-				specialRules.add(SpecialRule.from(pValue));
+				SpecialRule rule = SpecialRule.from(pValue);
+				if (rule != null) {
+					specialRules.add(rule);
+				} else {
+					game.getApplicationSource().logError("Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
+				}
 			}
 		}
 		return complete;
@@ -310,7 +316,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
 		IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
 		IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
-		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().map(SpecialRule::name).collect(Collectors.toSet()));
+		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().filter(Objects::nonNull).map(SpecialRule::name).collect(Collectors.toSet()));
 
 		JsonArray positionArray = new JsonArray();
 		for (RosterPosition position : getPositions()) {
@@ -348,7 +354,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			}
 		}
 
-		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).map(SpecialRule::valueOf).collect(Collectors.toSet()));
+		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).filter(Objects::nonNull).map(SpecialRule::valueOf).collect(Collectors.toSet()));
 
 		return this;
 

@@ -345,8 +345,30 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameState initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public GameState initFrom(IFactorySource emptySource, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		
+		// Preinitialize the game so we can get the correct factories later.
+		setGame(null);
+		JsonObject gameObject = IServerJsonOption.GAME.getFrom(emptySource, jsonObject);
+		fCurrentStep = null;
+		IFactorySource source = null;
+		if (gameObject != null) {
+			Game newGame = new Game(getServer().getFactorySource(), getServer().getFactoryManager());
+			newGame.initFrom(emptySource, gameObject);
+			source = newGame.getRules();
+			setGame(newGame);
+			initRulesDependentMembers();
+			JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
+			if (currentStepObject != null) {
+				fCurrentStep = stepFactory.forJsonValue(source, currentStepObject);
+			}
+		}
+
+		if (source == null) {
+			source = emptySource;
+		}
+
 		fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(source, jsonObject);
 		fStepStack.clear();
 		JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(source, jsonObject);
@@ -357,19 +379,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(source, jsonObject);
 		if (gameLogObject != null) {
 			fGameLog.initFrom(source, gameLogObject);
-		}
-		fCurrentStep = null;
-		setGame(null);
-		JsonObject gameObject = IServerJsonOption.GAME.getFrom(source, jsonObject);
-		if (gameObject != null) {
-			Game newGame = new Game(getServer().getFactorySource(), getServer().getFactoryManager());
-			newGame.initFrom(source, gameObject);
-			setGame(newGame);
-			initRulesDependentMembers();
-			JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
-			if (currentStepObject != null) {
-				fCurrentStep = stepFactory.forJsonValue(source, currentStepObject);
-			}
 		}
 		String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject);
 		if (ids != null) {

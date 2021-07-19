@@ -26,7 +26,7 @@ public class KickTeamMate extends com.fumbbl.ffb.server.step.generator.KickTeamM
 			from(StepParameterKey.KICKED_PLAYER_ID, params.getKickedPlayerId()), from(StepParameterKey.NR_OF_DICE, params.getNumDice()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
-		sequence.add(StepId.TAKE_ROOT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
+		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.WILD_ANIMAL, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
 		sequence.add(StepId.BLOOD_LUST);
 		sequence.add(StepId.KICK_TEAM_MATE,

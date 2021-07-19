@@ -106,8 +106,8 @@ public class UtilServerReRoll {
 	public static boolean isProReRollAvailable(Player<?> player, Game game) {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		return (mechanic.eligibleForPro(game.getActingPlayer(), player) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
-				&& !playerState.hasUsedPro());
+		return (mechanic.eligibleForPro(game, player) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
+			&& !playerState.hasUsedPro());
 	}
 
 	public static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {

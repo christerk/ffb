@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -43,12 +43,17 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		Game game = getClient().getGame();
+		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
+		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (!actingPlayer.hasBlocked() && UtilPlayer.isValidBlitzTarget(game, pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
 		} else {
-			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
+			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_BLOCK);
 		}
+
+		showShortestPath(game.getFieldModel().getPlayerCoordinate(pPlayer), game, fieldComponent, actingPlayer);
+
 		return true;
 	}
 
@@ -58,39 +63,48 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(pCoordinate);
-		if (moveSquare != null) {
-			setCustomCursor(moveSquare);
-		} else {
-			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-			String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
-			if ((actingPlayer != null) && (actingPlayer.getPlayerAction() != null)
-				&& actingPlayer.getPlayerAction().isMoving() && ArrayTool.isProvided(game.getFieldModel().getMoveSquares())
-				&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
-				&& (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
-				&& (game.getTurnMode() != TurnMode.SWARMING)
-				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)) {
-				FieldCoordinate[] shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
-				if (ArrayTool.isProvided(shortestPath)) {
-					fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
-					fieldComponent.refresh();
-				}
-			}
-		}
-		return super.mouseOverField(pCoordinate);
+
+		UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_BLOCK);
+
+		showShortestPath(pCoordinate, game, fieldComponent, actingPlayer);
+
+		return true;
 	}
 
-	private void setCustomCursor(MoveSquare pMoveSquare) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pMoveSquare.isGoingForIt() && (pMoveSquare.isDodging() && !actingPlayer.isJumping())) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI_DODGE);
-		} else if (pMoveSquare.isGoingForIt()) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI);
-		} else if (pMoveSquare.isDodging() && !actingPlayer.isJumping()) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_DODGE);
-		} else {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
+	private void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,
+			ActingPlayer actingPlayer) {
+		String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
+		if (actingPlayer != null
+			&& actingPlayer.getPlayerAction() != null
+			&& actingPlayer.getPlayerAction().isMoving()
+			&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
+			&& game.getTurnMode() != TurnMode.PASS_BLOCK
+			&& game.getTurnMode() != TurnMode.KICKOFF_RETURN
+			&& game.getTurnMode() != TurnMode.SWARMING
+			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)
+		) {
+
+			FieldCoordinate[] shortestPath;
+
+			Player<?> playerInTarget = game.getFieldModel().getPlayer(pCoordinate);
+
+			if (actingPlayer.isStandingUp()
+				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
+				actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,
+					actingPlayer.getPlayer().getMovementWithModifiers()));
+				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
+				// go-for-it
+			}
+
+			if (playerInTarget != null && playerInTarget.getTeam() != actingPlayer.getPlayer().getTeam()) {
+				shortestPath = PathFinderWithPassBlockSupport.getShortestPathToPlayer(game, playerInTarget);
+			} else {
+				shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
+			}
+			if (ArrayTool.isProvided(shortestPath)) {
+				fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
+				fieldComponent.refresh();
+			}
 		}
 	}
 

@@ -5,7 +5,6 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
-import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportOfficiousRefRoll;
@@ -16,7 +15,6 @@ public class OfficiousRefRollMessage extends ReportMessageBase<ReportOfficiousRe
 
     @Override
     protected void render(ReportOfficiousRefRoll report) {
-  		GameResult gameResult = game.getGameResult();
 	    println(getIndent(), TextStyle.ROLL, "Officious Ref Effect Roll [ " + report.getRoll() + " ]");
   		Player<?> player = game.getPlayerById(report.getPlayerId());
   		print(getIndent() + 1, false, player);

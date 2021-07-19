@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.inducement.Card;
+import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsDrawingModifier;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
@@ -332,6 +333,7 @@ public class PlayerDetailComponent extends JPanel {
 			g2d.setFont(_SPP_FONT);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Game game = getSideBar().getClient().getGame();
+			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			StringBuilder sppInfo = new StringBuilder();
 			if ((playerResult != null) && (getPlayer() != null)) {
@@ -345,21 +347,7 @@ public class PlayerDetailComponent extends JPanel {
 					if (newSpps > 0) {
 						sppInfo.append("+").append(newSpps);
 					}
-					if (oldSpps > 175) {
-						sppInfo.append(" Legend");
-					} else if (oldSpps > 75) {
-						sppInfo.append(" Super Star");
-					} else if (oldSpps > 50) {
-						sppInfo.append(" Star");
-					} else if (oldSpps > 30) {
-						sppInfo.append(" Emerging");
-					} else if (oldSpps > 15) {
-						sppInfo.append(" Veteran");
-					} else if (oldSpps > 5) {
-						sppInfo.append(" Experienced");
-					} else {
-						sppInfo.append(" Rookie");
-					}
+					sppInfo.append(" ").append(mechanic.calculatePlayerLevel(game, getPlayer()));
 				}
 			}
 			g2d.setColor(Color.BLACK);

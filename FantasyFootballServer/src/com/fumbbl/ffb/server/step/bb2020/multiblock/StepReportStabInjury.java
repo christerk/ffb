@@ -2,12 +2,9 @@ package com.fumbbl.ffb.server.step.bb2020.multiblock;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -35,7 +32,6 @@ public class StepReportStabInjury extends AbstractStep {
 		return StepId.REPORT_STAB_INJURY;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void init(StepParameterSet parameterSet) {
 		if (parameterSet != null) {
@@ -56,11 +52,6 @@ public class StepReportStabInjury extends AbstractStep {
 		if (injuryResult != null) {
 			injuryResult.report(this);
 		}
-
-		Game game = getGameState().getGame();
-		Player<?> defender = game.getPlayerById(target);
-		PlayerState playerState = game.getFieldModel().getPlayerState(defender);
-		game.getFieldModel().setPlayerState(defender, playerState.changeSelectedStabTarget(false));
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

@@ -147,7 +147,7 @@ public class StepBribes extends AbstractStep {
 		if ((fBribesChoice != null) && (fArgueTheCallChoice != null) && fArgueTheCallChoice) {
 			int roll = getGameState().getDiceRoller().rollArgueTheCall();
 			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam());
-			int modifiedRoll = friendsWithTheRef ? roll + 1 : roll;
+			int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
 			fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
 			boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
 			getResult().addReport(

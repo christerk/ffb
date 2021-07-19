@@ -1,27 +1,11 @@
 package com.fumbbl.ffb.client;
 
-import java.awt.Insets;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.UIManager;
-import javax.websocket.ContainerProvider;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FactoryManager;
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -37,39 +21,53 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.IConnectionListener;
 import com.fumbbl.ffb.util.StringTool;
 
+import javax.swing.UIManager;
+import javax.websocket.ContainerProvider;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
+import java.awt.Insets;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
+
 /**
- * 
  * @author Kalimar
  */
 public class FantasyFootballClient implements IConnectionListener, IDialogCloseListener, IFactorySource {
 	private Game fGame;
-	private UserInterface fUserInterface;
-	private ClientCommunication fCommunication;
-	private Thread fCommunicationThread;
+	private final UserInterface fUserInterface;
+	private final ClientCommunication fCommunication;
+	private final Thread fCommunicationThread;
 	private Timer fPingTimer;
 	private ClientPingTask fClientPingTask;
 	private Properties fProperties;
 	private ClientState fState;
-	private ClientStateFactory fStateFactory;
-	private ClientCommandHandlerFactory fCommandHandlerFactory;
+	private final ClientStateFactory fStateFactory;
+	private final ClientCommandHandlerFactory fCommandHandlerFactory;
 	private boolean fConnectionEstablished;
-	private ActionKeyBindings fActionKeyBindings;
-	private ClientReplayer fReplayer;
-	private ClientParameters fParameters;
+	private final ActionKeyBindings fActionKeyBindings;
+	private final ClientReplayer fReplayer;
+	private final ClientParameters fParameters;
 	private ClientMode fMode;
 
 	private Session fSession;
 	private CommandEndpoint fCommandEndpoint;
 
-	private transient ClientData fClientData;
+	private final transient ClientData fClientData;
 
-	private FactoryManager factoryManager;
-	private Map<Factory, INamedObjectFactory> factories;
-	
+	private final FactoryManager factoryManager;
+	private final Map<Factory, INamedObjectFactory> factories;
+
 	public FantasyFootballClient(ClientParameters pParameters) throws IOException {
 		factoryManager = new FactoryManager();
 		factories = factoryManager.getFactoriesForContext(getContext());
-		
+
 		fParameters = pParameters;
 		setMode(fParameters.getMode());
 
@@ -324,7 +322,12 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
 		return (T) factories.get(factory);
 	}
-	
+
+	@Override
+	public void logError(String message) {
+		System.err.println(message);
+	}
+
 	public IFactorySource getFactorySource() {
 		return this;
 	}

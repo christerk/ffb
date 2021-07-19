@@ -145,9 +145,16 @@ public class StepFollowup extends AbstractStep {
 							true, SkillUse.CANCEL_FEND));
 					}
 				}
+				boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
 				if (usingSkillPreventingFollowUp == null) {
-					UtilServerDialog.showDialog(getGameState(),
+					if(defenderHasTacklezones) {
+						UtilServerDialog.showDialog(getGameState(),
 							new DialogSkillUseParameter(game.getDefenderId(), skillPreventsFollowingUp, 0), true);
+					} 
+					else {
+							getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillPreventsFollowingUp, false, SkillUse.NO_TACKLEZONE));
+							usingSkillPreventingFollowUp = false;
+						}
 				} else {
 					if (usingSkillPreventingFollowUp) {
 						publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));

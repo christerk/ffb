@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PassContext;
@@ -28,4 +30,8 @@ public class StrongArm extends Skill {
 		});
 	}
 
+	@Override
+	public boolean canBeAssignedTo(Player<?> player) {
+		return player.hasSkillProperty(NamedProperties.canThrowTeamMates);
+	}
 }

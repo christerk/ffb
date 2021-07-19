@@ -28,20 +28,25 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 			1, false))
 			.map(fieldModel::getPlayer)
 			.filter(Objects::nonNull)
-			.filter(Player::canBeThrown).toArray(Player[]::new);
+			.filter(player -> canBeThrown(pGame, player)).toArray(Player[]::new);
 	}
 
 	@Override
 	public boolean canBeThrown(Game game, Player<?> player) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return player.canBeThrown()
+			&& !playerState.isRooted()
 			&& game.getActingTeam() == player.getTeam();
 	}
 
 	@Override
 	public boolean canBeKicked(Game game, Player<?> player) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return player.canBeThrown()
-			&& game.getFieldModel().getPlayerState(player).getBase() == PlayerState.STANDING
-			&& game.getActingTeam() == player.getTeam();	}
+			&& playerState.getBase() == PlayerState.STANDING
+			&& !playerState.isRooted()
+			&& game.getActingTeam() == player.getTeam();
+	}
 
 	@Override
 	public int minimumRoll(PassingDistance distance, Set<PassModifier> modifiers) {

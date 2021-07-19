@@ -56,9 +56,6 @@ public class ServerUtilPlayer {
 				}
 			}
 		}
-		if (blockStrength > attackerStrength) {
-			blockStrength -= mechanic.assistReduction(isMultiBlock, game, attacker);
-		}
 		return blockStrength;
 	}
 

@@ -4,6 +4,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackMode;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -11,6 +12,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -21,7 +23,7 @@ import com.fumbbl.ffb.server.step.bb2020.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
-import com.fumbbl.ffb.skill.SideStep;
+import com.fumbbl.ffb.skill.bb2020.SideStep;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)
@@ -29,7 +31,7 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 	public SideStepBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepPushback, StepState>(2) {
+		registerModifier(new StepModifier<StepPushback, StepState>(3) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepState state,
@@ -77,6 +79,9 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 						step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
 					}
 					return true;
+				}
+				else if(UtilCards.hasSkill(state.defender, skill) && (state.oldDefenderState != null) && !state.oldDefenderState.hasTacklezones()) {
+					step.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skill, false, SkillUse.NO_TACKLEZONE));
 				}
 				return false;
 			}

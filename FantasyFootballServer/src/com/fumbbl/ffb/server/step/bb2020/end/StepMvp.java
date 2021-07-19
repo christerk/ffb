@@ -44,11 +44,11 @@ public final class StepMvp extends AbstractStep {
 	private int fNrOfHomeMvps;
 	private int fNrOfHomeChoices;
 	private String[] fHomePlayersNominated;
-	private List<String> fHomePlayersMvp;
+	private final List<String> fHomePlayersMvp;
 	private int fNrOfAwayMvps;
 	private int fNrOfAwayChoices;
 	private String[] fAwayPlayersNominated;
-	private List<String> fAwayPlayersMvp;
+	private final List<String> fAwayPlayersMvp;
 
 	public StepMvp(GameState pGameState) {
 		super(pGameState);
@@ -85,8 +85,9 @@ public final class StepMvp extends AbstractStep {
 					}
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-			default:
 				break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {

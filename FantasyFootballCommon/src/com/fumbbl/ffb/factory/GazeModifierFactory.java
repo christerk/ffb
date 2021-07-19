@@ -1,9 +1,5 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -14,14 +10,17 @@ import com.fumbbl.ffb.modifiers.GazeModifierContext;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.util.Scanner;
 
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 /**
- * 
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.GAZE_MODIFIER)
 @RulesCollection(Rules.COMMON)
 public class GazeModifierFactory extends GenerifiedModifierFactory<GazeModifierContext, GazeModifier, GazeModifierCollection> {
-	private GazeModifierCollection gazeModifierCollection = new GazeModifierCollection();
+	private GazeModifierCollection gazeModifierCollection;
 
 	@Override
 	protected Scanner<GazeModifierCollection> getScanner() {

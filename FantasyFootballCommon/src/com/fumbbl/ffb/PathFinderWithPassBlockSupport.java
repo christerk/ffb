@@ -8,11 +8,13 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -185,10 +187,9 @@ public class PathFinderWithPassBlockSupport {
 			data.setNode(ballCoord, new PathFindNode(normalState, ballCoord, 1000, true, pEndCoords, null));
 		}
 
-		// Treat trap door fields as tackle zones to avoid paths crossing them
-		fieldModel.getOnPitchEnhancements().stream().map(OnPitchEnhancement::getCoordinate).forEach(coord ->
-			data.setNode(coord, new PathFindNode(normalState, coord, 1000, true, pEndCoords, null))
-		);
+		// Treat trapdoor fields as tackle zones to avoid paths crossing them
+		fieldModel.getOnPitchEnhancements().stream().map(OnPitchEnhancement::getCoordinate)
+				.forEach(coord -> data.setNode(coord, new PathFindNode(normalState, coord, 1000, true, pEndCoords, null)));
 
 		boolean hasBall = start.equals(ballCoord);
 
@@ -311,7 +312,6 @@ public class PathFinderWithPassBlockSupport {
 		return list.toArray(result);
 	}
 
-
 	/**
 	 * Gets the shortest path from the player in the start square to the end square.
 	 * The start square must contain a player. The path will not leave or pass
@@ -335,6 +335,36 @@ public class PathFinderWithPassBlockSupport {
 	}
 
 	/**
+	 * Gets the shortest path from the player in the start square to the target
+	 * player. The start square must contain a player. The path will not leave or
+	 * pass through a tackle zone, but it may end in one. The path will also avoid
+	 * going through.
+	 *
+	 * @param targetPlayer Target player.
+	 * @return Shortest path to target square
+	 */
+	public static FieldCoordinate[] getShortestPathToPlayer(Game pGame, Player<?> targetPlayer) {
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate[] adjacentSquares = fieldModel.findAdjacentCoordinates(
+			fieldModel.getPlayerCoordinate(targetPlayer), FieldCoordinateBounds.FIELD, 1, false);
+
+		Set<FieldCoordinate> pEndCoords = Arrays.stream(adjacentSquares).filter(s -> fieldModel.getPlayer(s) == null).collect(Collectors.toSet());
+
+		ActingPlayer actingPlayer = pGame.getActingPlayer();
+
+		if (actingPlayer == null || actingPlayer.getPlayer() == null) {
+			return null;
+		}
+
+		FieldCoordinate start = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+
+		int maxDistance = actingPlayer.getPlayer().getMovementWithModifiers() - actingPlayer.getCurrentMove();
+
+		return getShortestPath(pGame, start, pEndCoords, maxDistance, actingPlayer.getPlayer().getTeam(),
+			normalMoveContext, false);
+	}
+
+	/**
 	 * Gets the shortest path from the player in the start square to the end square.
 	 * The start square must contain a player. The path will not leave or pass
 	 * through a tackle zone, but it may end in one. The path will also avoid going
@@ -343,7 +373,8 @@ public class PathFinderWithPassBlockSupport {
 	 * @param pEndCoords Target squares.
 	 * @return Shortest path to a target square
 	 */
-	public static FieldCoordinate[] getShortestPath(Game pGame, Set<FieldCoordinate> pEndCoords, Player<?> player, int currentMove) {
+	public static FieldCoordinate[] getShortestPath(Game pGame, Set<FieldCoordinate> pEndCoords, Player<?> player,
+			int currentMove) {
 		if (pGame == null || player == null) {
 			return null;
 		}
@@ -389,7 +420,7 @@ public class PathFinderWithPassBlockSupport {
 
 	private static boolean isOnField(Game pGame, FieldCoordinate pCoordinate) {
 		return (pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) ? FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate)
-			: FieldCoordinateBounds.FIELD.isInBounds(pCoordinate);
+				: FieldCoordinateBounds.FIELD.isInBounds(pCoordinate);
 	}
 
 	private static boolean isOnField(Game pGame, Set<FieldCoordinate> pCoordinates) {
@@ -409,8 +440,8 @@ public class PathFinderWithPassBlockSupport {
 		}
 
 		// If we have a path, the player can intercept.
-		return getShortestPath(pGame, startPosition, validEndCoordinates, distance, passBlocker.getTeam(),
-				passBlockContext, canJump);
+		return getShortestPath(pGame, startPosition, validEndCoordinates, distance, passBlocker.getTeam(), passBlockContext,
+				canJump);
 
 	}
 

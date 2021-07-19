@@ -11,14 +11,13 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
- * 
  * @author Kalimar
  */
 public class RangeGridHandler {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 	private boolean fShowRangeGrid;
-	private boolean fThrowTeamMate;
+	private final boolean fThrowTeamMate;
 
 	public RangeGridHandler(FantasyFootballClient pClient, boolean pThrowTeamMate) {
 		fClient = pClient;
@@ -36,8 +35,8 @@ public class RangeGridHandler {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			if ((!fThrowTeamMate && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-					|| (fThrowTeamMate && (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE))
-					|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)) {
+				|| (fThrowTeamMate && (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE || actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE))
+				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)) {
 				FieldCoordinate actingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				if (userInterface.getFieldComponent().getLayerRangeGrid().drawRangeGrid(actingPlayerCoordinate,
 						fThrowTeamMate)) {

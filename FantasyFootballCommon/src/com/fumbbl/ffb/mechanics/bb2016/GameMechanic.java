@@ -5,10 +5,11 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.TurnData;
 
@@ -41,7 +42,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean eligibleForPro(ActingPlayer actingPlayer, Player<?> player) {
+	public boolean eligibleForPro(Game game, Player<?> player) {
 		return true;
 	}
 
@@ -93,11 +94,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public int assistReduction(boolean usingMultiBlock, Game game, Player<?> attacker) {
-		return 0;
-	}
-
-	@Override
 	public boolean canRaiseDead(Roster roster) {
 		return roster.hasNecromancer();
 	}
@@ -135,5 +131,61 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean allowesCancellingGuard(TurnMode turnMode) {
 		return false;
+	}
+
+	@Override
+	public boolean isBlockActionAllowed(TurnMode turnMode) {
+		return true;
+	}
+
+	@Override
+	public PlayerStats zappedPlayerStats() {
+		return new PlayerStats() {
+			@Override
+			public int move() {
+				return 5;
+			}
+
+			@Override
+			public int strength() {
+				return 1;
+			}
+
+			@Override
+			public int agility() {
+				return 4;
+			}
+
+			@Override
+			public int passing() {
+				return 0;
+			}
+
+			@Override
+			public int armour() {
+				return 4;
+			}
+		};
+	}
+
+	@Override
+	public String calculatePlayerLevel(Game game, Player<?> player) {
+		PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
+		int oldSpps = playerResult.getCurrentSpps();
+		if (oldSpps > 175) {
+			return "Legend";
+		} else if (oldSpps > 75) {
+			return "Super Star";
+		} else if (oldSpps > 50) {
+			return "Star";
+		} else if (oldSpps > 30) {
+			return "Emerging";
+		} else if (oldSpps > 15) {
+			return "Veteran";
+		} else if (oldSpps > 5) {
+			return "Experienced";
+		} else {
+			return "Rookie";
+		}
 	}
 }

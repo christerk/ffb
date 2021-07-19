@@ -6,8 +6,6 @@ import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.modifiers.ModifierType;
-import com.fumbbl.ffb.modifiers.RightStuffModifier;
 
 /**
  * This player is equipped with a rudimentary set of wings, either natural or
@@ -36,7 +34,6 @@ public class Swoop extends Skill {
 		registerProperty(NamedProperties.preventStuntyDodgeModifier);
 		registerProperty(NamedProperties.ttmScattersInSingleDirection);
 		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
-		registerModifier(new RightStuffModifier("Swoop", -1, ModifierType.REGULAR));
 	}
 
 }

@@ -49,17 +49,17 @@ import java.util.Set;
 
 /**
  * Step in move sequence to handle skill DODGE.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- *
+ * <p>
  * Expects stepParameter COORDINATE_FROM to be set by a preceding step. Expects
  * stepParameter COORDINATE_TO to be set by a preceding step. Expects
  * stepParameter USING_BREAK_TACKLE to be set by a preceding step. Expects
  * stepParameter USING_DIVING_TACKLE to be set by a preceding step.
- *
+ * <p>
  * StepParameter RE_ROLL_USED may be set by a preceding step. StepParameter
  * DODGE_ROLL may be set by a preceding step.
- *
+ * <p>
  * Sets stepParameter RE_ROLL_USED for all steps on the stack. Sets
  * stepParameter DODGE_ROLL for all steps on the stack. Sets stepParameter
  * INJURY_TYPE for all steps on the stack. Sets stepParameter USING_BREAK_TACKLE
@@ -105,26 +105,26 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-			case COORDINATE_FROM:
-				fCoordinateFrom = (FieldCoordinate) parameter.getValue();
-				return true;
-			case COORDINATE_TO:
-				fCoordinateTo = (FieldCoordinate) parameter.getValue();
-				return true;
-			case DODGE_ROLL:
-				fDodgeRoll = (Integer) parameter.getValue();
-				return true;
-			case USING_BREAK_TACKLE:
-				fUsingBreakTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				return true;
-			case USING_DIVING_TACKLE:
-				fUsingDivingTackle = (Boolean) parameter.getValue();
-				return true;
-			case RE_ROLL_USED:
-				fReRollUsed = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				return true;
-			default:
-				break;
+				case COORDINATE_FROM:
+					fCoordinateFrom = (FieldCoordinate) parameter.getValue();
+					return true;
+				case COORDINATE_TO:
+					fCoordinateTo = (FieldCoordinate) parameter.getValue();
+					return true;
+				case DODGE_ROLL:
+					fDodgeRoll = (Integer) parameter.getValue();
+					return true;
+				case USING_BREAK_TACKLE:
+					fUsingBreakTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;
+				case USING_DIVING_TACKLE:
+					fUsingDivingTackle = (Boolean) parameter.getValue();
+					return true;
+				case RE_ROLL_USED:
+					fReRollUsed = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -154,7 +154,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		}
 		if (ReRolledActions.DODGE == getReRolledAction()) {
 			if ((getReRollSource() == null)
-					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+				|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 				failDodge();
 				return;
 			}
@@ -162,26 +162,26 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		boolean reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
 		boolean doRoll = reRolledAction || (fUsingDivingTackle == null);
 		switch (dodge(doRoll)) {
-		case SUCCESS:
-			reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
-			publishParameter(new StepParameter(StepParameterKey.RE_ROLL_USED, fReRollUsed || reRolledAction));
-			getResult().setNextAction(StepAction.NEXT_STEP);
-			break;
-		case FAILURE:
-			if (UtilGameOption.isOptionEnabled(game, GameOptionId.STAND_FIRM_NO_DROP_ON_FAILED_DODGE)) {
-				publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+			case SUCCESS:
+				reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
+				publishParameter(new StepParameter(StepParameterKey.RE_ROLL_USED, fReRollUsed || reRolledAction));
 				getResult().setNextAction(StepAction.NEXT_STEP);
-			} else {
-				failDodge();
-			}
-			break;
-		default:
-			break;
+				break;
+			case FAILURE:
+				if (UtilGameOption.isOptionEnabled(game, GameOptionId.STAND_FIRM_NO_DROP_ON_FAILED_DODGE)) {
+					publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+					getResult().setNextAction(StepAction.NEXT_STEP);
+				} else {
+					failDodge();
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
 	private void failDodge() {
-		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropDodge()));
+		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropDodge(getGameState().getGame().getDefender())));
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 	}
 
@@ -213,7 +213,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			if (btModifier.isPresent()) {
 				dodgeModifiers.remove(btModifier.get());
 				int minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game,
-						actingPlayer.getPlayer(), dodgeModifiers);
+					actingPlayer.getPlayer(), dodgeModifiers);
 				if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
 					dodgeModifiers.add(btModifier.get());
 				} else {
@@ -232,7 +232,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null));
 		getResult().addReport(new ReportDodgeRoll(actingPlayer.getPlayerId(), successful,
-				(pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled, dodgeModifiers.toArray(new DodgeModifier[0])));
+			(pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled, dodgeModifiers.toArray(new DodgeModifier[0])));
 
 		if (successful) {
 			status = ActionStatus.SUCCESS;
@@ -260,7 +260,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					status = dodge(true);
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
-							minimumRoll, false)) {
+						minimumRoll, false)) {
 						status = ActionStatus.WAITING_FOR_RE_ROLL;
 					}
 				}

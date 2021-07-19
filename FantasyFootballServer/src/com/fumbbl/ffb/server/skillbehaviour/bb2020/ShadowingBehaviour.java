@@ -25,7 +25,7 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Shadowing;
+import com.fumbbl.ffb.skill.bb2020.Shadowing;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -48,8 +48,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				UtilServerDialog.hideDialog(step.getGameState());
 				boolean doNextStep = true;
-				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
-						&& (game.getTurnMode() != TurnMode.PASS_BLOCK));
+				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN));
 				if (doShadowing && (state.coordinateFrom != null) && (state.usingShadowing == null)) {
 					Player<?>[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill, true);
 					shadowers = UtilPlayer.filterThrower(game, shadowers);

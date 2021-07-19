@@ -20,14 +20,16 @@ public class ServerCommandTalk extends ServerCommand {
 
 	private String fCoach;
 	private List<String> fTalks;
+	private boolean fAdminMode;
 
 	public ServerCommandTalk() {
 		fTalks = new ArrayList<>();
 	}
 
-	public ServerCommandTalk(String pCoach, String pTalk) {
+	public ServerCommandTalk(String pCoach, String pTalk, boolean adminMode) {
 		this();
 		fCoach = pCoach;
+		fAdminMode = adminMode;
 		addTalk(pTalk);
 	}
 
@@ -43,6 +45,10 @@ public class ServerCommandTalk extends ServerCommand {
 
 	public String getCoach() {
 		return fCoach;
+	}
+	
+	public boolean isAdminMode() {
+		return fAdminMode;
 	}
 
 	public void addTalk(String pTalk) {
@@ -74,6 +80,7 @@ public class ServerCommandTalk extends ServerCommand {
 		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.COACH.addTo(jsonObject, fCoach);
 		IJsonOption.TALKS.addTo(jsonObject, fTalks);
+		IJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
 		return jsonObject;
 	}
 
@@ -81,6 +88,7 @@ public class ServerCommandTalk extends ServerCommand {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
+		fAdminMode = IJsonOption.ADMIN_MODE.getFrom(game, jsonObject);
 		addTalks(IJsonOption.TALKS.getFrom(game, jsonObject));
 		return this;
 	}
