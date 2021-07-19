@@ -47,11 +47,16 @@ public class UtilBlockSequence {
 
 			Skill skillCanCounterOpponentForcingDropBall = UtilCards.getSkillCancelling(game.getDefender(),
 				skillCanForceOpponentToDropBall);
+			
+			boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones(); 
 
-			if ((game.getDefender() != null) && skillCanCounterOpponentForcingDropBall != null && mechanic.canPreventStripBall(game.getFieldModel().getPlayerState(game.getDefender()))) {
+			if ((game.getDefender() != null) && skillCanCounterOpponentForcingDropBall != null && mechanic.canPreventStripBall(game.getFieldModel().getPlayerState(game.getDefender())) && defenderHasTacklezones) {
 				pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillCanCounterOpponentForcingDropBall,
 					true, SkillUse.CANCEL_STRIP_BALL));
 			} else {
+				if(!defenderHasTacklezones && skillCanCounterOpponentForcingDropBall != null) {	
+					pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillCanCounterOpponentForcingDropBall, false, SkillUse.NO_TACKLEZONE));
+				}
 				pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
 					skillCanCounterOpponentForcingDropBall, true, SkillUse.STEAL_BALL));
 				parameterSet
