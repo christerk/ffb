@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.inducement;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -50,7 +50,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepWizard extends AbstractStep {
 
 	private SpecialEffect fWizardSpell;
@@ -176,7 +176,7 @@ public final class StepWizard extends AbstractStep {
 			}
 			game.setTurnMode(TurnMode.WIZARD);
 
-			UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
+			UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter((game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway()).getId()), false);
 		}
 	}
 

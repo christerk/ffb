@@ -5,6 +5,7 @@ import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.dialog.DialogWizardSpellParameter;
 import com.fumbbl.ffb.model.Game;
 
 /**
@@ -21,8 +22,9 @@ public class DialogWizardSpellHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 
-		if ((ClientMode.PLAYER == getClient().getMode()) && game.isHomePlaying()) {
-			setDialog(new DialogWizardSpell(getClient()));
+		DialogWizardSpellParameter parameter = (DialogWizardSpellParameter) game.getDialogParameter();
+		if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().getId().equals(parameter.getTeamId())) {
+			setDialog(new DialogWizardSpell(getClient(), parameter.getTeamId()));
 			getDialog().showDialog(this);
 
 		} else {

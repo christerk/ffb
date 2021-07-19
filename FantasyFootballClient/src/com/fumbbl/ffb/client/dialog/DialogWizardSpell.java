@@ -18,7 +18,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogWizardSpell extends Dialog implements ActionListener, KeyListener {
@@ -26,13 +25,15 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 	private JButton fButtonLightning;
 	private JButton buttonZap;
 	private JButton fButtonFireball;
-	private JButton fButtonCancel;
+	private final JButton fButtonCancel;
 	private SpecialEffect fWizardSpell;
+	private final String teamId;
 
-	public DialogWizardSpell(FantasyFootballClient pClient) {
+	public DialogWizardSpell(FantasyFootballClient pClient, String teamId) {
 
 		super(pClient, "Wizard Spell", false);
 
+		this.teamId = teamId;
 		JPanel panelText = new JPanel();
 		panelText.setLayout(new BoxLayout(panelText, BoxLayout.X_AXIS));
 		panelText.add(new JLabel("Which spell should your wizard cast?"));
@@ -149,7 +150,7 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 
 	private boolean spellEnabled(SpecialEffect effect) {
 		final Game game = getClient().getGame();
-		InducementSet inducementSet = game.isHomePlaying()
+		InducementSet inducementSet = game.getTeamHome().getId().equals(teamId)
 			? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
 		return inducementSet.getInducementMapping().entrySet().stream()
