@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
 
 import java.util.Arrays;
@@ -71,6 +72,11 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	@Override
 	public boolean isKtmAvailable(TurnData turnData) {
 		return !turnData.isKtmUsed();
+	}
+
+	@Override
+	public boolean canThrow(Player<?> player) {
+		return player.hasSkillProperty(NamedProperties.canThrowTeamMates) && player.getStrengthWithModifiers() >= 5;
 	}
 
 	private int calculateModifiers(Collection<PassModifier> pPassModifiers) {
