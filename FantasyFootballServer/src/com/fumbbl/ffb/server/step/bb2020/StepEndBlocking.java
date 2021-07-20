@@ -29,7 +29,12 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.*;
+import com.fumbbl.ffb.server.step.generator.BlitzBlock;
+import com.fumbbl.ffb.server.step.generator.Block;
+import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Move;
+import com.fumbbl.ffb.server.step.generator.PileDriver;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -148,8 +153,8 @@ public class StepEndBlocking extends AbstractStep {
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
+		game.getFieldModel().clearMultiBlockTargets();
 		if (fEndTurn || fEndPlayerAction) {
-			game.getFieldModel().clearMultiBlockTargets();
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else {
