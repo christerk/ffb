@@ -63,4 +63,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract PlayerStats zappedPlayerStats();
 
 	public abstract String calculatePlayerLevel(Game game, Player<?> player);
+
+	public abstract boolean touchdownEndsGame(Game game);
 }

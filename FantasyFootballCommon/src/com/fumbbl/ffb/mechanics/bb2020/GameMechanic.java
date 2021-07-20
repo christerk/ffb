@@ -192,4 +192,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return "Legend";
 		}
 	}
+
+	@Override
+	public boolean touchdownEndsGame(Game game) {
+		return false;
+	}
 }

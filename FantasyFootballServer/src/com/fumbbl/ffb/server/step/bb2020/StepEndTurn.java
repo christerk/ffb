@@ -24,6 +24,8 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -342,7 +344,9 @@ public class StepEndTurn extends AbstractStep {
 					game.getFieldModel().setBallInPlay(false);
 					getGameState().getServer().getCommunication().sendSound(getGameState(), SoundId.TOUCHDOWN);
 					getResult().setSound(SoundId.WHISTLE);
-					if (game.getHalf() == 3) {
+					GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
+					if (mechanic.touchdownEndsGame(game)) {
 						endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
 					} else {
 						kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), false));

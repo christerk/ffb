@@ -188,4 +188,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			return "Rookie";
 		}
 	}
+
+	@Override
+	public boolean touchdownEndsGame(Game game) {
+		return game.getHalf() == 3;
+	}
 }
