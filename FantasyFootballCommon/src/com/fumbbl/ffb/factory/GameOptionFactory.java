@@ -87,7 +87,7 @@ public class GameOptionFactory {
 			case CHECK_OWNERSHIP:
 				return new GameOptionBoolean(pOptionId).setDefault(true).setMessageFalse("Team ownership is not checked.");
 			case CLAW_DOES_NOT_STACK:
-				return new GameOptionBoolean(pOptionId).setDefault(false)
+				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Claw does not stack with other skills that modify armour rolls.");
 			case EXTRA_MVP:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
@@ -156,7 +156,7 @@ public class GameOptionFactory {
 			case INDUCEMENT_WIZARDS_COST:
 				return new GameOptionInt(pOptionId).setDefault(150000).setMessage("Wizards can be purchased for $1 gps each.");
 			case INDUCEMENT_WIZARDS_MAX:
-				return new GameOptionInt(pOptionId).setDefault(0).setMessage("Coaches may purchase up to $1 wizard(s).");
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 wizard(s).");
 			case MAX_NR_OF_CARDS:
 				return new GameOptionInt(pOptionId).setDefault(5).setMessage("A maximum of $1 cards can be bought.");
 			case MAX_PLAYERS_IN_WIDE_ZONE:
@@ -169,7 +169,7 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(3)
 					.setMessage("A minimum of $1 players must be set up on the line of scrimmage.");
 			case MVP_NOMINATIONS:
-				return new GameOptionInt(pOptionId).setDefault(3)
+				return new GameOptionInt(pOptionId).setDefault(0)
 					.setMessage("$1 players may be nominated to receice the MVP award.");
 			case OVERTIME:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
@@ -221,7 +221,7 @@ public class GameOptionFactory {
 			case USE_PREDEFINED_INDUCEMENTS:
 				return new GameOptionBoolean(pOptionId).setDefault(false).setMessageTrue("Inducements are predefined.");
 			case WIZARD_AVAILABLE:
-				return new GameOptionBoolean(pOptionId).setDefault(false)
+				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("A wizard may be bought as an inducement.");
 			case INDUCEMENT_RIOTOUS_ROOKIES_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 groups of Riotous Rookies.");
