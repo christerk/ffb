@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.block;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -20,17 +20,17 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
  * Step in block sequence to handle skill FOUL_APPEARANCE.
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepFoulAppearance extends AbstractStepWithReRoll {
 
 	public class StepState {
 		public String goToLabelOnFailure;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepFoulAppearance(GameState pGameState) {
 		super(pGameState);
