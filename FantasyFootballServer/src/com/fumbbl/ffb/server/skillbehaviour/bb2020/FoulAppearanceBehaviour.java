@@ -22,8 +22,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.action.block.StepFoulAppearance;
-import com.fumbbl.ffb.server.step.action.block.StepFoulAppearance.StepState;
+import com.fumbbl.ffb.server.step.bb2020.StepFoulAppearance;
+import com.fumbbl.ffb.server.step.bb2020.StepFoulAppearance.StepState;
 import com.fumbbl.ffb.server.step.bb2020.multiblock.StepFoulAppearanceMultiple;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.FoulAppearance;
@@ -54,7 +54,9 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				}
 
 				if (UtilCards.hasSkill(defender, skill)
-					&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)) {
+					&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)
+					&& (!state.gazeOnly || actingPlayer.getPlayerAction() == PlayerAction.GAZE)
+				) {
 					boolean doRoll = true;
 					if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)

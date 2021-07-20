@@ -66,6 +66,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption FUMBBL_GAME_CREATED = new JsonBooleanOption("fumbblGameCreated");
 	JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
 	JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);
+	JsonBooleanOption GAZE_ONLY = new JsonBooleanOption("gazeOnly");
 	JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
 	JsonStringArrayOption GET_ADDITIONAL_CASUALTY_SPP = new JsonStringArrayOption("getAdditionalCasualtySpp");
 	JsonStringArrayOption GET_ADDITIONAL_COMPLETION_SPP = new JsonStringArrayOption("getAdditionalCompletionSpp");
