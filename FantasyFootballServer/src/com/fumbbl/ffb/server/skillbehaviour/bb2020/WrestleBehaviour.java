@@ -64,6 +64,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			private StepAction performWrestle(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
+				boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
 
 				if (state.usingWrestleAttacker) {
 					step.getResult()
@@ -72,7 +73,10 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 					step.getResult()
 						.addReport(new ReportSkillUse(game.getDefenderId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
 				} else {
-					if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
+					if(!defenderHasTacklezones && UtilCards.hasSkill(game.getDefender(), skill)) {
+						step.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skill, false, SkillUse.NO_TACKLEZONE));
+					}
+					else if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
 						step.getResult().addReport(new ReportSkillUse(null, skill, false, null));
 					}
 				}
