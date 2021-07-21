@@ -35,7 +35,7 @@ public class PenaltyShootoutMessage extends ReportMessageBase<ReportPenaltyShoot
 		    TextStyle teamStyle = game.getTeamHome().equals(team) ? TextStyle.HOME : TextStyle.AWAY;
 
 		    print(getIndent(), teamStyle, team.getName());
-		    println(getIndent(), TextStyle.NONE, " win the game");
+		    println(getIndent(), TextStyle.NONE, " win sudden death");
 	    }
     }
 }

@@ -1,16 +1,18 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportMostValuablePlayers;
 
 @ReportMessageType(ReportId.MOST_VALUABLE_PLAYERS)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class MostValuablePlayersMessage extends ReportMessageBase<ReportMostValuablePlayers> {
 
     @Override
