@@ -76,9 +76,11 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				if (game.getThrower() == null) {
 					return false;
 				}
-
-				PassState passState = new PassState();
-				step.getGameState().setPassState(passState);
+				PassState passState;
+				if (step.getGameState().getPassState() == null) {
+					step.getGameState().setPassState(new PassState());
+				}
+				passState = step.getGameState().getPassState();
 				passState.setThrowerCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
 
 				boolean bombAction;
