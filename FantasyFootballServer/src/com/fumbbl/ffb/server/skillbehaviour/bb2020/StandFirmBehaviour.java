@@ -45,7 +45,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 				PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);
 				if (playerState.isRooted()) {
 					state.standingFirm.put(state.defender.getId(), true);
-				} else if ((state.oldDefenderState != null) && !state.oldDefenderState.hasTacklezones()) {
+				} else if ((state.oldDefenderState != null) && !state.oldDefenderState.hasTacklezones() && UtilCards.hasSkill(state.defender, skill)) {
 					step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, false, SkillUse.NO_TACKLEZONE));
 					state.standingFirm.put(state.defender.getId(), false);
 				} else if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && cancellingSkill != null
