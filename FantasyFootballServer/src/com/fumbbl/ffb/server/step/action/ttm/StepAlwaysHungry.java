@@ -6,6 +6,7 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -159,6 +160,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 			getResult().addReport(
 					new ReportEscapeRoll(fThrownPlayerId, successful, roll, 2, false, null));
 			if (successful) {
+				publishParameter(StepParameter.from(StepParameterKey.PASS_RESULT, PassResult.FUMBLE));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
 			} else {
 				if (getReRolledAction() != ReRolledActions.ESCAPE) {
