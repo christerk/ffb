@@ -263,7 +263,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
 		boolean canBuyCards = cardSlots > 0 && availableInducementGoldAway >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
 
-		boolean canBuyInducements = minimumInducementCost(game.getTeamHome()) <= availableInducementGoldAway;
+		boolean canBuyInducements = minimumInducementCost(game.getTeamAway()) <= availableInducementGoldAway;
 
 		if (canBuyCards || canBuyInducements) {
 			UtilServerDialog.showDialog(getGameState(),
@@ -280,7 +280,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		return Stream.concat(
 			Stream.concat(
 				Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.STAR).map(RosterPosition::getCost),
-				factory.allTypes().stream().map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(roster)))
+				factory.allTypes().stream().filter(type -> type.getCostId() != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(roster)))
 			),
 			Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.MERCENARY).map(pos -> pos.getCost() + UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 		).min(Integer::compareTo).orElse(Integer.MAX_VALUE);
