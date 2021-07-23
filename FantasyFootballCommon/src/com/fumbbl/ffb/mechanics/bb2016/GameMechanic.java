@@ -11,6 +11,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.TurnData;
 
 import java.util.HashSet;
@@ -192,5 +193,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean touchdownEndsGame(Game game) {
 		return game.getHalf() == 3;
+	}
+
+	@Override
+	public RosterPosition riotousRookiesPosition(Roster roster) {
+		return roster.getRiotousPosition();
 	}
 }

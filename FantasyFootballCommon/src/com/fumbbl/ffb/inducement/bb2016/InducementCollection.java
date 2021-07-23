@@ -4,8 +4,10 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,7 +44,16 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
-
+		add(new InducementType("riotousRookies", "Riotous Rookies", "Riotous Rookies", "Riotous Rookies",
+			GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX, GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_COST, Usage.ADD_LINEMEN) {
+			@Override
+			public int availability(Roster roster, GameOptions options) {
+				if (!StringTool.isProvided(roster.getRiotousPositionId()) || "0".equals(roster.getRiotousPositionId())) {
+					return 0;
+				}
+				return super.availability(roster, options);
+			}
+		});
 	}};
 
 	protected Set<InducementType> getSubTypes() {

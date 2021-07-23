@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.TurnData;
 
 public abstract class GameMechanic implements Mechanic {
@@ -65,4 +66,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract String calculatePlayerLevel(Game game, Player<?> player);
 
 	public abstract boolean touchdownEndsGame(Game game);
+
+	public abstract RosterPosition riotousRookiesPosition(Roster roster);
 }

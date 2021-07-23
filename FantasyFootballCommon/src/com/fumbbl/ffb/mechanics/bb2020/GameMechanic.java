@@ -11,13 +11,18 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
@@ -196,5 +201,15 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean touchdownEndsGame(Game game) {
 		return false;
+	}
+
+	@Override
+	public RosterPosition riotousRookiesPosition(Roster roster) {
+		List<RosterPosition> rosterPositions = Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16).collect(Collectors.toList());
+		if (rosterPositions.isEmpty()) {
+			return null;
+		}
+		Collections.shuffle(rosterPositions);
+		return rosterPositions.get(0);
 	}
 }

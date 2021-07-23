@@ -8,7 +8,6 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
-import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,18 +41,6 @@ public abstract class InducementCollection implements IKeyedItem {
 			public int availability(Roster roster, GameOptions options) {
 				//TODO this might need change for the new rules depending on how the site will handle Sylvanian Spotlight
 				if (roster.hasApothecary()) {
-					return 0;
-				}
-				return super.availability(roster, options);
-			}
-		});
-
-		add(new InducementType("riotousRookies", "Riotous Rookies", "Riotous Rookies", "Riotous Rookies",
-			GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX, GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_COST, Usage.ADD_LINEMEN) {
-			@Override
-			public int availability(Roster roster, GameOptions options) {
-				//TODO this might need change for the new rules depending on how the site will handle Low Cost Linemen
-				if (!StringTool.isProvided(roster.getRiotousPositionId()) || "0".equals(roster.getRiotousPositionId())) {
 					return 0;
 				}
 				return super.availability(roster, options);
