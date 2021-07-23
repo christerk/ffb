@@ -27,16 +27,19 @@ public class MercenaryTableModel extends AbstractTableModel {
 	private final AbstractBuyInducementsDialog fDialog;
 	private int checkedRows = 0;
 	private final int maxMercs;
+	private final int bigGuysOnTeam;
+	private int boughtBigGuys = 0;
 
 	public MercenaryTableModel(AbstractBuyInducementsDialog pDialog, GameOptions gameOptions) {
 		mercExtraCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
-				.getValue();
+			.getValue();
 		mercSkillCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST))
-				.getValue();
+			.getValue();
 		maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX)).getValue();
 
 		fDialog = pDialog;
-		fColumnNames = new String[] { "", "Icon", "Name", "Gold", "Skill" };
+		fColumnNames = new String[]{"", "Icon", "Name", "Gold", "Skill"};
+		bigGuysOnTeam = (int) Arrays.stream(fDialog.getTeam().getPlayers()).filter(player -> player.getRecoveringInjury() == null && player.getPlayerType() == PlayerType.BIG_GUY).count();
 		fRowData = buildRowData();
 	}
 
@@ -81,15 +84,21 @@ public class MercenaryTableModel extends AbstractTableModel {
 			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? mercSkillCost : 0;
 			if ((Boolean) pValue) {
 				if ((playerCost + skillCost <= fDialog.getAvailableGold()) && (fDialog.getFreeSlotsInRoster() > 0)
-						&& checkedRows < maxMercs) {
+					&& checkedRows < maxMercs && (player.getPlayerType() != PlayerType.BIG_GUY || fDialog.getRoster().getMaxBigGuys() > bigGuysOnTeam + boughtBigGuys)) {
 					fRowData[pRowIndex][pColumnIndex] = pValue;
 					fireTableCellUpdated(pRowIndex, pColumnIndex);
 					checkedRows = getCheckedRows();
+					if (player.getPlayerType() == PlayerType.BIG_GUY) {
+						boughtBigGuys++;
+					}
 				}
 			} else {
 				fRowData[pRowIndex][pColumnIndex] = pValue;
 				fireTableCellUpdated(pRowIndex, pColumnIndex);
 				checkedRows = getCheckedRows();
+				if (player.getPlayerType() == PlayerType.BIG_GUY) {
+					boughtBigGuys--;
+				}
 			}
 			fDialog.recalculateGold();
 		}
@@ -118,18 +127,20 @@ public class MercenaryTableModel extends AbstractTableModel {
 			if (PlayerType.STAR != pos.getType()) {
 				int playerInPosition = fDialog.getTeam().getNrOfAvailablePlayersInPosition(pos);
 				for (int i = 0; i < pos.getQuantity() - playerInPosition; i++) {
-					RosterPlayer player = new RosterPlayer();
-					player.updatePosition(pos, fDialog.getClient().getGame().getRules());
-					player.setName(pos.getName());
-					Object[] mecenary = new Object[6];
-					mecenary[0] = Boolean.FALSE;
-					mecenary[1] = new ImageIcon(
+					if (pos.getType() != PlayerType.BIG_GUY || fDialog.getRoster().getMaxBigGuys() > bigGuysOnTeam) {
+						RosterPlayer player = new RosterPlayer();
+						player.updatePosition(pos, fDialog.getClient().getGame().getRules());
+						player.setName(pos.getName());
+						Object[] mercenary = new Object[6];
+						mercenary[0] = Boolean.FALSE;
+						mercenary[1] = new ImageIcon(
 							playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
-					mecenary[2] = pos.getName();
-					mecenary[3] = StringTool.formatThousands(pos.getCost() + mercExtraCost);
-					mecenary[4] = "";
-					mecenary[5] = player;
-					mercenaryList.add(mecenary);
+						mercenary[2] = pos.getName();
+						mercenary[3] = StringTool.formatThousands(pos.getCost() + mercExtraCost);
+						mercenary[4] = "";
+						mercenary[5] = player;
+						mercenaryList.add(mercenary);
+					}
 				}
 			}
 		}

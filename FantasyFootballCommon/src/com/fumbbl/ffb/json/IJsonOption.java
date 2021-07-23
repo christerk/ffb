@@ -60,7 +60,6 @@ public interface IJsonOption {
 	JsonBooleanOption BOMB_MOVING = new JsonBooleanOption("bombMoving");
 	JsonBooleanOption BOMB_USED = new JsonBooleanOption("bombUsed");
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
-	JsonBooleanOption BRAWLER_AVAILABLE = new JsonBooleanOption("brawlerAvailable");
 	JsonBooleanOption BRAWLER_OPTION = new JsonBooleanOption("brawlerOption");
 	JsonBooleanOption CAN_BUY_CARDS = new JsonBooleanOption("canBuyCards");
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);
@@ -236,6 +235,7 @@ public interface IJsonOption {
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
+	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
 	JsonIntOption MAX_RE_ROLLS = new JsonIntOption("maxReRolls");
 	JsonIntOption MAX_SELECTS = new JsonIntOption("maxSelects");

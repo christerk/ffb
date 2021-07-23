@@ -46,6 +46,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
 	private static final String _XML_TAG_SPECIAL_RULES = "specialRule";
 	private static final String _XML_TAG_RULE = "rule";
+	private static final String _XML_TAG_MAX_BIG_GUYS = "maxBigGuys";
 
 	private String fId;
 	private String fName;
@@ -60,6 +61,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private String riotousPositionId;
 	private String nameGenerator;
 	private final Set<SpecialRule> specialRules;
+	private int maxBigGuys;
 
 	private RosterPosition fCurrentlyParsedRosterPosition;
 
@@ -191,7 +193,12 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		}
 		return "default";
 	}
-// XML serialization
+
+	public int getMaxBigGuys() {
+		return maxBigGuys;
+	}
+
+	// XML serialization
 
 	public void addToXml(TransformerHandler pHandler) {
 
@@ -210,6 +217,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
 		UtilXml.addValueElement(pHandler, _XML_TAG_RIOTOUS_POSITION_ID, getRiotousPositionId());
 		UtilXml.addValueElement(pHandler, _XML_TAG_NAME_GENERATOR, nameGenerator);
+		UtilXml.addValueElement(pHandler, _XML_TAG_MAX_BIG_GUYS, maxBigGuys);
 
 		for (RosterPosition position : getPositions()) {
 			position.addToXml(pHandler);
@@ -294,6 +302,10 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 					game.getApplicationSource().logError("Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
 				}
 			}
+
+			if (_XML_TAG_MAX_BIG_GUYS.equals(pXmlTag)) {
+				maxBigGuys = Integer.parseInt(pValue);
+			}
 		}
 		return complete;
 	}
@@ -317,6 +329,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
 		IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
 		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().filter(Objects::nonNull).map(SpecialRule::name).collect(Collectors.toSet()));
+		IJsonOption.MAX_BIG_GUYS.addTo(jsonObject, maxBigGuys);
 
 		JsonArray positionArray = new JsonArray();
 		for (RosterPosition position : getPositions()) {
@@ -355,6 +368,8 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		}
 
 		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).filter(Objects::nonNull).map(SpecialRule::valueOf).collect(Collectors.toSet()));
+
+		maxBigGuys = IJsonOption.MAX_BIG_GUYS.getFrom(game, jsonObject);
 
 		return this;
 
