@@ -50,10 +50,18 @@ public class MostValuablePlayersMessage extends ReportMessageBase<ReportMostValu
 
 		StringBuilder status = new StringBuilder();
 		if (gameResult.getTeamResultHome().hasConceded()) {
-			status.append("Coach ").append(game.getTeamHome().getCoach()).append(" concedes the game.");
+			status.append("Coach ").append(game.getTeamHome().getCoach()).append(" concedes the game");
+			if (game.isConcededLegally()) {
+				status.append(" without penalties due to excessive player loss");
+			}
+			status.append(".");
 			println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN_HOME, status.toString());
 		} else if (gameResult.getTeamResultAway().hasConceded()) {
-			status.append("Coach ").append(game.getTeamAway().getCoach()).append(" concedes the game.");
+			status.append("Coach ").append(game.getTeamAway().getCoach()).append(" concedes the game");
+			if (game.isConcededLegally()) {
+				status.append(" without penalties due to excessive player loss");
+			}
+			status.append(".");
 			println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN_AWAY, status.toString());
 		} else if (scoreDiffHome > 0) {
 			status.append(game.getTeamHome().getName()).append(" win the game.");

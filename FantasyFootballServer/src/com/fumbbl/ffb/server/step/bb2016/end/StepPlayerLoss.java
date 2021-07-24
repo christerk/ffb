@@ -16,7 +16,6 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +47,11 @@ public final class StepPlayerLoss extends AbstractStep {
 		GameResult gameResult = game.getGameResult();
 		Team team = null;
 		if (gameResult.getTeamResultHome().hasConceded()
-				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
+			&& !game.isConcededLegally()) {
 			team = game.getTeamHome();
 		}
 		if (gameResult.getTeamResultAway().hasConceded()
-				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
+			&& !game.isConcededLegally()) {
 			team = game.getTeamAway();
 		}
 		if (team != null) {

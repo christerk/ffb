@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.end;
+package com.fumbbl.ffb.server.step.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -27,13 +27,13 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
  * Final step of the feed sequence. Consumes all expected stepParameters.
- * <p>
+ * 
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step.
- *
+ * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepEndFeeding extends AbstractStep {
 
 	private boolean fEndPlayerAction;
@@ -51,16 +51,16 @@ public class StepEndFeeding extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-				case END_PLAYER_ACTION:
-					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
-					return true;
-				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
-					return true;
-				default:
-					break;
+			case END_PLAYER_ACTION:
+				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case END_TURN:
+				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			default:
+				break;
 			}
 		}
 		return false;
@@ -84,14 +84,9 @@ public class StepEndFeeding extends AbstractStep {
 					.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 			} else {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
-				if (game.getTurnMode() == TurnMode.REGULAR) {
-					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
-						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OPPONENT_TURN,
-							!game.isHomePlaying()));
-					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
-						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
-							game.isHomePlaying()));
-				}
+				((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
+					.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
+						game.isHomePlaying()));
 			}
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
 			((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))

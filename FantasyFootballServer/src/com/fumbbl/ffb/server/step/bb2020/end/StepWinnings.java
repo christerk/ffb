@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.report.bb2020.ReportWinnings;
 import com.fumbbl.ffb.server.GameState;
@@ -44,14 +45,15 @@ public final class StepWinnings extends AbstractStep {
 	}
 
 	private void executeStep() {
-		GameResult gameResult = getGameState().getGame().getGameResult();
+		Game game = getGameState().getGame();
+		GameResult gameResult = game.getGameResult();
 		double attendance = gameResult.getTeamResultAway().getFanFactor() + gameResult.getTeamResultHome().getFanFactor();
 		double homeWinnings = gameResult.getTeamResultHome().getScore();
 		double awayWinnings = gameResult.getTeamResultAway().getScore();
 
-		if (gameResult.getTeamResultHome().hasConceded()) {
+		if (gameResult.getTeamResultHome().hasConceded() && !game.isConcededLegally()) {
 			awayWinnings += attendance;
-		} else if (gameResult.getTeamResultAway().hasConceded()) {
+		} else if (gameResult.getTeamResultAway().hasConceded() && !game.isConcededLegally()) {
 			homeWinnings += attendance;
 		} else {
 			awayWinnings += attendance / 2;

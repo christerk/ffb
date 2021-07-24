@@ -13,7 +13,6 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step in end game sequence to roll winnings.
@@ -116,20 +115,20 @@ public final class StepWinnings extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		if (gameResult.getTeamResultHome().hasConceded()
-				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
+			&& !game.isConcededLegally()) {
 			gameResult.getTeamResultAway()
-					.setWinnings(gameResult.getTeamResultAway().getWinnings() + gameResult.getTeamResultHome().getWinnings());
+				.setWinnings(gameResult.getTeamResultAway().getWinnings() + gameResult.getTeamResultHome().getWinnings());
 			gameResult.getTeamResultHome().setWinnings(0);
 			report = new ReportWinningsRoll(0, gameResult.getTeamResultHome().getWinnings(), 0,
-					gameResult.getTeamResultAway().getWinnings());
+				gameResult.getTeamResultAway().getWinnings());
 		}
 		if (gameResult.getTeamResultAway().hasConceded()
-				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
+			&& !game.isConcededLegally()) {
 			gameResult.getTeamResultHome()
-					.setWinnings(gameResult.getTeamResultHome().getWinnings() + gameResult.getTeamResultAway().getWinnings());
+				.setWinnings(gameResult.getTeamResultHome().getWinnings() + gameResult.getTeamResultAway().getWinnings());
 			gameResult.getTeamResultAway().setWinnings(0);
 			report = new ReportWinningsRoll(0, gameResult.getTeamResultHome().getWinnings(), 0,
-					gameResult.getTeamResultAway().getWinnings());
+				gameResult.getTeamResultAway().getWinnings());
 		}
 		return report;
 	}

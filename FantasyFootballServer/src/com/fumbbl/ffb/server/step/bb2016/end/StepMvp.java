@@ -29,7 +29,6 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.ListTool;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,12 +109,12 @@ public final class StepMvp extends AbstractStep {
 				fNrOfAwayMvps++;
 			}
 			if (gameResult.getTeamResultHome().hasConceded()
-					&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
+				&& !game.isConcededLegally()) {
 				fNrOfHomeMvps = 0;
 				fNrOfAwayMvps++;
 			}
 			if (gameResult.getTeamResultAway().hasConceded()
-					&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
+				&& !game.isConcededLegally()) {
 				fNrOfHomeMvps++;
 				fNrOfAwayMvps = 0;
 			}

@@ -106,6 +106,7 @@ public interface IJsonOption {
 	JsonIntOption COMPLETIONS_WITH_ADDITONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
 	JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", Factory.CONCEDE_GAME_STATUS);
 	JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
+	JsonBooleanOption CONCEDED_LEGALLY = new JsonBooleanOption("concededLegally");
 	JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");
 	JsonBooleanOption CONCESSION_POSSIBLE = new JsonBooleanOption("concessionPossible");
 	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", Factory.SKILL);

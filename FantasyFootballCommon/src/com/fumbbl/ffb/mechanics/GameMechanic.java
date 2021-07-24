@@ -10,6 +10,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 
 public abstract class GameMechanic implements Mechanic {
@@ -68,4 +69,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean touchdownEndsGame(Game game);
 
 	public abstract RosterPosition riotousRookiesPosition(Roster roster);
+
+	public abstract boolean isLegalConcession(Game game, Team team);
 }

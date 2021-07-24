@@ -2,10 +2,12 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ConcedeGameStatus;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * 
@@ -21,8 +23,10 @@ public class DialogGameConcessionHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
 		if ((ClientMode.PLAYER == getClient().getMode()) && (game.isHomePlaying())) {
-			boolean legalConcession = UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length <= 2;
+			boolean legalConcession = mechanic.isLegalConcession(game, game.getTeamHome());
 			setDialog(new DialogConcedeGame(getClient(), legalConcession));
 			getDialog().showDialog(this);
 		}

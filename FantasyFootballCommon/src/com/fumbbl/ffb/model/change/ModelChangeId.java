@@ -64,6 +64,7 @@ public enum ModelChangeId implements INamedObject {
 	FIELD_MODEL_SET_WEATHER("fieldModelSetWeather", ModelChangeDataType.WEATHER),
 
 	GAME_SET_ADMIN_MODE("gameSetAdminMode", ModelChangeDataType.BOOLEAN),
+	GAME_SET_CONCEDED_LEGALLY("gameSetConcededLegally", ModelChangeDataType.BOOLEAN),
 	GAME_SET_CONCESSION_POSSIBLE("gameSetConcessionPossible", ModelChangeDataType.BOOLEAN),
 	GAME_SET_DEFENDER_ACTION("gameSetDefenderAction", ModelChangeDataType.PLAYER_ACTION),
 	GAME_SET_DEFENDER_ID("gameSetDefenderId", ModelChangeDataType.STRING),

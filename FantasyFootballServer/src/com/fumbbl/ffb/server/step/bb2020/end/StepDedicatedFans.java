@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.report.bb2020.ReportDedicatedFans;
@@ -23,8 +24,10 @@ public class StepDedicatedFans extends AbstractStep {
 	@Override
 	public void start() {
 
-		TeamResult homeResult = getGameState().getGame().getGameResult().getTeamResultHome();
-		TeamResult awayResult = getGameState().getGame().getGameResult().getTeamResultAway();
+		Game game = getGameState().getGame();
+
+		TeamResult homeResult = game.getGameResult().getTeamResultHome();
+		TeamResult awayResult = game.getGameResult().getTeamResultAway();
 
 		int homeDie;
 		int awayDie;
@@ -32,18 +35,18 @@ public class StepDedicatedFans extends AbstractStep {
 		String concededTeam = null;
 		Team winningTeam = null;
 
-		Team teamHome = getGameState().getGame().getTeamHome();
-		Team teamAway = getGameState().getGame().getTeamAway();
+		Team teamHome = game.getTeamHome();
+		Team teamAway = game.getTeamAway();
 
-		if (homeResult.hasConceded()) {
+		if (homeResult.hasConceded() && !game.isConcededLegally()) {
 			homeDie = 3;
 			concededTeam = teamHome.getId();
 			winningTeam = teamAway;
 		} else {
-		 homeDie = 6;
+			homeDie = 6;
 		}
 
-		if (awayResult.hasConceded()) {
+		if (awayResult.hasConceded() && !game.isConcededLegally()) {
 			awayDie = 3;
 			concededTeam = teamAway.getId();
 			winningTeam = teamHome;
