@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.block;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -18,26 +18,28 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.action.block.UtilBlockSequence;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 /**
  * Step in the block sequence to handle skill BALL_AND_CHAIN.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_PUSHBACK.
- * 
+ * <p>
  * Expects stepParameter OLD_DEFENDER_STATE_ID to be set by a preceding step.
- * 
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter STARTING_PUSHBACK_SQUARE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBlockBallAndChain extends AbstractStep {
 
 	private String fGotoLabelOnPushback;
 	private PlayerState fOldDefenderState;
+	private boolean endTurn;
 
 	public StepBlockBallAndChain(GameState pGameState) {
 		super(pGameState);
@@ -52,12 +54,12 @@ public class StepBlockBallAndChain extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_PUSHBACK:
-					fGotoLabelOnPushback = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_PUSHBACK:
+						fGotoLabelOnPushback = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -67,14 +69,17 @@ public class StepBlockBallAndChain extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case OLD_DEFENDER_STATE:
-				fOldDefenderState = (PlayerState) pParameter.getValue();
-				return true;
-			default:
-				break;
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
+				case OLD_DEFENDER_STATE:
+					fOldDefenderState = (PlayerState) parameter.getValue();
+					return true;
+				case END_TURN:
+					endTurn = parameter.getValue() != null && (boolean) parameter.getValue();
+					break;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -89,8 +94,13 @@ public class StepBlockBallAndChain extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly) && (fOldDefenderState != null)
-				&& fOldDefenderState.isProne()) {
+		if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly) && endTurn) {
+			publishParameters(UtilBlockSequence.initPushback(this));
+			PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+			game.getFieldModel().setPlayerState(game.getActingPlayer().getPlayer(), playerState.changeBase(PlayerState.FALLING));
+			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+		} else if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly) && (fOldDefenderState != null)
+			&& fOldDefenderState.isProne()) {
 			publishParameters(UtilBlockSequence.initPushback(this));
 			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.FALLING));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);

@@ -13,7 +13,7 @@ public class UtilGameOption {
 			return false;
 		}
 		GameOptionBoolean gameOption = (GameOptionBoolean) pGame.getOptions().getOptionWithDefault(pOptionId);
-		return (gameOption != null) ? gameOption.isEnabled() : false;
+		return gameOption != null && gameOption.isEnabled();
 	}
 
 	public static int getIntOption(Game pGame, GameOptionId pOptionId) {
