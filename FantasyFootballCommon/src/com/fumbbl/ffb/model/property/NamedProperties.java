@@ -144,16 +144,17 @@ public class NamedProperties {
 	public static final ISkillProperty preventHoldBall = new NamedProperty("Prevent Hold Ball");
 	public static final ISkillProperty preventKickTeamMateAction = new NamedProperty("Prevent Kick Team Mate Action");
 	public static final ISkillProperty preventOpponentFollowingUp = new NamedProperty("Prevent Opponent Following Up");
+	public static final ISkillProperty preventPickup = new NamedProperty("Prevent Pickup");
 	public static final ISkillProperty preventRaiseFromDead = new NamedProperty("Prevent Raise From Dead");
 	public static final ISkillProperty preventRecoverFromConcusionAction = new NamedProperty(
-			"Prevent Recover from Confusion Action");
+		"Prevent Recover from Confusion Action");
 	public static final ISkillProperty preventRecoverFromGazeAction = new NamedProperty(
-			"Prevent Recover from Gaze Aztion");
+		"Prevent Recover from Gaze Aztion");
 	public static final ISkillProperty preventRegularBlitzAction = new NamedProperty("Prevent Regular Blitz Action");
 	public static final ISkillProperty preventRegularBlockAction = new NamedProperty("Prevent Regular Block Action");
 	public static final ISkillProperty preventRegularFoulAction = new NamedProperty("Prevent Regular Foul Action");
 	public static final ISkillProperty preventRegularHandOverAction = new NamedProperty(
-			"Prevent Regular Hand Over Action");
+		"Prevent Regular Hand Over Action");
 	public static final ISkillProperty preventRegularPassAction = new NamedProperty("Prevent Regular Pass Action");
 	public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");

@@ -123,7 +123,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 						break;
 					case FAILURE:
 						publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+						if (!player.hasSkillProperty(NamedProperties.preventPickup)) {
+							publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+						}
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
 						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
@@ -151,7 +153,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private ActionStatus pickUp(Player<?> player) {
 		Game game = getGameState().getGame();
-		if (player.hasSkillProperty(NamedProperties.preventHoldBall)) {
+		if (player.hasSkillProperty(NamedProperties.preventHoldBall) || player.hasSkillProperty(NamedProperties.preventPickup)) {
 			return ActionStatus.FAILURE;
 		} else {
 			PickupModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.PICKUP_MODIFIER);
