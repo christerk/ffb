@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -51,15 +52,18 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				actingPlayer.setHasPassed(true);
 				game.setConcessionPossible(false);
+				ReRolledAction rerolledAction;
 				if (state.kicked) {
 					game.getTurnData().setKtmUsed(true);
+					rerolledAction = ReRolledActions.KICK_TEAM_MATE;
 				} else {
 					game.getTurnData().setPassUsed(true);
+					rerolledAction = ReRolledActions.THROW_TEAM_MATE;
 				}
 				UtilServerDialog.hideDialog(step.getGameState());
 				Player<?> thrower = game.getActingPlayer().getPlayer();
 				boolean doRoll = true;
-				if (ReRolledActions.THROW_TEAM_MATE == step.getReRolledAction()) {
+				if (rerolledAction == step.getReRolledAction()) {
 					if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), thrower)) {
 						handlePassResult(state.passResult, step);
 						doRoll = false;
@@ -77,7 +81,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					int roll = step.getGameState().getDiceRoller().rollSkill();
 					boolean playerCanPass = thrower.getPassing() != 0;
 					state.passResult = evaluatePass(playerCanPass, thrower.getPassingWithModifiers(), roll, ttmMechanic.modifierSum(passingDistance, passModifiers));
-					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
+					boolean reRolled = ((step.getReRolledAction() == rerolledAction)
 						&& (step.getReRollSource() != null));
 					boolean successful = state.passResult == PassResult.ACCURATE || state.passResult == PassResult.INACCURATE;
 
@@ -86,12 +90,12 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					if (successful) {
 						handlePassResult(state.passResult, step);
 					} else {
-						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE && playerCanPass) {
-							step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
+						if (step.getReRolledAction() != rerolledAction && playerCanPass) {
+							step.setReRolledAction(rerolledAction);
 							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-								ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
+								rerolledAction, minimumRoll, false)) {
 								handlePassResult(state.passResult, step);
-							}	
+							}
 						} else {
 							handlePassResult(state.passResult, step);
 						}
