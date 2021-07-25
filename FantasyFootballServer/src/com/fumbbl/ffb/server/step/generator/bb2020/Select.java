@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.step.generator.bb2020;
 
 import com.fumbbl.ffb.ApothecaryMode;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -39,7 +40,7 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING,
-			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false));
+			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, gameState.getGame().getActingPlayer().getPlayerAction() == PlayerAction.BLITZ_MOVE));
 		sequence.add(StepId.END_SELECTING);
 		// may insert endTurn, pass, throwTeamMate, block, foul or moveSequence add
 		// this point
