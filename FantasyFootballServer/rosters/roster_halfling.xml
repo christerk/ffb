@@ -48,8 +48,8 @@
 		<agility>3</agility>
 		<passing>4</passing>
 		<armour>6</armour>
-		<portrait>portraits/halfling_halfling.png</portrait>
-		<iconSet size="16">iconsets/halfling_halfling.png</iconSet>
+		<portrait>portraits/halfling_halflinghopeful.png</portrait>
+		<iconSet size="16">iconsets/halfling_halflinghopeful.png</iconSet>
 		<nameGenerator>halflingpos</nameGenerator>
 		<skillList>
 			<skill>Dodge</skill>
