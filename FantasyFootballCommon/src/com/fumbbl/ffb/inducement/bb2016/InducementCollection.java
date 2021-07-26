@@ -35,6 +35,17 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
+		add(new InducementType("igor", "Igor", "Igor", "Igors", GameOptionId.INDUCEMENT_IGORS_MAX,
+			GameOptionId.INDUCEMENT_IGORS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				if (team.getRoster().hasApothecary()) {
+					return 0;
+				}
+				return super.availability(team, options);
+			}
+		});
+
 		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
 			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,
 			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, IIconProperty.RESOURCE_MASTER_CHEF, Usage.STEAL_REROLL) {

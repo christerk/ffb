@@ -35,18 +35,6 @@ public abstract class InducementCollection implements IKeyedItem {
 			}
 		});
 
-		add(new InducementType("igor", "Igor", "Igor", "Igors", GameOptionId.INDUCEMENT_IGORS_MAX,
-			GameOptionId.INDUCEMENT_IGORS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
-			@Override
-			public int availability(Team team, GameOptions options) {
-				//TODO this might need change for the new rules depending on how the site will handle Sylvanian Spotlight
-				if (team.getRoster().hasApothecary()) {
-					return 0;
-				}
-				return super.availability(team, options);
-			}
-		});
-
 		add(new InducementType("starPlayers", "Star Players", "Star Player", "Star Players", GameOptionId.INDUCEMENT_STARS_MAX, null, Usage.STAR));
 
 		add(new InducementType("mercenaries", "Mercenaries", "Mercenary", "Mercenaries", null, null, Usage.LONER));

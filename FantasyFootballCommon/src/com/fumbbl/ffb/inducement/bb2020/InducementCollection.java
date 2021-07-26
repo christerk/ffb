@@ -35,6 +35,17 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
+		add(new InducementType("igor", "Igor", "Igor", "Igors", GameOptionId.INDUCEMENT_IGORS_MAX,
+			GameOptionId.INDUCEMENT_IGORS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				if (!team.getSpecialRules().contains(SpecialRule.SYLVANIAN_SPOTLIGHT)) {
+					return 0;
+				}
+				return super.availability(team, options);
+			}
+		});
+
 		add(new InducementType("riotousRookies", "Riotous Rookies", "Riotous Rookies", "Riotous Rookies",
 			GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX, GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_COST, Usage.ADD_LINEMEN) {
 			@Override
