@@ -78,20 +78,20 @@ public final class StepPettyCash extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		GameResult gameResult = game.getGameResult();
+		gameResult.getTeamResultHome()
+			.setTeamValue(Math.max(gameResult.getTeamResultHome().getTeamValue(), game.getTeamHome().getTeamValue()));
+		gameResult.getTeamResultAway()
+			.setTeamValue(Math.max(gameResult.getTeamResultAway().getTeamValue(), game.getTeamAway().getTeamValue()));
 		if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PETTY_CASH)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
-		GameResult gameResult = game.getGameResult();
-		gameResult.getTeamResultHome()
-				.setTeamValue(Math.max(gameResult.getTeamResultHome().getTeamValue(), game.getTeamHome().getTeamValue()));
-		gameResult.getTeamResultAway()
-				.setTeamValue(Math.max(gameResult.getTeamResultAway().getTeamValue(), game.getTeamAway().getTeamValue()));
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.FORCE_TREASURY_TO_PETTY_CASH)) {
 			gameResult.getTeamResultHome().setPettyCashTransferred(game.getTeamHome().getTreasury());
 			if (game.getTeamAway().getTeamValue() > game.getTeamHome().getTeamValue()) {
 				gameResult.getTeamResultHome().setPettyCashTransferred(gameResult.getTeamResultHome().getPettyCashTransferred()
-						+ (game.getTeamAway().getTeamValue() - game.getTeamHome().getTeamValue()));
+					+ (game.getTeamAway().getTeamValue() - game.getTeamHome().getTeamValue()));
 			}
 			fPettyCashSelectedHome = true;
 			gameResult.getTeamResultAway().setPettyCashTransferred(game.getTeamAway().getTreasury());

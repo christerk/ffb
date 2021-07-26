@@ -10,7 +10,6 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -39,7 +38,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_ASSISTANT_COACHES = "assistantCoaches";
 	private static final String _XML_TAG_COACH = "coach";
 	private static final String _XML_TAG_FAN_FACTOR = "fanFactor";
-	private static final String _XML_TAG_TEAM_VALUE = "teamValue";
+	private static final String _XML_TAG_TEAM_VALUE = "currentTeamValue";
 	private static final String _XML_TAG_DIVISION = "division";
 	private static final String _XML_TAG_TREASURY = "treasury";
 	private static final String _XML_TAG_BASE_ICON_PATH = "baseIconPath";
