@@ -14,6 +14,9 @@
 	<teamStrength>88</teamStrength>
 	<division>[X]</division>
 	<treasury>500000</treasury>
+	<specialRules>
+		<rule>Bribery and Corruption</rule>
+	</specialRules>
 
 	<player nr="1" id="teamGoblinKalimar1">
 		<name>Troll1</name>

@@ -12,9 +12,7 @@
 	<necromancer>true</necromancer>
 	<undead>true</undead>
 	<nameGenerator>default</nameGenerator>
-	<specialRules>
-		<rule>Masters of Undeath</rule>
-	</specialRules>
+
 
 	<position id="necromantic.werewolf">
 		<quantity>2</quantity>

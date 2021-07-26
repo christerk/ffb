@@ -1,15 +1,15 @@
 package com.fumbbl.ffb.inducement;
 
-import java.util.Collections;
-import java.util.Set;
-
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.model.GameOptions;
-import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.option.IGameOption;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class InducementType implements INamedObject {
 
@@ -86,15 +86,15 @@ public class InducementType implements INamedObject {
 		return slotIconProperty;
 	}
 
-	public GameOptionId getActualCostId(Roster roster) {
-		return useReducedCostId(roster) ? getReducedCostId() : getCostId();
+	public GameOptionId getActualCostId(Team team) {
+		return useReducedCostId(team) ? getReducedCostId() : getCostId();
 	}
 
-	protected boolean useReducedCostId(Roster roster) {
+	protected boolean useReducedCostId(Team team) {
 		return false;
 	}
 
-	public int availability(Roster roster, GameOptions options) {
+	public int availability(Team team, GameOptions options) {
 		IGameOption gameOption = options.getOptionWithDefault(getMaxId());
 
 		if (gameOption instanceof GameOptionInt) {

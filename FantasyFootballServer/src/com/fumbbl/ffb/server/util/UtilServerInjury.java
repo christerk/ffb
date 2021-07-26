@@ -205,7 +205,7 @@ public class UtilServerInjury {
 		boolean deadPlayerPreventsRaisedFromDead = deadPlayer.hasSkillProperty(NamedProperties.preventRaiseFromDead);
 
 		if (pInjuryResult.injuryContext().getPlayerState() != null && PlayerState.RIP == pInjuryResult.injuryContext().getPlayerState().getBase()) {
-			if (mechanic.canRaiseDead(necroTeam.getRoster()) && (necroTeamResult.getRaisedDead() == 0)
+			if (mechanic.canRaiseDead(necroTeam) && (necroTeamResult.getRaisedDead() == 0)
 				&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead) {
 				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
 					deadPlayer.getId());

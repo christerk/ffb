@@ -7,9 +7,7 @@
 	<reRollCost>70000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-	<specialRules>
-		<rule>Low Cost Linemen</rule>
-	</specialRules>
+
 	<maxBigGuys>2</maxBigGuys>
 
 	<position id="37844">

@@ -108,8 +108,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canRaiseDead(Roster roster) {
-		return roster.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
+	public boolean canRaiseDead(Team team) {
+		return team.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
 	}
 
 	@Override

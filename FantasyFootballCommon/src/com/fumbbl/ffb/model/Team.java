@@ -17,7 +17,11 @@ import javax.xml.transform.sax.TransformerHandler;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -44,6 +48,8 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_BASE_ICON_PATH = "baseIconPath";
 	private static final String _XML_TAG_LOGO_URL = "logo";
 	private static final String _XML_TAG_DEDICATED_FANS = "dedicatedFans";
+	private static final String _XML_TAG_SPECIAL_RULES = "specialRule";
+	private static final String _XML_TAG_RULE = "rule";
 
 	private String fId;
 	private String fName;
@@ -60,6 +66,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	private String fBaseIconPath;
 	private String fLogoUrl;
 	private int dedicatedFans;
+	private final Set<SpecialRule> specialRules;
 
 	private String fRosterId;
 	private Roster fRoster;
@@ -78,6 +85,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	public Team(IFactorySource game) {
 		fPlayerById = new HashMap<>();
 		fPlayerByNr = new HashMap<>();
+		specialRules = new HashSet<>();
 		updateRoster(new Roster(), game);
 	}
 
@@ -119,6 +127,10 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 
 	public String getId() {
 		return fId;
+	}
+
+	public Set<SpecialRule> getSpecialRules() {
+		return specialRules;
 	}
 
 	public void addPlayer(Player<?> pPlayer) {
@@ -334,6 +346,12 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 			player.addToXml(pHandler);
 		}
 
+		if (!specialRules.isEmpty()) {
+			UtilXml.startElement(pHandler, _XML_TAG_SPECIAL_RULES);
+			specialRules.forEach(rule -> UtilXml.addValueElement(pHandler, _XML_TAG_RULE, rule.getRuleName()));
+			UtilXml.endElement(pHandler, _XML_TAG_SPECIAL_RULES);
+		}
+
 		UtilXml.endElement(pHandler, XML_TAG);
 
 	}
@@ -417,6 +435,15 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 			if (_XML_TAG_DEDICATED_FANS.equals(pXmlTag)) {
 				setDedicatedFans(Integer.parseInt(pValue));
 			}
+
+			if (_XML_TAG_RULE.equals(pXmlTag)) {
+				SpecialRule rule = SpecialRule.from(pValue);
+				if (rule != null) {
+					specialRules.add(rule);
+				} else {
+					game.getApplicationSource().logError("Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
+				}
+			}
 		}
 		return complete;
 	}
@@ -441,6 +468,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
 		IJsonOption.LOGO_URL.addTo(jsonObject, fLogoUrl);
 		IJsonOption.DEDICATED_FANS.addTo(jsonObject, dedicatedFans);
+		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().filter(Objects::nonNull).map(SpecialRule::name).collect(Collectors.toSet()));
 
 		JsonArray playerArray = new JsonArray();
 		for (Player<?> player : getPlayers()) {
@@ -474,6 +502,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(game, jsonObject);
 		fLogoUrl = IJsonOption.LOGO_URL.getFrom(game, jsonObject);
 		dedicatedFans = IJsonOption.DEDICATED_FANS.getFrom(game, jsonObject);
+		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).filter(Objects::nonNull).map(SpecialRule::valueOf).collect(Collectors.toSet()));
 
 		fPlayerById.clear();
 		fPlayerByNr.clear();

@@ -280,7 +280,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		return Stream.concat(
 			Stream.concat(
 				Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.STAR).map(RosterPosition::getCost),
-				factory.allTypes().stream().filter(type -> type.getCostId() != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(roster)))
+				factory.allTypes().stream().filter(type -> type.getCostId() != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(team)))
 			),
 			Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.MERCENARY).map(pos -> pos.getCost() + UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 		).min(Integer::compareTo).orElse(Integer.MAX_VALUE);
@@ -489,8 +489,8 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		Roster roster = team.getRoster();
 		Game game = getGameState().getGame();
 		return Arrays.stream(inducementSet.getInducements())
-			.filter(inducement -> inducement.getType().getActualCostId(roster) != null)
-			.mapToInt(inducement -> inducement.getValue() * UtilGameOption.getIntOption(game, inducement.getType().getActualCostId(roster)))
+			.filter(inducement -> inducement.getType().getActualCostId(team) != null)
+			.mapToInt(inducement -> inducement.getValue() * UtilGameOption.getIntOption(game, inducement.getType().getActualCostId(team)))
 			.sum();
 	}
 

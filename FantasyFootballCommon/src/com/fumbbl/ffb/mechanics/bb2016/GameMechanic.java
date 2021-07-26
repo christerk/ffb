@@ -97,8 +97,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canRaiseDead(Roster roster) {
-		return roster.hasNecromancer();
+	public boolean canRaiseDead(Team team) {
+		return team.getRoster().hasNecromancer();
 	}
 
 	@Override

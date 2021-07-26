@@ -7,9 +7,6 @@
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<nameGenerator>default</nameGenerator>
-	<specialRules>
-		<rule>Bribery and Corruption</rule>
-	</specialRules>
 
 	<position id="goblin.goblin">
 		<quantity>16</quantity>

@@ -5,7 +5,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.GameOptions;
-import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -30,8 +30,8 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			};
 
 			@Override
-			protected boolean useReducedCostId(Roster roster) {
-				return ROSTERS_WITH_CHEAP_BRIBES.contains(roster.getName());
+			protected boolean useReducedCostId(Team team) {
+				return ROSTERS_WITH_CHEAP_BRIBES.contains(team.getRoster().getName());
 			}
 		});
 
@@ -39,19 +39,19 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,
 			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, IIconProperty.RESOURCE_MASTER_CHEF, Usage.STEAL_REROLL) {
 			@Override
-			protected boolean useReducedCostId(Roster roster) {
-				return "Halfling".equals(roster.getName());
+			protected boolean useReducedCostId(Team team) {
+				return "Halfling".equals(team.getRoster().getName());
 			}
 		});
 
 		add(new InducementType("riotousRookies", "Riotous Rookies", "Riotous Rookies", "Riotous Rookies",
 			GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX, GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_COST, Usage.ADD_LINEMEN) {
 			@Override
-			public int availability(Roster roster, GameOptions options) {
-				if (!StringTool.isProvided(roster.getRiotousPositionId()) || "0".equals(roster.getRiotousPositionId())) {
+			public int availability(Team team, GameOptions options) {
+				if (!StringTool.isProvided(team.getRoster().getRiotousPositionId()) || "0".equals(team.getRoster().getRiotousPositionId())) {
 					return 0;
 				}
-				return super.availability(roster, options);
+				return super.availability(team, options);
 			}
 		});
 	}};

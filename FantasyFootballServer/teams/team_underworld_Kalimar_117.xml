@@ -13,6 +13,9 @@
 	<currentTeamValue>100</currentTeamValue>
 	<teamStrength>106</teamStrength>
 	<division>[X]</division>
+	<specialRules>
+		<rule>Low Cost Linemen</rule>
+	</specialRules>
 
 	<player nr="1" id="teamUnderworldKalimar1">
 		<name>Goblin1</name>
