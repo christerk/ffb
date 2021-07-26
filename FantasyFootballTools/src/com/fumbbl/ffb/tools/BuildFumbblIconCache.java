@@ -1,5 +1,17 @@
 package com.fumbbl.ffb.tools;
 
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.tools.mock.MockGame;
+import com.fumbbl.ffb.xml.XmlHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -14,19 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.model.RosterPosition;
-import com.fumbbl.ffb.xml.XmlHandler;
 
 /**
  * Ergebnis eines XML Imports.
@@ -80,7 +79,7 @@ public class BuildFumbblIconCache {
          BufferedReader xmlIn = new BufferedReader(stringReader)) {
       InputSource inputSource = new InputSource(xmlIn);
       try {
-        XmlHandler.parse(null, inputSource, roster);
+        XmlHandler.parse(new MockGame(), inputSource, roster);
       } catch (FantasyFootballException pFfe) {
         throw new FantasyFootballException("Error initializing roster id " + pRosterId, pFfe);
       }
@@ -193,6 +192,9 @@ public class BuildFumbblIconCache {
       	Properties iconCache = new Properties();
         collectPlayerIcons.collectRosterIcons(1, iconCache);  // Ranked
         collectPlayerIcons.collectRosterIcons(3, iconCache);  // Stunty Leeg
+        collectPlayerIcons.collectRosterIcons(5, iconCache);
+        collectPlayerIcons.collectRosterIcons(10, iconCache);
+        collectPlayerIcons.collectRosterIcons(200, iconCache);
         collectPlayerIcons.saveIconCache(new File(args[0]), iconCache);
       } catch (Exception pAnyException) {
         pAnyException.printStackTrace();
