@@ -10,7 +10,7 @@
 	<fanFactor>9</fanFactor>
 	<apothecaries>1</apothecaries>
 	<teamRating>100</teamRating>
-	<currentTeamRating>100</currentTeamRating>
+	<currentTeamValue>100</currentTeamValue>
 	<teamStrength>88</teamStrength>
 	<division>[X]</division>
 	<treasury>500000</treasury>

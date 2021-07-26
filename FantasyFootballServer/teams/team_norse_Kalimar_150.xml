@@ -12,7 +12,7 @@
 	<cheerleaders>3</cheerleaders>
 	<assistantCoaches>4</assistantCoaches>
 	<teamRating>100</teamRating>
-	<currentTeamRating>100</currentTeamRating>
+	<currentTeamValue>100</currentTeamValue>
 	<teamStrength>102</teamStrength>
 	<division>[X]</division>
 	<baseIconPath>http://localhost:2224/icons/</baseIconPath>

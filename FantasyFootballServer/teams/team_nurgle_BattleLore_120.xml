@@ -10,7 +10,7 @@
     <fanFactor>4</fanFactor>
     <apothecaries>0</apothecaries>
     <teamRating>100</teamRating>
-    <currentTeamRating>100</currentTeamRating>
+    <currentTeamValue>100</currentTeamValue>
     <teamStrength>103</teamStrength>
     <division>[X]</division>
     <baseIconPath>http://localhost:2224/icons/</baseIconPath>
