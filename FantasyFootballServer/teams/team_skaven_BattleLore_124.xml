@@ -2,25 +2,26 @@
 
 <team id="teamSkavenBattleLore">
 
-  <coach>BattleLore</coach>
-  <name>BattleLore's Skaven</name>
-  <race>Skaven</race>
-  <rosterId>skaven.lrb6</rosterId>
-  <reRolls>5</reRolls>
-  <fanFactor>9</fanFactor>
-  <apothecaries>1</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>117</teamStrength>
-  <division>[X]</division>
+	<coach>BattleLore</coach>
+	<name>BattleLore's Skaven</name>
+	<race>Skaven</race>
+	<rosterId>skaven.lrb6</rosterId>
+	<reRolls>5</reRolls>
+	<fanFactor>9</fanFactor>
+	<apothecaries>1</apothecaries>
+	<teamRating>100</teamRating>
+	<currentTeamRating>100</currentTeamRating>
+	<teamStrength>117</teamStrength>
+	<division>[X]</division>
 
-  <player nr="1" id="teamSkavenBattleLore1">
-  	<name>RatOgre</name>
-  	<gender>male</gender>
-  	<positionId>skaven.ratogre</positionId>
-  	<skillList></skillList>
-  </player>
+	<player nr="1" id="teamSkavenBattleLore1">
+		<name>RatOgre</name>
+		<gender>male</gender>
+		<positionId>skaven.ratogre</positionId>
+		<skillList></skillList>
+	</player>
 
-  <player nr="2" id="teamSkavenBattleLore2">
+	<player nr="2" id="teamSkavenBattleLore2">
   	<name>Blitzer1</name>
   	<gender>male</gender>
   	<positionId>skaven.blitzer</positionId>

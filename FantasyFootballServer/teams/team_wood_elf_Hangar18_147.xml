@@ -2,24 +2,25 @@
 
 <team id="teamWoodElfHangar18">
 
-  <coach>Hangar18</coach>
-  <name>Hangar18's Wood Elves</name>
-  <race>Wood Elf</race>
-  <rosterId>woodelf.lrb6</rosterId>
-  <reRolls>3</reRolls>
-  <fanFactor>8</fanFactor>
-  <apothecaries>2</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>113</teamStrength>
-  <division>[X]</division>
+    <coach>Hangar18</coach>
+    <name>Hangar18's Wood Elves</name>
+    <race>Wood Elf</race>
+    <rosterId>woodelf.lrb6</rosterId>
+    <reRolls>3</reRolls>
+    <fanFactor>8</fanFactor>
+    <apothecaries>2</apothecaries>
+    <teamRating>100</teamRating>
+    <currentTeamRating>100</currentTeamRating>
+    <teamStrength>113</teamStrength>
+    <division>[X]</division>
 
-  <player nr="1" id="teamWoodElfHangar181">
-  	<name>Wardancer1</name>
-  	<gender>male</gender>
-  	<positionId>woodelf.wardancer</positionId>
-  	<skillList>
-  	  <skill>Strip Ball</skill>
-	  <skill>Leader</skill>
+    <player nr="1" id="teamWoodElfHangar181">
+        <name>Wardancer1</name>
+        <gender>male</gender>
+        <positionId>woodelf.wardancer</positionId>
+        <skillList>
+            <skill>Strip Ball</skill>
+            <skill>Leader</skill>
   	</skillList>
   </player>
 
