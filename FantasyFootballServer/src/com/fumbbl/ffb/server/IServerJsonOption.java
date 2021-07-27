@@ -29,6 +29,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
 	JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
 	JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
+	JsonIntOption BRAWLER_INDEX = new JsonIntOption("brawlerIndex");
 	JsonBooleanOption BRIBES_CHOICE = new JsonBooleanOption("bribesChoice");
 	JsonBooleanOption BRIBES_CHOICE_AWAY = new JsonBooleanOption("bribesChoiceAway");
 	JsonBooleanOption BRIBES_CHOICE_HOME = new JsonBooleanOption("bribesChoiceHome");
