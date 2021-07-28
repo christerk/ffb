@@ -137,7 +137,7 @@ public class ActingPlayer implements IJsonSerializable {
 		if ((pSkill == null) || isSkillUsed(pSkill)) {
 			return;
 		}
-		if (pSkill.getSkillUsageType() != SkillUsageType.NORMAL) {
+		if (pSkill.getSkillUsageType() != SkillUsageType.ONCE_PER_TURN) {
 			getPlayer().markUsed(pSkill, getGame());
 		} else {
 			fUsedSkills.add(pSkill);

@@ -64,7 +64,7 @@ public abstract class Skill implements INamedObject {
 	}
 
 	public Skill(String name, SkillCategory category, int defaultSkillValue) {
-		this(name, category, defaultSkillValue, SkillUsageType.NORMAL);
+		this(name, category, defaultSkillValue, SkillUsageType.ONCE_PER_TURN);
 	}
 
 	public Skill(String name, SkillCategory category, int defaultSkillValue, SkillUsageType skillUsageType) {
