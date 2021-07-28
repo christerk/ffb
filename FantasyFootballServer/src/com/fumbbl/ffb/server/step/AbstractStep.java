@@ -7,6 +7,8 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogConcedeGameParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -24,8 +26,8 @@ import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.EndGame;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 
@@ -190,20 +192,23 @@ public abstract class AbstractStep implements IStep {
 			boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState().getId()) == pReceivedCommand
 					.getSession());
 			switch (concedeGameCommand.getConcedeGameStatus()) {
-			case REQUESTED:
-				if (game.isConcessionPossible()
+				case REQUESTED:
+					if (game.isConcessionPossible()
 						&& ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
-					UtilServerDialog.showDialog(getGameState(), new DialogConcedeGameParameter(), false);
-				}
-				break;
-			case CONFIRMED:
-				game.setConcessionPossible(false);
-				gameResult.getTeamResultHome().setConceded(game.isHomePlaying() && homeCommand);
-				gameResult.getTeamResultAway().setConceded(!game.isHomePlaying() && awayCommand);
-				break;
-			case DENIED:
-				UtilServerDialog.hideDialog(getGameState());
-				break;
+						UtilServerDialog.showDialog(getGameState(), new DialogConcedeGameParameter(), false);
+					}
+					break;
+				case CONFIRMED:
+					game.setConcessionPossible(false);
+					gameResult.getTeamResultHome().setConceded(game.isHomePlaying() && homeCommand);
+					gameResult.getTeamResultAway().setConceded(!game.isHomePlaying() && awayCommand);
+					GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+					boolean isLegal = mechanic.isLegalConcession(game, game.getActingTeam());
+					game.setConcededLegally(isLegal);
+					break;
+				case DENIED:
+					UtilServerDialog.hideDialog(getGameState());
+					break;
 			}
 			if (gameResult.getTeamResultHome().hasConceded() || gameResult.getTeamResultAway().hasConceded()) {
 				getGameState().getStepStack().clear();

@@ -74,7 +74,7 @@ public enum PlayerChoiceMode implements INamedObject {
 				header.append("Select a player to receive the Blessed Statue of Nuffle");
 				break;
 			case ASSIGN_TOUCHDOWN:
-				header.append("Assign a touchdown from the conceding team to one your players");
+				header.append("Assign a touchdown to one of your players");
 				break;
 			default:
 				break;

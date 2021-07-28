@@ -100,7 +100,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		int[] roll = injuryContext.getCasualtyRoll();
 		CasualtyModifierFactory factory = game.getFactory(FactoryType.Factory.CASUALTY_MODIFIER);
 		Set<CasualtyModifier> casualtyModifiers = factory.findModifiers(player);
-		injuryContext.setCasualtyModifiers(casualtyModifiers);
+		injuryContext.addCasualtyModifiers(casualtyModifiers);
 		int modifierSum = casualtyModifiers.stream().mapToInt(CasualtyModifier::getModifier).sum();
 		return new PlayerState(mapCasualtyRoll(roll[0] + modifierSum));
 	}

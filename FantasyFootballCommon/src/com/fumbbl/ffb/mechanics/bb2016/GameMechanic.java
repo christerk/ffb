@@ -11,7 +11,10 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -94,8 +97,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canRaiseDead(Roster roster) {
-		return roster.hasNecromancer();
+	public boolean canRaiseDead(Team team) {
+		return team.getRoster().hasNecromancer();
 	}
 
 	@Override
@@ -187,5 +190,20 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		} else {
 			return "Rookie";
 		}
+	}
+
+	@Override
+	public boolean touchdownEndsGame(Game game) {
+		return game.getHalf() == 3;
+	}
+
+	@Override
+	public RosterPosition riotousRookiesPosition(Roster roster) {
+		return roster.getRiotousPosition();
+	}
+
+	@Override
+	public boolean isLegalConcession(Game game, Team team) {
+		return UtilPlayer.findPlayersInReserveOrField(game, team).length <= 2;
 	}
 }

@@ -64,8 +64,8 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			private StepAction performWrestle(StepWrestle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
-
+				boolean defenderHasTacklezones = state.oldDefenderState.hasTacklezones();
+				
 				if (state.usingWrestleAttacker) {
 					step.getResult()
 						.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));

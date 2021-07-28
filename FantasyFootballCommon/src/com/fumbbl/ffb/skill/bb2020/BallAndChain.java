@@ -42,6 +42,7 @@ public class BallAndChain extends Skill {
 		registerProperty(NamedProperties.placedProneCausesInjuryRoll);
 		registerProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
 		registerProperty(NamedProperties.preventAutoMove);
+		registerProperty(NamedProperties.preventPickup);
 		registerProperty(NamedProperties.preventRegularBlitzAction);
 		registerProperty(NamedProperties.preventRegularBlockAction);
 		registerProperty(NamedProperties.preventRegularFoulAction);

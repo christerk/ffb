@@ -1,27 +1,20 @@
 package com.fumbbl.ffb.server.step.bb2020;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.BlitzTurnState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.report.bb2020.ReportBlitzRoll;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
@@ -32,16 +25,14 @@ import java.util.Arrays;
 
 /**
  * Step in kickoff sequence to handle blitz kickoff result.
- * 
+ * <p>
  * Expects stepParameter END_TURN to be set by a preceding step. (parameter is
  * consumed on TurnMode.BLITZ)
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepBlitzTurn extends AbstractStep {
-
-	private boolean fEndTurn;
 
 	public StepBlitzTurn(GameState pGameState) {
 		super(pGameState);
@@ -49,21 +40,6 @@ public final class StepBlitzTurn extends AbstractStep {
 
 	public StepId getId() {
 		return StepId.BLITZ_TURN;
-	}
-
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		Game game = getGameState().getGame();
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.END_TURN) {
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				if (game.getTurnMode() == TurnMode.BLITZ) {
-					consume(pParameter);
-				}
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
@@ -87,10 +63,9 @@ public final class StepBlitzTurn extends AbstractStep {
 
 		if (game.getTurnMode() == TurnMode.BLITZ) {
 
-			if (fEndTurn) {
-				getGameState().setBlitzTurnState(null);
-				game.setTurnMode(TurnMode.KICKOFF);
-			}
+			getGameState().setBlitzTurnState(null);
+			game.setTurnMode(TurnMode.KICKOFF);
+
 
 		} else {
 
@@ -127,23 +102,6 @@ public final class StepBlitzTurn extends AbstractStep {
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
-	}
-
-	// JSON serialization
-
-	@Override
-	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-		return jsonObject;
-	}
-
-	@Override
-	public StepBlitzTurn initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
-		return this;
 	}
 
 }

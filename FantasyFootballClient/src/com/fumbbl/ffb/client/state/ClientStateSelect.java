@@ -423,7 +423,7 @@ public class ClientStateSelect extends ClientState {
 
 		return (!game.getTurnData().isPassUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& pPlayer.hasSkillProperty(NamedProperties.canThrowTeamMates) && rightStuffAvailable
+			&& mechanic.canThrow(pPlayer) && rightStuffAvailable
 			&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 

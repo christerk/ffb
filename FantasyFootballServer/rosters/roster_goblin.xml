@@ -7,9 +7,6 @@
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<nameGenerator>default</nameGenerator>
-	<specialRules>
-		<rule>Bribery and Corruption</rule>
-	</specialRules>
 
 	<position id="goblin.goblin">
 		<quantity>16</quantity>
@@ -78,8 +75,8 @@
 		<agility>3</agility>
 		<passing>4</passing>
 		<armour>7</armour>
-		<portrait>portraits/goblin_bombardier.png</portrait>
-		<iconSet size="2">iconsets/goblin_bombardier.png</iconSet>
+		<portrait>portraits/goblin_bomma.png</portrait>
+		<iconSet size="2">iconsets/goblin_bomma.png</iconSet>
 		<skillList>
 			<skill>Bombardier</skill>
 			<skill>Dodge</skill>
@@ -276,8 +273,8 @@
 		<strength>6</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/Ripper.png</portrait>
-		<iconSet size="1">iconsets/Ripper.png</iconSet>
+		<portrait>portraits/RipperBolgrot.png</portrait>
+		<iconSet size="1">iconsets/RipperBolgrot.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Grab</skill>

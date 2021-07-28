@@ -4,11 +4,10 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.model.GameOptions;
-import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
-import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,35 +27,11 @@ public abstract class InducementCollection implements IKeyedItem {
 		add(new InducementType("wanderingApothecaries", "Wandering Apo.", "Wandering Apothecary", "Wandering Apothecaries",
 			GameOptionId.INDUCEMENT_APOS_MAX, GameOptionId.INDUCEMENT_APOS_COST, Usage.APOTHECARY) {
 			@Override
-			public int availability(Roster roster, GameOptions options) {
-				if (!roster.hasApothecary()) {
+			public int availability(Team team, GameOptions options) {
+				if (!team.getRoster().hasApothecary()) {
 					return 0;
 				}
-				return super.availability(roster, options);
-			}
-		});
-
-		add(new InducementType("igor", "Igor", "Igor", "Igors", GameOptionId.INDUCEMENT_IGORS_MAX,
-			GameOptionId.INDUCEMENT_IGORS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
-			@Override
-			public int availability(Roster roster, GameOptions options) {
-				//TODO this might need change for the new rules depending on how the site will handle Sylvanian Spotlight
-				if (roster.hasApothecary()) {
-					return 0;
-				}
-				return super.availability(roster, options);
-			}
-		});
-
-		add(new InducementType("riotousRookies", "Riotous Rookies", "Riotous Rookies", "Riotous Rookies",
-			GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX, GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_COST, Usage.ADD_LINEMEN) {
-			@Override
-			public int availability(Roster roster, GameOptions options) {
-				//TODO this might need change for the new rules depending on how the site will handle Low Cost Linemen
-				if (!StringTool.isProvided(roster.getRiotousPositionId()) || "0".equals(roster.getRiotousPositionId())) {
-					return 0;
-				}
-				return super.availability(roster, options);
+				return super.availability(team, options);
 			}
 		});
 
@@ -67,14 +42,14 @@ public abstract class InducementCollection implements IKeyedItem {
 		add(new InducementType("wizard", "Wizard", "Wizard", "Wizards", GameOptionId.INDUCEMENT_WIZARDS_MAX,
 			GameOptionId.INDUCEMENT_WIZARDS_COST, IIconProperty.RESOURCE_WIZARD, Usage.SPELL) {
 			@Override
-			public int availability(Roster roster, GameOptions options) {
+			public int availability(Team team, GameOptions options) {
 				IGameOption wizardOption = options.getOptionWithDefault(getMaxId());
 				if (!wizardOption.isChanged()) {
 					return ((GameOptionBoolean) options.getOptionWithDefault(GameOptionId.WIZARD_AVAILABLE)).isEnabled() ? 1
 						: 0;
 				}
 
-				return super.availability(roster, options);
+				return super.availability(team, options);
 			}
 
 			@Override

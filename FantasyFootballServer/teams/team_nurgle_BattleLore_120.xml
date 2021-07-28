@@ -2,24 +2,25 @@
 
 <team id="teamNurgleBattleLore">
 
-  <coach>BattleLore</coach>
-  <name>BattleLore's Nurgle</name>
-  <race>Nurgle</race>
-  <rosterId>nurgle.lrb6</rosterId>
-  <reRolls>3</reRolls>
-  <fanFactor>4</fanFactor>
-  <apothecaries>0</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>103</teamStrength>
-  <division>[X]</division>
-  <baseIconPath>http://localhost:2224/icons/</baseIconPath>  
+    <coach>BattleLore</coach>
+    <name>BattleLore's Nurgle</name>
+    <race>Nurgle</race>
+    <rosterId>nurgle.lrb6</rosterId>
+    <reRolls>3</reRolls>
+    <fanFactor>4</fanFactor>
+    <apothecaries>0</apothecaries>
+    <teamRating>100</teamRating>
+    <currentTeamValue>100</currentTeamValue>
+    <teamStrength>103</teamStrength>
+    <division>[X]</division>
+    <baseIconPath>http://localhost:2224/icons/</baseIconPath>
 
-  <player nr="1" id="teamNurgleBattleLore1">
-    <name>The Beast</name>
-  	<gender>male</gender>
-  	<positionId>nurgle.beast</positionId>
-  	<skillList></skillList>
-  </player>
+    <player nr="1" id="teamNurgleBattleLore1">
+        <name>The Beast</name>
+        <gender>male</gender>
+        <positionId>nurgle.beast</positionId>
+        <skillList></skillList>
+    </player>
 
   <player nr="2" id="teamNurgleBattleLore2">
   	<name>Warrior1</name>

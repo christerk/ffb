@@ -101,6 +101,10 @@ public final class StepAssignTouchdowns extends AbstractStep {
 			touchdowns = 0;
 		}
 
+		if (game.isConcededLegally()) {
+			touchdowns = Math.min(touchdowns, 1);
+		}
+
 		if (game.isAdminMode()) {
 			while (touchdowns-- > 0) {
 				Collections.shuffle(players);

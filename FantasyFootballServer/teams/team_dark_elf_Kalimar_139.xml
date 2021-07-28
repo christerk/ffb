@@ -2,25 +2,26 @@
 
 <team id="teamDarkElfKalimar">
 
-  <coach>Kalimar</coach>
-  <name>Kalimar's Dark Elves</name>
-  <race>Dark Elf</race>
-  <rosterId>darkelf.lrb6</rosterId>
-  <reRolls>3</reRolls>
-  <fanFactor>8</fanFactor>
-  <apothecaries>1</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>99</teamStrength>
-  <division>[X]</division>
+	<coach>Kalimar</coach>
+	<name>Kalimar's Dark Elves</name>
+	<race>Dark Elf</race>
+	<rosterId>darkelf.lrb6</rosterId>
+	<reRolls>3</reRolls>
+	<fanFactor>8</fanFactor>
+	<apothecaries>1</apothecaries>
+	<teamRating>100</teamRating>
+	<currentTeamValue>100</currentTeamValue>
+	<teamStrength>99</teamStrength>
+	<division>[X]</division>
 
-  <player nr="1" id="teamDarkElfKalimar1">
-  	<name>Blitzer1</name>
-  	<gender>male</gender>
-  	<positionId>darkelf.blitzer</positionId>
-  	<skillList></skillList>
-  </player>
+	<player nr="1" id="teamDarkElfKalimar1">
+		<name>Blitzer1</name>
+		<gender>male</gender>
+		<positionId>darkelf.blitzer</positionId>
+		<skillList></skillList>
+	</player>
 
-  <player nr="2" id="teamDarkElfKalimar2">
+	<player nr="2" id="teamDarkElfKalimar2">
   	<name>Blitzer2</name>
   	<gender>male</gender>
   	<positionId>darkelf.blitzer</positionId>

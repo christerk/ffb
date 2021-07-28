@@ -11,13 +11,19 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.SpecialRule;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
@@ -76,11 +82,18 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {
-		String[] messages = new String[4];
-		messages[0] = "Do you want to concede this game?";
-		messages[1] = "You will lose D3 dedicated fans (to a minimum of 1).";
-		messages[2] = "You will lose your player award and all your winnings.";
-		messages[3] = "Some valuable players (more than 3 advancements) may decide to leave your team.";
+		String[] messages;
+		if (legalConcession) {
+			messages = new String[2];
+			messages[0] = "Do you want to concede this game?";
+			messages[1] = "The concession will have no negative consequences at this point.";
+		} else {
+			messages = new String[4];
+			messages[0] = "Do you want to concede this game?";
+			messages[1] = "You will lose D3 dedicated fans (to a minimum of 1).";
+			messages[2] = "You will lose your player award and all your winnings.";
+			messages[3] = "Some valuable players (more than 3 advancements) may decide to leave your team.";
+		}
 		return messages;
 	}
 
@@ -95,8 +108,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canRaiseDead(Roster roster) {
-		return roster.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
+	public boolean canRaiseDead(Team team) {
+		return team.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
 	}
 
 	@Override
@@ -191,5 +204,28 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			default:
 				return "Legend";
 		}
+	}
+
+	@Override
+	public boolean touchdownEndsGame(Game game) {
+		return false;
+	}
+
+	@Override
+	public RosterPosition riotousRookiesPosition(Roster roster) {
+		List<RosterPosition> rosterPositions = Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16).collect(Collectors.toList());
+		if (rosterPositions.isEmpty()) {
+			return null;
+		}
+		Collections.shuffle(rosterPositions);
+		return rosterPositions.get(0);
+	}
+
+	@Override
+	public boolean isLegalConcession(Game game, Team team) {
+		return game.getTurnMode() == TurnMode.SETUP && Arrays.stream(team.getPlayers())
+			.map(player -> game.getFieldModel().getPlayerState(player))
+			.filter(PlayerState::canBeSetUp)
+			.count() <= 3;
 	}
 }

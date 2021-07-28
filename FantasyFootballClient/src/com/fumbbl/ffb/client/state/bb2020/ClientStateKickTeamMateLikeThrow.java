@@ -143,9 +143,9 @@ public class ClientStateKickTeamMateLikeThrow extends ClientStateMove {
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		// added a check so you could not throw the opponents players, maybe this should
 		// be in the server-check?
-		return actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canThrowTeamMates)
-				&& mechanic.canBeKicked(game, pPlayer)
-				&& catcherCoordinate.isAdjacent(throwerCoordinate);
+		return actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canKickTeamMates)
+			&& mechanic.canBeKicked(game, pPlayer)
+			&& catcherCoordinate.isAdjacent(throwerCoordinate);
 	}
 
 	private void markThrowablePlayers() {

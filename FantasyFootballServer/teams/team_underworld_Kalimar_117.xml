@@ -2,24 +2,28 @@
 
 <team id="teamUnderworldKalimar">
 
-  <coach>Kalimar</coach>
-  <name>Kalimar's Underworld</name>
-  <race>Underworld</race>
-  <rosterId>underworld.lrb6</rosterId>
-  <reRolls>4</reRolls>
-  <fanFactor>10</fanFactor>
-  <apothecaries>2</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>106</teamStrength>
-  <division>[X]</division>
+	<coach>Kalimar</coach>
+	<name>Kalimar's Underworld</name>
+	<race>Underworld</race>
+	<rosterId>underworld.lrb6</rosterId>
+	<reRolls>4</reRolls>
+	<fanFactor>10</fanFactor>
+	<apothecaries>2</apothecaries>
+	<teamRating>100</teamRating>
+	<currentTeamValue>100</currentTeamValue>
+	<teamStrength>106</teamStrength>
+	<division>[X]</division>
+	<specialRules>
+		<rule>Low Cost Linemen</rule>
+	</specialRules>
 
-  <player nr="1" id="teamUnderworldKalimar1">
-  	<name>Goblin1</name>
-  	<positionId>underworld.goblin</positionId>
-  	<skillList></skillList>
-  </player>
+	<player nr="1" id="teamUnderworldKalimar1">
+		<name>Goblin1</name>
+		<positionId>underworld.goblin</positionId>
+		<skillList></skillList>
+	</player>
 
-  <player nr="2" id="teamUnderworldKalimar2">
+	<player nr="2" id="teamUnderworldKalimar2">
   	<name>Goblin2</name>
   	<positionId>underworld.goblin</positionId>
   	<skillList></skillList>

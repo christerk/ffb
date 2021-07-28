@@ -6,50 +6,60 @@ package com.fumbbl.ffb;
  */
 public enum PlayerGender implements INamedObject {
 
-	MALE("male", "M", "he", "his", "him", "himself"),
-	FEMALE("female", "F", "she", "her", "her", "herself"),
-	UNSPECIFIED("unspecified", "U", "they", "their", "them", "themself"),
-	NEUTRAL("neutral", "N", "it", "its", "it", "itself");
+	MALE("male", "M", "he", "his", "him", "himself", VerbForm.singular),
+	FEMALE("female", "F", "she", "her", "her", "herself", VerbForm.singular),
+	NONBINARY("nonbinary", "NB", "they", "their", "them", "themself", VerbForm.plural),
+	NEUTRAL("neutral", "N", "it", "its", "it", "itself", VerbForm.singular);
 
-	private String fName;
-	private String fTypeString;
-	private String fNominative;
-	private String fGenitive;
-	private String fDative;
-	private String fSelf;
+	public enum VerbForm {
+		singular, plural
+	}
+
+	private String name;
+	private String typeString;
+	private String nominative;
+	private String genitive;
+	private String dative;
+	private String self;
+	private VerbForm verbForm;
 
 	private PlayerGender(String pName, String pTypeString, String pNominative, String pGenitive, String pDative,
-			String pSelf) {
-		fName = pName;
-		fTypeString = pTypeString;
-		fNominative = pNominative;
-		fGenitive = pGenitive;
-		fDative = pDative;
-		fSelf = pSelf;
+			String pSelf, VerbForm verbForm) {
+		this.name = pName;
+		this.typeString = pTypeString;
+		this.nominative = pNominative;
+		this.genitive = pGenitive;
+		this.dative = pDative;
+		this.self = pSelf;
+		this.verbForm = verbForm;
 	}
 
 	public String getName() {
-		return fName;
+		return name;
 	}
 
 	public String getTypeString() {
-		return fTypeString;
+		return typeString;
 	}
 
 	public String getNominative() {
-		return fNominative;
+		return nominative;
 	}
 
 	public String getGenitive() {
-		return fGenitive;
+		return genitive;
 	}
 
 	public String getDative() {
-		return fDative;
+		return dative;
 	}
 
 	public String getSelf() {
-		return fSelf;
+		return self;
+	}
+
+	public String getVerbForm(String singularForm, String pluralForm) {
+		return this.verbForm == VerbForm.singular ? singularForm : pluralForm;
 	}
 
 	public static PlayerGender fromOrdinal(int ordinal) {
@@ -59,7 +69,7 @@ public enum PlayerGender implements INamedObject {
 		case 2:
 			return FEMALE;
 		case 3:
-			return UNSPECIFIED;
+			return NONBINARY;
 		default:
 			return NEUTRAL;
 		}

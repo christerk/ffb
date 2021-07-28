@@ -46,7 +46,7 @@ public class DedicatedFansMessage extends ReportMessageBase<ReportDedicatedFans>
 	    }
 
 	    if (conceded) {
-    	  text.append(" due to conceeding");
+    	  text.append(" due to conceding");
 	    }
 	    text.append(".");
 

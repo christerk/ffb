@@ -17,7 +17,6 @@ import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilRangeRuler;
@@ -140,9 +139,9 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		// added a check so you could not throw the opponents players, maybe this should
 		// be in the server-check?
-		return actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canThrowTeamMates)
-				&& mechanic.canBeThrown(game, pPlayer)
-				&& catcherCoordinate.isAdjacent(throwerCoordinate);
+		return mechanic.canThrow(actingPlayer.getPlayer())
+			&& mechanic.canBeThrown(game, pPlayer)
+			&& catcherCoordinate.isAdjacent(throwerCoordinate);
 	}
 
 	private void markThrowablePlayers() {

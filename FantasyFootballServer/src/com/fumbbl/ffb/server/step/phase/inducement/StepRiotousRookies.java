@@ -7,6 +7,8 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.RosterPosition;
@@ -45,16 +47,24 @@ public class StepRiotousRookies extends AbstractStep {
 	}
 
 	private void hireRiotousRookies(TurnData turnData, Team team) {
-		if (turnData.getInducementSet().getInducementMapping().keySet().stream()
-			.anyMatch(type -> type.getUsage() == Usage.ADD_LINEMEN)) {
-			int[] rookiesRoll = getGameState().getDiceRoller().rollRiotousRookies();
-			int rookies = rookiesRoll[0] + rookiesRoll[1] + 1;
-			RosterPosition position = team.getRoster().getRiotousPosition();
-			for (int i = 0; i < rookies; i++) {
-				riotousPlayer(getGameState().getGame(), team, i, position);
+		GameMechanic mechanic = (GameMechanic) getGameState().getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		turnData.getInducementSet().getInducementMapping().keySet().stream()
+			.filter(type -> type.getUsage() == Usage.ADD_LINEMEN).findFirst().ifPresent(inducementType -> {
+			int value = turnData.getInducementSet().getInducementMapping().get(inducementType).getValue();
+			int rookieCounter = 0;
+			for (int j = 0; j < value; j++) {
+				int[] rookiesRoll = getGameState().getDiceRoller().rollRiotousRookies();
+				int rookies = rookiesRoll[0] + rookiesRoll[1] + 1;
+				RosterPosition position = mechanic.riotousRookiesPosition(team.getRoster());
+				if (position != null) {
+					for (int i = 0; i < rookies; i++) {
+						riotousPlayer(getGameState().getGame(), team, i + rookieCounter, position);
+					}
+					getResult().addReport(new ReportRiotousRookies(rookiesRoll, rookies, team.getId()));
+				}
+				rookieCounter += rookies;
 			}
-			getResult().addReport(new ReportRiotousRookies(rookiesRoll, rookies, team.getId()));
-		}
+		});
 	}
 
 	private void riotousPlayer(Game game, Team team, int index, RosterPosition position) {
@@ -74,12 +84,12 @@ public class StepRiotousRookies extends AbstractStep {
 		game.getFieldModel().setPlayerState(riotousPlayer, new PlayerState(PlayerState.RESERVE));
 		UtilBox.putPlayerIntoBox(game, riotousPlayer);
 		getGameState().getServer().getCommunication().sendAddPlayer(getGameState(), team.getId(), riotousPlayer,
-				game.getFieldModel().getPlayerState(riotousPlayer), game.getGameResult().getPlayerResult(riotousPlayer));
+			game.getFieldModel().getPlayerState(riotousPlayer), game.getGameResult().getPlayerResult(riotousPlayer));
 	}
 
 	private String rookieName(String generator, PlayerGender gender, String fallback) {
 		StringBuilder url = new StringBuilder(
-				getGameState().getServer().getProperty(IServerProperty.FUMBBL_NAMEGENERATOR_BASE));
+			getGameState().getServer().getProperty(IServerProperty.FUMBBL_NAMEGENERATOR_BASE));
 
 		if (!url.toString().endsWith("/")) {
 			url.append("/");

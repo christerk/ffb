@@ -14,13 +14,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -44,8 +39,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_UNDEAD = "undead";
 	private static final String _XML_TAG_RIOTOUS_POSITION_ID = "riotousPositionId";
 	private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
-	private static final String _XML_TAG_SPECIAL_RULES = "specialRule";
-	private static final String _XML_TAG_RULE = "rule";
+	private static final String _XML_TAG_MAX_BIG_GUYS = "maxBigGuys";
 
 	private String fId;
 	private String fName;
@@ -59,7 +53,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private boolean fUndead;
 	private String riotousPositionId;
 	private String nameGenerator;
-	private final Set<SpecialRule> specialRules;
+	private int maxBigGuys;
 
 	private RosterPosition fCurrentlyParsedRosterPosition;
 
@@ -69,7 +63,6 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	public Roster() {
 		fRosterPositionById = new HashMap<>();
 		fRosterPositionByName = new HashMap<>();
-		specialRules = new HashSet<>();
 		fApothecary = true;
 	}
 
@@ -91,10 +84,6 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 
 	public RosterPosition[] getPositions() {
 		return fRosterPositionById.values().toArray(new RosterPosition[0]);
-	}
-
-	public Set<SpecialRule> getSpecialRules() {
-		return specialRules;
 	}
 
 	public RosterPosition getPositionById(String pPositionId) {
@@ -191,7 +180,12 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		}
 		return "default";
 	}
-// XML serialization
+
+	public int getMaxBigGuys() {
+		return maxBigGuys;
+	}
+
+	// XML serialization
 
 	public void addToXml(TransformerHandler pHandler) {
 
@@ -210,15 +204,10 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
 		UtilXml.addValueElement(pHandler, _XML_TAG_RIOTOUS_POSITION_ID, getRiotousPositionId());
 		UtilXml.addValueElement(pHandler, _XML_TAG_NAME_GENERATOR, nameGenerator);
+		UtilXml.addValueElement(pHandler, _XML_TAG_MAX_BIG_GUYS, maxBigGuys);
 
 		for (RosterPosition position : getPositions()) {
 			position.addToXml(pHandler);
-		}
-
-		if (!specialRules.isEmpty()) {
-			UtilXml.startElement(pHandler, _XML_TAG_SPECIAL_RULES);
-			specialRules.forEach(rule -> UtilXml.addValueElement(pHandler, _XML_TAG_RULE, rule.getRuleName()));
-			UtilXml.endElement(pHandler, _XML_TAG_SPECIAL_RULES);
 		}
 
 		UtilXml.endElement(pHandler, XML_TAG);
@@ -286,13 +275,9 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			if (_XML_TAG_NAME_GENERATOR.equals(pXmlTag)) {
 				nameGenerator = pValue;
 			}
-			if (_XML_TAG_RULE.equals(pXmlTag)) {
-				SpecialRule rule = SpecialRule.from(pValue);
-				if (rule != null) {
-					specialRules.add(rule);
-				} else {
-					game.getApplicationSource().logError("Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
-				}
+
+			if (_XML_TAG_MAX_BIG_GUYS.equals(pXmlTag)) {
+				maxBigGuys = Integer.parseInt(pValue);
 			}
 		}
 		return complete;
@@ -316,7 +301,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
 		IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
 		IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
-		IJsonOption.SPECIAL_RULES.addTo(jsonObject, specialRules.stream().filter(Objects::nonNull).map(SpecialRule::name).collect(Collectors.toSet()));
+		IJsonOption.MAX_BIG_GUYS.addTo(jsonObject, maxBigGuys);
 
 		JsonArray positionArray = new JsonArray();
 		for (RosterPosition position : getPositions()) {
@@ -354,7 +339,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			}
 		}
 
-		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).filter(Objects::nonNull).map(SpecialRule::valueOf).collect(Collectors.toSet()));
+		maxBigGuys = IJsonOption.MAX_BIG_GUYS.getFrom(game, jsonObject);
 
 		return this;
 

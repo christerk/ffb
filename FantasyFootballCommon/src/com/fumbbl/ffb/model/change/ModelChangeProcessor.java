@@ -207,6 +207,9 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().setWeather((Weather) pModelChange.getValue());
 				return true;
 
+			case GAME_SET_CONCEDED_LEGALLY:
+				pGame.setConcededLegally((Boolean) pModelChange.getValue());
+				return true;
 			case GAME_SET_CONCESSION_POSSIBLE:
 				pGame.setConcessionPossible((Boolean) pModelChange.getValue());
 				return true;

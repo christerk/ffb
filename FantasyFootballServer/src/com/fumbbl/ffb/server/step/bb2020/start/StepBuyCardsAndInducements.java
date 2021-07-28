@@ -263,7 +263,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
 		boolean canBuyCards = cardSlots > 0 && availableInducementGoldAway >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
 
-		boolean canBuyInducements = minimumInducementCost(game.getTeamHome()) <= availableInducementGoldAway;
+		boolean canBuyInducements = minimumInducementCost(game.getTeamAway()) <= availableInducementGoldAway;
 
 		if (canBuyCards || canBuyInducements) {
 			UtilServerDialog.showDialog(getGameState(),
@@ -279,8 +279,8 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		InducementTypeFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
 		return Stream.concat(
 			Stream.concat(
-				Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.STAR).map(RosterPosition::getCost),
-				factory.allTypes().stream().map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(roster)))
+				Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.STAR).map(RosterPosition::getCost).filter(i -> i > 0),
+				factory.allTypes().stream().filter(type -> type.getCostId() != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(team)))
 			),
 			Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.MERCENARY).map(pos -> pos.getCost() + UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 		).min(Integer::compareTo).orElse(Integer.MAX_VALUE);
@@ -489,8 +489,8 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		Roster roster = team.getRoster();
 		Game game = getGameState().getGame();
 		return Arrays.stream(inducementSet.getInducements())
-			.filter(inducement -> inducement.getType().getActualCostId(roster) != null)
-			.mapToInt(inducement -> inducement.getValue() * UtilGameOption.getIntOption(game, inducement.getType().getActualCostId(roster)))
+			.filter(inducement -> inducement.getType().getActualCostId(team) != null)
+			.mapToInt(inducement -> inducement.getValue() * UtilGameOption.getIntOption(game, inducement.getType().getActualCostId(team)))
 			.sum();
 	}
 

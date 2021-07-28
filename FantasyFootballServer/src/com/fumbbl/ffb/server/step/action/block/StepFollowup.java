@@ -145,7 +145,7 @@ public class StepFollowup extends AbstractStep {
 							true, SkillUse.CANCEL_FEND));
 					}
 				}
-				boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
+				boolean defenderHasTacklezones = oldDefenderState.hasTacklezones();
 				if (usingSkillPreventingFollowUp == null) {
 					if(defenderHasTacklezones) {
 						UtilServerDialog.showDialog(getGameState(),

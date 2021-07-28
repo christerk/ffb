@@ -229,11 +229,11 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	private void createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut,
 	                         GameOptions gameOptions) {
-		int maxCount = pInducementType.availability(fRoster, gameOptions);
+		int maxCount = pInducementType.availability(fTeam, gameOptions);
 		if (maxCount <= 0) {
 			return;
 		}
-		int cost = findInducementCost(fRoster, pInducementType, gameOptions);
+		int cost = findInducementCost(fTeam, pInducementType, gameOptions);
 		DropDownPanel panel = new DropDownPanel(pInducementType, maxCount, pInducementType.getDescription(), cost, this,
 			getAvailableGold());
 		pAddToPanel.add(panel);
@@ -243,9 +243,9 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		fPanels.add(panel);
 	}
 
-	public int findInducementCost(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
+	public int findInducementCost(Team team, InducementType pInducement, GameOptions gameOptions) {
 
-		IGameOption gameOption = gameOptions.getOptionWithDefault(pInducement.getActualCostId(pRoster));
+		IGameOption gameOption = gameOptions.getOptionWithDefault(pInducement.getActualCostId(team));
 
 		if (gameOption instanceof GameOptionInt) {
 			return ((GameOptionInt) gameOption).getValue();

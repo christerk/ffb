@@ -49,10 +49,10 @@ public final class StepPlayerLoss extends AbstractStep {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		Team team = null;
-		if (gameResult.getTeamResultHome().hasConceded()) {
+		if (gameResult.getTeamResultHome().hasConceded() && !game.isConcededLegally()) {
 			team = game.getTeamHome();
 		}
-		if (gameResult.getTeamResultAway().hasConceded()) {
+		if (gameResult.getTeamResultAway().hasConceded() && !game.isConcededLegally()) {
 			team = game.getTeamAway();
 		}
 		if (team != null) {

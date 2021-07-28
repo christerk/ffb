@@ -57,6 +57,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private boolean fConcessionPossible;
 	private boolean fTesting;
 	private boolean fAdminMode;
+	private boolean concededLegally;
 
 	private IDialogParameter fDialogParameter;
 
@@ -545,6 +546,19 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		notifyObservers(modelChange);
 	}
 
+
+	public boolean isConcededLegally() {
+		return concededLegally;
+	}
+
+	public void setConcededLegally(boolean concededLegally) {
+		if (this.concededLegally == concededLegally) {
+			return;
+		}
+		this.concededLegally = concededLegally;
+		notifyObservers(ModelChangeId.GAME_SET_CONCEDED_LEGALLY, null, concededLegally);
+	}
+
 	// transformation
 
 	public Game transform() {
@@ -594,6 +608,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 		transformedGame.fGameResult = getGameResult().transform();
 
+		transformedGame.concededLegally = concededLegally;
 		return transformedGame;
 
 	}
@@ -638,6 +653,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		if (fDialogParameter != null) {
 			IJsonOption.DIALOG_PARAMETER.addTo(jsonObject, fDialogParameter.toJsonValue());
 		}
+		IJsonOption.CONCEDED_LEGALLY.addTo(jsonObject, concededLegally);
 
 		return jsonObject;
 
@@ -690,6 +706,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		if (dialogParameterObject != null) {
 			fDialogParameter = new DialogParameterFactory().forJsonValue(source, dialogParameterObject);
 		}
+		concededLegally = IJsonOption.CONCEDED_LEGALLY.getFrom(source, jsonObject);
 
 		return this;
 

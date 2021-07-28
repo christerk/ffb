@@ -7,7 +7,40 @@
 	<reRollCost>70000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-  
+
+	<maxBigGuys>2</maxBigGuys>
+
+	<position id="37844">
+		<quantity>2</quantity>
+		<name>Mutant Rat Ogre</name>
+		<shorthand>RO</shorthand>
+		<type>Big Guy</type>
+		<gender>random</gender>
+		<cost>150000</cost>
+		<movement>6</movement>
+		<strength>5</strength>
+		<agility>4</agility>
+		<passing>0</passing>
+		<armour>9</armour>
+		<undead>false</undead>
+		<thrall>false</thrall>
+		<portrait>i/673332</portrait>
+		<iconSet size="1" mimeType="image/png">i/673333.png</iconSet>
+		<skillList>
+			<skill>Animal Savagery</skill>
+			<skill>Frenzy</skill>
+			<skill value="4">Loner</skill>
+			<skill value="1">Mighty Blow</skill>
+			<skill>Prehensile Tail</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<normal>Mutation</normal>
+			<double>General</double>
+			<double>Agility</double>
+		</skillCategoryList>
+	</position>
+
 	<position id="underworld.goblin">
 		<quantity>12</quantity>
 		<name>Underworld Goblin</name>
@@ -36,9 +69,9 @@
 			<double>Passing</double>
 		</skillCategoryList>
 	</position>
-  
+
 	<position id="underworld.skaven.lineman">
-		<quantity>2</quantity>
+		<quantity>16</quantity>
 		<name>Skaven Lineman</name>
 		<shorthand>L</shorthand>
 		<type>Regular</type>
@@ -119,9 +152,9 @@
 			<double>Passing</double>
 		</skillCategoryList>
 	</position>
-  
+
 	<position id="underworld.troll.warpstone">
-		<quantity>1</quantity>
+		<quantity>2</quantity>
 		<name>Warpstone Troll</name>
 		<shorthand>WT</shorthand>
 		<type>Big Guy</type>

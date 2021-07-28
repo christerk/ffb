@@ -22,6 +22,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
+import com.fumbbl.ffb.server.step.generator.BlitzMove;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Foul;
@@ -175,6 +176,8 @@ public class StepEndMoving extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
 		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
+		BlitzMove blitzMoveGenerator = (BlitzMove) factory.forName(SequenceGenerator.Type.BlitzMove.name());
+
 		if (fEndTurn || fEndPlayerAction) {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 			// block defender set by ball and chain
@@ -187,7 +190,11 @@ public class StepEndMoving extends AbstractStep {
 			&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
 			pushSequenceForPlayerAction(actingPlayer.getPlayerAction());
 		} else if (ArrayTool.isProvided(fMoveStack)) {
-			moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart));
+			if (PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction()) {
+				blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, null, moveStart));
+			} else {
+				moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart));
+			}
 		} else if (UtilPlayer.isNextMovePossible(game, false)
 			|| ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
 			|| ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
@@ -196,7 +203,11 @@ public class StepEndMoving extends AbstractStep {
 			|| ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
 			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-			moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+			if (PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction()) {
+				blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
+			} else {
+				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+			}
 		} else {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 		}

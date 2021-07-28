@@ -8,9 +8,7 @@
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<nameGenerator>default</nameGenerator>
-	<specialRules>
-		<rule>Halfling Thimble Cup</rule>
-	</specialRules>
+
 	<position id="halfling.treeman">
 		<quantity>2</quantity>
 		<name>Treeman</name>
@@ -50,8 +48,8 @@
 		<agility>3</agility>
 		<passing>4</passing>
 		<armour>6</armour>
-		<portrait>portraits/halfling_halfling.png</portrait>
-		<iconSet size="16">iconsets/halfling_halfling.png</iconSet>
+		<portrait>portraits/halfling_halflinghopeful.png</portrait>
+		<iconSet size="16">iconsets/halfling_halflinghopeful.png</iconSet>
 		<nameGenerator>halflingpos</nameGenerator>
 		<skillList>
 			<skill>Dodge</skill>

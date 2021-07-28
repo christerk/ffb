@@ -29,6 +29,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
 	JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
 	JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
+	JsonIntOption BRAWLER_INDEX = new JsonIntOption("brawlerIndex");
 	JsonBooleanOption BRIBES_CHOICE = new JsonBooleanOption("bribesChoice");
 	JsonBooleanOption BRIBES_CHOICE_AWAY = new JsonBooleanOption("bribesChoiceAway");
 	JsonBooleanOption BRIBES_CHOICE_HOME = new JsonBooleanOption("bribesChoiceHome");
@@ -66,6 +67,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption FUMBBL_GAME_CREATED = new JsonBooleanOption("fumbblGameCreated");
 	JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
 	JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);
+	JsonBooleanOption GAZE_ONLY = new JsonBooleanOption("gazeOnly");
 	JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
 	JsonStringArrayOption GET_ADDITIONAL_CASUALTY_SPP = new JsonStringArrayOption("getAdditionalCasualtySpp");
 	JsonStringArrayOption GET_ADDITIONAL_COMPLETION_SPP = new JsonStringArrayOption("getAdditionalCompletionSpp");

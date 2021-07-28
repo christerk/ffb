@@ -37,6 +37,7 @@ public class InjuryContext {
 	public InjuryContext() {
 		fArmorModifiers = new HashSet<>();
 		fInjuryModifiers = new HashSet<>();
+		casualtyModifiers = new HashSet<>();
 	}
 
 	public void setInjuryType(InjuryType pInjuryType) {
@@ -295,8 +296,8 @@ public class InjuryContext {
 		return casualtyModifiers;
 	}
 
-	public void setCasualtyModifiers(Set<CasualtyModifier> casualtyModifiers) {
-		this.casualtyModifiers = casualtyModifiers;
+	public void addCasualtyModifiers(Set<CasualtyModifier> casualtyModifiers) {
+		this.casualtyModifiers.addAll(casualtyModifiers);
 	}
 
 	public SeriousInjury getOriginalSeriousInjury() {

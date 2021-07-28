@@ -48,7 +48,7 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 				UtilServerDialog.hideDialog(step.getGameState());
 				Game game = step.getGameState().getGame();
 				boolean addReport = true;
-				boolean hasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
+				boolean hasTacklezones = state.oldDefenderState.hasTacklezones();
 				if (!hasTacklezones) {
 					state.usingDodge = false;
 				}
