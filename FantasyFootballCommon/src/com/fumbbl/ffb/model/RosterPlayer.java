@@ -19,6 +19,7 @@ import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.util.StringTool;
@@ -792,5 +793,24 @@ public class RosterPlayer extends Player<RosterPosition> {
 		}
 		usedSkills.add(skill);
 		game.notifyObservers(new ModelChange(ModelChangeId.PLAYER_MARK_SKILL_USED, fId, skill));
+	}
+	
+	@Override
+	public  void markUnused(Skill skill, Game game) {
+		if ((skill == null) || !isUsed(skill)) {
+			return;
+		}
+		usedSkills.remove(skill);
+		game.notifyObservers(new ModelChange(ModelChangeId.PLAYER_MARK_SKILL_UNUSED, fId, skill));
+	}
+
+	
+	@Override
+	public void resetUsedSkills(SkillUsageType type, Game game) {
+		for(Skill skill : usedSkills) {
+			if(skill.getSkillUsageType() == type) {
+				markUnused(skill, game);
+			}
+		}
 	}
 }

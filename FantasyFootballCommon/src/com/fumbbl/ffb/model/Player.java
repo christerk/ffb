@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
@@ -357,5 +358,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract boolean isUsed(Skill skill);
 
 	public abstract void markUsed(Skill skill, Game game);
+	public abstract void markUnused(Skill skill, Game game);
+	public abstract void resetUsedSkills(SkillUsageType type, Game game);
 
 }

@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.ReportLeader;
@@ -126,6 +127,7 @@ public class UtilServerGame {
 			}
 		}
 		resetLeaderState(game);
+		resetSpecialSkills(game, SkillUsageType.ONCE_PER_HALF);
 		updateLeaderReRolls(pStep);
 
 	}
@@ -135,6 +137,19 @@ public class UtilServerGame {
 			pGame.getTurnDataHome().setLeaderState(LeaderState.NONE);
 			pGame.getTurnDataAway().setLeaderState(LeaderState.NONE);
 		}
+	}
+	
+	protected static void resetSpecialSkills(Game pGame, SkillUsageType type) {
+		if (pGame.getHalf() <= 2) {
+			resetSpecialSkillsForTeam(pGame, pGame.getTeamHome(), type);
+			resetSpecialSkillsForTeam(pGame, pGame.getTeamAway(), type);
+			}
+	}
+	
+	protected static void resetSpecialSkillsForTeam(Game pGame, Team team, SkillUsageType type) {
+			for (Player<?> player : team.getPlayers()) {
+				player.resetUsedSkills(type, pGame);
+			}
 	}
 
 	public static void updateLeaderReRolls(IStep pStep) {

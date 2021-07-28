@@ -53,25 +53,25 @@ public abstract class Skill implements INamedObject {
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
 	private final int defaultSkillValue;
 	private final List<ISkillProperty> conflictingProperties = new ArrayList<>();
-	private final boolean singleUse;
+	private final SkillUsageType skillUsageType;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
 	}
 
-	public Skill(String name, SkillCategory category, boolean singleUse) {
-		this(name, category, 0, singleUse);
+	public Skill(String name, SkillCategory category, SkillUsageType skillUsageType) {
+		this(name, category, 0, skillUsageType);
 	}
 
 	public Skill(String name, SkillCategory category, int defaultSkillValue) {
-		this(name, category, defaultSkillValue, false);
+		this(name, category, defaultSkillValue, SkillUsageType.NORMAL);
 	}
 
-	public Skill(String name, SkillCategory category, int defaultSkillValue, boolean singleUse) {
+	public Skill(String name, SkillCategory category, int defaultSkillValue, SkillUsageType skillUsageType) {
 		this.name = name;
 		this.category = category;
 		this.defaultSkillValue = defaultSkillValue;
-		this.singleUse = singleUse;
+		this.skillUsageType = skillUsageType;
 	}
 
 	public void postConstruct() {
@@ -218,8 +218,8 @@ public abstract class Skill implements INamedObject {
 		return casualtyModifiers;
 	}
 
-	public boolean isSingleUse() {
-		return singleUse;
+	public SkillUsageType getSkillUsageType() {
+		return skillUsageType;
 	}
 
 	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {
