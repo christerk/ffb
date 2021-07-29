@@ -42,6 +42,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		ServerCommandGameState gameStateCommand = (ServerCommandGameState) pNetCommand;
 		Game game = gameStateCommand.getGame();
+		getClient().setGame(game);
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
@@ -97,7 +98,6 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		}
 
-		getClient().setGame(game);
 		UtilClientThrowTeamMate.updateThrownPlayer(getClient());
 
 		if (pMode == ClientCommandHandlerMode.PLAYING) {

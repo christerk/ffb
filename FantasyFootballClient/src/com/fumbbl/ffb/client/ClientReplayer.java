@@ -36,14 +36,14 @@ import java.util.List;
  */
 public class ClientReplayer implements ActionListener {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
 	private static final int[] _TIMER_SETTINGS = { 800, 400, 200, 100, 50, 25, 10 };
 
 	private int fFirstCommandNr;
 
 	private List<ServerCommand> fReplayList;
-	private List<ServerCommand> fUnseenList;
+	private final List<ServerCommand> fUnseenList;
 	private int fLastReplayPosition;
 	private int fReplaySpeed;
 	private boolean fReplayDirectionForward;
@@ -51,7 +51,7 @@ public class ClientReplayer implements ActionListener {
 	private int fUnseenPosition;
 	private boolean fSkipping;
 
-	private Timer fTimer;
+	private final Timer fTimer;
 
 	public ClientReplayer(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -278,11 +278,11 @@ public class ClientReplayer implements ActionListener {
 		if ((fLastReplayPosition >= 0) && (fLastReplayPosition < pReplayPosition)) {
 			start = fLastReplayPosition;
 		}
-		if (start == 0) {
+		/*if (start == 0) {
 			Game game = createGame();
 			getClient().setGame(game);
 			getClient().getUserInterface().init(game.getOptions());
-		}
+		}*/
 		ServerCommand serverCommand = null;
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
