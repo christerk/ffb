@@ -28,6 +28,12 @@ public class ReRollSources {
 	public static final ReRollSource LEADER = new ReRollSource(Leader.class);
 	public static final ReRollSource MONSTROUS_MOUTH = new ReRollSource("Monstrous Mouth");
 	public static final ReRollSource BRAWLER = new ReRollSource(Brawler.class);
+	
+	public static final ReRollSource BLIND_RAGE_RE_ROLL = new ReRollSource("Blind Rage ReRoll");
+	public static final ReRollSource BALLISTA_RE_ROLL = new ReRollSource("The Ballista ReRoll");
+	public static final ReRollSource MESMERIZING_DANCE_RE_ROLL = new ReRollSource("Mesmerizing Dance ReRoll");
+
+
 
 	private final Map<String, ReRollSource> values;
 
