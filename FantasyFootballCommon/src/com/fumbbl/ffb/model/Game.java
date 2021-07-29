@@ -706,7 +706,8 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		if (dialogParameterObject != null) {
 			fDialogParameter = new DialogParameterFactory().forJsonValue(source, dialogParameterObject);
 		}
-		concededLegally = IJsonOption.CONCEDED_LEGALLY.getFrom(source, jsonObject);
+		Boolean concededValue = IJsonOption.CONCEDED_LEGALLY.getFrom(source, jsonObject);
+		concededLegally = concededValue != null && concededValue;
 
 		return this;
 

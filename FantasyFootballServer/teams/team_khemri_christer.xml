@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<team id="55051" status="7">
+    <coach>Christer</coach>
+    <name>Forgotten Kings</name>
+    <rosterId>51</rosterId>
+    <reRolls>5</reRolls>
+    <fanFactor>8</fanFactor>
+    <apothecaries>0</apothecaries>
+    <cheerleaders>0</cheerleaders>
+    <assistantCoaches>1</assistantCoaches>
+    <rating>196</rating>
+    <teamValue>1960000</teamValue>
+    <currentTeamValue>1960000</currentTeamValue>
+    <strength>196</strength>
+    <division>1</division>
+    <treasury>60000</treasury>
+    <tournamentWeight>1960000</tournamentWeight>
+    <record>
+        <form>DWLLL</form>
+        <wins>80</wins>
+        <ties>35</ties>
+        <losses>75</losses>
+    </record>
+    <lastMatch date="2020-12-01" opponent="744258">4254495</lastMatch>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <player status="Active" nr="1" id="4230530">
+        <name>Osiris VI</name>
+        <gender>male</gender>
+        <positionId>2895</positionId>
+        <position>Tomb Guardian</position>
+        <playerStatistics currentSpps="48">
+            <completions>0</completions>
+            <touchdowns>1</touchdowns>
+            <interceptions>1</interceptions>
+            <casualties>19</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>16</rushing>
+            <blocks>364</blocks>
+            <fouls>0</fouls>
+            <games>41</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Frenzy</skill>
+            <skill>Guard</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="2" id="4697389">
+        <name>Isis IV</name>
+        <gender>female</gender>
+        <positionId>2895</positionId>
+        <position>Tomb Guardian</position>
+        <playerStatistics currentSpps="33">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>9</casualties>
+            <mvps>3</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>224</blocks>
+            <fouls>0</fouls>
+            <games>25</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Frenzy</skill>
+            <skill>Guard</skill>
+            <skill>Mighty Blow</skill>
+        </skillList>
+        <injuryList>
+            <injury>Damaged Back (NI)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="3" id="4643720">
+        <name>Nephthys V</name>
+        <gender>female</gender>
+        <positionId>2895</positionId>
+        <position>Tomb Guardian</position>
+        <playerStatistics currentSpps="55">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>20</casualties>
+            <mvps>3</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>298</blocks>
+            <fouls>2</fouls>
+            <games>33</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Frenzy</skill>
+            <skill>Guard</skill>
+            <skill>Tackle</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="4" id="4812362">
+        <name>Set VII</name>
+        <gender>male</gender>
+        <positionId>2895</positionId>
+        <position>Tomb Guardian</position>
+        <playerStatistics currentSpps="12">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>6</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>3</rushing>
+            <blocks>122</blocks>
+            <fouls>0</fouls>
+            <games>18</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="5" id="3621128">
+        <name>Nut V</name>
+        <gender>female</gender>
+        <positionId>2893</positionId>
+        <position>Anointed Thrower</position>
+        <playerStatistics currentSpps="136">
+            <completions>16</completions>
+            <touchdowns>24</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>4</casualties>
+            <mvps>8</mvps>
+            <passing>70</passing>
+            <rushing>794</rushing>
+            <blocks>129</blocks>
+            <fouls>1</fouls>
+            <games>83</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+MA</skill>
+            <skill>Accurate</skill>
+            <skill>Block</skill>
+            <skill>Safe Throw</skill>
+            <skill>Tackle</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="6" id="12574612">
+        <name>Geb X</name>
+        <gender>male</gender>
+        <positionId>2893</positionId>
+        <position>Anointed Thrower</position>
+        <playerStatistics currentSpps="5">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>4</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="7" id="4686267">
+        <name>Anubis VIII</name>
+        <gender>male</gender>
+        <positionId>2894</positionId>
+        <position>Anointed Blitzer</position>
+        <playerStatistics currentSpps="53">
+            <completions>0</completions>
+            <touchdowns>5</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>14</casualties>
+            <mvps>2</mvps>
+            <passing>0</passing>
+            <rushing>35</rushing>
+            <blocks>122</blocks>
+            <fouls>1</fouls>
+            <games>28</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Frenzy</skill>
+            <skill>Guard</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Tackle</skill>
+        </skillList>
+        <injuryList>
+            <injury>Smashed Hip (-MA)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="8" id="4813589">
+        <name>Horus IX</name>
+        <gender>male</gender>
+        <positionId>2894</positionId>
+        <position>Anointed Blitzer</position>
+        <playerStatistics currentSpps="3">
+            <completions>0</completions>
+            <touchdowns>1</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>15</rushing>
+            <blocks>45</blocks>
+            <fouls>0</fouls>
+            <games>13</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList>
+            <injury>Fractured Arm (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="9" id="12369596">
+        <name>Amun III</name>
+        <gender>neutral</gender>
+        <positionId>2892</positionId>
+        <position>Skeleton Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>7</blocks>
+            <fouls>2</fouls>
+            <games>3</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="10" id="12369597">
+        <name>Amunet IV</name>
+        <gender>female</gender>
+        <positionId>2892</positionId>
+        <position>Skeleton Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>2</blocks>
+            <fouls>2</fouls>
+            <games>3</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="11" id="4950184">
+        <name>Re V</name>
+        <gender>male</gender>
+        <positionId>2892</positionId>
+        <position>Skeleton Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>1</blocks>
+            <fouls>0</fouls>
+            <games>6</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList>
+            <injury>Broken Ribs (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="12" id="4813615">
+        <name>Mut IV</name>
+        <gender>female</gender>
+        <positionId>2892</positionId>
+        <position>Skeleton Lineman</position>
+        <playerStatistics currentSpps="13">
+            <completions>0</completions>
+            <touchdowns>2</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>1</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>28</rushing>
+            <blocks>12</blocks>
+            <fouls>4</fouls>
+            <games>14</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+AG</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="14" id="3813305">
+        <name>Naunet IV</name>
+        <gender>female</gender>
+        <positionId>2892</positionId>
+        <position>Skeleton Lineman</position>
+        <playerStatistics currentSpps="14">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>2</casualties>
+            <mvps>2</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>50</blocks>
+            <fouls>36</fouls>
+            <games>49</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Dirty Player</skill>
+        </skillList>
+        <injuryList>
+            <injury>Fractured Skull (-AV)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="16" id="4697130">
+        <name>Kauket IV</name>
+        <gender>female</gender>
+        <positionId>2892</positionId>
+        <position>Skeleton Lineman</position>
+        <playerStatistics currentSpps="7">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>1</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>26</blocks>
+            <fouls>3</fouls>
+            <games>26</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Concussion (-AV)</injury>
+            <injury>Broken Ribs (MNG)</injury>
+            <injury>Damaged Back (NI)</injury>
+        </injuryList>
+    </player>
+</team>

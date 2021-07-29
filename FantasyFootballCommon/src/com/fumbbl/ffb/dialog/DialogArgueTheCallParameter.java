@@ -90,7 +90,8 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		setTeamId(IJsonOption.TEAM_ID.getFrom(game, jsonObject));
 		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
-		stayOnPitch = IJsonOption.STAYS_ON_PITCH.getFrom(game, jsonObject);
+		Boolean stayOnPitchValue = IJsonOption.STAYS_ON_PITCH.getFrom(game, jsonObject);
+		stayOnPitch = stayOnPitchValue != null && stayOnPitchValue;
 		return this;
 	}
 

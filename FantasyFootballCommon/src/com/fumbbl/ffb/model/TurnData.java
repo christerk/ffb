@@ -327,8 +327,11 @@ public class TurnData implements IJsonSerializable {
 		fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);
 		fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(source, jsonObject);
 		fPassUsed = IJsonOption.PASS_USED.getFrom(source, jsonObject);
-		ktmUsed = IJsonOption.KTM_USED.getFrom(source, jsonObject);
-		bombUsed = IJsonOption.BOMB_USED.getFrom(source, jsonObject);
+
+		Boolean ktmValue = IJsonOption.KTM_USED.getFrom(source, jsonObject);
+		ktmUsed = ktmValue != null && ktmValue;
+		Boolean bombValue = IJsonOption.BOMB_USED.getFrom(source, jsonObject);
+		bombUsed = bombValue != null && bombValue;
 		Boolean coachBanned = IJsonOption.COACH_BANNED.getFrom(source, jsonObject);
 		fCoachBanned = (coachBanned != null) ? coachBanned : false;
 		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(source, jsonObject);

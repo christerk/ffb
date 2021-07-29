@@ -106,8 +106,10 @@ public class ReportBlockChoice implements IReport {
 		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
 		fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
 		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		suppressExtraEffectHandling = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(game, jsonObject);
-		showNameInReport = IJsonOption.SHOW_NAME_IN_REPORT.getFrom(game, jsonObject);
+		Boolean extraEffectValue = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(game, jsonObject);
+		suppressExtraEffectHandling = extraEffectValue != null && extraEffectValue;
+		Boolean showNameValue = IJsonOption.SHOW_NAME_IN_REPORT.getFrom(game, jsonObject);
+		showNameInReport = showNameValue != null && showNameValue;
 		blockRollId = IJsonOption.BLOCK_ROLL_ID.getFrom(game, jsonObject);
 		return this;
 	}

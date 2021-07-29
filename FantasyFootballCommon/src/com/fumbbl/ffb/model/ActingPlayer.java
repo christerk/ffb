@@ -365,7 +365,8 @@ public class ActingPlayer implements IJsonSerializable {
 		fStandingUp = IJsonOption.STANDING_UP.getFrom(source, jsonObject);
 		fSufferingAnimosity = IJsonOption.SUFFERING_ANIMOSITY.getFrom(source, jsonObject);
 		fSufferingBloodLust = IJsonOption.SUFFERING_BLOODLUST.getFrom(source, jsonObject);
-		fumblerooskiePending = IJsonOption.FUMBLEROOSKIE_PENDING.getFrom(source, jsonObject);
+		Boolean fumblerroskieValue = IJsonOption.FUMBLEROOSKIE_PENDING.getFrom(source, jsonObject);
+		fumblerooskiePending = fumblerroskieValue != null && fumblerroskieValue;
 		JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(source, jsonObject);
 		fUsedSkills.clear();
 		if (usedSkillsArray != null) {
