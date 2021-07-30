@@ -278,11 +278,11 @@ public class ClientReplayer implements ActionListener {
 		if ((fLastReplayPosition >= 0) && (fLastReplayPosition < pReplayPosition)) {
 			start = fLastReplayPosition;
 		}
-		/*if (start == 0) {
+		if (start == 0) {
 			Game game = createGame();
 			getClient().setGame(game);
 			getClient().getUserInterface().init(game.getOptions());
-		}*/
+		}
 		ServerCommand serverCommand = null;
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
@@ -351,6 +351,7 @@ public class ClientReplayer implements ActionListener {
 		GameResult oldGameResult = oldGame.getGameResult();
 		addTeam(game, oldGame.getTeamHome(), oldGameResult.getTeamResultHome(), true);
 		addTeam(game, oldGame.getTeamAway(), oldGameResult.getTeamResultAway(), false);
+		game.initializeRules();
 		return game;
 	}
 

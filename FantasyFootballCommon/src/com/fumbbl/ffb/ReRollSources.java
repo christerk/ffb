@@ -1,14 +1,5 @@
 package com.fumbbl.ffb;
 
-import com.fumbbl.ffb.skill.Catch;
-import com.fumbbl.ffb.skill.Dodge;
-import com.fumbbl.ffb.skill.Leader;
-import com.fumbbl.ffb.skill.Pass;
-import com.fumbbl.ffb.skill.Pro;
-import com.fumbbl.ffb.skill.SureFeet;
-import com.fumbbl.ffb.skill.SureHands;
-import com.fumbbl.ffb.skill.bb2020.Brawler;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +8,17 @@ public class ReRollSources {
 
 	public static final ReRollSource TEAM_RE_ROLL = new ReRollSource("Team ReRoll");
 	public static final ReRollSource BRILLIANT_COACHING_RE_ROLL = new ReRollSource("Brilliant Coaching ReRoll");
-	public static final ReRollSource DODGE = new ReRollSource(Dodge.class);
-	public static final ReRollSource PRO = new ReRollSource(Pro.class);
-	public static final ReRollSource SURE_FEET = new ReRollSource(SureFeet.class);
-	public static final ReRollSource SURE_HANDS = new ReRollSource(SureHands.class);
-	public static final ReRollSource CATCH = new ReRollSource(Catch.class);
-	public static final ReRollSource PASS = new ReRollSource(Pass.class);
+	public static final ReRollSource DODGE = new ReRollSource("Dodge");
+	public static final ReRollSource PRO = new ReRollSource("Pro");
+	public static final ReRollSource SURE_FEET = new ReRollSource("Sure Feet");
+	public static final ReRollSource SURE_HANDS = new ReRollSource("Sure Hands");
+	public static final ReRollSource CATCH = new ReRollSource("Catch");
+	public static final ReRollSource PASS = new ReRollSource("Pass");
 	public static final ReRollSource WINNINGS = new ReRollSource("Winnings");
 	public static final ReRollSource LONER = new ReRollSource("Loner");
-	public static final ReRollSource LEADER = new ReRollSource(Leader.class);
+	public static final ReRollSource LEADER = new ReRollSource("Leader");
 	public static final ReRollSource MONSTROUS_MOUTH = new ReRollSource("Monstrous Mouth");
-	public static final ReRollSource BRAWLER = new ReRollSource(Brawler.class);
+	public static final ReRollSource BRAWLER = new ReRollSource("Brawler");
 
 	private final Map<String, ReRollSource> values;
 
