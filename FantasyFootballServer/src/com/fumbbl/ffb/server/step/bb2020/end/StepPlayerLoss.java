@@ -63,7 +63,7 @@ public final class StepPlayerLoss extends AbstractStep {
 				PlayerResult playerResult = gameResult.getPlayerResult(player);
 				int playerSkillCount = countAdvancements(player.getSkills());
 				int positionSkillCount = countAdvancements(player.getPosition().getSkills());
-				if (playerSkillCount - positionSkillCount > 3) {
+				if (playerSkillCount - positionSkillCount >= 3) {
 					defectingPlayerIds.add(player.getId());
 					int defectingRoll = getGameState().getDiceRoller().rollPlayerLoss();
 					defectingRolls.add(defectingRoll);
