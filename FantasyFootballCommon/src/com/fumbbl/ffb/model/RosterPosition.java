@@ -687,10 +687,8 @@ public class RosterPosition implements Position {
 			for (int i = 0; i < skillArray.size(); i++) {
 				Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
 				if (skill != null) {
-					if (skillValues[i] != null) {
-						fSkillValues.put(skill, skillValues[i]);
-					}
-					if (displayValues != null && displayValues.length >= i + 1 && displayValues[i] != null) {
+					fSkillValues.put(skill, skillValues[i]);
+					if (displayValues != null && displayValues.length >= i + 1) {
 						this.displayValues.put(skill, displayValues[i]);
 					}
 				}
