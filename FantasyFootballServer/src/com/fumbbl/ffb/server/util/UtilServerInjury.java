@@ -304,7 +304,7 @@ public class UtilServerInjury {
 			} else {
 				if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
 					playerState = playerState.changeBase(pPlayerBase);
-					if ((pPlayer == game.getActingPlayer().getPlayer()) || (PlayerState.STUNNED == pPlayerBase)) {
+					if ((pPlayer == game.getActingPlayer().getPlayer() && pApothecaryMode != ApothecaryMode.THROWN_PLAYER) || (PlayerState.STUNNED == pPlayerBase)) {
 						playerState = playerState.changeActive(false);
 					}
 				}
