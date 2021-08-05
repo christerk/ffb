@@ -66,10 +66,10 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final Font _DICE_FONT = new Font("Sans Serif", Font.BOLD, 11);
 	private static final Font _STATUS_TITLE_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font _STATUS_MESSAGE_FONT = new Font("Sans Serif", Font.PLAIN, 12);
-	private static final int _STATUS_TEXT_WIDTH = WIDTH - 49;
+	private static final int _STATUS_TEXT_WIDTH = WIDTH - 10;
 
-	private SideBarComponent fSideBar;
-	private BufferedImage fImage;
+	private final SideBarComponent fSideBar;
+	private final BufferedImage fImage;
 
 	private boolean fEndTurnButtonShown;
 	private boolean fTimeoutButtonShown;
@@ -88,7 +88,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private boolean fEndTurnButtonHidden;
 	private Date fFinished;
 
-	private List<BlockRoll> blockRolls = new ArrayList<>();
+	private final List<BlockRoll> blockRolls = new ArrayList<>();
 
 	private boolean fRefreshNecessary;
 
