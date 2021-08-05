@@ -14,6 +14,9 @@
     <teamStrength>103</teamStrength>
     <division>[X]</division>
     <baseIconPath>http://localhost:2224/icons/</baseIconPath>
+    <specialRules>
+        <rule>Favoured of Nurgle</rule>
+    </specialRules>
 
     <player nr="1" id="teamNurgleBattleLore1">
         <name>The Beast</name>
@@ -22,8 +25,8 @@
         <skillList></skillList>
     </player>
 
-  <player nr="2" id="teamNurgleBattleLore2">
-  	<name>Warrior1</name>
+    <player nr="2" id="teamNurgleBattleLore2">
+        <name>Warrior1</name>
   	<gender>male</gender>
   	<positionId>nurgle.warrior</positionId>
   	<skillList></skillList>

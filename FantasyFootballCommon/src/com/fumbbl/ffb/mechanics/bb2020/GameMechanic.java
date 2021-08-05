@@ -108,6 +108,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
+	public boolean canRaiseInfectedPlayers(Team team) {
+		return team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE);
+	}
+
+	@Override
+	public boolean infectedGoesToReserves() {
+		return true;
+	}
+
+	@Override
 	public boolean canRaiseDead(Team team) {
 		return team.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
 	}

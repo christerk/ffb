@@ -97,6 +97,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
+	public boolean canRaiseInfectedPlayers(Team team) {
+		return true;
+	}
+
+	@Override
+	public boolean infectedGoesToReserves() {
+		return false;
+	}
+
+	@Override
 	public boolean canRaiseDead(Team team) {
 		return team.getRoster().hasNecromancer();
 	}

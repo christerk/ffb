@@ -211,14 +211,14 @@ public class UtilServerInjury {
 					deadPlayer.getId());
 			} else {
 				Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
-				if ((attacker != null) && attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman)
+				if (mechanic.canRaiseInfectedPlayers(necroTeam) && (attacker != null) && attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman)
 					&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
 					&& !deadPlayer.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
 						nurglesRot = true;
 						raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
-								deadPlayer.getId());
+							deadPlayer.getId());
 					}
 				}
 			}
@@ -260,7 +260,8 @@ public class UtilServerInjury {
 			playerResult.setSendToBoxTurn(pGame.getTurnData().getTurnNr());
 			if (pNurglesRot) {
 				GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(PlayerState.MISSING));
+				int newPlayerState = mechanic.infectedGoesToReserves() ? PlayerState.RESERVE : PlayerState.MISSING;
+				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(newPlayerState));
 				playerResult.setSendToBoxReason(mechanic.raisedByNurgleReason());
 			} else {
 				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(PlayerState.RESERVE));
