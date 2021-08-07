@@ -14,15 +14,12 @@ import com.fumbbl.ffb.model.TurnData;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -38,6 +35,9 @@ public class ResourceComponent extends JPanel {
 
 	public static final int WIDTH = 145;
 	public static final int HEIGHT = 168; // 256
+	private static final int _SLOT_HEIGHT = 40;
+	private static final int _SLOT_WIDTH = 46;
+	private static final int COUNTER_SIZE = 15;
 
 	private final SideBarComponent fSideBar;
 	private final BufferedImage fImage;
@@ -46,9 +46,6 @@ public class ResourceComponent extends JPanel {
 	private final ResourceSlot[] fSlots;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
-
-	private static final int _SLOT_HEIGHT = 40;
-	private static final int _SLOT_WIDTH = 46;
 
 	private static final Font _NUMBER_FONT = new Font("Sans Serif", Font.BOLD, 16);
 
@@ -132,26 +129,27 @@ public class ResourceComponent extends JPanel {
 			g2d.drawImage(resourceIcon, x, y, null);
 			if (!pSlot.isEnabled()) {
 				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED);
-				x += (resourceIcon.getWidth() - disabledIcon.getWidth()) / 2;
-				y += (resourceIcon.getHeight() - disabledIcon.getHeight()) / 2;
-				g2d.drawImage(disabledIcon, x, y, null);
+				g2d.drawImage(disabledIcon, x + (resourceIcon.getWidth() - disabledIcon.getWidth()) / 2,
+					y + (resourceIcon.getHeight() - disabledIcon.getHeight()) / 2, null);
 			}
-			g2d.setFont(_NUMBER_FONT);
-			String resourceValue = Integer.toString(pSlot.getValue());
-			FontMetrics metrics = g2d.getFontMetrics();
-			Rectangle2D bounds = metrics.getStringBounds(resourceValue, g2d);
-			y = pSlot.getLocation().y + ((pSlot.getLocation().height + metrics.getHeight()) / 2) - metrics.getDescent();
-			if (getSideBar().isHomeSide()) {
-				x = pSlot.getLocation().x + 3;
-			} else {
-				x = pSlot.getLocation().x + pSlot.getLocation().width - (int) bounds.getWidth() - 3;
+
+			if (pSlot.getValue() > 1) {
+				Rectangle counterCrop = counterCrop(pSlot.getValue() - 1);
+				BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
+					.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
+
+				g2d.drawImage(counter, x + pSlot.getLocation().width - COUNTER_SIZE - 5,
+					y + pSlot.getLocation().height - COUNTER_SIZE, null);
 			}
-			g2d.setColor(Color.BLACK);
-			g2d.drawString(resourceValue, x + 1, y + 1);
-			g2d.setColor(Color.WHITE);
-			g2d.drawString(resourceValue, x, y);
 			g2d.dispose();
 		}
+	}
+
+	private Rectangle counterCrop(int elementIndex) {
+		int row = elementIndex / 4;
+		int column = elementIndex % 4;
+
+		return new Rectangle(column * COUNTER_SIZE, row * COUNTER_SIZE, COUNTER_SIZE, COUNTER_SIZE);
 	}
 
 	private void updateSlots() {
@@ -165,7 +163,7 @@ public class ResourceComponent extends JPanel {
 
 		fRefreshNecessary |= (turnData.getReRolls() != fCurrentReRolls);
 		fCurrentReRolls = turnData.getReRolls();
-		if ((team.getReRolls() > 0) || (turnData.getReRolls() > 0)) {
+		if (turnData.getReRolls() > 0) {
 			ResourceSlot reRollSlot = fSlots[slotIndex.getAndIncrement()];
 			reRollSlot.setSingular("Re-Roll");
 			reRollSlot.setPlural("Re-Rolls");
@@ -177,7 +175,7 @@ public class ResourceComponent extends JPanel {
 
 		fRefreshNecessary |= (turnData.getApothecaries() != fCurrentApothecaries);
 		fCurrentApothecaries = turnData.getApothecaries();
-		if ((team.getApothecaries() > 0) || (turnData.getApothecaries() > 0)) {
+		if (turnData.getApothecaries() > 0) {
 			ResourceSlot apothecarySlot = fSlots[slotIndex.getAndIncrement()];
 			apothecarySlot.setSingular("Apothecary");
 			apothecarySlot.setPlural("Apothecaries");
