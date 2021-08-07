@@ -93,6 +93,7 @@ public interface IIconProperty {
 	String RESOURCE_RE_ROLL = "resource.reRoll";
 	String RESOURCE_IGOR = "resource.igor";
 	String RESOURCE_WIZARD = "resource.wizard";
+	String RESOURCE_COUNTER_SPRITE = "resource.counter.sprite";
 
 	// Dice
 	String DICE_BLOCK_1 = "dice.block.1";
