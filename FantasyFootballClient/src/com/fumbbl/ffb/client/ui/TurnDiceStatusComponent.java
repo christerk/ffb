@@ -61,7 +61,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final String _LABEL_TIMEOUT = "Timeout";
 
 	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 14);
-	private static final Rectangle _BUTTON_AREA = new Rectangle(1, 1, 140, 31);
+	private static final Rectangle _BUTTON_AREA = new Rectangle(1, 1, 143, 31);
 
 	private static final Font _DICE_FONT = new Font("Sans Serif", Font.BOLD, 11);
 	private static final Font _STATUS_TITLE_FONT = new Font("Sans Serif", Font.BOLD, 12);
