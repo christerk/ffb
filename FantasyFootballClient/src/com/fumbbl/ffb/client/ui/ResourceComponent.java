@@ -134,7 +134,7 @@ public class ResourceComponent extends JPanel {
 			}
 
 			if (pSlot.getValue() > 1) {
-				Rectangle counterCrop = counterCrop(pSlot.getValue() - 1);
+				Rectangle counterCrop = counterCrop(Math.min(pSlot.getValue() - 1, 15));
 				BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
 					.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
 
