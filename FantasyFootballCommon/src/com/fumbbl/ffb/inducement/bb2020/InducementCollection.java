@@ -26,6 +26,10 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 		add(new InducementType("prayers", "Prayers", "Prayer", "Prayers", GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
 			GameOptionId.INDUCEMENT_PRAYERS_COST, false, IIconProperty.RESOURCE_PRAYER, Usage.GAME_MODIFICATION));
 
+		add(new InducementType("briberyAndCorruption", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRolls",
+			GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
+			GameOptionId.INDUCEMENT_PRAYERS_COST, true, IIconProperty.RESOURCE_PRAYER, Usage.REROLL_ARGUE));
+
 		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
 			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,
 			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, IIconProperty.RESOURCE_MASTER_CHEF, Usage.STEAL_REROLL) {
