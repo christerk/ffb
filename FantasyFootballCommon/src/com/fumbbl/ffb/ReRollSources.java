@@ -19,6 +19,7 @@ public class ReRollSources {
 	public static final ReRollSource LEADER = new ReRollSource("Leader");
 	public static final ReRollSource MONSTROUS_MOUTH = new ReRollSource("Monstrous Mouth");
 	public static final ReRollSource BRAWLER = new ReRollSource("Brawler");
+	public static final ReRollSource BRIBERY_AND_CORRUPTION = new ReRollSource("Bribery and Corruption");
 
 	private final Map<String, ReRollSource> values;
 
