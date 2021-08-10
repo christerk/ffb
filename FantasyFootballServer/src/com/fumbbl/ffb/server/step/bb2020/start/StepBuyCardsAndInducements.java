@@ -21,6 +21,7 @@ import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
@@ -558,12 +559,12 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 				if (teamHome.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
 					game.getTurnDataHome().getInducementSet().addInducement(new Inducement(inducementType, 1));
-					getResult().addReport(new ReportBriberyAndCorruptionReRoll(teamHome.getId(), false));
+					getResult().addReport(new ReportBriberyAndCorruptionReRoll(teamHome.getId(), BriberyAndCorruptionAction.ADDED));
 				}
 
 				if (teamAway.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
 					game.getTurnDataAway().getInducementSet().addInducement(new Inducement(inducementType, 1));
-					getResult().addReport(new ReportBriberyAndCorruptionReRoll(teamAway.getId(), false));
+					getResult().addReport(new ReportBriberyAndCorruptionReRoll(teamAway.getId(), BriberyAndCorruptionAction.ADDED));
 				}
 
 			});

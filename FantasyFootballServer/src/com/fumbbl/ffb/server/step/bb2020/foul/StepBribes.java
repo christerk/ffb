@@ -12,6 +12,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -164,7 +165,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 				Inducement inducement = inducementSet.getInducementMapping().get(briberyReRoll.get());
 				inducement.setUses(inducement.getUses() + 1);
 				inducementSet.addInducement(inducement);
-				getResult().addReport(new ReportBriberyAndCorruptionReRoll(game.getActingTeam().getId(), true));
+				getResult().addReport(new ReportBriberyAndCorruptionReRoll(game.getActingTeam().getId(), BriberyAndCorruptionAction.USED));
 			}
 
 			int roll = getGameState().getDiceRoller().rollArgueTheCall();

@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.report.IReport;
@@ -14,23 +15,23 @@ import com.fumbbl.ffb.report.UtilReport;
 public class ReportBriberyAndCorruptionReRoll implements IReport {
 
 	private String teamId;
-	private boolean used;
+	private BriberyAndCorruptionAction action;
 
 	public ReportBriberyAndCorruptionReRoll() {
 		super();
 	}
 
-	public ReportBriberyAndCorruptionReRoll(String teamId, boolean used) {
+	public ReportBriberyAndCorruptionReRoll(String teamId, BriberyAndCorruptionAction action) {
 		this.teamId = teamId;
-		this.used = used;
+		this.action = action;
 	}
 
 	public ReportId getId() {
 		return ReportId.BRIBERY_AND_CORRUPTION_RE_ROLL;
 	}
 
-	public boolean isUsed() {
-		return used;
+	public BriberyAndCorruptionAction getAction() {
+		return action;
 	}
 
 	public String getTeamId() {
@@ -40,7 +41,7 @@ public class ReportBriberyAndCorruptionReRoll implements IReport {
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportBriberyAndCorruptionReRoll(teamId, used);
+		return new ReportBriberyAndCorruptionReRoll(teamId, action);
 	}
 
 	// JSON serialization
@@ -49,14 +50,14 @@ public class ReportBriberyAndCorruptionReRoll implements IReport {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.TEAM_ID.addTo(jsonObject, teamId);
-		IJsonOption.USED.addTo(jsonObject, used);
+		IJsonOption.BRIBERY_AND_CORRUPTION_ACTION.addTo(jsonObject, action.name());
 		return jsonObject;
 	}
 
 	public ReportBriberyAndCorruptionReRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		used = IJsonOption.USED.getFrom(game, jsonObject);
+		action = BriberyAndCorruptionAction.valueOf(IJsonOption.BRIBERY_AND_CORRUPTION_ACTION.getFrom(game, jsonObject));
 		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
 		return this;
 	}

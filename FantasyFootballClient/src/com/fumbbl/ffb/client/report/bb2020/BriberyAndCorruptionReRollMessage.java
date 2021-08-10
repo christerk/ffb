@@ -16,10 +16,16 @@ public class BriberyAndCorruptionReRollMessage extends ReportMessageBase<ReportB
 		Team team = game.getTeamById(report.getTeamId());
 		TextStyle teamStyle = game.getTeamHome() == team ? TextStyle.HOME_BOLD : TextStyle.AWAY_BOLD;
 		print(getIndent(), teamStyle, team.getName());
-		if (report.isUsed()) {
-			println(getIndent(), " use Bribery and Corruption to re-roll their Argue the Call roll.");
-		} else {
-			println(getIndent(), " may re-roll a natural 1 on an Argue the Call roll once in this game due to Bribery and Corruption.");
+		switch (report.getAction()) {
+			case USED:
+				println(getIndent(), " use Bribery and Corruption to re-roll their Argue the Call roll.");
+				break;
+			case ADDED:
+				println(getIndent(), " may re-roll a natural 1 on an Argue the Call roll once in this game due to Bribery and Corruption.");
+				break;
+			case WASTED:
+				println(getIndent(), " have no use for their Bribery and Corruption as the coach was banned for more than one argue.");
+				break;
 		}
 	}
 }

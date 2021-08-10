@@ -8,12 +8,15 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.HeatExhaustion;
 import com.fumbbl.ffb.KnockoutRecovery;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogArgueTheCallParameter;
+import com.fumbbl.ffb.dialog.DialogBriberyAndCorruptionParameter;
 import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Card;
@@ -22,6 +25,7 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -39,11 +43,13 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
+import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
 import com.fumbbl.ffb.report.bb2020.ReportArgueTheCallRoll;
+import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
 import com.fumbbl.ffb.report.bb2020.ReportPrayerEnd;
 import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
@@ -108,6 +114,7 @@ public class StepEndTurn extends AbstractStep {
 	private boolean fEndGame;
 	private boolean fWithinSecretWeaponHandling;
 	private int turnNr, half;
+	private String playerIdWithPendingArgue;
 
 	public StepEndTurn(GameState pGameState) {
 		super(pGameState);
@@ -131,6 +138,27 @@ public class StepEndTurn extends AbstractStep {
 			Team team = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand) ? game.getTeamHome()
 				: game.getTeamAway();
 			switch (pReceivedCommand.getId()) {
+				case CLIENT_USE_RE_ROLL:
+					ClientCommandUseReRoll useReRollCommand = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
+					if (useReRollCommand.getReRolledAction() == ReRolledActions.ARGUE_THE_CALL) {
+						String playerId = playerIdWithPendingArgue;
+						playerIdWithPendingArgue = null;
+						TurnData turnData = team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
+						Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet()
+							.stream().filter(key -> key.getUsage() == Usage.REROLL_ARGUE).findFirst();
+
+						if (useReRollCommand.getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get())) {
+							Inducement inducement = turnData.getInducementSet().getInducementMapping().get(briberyReRoll.get());
+							inducement.setUses(inducement.getUses() + 1);
+							turnData.getInducementSet().addInducement(inducement);
+							getResult().addReport(new ReportBriberyAndCorruptionReRoll(team.getId(), BriberyAndCorruptionAction.USED));
+							argueTheCall(team, new String[]{playerId});
+						} else {
+							turnData.setCoachBanned(true);
+						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
 				case CLIENT_ARGUE_THE_CALL:
 					ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand.getCommand();
 					argueTheCall(team, argueTheCallCommand.getPlayerIds());
@@ -397,6 +425,12 @@ public class StepEndTurn extends AbstractStep {
 			}
 		}
 
+		if (playerIdWithPendingArgue != null) {
+			Team team = game.findTeam(game.getPlayerById(playerIdWithPendingArgue));
+			UtilServerDialog.showDialog(getGameState(), new DialogBriberyAndCorruptionParameter(team.getId()), false);
+			return;
+		}
+
 		if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceAway == null)) {
 			fArgueTheCallChoiceAway = false;
 			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway())) {
@@ -602,6 +636,7 @@ public class StepEndTurn extends AbstractStep {
 			turnData = game.getTurnDataAway();
 		}
 		if (ArrayTool.isProvided(pPlayerIds)) {
+			List<String> playerIdsForBanRolls = new ArrayList<>();
 			for (String playerId : pPlayerIds) {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if ((player != null) && !turnData.isCoachBanned()) {
@@ -617,8 +652,20 @@ public class StepEndTurn extends AbstractStep {
 						playerResult.setHasUsedSecretWeapon(false);
 					}
 					if (coachBanned) {
-						turnData.setCoachBanned(true);
+						playerIdsForBanRolls.add(playerId);
 					}
+				}
+			}
+
+			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet().stream()
+				.filter(inducement -> inducement.getUsage() == Usage.REROLL_ARGUE).findFirst();
+
+			if (!playerIdsForBanRolls.isEmpty()) {
+				if (!briberyReRoll.isPresent() || !(turnData.getInducementSet().hasUsesLeft(briberyReRoll.get())) || playerIdsForBanRolls.size() > 1) {
+					turnData.setCoachBanned(true);
+					getResult().addReport(new ReportBriberyAndCorruptionReRoll(pTeam.getId(), BriberyAndCorruptionAction.WASTED));
+				} else {
+					playerIdWithPendingArgue = playerIdsForBanRolls.get(0);
 				}
 			}
 		}
@@ -781,6 +828,7 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.addTo(jsonObject, fWithinSecretWeaponHandling);
 		IServerJsonOption.HALF.addTo(jsonObject, half);
 		IServerJsonOption.TURN_NR.addTo(jsonObject, turnNr);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerIdWithPendingArgue);
 		return jsonObject;
 	}
 
@@ -801,6 +849,7 @@ public class StepEndTurn extends AbstractStep {
 		fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
 		half = IServerJsonOption.HALF.getFrom(source, jsonObject);
 		turnNr = IServerJsonOption.TURN_NR.getFrom(source, jsonObject);
+		playerIdWithPendingArgue = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 
