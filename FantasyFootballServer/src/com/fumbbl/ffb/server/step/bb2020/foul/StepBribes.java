@@ -156,13 +156,14 @@ public class StepBribes extends AbstractStepWithReRoll {
 			&& (getReRolledAction() != ReRolledActions.ARGUE_THE_CALL || getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION)) {
 
 			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-			Optional<InducementType> briberyReroll = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REROLL_ARGUE)
+			Optional<InducementType> briberyReRoll = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REROLL_ARGUE)
 				.findFirst();
 
 			if (getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION
-				&& briberyReroll.isPresent() && inducementSet.hasUsesLeft(briberyReroll.get())) {
-				Inducement inducement = inducementSet.getInducementMapping().get(briberyReroll.get());
+				&& briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get())) {
+				Inducement inducement = inducementSet.getInducementMapping().get(briberyReRoll.get());
 				inducement.setUses(inducement.getUses() + 1);
+				inducementSet.addInducement(inducement);
 				getResult().addReport(new ReportBriberyAndCorruptionReRoll(game.getActingTeam().getId(), true));
 			}
 
@@ -175,7 +176,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 				new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef));
 			if (coachBanned) {
 				if (getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
-					&& briberyReroll.isPresent() && inducementSet.hasUsesLeft(briberyReroll.get())) {
+					&& briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get())) {
 					UtilServerDialog.showDialog(getGameState(), new DialogBriberyAndCorruptionParameter(game.getActingTeam().getId()), false);
 					return;
 				}
@@ -183,6 +184,11 @@ public class StepBribes extends AbstractStepWithReRoll {
 				game.getTurnData().setCoachBanned(true);
 			}
 		}
+
+		if (getReRollSource() == null && getReRolledAction() == ReRolledActions.ARGUE_THE_CALL) {
+			game.getTurnData().setCoachBanned(true);
+		}
+
 		if ((fBribesChoice != null) && (fArgueTheCallChoice != null)) {
 			boolean successful = (fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false;
 			publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESSFUL, successful));
