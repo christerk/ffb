@@ -311,6 +311,8 @@ public interface IJsonOption {
 	JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
 	JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
 	JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
+	JsonStringArrayOption PLAYER_IDS_NATURAL_ONES = new JsonStringArrayOption("playerIdsNaturalOnes");
+	JsonStringArrayOption PLAYER_IDS_COACH_BANNED = new JsonStringArrayOption("playerIdsCoachBanned");
 	JsonArrayOption PLAYER_MARKER_ARRAY = new JsonArrayOption("playerMarkerArray");
 	JsonStringOption PLAYER_NAME = new JsonStringOption("playerName");
 	JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");

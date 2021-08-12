@@ -13,23 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogArgueTheCallParameter implements IDialogParameter {
 
 	private String fTeamId;
 	private final List<String> fPlayerIds;
-	private boolean stayOnPitch;
+	private boolean stayOnPitch, friendsWithTheRef;
 
 	public DialogArgueTheCallParameter() {
 		fPlayerIds = new ArrayList<>();
 	}
 
-	public DialogArgueTheCallParameter(String teamId, boolean stayOnPitch) {
+	public DialogArgueTheCallParameter(String teamId, boolean stayOnPitch, boolean friendsWithTheRef) {
 		this();
 		setTeamId(teamId);
 		this.stayOnPitch = stayOnPitch;
+		this.friendsWithTheRef = friendsWithTheRef;
 	}
 
 	public DialogId getId() {
@@ -46,6 +46,10 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 
 	public boolean isStayOnPitch() {
 		return stayOnPitch;
+	}
+
+	public boolean isFriendsWithTheRef() {
+		return friendsWithTheRef;
 	}
 
 	public void addPlayerId(String pPlayerId) {
@@ -69,7 +73,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 	// transformation
 
 	public IDialogParameter transform() {
-		DialogArgueTheCallParameter transformedParameter = new DialogArgueTheCallParameter(getTeamId(), stayOnPitch);
+		DialogArgueTheCallParameter transformedParameter = new DialogArgueTheCallParameter(getTeamId(), stayOnPitch, friendsWithTheRef);
 		transformedParameter.addPlayerIds(getPlayerIds());
 		return transformedParameter;
 	}
@@ -82,6 +86,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		IJsonOption.TEAM_ID.addTo(jsonObject, getTeamId());
 		IJsonOption.PLAYER_IDS.addTo(jsonObject, getPlayerIds());
 		IJsonOption.STAYS_ON_PITCH.addTo(jsonObject, stayOnPitch);
+		IJsonOption.FRIENDS_WITH_REF.addTo(jsonObject, friendsWithTheRef);
 		return jsonObject;
 	}
 
@@ -92,6 +97,8 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		Boolean stayOnPitchValue = IJsonOption.STAYS_ON_PITCH.getFrom(game, jsonObject);
 		stayOnPitch = stayOnPitchValue != null && stayOnPitchValue;
+		Boolean friendsWithTheRefValue = IJsonOption.FRIENDS_WITH_REF.getFrom(game, jsonObject);
+		friendsWithTheRef = friendsWithTheRefValue != null && friendsWithTheRefValue;
 		return this;
 	}
 

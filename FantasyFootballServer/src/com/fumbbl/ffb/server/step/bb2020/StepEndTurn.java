@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.HeatExhaustion;
 import com.fumbbl.ffb.KnockoutRecovery;
+import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogArgueTheCallParameter;
 import com.fumbbl.ffb.dialog.DialogBriberyAndCorruptionParameter;
 import com.fumbbl.ffb.dialog.DialogBribesParameter;
+import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -42,6 +44,7 @@ import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
+import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -81,6 +84,7 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -114,7 +118,8 @@ public class StepEndTurn extends AbstractStep {
 	private boolean fEndGame;
 	private boolean fWithinSecretWeaponHandling;
 	private int turnNr, half;
-	private String playerIdWithPendingArgue;
+	private final List<String> playerIdsCoachBanned = new ArrayList<>();
+	private List<String> playerIdsNaturalOnes = new ArrayList<>();
 
 	public StepEndTurn(GameState pGameState) {
 		super(pGameState);
@@ -137,31 +142,49 @@ public class StepEndTurn extends AbstractStep {
 			Game game = getGameState().getGame();
 			Team team = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand) ? game.getTeamHome()
 				: game.getTeamAway();
+			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(team);
+			TurnData turnData = team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
+			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet()
+				.stream().filter(key -> key.getUsage() == Usage.REROLL_ARGUE).findFirst();
+			boolean canUseReRoll = briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
+
 			switch (pReceivedCommand.getId()) {
+				case CLIENT_PLAYER_CHOICE:
+					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+					if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.BRIBERY_AND_CORRUPTION) {
+						String playerId = playerChoiceCommand.getPlayerId();
+						if (!playerIdsCoachBanned.isEmpty() && !playerIdsCoachBanned.contains(playerId) || playerIdsCoachBanned.size() > 1) {
+							turnData.setCoachBanned(true);
+						}
+						playerIdsNaturalOnes.clear();
+						playerIdsCoachBanned.clear();
+
+						if (canUseReRoll && StringTool.isProvided(playerId)) {
+							reRollArgue(team, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
+						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
 				case CLIENT_USE_RE_ROLL:
 					ClientCommandUseReRoll useReRollCommand = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
 					if (useReRollCommand.getReRolledAction() == ReRolledActions.ARGUE_THE_CALL) {
-						String playerId = playerIdWithPendingArgue;
-						playerIdWithPendingArgue = null;
-						TurnData turnData = team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
-						Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet()
-							.stream().filter(key -> key.getUsage() == Usage.REROLL_ARGUE).findFirst();
-
-						if (useReRollCommand.getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get())) {
-							Inducement inducement = turnData.getInducementSet().getInducementMapping().get(briberyReRoll.get());
-							inducement.setUses(inducement.getUses() + 1);
-							turnData.getInducementSet().addInducement(inducement);
-							getResult().addReport(new ReportBriberyAndCorruptionReRoll(team.getId(), BriberyAndCorruptionAction.USED));
-							argueTheCall(team, new String[]{playerId});
-						} else {
+						String playerId = playerIdsNaturalOnes.get(0);
+						if (!playerIdsCoachBanned.isEmpty() && !playerIdsCoachBanned.contains(playerId) || playerIdsCoachBanned.size() > 1) {
 							turnData.setCoachBanned(true);
 						}
+						playerIdsNaturalOnes.clear();
+						playerIdsCoachBanned.clear();
+
+						if (useReRollCommand.getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION && canUseReRoll) {
+							reRollArgue(team, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
+						}
+
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_ARGUE_THE_CALL:
 					ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand.getCommand();
-					argueTheCall(team, argueTheCallCommand.getPlayerIds());
+					argueTheCall(team, argueTheCallCommand.getPlayerIds(), friendsWithTheRef);
 					fWithinSecretWeaponHandling = true;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -187,6 +210,14 @@ public class StepEndTurn extends AbstractStep {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	private void reRollArgue(Team team, boolean friendsWithTheRef, String playerId, TurnData turnData, InducementType briberyReRoll) {
+		Inducement inducement = turnData.getInducementSet().getInducementMapping().get(briberyReRoll);
+		inducement.setUses(inducement.getUses() + 1);
+		turnData.getInducementSet().addInducement(inducement);
+		getResult().addReport(new ReportBriberyAndCorruptionReRoll(team.getId(), BriberyAndCorruptionAction.USED));
+		argueTheCall(team, new String[]{playerId}, friendsWithTheRef);
 	}
 
 	private void executeStep() {
@@ -425,15 +456,23 @@ public class StepEndTurn extends AbstractStep {
 			}
 		}
 
-		if (playerIdWithPendingArgue != null) {
-			Team team = game.findTeam(game.getPlayerById(playerIdWithPendingArgue));
+		if (playerIdsNaturalOnes.size() == 1) {
+			Team team = game.findTeam(game.getPlayerById(playerIdsNaturalOnes.get(0)));
 			UtilServerDialog.showDialog(getGameState(), new DialogBriberyAndCorruptionParameter(team.getId()), false);
+			return;
+		} else if (!playerIdsNaturalOnes.isEmpty()) {
+			Player<?>[] players = playerIdsNaturalOnes.stream().map(game::getPlayerById).toArray(Player[]::new);
+			Team team = game.findTeam(players[0]);
+			UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.BRIBERY_AND_CORRUPTION, players,
+				null, 1), false);
 			return;
 		}
 
 		if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceAway == null)) {
 			fArgueTheCallChoiceAway = false;
-			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway())) {
+			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getTeamAway());
+
+			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway(), friendsWithTheRef)) {
 				fArgueTheCallChoiceAway = null;
 			}
 		}
@@ -441,7 +480,9 @@ public class StepEndTurn extends AbstractStep {
 		if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceHome == null)
 			&& (fArgueTheCallChoiceAway != null)) {
 			fArgueTheCallChoiceHome = false;
-			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome())) {
+			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getTeamHome());
+
+			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome(), friendsWithTheRef)) {
 				fArgueTheCallChoiceHome = null;
 			}
 		}
@@ -625,9 +666,11 @@ public class StepEndTurn extends AbstractStep {
 		}
 	}
 
-	private void argueTheCall(Team pTeam, String[] pPlayerIds) {
+	private void argueTheCall(Team pTeam, String[] pPlayerIds, boolean friendsWithTheRef) {
 		Game game = getGameState().getGame();
 		TurnData turnData;
+		playerIdsNaturalOnes.clear();
+		playerIdsCoachBanned.clear();
 		if (game.getTeamHome() == pTeam) {
 			fArgueTheCallChoiceHome = ArrayTool.isProvided(pPlayerIds);
 			turnData = game.getTurnDataHome();
@@ -636,12 +679,10 @@ public class StepEndTurn extends AbstractStep {
 			turnData = game.getTurnDataAway();
 		}
 		if (ArrayTool.isProvided(pPlayerIds)) {
-			List<String> playerIdsForBanRolls = new ArrayList<>();
 			for (String playerId : pPlayerIds) {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if ((player != null) && !turnData.isCoachBanned()) {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
-					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.findTeam(player));
 					int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
 
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
@@ -651,8 +692,13 @@ public class StepEndTurn extends AbstractStep {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);
 					}
+
 					if (coachBanned) {
-						playerIdsForBanRolls.add(playerId);
+						playerIdsCoachBanned.add(playerId);
+					}
+
+					if (roll == 1) {
+						playerIdsNaturalOnes.add(playerId);
 					}
 				}
 			}
@@ -660,13 +706,23 @@ public class StepEndTurn extends AbstractStep {
 			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet().stream()
 				.filter(inducement -> inducement.getUsage() == Usage.REROLL_ARGUE).findFirst();
 
-			if (!playerIdsForBanRolls.isEmpty()) {
-				if (!briberyReRoll.isPresent() || !(turnData.getInducementSet().hasUsesLeft(briberyReRoll.get())) || playerIdsForBanRolls.size() > 1) {
-					turnData.setCoachBanned(true);
-					getResult().addReport(new ReportBriberyAndCorruptionReRoll(pTeam.getId(), BriberyAndCorruptionAction.WASTED));
-				} else {
-					playerIdWithPendingArgue = playerIdsForBanRolls.get(0);
-				}
+			boolean hasReRoll = briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
+
+			// if the coach was banned, and we have no re-roll or there were multiple bans or it was only one ban but not on a natural one
+			// we can set the coach to banned in any case
+			if (!playerIdsCoachBanned.isEmpty()
+				&& (!hasReRoll
+				|| playerIdsCoachBanned.size() > 1
+				|| playerIdsNaturalOnes.isEmpty()
+			)) {
+				turnData.setCoachBanned(true);
+			}
+
+			// if we have exactly one roll of a natural one and the coach was banned for it, we auto re-roll
+			if (hasReRoll && playerIdsNaturalOnes.size() == 1 && playerIdsCoachBanned.contains(playerIdsNaturalOnes.get(0))) {
+				reRollArgue(pTeam, friendsWithTheRef, playerIdsCoachBanned.get(0), turnData, briberyReRoll.get());
+				playerIdsNaturalOnes.clear();
+				playerIdsCoachBanned.clear();
 			}
 		}
 	}
@@ -779,7 +835,7 @@ public class StepEndTurn extends AbstractStep {
 		return false;
 	}
 
-	private boolean askForArgueTheCall(Team team) {
+	private boolean askForArgueTheCall(Team team, boolean friendsWithTheRef) {
 		Game game = getGameState().getGame();
 		if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
 			return false;
@@ -788,7 +844,7 @@ public class StepEndTurn extends AbstractStep {
 		if (playerIds.size() > 0) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
-				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false);
+				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false, friendsWithTheRef);
 				dialogParameter.addPlayerIds(playerIds.toArray(new String[0]));
 				UtilServerDialog.showDialog(getGameState(), dialogParameter,
 					(game.isHomePlaying() && (team != game.getTeamHome()))
@@ -828,7 +884,7 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.addTo(jsonObject, fWithinSecretWeaponHandling);
 		IServerJsonOption.HALF.addTo(jsonObject, half);
 		IServerJsonOption.TURN_NR.addTo(jsonObject, turnNr);
-		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerIdWithPendingArgue);
+		IServerJsonOption.PLAYER_IDS_NATURAL_ONES.addTo(jsonObject, playerIdsNaturalOnes);
 		return jsonObject;
 	}
 
@@ -849,7 +905,7 @@ public class StepEndTurn extends AbstractStep {
 		fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
 		half = IServerJsonOption.HALF.getFrom(source, jsonObject);
 		turnNr = IServerJsonOption.TURN_NR.getFrom(source, jsonObject);
-		playerIdWithPendingArgue = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		playerIdsNaturalOnes = Arrays.stream(IServerJsonOption.PLAYER_IDS_NATURAL_ONES.getFrom(source, jsonObject)).collect(Collectors.toList());
 		return this;
 	}
 
