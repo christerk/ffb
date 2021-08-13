@@ -118,7 +118,6 @@ public class StepEndTurn extends AbstractStep {
 	private boolean fEndGame;
 	private boolean fWithinSecretWeaponHandling;
 	private int turnNr, half;
-	private final List<String> playerIdsCoachBanned = new ArrayList<>();
 	private List<String> playerIdsNaturalOnes = new ArrayList<>();
 
 	public StepEndTurn(GameState pGameState) {
@@ -153,11 +152,7 @@ public class StepEndTurn extends AbstractStep {
 					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 					if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.BRIBERY_AND_CORRUPTION) {
 						String playerId = playerChoiceCommand.getPlayerId();
-						if (!playerIdsCoachBanned.isEmpty() && !playerIdsCoachBanned.contains(playerId) || playerIdsCoachBanned.size() > 1) {
-							turnData.setCoachBanned(true);
-						}
 						playerIdsNaturalOnes.clear();
-						playerIdsCoachBanned.clear();
 
 						if (canUseReRoll && StringTool.isProvided(playerId)) {
 							reRollArgue(team, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
@@ -169,11 +164,7 @@ public class StepEndTurn extends AbstractStep {
 					ClientCommandUseReRoll useReRollCommand = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
 					if (useReRollCommand.getReRolledAction() == ReRolledActions.ARGUE_THE_CALL) {
 						String playerId = playerIdsNaturalOnes.get(0);
-						if (!playerIdsCoachBanned.isEmpty() && !playerIdsCoachBanned.contains(playerId) || playerIdsCoachBanned.size() > 1) {
-							turnData.setCoachBanned(true);
-						}
 						playerIdsNaturalOnes.clear();
-						playerIdsCoachBanned.clear();
 
 						if (useReRollCommand.getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION && canUseReRoll) {
 							reRollArgue(team, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
@@ -669,8 +660,6 @@ public class StepEndTurn extends AbstractStep {
 	private void argueTheCall(Team pTeam, String[] pPlayerIds, boolean friendsWithTheRef) {
 		Game game = getGameState().getGame();
 		TurnData turnData;
-		playerIdsNaturalOnes.clear();
-		playerIdsCoachBanned.clear();
 		if (game.getTeamHome() == pTeam) {
 			fArgueTheCallChoiceHome = ArrayTool.isProvided(pPlayerIds);
 			turnData = game.getTurnDataHome();
@@ -679,6 +668,9 @@ public class StepEndTurn extends AbstractStep {
 			turnData = game.getTurnDataAway();
 		}
 		if (ArrayTool.isProvided(pPlayerIds)) {
+			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet().stream()
+				.filter(inducement -> inducement.getUsage() == Usage.REROLL_ARGUE).findFirst();
+
 			for (String playerId : pPlayerIds) {
 				Player<?> player = pTeam.getPlayerById(playerId);
 				if ((player != null) && !turnData.isCoachBanned()) {
@@ -692,37 +684,17 @@ public class StepEndTurn extends AbstractStep {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);
 					}
+					boolean canBeReRolled = roll == 1 && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
 
-					if (coachBanned) {
-						playerIdsCoachBanned.add(playerId);
-					}
-
-					if (roll == 1) {
+					if (canBeReRolled && coachBanned) {
+						reRollArgue(pTeam, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
+					} else if (coachBanned) {
+						turnData.setCoachBanned(true);
+					} else if (canBeReRolled) {
 						playerIdsNaturalOnes.add(playerId);
 					}
 				}
-			}
 
-			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet().stream()
-				.filter(inducement -> inducement.getUsage() == Usage.REROLL_ARGUE).findFirst();
-
-			boolean hasReRoll = briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
-
-			// if the coach was banned, and we have no re-roll or there were multiple bans or it was only one ban but not on a natural one
-			// we can set the coach to banned in any case
-			if (!playerIdsCoachBanned.isEmpty()
-				&& (!hasReRoll
-				|| playerIdsCoachBanned.size() > 1
-				|| playerIdsNaturalOnes.isEmpty()
-			)) {
-				turnData.setCoachBanned(true);
-			}
-
-			// if we have exactly one roll of a natural one and the coach was banned for it, we auto re-roll
-			if (hasReRoll && playerIdsNaturalOnes.size() == 1 && playerIdsCoachBanned.contains(playerIdsNaturalOnes.get(0))) {
-				reRollArgue(pTeam, friendsWithTheRef, playerIdsCoachBanned.get(0), turnData, briberyReRoll.get());
-				playerIdsNaturalOnes.clear();
-				playerIdsCoachBanned.clear();
 			}
 		}
 	}

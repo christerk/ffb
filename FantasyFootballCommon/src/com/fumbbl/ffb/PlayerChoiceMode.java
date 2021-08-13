@@ -9,7 +9,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card", false), BLOCK("block"),
 	MVP("mvp"), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
-	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption");
+	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false);
 
 	private final String name;
 	private final boolean usePlayerPosition;
