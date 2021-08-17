@@ -75,4 +75,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract RosterPosition riotousRookiesPosition(Roster roster);
 
 	public abstract boolean isLegalConcession(Game game, Team team);
+
+	public abstract boolean starPairCountsAsTwo();
 }

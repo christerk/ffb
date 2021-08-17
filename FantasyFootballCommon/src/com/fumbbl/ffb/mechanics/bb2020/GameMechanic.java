@@ -238,4 +238,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			.filter(PlayerState::canBeSetUp)
 			.count() <= 3;
 	}
+
+	@Override
+	public boolean starPairCountsAsTwo() {
+		return true;
+	}
 }

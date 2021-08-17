@@ -216,4 +216,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean isLegalConcession(Game game, Team team) {
 		return UtilPlayer.findPlayersInReserveOrField(game, team).length <= 2;
 	}
+
+	@Override
+	public boolean starPairCountsAsTwo() {
+		return false;
+	}
 }
