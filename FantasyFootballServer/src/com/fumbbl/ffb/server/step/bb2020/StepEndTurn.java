@@ -558,7 +558,9 @@ public class StepEndTurn extends AbstractStep {
 		int reRollsBrilliantCoaching = turnData.getReRollsBrilliantCoachingOneDrive();
 		if (reRollsBrilliantCoaching > 0) {
 			turnData.setReRollsBrilliantCoachingOneDrive(0);
-			turnData.setReRolls(turnData.getReRolls() - reRollsBrilliantCoaching);
+			if (!fNewHalf || getGameState().getGame().getHalf() > 2) {
+				turnData.setReRolls(Math.max(turnData.getReRolls() - reRollsBrilliantCoaching, 0));
+			}
 			getResult().addReport(new ReportBrilliantCoachingReRollsLost(teamId, reRollsBrilliantCoaching));
 		}
 
