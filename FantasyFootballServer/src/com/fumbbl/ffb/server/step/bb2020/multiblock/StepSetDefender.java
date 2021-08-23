@@ -45,8 +45,15 @@ public class StepSetDefender extends AbstractStep {
 
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
-		if (pParameter != null && pParameter.getKey() == StepParameterKey.BLOCK_DEFENDER_ID) {
-			defenderId = (String) pParameter.getValue();
+		if (pParameter != null) {
+			switch (pParameter.getKey()) {
+				case BLOCK_DEFENDER_ID:
+				case GAZE_VICTIM_ID:
+					defenderId = (String) pParameter.getValue();
+					break;
+				default:
+					break;
+			}
 		}
 		return super.setParameter(pParameter);
 	}
