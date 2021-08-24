@@ -31,7 +31,8 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.SET_DEFENDER, params.getGazeVictimId());
+		sequence.add(StepId.SET_DEFENDER, from(StepParameterKey.BLOCK_DEFENDER_ID, params.getGazeVictimId()),
+			from(StepParameterKey.IGNORE_NULL_VALUE, true));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
 		sequence.add(StepId.TAKE_ROOT);

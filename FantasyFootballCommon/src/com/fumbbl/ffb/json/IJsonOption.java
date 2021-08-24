@@ -208,6 +208,7 @@ public interface IJsonOption {
 	JsonStringArrayOption ICON_URLS_AWAY_STANDING = new JsonStringArrayOption("iconUrlsAwayStanding");
 	JsonStringArrayOption ICON_URLS_HOME_MOVING = new JsonStringArrayOption("iconUrlsHomeMoving");
 	JsonStringArrayOption ICON_URLS_HOME_STANDING = new JsonStringArrayOption("iconUrlsHomeStanding");
+	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);

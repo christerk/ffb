@@ -11,12 +11,13 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.util.StringTool;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepSetDefender extends AbstractStep {
 	private String defenderId;
+	private boolean ignoreNullValue;
 
 	public StepSetDefender(GameState pGameState) {
 		super(pGameState);
@@ -36,8 +37,15 @@ public class StepSetDefender extends AbstractStep {
 		super.init(parameterSet);
 		if (parameterSet != null) {
 			for (StepParameter parameter : parameterSet.values()) {
-				if (parameter.getKey() == StepParameterKey.BLOCK_DEFENDER_ID) {
-					defenderId = (String) parameter.getValue();
+				switch (parameter.getKey()) {
+					case BLOCK_DEFENDER_ID:
+						defenderId = (String) parameter.getValue();
+						break;
+					case IGNORE_NULL_VALUE:
+						ignoreNullValue = (boolean) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -65,7 +73,9 @@ public class StepSetDefender extends AbstractStep {
 	}
 
 	private void executeStep() {
-		getGameState().getGame().setDefenderId(defenderId);
+		if (StringTool.isProvided(defenderId) || !ignoreNullValue) {
+			getGameState().getGame().setDefenderId(defenderId);
+		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
@@ -73,13 +83,16 @@ public class StepSetDefender extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, defenderId);
+		IJsonOption.IGNORE_NULL_VALUE.addTo(jsonObject, ignoreNullValue);
 		return jsonObject;
 	}
 
 	@Override
 	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
 		super.initFrom(source, pJsonValue);
-		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, UtilJson.toJsonObject(pJsonValue));
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		ignoreNullValue = IJsonOption.IGNORE_NULL_VALUE.getFrom(source, jsonObject);
 		return this;
 	}
 }
