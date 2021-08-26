@@ -4,8 +4,8 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogDefenderActionParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.BlitzState;
@@ -43,6 +43,7 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 			@Override
 			public boolean handleExecuteStepHook(StepDumpOff step, StepState state) {
 				Game game = step.getGameState().getGame();
+				UtilServerDialog.hideDialog(step.getGameState());
 
 				if (game.getTurnMode() == TurnMode.DUMP_OFF) {
 					game.setTurnMode(state.oldTurnMode);
