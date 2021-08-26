@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -97,7 +98,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canRaiseInfectedPlayers(Team team) {
+	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
 		return true;
 	}
 

@@ -211,7 +211,7 @@ public class UtilServerInjury {
 					deadPlayer.getId());
 			} else {
 				Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
-				if (mechanic.canRaiseInfectedPlayers(necroTeam) && (attacker != null) && attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman)
+				if (mechanic.canRaiseInfectedPlayers(necroTeam, necroTeamResult) && (attacker != null) && attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman)
 					&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
 					&& !deadPlayer.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();

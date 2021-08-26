@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
@@ -108,8 +109,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canRaiseInfectedPlayers(Team team) {
-		return team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE);
+	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
+		return team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE) && teamResult.getRaisedDead() == 0;
 	}
 
 	@Override
