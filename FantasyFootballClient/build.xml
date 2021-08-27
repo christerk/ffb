@@ -35,6 +35,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${build.dir}" includes="**/*"/>
 		</delete>
+		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="clean" />
 	</target>
 	
 	<target name="FantasyFootballCommon">
@@ -48,7 +49,7 @@
 		</path>
 		<property name="myClasspath" refid="classpath" />
 		<echo message="Classpath = ${myClasspath}" />
-		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" includeantruntime="false" debug="on">
+		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" target="1.8" source="1.8" includeantruntime="false" debug="on">
 			<classpath refid="classpath" />
 		</javac>
 	</target>
@@ -59,7 +60,7 @@
         	<metainf dir="${metainf.dir}" />
 			<manifest>
         		<attribute name="Built-By" value="${user.name}" />
-            	<attribute name="Main-Class" value="com.balancedbytes.games.ffb.client.FantasyFootballClient" />
+            	<attribute name="Main-Class" value="com.fumbbl.ffb.client.FantasyFootballClient" />
             	<attribute name="Permissions" value="all-permissions" />
             	<attribute name="Application-Name" value="Fantasy Football Client" />
             	<attribute name="Codebase" value="www.fumbbl.com fumbbl.com" />
@@ -98,6 +99,10 @@
         </jar>
 		<copy todir="${build.dir}/lib">
 			<fileset dir="${lib.dir}" includes="*.jar" />
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
+		</copy>
+		<copy todir="${build.dir}">
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
 		</copy>
 		<!--
 		<signjar keystore="../FantasyFootballCommon/keystore.jks" storepass="dragon" alias="Kalimar" keypass="dragon">
@@ -124,7 +129,7 @@
 	
 	<!--
 	<target name="sign" depends="jarCommon">
-		<signjar keystore="../FantasyFootballCommon/.keystore" storepass="dragon" alias="www.balancedbytes.com" keypass="dragon">
+		<signjar keystore="../FantasyFootballCommon/.keystore" storepass="dragon" alias="fumbbl.com" keypass="dragon">
 			<fileset dir="${build.dir}" includes="*.jar" />
 		</signjar>
 	</target>

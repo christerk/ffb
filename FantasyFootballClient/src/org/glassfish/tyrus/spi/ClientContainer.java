@@ -52,42 +52,53 @@ import javax.websocket.DeploymentException;
  */
 public interface ClientContainer {
 
-    /**
-     * Property name for maximal incoming buffer size.
-     * <p>
-     * Can be set in properties map (see {@link #openClientSocket(javax.websocket.ClientEndpointConfig, java.util.Map,
-     * ClientEngine)}).
-     *
-     * @deprecated please use {@code org.glassfish.tyrus.client.ClientProperties#INCOMING_BUFFER_SIZE}.
-     */
-    String INCOMING_BUFFER_SIZE = "org.glassfish.tyrus.incomingBufferSize";
+	/**
+	 * Property name for maximal incoming buffer size.
+	 * <p>
+	 * Can be set in properties map (see
+	 * {@link #openClientSocket(javax.websocket.ClientEndpointConfig, java.util.Map, ClientEngine)}).
+	 *
+	 * @deprecated please use
+	 *             {@code org.glassfish.tyrus.client.ClientProperties#INCOMING_BUFFER_SIZE}.
+	 */
+	String INCOMING_BUFFER_SIZE = "org.glassfish.tyrus.incomingBufferSize";
 
-    /**
-     * WLS version of {@link org.glassfish.tyrus.spi.ClientContainer#INCOMING_BUFFER_SIZE}.
-     */
-    String WLS_INCOMING_BUFFER_SIZE = "weblogic.websocket.tyrus.incoming-buffer-size";
+	/**
+	 * WLS version of
+	 * {@link org.glassfish.tyrus.spi.ClientContainer#INCOMING_BUFFER_SIZE}.
+	 */
+	String WLS_INCOMING_BUFFER_SIZE = "weblogic.websocket.tyrus.incoming-buffer-size";
 
-    /**
-     * Open client socket - connect to endpoint specified with {@code url} parameter.
-     * <p>
-     * Called from ClientManager when {@link javax.websocket.WebSocketContainer#connectToServer(Class,
-     * javax.websocket.ClientEndpointConfig, java.net.URI)} is invoked.
-     *
-     * @param cec          endpoint configuration. SPI consumer can access user properties, {@link
-     *                     javax.websocket.ClientEndpointConfig.Configurator}, extensions and subprotocol
-     *                     configuration,
-     *                     etc..
-     * @param properties   properties passed from client container. Don't mix up this with {@link
-     *                     javax.websocket.ClientEndpointConfig#getUserProperties()}, these are Tyrus proprietary.
-     * @param clientEngine one instance equals to one connection, cannot be reused. Implementation is expected to call
-     *                     {@link ClientEngine#createUpgradeRequest(ClientEngine.TimeoutHandler)} and {@link
-     *                     ClientEngine#processResponse(UpgradeResponse, Writer,
-     *                     org.glassfish.tyrus.spi.Connection.CloseListener)} (in that order).
-     * @throws javax.websocket.DeploymentException when the client endpoint is invalid or when there is any other (not
-     *                                             specified) connection problem.
-     * @throws java.io.IOException                 when there is any I/O issue related to opening client socket or
-     *                                             connecting to remote endpoint.
-     */
-    void openClientSocket(ClientEndpointConfig cec, Map<String, Object> properties, ClientEngine clientEngine) throws
-            DeploymentException, IOException;
+	/**
+	 * Open client socket - connect to endpoint specified with {@code url}
+	 * parameter.
+	 * <p>
+	 * Called from ClientManager when
+	 * {@link javax.websocket.WebSocketContainer#connectToServer(Class, javax.websocket.ClientEndpointConfig, java.net.URI)}
+	 * is invoked.
+	 *
+	 * @param cec          endpoint configuration. SPI consumer can access user
+	 *                     properties,
+	 *                     {@link javax.websocket.ClientEndpointConfig.Configurator},
+	 *                     extensions and subprotocol configuration, etc..
+	 * @param properties   properties passed from client container. Don't mix up
+	 *                     this with
+	 *                     {@link javax.websocket.ClientEndpointConfig#getUserProperties()},
+	 *                     these are Tyrus proprietary.
+	 * @param clientEngine one instance equals to one connection, cannot be reused.
+	 *                     Implementation is expected to call
+	 *                     {@link ClientEngine#createUpgradeRequest(ClientEngine.TimeoutHandler)}
+	 *                     and
+	 *                     {@link ClientEngine#processResponse(UpgradeResponse, Writer, org.glassfish.tyrus.spi.Connection.CloseListener)}
+	 *                     (in that order).
+	 * @throws javax.websocket.DeploymentException when the client endpoint is
+	 *                                             invalid or when there is any
+	 *                                             other (not specified) connection
+	 *                                             problem.
+	 * @throws java.io.IOException                 when there is any I/O issue
+	 *                                             related to opening client socket
+	 *                                             or connecting to remote endpoint.
+	 */
+	void openClientSocket(ClientEndpointConfig cec, Map<String, Object> properties, ClientEngine clientEngine)
+			throws DeploymentException, IOException;
 }

@@ -16,6 +16,7 @@
 		<movement>2</movement>
 		<strength>6</strength>
 		<agility>1</agility>
+		<passing>5</passing>
 		<armour>10</armour>
 		<portrait>portraits/woodelf_treeman.png</portrait>
 		<iconSet size="3">iconsets/woodelf_treeman.png</iconSet>
@@ -44,6 +45,7 @@
 		<movement>8</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/woodelf_wardancer.png</portrait>
 		<iconSet size="2">iconsets/woodelf_wardancer.png</iconSet>
@@ -68,6 +70,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>2</passing>
 		<armour>7</armour>
 		<portrait>portraits/woodelf_thrower.png</portrait>
 		<iconSet size="1">iconsets/woodelf_thrower.png</iconSet>
@@ -90,6 +93,7 @@
 		<movement>9</movement>
 		<strength>2</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/woodelf_catcher.png</portrait>
 		<iconSet size="2">iconsets/woodelf_catcher.png</iconSet>
@@ -113,6 +117,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/woodelf_lineman.png</portrait>
 		<iconSet size="2">iconsets/woodelf_lineman.png</iconSet>

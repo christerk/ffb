@@ -51,26 +51,23 @@ import org.glassfish.tyrus.core.HandshakeException;
 import org.glassfish.tyrus.spi.UpgradeResponse;
 
 /**
- * This exception is set as a cause of {@link DeploymentException} thrown when {@link
- * WebSocketContainer}.connectToServer(...)
- * fails because of any of the following:
+ * This exception is set as a cause of {@link DeploymentException} thrown when
+ * {@link WebSocketContainer}.connectToServer(...) fails because of any of the
+ * following:
  * <ul>
- * <li>
- * HTTP response status code 401 is received and "{@value UpgradeResponse#WWW_AUTHENTICATE}" header
- * contains scheme which is not handled by any {@link Authenticator} registered in {@link AuthConfig}.
+ * <li>HTTP response status code 401 is received and
+ * "{@value UpgradeResponse#WWW_AUTHENTICATE}" header contains scheme which is
+ * not handled by any {@link Authenticator} registered in {@link AuthConfig}.
  * </li>
- * <li>
- * HTTP response status code 401 is received and "{@value UpgradeResponse#WWW_AUTHENTICATE}" header
- * does not contain authentication scheme token or "{@value UpgradeResponse#WWW_AUTHENTICATE}" header is missing.
- * </li>
- * <li>
- * {@link AuthenticationException} is thrown from {@link Authenticator#generateAuthorizationHeader(URI, String,
- * Credentials)}
- * method.
- * </li>
- * <li>
- * Property {@link ClientProperties#AUTH_CONFIG} is not instance of {@link AuthConfig}.
- * </li>
+ * <li>HTTP response status code 401 is received and
+ * "{@value UpgradeResponse#WWW_AUTHENTICATE}" header does not contain
+ * authentication scheme token or "{@value UpgradeResponse#WWW_AUTHENTICATE}"
+ * header is missing.</li>
+ * <li>{@link AuthenticationException} is thrown from
+ * {@link Authenticator#generateAuthorizationHeader(URI, String, Credentials)}
+ * method.</li>
+ * <li>Property {@link ClientProperties#AUTH_CONFIG} is not instance of
+ * {@link AuthConfig}.</li>
  * </ul>
  * <p>
  * {@link #getHttpStatusCode()} returns always {@code 401}.
@@ -82,19 +79,19 @@ import org.glassfish.tyrus.spi.UpgradeResponse;
 @Beta
 public class AuthenticationException extends HandshakeException {
 
-    /**
-	 * 
-	 */
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = -2865434926000784083L;
 
 	/**
-     * Constructor.
-     *
-     * @param message the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
-     *                method.
-     */
-    public AuthenticationException(String message) {
-        super(401, message);
-    }
+	 * Constructor.
+	 *
+	 * @param message the detail message. The detail message is saved for later
+	 *                retrieval by the {@link #getMessage()} method.
+	 */
+	public AuthenticationException(String message) {
+		super(401, message);
+	}
 
 }

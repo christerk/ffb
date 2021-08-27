@@ -51,8 +51,8 @@ import org.glassfish.tyrus.client.ClientManager;
  */
 public class JdkContainerProvider extends ContainerProvider {
 
-    @Override
-    protected WebSocketContainer getContainer() {
-        return ClientManager.createClient(JdkClientContainer.class.getName());
-    }
+	@Override
+	protected WebSocketContainer getContainer() {
+		return ClientManager.createClient(JdkClientContainer.class.getName());
+	}
 }

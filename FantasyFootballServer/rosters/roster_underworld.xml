@@ -7,7 +7,40 @@
 	<reRollCost>70000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-  
+
+	<maxBigGuys>2</maxBigGuys>
+
+	<position id="37844">
+		<quantity>2</quantity>
+		<name>Mutant Rat Ogre</name>
+		<shorthand>RO</shorthand>
+		<type>Big Guy</type>
+		<gender>random</gender>
+		<cost>150000</cost>
+		<movement>6</movement>
+		<strength>5</strength>
+		<agility>4</agility>
+		<passing>0</passing>
+		<armour>9</armour>
+		<undead>false</undead>
+		<thrall>false</thrall>
+		<portrait>i/673332</portrait>
+		<iconSet size="1" mimeType="image/png">i/673333.png</iconSet>
+		<skillList>
+			<skill>Animal Savagery</skill>
+			<skill>Frenzy</skill>
+			<skill value="4">Loner</skill>
+			<skill value="1">Mighty Blow</skill>
+			<skill>Prehensile Tail</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<normal>Mutation</normal>
+			<double>General</double>
+			<double>Agility</double>
+		</skillCategoryList>
+	</position>
+
 	<position id="underworld.goblin">
 		<quantity>12</quantity>
 		<name>Underworld Goblin</name>
@@ -17,6 +50,7 @@
 		<movement>6</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<race>Goblin</race>
 		<portrait>portraits/underworld_underworldgoblin.png</portrait>
@@ -25,6 +59,7 @@
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
 			<skill>Stunty</skill>
+			<skill displayValueAs="Rats" value="Skaven">Animosity</skill>
 		</skillList>
 		<skillCategoryList>
 			<normal>Agility</normal>
@@ -34,9 +69,9 @@
 			<double>Passing</double>
 		</skillCategoryList>
 	</position>
-  
+
 	<position id="underworld.skaven.lineman">
-		<quantity>2</quantity>
+		<quantity>16</quantity>
 		<name>Skaven Lineman</name>
 		<shorthand>L</shorthand>
 		<type>Regular</type>
@@ -44,12 +79,15 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<race>Skaven</race>
 		<portrait>portraits/underworld_skavenlineman.png</portrait>
 		<iconSet size="3">iconsets/underworld_skavenlineman.png</iconSet>
 		<skillList>
-			<skill>Animosity</skill>
+			<skill displayValueAs="Positions with T" value="underworld.skaven.thrower;underworld.troll.warpstone">
+				Animosity
+			</skill>
 		</skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -69,12 +107,13 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>2</passing>
 		<armour>7</armour>
 		<race>Skaven</race>
 		<portrait>portraits/underworld_skaventhrower.png</portrait>
 		<iconSet size="1">iconsets/underworld_skaventhrower.png</iconSet>
 		<skillList>
-			<skill>Animosity</skill>
+			<skill value="All">Animosity</skill>
 			<skill>Pass</skill>
 			<skill>Sure Hands</skill>
 		</skillList>
@@ -96,6 +135,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>8</armour>
 		<race>Skaven</race>
 		<portrait>portraits/underworld_skavenblitzer.png</portrait>
@@ -112,9 +152,9 @@
 			<double>Passing</double>
 		</skillCategoryList>
 	</position>
-  
+
 	<position id="underworld.troll.warpstone">
-		<quantity>1</quantity>
+		<quantity>2</quantity>
 		<name>Warpstone Troll</name>
 		<shorthand>WT</shorthand>
 		<type>Big Guy</type>
@@ -122,6 +162,7 @@
 		<movement>4</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/underworld_warpstonetroll.png</portrait>
 		<iconSet size="1">iconsets/underworld_warpstonetroll.png</iconSet>

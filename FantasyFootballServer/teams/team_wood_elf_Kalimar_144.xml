@@ -2,24 +2,35 @@
 
 <team id="teamWoodElfKalimar">
 
-  <coach>Kalimar</coach>
-  <name>Kalimar's Wood Elves</name>
-  <race>Wood Elf</race>
-  <rosterId>woodelf.lrb6</rosterId>
-  <reRolls>3</reRolls>
-  <fanFactor>8</fanFactor>
-  <apothecaries>2</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>113</teamStrength>
-  <division>[X]</division>
+    <coach>Kalimar</coach>
+    <name>Kalimar's Wood Elves</name>
+    <race>Wood Elf</race>
+    <rosterId>woodelf.lrb6</rosterId>
+    <reRolls>3</reRolls>
+    <fanFactor>8</fanFactor>
+    <apothecaries>2</apothecaries>
+    <teamRating>100</teamRating>
+    <currentTeamValue>100</currentTeamValue>
+    <teamStrength>113</teamStrength>
+    <division>[X]</division>
 
-  <player nr="1" id="teamWoodElfKalimar1">
-  	<name>Wardancer1</name>
-  	<gender>male</gender>
-  	<positionId>woodelf.wardancer</positionId>
-  	<skillList>
-  	  <skill>Strip Ball</skill>
-  	</skillList>
+    <player nr="1" id="teamWoodElfKalimar1">
+        <name>Wardancer1</name>
+        <gender>male</gender>
+        <positionId>woodelf.wardancer</positionId>
+        <skillList>
+            <skill>Strip Ball</skill>
+            <skill>-MA</skill>
+        <skill>-ST</skill>
+        <skill>-AG</skill>
+        <skill>-PA</skill>
+        <skill>-AV</skill>
+        <skill>-MA</skill>
+        <skill>-ST</skill>
+        <skill>-AG</skill>
+        <skill>-PA</skill>
+        <skill>-AV</skill>
+    </skillList>
   </player>
 
   <player nr="2" id="teamWoodElfKalimar2">
@@ -28,6 +39,11 @@
   	<positionId>woodelf.wardancer</positionId>
     <skillList>
       <skill>Strip Ball</skill>
+        <skill>+MA</skill>
+        <skill>+ST</skill>
+        <skill>+AG</skill>
+        <skill>+PA</skill>
+        <skill>+AV</skill>
     </skillList>
   </player>
 
@@ -35,35 +51,55 @@
   	<name>Catcher1</name>
   	<gender>male</gender>
   	<positionId>woodelf.catcher</positionId>
-  	<skillList></skillList>
+  	<skillList>
+        <skill>-MA</skill>
+        <skill>-ST</skill>
+        <skill>-AG</skill>
+        <skill>-PA</skill>
+        <skill>-AV</skill>
+    </skillList>
   </player>
 
   <player nr="4" id="teamWoodElfKalimar4">
   	<name>Catcher2</name>
   	<gender>male</gender>
   	<positionId>woodelf.catcher</positionId>
-  	<skillList></skillList>
+  	<skillList>
+        <skill>+MA</skill>
+        <skill>+ST</skill>
+        <skill>+AG</skill>
+        <skill>+PA</skill>
+        <skill>+AV</skill>
+        <skill>+MA</skill>
+        <skill>+ST</skill>
+        <skill>+AG</skill>
+        <skill>+PA</skill>
+        <skill>+AV</skill>
+    </skillList>
   </player>
 
   <player nr="5" id="teamWoodElfKalimar5">
     <name>Thrower1</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList></skillList>
+  	<skillList><skill value="3">Mighty Blow</skill></skillList>
   </player>
 	
   <player nr="6" id="teamWoodElfKalimar6">
     <name>Thrower2</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList></skillList>
+  	<skillList>
+        <skill value="3">Loner</skill>
+        <skill>Leader</skill>
+    </skillList>
   </player>
 
   <player nr="7" id="teamWoodElfKalimar7">
     <name>Lineman1</name>
   	<gender>male</gender>
   	<positionId>woodelf.lineman</positionId>
-  	<skillList></skillList>
+  	<skillList><skill>Pro</skill></skillList>
   </player>
 
   <player nr="8" id="teamWoodElfKalimar8">

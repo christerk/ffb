@@ -39,8 +39,8 @@
  */
 
 /**
- * Common classes that provide support for URI templates,
- * encoding/decoding of URI components and multivalued collections.
+ * Common classes that provide support for URI templates, encoding/decoding of
+ * URI components and multivalued collections.
  *
  * Taken from Jersey 2 - org.glassfish.jersey.uri.
  */

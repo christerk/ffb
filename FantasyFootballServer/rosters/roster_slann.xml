@@ -17,6 +17,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/slann_lineman.png</portrait>
 		<iconSet size="7">iconsets/slann_lineman.png</iconSet>
@@ -25,7 +26,7 @@
 			<skill>Very Long Legs</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
+			<normal>General</normal>
 			<double>Agility</double>
 			<double>Strength</double>
 			<double>Passing</double>
@@ -41,6 +42,7 @@
 		<movement>7</movement>
 		<strength>2</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/slann_catcher.png</portrait>
 		<iconSet size="4">iconsets/slann_catcher.png</iconSet>
@@ -50,8 +52,8 @@
 			<skill>Very Long Legs</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Agility</Normal>
+			<normal>General</normal>
+			<normal>Agility</normal>
 			<double>Strength</double>
 			<double>Passing</double>
 		</skillCategoryList>
@@ -66,6 +68,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/slann_blitzer.png</portrait>
 		<iconSet size="4">iconsets/slann_blitzer.png</iconSet>
@@ -76,9 +79,9 @@
 			<skill>Very Long Legs</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Agility</Normal>
-			<Normal>Strength</Normal>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<normal>Strength</normal>
 			<double>Passing</double>
 		</skillCategoryList>
 	</position>
@@ -92,18 +95,19 @@
 		<movement>6</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>9</armour>
 		<portrait>portraits/slann_kroxigor.png</portrait>
 		<iconSet size="1">iconsets/slann_kroxigor.png</iconSet>
 		<skillList>
-			<skill>Bone-head</skill>
+			<skill>Bone head</skill>
 			<skill>Loner</skill>
 			<skill>Mighty Blow</skill>
 			<skill>Prehensile Tail</skill>
 			<skill>Thick Skull</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>Strength</Normal>
+			<normal>Strength</normal>
 			<double>General</double>
 			<double>Agility</double>
 			<double>Passing</double>

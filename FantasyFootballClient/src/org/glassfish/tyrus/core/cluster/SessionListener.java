@@ -49,17 +49,17 @@ package org.glassfish.tyrus.core.cluster;
  */
 public interface SessionListener {
 
-    /**
-     * Invoked when session is opened.
-     *
-     * @param sessionId session id of opened session.
-     */
-    void onSessionOpened(String sessionId);
+	/**
+	 * Invoked when session is opened.
+	 *
+	 * @param sessionId session id of opened session.
+	 */
+	void onSessionOpened(String sessionId);
 
-    /**
-     * Invoked when session is closed.
-     *
-     * @param sessionId session id of closed session.
-     */
-    void onSessionClosed(String sessionId);
+	/**
+	 * Invoked when session is closed.
+	 *
+	 * @param sessionId session id of closed session.
+	 */
+	void onSessionClosed(String sessionId);
 }

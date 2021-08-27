@@ -54,63 +54,63 @@ import org.glassfish.tyrus.spi.UpgradeResponse;
  */
 public class TyrusUpgradeResponse extends UpgradeResponse {
 
-    private final Map<String, List<String>> headers = new TreeMap<String, List<String>>(new Comparator<String>() {
-        @Override
-        public int compare(String o1, String o2) {
-            return o1.toLowerCase().compareTo(o2.toLowerCase());
-        }
-    });
+	private final Map<String, List<String>> headers = new TreeMap<String, List<String>>(new Comparator<String>() {
+		@Override
+		public int compare(String o1, String o2) {
+			return o1.toLowerCase().compareTo(o2.toLowerCase());
+		}
+	});
 
-    private int status;
-    private String reasonPhrase;
+	private int status;
+	private String reasonPhrase;
 
-    /**
-     * Get HTTP status.
-     *
-     * @return HTTP status.
-     */
-    @Override
-    public int getStatus() {
-        return status;
-    }
+	/**
+	 * Get HTTP status.
+	 *
+	 * @return HTTP status.
+	 */
+	@Override
+	public int getStatus() {
+		return status;
+	}
 
-    /**
-     * Get HTTP reason phrase.
-     *
-     * @return reason phrase.
-     */
+	/**
+	 * Get HTTP reason phrase.
+	 *
+	 * @return reason phrase.
+	 */
 //    @Override
-    public String getReasonPhrase() {
-        return reasonPhrase;
-    }
+	public String getReasonPhrase() {
+		return reasonPhrase;
+	}
 
-    /**
-     * Get HTTP headers.
-     *
-     * @return HTTP headers.
-     */
-    @Override
-    public Map<String, List<String>> getHeaders() {
-        return headers;
-    }
+	/**
+	 * Get HTTP headers.
+	 *
+	 * @return HTTP headers.
+	 */
+	@Override
+	public Map<String, List<String>> getHeaders() {
+		return headers;
+	}
 
-    /**
-     * Set HTTP status.
-     *
-     * @param statusCode status code to be set.
-     */
-    @Override
-    public void setStatus(int statusCode) {
-        status = statusCode;
-    }
+	/**
+	 * Set HTTP status.
+	 *
+	 * @param statusCode status code to be set.
+	 */
+	@Override
+	public void setStatus(int statusCode) {
+		status = statusCode;
+	}
 
-    /**
-     * Set HTTP reason phrase.
-     *
-     * @param reasonPhrase reason phrase to be set.
-     */
-    @Override
-    public void setReasonPhrase(String reasonPhrase) {
-        this.reasonPhrase = reasonPhrase;
-    }
+	/**
+	 * Set HTTP reason phrase.
+	 *
+	 * @param reasonPhrase reason phrase to be set.
+	 */
+	@Override
+	public void setReasonPhrase(String reasonPhrase) {
+		this.reasonPhrase = reasonPhrase;
+	}
 }

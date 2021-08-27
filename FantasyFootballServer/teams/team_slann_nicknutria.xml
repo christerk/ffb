@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<team id="744258" status="1">
+    <coach>NickNutria</coach>
+    <name>Matschplanscher</name>
+    <rosterId>65</rosterId>
+    <reRolls>5</reRolls>
+    <fanFactor>7</fanFactor>
+    <apothecaries>1</apothecaries>
+    <cheerleaders>2</cheerleaders>
+    <assistantCoaches>2</assistantCoaches>
+    <rating>181</rating>
+    <teamValue>1810000</teamValue>
+    <currentTeamValue>1810000</currentTeamValue>
+    <strength>181</strength>
+    <division>1</division>
+    <treasury>90000</treasury>
+    <tournamentWeight>1810000</tournamentWeight>
+    <record>
+        <form>LWDDW</form>
+        <wins>96</wins>
+        <ties>32</ties>
+        <losses>68</losses>
+    </record>
+    <lastMatch date="2020-12-14" opponent="918035">4259179</lastMatch>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <player status="Active" nr="1" id="13804414">
+        <name>Garett Greifer</name>
+        <gender>male</gender>
+        <positionId>2996</positionId>
+        <position>Kroxigor</position>
+        <playerStatistics currentSpps="5">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>39</blocks>
+            <fouls>0</fouls>
+            <games>10</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="2" id="13880294">
+        <name>Preston Prima</name>
+        <gender>male</gender>
+        <positionId>2995</positionId>
+        <position>Blitzer</position>
+        <playerStatistics currentSpps="2">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>1</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>4</blocks>
+            <fouls>0</fouls>
+            <games>3</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList>
+            <injury>Fractured Leg (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="4" id="13338558">
+        <name>Liam Lustgewinn</name>
+        <gender>male</gender>
+        <positionId>2994</positionId>
+        <position>Catcher</position>
+        <playerStatistics currentSpps="48">
+            <completions>4</completions>
+            <touchdowns>8</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>4</mvps>
+            <passing>2</passing>
+            <rushing>63</rushing>
+            <blocks>3</blocks>
+            <fouls>0</fouls>
+            <games>21</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Dodge</skill>
+            <skill>Guard</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Concussion (-AV)</injury>
+            <injury>Serious Concussion (-AV)</injury>
+            <injury>Broken Ribs (MNG)</injury>
+            <injury>Gouged Eye (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="5" id="9694683">
+        <name>Peter Planvoll</name>
+        <gender>male</gender>
+        <positionId>2995</positionId>
+        <position>Blitzer</position>
+        <playerStatistics currentSpps="373">
+            <completions>60</completions>
+            <touchdowns>75</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>24</casualties>
+            <mvps>8</mvps>
+            <passing>182</passing>
+            <rushing>1121</rushing>
+            <blocks>769</blocks>
+            <fouls>1</fouls>
+            <games>157</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+AG</skill>
+            <skill>+MA</skill>
+            <skill>+ST</skill>
+            <skill>Dodge</skill>
+            <skill>Tackle</skill>
+            <skill>Wrestle</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Concussion (-AV)</injury>
+            <injury>Pinched Nerve (MNG)</injury>
+            <injury>Broken Ribs (MNG)</injury>
+            <injury>Groin Strain (MNG)</injury>
+            <injury>Broken Ribs (MNG)</injury>
+            <injury>Broken Ribs (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="10" id="12774036">
+        <name>Cuno Clammerschwanz</name>
+        <gender>male</gender>
+        <positionId>2994</positionId>
+        <position>Catcher</position>
+        <playerStatistics currentSpps="129">
+            <completions>25</completions>
+            <touchdowns>28</touchdowns>
+            <interceptions>3</interceptions>
+            <casualties>2</casualties>
+            <mvps>2</mvps>
+            <passing>65</passing>
+            <rushing>565</rushing>
+            <blocks>11</blocks>
+            <fouls>2</fouls>
+            <games>51</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+MA</skill>
+            <skill>Block</skill>
+            <skill>Catch</skill>
+            <skill>Dodge</skill>
+            <skill>Pass Block</skill>
+        </skillList>
+        <injuryList>
+            <injury>Broken Jaw (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="11" id="13880296">
+        <name>George Großschild</name>
+        <gender>male</gender>
+        <positionId>2993</positionId>
+        <position>Lineman</position>
+        <playerStatistics currentSpps="9">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>2</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>16</blocks>
+            <fouls>2</fouls>
+            <games>4</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="12" id="13828430">
+        <name>Xavier Xtrem</name>
+        <gender>male</gender>
+        <positionId>2993</positionId>
+        <position>Lineman</position>
+        <playerStatistics currentSpps="6">
+            <completions>1</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>1</passing>
+            <rushing>41</rushing>
+            <blocks>9</blocks>
+            <fouls>1</fouls>
+            <games>7</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Kick</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="13" id="13890860">
+        <name>Jack Goldrock</name>
+        <gender>male</gender>
+        <positionId>2993</positionId>
+        <position>Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>1</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="14" id="13243594">
+        <name>Noah Notfall</name>
+        <gender>male</gender>
+        <positionId>2994</positionId>
+        <position>Catcher</position>
+        <playerStatistics currentSpps="79">
+            <completions>9</completions>
+            <touchdowns>16</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>1</casualties>
+            <mvps>4</mvps>
+            <passing>35</passing>
+            <rushing>260</rushing>
+            <blocks>7</blocks>
+            <fouls>2</fouls>
+            <games>26</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Catch</skill>
+            <skill>Dodge</skill>
+            <skill>Pass Block</skill>
+            <skill>Sprint</skill>
+        </skillList>
+        <injuryList>
+            <injury>Smashed Hand (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="journeyman" nr="17" id="13890998">
+        <name>Sean Coldfire</name>
+        <gender>male</gender>
+        <positionId>2993</positionId>
+        <position>Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Loner</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="journeyman" nr="18" id="13890999">
+        <name>Albert Vilesnake</name>
+        <gender>male</gender>
+        <positionId>2993</positionId>
+        <position>Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Loner</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+</team>

@@ -47,41 +47,42 @@ import java.util.HashMap;
  */
 class PrimitivesToWrappers {
 
-    private static final HashMap<Class<?>, Class<?>> conversionMap = new HashMap<Class<?>, Class<?>>();
+	private static final HashMap<Class<?>, Class<?>> conversionMap = new HashMap<Class<?>, Class<?>>();
 
-    static {
-        conversionMap.put(int.class, Integer.class);
-        conversionMap.put(short.class, Short.class);
-        conversionMap.put(long.class, Long.class);
-        conversionMap.put(double.class, Double.class);
-        conversionMap.put(float.class, Float.class);
-        conversionMap.put(boolean.class, Boolean.class);
-        conversionMap.put(byte.class, Byte.class);
-        conversionMap.put(char.class, Character.class);
-        conversionMap.put(void.class, Void.class);
-    }
+	static {
+		conversionMap.put(int.class, Integer.class);
+		conversionMap.put(short.class, Short.class);
+		conversionMap.put(long.class, Long.class);
+		conversionMap.put(double.class, Double.class);
+		conversionMap.put(float.class, Float.class);
+		conversionMap.put(boolean.class, Boolean.class);
+		conversionMap.put(byte.class, Byte.class);
+		conversionMap.put(char.class, Character.class);
+		conversionMap.put(void.class, Void.class);
+	}
 
-    /**
-     * Gets the Boxing class for the primitive type.
-     *
-     * @param c primitive type
-     * @return boxing class if c is primitive type, c otherwise
-     */
-    public static Class<?> getPrimitiveWrapper(Class<?> c) {
-        if (!c.isPrimitive()) {
-            return c;
-        }
+	/**
+	 * Gets the Boxing class for the primitive type.
+	 *
+	 * @param c primitive type
+	 * @return boxing class if c is primitive type, c otherwise
+	 */
+	public static Class<?> getPrimitiveWrapper(Class<?> c) {
+		if (!c.isPrimitive()) {
+			return c;
+		}
 
-        return conversionMap.containsKey(c) ? conversionMap.get(c) : c;
-    }
+		return conversionMap.containsKey(c) ? conversionMap.get(c) : c;
+	}
 
-    /**
-     * Checks whether the given {@link Class} is a primitive wrapper class.
-     *
-     * @param c {@link Class} to be checked.
-     * @return {@code true} iff the class is primitive wrapper, {@code false} otherwise.
-     */
-    public static boolean isPrimitiveWrapper(Class<?> c) {
-        return conversionMap.containsValue(c);
-    }
+	/**
+	 * Checks whether the given {@link Class} is a primitive wrapper class.
+	 *
+	 * @param c {@link Class} to be checked.
+	 * @return {@code true} iff the class is primitive wrapper, {@code false}
+	 *         otherwise.
+	 */
+	public static boolean isPrimitiveWrapper(Class<?> c) {
+		return conversionMap.containsValue(c);
+	}
 }

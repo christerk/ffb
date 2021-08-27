@@ -49,23 +49,17 @@ import org.glassfish.tyrus.core.HandshakeException;
 import org.glassfish.tyrus.spi.UpgradeResponse;
 
 /**
- * This exception is set as a cause of {@link DeploymentException} thrown from {@link
- * WebSocketContainer}.connectToServer(...)
- * when any of the Redirect HTTP response status codes (300, 301, 302, 303, 307, 308) is received as a handshake
- * response and:
+ * This exception is set as a cause of {@link DeploymentException} thrown from
+ * {@link WebSocketContainer}.connectToServer(...) when any of the Redirect HTTP
+ * response status codes (300, 301, 302, 303, 307, 308) is received as a
+ * handshake response and:
  * <ul>
- * <li>
- * {@link ClientProperties#REDIRECT_ENABLED} is not enabled
- * </li>
- * <li>
- * or the chained redirection count exceeds the value of {@link ClientProperties#REDIRECT_THRESHOLD}
- * </li>
- * <li>
- * or Infinite redirection loop is detected
- * </li>
- * <li>
- * or {@value UpgradeResponse#LOCATION} response header is missing, empty or does not contain a valid {@link URI}.
- * </li>
+ * <li>{@link ClientProperties#REDIRECT_ENABLED} is not enabled</li>
+ * <li>or the chained redirection count exceeds the value of
+ * {@link ClientProperties#REDIRECT_THRESHOLD}</li>
+ * <li>or Infinite redirection loop is detected</li>
+ * <li>or {@value UpgradeResponse#LOCATION} response header is missing, empty or
+ * does not contain a valid {@link URI}.</li>
  * </ul>
  *
  * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
@@ -74,16 +68,16 @@ import org.glassfish.tyrus.spi.UpgradeResponse;
  */
 public class RedirectException extends HandshakeException {
 
-    private static final long serialVersionUID = 4357724300486801294L;
+	private static final long serialVersionUID = 4357724300486801294L;
 
-    /**
-     * Constructor.
-     *
-     * @param httpStatusCode http status code to be set to response.
-     * @param message        the detail message. The detail message is saved for later retrieval by the {@link
-     *                       #getMessage()} method.
-     */
-    public RedirectException(int httpStatusCode, String message) {
-        super(httpStatusCode, message);
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param httpStatusCode http status code to be set to response.
+	 * @param message        the detail message. The detail message is saved for
+	 *                       later retrieval by the {@link #getMessage()} method.
+	 */
+	public RedirectException(int httpStatusCode, String message) {
+		super(httpStatusCode, message);
+	}
 }

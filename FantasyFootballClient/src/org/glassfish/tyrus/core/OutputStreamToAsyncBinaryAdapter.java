@@ -50,50 +50,50 @@ import java.util.concurrent.Future;
  * @author Danny Coward (danny.coward at oracle.com)
  */
 class OutputStreamToAsyncBinaryAdapter extends OutputStream {
-    private final TyrusWebSocket socket;
+	private final TyrusWebSocket socket;
 
-    public OutputStreamToAsyncBinaryAdapter(TyrusWebSocket socket) {
-        this.socket = socket;
-    }
+	public OutputStreamToAsyncBinaryAdapter(TyrusWebSocket socket) {
+		this.socket = socket;
+	}
 
-    @Override
-    public void write(byte b[], int off, int len) throws IOException {
-        if (b == null) {
-            throw new NullPointerException();
-        } else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
-            throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
-            return;
-        }
+	@Override
+	public void write(byte b[], int off, int len) throws IOException {
+		if (b == null) {
+			throw new NullPointerException();
+		} else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
+			throw new IndexOutOfBoundsException();
+		} else if (len == 0) {
+			return;
+		}
 
-        final Future<?> future = socket.sendBinary(b, off, len, false);
-        try {
-            future.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            if (e.getCause() instanceof IOException) {
-                throw (IOException) e.getCause();
-            } else {
-                throw new IOException(e.getCause());
-            }
-        }
-    }
+		final Future<?> future = socket.sendBinary(b, off, len, false);
+		try {
+			future.get();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} catch (ExecutionException e) {
+			if (e.getCause() instanceof IOException) {
+				throw (IOException) e.getCause();
+			} else {
+				throw new IOException(e.getCause());
+			}
+		}
+	}
 
-    @Override
-    public void write(int i) throws IOException {
-        byte[] byteArray = new byte[]{(byte) i};
+	@Override
+	public void write(int i) throws IOException {
+		byte[] byteArray = new byte[] { (byte) i };
 
-        write(byteArray, 0, byteArray.length);
-    }
+		write(byteArray, 0, byteArray.length);
+	}
 
-    @Override
-    public void flush() throws IOException {
-        // do nothing.
-    }
+	@Override
+	public void flush() throws IOException {
+		// do nothing.
+	}
 
-    @Override
-    public void close() throws IOException {
-        socket.sendBinary(new byte[]{}, true);
-    }
+	@Override
+	public void close() throws IOException {
+		socket.sendBinary(new byte[] {}, true);
+	}
 }

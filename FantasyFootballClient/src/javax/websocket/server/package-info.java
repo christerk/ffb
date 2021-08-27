@@ -38,9 +38,8 @@
  * holder.
  */
 
-/** 
+/**
  * This package contains all the WebSocket APIs used only by server side
  * applications.
  */
 package javax.websocket.server;
-

@@ -47,26 +47,26 @@ import org.glassfish.tyrus.core.TyrusWebSocket;
  */
 public class PingFrame extends TyrusFrame {
 
-    /**
-     * Constructor.
-     *
-     * @param frame original (ping) frame.
-     */
-    public PingFrame(Frame frame) {
-        super(frame, FrameType.PING);
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param frame original (ping) frame.
+	 */
+	public PingFrame(Frame frame) {
+		super(frame, FrameType.PING);
+	}
 
-    /**
-     * Constructor.
-     *
-     * @param payload ping frame payload.
-     */
-    public PingFrame(byte[] payload) {
-        super(Frame.builder().fin(true).opcode((byte) 0x09).payloadData(payload).build(), FrameType.PING);
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param payload ping frame payload.
+	 */
+	public PingFrame(byte[] payload) {
+		super(Frame.builder().fin(true).opcode((byte) 0x09).payloadData(payload).build(), FrameType.PING);
+	}
 
-    @Override
-    public void respond(TyrusWebSocket socket) {
-        socket.onPing(this);
-    }
+	@Override
+	public void respond(TyrusWebSocket socket) {
+		socket.onPing(this);
+	}
 }

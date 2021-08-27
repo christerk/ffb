@@ -4,13 +4,13 @@
 <jnlp codebase="http://localhost:2224/" href="BloodBowlClient_local.jnlp">
   <information>
     <title>BloodBowlClient</title>
-    <vendor>www.balancedbytes.com</vendor>
+    <vendor>fumbbl.com</vendor>
   </information>
   <resources>
     <jar href="BloodBowlClient.jar" />
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
   </resources>
-  <application-desc main-class="com.balancedbytes.games.bloodbowl.client.BloodBowlClient">
+  <application-desc main-class="com.fumbbl.bloodbowl.client.BloodBowlClient">
     <argument>-h</argument>
     <argument>localhost</argument>
   </application-desc>

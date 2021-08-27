@@ -40,50 +40,50 @@
 package javax.websocket;
 
 /**
- * The result of asynchronously sending a web socket message. A SendResult is either
- * ok indicating there was no problem, or is not OK in which case there was a problem
- * and it carries an exception to indicate what the problem was.
+ * The result of asynchronously sending a web socket message. A SendResult is
+ * either ok indicating there was no problem, or is not OK in which case there
+ * was a problem and it carries an exception to indicate what the problem was.
  *
  * @author dannycoward
  */
 final public class SendResult {
 
-    private final Throwable exception;
-    private final boolean isOK;
+	private final Throwable exception;
+	private final boolean isOK;
 
-    /**
-     * Construct a SendResult carrying an exception.
-     *
-     * @param exception the exception causing a send failure.
-     */
-    public SendResult(Throwable exception) {
-        this.exception = exception;
-        this.isOK = false;
-    }
+	/**
+	 * Construct a SendResult carrying an exception.
+	 *
+	 * @param exception the exception causing a send failure.
+	 */
+	public SendResult(Throwable exception) {
+		this.exception = exception;
+		this.isOK = false;
+	}
 
-    /**
-     * Construct a SendResult signifying a successful send carrying no exception.
-     */
-    public SendResult() {
-        this.exception = null;
-        this.isOK = true;
-    }
+	/**
+	 * Construct a SendResult signifying a successful send carrying no exception.
+	 */
+	public SendResult() {
+		this.exception = null;
+		this.isOK = true;
+	}
 
-    /**
-     * The problem sending the message.
-     *
-     * @return the problem or {@code null} if the send was successful.
-     */
-    public Throwable getException() {
-        return exception;
-    }
+	/**
+	 * The problem sending the message.
+	 *
+	 * @return the problem or {@code null} if the send was successful.
+	 */
+	public Throwable getException() {
+		return exception;
+	}
 
-    /**
-     * Determines if this result is ok or not.
-     *
-     * @return whether the send was successful or not.
-     */
-    public boolean isOK() {
-        return this.isOK;
-    }
+	/**
+	 * Determines if this result is ok or not.
+	 *
+	 * @return whether the send was successful or not.
+	 */
+	public boolean isOK() {
+		return this.isOK;
+	}
 }

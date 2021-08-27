@@ -16,6 +16,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/elf_lineman.png</portrait>
 		<iconSet size="4">iconsets/elf_lineman.png</iconSet>
@@ -36,6 +37,7 @@
 		<movement>8</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/elf_catcher.png</portrait>
 		<iconSet size="4">iconsets/elf_catcher.png</iconSet>
@@ -59,6 +61,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>2</passing>
 		<armour>7</armour>
 		<portrait>portraits/elf_thrower.png</portrait>
 		<iconSet size="2">iconsets/elf_thrower.png</iconSet>
@@ -81,6 +84,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>3</passing>
 		<armour>8</armour>
 		<portrait>portraits/elf_blitzer.png</portrait>
 		<iconSet size="2">iconsets/elf_blitzer.png</iconSet>

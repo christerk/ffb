@@ -45,7 +45,8 @@ import org.glassfish.tyrus.core.Beta;
 import org.glassfish.tyrus.core.l10n.LocalizationMessages;
 
 /**
- * Credentials can be used when configuring authentication properties used during client handshake.
+ * Credentials can be used when configuring authentication properties used
+ * during client handshake.
  *
  * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
  * @see ClientProperties#CREDENTIALS
@@ -53,66 +54,66 @@ import org.glassfish.tyrus.core.l10n.LocalizationMessages;
 @Beta
 public final class Credentials {
 
-    private final String username;
-    private final byte[] password;
+	private final String username;
+	private final byte[] password;
 
-    /**
-     * Create new credentials.
-     *
-     * @param username Username. Cannot be {@code null}.
-     * @param password Password as byte array. Cannot be {@code null}.
-     */
-    public Credentials(String username, byte[] password) {
-        if (username == null) {
-            throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("username"));
-        }
+	/**
+	 * Create new credentials.
+	 *
+	 * @param username Username. Cannot be {@code null}.
+	 * @param password Password as byte array. Cannot be {@code null}.
+	 */
+	public Credentials(String username, byte[] password) {
+		if (username == null) {
+			throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("username"));
+		}
 
-        if (password == null) {
-            throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("password"));
-        }
+		if (password == null) {
+			throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("password"));
+		}
 
-        this.username = username;
-        this.password = password;
-    }
+		this.username = username;
+		this.password = password;
+	}
 
-    /**
-     * Create new credentials.
-     *
-     * @param username Username. Cannot be {@code null}.
-     * @param password Password. Cannot be {@code null}.
-     */
-    public Credentials(String username, String password) {
-        if (username == null) {
-            throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("username"));
-        }
+	/**
+	 * Create new credentials.
+	 *
+	 * @param username Username. Cannot be {@code null}.
+	 * @param password Password. Cannot be {@code null}.
+	 */
+	public Credentials(String username, String password) {
+		if (username == null) {
+			throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("username"));
+		}
 
-        if (password == null) {
-            throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("password"));
-        }
+		if (password == null) {
+			throw new IllegalArgumentException(LocalizationMessages.ARGUMENT_NOT_NULL("password"));
+		}
 
-        this.username = username;
-        this.password = password.getBytes(AuthConfig.CHARACTER_SET);
-    }
+		this.username = username;
+		this.password = password.getBytes(AuthConfig.CHARACTER_SET);
+	}
 
-    /**
-     * Get the username.
-     *
-     * @return username.
-     */
-    public String getUsername() {
-        return username;
-    }
+	/**
+	 * Get the username.
+	 *
+	 * @return username.
+	 */
+	public String getUsername() {
+		return username;
+	}
 
-    /**
-     * Get the password as byte array.
-     *
-     * @return Password string in byte array representation.
-     */
-    public byte[] getPassword() {
-        return password;
-    }
+	/**
+	 * Get the password as byte array.
+	 *
+	 * @return Password string in byte array representation.
+	 */
+	public byte[] getPassword() {
+		return password;
+	}
 
-    public String toString() {
-        return "Credentials{username: " + username + ", password: *****}";
-    }
+	public String toString() {
+		return "Credentials{username: " + username + ", password: *****}";
+	}
 }

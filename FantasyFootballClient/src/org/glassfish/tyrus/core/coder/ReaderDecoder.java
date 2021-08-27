@@ -52,13 +52,13 @@ import javax.websocket.Decoder;
  */
 public class ReaderDecoder extends CoderAdapter implements Decoder.Text<Reader> {
 
-    @Override
-    public boolean willDecode(String s) {
-        return true;
-    }
+	@Override
+	public boolean willDecode(String s) {
+		return true;
+	}
 
-    @Override
-    public Reader decode(String s) throws DecodeException {
-        return new StringReader(s);
-    }
+	@Override
+	public Reader decode(String s) throws DecodeException {
+		return new StringReader(s);
+	}
 }

@@ -2,24 +2,25 @@
 
 <team id="teamOrcBattleLore">
 
-  <coach>BattleLore</coach>
-  <name>BattleLore's Orcs</name>
-  <race>Orc</race>
-  <rosterId>orc.lrb6</rosterId>
-  <reRolls>3</reRolls>
-  <fanFactor>4</fanFactor>
-  <apothecaries>1</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>103</teamStrength>
-  <division>[X]</division>
-  <treasury>1000000</treasury>
-  <baseIconPath>http://localhost:2224/icons/</baseIconPath>
-  <logo>teamlogos/orc.gif</logo>
+    <coach>BattleLore</coach>
+    <name>BattleLore's Orcs</name>
+    <race>Orc</race>
+    <rosterId>orc.lrb6</rosterId>
+    <reRolls>3</reRolls>
+    <fanFactor>4</fanFactor>
+    <apothecaries>1</apothecaries>
+    <teamRating>100</teamRating>
+    <currentTeamValue>100</currentTeamValue>
+    <teamStrength>103</teamStrength>
+    <division>[X]</division>
+    <treasury>1000000</treasury>
+    <baseIconPath>http://localhost:2224/icons/</baseIconPath>
+    <logo>teamlogos/orc.gif</logo>
 
-  <player nr="1" id="teamOrcBattleLore1">
-    <name>The horribly stupid but strong Troll</name>
-  	<gender>male</gender>
-  	<positionId>orc.troll</positionId>
+    <player nr="1" id="teamOrcBattleLore1">
+        <name>The horribly stupid but strong Troll</name>
+        <gender>male</gender>
+        <positionId>orc.troll</positionId>
   	<skillList>
   	  <skill>Pro</skill>
   	  <skill>Guard</skill>

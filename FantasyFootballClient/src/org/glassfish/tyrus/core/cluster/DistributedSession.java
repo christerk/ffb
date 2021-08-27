@@ -54,23 +54,25 @@ import org.glassfish.tyrus.core.TyrusSession;
  */
 public interface DistributedSession extends Session {
 
-    /**
-     * Get distributed properties.
-     * <p>
-     * Values put into this map must be {@link Serializable} or serializable by other, implementation-dependent
-     * alternative.
-     * <p>
-     * Content of this map is synchronized among all cluster nodes, so putting an entry on any of the nodes will be
-     * visible on all other nodes which have reference to current session (in form of {@link TyrusSession} or {@link
-     * RemoteSession}).
-     * <p>
-     * Please note that when not running in the distributed environment, this map behaves similarly to {@link
-     * #getUserProperties()}, so no serialization or deserialization is performed when values are read from or stored to
-     * the returned map.
-     *
-     * @return map of distributed properties.
-     * @see TyrusSession
-     * @see RemoteSession
-     */
-    public Map<String, Object> getDistributedProperties();
+	/**
+	 * Get distributed properties.
+	 * <p>
+	 * Values put into this map must be {@link Serializable} or serializable by
+	 * other, implementation-dependent alternative.
+	 * <p>
+	 * Content of this map is synchronized among all cluster nodes, so putting an
+	 * entry on any of the nodes will be visible on all other nodes which have
+	 * reference to current session (in form of {@link TyrusSession} or
+	 * {@link RemoteSession}).
+	 * <p>
+	 * Please note that when not running in the distributed environment, this map
+	 * behaves similarly to {@link #getUserProperties()}, so no serialization or
+	 * deserialization is performed when values are read from or stored to the
+	 * returned map.
+	 *
+	 * @return map of distributed properties.
+	 * @see TyrusSession
+	 * @see RemoteSession
+	 */
+	public Map<String, Object> getDistributedProperties();
 }

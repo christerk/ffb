@@ -47,24 +47,24 @@ import javax.websocket.CloseReason;
  */
 public abstract class WebSocketException extends RuntimeException {
 
-    /**
-	 * 
-	 */
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = -5111342169804344910L;
 
 	/**
-     * Create new {@link org.glassfish.tyrus.core.WebSocketException}.
-     *
-     * @param message excetion message.
-     */
-    public WebSocketException(String message) {
-        super(message);
-    }
+	 * Create new {@link org.glassfish.tyrus.core.WebSocketException}.
+	 *
+	 * @param message excetion message.
+	 */
+	public WebSocketException(String message) {
+		super(message);
+	}
 
-    /**
-     * Get close reason.
-     *
-     * @return close reason used when processing this exception.
-     */
-    public abstract CloseReason getCloseReason();
+	/**
+	 * Get close reason.
+	 *
+	 * @return close reason used when processing this exception.
+	 */
+	public abstract CloseReason getCloseReason();
 }

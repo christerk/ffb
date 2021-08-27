@@ -45,14 +45,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The ClientEndpoint annotation a class level annotation is used to denote that a POJO
- * is a web socket client and can be deployed as such. Similar to
- * {@link javax.websocket.server.ServerEndpoint}, POJOs that are
- * annotated with this annotation can have methods that, using the web socket method level annotations,
- * are web socket lifecycle methods.
+ * The ClientEndpoint annotation a class level annotation is used to denote that
+ * a POJO is a web socket client and can be deployed as such. Similar to
+ * {@link javax.websocket.server.ServerEndpoint}, POJOs that are annotated with
+ * this annotation can have methods that, using the web socket method level
+ * annotations, are web socket lifecycle methods.
  * <p>
  * For example:
- * <pre><code>
+ * 
+ * <pre>
+ * <code>
  * &#64;ClientEndpoint(subprotocols="chat")
  * public class HelloServer {
  *
@@ -62,7 +64,8 @@ import java.lang.annotation.Target;
  *     }
  *
  * }
- * </code></pre>
+ * </code>
+ * </pre>
  *
  * @author dannycoward
  */
@@ -71,35 +74,37 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ClientEndpoint {
 
-    /**
-     * The names of the subprotocols this client supports.
-     *
-     * @return the array of names of the subprotocols.
-     */
-    String[] subprotocols() default {};
+	/**
+	 * The names of the subprotocols this client supports.
+	 *
+	 * @return the array of names of the subprotocols.
+	 */
+	String[] subprotocols() default {};
 
-    /**
-     * The array of Java classes that are to act as Decoders for messages coming into
-     * the client.
-     *
-     * @return the array of decoders.
-     */
-    Class<? extends Decoder>[] decoders() default {};
+	/**
+	 * The array of Java classes that are to act as Decoders for messages coming
+	 * into the client.
+	 *
+	 * @return the array of decoders.
+	 */
+	Class<? extends Decoder>[] decoders() default {};
 
-    /**
-     * The array of Java classes that are to act as Encoders for messages sent by the client.
-     *
-     * @return the array of decoders.
-     */
-    Class<? extends Encoder>[] encoders() default {};
-    
-    /**
-     * An optional custom configurator class that the developer would like to use
-     * to provide custom configuration of new instances of this endpoint. The implementation
-     * creates a new instance of the configurator per logical endpoint.
-     *
-     * @return the custom configurator class, or ClientEndpointConfigurator.class
-     * if none was provided in the annotation.
-     */
-    public Class<? extends ClientEndpointConfig.Configurator> configurator() default ClientEndpointConfig.Configurator.class;
+	/**
+	 * The array of Java classes that are to act as Encoders for messages sent by
+	 * the client.
+	 *
+	 * @return the array of decoders.
+	 */
+	Class<? extends Encoder>[] encoders() default {};
+
+	/**
+	 * An optional custom configurator class that the developer would like to use to
+	 * provide custom configuration of new instances of this endpoint. The
+	 * implementation creates a new instance of the configurator per logical
+	 * endpoint.
+	 *
+	 * @return the custom configurator class, or ClientEndpointConfigurator.class if
+	 *         none was provided in the annotation.
+	 */
+	public Class<? extends ClientEndpointConfig.Configurator> configurator() default ClientEndpointConfig.Configurator.class;
 }

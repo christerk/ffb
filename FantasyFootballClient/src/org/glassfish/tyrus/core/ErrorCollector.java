@@ -54,42 +54,43 @@ import javax.websocket.DeploymentException;
  */
 public class ErrorCollector {
 
-    private static final Logger LOGGER = Logger.getLogger(ErrorCollector.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ErrorCollector.class.getName());
 
-    private final List<Exception> exceptionsToPublish = new ArrayList<Exception>();
+	private final List<Exception> exceptionsToPublish = new ArrayList<Exception>();
 
-    /**
-     * Add {@link Exception} to the collector.
-     *
-     * @param exception to be collected.
-     */
-    public void addException(Exception exception) {
-        LOGGER.log(Level.FINE, "Adding exception", exception);
-        exceptionsToPublish.add(exception);
-    }
+	/**
+	 * Add {@link Exception} to the collector.
+	 *
+	 * @param exception to be collected.
+	 */
+	public void addException(Exception exception) {
+		LOGGER.log(Level.FINE, "Adding exception", exception);
+		exceptionsToPublish.add(exception);
+	}
 
-    /**
-     * Create {@link DeploymentException} with message concatenated from collected exceptions.
-     *
-     * @return comprehensive exception.
-     */
-    public DeploymentException composeComprehensiveException() {
-        StringBuilder sb = new StringBuilder();
+	/**
+	 * Create {@link DeploymentException} with message concatenated from collected
+	 * exceptions.
+	 *
+	 * @return comprehensive exception.
+	 */
+	public DeploymentException composeComprehensiveException() {
+		StringBuilder sb = new StringBuilder();
 
-        for (Exception exception : exceptionsToPublish) {
-            sb.append(exception.getMessage());
-            sb.append("\n");
-        }
+		for (Exception exception : exceptionsToPublish) {
+			sb.append(exception.getMessage());
+			sb.append("\n");
+		}
 
-        return new DeploymentException(sb.toString());
-    }
+		return new DeploymentException(sb.toString());
+	}
 
-    /**
-     * Checks whether any exception has been logged.
-     *
-     * @return {@code true} iff no exception was logged, {@code false} otherwise.
-     */
-    public boolean isEmpty() {
-        return exceptionsToPublish.isEmpty();
-    }
+	/**
+	 * Checks whether any exception has been logged.
+	 *
+	 * @return {@code true} iff no exception was logged, {@code false} otherwise.
+	 */
+	public boolean isEmpty() {
+		return exceptionsToPublish.isEmpty();
+	}
 }

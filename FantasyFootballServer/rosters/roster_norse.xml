@@ -17,6 +17,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_lineman.png</portrait>
 		<iconSet size="4">iconsets/norse_lineman.png</iconSet>
@@ -24,7 +25,7 @@
 			<skill>Block</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
+			<normal>General</normal>
 			<double>Agility</double>
 			<double>Passing</double>
 			<double>Strength</double>
@@ -40,6 +41,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>3</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_thrower.png</portrait>
 		<iconSet size="2">iconsets/norse_thrower.png</iconSet>
@@ -48,8 +50,8 @@
 			<skill>Pass</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Passing</Normal>
+			<normal>General</normal>
+			<normal>Passing</normal>
 			<double>Agility</double>
 			<double>Strength</double>
 		</skillCategoryList>
@@ -64,6 +66,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_runner.png</portrait>
 		<iconSet size="2">iconsets/norse_runner.png</iconSet>
@@ -72,8 +75,8 @@
 			<skill>Dauntless</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Agility</Normal>
+			<normal>General</normal>
+			<normal>Agility</normal>
 			<double>Strength</double>
 			<double>Passing</double>
 		</skillCategoryList>
@@ -88,6 +91,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_berserker.png</portrait>
 		<iconSet size="2">iconsets/norse_berserker.png</iconSet>
@@ -97,8 +101,8 @@
 			<skill>Jump Up</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Strength</Normal>
+			<normal>General</normal>
+			<normal>Strength</normal>
 			<double>Agility</double>
 			<double>Passing</double>
 		</skillCategoryList>
@@ -113,6 +117,7 @@
 		<movement>6</movement>
 		<strength>4</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/norse_ulfwerener.png</portrait>
 		<iconSet size="2">iconsets/norse_ulfwerener.png</iconSet>
@@ -120,8 +125,8 @@
 			<skill>Frenzy</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>General</Normal>
-			<Normal>Strength</Normal>
+			<normal>General</normal>
+			<normal>Strength</normal>
 			<double>Agility</double>
 			<double>Passing</double>
 		</skillCategoryList>
@@ -136,18 +141,20 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/norse_snowtroll.png</portrait>
 		<iconSet size="1">iconsets/norse_snowtroll.png</iconSet>
 		<skillList>
 			<skill>Claw</skill>
+			<skill>Claws</skill>
 			<skill>Disturbing Presence</skill>
 			<skill>Frenzy</skill>
 			<skill>Loner</skill>
 			<skill>Wild Animal</skill>
 		</skillList>
 		<skillCategoryList>
-			<Normal>Strength</Normal>
+			<normal>Strength</normal>
 			<double>Agility</double>
 			<double>General</double>
 			<double>Passing</double>

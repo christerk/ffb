@@ -40,45 +40,46 @@
 package javax.websocket;
 
 /**
- * A general exception that occurs when trying to encode a custom object to a string or binary message.
+ * A general exception that occurs when trying to encode a custom object to a
+ * string or binary message.
  *
  * @author dannycoward
  */
 public class EncodeException extends Exception {
-    private final Object object;
-    private static final long serialVersionUID = 006;
+	private final Object object;
+	private static final long serialVersionUID = 006;
 
-    /**
-     * Constructor with the object being encoded, and the reason why it failed to be.
-     *
-     * @param object  the object that could not be encoded.
-     * @param message the reason for the failure.
-     */
-    public EncodeException(Object object, String message) {
-        super(message);
-        this.object = object;
-    }
+	/**
+	 * Constructor with the object being encoded, and the reason why it failed to
+	 * be.
+	 *
+	 * @param object  the object that could not be encoded.
+	 * @param message the reason for the failure.
+	 */
+	public EncodeException(Object object, String message) {
+		super(message);
+		this.object = object;
+	}
 
+	/**
+	 * Constructor with the object being encoded, and the reason why it failed to
+	 * be, and the cause.
+	 *
+	 * @param object  the object that could not be encoded.
+	 * @param message the reason for the failure.
+	 * @param cause   the cause of the problem.
+	 */
+	public EncodeException(Object object, String message, Throwable cause) {
+		super(message, cause);
+		this.object = object;
+	}
 
-    /**
-     * Constructor with the object being encoded, and the reason why it failed to be, and the cause.
-     *
-     * @param object  the object that could not be encoded.
-     * @param message the reason for the failure.
-     * @param cause   the cause of the problem.
-     */
-    public EncodeException(Object object, String message, Throwable cause) {
-        super(message, cause);
-        this.object = object;
-    }
-
-
-    /**
-     * Return the Object that could not be encoded.
-     *
-     * @return the object.
-     */
-    public Object getObject() {
-        return this.object;
-    }
+	/**
+	 * Return the Object that could not be encoded.
+	 *
+	 * @return the object.
+	 */
+	public Object getObject() {
+		return this.object;
+	}
 }

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roster team="744258">
+    <name>Slann</name>
+    <type>Regular</type>
+    <reRollCost>50000</reRollCost>
+    <maxReRolls>8</maxReRolls>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <logo>i/486367</logo>
+    <raisedPositionId></raisedPositionId>
+    <apothecary>true</apothecary>
+    <necromancer>false</necromancer>
+    <undead>false</undead>
+    <nameGenerator>default</nameGenerator>
+    <maxBigGuys>3</maxBigGuys>
+    <position id="2995">
+        <quantity>4</quantity>
+        <name>Blitzer</name>
+        <shorthand>Z</shorthand>
+        <type>Regular</type>
+        <gender>male</gender>
+        <cost>110000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318656</portrait>
+        <iconSet size="4" mimeType="image/png">i/436348.png</iconSet>
+        <skillList>
+            <skill>Diving Tackle</skill>
+            <skill>Jump Up</skill>
+            <skill>Leap</skill>
+            <skill>Very Long Legs</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <normal>Strength</normal>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="2994">
+        <quantity>4</quantity>
+        <name>Catcher</name>
+        <shorthand>C</shorthand>
+        <type>Regular</type>
+        <gender>male</gender>
+        <cost>80000</cost>
+        <movement>7</movement>
+        <strength>2</strength>
+        <agility>4</agility>
+        <passing></passing>
+        <armour>7</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318657</portrait>
+        <iconSet size="4" mimeType="image/png">i/581225.png</iconSet>
+        <skillList>
+            <skill>Diving Catch</skill>
+            <skill>Leap</skill>
+            <skill>Very Long Legs</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="2996">
+        <quantity>1</quantity>
+        <name>Kroxigor</name>
+        <shorthand>KR</shorthand>
+        <type>Big Guy</type>
+        <gender>male</gender>
+        <cost>140000</cost>
+        <movement>6</movement>
+        <strength>5</strength>
+        <agility>1</agility>
+        <passing></passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318655</portrait>
+        <iconSet size="1" mimeType="image/png">i/436349.png</iconSet>
+        <skillList>
+            <skill>Bone-head</skill>
+            <skill>Loner</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Prehensile Tail</skill>
+            <skill>Thick Skull</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="2993">
+        <quantity>16</quantity>
+        <name>Lineman</name>
+        <shorthand>L</shorthand>
+        <type>Regular</type>
+        <gender>male</gender>
+        <cost>60000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318658</portrait>
+        <iconSet size="7" mimeType="image/png">i/436346.png</iconSet>
+        <skillList>
+            <skill>Leap</skill>
+            <skill>Very Long Legs</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <double>Agility</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="3024">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Helmut Wulf</name>
+        <shorthand>HW</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>110000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/332797</portrait>
+        <iconSet size="1" mimeType="image/png">i/436458.png</iconSet>
+        <skillList>
+            <skill>Chainsaw</skill>
+            <skill>Loner</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stand Firm</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="3025">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Hemlock</name>
+        <shorthand>He</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>170000</cost>
+        <movement>8</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing></passing>
+        <armour>7</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/332789</portrait>
+        <iconSet size="1" mimeType="image/png">i/436459.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Dodge</skill>
+            <skill>Jump Up</skill>
+            <skill>Loner</skill>
+            <skill>Side Step</skill>
+            <skill>Stab</skill>
+            <skill>Stunty</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="3036">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Lottabottol</name>
+        <shorthand>Lo</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>220000</cost>
+        <movement>8</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/332781</portrait>
+        <iconSet size="1" mimeType="image/png">i/440131.png</iconSet>
+        <skillList>
+            <skill>Catch</skill>
+            <skill>Diving Tackle</skill>
+            <skill>Jump Up</skill>
+            <skill>Leap</skill>
+            <skill>Loner</skill>
+            <skill>Pass Block</skill>
+            <skill>Shadowing</skill>
+            <skill>Very Long Legs</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="3039">
+        <race>Ogre</race>
+        <quantity>1</quantity>
+        <name>Morg 'n' Thorg</name>
+        <shorthand>MT</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>430000</cost>
+        <movement>6</movement>
+        <strength>6</strength>
+        <agility>3</agility>
+        <passing></passing>
+        <armour>10</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/332759</portrait>
+        <iconSet size="1" mimeType="image/png">i/436473.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Loner</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Thick Skull</skill>
+            <skill>Throw Team-Mate</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="3044">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Quetzal Leap</name>
+        <shorthand>QL</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>250000</cost>
+        <movement>8</movement>
+        <strength>2</strength>
+        <agility>4</agility>
+        <passing></passing>
+        <armour>7</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/332776</portrait>
+        <iconSet size="1" mimeType="image/png">i/440141.png</iconSet>
+        <skillList>
+            <skill>Catch</skill>
+            <skill>Diving Catch</skill>
+            <skill>Fend</skill>
+            <skill>Kick-Off Return</skill>
+            <skill>Leap</skill>
+            <skill>Loner</skill>
+            <skill>Nerves Of Steel</skill>
+            <skill>Very Long Legs</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="3051">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Slibli</name>
+        <shorthand>Sl</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>250000</cost>
+        <movement>7</movement>
+        <strength>4</strength>
+        <agility>1</agility>
+        <passing></passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/332777</portrait>
+        <iconSet size="1" mimeType="image/png">i/450982.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Grab</skill>
+            <skill>Guard</skill>
+            <skill>Loner</skill>
+            <skill>Stand Firm</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+</roster>
+        <!-- Time: 0.039310932159424 -->

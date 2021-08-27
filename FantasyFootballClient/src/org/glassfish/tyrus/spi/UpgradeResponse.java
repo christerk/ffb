@@ -45,72 +45,73 @@ import javax.websocket.HandshakeResponse;
 
 /**
  * Abstraction for a HTTP upgrade response. A transport creates an
- * implementation for this and uses {@link WebSocketEngine#upgrade} method
- * to upgrade the request.
+ * implementation for this and uses {@link WebSocketEngine#upgrade} method to
+ * upgrade the request.
  *
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 public abstract class UpgradeResponse implements HandshakeResponse {
 
-    /**
-     * Header containing challenge with authentication scheme and parameters.
-     */
-    public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
+	/**
+	 * Header containing challenge with authentication scheme and parameters.
+	 */
+	public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
 
-    /**
-     * Header containing a new URI when {@link #getStatus()} .
-     */
-    public static final String LOCATION = "Location";
+	/**
+	 * Header containing a new URI when {@link #getStatus()} .
+	 */
+	public static final String LOCATION = "Location";
 
-    /**
-     * Header containing delay or date in which client can try to reconnect to the server.
-     */
-    public static final String RETRY_AFTER = "Retry-After";
+	/**
+	 * Header containing delay or date in which client can try to reconnect to the
+	 * server.
+	 */
+	public static final String RETRY_AFTER = "Retry-After";
 
-    /**
-     * Prefix of headers used for including tracing information into handshake response.
-     */
-    public static final String TRACING_HEADER_PREFIX = "X-Tyrus-Tracing-";
+	/**
+	 * Prefix of headers used for including tracing information into handshake
+	 * response.
+	 */
+	public static final String TRACING_HEADER_PREFIX = "X-Tyrus-Tracing-";
 
-    /**
-     * Get the current HTTP status code of this response.
-     *
-     * @return the current HTTP status code.
-     */
-    public abstract int getStatus();
+	/**
+	 * Get the current HTTP status code of this response.
+	 *
+	 * @return the current HTTP status code.
+	 */
+	public abstract int getStatus();
 
-    /**
-     * Set HTTP status code for this response.
-     *
-     * @param status HTTP status code for this response.
-     */
-    public abstract void setStatus(int status);
+	/**
+	 * Set HTTP status code for this response.
+	 *
+	 * @param status HTTP status code for this response.
+	 */
+	public abstract void setStatus(int status);
 
-    /**
-     * Get HTTP reason phrase.
-     * <p>
-     * TODO remove ?? we are using only for "Switching Protocols" and that is
-     * TODO standard status code 101
-     *
-     * @param reason reason phrase to be set.
-     */
-    public abstract void setReasonPhrase(String reason);
+	/**
+	 * Get HTTP reason phrase.
+	 * <p>
+	 * TODO remove ?? we are using only for "Switching Protocols" and that is TODO
+	 * standard status code 101
+	 *
+	 * @param reason reason phrase to be set.
+	 */
+	public abstract void setReasonPhrase(String reason);
 
-    /**
-     * Gets the value of the response header with the given name.
-     * <p>
-     * If a response header with the given name exists and contains
-     * multiple values, the value that was added first will be returned.
-     *
-     * @param name header name.
-     * @return the value of the response header with the given name,
-     * null if no header with the given name has been set
-     * on this response.
-     * TODO rename to getHeader(String name) ?? similar to
-     * TODO HttpServletResponse#getHeader(String)
-     */
-    public final String getFirstHeaderValue(final String name) {
-        final List<String> stringList = getHeaders().get(name);
-        return stringList == null ? null : (stringList.size() > 0 ? stringList.get(0) : null);
-    }
+	/**
+	 * Gets the value of the response header with the given name.
+	 * <p>
+	 * If a response header with the given name exists and contains multiple values,
+	 * the value that was added first will be returned.
+	 *
+	 * @param name header name.
+	 * @return the value of the response header with the given name, null if no
+	 *         header with the given name has been set on this response. TODO rename
+	 *         to getHeader(String name) ?? similar to TODO
+	 *         HttpServletResponse#getHeader(String)
+	 */
+	public final String getFirstHeaderValue(final String name) {
+		final List<String> stringList = getHeaders().get(name);
+		return stringList == null ? null : (stringList.size() > 0 ? stringList.get(0) : null);
+	}
 }
