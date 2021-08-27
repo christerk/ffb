@@ -16,6 +16,7 @@
 		<movement>6</movement>
 		<strength>5</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/skaven_ratogre.png</portrait>
 		<iconSet size="1">iconsets/skaven_ratogre.png</iconSet>
@@ -43,6 +44,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>8</armour>
 		<portrait>portraits/skaven_blitzer.png</portrait>
 		<iconSet size="2">iconsets/skaven_blitzer.png</iconSet>
@@ -66,6 +68,7 @@
 		<movement>9</movement>
 		<strength>2</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/skaven_gutterrunner.png</portrait>
 		<iconSet size="4">iconsets/skaven_gutterrunner.png</iconSet>
@@ -89,6 +92,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>2</passing>
 		<armour>7</armour>
 		<portrait>portraits/skaven_thrower.png</portrait>
 		<iconSet size="1">iconsets/skaven_thrower.png</iconSet>
@@ -113,6 +117,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/skaven_lineman.png</portrait>
 		<iconSet size="3">iconsets/skaven_lineman.png</iconSet>

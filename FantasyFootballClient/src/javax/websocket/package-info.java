@@ -38,9 +38,8 @@
  * holder.
  */
 
-/** 
- * This package contains all the WebSocket APIs common to both the client
- * and server side.
+/**
+ * This package contains all the WebSocket APIs common to both the client and
+ * server side.
  */
 package javax.websocket;
-

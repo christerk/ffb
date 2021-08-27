@@ -41,13 +41,14 @@
 package org.glassfish.tyrus.core;
 
 /**
- * Taken from Jersey 2. Error thrown when something goes wrong while looking up service providers.
- * In particular, this error will be thrown in the following situations:
+ * Taken from Jersey 2. Error thrown when something goes wrong while looking up
+ * service providers. In particular, this error will be thrown in the following
+ * situations:
  * <ul>
- * <li> A concrete provider class cannot be found,
- * <li> A concrete provider class cannot be instantiated,
- * <li> The format of a provider-configuration file is illegal, or
- * <li> An IOException occurs while reading a provider-configuration file.
+ * <li>A concrete provider class cannot be found,
+ * <li>A concrete provider class cannot be instantiated,
+ * <li>The format of a provider-configuration file is illegal, or
+ * <li>An IOException occurs while reading a provider-configuration file.
  * </ul>
  *
  * @author Mark Reinhold
@@ -55,23 +56,23 @@ package org.glassfish.tyrus.core;
  */
 public class ServiceConfigurationError extends Error {
 
-    private static final long serialVersionUID = -8532392338326428074L;
+	private static final long serialVersionUID = -8532392338326428074L;
 
-    /**
-     * Constructs a new instance with the specified detail string.
-     *
-     * @param msg the detail string
-     */
-    public ServiceConfigurationError(String msg) {
-        super(msg);
-    }
+	/**
+	 * Constructs a new instance with the specified detail string.
+	 *
+	 * @param msg the detail string
+	 */
+	public ServiceConfigurationError(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Constructs a new instance that wraps the specified throwable.
-     *
-     * @param x the throwable to be wrapped
-     */
-    public ServiceConfigurationError(Throwable x) {
-        super(x);
-    }
+	/**
+	 * Constructs a new instance that wraps the specified throwable.
+	 *
+	 * @param x the throwable to be wrapped
+	 */
+	public ServiceConfigurationError(Throwable x) {
+		super(x);
+	}
 }

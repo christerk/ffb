@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roster team="55051">
+    <name>Tomb Kings</name>
+    <type>Regular</type>
+    <reRollCost>70000</reRollCost>
+    <maxReRolls>8</maxReRolls>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <logo>i/486301</logo>
+    <raisedPositionId></raisedPositionId>
+    <apothecary>false</apothecary>
+    <necromancer>false</necromancer>
+    <undead>true</undead>
+    <nameGenerator>tombking</nameGenerator>
+    <maxBigGuys>3</maxBigGuys>
+    <position id="2893">
+        <quantity>2</quantity>
+        <name>Anointed Thrower</name>
+        <shorthand>T</shorthand>
+        <type>Regular</type>
+        <gender>male</gender>
+        <cost>70000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing></passing>
+        <armour>7</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/318623</portrait>
+        <iconSet size="2" mimeType="image/png">i/585608.png</iconSet>
+        <skillList>
+            <skill>Pass</skill>
+            <skill>Regeneration</skill>
+            <skill>Sure Hands</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Passing</normal>
+            <double>Agility</double>
+            <double>Strength</double>
+        </skillCategoryList>
+    </position>
+    <position id="2892">
+        <quantity>16</quantity>
+        <name>Skeleton Lineman</name>
+        <shorthand>S</shorthand>
+        <type>Regular</type>
+        <gender>neutral</gender>
+        <cost>40000</cost>
+        <movement>5</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing></passing>
+        <armour>7</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/318624</portrait>
+        <iconSet size="8" mimeType="image/png">i/585607.png</iconSet>
+        <skillList>
+            <skill>Regeneration</skill>
+            <skill>Thick Skull</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <double>Agility</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="2895">
+        <quantity>4</quantity>
+        <name>Tomb Guardian</name>
+        <shorthand>TG</shorthand>
+        <type>Regular</type>
+        <gender>male</gender>
+        <cost>100000</cost>
+        <movement>4</movement>
+        <strength>5</strength>
+        <agility>1</agility>
+        <passing></passing>
+        <armour>9</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/318621</portrait>
+        <iconSet size="4" mimeType="image/png">i/585610.png</iconSet>
+        <skillList>
+            <skill>Decay</skill>
+            <skill>Regeneration</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="2894">
+        <quantity>2</quantity>
+        <name>Anointed Blitzer</name>
+        <shorthand>B</shorthand>
+        <type>Regular</type>
+        <gender>male</gender>
+        <cost>90000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/318622</portrait>
+        <iconSet size="2" mimeType="image/png">i/585609.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Regeneration</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Strength</normal>
+            <double>Agility</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="3045">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Ramtut III</name>
+        <shorthand>R3</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>360000</cost>
+        <movement>5</movement>
+        <strength>6</strength>
+        <agility>1</agility>
+        <passing></passing>
+        <armour>9</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/332761</portrait>
+        <iconSet size="1" mimeType="image/png">i/436478.png</iconSet>
+        <skillList>
+            <skill>Break Tackle</skill>
+            <skill>Loner</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Regeneration</skill>
+            <skill>Wrestle</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="20821">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Bryce 'The Slice' Cambuel</name>
+        <shorthand>BC</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>130000</cost>
+        <movement>5</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/585588</portrait>
+        <iconSet size="1" mimeType="image/png">i/585589.png</iconSet>
+        <skillList>
+            <skill>Chainsaw</skill>
+            <skill>Loner</skill>
+            <skill>Regeneration</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stand Firm</skill>
+            <skill>Thick Skull</skill>
+        </skillList>
+        <skillCategoryList>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="20825">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Ivan 'The Animal' Deathshroud</name>
+        <shorthand>ID</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>230000</cost>
+        <movement>6</movement>
+        <strength>4</strength>
+        <agility>2</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/585596</portrait>
+        <iconSet size="1" mimeType="image/png">i/585597.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Disturbing Presence</skill>
+            <skill>Juggernaut</skill>
+            <skill>Loner</skill>
+            <skill>Regeneration</skill>
+            <skill>Strip Ball</skill>
+            <skill>Tackle</skill>
+        </skillList>
+        <skillCategoryList>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="22963">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Skrull Halfheight</name>
+        <shorthand>SH</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>190000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing></passing>
+        <armour>8</armour>
+        <undead>true</undead>
+        <thrall>false</thrall>
+        <portrait>i/596248</portrait>
+        <iconSet size="1" mimeType="image/png">i/596232.png</iconSet>
+        <skillList>
+            <skill>Accurate</skill>
+            <skill>Loner</skill>
+            <skill>Nerves Of Steel</skill>
+            <skill>Pass</skill>
+            <skill>Regeneration</skill>
+            <skill>Sure Hands</skill>
+            <skill>Thick Skull</skill>
+        </skillList>
+        <skillCategoryList>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+</roster>
+        <!-- Time: 0.039552927017212 -->

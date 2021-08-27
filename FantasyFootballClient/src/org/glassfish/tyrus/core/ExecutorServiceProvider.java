@@ -48,17 +48,17 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public abstract class ExecutorServiceProvider {
 
-    /**
-     * Get the {@link ExecutorService}.
-     *
-     * @return executor service.
-     */
-    public abstract ExecutorService getExecutorService();
+	/**
+	 * Get the {@link ExecutorService}.
+	 *
+	 * @return executor service.
+	 */
+	public abstract ExecutorService getExecutorService();
 
-    /**
-     * Get the {@link ScheduledExecutorService}.
-     *
-     * @return scheduled executor service.
-     */
-    public abstract ScheduledExecutorService getScheduledExecutorService();
+	/**
+	 * Get the {@link ScheduledExecutorService}.
+	 *
+	 * @return scheduled executor service.
+	 */
+	public abstract ScheduledExecutorService getScheduledExecutorService();
 }

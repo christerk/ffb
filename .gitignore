@@ -5,3 +5,4 @@ FantasyFootballServer/.externalToolBuilders/org.eclipse.wst.validation.validatio
 FantasyFootballClient/.settings/org.eclipse.jdt.launching.prefs
 .idea/
 **/*.iml
+out/

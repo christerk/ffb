@@ -53,8 +53,9 @@ import org.glassfish.tyrus.spi.UpgradeResponse;
 /**
  * Authenticator provides a way how to plug-in custom authentication provider.
  * <p>
- * Authenticator is called when server-side returns HTTP 401 as a reply to handshake response. Tyrus client then looks
- * for authenticator instance registered to authentication scheme provided by server.
+ * Authenticator is called when server-side returns HTTP 401 as a reply to
+ * handshake response. Tyrus client then looks for authenticator instance
+ * registered to authentication scheme provided by server.
  *
  * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
  * @see AuthConfig.Builder#registerAuthProvider(String, Authenticator)
@@ -64,22 +65,29 @@ import org.glassfish.tyrus.spi.UpgradeResponse;
 @Beta
 public abstract class Authenticator {
 
-    /**
-     * Generate value used as "{@value UpgradeRequest#AUTHORIZATION}" header value for next request.
-     * <p>
-     * Thrown {@link AuthenticationException} will be wrapped as {@link DeploymentException} and thrown as a result of
-     * {@link WebSocketContainer}.connectToServer(...) method call.
-     *
-     * @param uri                   Uri of the server endpoint.
-     * @param wwwAuthenticateHeader "{@value UpgradeResponse#WWW_AUTHENTICATE}" header value received in a handshake
-     *                              response.
-     * @param credentials           credentials passed by property {@link ClientProperties#CREDENTIALS}. Can be {@code
-     *                              null} when there were no {@link Credentials} registered.
-     * @return value for {@value UpgradeRequest#AUTHORIZATION} header which will be put into next handshake request.
-     * @throws AuthenticationException when it is not possible to create "{@value UpgradeRequest#AUTHORIZATION}"
-     *                                 header.
-     */
-    public abstract String generateAuthorizationHeader(final URI uri, final String wwwAuthenticateHeader,
-                                                       final Credentials credentials) throws AuthenticationException;
+	/**
+	 * Generate value used as "{@value UpgradeRequest#AUTHORIZATION}" header value
+	 * for next request.
+	 * <p>
+	 * Thrown {@link AuthenticationException} will be wrapped as
+	 * {@link DeploymentException} and thrown as a result of
+	 * {@link WebSocketContainer}.connectToServer(...) method call.
+	 *
+	 * @param uri                   Uri of the server endpoint.
+	 * @param wwwAuthenticateHeader "{@value UpgradeResponse#WWW_AUTHENTICATE}"
+	 *                              header value received in a handshake response.
+	 * @param credentials           credentials passed by property
+	 *                              {@link ClientProperties#CREDENTIALS}. Can be
+	 *                              {@code
+	 *                              null} when there were no {@link Credentials}
+	 *                              registered.
+	 * @return value for {@value UpgradeRequest#AUTHORIZATION} header which will be
+	 *         put into next handshake request.
+	 * @throws AuthenticationException when it is not possible to create
+	 *                                 "{@value UpgradeRequest#AUTHORIZATION}"
+	 *                                 header.
+	 */
+	public abstract String generateAuthorizationHeader(final URI uri, final String wwwAuthenticateHeader,
+			final Credentials credentials) throws AuthenticationException;
 
 }

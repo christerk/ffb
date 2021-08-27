@@ -47,54 +47,57 @@ import org.glassfish.tyrus.core.TyrusWebSocket;
  */
 public class BinaryFrame extends TyrusFrame {
 
-    private final boolean continuation;
+	private final boolean continuation;
 
-    /**
-     * Constructor.
-     *
-     * @param frame original (binary) frame.
-     */
-    public BinaryFrame(Frame frame) {
-        super(frame, FrameType.BINARY);
-        this.continuation = false;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param frame original (binary) frame.
+	 */
+	public BinaryFrame(Frame frame) {
+		super(frame, FrameType.BINARY);
+		this.continuation = false;
+	}
 
-    /**
-     * Constructor.
-     *
-     * @param frame        original (binary) frame.
-     * @param continuation {@code true} when this frame is continuation frame, {@code false} otherwise.
-     */
-    public BinaryFrame(Frame frame, boolean continuation) {
-        super(frame, continuation ? FrameType.BINARY_CONTINUATION : FrameType.BINARY);
-        this.continuation = continuation;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param frame        original (binary) frame.
+	 * @param continuation {@code true} when this frame is continuation frame,
+	 *                     {@code false} otherwise.
+	 */
+	public BinaryFrame(Frame frame, boolean continuation) {
+		super(frame, continuation ? FrameType.BINARY_CONTINUATION : FrameType.BINARY);
+		this.continuation = continuation;
+	}
 
-    /**
-     * Constructor.
-     *
-     * @param payload      frame payload.
-     * @param continuation {@code true} {@code true} when this frame is continuation frame, {@code false} otherwise.
-     * @param fin          {@code true} when this frame is last in current partial message batch. Standard
-     *                     (non-continuous) frames have this bit set to {@code true}.
-     */
-    public BinaryFrame(byte[] payload, boolean continuation, boolean fin) {
-        super(Frame.builder().payloadData(payload).opcode(continuation ? (byte) 0x00 : (byte) 0x02).fin(fin).build(),
-              continuation ? FrameType.BINARY_CONTINUATION : FrameType.BINARY);
-        this.continuation = continuation;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param payload      frame payload.
+	 * @param continuation {@code true} {@code true} when this frame is continuation
+	 *                     frame, {@code false} otherwise.
+	 * @param fin          {@code true} when this frame is last in current partial
+	 *                     message batch. Standard (non-continuous) frames have this
+	 *                     bit set to {@code true}.
+	 */
+	public BinaryFrame(byte[] payload, boolean continuation, boolean fin) {
+		super(Frame.builder().payloadData(payload).opcode(continuation ? (byte) 0x00 : (byte) 0x02).fin(fin).build(),
+				continuation ? FrameType.BINARY_CONTINUATION : FrameType.BINARY);
+		this.continuation = continuation;
+	}
 
-    @Override
-    public void respond(TyrusWebSocket socket) {
+	@Override
+	public void respond(TyrusWebSocket socket) {
 
-        if (continuation) {
-            socket.onFragment(this, isFin());
-        } else {
-            if (isFin()) {
-                socket.onMessage(this);
-            } else {
-                socket.onFragment(this, false);
-            }
-        }
-    }
+		if (continuation) {
+			socket.onFragment(this, isFin());
+		} else {
+			if (isFin()) {
+				socket.onMessage(this);
+			} else {
+				socket.onFragment(this, false);
+			}
+		}
+	}
 }

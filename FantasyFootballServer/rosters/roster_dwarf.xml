@@ -17,6 +17,7 @@
 		<movement>4</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/dwarf_blocker.png</portrait>
 		<iconSet size="6">iconsets/dwarf_blocker.png</iconSet>
@@ -41,6 +42,7 @@
 		<movement>5</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>9</armour>
 		<portrait>portraits/dwarf_blitzer.png</portrait>
 		<iconSet size="2">iconsets/dwarf_blitzer.png</iconSet>
@@ -64,6 +66,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/dwarf_runner.png</portrait>
 		<iconSet size="3">iconsets/dwarf_runner.png</iconSet>
@@ -87,6 +90,7 @@
 		<movement>5</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/dwarf_trollslayer.png</portrait>
 		<iconSet size="2">iconsets/dwarf_trollslayer.png</iconSet>
@@ -112,6 +116,7 @@
 		<movement>4</movement>
 		<strength>7</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>10</armour>
 		<portrait>portraits/dwarf_deathroller.png</portrait>
 		<iconSet size="1">iconsets/dwarf_deathroller.png</iconSet>

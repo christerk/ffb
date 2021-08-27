@@ -4,7 +4,7 @@
 
 	<name>Necromantic</name>
 	<type>Regular</type>
-	<reRollCost>70000</reRollCost>	
+	<reRollCost>70000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<raisedPositionId>necromantic.zombie</raisedPositionId>
@@ -12,6 +12,7 @@
 	<necromancer>true</necromancer>
 	<undead>true</undead>
 	<nameGenerator>default</nameGenerator>
+
 
 	<position id="necromantic.werewolf">
 		<quantity>2</quantity>
@@ -21,11 +22,13 @@
 		<movement>8</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/necromantic_werewolf.png</portrait>
 		<iconSet size="2">iconsets/necromantic_werewolf.png</iconSet>
 		<skillList>
 			<skill>Claw</skill>
+			<skill>Claws</skill>
 			<skill>Frenzy</skill>
 			<skill>Regeneration</skill>
 		</skillList>
@@ -45,6 +48,7 @@
 		<movement>4</movement>
 		<strength>4</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>9</armour>
 		<portrait>portraits/necromantic_fleshgolem.png</portrait>
 		<iconSet size="2">iconsets/necromantic_fleshgolem.png</iconSet>
@@ -69,6 +73,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/necromantic_wight.png</portrait>
 		<iconSet size="2">iconsets/necromantic_wight.png</iconSet>
@@ -92,6 +97,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/necromantic_ghoul.png</portrait>
 		<iconSet size="2">iconsets/necromantic_ghoul.png</iconSet>
@@ -114,6 +120,7 @@
 		<movement>4</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/necromantic_zombie.png</portrait>
 		<iconSet size="12">iconsets/necromantic_zombie.png</iconSet>

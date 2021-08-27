@@ -51,103 +51,106 @@ import javax.websocket.server.HandshakeRequest;
  */
 public abstract class UpgradeRequest implements HandshakeRequest {
 
-    /**
-     * Expected value in HTTP handshake "Upgrade" header.
-     * <p>
-     * (Registered in RFC 6455).
-     */
-    public static final String WEBSOCKET = "websocket";
+	/**
+	 * Expected value in HTTP handshake "Upgrade" header.
+	 * <p>
+	 * (Registered in RFC 6455).
+	 */
+	public static final String WEBSOCKET = "websocket";
 
-    /**
-     * HTTP reason phrase for successful handshake response.
-     */
-    public static final String RESPONSE_CODE_MESSAGE = "Switching Protocols";
+	/**
+	 * HTTP reason phrase for successful handshake response.
+	 */
+	public static final String RESPONSE_CODE_MESSAGE = "Switching Protocols";
 
-    /**
-     * HTTP "Upgrade" header name and "Connection" header expected value.
-     */
-    public static final String UPGRADE = "Upgrade";
+	/**
+	 * HTTP "Upgrade" header name and "Connection" header expected value.
+	 */
+	public static final String UPGRADE = "Upgrade";
 
-    /**
-     * HTTP "Connection" header name.
-     */
-    public static final String CONNECTION = "Connection";
+	/**
+	 * HTTP "Connection" header name.
+	 */
+	public static final String CONNECTION = "Connection";
 
-    /**
-     * HTTP "Host" header name.
-     */
-    public static final String HOST = "Host";
+	/**
+	 * HTTP "Host" header name.
+	 */
+	public static final String HOST = "Host";
 
-    /**
-     * WebSocket origin header name from previous versions.
-     * <p>
-     * Keeping here only for backwards compatibility, not used anymore.
-     */
-    public static final String SEC_WS_ORIGIN_HEADER = "Sec-WebSocket-Origin";
+	/**
+	 * WebSocket origin header name from previous versions.
+	 * <p>
+	 * Keeping here only for backwards compatibility, not used anymore.
+	 */
+	public static final String SEC_WS_ORIGIN_HEADER = "Sec-WebSocket-Origin";
 
-    /**
-     * HTTP "Origin" header name.
-     */
-    public static final String ORIGIN_HEADER = "Origin";
+	/**
+	 * HTTP "Origin" header name.
+	 */
+	public static final String ORIGIN_HEADER = "Origin";
 
-    /**
-     * Tyrus cluster connection ID header name.
-     */
-    public static final String CLUSTER_CONNECTION_ID_HEADER = "tyrus-cluster-connection-id";
+	/**
+	 * Tyrus cluster connection ID header name.
+	 */
+	public static final String CLUSTER_CONNECTION_ID_HEADER = "tyrus-cluster-connection-id";
 
-    /**
-     * Server key hash used to compute "Sec-WebSocket-Accept" header value.
-     * <p>
-     * Defined in RFC 6455.
-     */
-    public static final String SERVER_KEY_HASH = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+	/**
+	 * Server key hash used to compute "Sec-WebSocket-Accept" header value.
+	 * <p>
+	 * Defined in RFC 6455.
+	 */
+	public static final String SERVER_KEY_HASH = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-    /**
-     * HTTP "Authorization" header name.
-     */
-    public static final String AUTHORIZATION = "Authorization";
+	/**
+	 * HTTP "Authorization" header name.
+	 */
+	public static final String AUTHORIZATION = "Authorization";
 
-    /**
-     * If this header is present in the handshake request and the tracing type is configured to "ON_DEMAND", tracing
-     * headers will be sent in the handshake response. The value of the header is no taken into account.
-     * <p>
-     * Setting this header does not have any effect if the tracing type is configured to "ALL" or "OFF".
-     */
-    public static final String ENABLE_TRACING_HEADER = "X-Tyrus-Tracing-Accept";
+	/**
+	 * If this header is present in the handshake request and the tracing type is
+	 * configured to "ON_DEMAND", tracing headers will be sent in the handshake
+	 * response. The value of the header is no taken into account.
+	 * <p>
+	 * Setting this header does not have any effect if the tracing type is
+	 * configured to "ALL" or "OFF".
+	 */
+	public static final String ENABLE_TRACING_HEADER = "X-Tyrus-Tracing-Accept";
 
-    /**
-     * This header allows temporarily changing tracing threshold. If present in the handshake request, the tracing
-     * threshold will be changed for the handshake the request is part of.
-     * <p>
-     * The expected values are "SUMMARY" or "TRACE", of which "TRACE" will provide more fine-grained information.
-     */
-    public static final String TRACING_THRESHOLD = "X-Tyrus-Tracing-Threshold";
+	/**
+	 * This header allows temporarily changing tracing threshold. If present in the
+	 * handshake request, the tracing threshold will be changed for the handshake
+	 * the request is part of.
+	 * <p>
+	 * The expected values are "SUMMARY" or "TRACE", of which "TRACE" will provide
+	 * more fine-grained information.
+	 */
+	public static final String TRACING_THRESHOLD = "X-Tyrus-Tracing-Threshold";
 
-    /**
-     * Returns the value of the specified request header name. If there are
-     * multiple headers with the same name, this method returns the first
-     * header in the request. The header name is case insensitive.
-     *
-     * @param name a header name.
-     * @return value of the specified header name,
-     * null if the request doesn't have a header of that name.
-     */
-    public abstract String getHeader(String name);
+	/**
+	 * Returns the value of the specified request header name. If there are multiple
+	 * headers with the same name, this method returns the first header in the
+	 * request. The header name is case insensitive.
+	 *
+	 * @param name a header name.
+	 * @return value of the specified header name, null if the request doesn't have
+	 *         a header of that name.
+	 */
+	public abstract String getHeader(String name);
 
-    /**
-     * Get the undecoded request uri (up to the query string) of underlying
-     * HTTP handshake request.
-     *
-     * @return request uri.
-     */
-    public abstract String getRequestUri();
+	/**
+	 * Get the undecoded request uri (up to the query string) of underlying HTTP
+	 * handshake request.
+	 *
+	 * @return request uri.
+	 */
+	public abstract String getRequestUri();
 
-    /**
-     * Indicates whether this request was made using a secure channel
-     * (such as HTTPS).
-     *
-     * @return true if the request was made using secure channel,
-     * false otherwise.
-     */
-    public abstract boolean isSecure();
+	/**
+	 * Indicates whether this request was made using a secure channel (such as
+	 * HTTPS).
+	 *
+	 * @return true if the request was made using secure channel, false otherwise.
+	 */
+	public abstract boolean isSecure();
 }

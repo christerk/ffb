@@ -46,32 +46,33 @@ package org.glassfish.tyrus.core.l10n;
  */
 public interface Localizable {
 
-    /**
-     * Special constant that represents a message that is not localizable.
-     * <p>
-     * Use of "new" is to create an unique instance.
-     */
-    public static final String NOT_LOCALIZABLE = "\u0000";
+	/**
+	 * Special constant that represents a message that is not localizable.
+	 * <p>
+	 * Use of "new" is to create an unique instance.
+	 */
+	public static final String NOT_LOCALIZABLE = "\u0000";
 
-    /**
-     * Gets the key in the resource bundle.
-     *
-     * @return if this method returns {@link #NOT_LOCALIZABLE}, that means the message is not localizable, and the first
-     * item of {@link #getArguments()} array holds a {@code String}.
-     */
-    public String getKey();
+	/**
+	 * Gets the key in the resource bundle.
+	 *
+	 * @return if this method returns {@link #NOT_LOCALIZABLE}, that means the
+	 *         message is not localizable, and the first item of
+	 *         {@link #getArguments()} array holds a {@code String}.
+	 */
+	public String getKey();
 
-    /**
-     * Returns the arguments for message formatting.
-     *
-     * @return can be an array of length 0 but never be {@code null}.
-     */
-    public Object[] getArguments();
+	/**
+	 * Returns the arguments for message formatting.
+	 *
+	 * @return can be an array of length 0 but never be {@code null}.
+	 */
+	public Object[] getArguments();
 
-    /**
-     * Get the name of the localization messages resource bundle.
-     *
-     * @return the localization messages resource bundle name.
-     */
-    public String getResourceBundleName();
+	/**
+	 * Get the name of the localization messages resource bundle.
+	 *
+	 * @return the localization messages resource bundle name.
+	 */
+	public String getResourceBundleName();
 }

@@ -23,6 +23,9 @@
 			<fileset dir="htdocs" />
 		</copy>
 		<copy file="server.ini" todir="${bin.dir}" />
+		<copy todir="${lib.dir}">
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar"/>
+		</copy>
 	</target>
 
 	<target name="prepare">
@@ -37,6 +40,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${build.dir}" includes="**/*"/>
 		</delete>
+		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="clean" />
 	</target>
 		
 	<target name="FantasyFootballCommon">
@@ -63,7 +67,7 @@
         <jar destfile="${build.dir}/${ant.project.name}.jar">
             <manifest>
               <attribute name="Built-By" value="${user.name}" />
-              <attribute name="Main-Class" value="com.balancedbytes.games.ffb.server.FantasyFootballServer" />
+              <attribute name="Main-Class" value="com.fumbbl.ffb.server.FantasyFootballServer" />
               <attribute name="Class-Path" value="${manifest-classpath}" />
             </manifest>
             <zipfileset dir="${bin.dir}" includes="**/*.class" />
@@ -125,6 +129,10 @@
     	<copy file="pitches-fumbbl-test.ini" tofile="${build.dir}/pitches.ini" />
     	<copy todir="${build.dir}/lib">
     		<fileset dir="lib" />
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
+    	</copy>
+    	<copy todir="${lib.dir}">
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
     	</copy>
 		<mkdir dir="${build.dir}/log" />
     	

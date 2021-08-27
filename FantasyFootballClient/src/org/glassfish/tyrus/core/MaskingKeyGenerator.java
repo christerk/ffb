@@ -46,15 +46,16 @@ package org.glassfish.tyrus.core;
  * The implementation must be thread safe.
  * <p>
  * Tyrus by default uses the following implementation:
+ * 
  * <pre>
- *     new MaskingKeyGenerator() {
+ * new MaskingKeyGenerator() {
  *
- *          private final SecureRandom secureRandom = new SecureRandom();
+ * 	private final SecureRandom secureRandom = new SecureRandom();
  *
- *          public int nextInt() {
- *              return secureRandom.nextInt();
- *          }
- *      };
+ * 	public int nextInt() {
+ * 		return secureRandom.nextInt();
+ * 	}
+ * };
  * </pre>
  *
  * @author Petr Janouch (petr.janouch at oracle.com)
@@ -62,10 +63,10 @@ package org.glassfish.tyrus.core;
 @Beta
 public interface MaskingKeyGenerator {
 
-    /**
-     * Return next random int similarly to {@link java.util.Random#nextInt()}.
-     *
-     * @return next random value.
-     */
-    int nextInt();
+	/**
+	 * Return next random int similarly to {@link java.util.Random#nextInt()}.
+	 *
+	 * @return next random value.
+	 */
+	int nextInt();
 }

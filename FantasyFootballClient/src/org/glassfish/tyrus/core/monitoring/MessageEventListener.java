@@ -50,36 +50,35 @@ import org.glassfish.tyrus.core.frame.TyrusFrame;
 @Beta
 public interface MessageEventListener {
 
-    /**
-     * Called when a frame has been sent.
-     *
-     * @param frameType     type of the frame.
-     * @param payloadLength length of the frame payload.
-     */
-    void onFrameSent(TyrusFrame.FrameType frameType, long payloadLength);
+	/**
+	 * Called when a frame has been sent.
+	 *
+	 * @param frameType     type of the frame.
+	 * @param payloadLength length of the frame payload.
+	 */
+	void onFrameSent(TyrusFrame.FrameType frameType, long payloadLength);
 
-    /**
-     * Called when a frame has been received.
-     *
-     * @param frameType     type of the frame.
-     * @param payloadLength length of the frame payload.
-     */
-    void onFrameReceived(TyrusFrame.FrameType frameType, long payloadLength);
+	/**
+	 * Called when a frame has been received.
+	 *
+	 * @param frameType     type of the frame.
+	 * @param payloadLength length of the frame payload.
+	 */
+	void onFrameReceived(TyrusFrame.FrameType frameType, long payloadLength);
 
-    /**
-     * An instance of @MessageEventListener that does not do anything.
-     */
-    public static final MessageEventListener NO_OP = new MessageEventListener() {
+	/**
+	 * An instance of @MessageEventListener that does not do anything.
+	 */
+	public static final MessageEventListener NO_OP = new MessageEventListener() {
 
+		@Override
+		public void onFrameSent(TyrusFrame.FrameType frameType, long payloadLength) {
+			// do nothing
+		}
 
-        @Override
-        public void onFrameSent(TyrusFrame.FrameType frameType, long payloadLength) {
-            //do nothing
-        }
-
-        @Override
-        public void onFrameReceived(TyrusFrame.FrameType frameType, long payloadLength) {
-            //do nothing
-        }
-    };
+		@Override
+		public void onFrameReceived(TyrusFrame.FrameType frameType, long payloadLength) {
+			// do nothing
+		}
+	};
 }

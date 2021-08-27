@@ -47,34 +47,34 @@ package org.glassfish.tyrus.spi;
  */
 public abstract class CompletionHandler<E> {
 
-    /**
-     * The operation was cancelled.
-     */
-    public void cancelled() {
-    }
+	/**
+	 * The operation was cancelled.
+	 */
+	public void cancelled() {
+	}
 
-    /**
-     * The operation was failed.
-     *
-     * @param throwable error, which occurred during operation execution.
-     */
-    public void failed(final Throwable throwable) {
-    }
+	/**
+	 * The operation was failed.
+	 *
+	 * @param throwable error, which occurred during operation execution.
+	 */
+	public void failed(final Throwable throwable) {
+	}
 
-    /**
-     * The operation was completed.
-     *
-     * @param result the operation result.
-     */
-    public void completed(final E result) {
-    }
+	/**
+	 * The operation was completed.
+	 *
+	 * @param result the operation result.
+	 */
+	public void completed(final E result) {
+	}
 
-    /**
-     * The callback method may be called, when there is some progress in
-     * operation execution, but it is still not completed.
-     *
-     * @param result the current result.
-     */
-    public void updated(final E result) {
-    }
+	/**
+	 * The callback method may be called, when there is some progress in operation
+	 * execution, but it is still not completed.
+	 *
+	 * @param result the current result.
+	 */
+	public void updated(final E result) {
+	}
 }

@@ -44,36 +44,37 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Passed to the (@link MessageHandler.Whole} in case that partial messages are being received.
+ * Passed to the (@link MessageHandler.Whole} in case that partial messages are
+ * being received.
  *
  * @author Danny Coward (danny.coward at oracle.com)
  * @author Stepan Kopriva (stepan.kopriva at oracle.com)
  */
 class BufferedStringReader extends Reader {
-    private final ReaderBuffer readerBuffer;
+	private final ReaderBuffer readerBuffer;
 
-    /**
-     * Constructor.
-     *
-     * @param readerBuffer underlying buffer.
-     */
-    public BufferedStringReader(ReaderBuffer readerBuffer) {
-        this.readerBuffer = readerBuffer;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param readerBuffer underlying buffer.
+	 */
+	public BufferedStringReader(ReaderBuffer readerBuffer) {
+		this.readerBuffer = readerBuffer;
+	}
 
-    @Override
-    public int read(char[] destination, int offsetToStart, int numberOfChars) throws IOException {
-        char[] got = readerBuffer.getNextChars(numberOfChars);
-        if (got != null) {
-            System.arraycopy(got, 0, destination, offsetToStart, got.length);
-            return got.length;
-        } else {
-            return -1;
-        }
-    }
+	@Override
+	public int read(char[] destination, int offsetToStart, int numberOfChars) throws IOException {
+		char[] got = readerBuffer.getNextChars(numberOfChars);
+		if (got != null) {
+			System.arraycopy(got, 0, destination, offsetToStart, got.length);
+			return got.length;
+		} else {
+			return -1;
+		}
+	}
 
-    @Override
-    public void close() {
-        this.readerBuffer.finishReading();
-    }
+	@Override
+	public void close() {
+		this.readerBuffer.finishReading();
+	}
 }

@@ -54,73 +54,73 @@ import java.util.List;
  */
 public class MultivaluedStringMap extends MultivaluedHashMap<String, String> {
 
-    static final long serialVersionUID = -6052320403766368902L;
+	static final long serialVersionUID = -6052320403766368902L;
 
-    public MultivaluedStringMap(MultivaluedMap<? extends String, ? extends String> map) {
-        super(map);
-    }
+	public MultivaluedStringMap(MultivaluedMap<? extends String, ? extends String> map) {
+		super(map);
+	}
 
-    public MultivaluedStringMap(int initialCapacity, float loadFactor) {
-        super(initialCapacity, loadFactor);
-    }
+	public MultivaluedStringMap(int initialCapacity, float loadFactor) {
+		super(initialCapacity, loadFactor);
+	}
 
-    public MultivaluedStringMap(int initialCapacity) {
-        super(initialCapacity);
-    }
+	public MultivaluedStringMap(int initialCapacity) {
+		super(initialCapacity);
+	}
 
-    public MultivaluedStringMap() {
-        super();
-    }
+	public MultivaluedStringMap() {
+		super();
+	}
 
-    @Override
-    protected void addFirstNull(List<String> values) {
-        values.add("");
-    }
+	@Override
+	protected void addFirstNull(List<String> values) {
+		values.add("");
+	}
 
-    @Override
-    protected void addNull(List<String> values) {
-        values.add(0, "");
-    }
+	@Override
+	protected void addNull(List<String> values) {
+		values.add(0, "");
+	}
 
-    public final <A> A getFirst(String key, Class<A> type) {
-        String value = getFirst(key);
-        if (value == null) {
-            return null;
-        }
-        Constructor<A> c = null;
-        try {
-            c = type.getConstructor(String.class);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(type.getName() + " has no String constructor", ex);
-        }
-        A retVal = null;
-        try {
-            retVal = c.newInstance(value);
-        } catch (Exception ex) {
-        }
-        return retVal;
-    }
+	public final <A> A getFirst(String key, Class<A> type) {
+		String value = getFirst(key);
+		if (value == null) {
+			return null;
+		}
+		Constructor<A> c = null;
+		try {
+			c = type.getConstructor(String.class);
+		} catch (Exception ex) {
+			throw new IllegalArgumentException(type.getName() + " has no String constructor", ex);
+		}
+		A retVal = null;
+		try {
+			retVal = c.newInstance(value);
+		} catch (Exception ex) {
+		}
+		return retVal;
+	}
 
-    @SuppressWarnings("unchecked")
-    public final <A> A getFirst(String key, A defaultValue) {
-        String value = getFirst(key);
-        if (value == null) {
-            return defaultValue;
-        }
+	@SuppressWarnings("unchecked")
+	public final <A> A getFirst(String key, A defaultValue) {
+		String value = getFirst(key);
+		if (value == null) {
+			return defaultValue;
+		}
 
-        Class<A> type = (Class<A>) defaultValue.getClass();
+		Class<A> type = (Class<A>) defaultValue.getClass();
 
-        Constructor<A> c = null;
-        try {
-            c = type.getConstructor(String.class);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(type.getName() + " has no String constructor", ex);
-        }
-        A retVal = defaultValue;
-        try {
-            retVal = c.newInstance(value);
-        } catch (Exception ex) {
-        }
-        return retVal;
-    }
+		Constructor<A> c = null;
+		try {
+			c = type.getConstructor(String.class);
+		} catch (Exception ex) {
+			throw new IllegalArgumentException(type.getName() + " has no String constructor", ex);
+		}
+		A retVal = defaultValue;
+		try {
+			retVal = c.newInstance(value);
+		} catch (Exception ex) {
+		}
+		return retVal;
+	}
 }

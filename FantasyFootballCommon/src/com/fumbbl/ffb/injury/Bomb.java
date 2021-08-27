@@ -1,0 +1,13 @@
+package com.fumbbl.ffb.injury;
+
+import com.fumbbl.ffb.InjuryType;
+import com.fumbbl.ffb.SendToBoxReason;
+
+public class Bomb extends InjuryType {
+
+	public Bomb() {
+		super("bomb", false, SendToBoxReason.BOMB);
+		// TODO Auto-generated constructor stub
+	}
+
+}

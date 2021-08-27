@@ -52,19 +52,19 @@ import javax.websocket.Encoder;
  * @author Stepan Kopriva (stepan.kopriva at oracle.com)
  */
 public class NoOpByteBufferCoder extends CoderAdapter
-        implements Decoder.Binary<ByteBuffer>, Encoder.Binary<ByteBuffer> {
-    @Override
-    public boolean willDecode(ByteBuffer bytes) {
-        return true;
-    }
+		implements Decoder.Binary<ByteBuffer>, Encoder.Binary<ByteBuffer> {
+	@Override
+	public boolean willDecode(ByteBuffer bytes) {
+		return true;
+	}
 
-    @Override
-    public ByteBuffer decode(ByteBuffer bytes) throws DecodeException {
-        return bytes;
-    }
+	@Override
+	public ByteBuffer decode(ByteBuffer bytes) throws DecodeException {
+		return bytes;
+	}
 
-    @Override
-    public ByteBuffer encode(ByteBuffer object) throws EncodeException {
-        return object;
-    }
+	@Override
+	public ByteBuffer encode(ByteBuffer object) throws EncodeException {
+		return object;
+	}
 }

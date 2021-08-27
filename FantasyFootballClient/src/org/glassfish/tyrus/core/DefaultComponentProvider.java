@@ -49,27 +49,27 @@ import java.lang.reflect.Method;
  */
 public class DefaultComponentProvider extends ComponentProvider {
 
-    @Override
-    public boolean isApplicable(Class<?> c) {
-        return true;
-    }
+	@Override
+	public boolean isApplicable(Class<?> c) {
+		return true;
+	}
 
-    @Override
-    public <T> Object create(Class<T> toLoad) {
-        try {
-            return ReflectionHelper.getInstance(toLoad);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+	@Override
+	public <T> Object create(Class<T> toLoad) {
+		try {
+			return ReflectionHelper.getInstance(toLoad);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
-    @Override
-    public boolean destroy(Object o) {
-        return false;
-    }
+	@Override
+	public boolean destroy(Object o) {
+		return false;
+	}
 
-    @Override
-    public Method getInvocableMethod(Method method) {
-        return method;
-    }
+	@Override
+	public Method getInvocableMethod(Method method) {
+		return method;
+	}
 }

@@ -17,6 +17,7 @@
 		<movement>4</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/orc_troll.png</portrait>
 		<iconSet size="3">iconsets/orc_troll.png</iconSet>
@@ -46,6 +47,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>9</armour>
 		<portrait>portraits/orc_blitzer.png</portrait>
 		<iconSet size="4">iconsets/orc_blitzer.png</iconSet>
@@ -69,6 +71,7 @@
 		<movement>4</movement>
 		<strength>4</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>9</armour>
 		<portrait>portraits/orc_blackorcblocker.png</portrait>
 		<iconSet size="4">iconsets/orc_blackorcblocker.png</iconSet>
@@ -91,6 +94,7 @@
 		<movement>5</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>3</passing>
 		<armour>8</armour>
 		<portrait>portraits/orc_thrower.png</portrait>
 		<iconSet size="2">iconsets/orc_thrower.png</iconSet>
@@ -115,6 +119,7 @@
 		<movement>6</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/orc_goblin.png</portrait>
 		<iconSet size="7">iconsets/orc_goblin.png</iconSet>
@@ -141,6 +146,7 @@
 		<movement>5</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>9</armour>
 		<portrait>portraits/orc_lineman.png</portrait>
 		<iconSet size="3">iconsets/orc_lineman.png</iconSet>

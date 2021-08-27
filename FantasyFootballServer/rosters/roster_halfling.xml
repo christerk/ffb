@@ -4,7 +4,7 @@
 
 	<name>Halfling</name>
 	<type>Regular</type>
-	<reRollCost>60000</reRollCost>	
+	<reRollCost>60000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<nameGenerator>default</nameGenerator>
@@ -17,6 +17,7 @@
 		<movement>2</movement>
 		<strength>6</strength>
 		<agility>1</agility>
+		<passing>5</passing>
 		<armour>10</armour>
 		<portrait>portraits/halfling_treeman.png</portrait>
 		<iconSet size="3">iconsets/halfling_treeman.png</iconSet>
@@ -45,9 +46,10 @@
 		<movement>5</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>6</armour>
-		<portrait>portraits/halfling_halfling.png</portrait>
-		<iconSet size="16">iconsets/halfling_halfling.png</iconSet>
+		<portrait>portraits/halfling_halflinghopeful.png</portrait>
+		<iconSet size="16">iconsets/halfling_halflinghopeful.png</iconSet>
 		<nameGenerator>halflingpos</nameGenerator>
 		<skillList>
 			<skill>Dodge</skill>
@@ -164,7 +166,7 @@
 		<iconSet size="1">iconsets/BerthaBigfist.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
-			<skill>Bone-Head</skill>
+			<skill>bone head</skill>
 			<skill>Break Tackle</skill>
 			<skill>Dodge</skill>
 			<skill>Mighty Blow</skill>

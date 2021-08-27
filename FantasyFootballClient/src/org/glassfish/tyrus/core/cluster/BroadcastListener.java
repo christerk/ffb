@@ -47,17 +47,17 @@ package org.glassfish.tyrus.core.cluster;
  */
 public interface BroadcastListener {
 
-    /**
-     * Invoked when received request to broadcast text message.
-     *
-     * @param text message to broadcast.
-     */
-    void onBroadcast(String text);
+	/**
+	 * Invoked when received request to broadcast text message.
+	 *
+	 * @param text message to broadcast.
+	 */
+	void onBroadcast(String text);
 
-    /**
-     * Invoked when received request to broadcast binary data.
-     *
-     * @param data data to broadcast.
-     */
-    void onBroadcast(byte[] data);
+	/**
+	 * Invoked when received request to broadcast binary data.
+	 *
+	 * @param data data to broadcast.
+	 */
+	void onBroadcast(byte[] data);
 }

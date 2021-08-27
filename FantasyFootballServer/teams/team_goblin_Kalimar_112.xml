@@ -10,8 +10,13 @@
 	<fanFactor>9</fanFactor>
 	<apothecaries>1</apothecaries>
 	<teamRating>100</teamRating>
+	<currentTeamValue>100</currentTeamValue>
 	<teamStrength>88</teamStrength>
 	<division>[X]</division>
+	<treasury>500000</treasury>
+	<specialRules>
+		<rule>Bribery and Corruption</rule>
+	</specialRules>
 
 	<player nr="1" id="teamGoblinKalimar1">
 		<name>Troll1</name>
@@ -59,63 +64,88 @@
 		<name>Goblin1</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
 	</player>
 
 	<player nr="8" id="teamGoblinKalimar8">
 		<name>Goblin2</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill value="4">Mighty Blow</skill></skillList>
 	</player>
 
 	<player nr="9" id="teamGoblinKalimar9">
 		<name>Goblin3</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill value="2">Dirty Player</skill></skillList>
 	</player>
 
 	<player nr="10" id="teamGoblinKalimar10">
 		<name>Goblin4</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill>Dirty Player</skill></skillList>
 	</player>
 
 	<player nr="11" id="teamGoblinKalimar11">
 		<name>Goblin5</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList><skill>Leader</skill></skillList>
 	</player>
 
 	<player nr="12" id="teamGoblinKalimar12">
 		<name>Goblin6</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
 	</player>
 
 	<player nr="13" id="teamGoblinKalimar13">
 		<name>Goblin7</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
 	</player>
 
 	<player nr="14" id="teamGoblinKalimar14">
 		<name>Goblin8</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
 	</player>
 
 	<player nr="15" id="teamGoblinKalimar15">
 		<name>Goblin9</name>
 		<gender>male</gender>
 		<positionId>goblin.goblin</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
 	</player>
 
 </team>

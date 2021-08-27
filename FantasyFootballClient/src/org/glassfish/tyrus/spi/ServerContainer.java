@@ -43,7 +43,6 @@ import java.io.IOException;
 
 import javax.websocket.DeploymentException;
 
-
 /**
  * HTTP server abstraction.
  * <p>
@@ -53,29 +52,30 @@ import javax.websocket.DeploymentException;
  */
 public interface ServerContainer extends javax.websocket.server.ServerContainer {
 
-    /**
-     * Start the server.
-     * <p>
-     * Creates a new embedded HTTP server (if supported) listening to incoming connections at a given root path
-     * and port.
-     *
-     * @param rootPath context root
-     * @param port     TCP port
-     * @throws IOException                         if something goes wrong.
-     * @throws javax.websocket.DeploymentException when there is any issue with endpoints or other, non-specific
-     *                                             issues.
-     */
-    void start(String rootPath, int port) throws IOException, DeploymentException;
+	/**
+	 * Start the server.
+	 * <p>
+	 * Creates a new embedded HTTP server (if supported) listening to incoming
+	 * connections at a given root path and port.
+	 *
+	 * @param rootPath context root
+	 * @param port     TCP port
+	 * @throws IOException                         if something goes wrong.
+	 * @throws javax.websocket.DeploymentException when there is any issue with
+	 *                                             endpoints or other, non-specific
+	 *                                             issues.
+	 */
+	void start(String rootPath, int port) throws IOException, DeploymentException;
 
-    /**
-     * Stop the server.
-     */
-    void stop();
+	/**
+	 * Stop the server.
+	 */
+	void stop();
 
-    /**
-     * Return WebSocketEngine to upgrade requests and setting up the connection.
-     *
-     * @return websocket engine
-     */
-    WebSocketEngine getWebSocketEngine();
+	/**
+	 * Return WebSocketEngine to upgrade requests and setting up the connection.
+	 *
+	 * @return websocket engine
+	 */
+	WebSocketEngine getWebSocketEngine();
 }

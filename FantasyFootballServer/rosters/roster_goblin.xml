@@ -1,301 +1,355 @@
 <roster id="goblin.lrb6">
-  
-	<name>Goblin</name>
-  
-	<type>Regular</type>
-	<reRollCost>60000</reRollCost>
-	<maxReRolls>8</maxReRolls>
-	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-	<nameGenerator>default</nameGenerator>
 
-	<position id="goblin.goblin">
-		<quantity>16</quantity>
-		<name>Goblin</name>
-		<shorthand>G</shorthand>
-		<type>Regular</type>
-		<cost>40000</cost>
-		<movement>6</movement>
-		<strength>2</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/goblin_goblin.png</portrait>
-		<iconSet size="7">iconsets/goblin_goblin.png</iconSet>
-		<skillList>
-			<skill>Dodge</skill>
-			<skill>Right Stuff</skill>
-			<skill>Stunty</skill>
-		</skillList>
-		<skillCategoryList>
-			<normal>Agility</normal>
-			<double>General</double>
-			<double>Strength</double>
-			<double>Passing</double>
-		</skillCategoryList>
-	</position>
+    <name>Goblin</name>
 
-	<position id="goblin.troll">
-		<quantity>2</quantity>
-		<name>Troll</name>
-		<shorthand>T</shorthand>
-		<type>Big Guy</type>
-		<cost>110000</cost>
-		<movement>4</movement>
-		<strength>5</strength>
-		<agility>1</agility>
-		<armour>9</armour>
-		<portrait>portraits/goblin_troll.png</portrait>
-		<iconSet size="3">iconsets/goblin_troll.png</iconSet>
-		<skillList>
-			<skill>Always Hungry</skill>
-			<skill>Loner</skill>
-			<skill>Mighty Blow</skill>
-			<skill>Really Stupid</skill>
-			<skill>Regeneration</skill>
-			<skill>Throw Team-Mate</skill>
-		</skillList>
-		<skillCategoryList>
-			<normal>Strength</normal>
-			<double>General</double>
-			<double>Agility</double>
-			<double>Passing</double>
-		</skillCategoryList>
-	</position>
+    <type>Regular</type>
+    <reRollCost>60000</reRollCost>
+    <maxReRolls>8</maxReRolls>
+    <baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
+    <nameGenerator>default</nameGenerator>
 
-	<position id="goblin.bombardier">
-		<quantity>1</quantity>
-		<name>Bombardier</name>
-		<shorthand>B</shorthand>
-		<type>Regular</type>
-		<cost>40000</cost>
-		<movement>6</movement>
-		<strength>2</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/goblin_bombardier.png</portrait>
-		<iconSet size="2">iconsets/goblin_bombardier.png</iconSet>
-		<skillList>
-			<skill>Bombardier</skill>
-			<skill>Dodge</skill>
-			<skill>Secret Weapon</skill>
-			<skill>Stunty</skill>
-		</skillList>
-		<skillCategoryList>
-			<normal>Agility</normal>
-			<double>General</double>
-			<double>Strength</double>
-			<double>Passing</double>
-		</skillCategoryList>
-	</position>
-  
-	<position id="goblin.pogoer">
-		<quantity>1</quantity>
-		<name>Pogoer</name>
-		<shorthand>P</shorthand>
-		<type>Regular</type>
-		<cost>70000</cost>
-		<movement>7</movement>
-		<strength>2</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/goblin_pogoer.png</portrait>
-		<iconSet size="2">iconsets/goblin_pogoer.png</iconSet>
-		<skillList>
-			<skill>Dodge</skill>
-			<skill>Leap</skill>
-			<skill>Stunty</skill>
-			<skill>Very Long Legs</skill>
-		</skillList>
-		<skillCategoryList>
-			<normal>Agility</normal>
-			<double>General</double>
-			<double>Strength</double>
-			<double>Passing</double>
-		</skillCategoryList>
-	</position>
-  
-	<position id="goblin.looney">
-		<quantity>1</quantity>
-		<name>Looney</name>
-		<shorthand>L</shorthand>
-		<type>Regular</type>
-		<cost>40000</cost>
-		<movement>6</movement>
-		<strength>2</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/goblin_looney.png</portrait>
-		<iconSet size="1">iconsets/goblin_looney.png</iconSet>
-		<skillList>
-			<skill>Chainsaw</skill>
-			<skill>Secret Weapon</skill>
-			<skill>Stunty</skill>
-		</skillList>
-		<skillCategoryList>
-			<normal>Agility</normal>
-			<double>General</double>
-			<double>Strength</double>
-			<double>Passing</double>
-		</skillCategoryList>
-	</position>
-  
-	<position id="goblin.fanatic">
-		<quantity>1</quantity>
-		<name>Fanatic</name>
-		<shorthand>F</shorthand>
-		<type>Regular</type>
-		<cost>70000</cost>
-		<movement>3</movement>
-		<strength>7</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/goblin_fanatic.png</portrait>
-		<iconSet size="1">iconsets/goblin_fanatic.png</iconSet>
-		<skillList>
-			<skill>Ball and Chain</skill>
-			<skill>No Hands</skill>
-			<skill>Secret Weapon</skill>
-			<skill>Stunty</skill>
-		</skillList>
-		<skillCategoryList>
-			<normal>Strength</normal>
-			<double>General</double>
-			<double>Agility</double>
-			<double>Passing</double>
-		</skillCategoryList>
-	</position>
-  
-	<position id="goblin.Dribblesnot">
-		<quantity>1</quantity>
-		<name>Bomber Dribblesnot</name>
-		<shorthand>BD</shorthand>
-		<type>Star</type>
-		<cost>60000</cost>
-		<movement>6</movement>
-		<strength>2</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/BomberDribblesnot.png</portrait>
-		<iconSet size="1">iconsets/BomberDribblesnot.png</iconSet>
-		<skillList>
-			<skill>Loner</skill>
-			<skill>Accurate</skill>
-			<skill>Bombardier</skill>
-			<skill>Dodge</skill>
-			<skill>Right Stuff</skill>
-			<skill>Secret Weapon</skill>
-			<skill>Stunty</skill>
-		</skillList>
-	</position>
+    <position id="goblin.goblin">
+        <quantity>16</quantity>
+        <name>Goblin</name>
+        <shorthand>G</shorthand>
+        <type>Regular</type>
+        <cost>40000</cost>
+        <movement>6</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>4</passing>
+        <armour>7</armour>
+        <portrait>portraits/goblin_goblin.png</portrait>
+        <iconSet size="7">iconsets/goblin_goblin.png</iconSet>
+        <skillList>
+            <skill>Dodge</skill>
+            <skill>Right Stuff</skill>
+            <skill>Stunty</skill>
+            <skill>Thick Skull</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Agility</normal>
+            <double>General</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
 
-	<position id="goblin.Fungus">
-		<quantity>1</quantity>
-		<name>Fungus the Loon</name>
-		<shorthand>FL</shorthand>
-		<type>Star</type>
-		<cost>80000</cost>
-		<movement>4</movement>
-		<strength>7</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/FungusTheLoon.png</portrait>
-		<iconSet size="1">iconsets/FungusTheLoon.png</iconSet>
-		<skillList>
-			<skill>Loner</skill>
-			<skill>Ball and Chain</skill>
-			<skill>Mighty Blow</skill>
-			<skill>No Hands</skill>
-			<skill>Secret Weapon</skill>
-			<skill>Stunty</skill>
-		</skillList>
-	</position>
+    <position id="goblin.troll">
+        <quantity>2</quantity>
+        <name>Troll</name>
+        <shorthand>T</shorthand>
+        <type>Big Guy</type>
+        <cost>110000</cost>
+        <movement>4</movement>
+        <strength>5</strength>
+        <agility>1</agility>
+        <passing>5</passing>
+        <armour>9</armour>
+        <portrait>portraits/goblin_troll.png</portrait>
+        <iconSet size="3">iconsets/goblin_troll.png</iconSet>
+        <skillList>
+            <skill>Always Hungry</skill>
+            <skill>Loner</skill>
+            <skill value="2">Mighty Blow</skill>
+            <skill>Really Stupid</skill>
+            <skill>Regeneration</skill>
+            <skill>Throw Team-Mate</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
 
-	<position id="goblin.Nobbla">
-		<quantity>1</quantity>
-		<name>Nobbla Blackwart</name>
-		<shorthand>NB</shorthand>
-		<type>Star</type>
-		<cost>130000</cost>
-		<movement>6</movement>
-		<strength>2</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/NobblaBlackwart.png</portrait>
-		<iconSet size="1">iconsets/NobblaBlackwart.png</iconSet>
-		<skillList>
-			<skill>Loner</skill>
-			<skill>Block</skill>
-			<skill>Dodge</skill>
-			<skill>Chainsaw</skill>
-			<skill>Secret Weapon</skill>
-			<skill>Stunty</skill>
-		</skillList>
-	</position>
+    <position id="goblin.bombardier">
+        <quantity>1</quantity>
+        <name>Bombardier</name>
+        <shorthand>B</shorthand>
+        <type>Regular</type>
+        <cost>40000</cost>
+        <movement>6</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>4</passing>
+        <armour>7</armour>
+        <portrait>portraits/goblin_bomma.png</portrait>
+        <iconSet size="2">iconsets/goblin_bomma.png</iconSet>
+        <skillList>
+            <skill>Bombardier</skill>
+            <skill>Dodge</skill>
+            <skill value="5">Secret Weapon</skill>
+            <skill>Stunty</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Agility</normal>
+            <double>General</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
 
-	<position id="goblin.Scrappa">
-		<quantity>1</quantity>
-		<name>Scrappa Sorehead</name>
-		<shorthand>SS</shorthand>
-		<type>Star</type>
-		<cost>150000</cost>
-		<movement>7</movement>
-		<strength>2</strength>
-		<agility>3</agility>
-		<armour>7</armour>
-		<portrait>portraits/ScrappaSorehead.png</portrait>
-		<iconSet size="1">iconsets/ScrappaSorehead.png</iconSet>
-		<skillList>
-			<skill>Loner</skill>
-			<skill>Dirty Player</skill>
-			<skill>Dodge</skill>
-			<skill>Leap</skill>
-			<skill>Right Stuff</skill>
-			<skill>Sprint</skill>
-			<skill>Stunty</skill>
-			<skill>Sure Feet</skill>
-			<skill>Very Long Legs</skill>
-		</skillList>
-	</position>
+    <position id="goblin.pogoer">
+        <quantity>1</quantity>
+        <name>Pogoer</name>
+        <shorthand>P</shorthand>
+        <type>Regular</type>
+        <cost>70000</cost>
+        <movement>7</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>5</passing>
+        <armour>7</armour>
+        <portrait>portraits/goblin_pogoer.png</portrait>
+        <iconSet size="2">iconsets/goblin_pogoer.png</iconSet>
+        <skillList>
+            <skill>Dodge</skill>
+            <skill>Leap</skill>
+            <skill>Stunty</skill>
+            <skill>Very Long Legs</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Agility</normal>
+            <double>General</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
 
-	<position id="goblin.Ripper">
-		<quantity>1</quantity>
-		<name>Ripper</name>
-		<shorthand>RP</shorthand>
-		<type>Star</type>
-		<cost>270000</cost>
-		<movement>4</movement>
-		<strength>6</strength>
-		<agility>1</agility>
-		<armour>9</armour>
-		<portrait>portraits/Ripper.png</portrait>
-		<iconSet size="1">iconsets/Ripper.png</iconSet>
-		<skillList>
-			<skill>Loner</skill>
-			<skill>Grab</skill>
-			<skill>Mighty Blow</skill>
-			<skill>Regeneration</skill>
-			<skill>Throw Team-Mate</skill>
-		</skillList>
-	</position>
-	
-	<position id="goblin.Morg">
-		<quantity>1</quantity>
-		<name>Morg 'n' Thorg</name>
-		<shorthand>MT</shorthand>
-		<type>Star</type>
-		<cost>430000</cost>
-		<movement>6</movement>
-		<strength>6</strength>
-		<agility>3</agility>
-		<armour>10</armour>
-		<portrait>portraits/MorgNThorg.png</portrait>
-		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
-		<skillList>
-			<skill>Loner</skill>
-			<skill>Block</skill>
-			<skill>Mighty Blow</skill>
-			<skill>Thick Skull</skill>
-			<skill>Throw Team-Mate</skill>
-		</skillList>
-	</position>
-  
+    <position id="goblin.looney">
+        <quantity>1</quantity>
+        <name>Looney</name>
+        <shorthand>L</shorthand>
+        <type>Regular</type>
+        <cost>40000</cost>
+        <movement>6</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>0</passing>
+        <armour>7</armour>
+        <portrait>portraits/goblin_looney.png</portrait>
+        <iconSet size="1">iconsets/goblin_looney.png</iconSet>
+        <skillList>
+            <skill>Chainsaw</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stunty</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Agility</normal>
+            <double>General</double>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+
+    <position id="goblin.fanatic">
+        <quantity>1</quantity>
+        <name>Fanatic</name>
+        <shorthand>F</shorthand>
+        <type>Regular</type>
+        <cost>70000</cost>
+        <movement>3</movement>
+        <strength>7</strength>
+        <agility>3</agility>
+        <passing>0</passing>
+        <armour>7</armour>
+        <portrait>portraits/goblin_fanatic.png</portrait>
+        <iconSet size="1">iconsets/goblin_fanatic.png</iconSet>
+        <skillList>
+            <skill>Ball and Chain</skill>
+            <skill>No Hands</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stunty</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+
+    <position id="goblin.Dribblesnot">
+        <quantity>1</quantity>
+        <name>Bomber Dribblesnot</name>
+        <shorthand>BD</shorthand>
+        <type>Star</type>
+        <cost>60000</cost>
+        <movement>6</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <armour>7</armour>
+        <portrait>portraits/BomberDribblesnot.png</portrait>
+        <iconSet size="1">iconsets/BomberDribblesnot.png</iconSet>
+        <skillList>
+            <skill>Loner</skill>
+            <skill>Accurate</skill>
+            <skill>Bombardier</skill>
+            <skill>Dodge</skill>
+            <skill>Right Stuff</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stunty</skill>
+        </skillList>
+    </position>
+
+    <position id="goblin.Fungus">
+        <quantity>1</quantity>
+        <name>Fungus the Loon</name>
+        <shorthand>FL</shorthand>
+        <type>Star</type>
+        <cost>80000</cost>
+        <movement>4</movement>
+        <strength>7</strength>
+        <agility>3</agility>
+        <armour>7</armour>
+        <portrait>portraits/FungusTheLoon.png</portrait>
+        <iconSet size="1">iconsets/FungusTheLoon.png</iconSet>
+        <skillList>
+            <skill>Loner</skill>
+            <skill>Ball and Chain</skill>
+            <skill>Mighty Blow</skill>
+            <skill>No Hands</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stunty</skill>
+        </skillList>
+    </position>
+
+    <position id="goblin.Nobbla">
+        <quantity>1</quantity>
+        <name>Nobbla Blackwart</name>
+        <shorthand>NB</shorthand>
+        <type>Star</type>
+        <cost>130000</cost>
+        <movement>6</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <armour>7</armour>
+        <portrait>portraits/NobblaBlackwart.png</portrait>
+        <iconSet size="1">iconsets/NobblaBlackwart.png</iconSet>
+        <skillList>
+            <skill>Loner</skill>
+            <skill>Block</skill>
+            <skill>Dodge</skill>
+            <skill>Chainsaw</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stunty</skill>
+        </skillList>
+    </position>
+
+    <position id="goblin.Scrappa">
+        <quantity>1</quantity>
+        <name>Scrappa Sorehead</name>
+        <shorthand>SS</shorthand>
+        <type>Star</type>
+        <cost>150000</cost>
+        <movement>7</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <armour>7</armour>
+        <portrait>portraits/ScrappaSorehead.png</portrait>
+        <iconSet size="1">iconsets/ScrappaSorehead.png</iconSet>
+        <skillList>
+            <skill>Loner</skill>
+            <skill>Dirty Player</skill>
+            <skill>Dodge</skill>
+            <skill>Leap</skill>
+            <skill>Right Stuff</skill>
+            <skill>Sprint</skill>
+            <skill>Stunty</skill>
+            <skill>Sure Feet</skill>
+            <skill>Very Long Legs</skill>
+        </skillList>
+    </position>
+
+    <position id="goblin.Ripper">
+        <quantity>1</quantity>
+        <name>Ripper</name>
+        <shorthand>RP</shorthand>
+        <type>Star</type>
+        <cost>270000</cost>
+        <movement>4</movement>
+        <strength>6</strength>
+        <agility>1</agility>
+        <armour>9</armour>
+        <portrait>portraits/RipperBolgrot.png</portrait>
+        <iconSet size="1">iconsets/RipperBolgrot.png</iconSet>
+        <skillList>
+            <skill>Loner</skill>
+            <skill>Grab</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Regeneration</skill>
+            <skill>Throw Team-Mate</skill>
+        </skillList>
+    </position>
+
+    <position id="goblin.Morg">
+        <quantity>1</quantity>
+        <name>Morg 'n' Thorg</name>
+        <shorthand>MT</shorthand>
+        <type>Star</type>
+        <cost>430000</cost>
+        <movement>6</movement>
+        <strength>6</strength>
+        <agility>3</agility>
+        <armour>10</armour>
+        <portrait>portraits/MorgNThorg.png</portrait>
+        <iconSet size="1">iconsets/MorgNThorg.png</iconSet>
+        <skillList>
+            <skill>Loner</skill>
+            <skill>Block</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Thick Skull</skill>
+            <skill>Throw Team-Mate</skill>
+        </skillList>
+    </position>
+
+    <position id="39459">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Grak</name>
+        <shorthand>Gr</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>250000</cost>
+        <movement>5</movement>
+        <strength>5</strength>
+        <agility>4</agility>
+        <passing>4</passing>
+        <armour>10</armour>
+        <teamWithPositionId>39460</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674104</portrait>
+        <iconSet size="1" mimeType="image/gif">i/674105.gif</iconSet>
+        <skillList>
+            <skill>Bone Head</skill>
+            <skill>Kick Team-mate</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Thick Skull</skill>
+            <skill>Two for One</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="39460">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Crumbleberry</name>
+        <shorthand>Cr</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>0</cost>
+        <movement>5</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>6</passing>
+        <armour>7</armour>
+        <teamWithPositionId>39459</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674107</portrait>
+        <iconSet size="1" mimeType="image/gif">i/674106.gif</iconSet>
+    </position>
 </roster>

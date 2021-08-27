@@ -16,12 +16,13 @@
 		<movement>6</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>9</armour>
 		<portrait>portraits/lizardman_kroxigor.png</portrait>
 		<iconSet size="1">iconsets/lizardman_kroxigor.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
-			<skill>Bone-Head</skill>
+			<skill>bone head</skill>
 			<skill>Mighty Blow</skill>
 			<skill>Prehensile Tail</skill>
 			<skill>Thick Skull</skill>
@@ -43,6 +44,7 @@
 		<movement>6</movement>
 		<strength>4</strength>
 		<agility>1</agility>
+		<passing>6</passing>
 		<armour>9</armour>
 		<portrait>portraits/lizardman_saurus.png</portrait>
 		<iconSet size="6">iconsets/lizardman_saurus.png</iconSet>
@@ -64,6 +66,7 @@
 		<movement>8</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/lizardman_skink.png</portrait>
 		<iconSet size="6">iconsets/lizardman_skink.png</iconSet>

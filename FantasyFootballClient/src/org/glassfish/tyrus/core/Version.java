@@ -47,40 +47,40 @@ import org.glassfish.tyrus.spi.UpgradeRequest;
  */
 public enum Version {
 
-    DRAFT17("13") {
-        @Override
-        public ProtocolHandler createHandler(boolean mask, MaskingKeyGenerator maskingKeyGenerator) {
-            return new ProtocolHandler(mask, maskingKeyGenerator);
-        }
+	DRAFT17("13") {
+		@Override
+		public ProtocolHandler createHandler(boolean mask, MaskingKeyGenerator maskingKeyGenerator) {
+			return new ProtocolHandler(mask, maskingKeyGenerator);
+		}
 
-        @Override
-        public boolean validate(UpgradeRequest request) {
-            return this.wireProtocolVersion.equals(request.getHeader(UpgradeRequest.SEC_WEBSOCKET_VERSION));
-        }
-    };
+		@Override
+		public boolean validate(UpgradeRequest request) {
+			return this.wireProtocolVersion.equals(request.getHeader(UpgradeRequest.SEC_WEBSOCKET_VERSION));
+		}
+	};
 
-    public abstract ProtocolHandler createHandler(boolean mask, MaskingKeyGenerator maskingKeyGenerator);
+	public abstract ProtocolHandler createHandler(boolean mask, MaskingKeyGenerator maskingKeyGenerator);
 
-    public abstract boolean validate(UpgradeRequest request);
+	public abstract boolean validate(UpgradeRequest request);
 
-    final String wireProtocolVersion;
+	final String wireProtocolVersion;
 
-    private Version(final String wireProtocolVersion) {
-        this.wireProtocolVersion = wireProtocolVersion;
-    }
+	private Version(final String wireProtocolVersion) {
+		this.wireProtocolVersion = wireProtocolVersion;
+	}
 
-    @Override
-    public String toString() {
-        return name();
-    }
+	@Override
+	public String toString() {
+		return name();
+	}
 
-    public static String getSupportedWireProtocolVersions() {
-        final StringBuilder sb = new StringBuilder();
-        for (Version v : Version.values()) {
-            if (v.wireProtocolVersion.length() > 0) {
-                sb.append(v.wireProtocolVersion).append(", ");
-            }
-        }
-        return sb.substring(0, sb.length() - 2);
-    }
+	public static String getSupportedWireProtocolVersions() {
+		final StringBuilder sb = new StringBuilder();
+		for (Version v : Version.values()) {
+			if (v.wireProtocolVersion.length() > 0) {
+				sb.append(v.wireProtocolVersion).append(", ");
+			}
+		}
+		return sb.substring(0, sb.length() - 2);
+	}
 }

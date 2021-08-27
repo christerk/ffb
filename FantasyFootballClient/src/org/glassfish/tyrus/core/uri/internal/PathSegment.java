@@ -44,28 +44,28 @@ package org.glassfish.tyrus.core.uri.internal;
  * instance of this type is injected with {@code javax.ws.rs.PathParam}, the
  * value of the annotation identifies which path segment is selected and the
  * presence of an {@code javax.ws.rs.Encoded} annotation will result in an
- * instance that supplies the path and matrix parameter values in
- * URI encoded form.
+ * instance that supplies the path and matrix parameter values in URI encoded
+ * form.
  *
  * @author Paul Sandoz
  * @author Marc Hadley
  */
 public interface PathSegment {
 
-    /**
-     * Get the path segment.
-     *
-     * @return the path segment
-     */
-    String getPath();
+	/**
+	 * Get the path segment.
+	 *
+	 * @return the path segment
+	 */
+	String getPath();
 
-    /**
-     * Get a map of the matrix parameters associated with the path segment.
-     * The map keys are the names of the matrix parameters with any
-     * percent-escaped octets decoded.
-     *
-     * @return the map of matrix parameters
-     * @see <a href="http://www.w3.org/DesignIssues/MatrixURIs.html">Matrix URIs</a>
-     */
-    MultivaluedMap<String, String> getMatrixParameters();
+	/**
+	 * Get a map of the matrix parameters associated with the path segment. The map
+	 * keys are the names of the matrix parameters with any percent-escaped octets
+	 * decoded.
+	 *
+	 * @return the map of matrix parameters
+	 * @see <a href="http://www.w3.org/DesignIssues/MatrixURIs.html">Matrix URIs</a>
+	 */
+	MultivaluedMap<String, String> getMatrixParameters();
 }

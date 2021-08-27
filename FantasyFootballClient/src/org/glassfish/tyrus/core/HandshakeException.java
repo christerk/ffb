@@ -41,46 +41,47 @@
 package org.glassfish.tyrus.core;
 
 /**
- * {@link Exception}, which describes the error, occurred during the handshake phase.
+ * {@link Exception}, which describes the error, occurred during the handshake
+ * phase.
  *
  * @author Alexey Stashok
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 public class HandshakeException extends Exception {
 
-    /**
-	 * 
-	 */
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = -4231040386246325101L;
 	private final int httpStatusCode;
 
-    /**
-     * Construct a HandshakeException. HTTP status code will be set to {@code 500}.
-     *
-     * @param message error description
-     */
-    public HandshakeException(String message) {
-        this(500, message);
-    }
+	/**
+	 * Construct a HandshakeException. HTTP status code will be set to {@code 500}.
+	 *
+	 * @param message error description
+	 */
+	public HandshakeException(String message) {
+		this(500, message);
+	}
 
-    /**
-     * Constructor.
-     *
-     * @param httpStatusCode http status code to be set to response.
-     * @param message        the detail message. The detail message is saved for later retrieval by the {@link
-     *                       #getMessage()} method.
-     */
-    public HandshakeException(int httpStatusCode, String message) {
-        super(message);
-        this.httpStatusCode = httpStatusCode;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param httpStatusCode http status code to be set to response.
+	 * @param message        the detail message. The detail message is saved for
+	 *                       later retrieval by the {@link #getMessage()} method.
+	 */
+	public HandshakeException(int httpStatusCode, String message) {
+		super(message);
+		this.httpStatusCode = httpStatusCode;
+	}
 
-    /**
-     * Get the error code.
-     *
-     * @return the error code.
-     */
-    public int getHttpStatusCode() {
-        return httpStatusCode;
-    }
+	/**
+	 * Get the error code.
+	 *
+	 * @return the error code.
+	 */
+	public int getHttpStatusCode() {
+		return httpStatusCode;
+	}
 }
