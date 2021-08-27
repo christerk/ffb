@@ -17,7 +17,6 @@ import com.fumbbl.ffb.server.util.UtilServerStartGame;
 import com.fumbbl.ffb.server.util.UtilSkillBehaviours;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.XmlHandler;
-
 import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
@@ -48,6 +47,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 		Team home = inflateIfNeeded(gameState.getGame().getTeamHome(), gameState);
 		Team away = inflateIfNeeded(gameState.getGame().getTeamAway(), gameState);
+		gameState.getGame().teamsAreInflated();
 
 		if (home == null || away == null) {
 			return false;
