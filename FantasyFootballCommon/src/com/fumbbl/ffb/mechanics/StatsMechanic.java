@@ -3,6 +3,8 @@ package com.fumbbl.ffb.mechanics;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.modifiers.PlayerStatLimit;
+import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 
 import java.util.Arrays;
 
@@ -31,4 +33,6 @@ public abstract class StatsMechanic implements Mechanic {
 		}
 		return armour;
 	}
+
+	public abstract PlayerStatLimit limit(TemporaryStatModifier.PlayerStatKey key);
 }

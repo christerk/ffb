@@ -16,8 +16,8 @@ public class TemporaryStatModifierFactory implements INamedObjectFactory<Tempora
 	public TemporaryStatModifier forName(String name) {
 		String[] parts = name.split(TemporaryStatModifier.NAME_SEPARATOR);
 		try {
-			Constructor<?> constructor = Class.forName(parts[1]).getConstructor(TemporaryStatModifier.PlayerStat.class);
-			return (TemporaryStatModifier) constructor.newInstance(TemporaryStatModifier.PlayerStat.valueOf(parts[0]));
+			Constructor<?> constructor = Class.forName(parts[1]).getConstructor(TemporaryStatModifier.PlayerStatKey.class);
+			return (TemporaryStatModifier) constructor.newInstance(TemporaryStatModifier.PlayerStatKey.valueOf(parts[0]));
 		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 			throw new FantasyFootballException("Could not create temporary stat modifier for '" + name + "' due to: ", e);
 		}

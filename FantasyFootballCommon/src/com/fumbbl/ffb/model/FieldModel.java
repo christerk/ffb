@@ -26,6 +26,8 @@ import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -291,7 +293,10 @@ public class FieldModel implements IJsonSerializable {
 		}
 		Set<Card> cards = fCardsByPlayerId.computeIfAbsent(pPlayer.getId(), k -> new HashSet<>());
 		cards.add(pCard);
-		pPlayer.addActivationEnhancements(pCard, getGame().getFactory(Factory.SKILL));
+
+		StatsMechanic mechanic = (StatsMechanic) getGame().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
+
+		pPlayer.addActivationEnhancements(pCard, getGame().getFactory(Factory.SKILL), mechanic);
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD, pPlayer.getId(), pCard);
 	}
 
@@ -299,7 +304,9 @@ public class FieldModel implements IJsonSerializable {
 		if ((player == null) || (card == null) || !fCardsByPlayerId.containsKey(player.getId())) {
 			return;
 		}
-		player.addDeactivationEnhancements(card, getGame().getFactory(Factory.SKILL));
+		StatsMechanic mechanic = (StatsMechanic) getGame().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
+
+		player.addDeactivationEnhancements(card, getGame().getFactory(Factory.SKILL), mechanic);
 		notifyObservers(ModelChangeId.FIELD_MODEL_KEEP_DEACTIVATED_CARD, player.getId(), card);
 	}
 
@@ -353,7 +360,8 @@ public class FieldModel implements IJsonSerializable {
 
 	public void addPrayerEnhancements(Player<?> player, Prayer prayer) {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
-		player.addEnhancement(prayer.getName(), prayer.enhancements(), factory);
+		StatsMechanic mechanic = (StatsMechanic) getGame().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
+		player.addEnhancement(prayer.getName(), prayer.enhancements(mechanic), factory);
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
 	}
 
