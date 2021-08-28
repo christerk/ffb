@@ -32,6 +32,8 @@ public class TeamSkeleton extends Team {
 	private String fCoach;
 	private String xmlContent;
 
+	private transient boolean parsingPlayer;
+
 	public TeamSkeleton(IFactorySource game) {
 		super(game);
 	}
@@ -101,6 +103,9 @@ public class TeamSkeleton extends Team {
 		if (XML_TAG.equals(pXmlTag)) {
 			setId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID));
 		}
+		if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
+			parsingPlayer = true;
+		}
 		// when reading XML only
 		return xmlElement;
 	}
@@ -108,7 +113,7 @@ public class TeamSkeleton extends Team {
 	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		boolean complete = XML_TAG.equals(pXmlTag);
 		if (!complete) {
-			if (_XML_TAG_NAME.equals(pXmlTag)) {
+			if (_XML_TAG_NAME.equals(pXmlTag) && !parsingPlayer) {
 				fName = pValue;
 			}
 			if (_XML_TAG_COACH.equals(pXmlTag)) {
@@ -116,6 +121,9 @@ public class TeamSkeleton extends Team {
 			}
 			if (_XML_TAG_TEAM_VALUE.equals(pXmlTag)) {
 				setTeamValue(Integer.parseInt(pValue));
+			}
+			if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
+				parsingPlayer = false;
 			}
 		}
 		return complete;
