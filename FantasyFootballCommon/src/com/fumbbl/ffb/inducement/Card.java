@@ -1,20 +1,21 @@
 package com.fumbbl.ffb.inducement;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.Set;
-
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.CardTarget;
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.factory.InducementPhaseFactory;
+import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * 
@@ -110,9 +111,13 @@ public class Card implements INamedObject {
 		return Collections.emptySet();
 	}
 
-	public TemporaryEnhancements activationEnhancement() { return new TemporaryEnhancements(); }
+	public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+		return new TemporaryEnhancements();
+	}
 
-	public TemporaryEnhancements deactivationEnhancement() { return new TemporaryEnhancements(); }
+	public TemporaryEnhancements deactivationEnhancement(StatsMechanic mechanic) {
+		return new TemporaryEnhancements();
+	}
 
 	public Optional<CardReport> cardReport(CardEffect effect, int roll) {
 		return Optional.empty();

@@ -2,6 +2,8 @@ package com.fumbbl.ffb.server.inducements.bb2020.prayers;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.factory.SkillFactory;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -21,8 +23,9 @@ public abstract class DialogPrayerHandler extends PrayerHandler {
 	@Override
 	final boolean initEffect(GameState gameState, Team prayingTeam) {
 		SkillFactory factory = gameState.getGame().getFactory(FactoryType.Factory.SKILL);
+		StatsMechanic mechanic = (StatsMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 
-		Set<Skill> skillsFromEnhancement = handledPrayer().enhancements().getSkills().stream().map(SkillClassWithValue::getSkill).map(factory::forClass).collect(Collectors.toSet());
+		Set<Skill> skillsFromEnhancement = handledPrayer().enhancements(mechanic).getSkills().stream().map(SkillClassWithValue::getSkill).map(factory::forClass).collect(Collectors.toSet());
 
 		List<Player<?>> players = selector.eligiblePlayers(prayingTeam, gameState.getGame(), skillsFromEnhancement);
 		if (players.isEmpty()) {

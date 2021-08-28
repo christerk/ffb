@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.modifiers;
 
+import com.fumbbl.ffb.mechanics.StatsMechanic;
+
 public class TemporaryStatDecrementer extends TemporaryStatModifier {
-	public TemporaryStatDecrementer(PlayerStat stat) {
-		super(stat);
+	public TemporaryStatDecrementer(PlayerStatKey stat, StatsMechanic mechanic) {
+		super(stat, mechanic);
 	}
 
 	@Override

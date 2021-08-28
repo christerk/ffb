@@ -4,6 +4,8 @@ import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.StatsDrawingModifier;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.modifiers.PlayerStatLimit;
+import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class StatsMechanic extends com.fumbbl.ffb.mechanics.StatsMechanic {
@@ -30,5 +32,18 @@ public class StatsMechanic extends com.fumbbl.ffb.mechanics.StatsMechanic {
 	@Override
 	public int applyAgilityDecreases(int agility, int decreases) {
 		return agility - decreases;
+	}
+
+	@Override
+	public PlayerStatLimit limit(TemporaryStatModifier.PlayerStatKey key) {
+		switch (key) {
+			case MA:
+			case ST:
+			case AG:
+			case AV:
+				return new PlayerStatLimit(1, 10);
+			default:
+				return new PlayerStatLimit(0, 0);
+		}
 	}
 }
