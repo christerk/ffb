@@ -8,20 +8,28 @@ import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.util.Scanner;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 public class UtilSkillBehaviours {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static void registerBehaviours(Game game, DebugLog log) {
 
 		Scanner<SkillBehaviour> scanner = new Scanner<>(SkillBehaviour.class);
-		for (SkillBehaviour<Skill> behaviour : scanner.getSubclasses(game.getOptions())) {
+		Collection<SkillBehaviour> skillBehaviours = scanner.getSubclasses(game.getOptions());
+		Set<String> packageNames = new HashSet<>();
+		for (SkillBehaviour<Skill> behaviour : skillBehaviours) {
+			packageNames.add(behaviour.getClass().getPackage().getName());
 			if (registerBehaviour(behaviour, game.getRules().getSkillFactory())) {
-				log.log(IServerLogLevel.DEBUG,
-						"Registered behavior class '" + behaviour.getClass().getSimpleName() + "' for skill '" + behaviour.skillClass.getSimpleName() + "'");
+				log.log(IServerLogLevel.DEBUG, game.getId(),
+					"Registered behaviour class '" + behaviour.getClass().getSimpleName() + "' for skill '" + behaviour.skillClass.getSimpleName() + "'");
 			} else {
-				log.log(IServerLogLevel.WARN, "No skill found for '" + behaviour.getClass().getSimpleName());
+				log.log(IServerLogLevel.WARN, game.getId(), "No skill found for '" + behaviour.getClass().getSimpleName());
 			}
 		}
+		log.log(IServerLogLevel.INFO, game.getId(), "Loaded " + skillBehaviours.size() + " behaviours from these packages: " + String.join(", ", packageNames));
 	}
 
 	private static boolean registerBehaviour(SkillBehaviour<Skill> behaviour, SkillFactory factory) {
