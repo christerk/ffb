@@ -10,10 +10,10 @@ import com.fumbbl.ffb.util.Scanner;
 
 public class UtilSkillBehaviours {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static void registerBehaviours(Game game, DebugLog log) {
 
-		Scanner<SkillBehaviour> scanner = new Scanner<SkillBehaviour>(SkillBehaviour.class);
+		Scanner<SkillBehaviour> scanner = new Scanner<>(SkillBehaviour.class);
 		for (SkillBehaviour<Skill> behaviour : scanner.getSubclasses(game.getOptions())) {
 			if (registerBehaviour(behaviour, game.getRules().getSkillFactory())) {
 				log.log(IServerLogLevel.DEBUG,
