@@ -3,8 +3,8 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.factory.GameOptionFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -47,11 +47,11 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 
 	public RulesCollection.Rules getRulesVersion() {
 		String rulesVersion = getOptionWithDefault(GameOptionId.RULESVERSION).getValueAsString();
-		RulesCollection.Rules rules = Rules.BB2020;
 		try {
-			rules = RulesCollection.Rules.valueOf(rulesVersion);
-		} catch (IllegalArgumentException e) { }
-		return rules;
+			return RulesCollection.Rules.valueOf(rulesVersion);
+		} catch (IllegalArgumentException e) {
+			throw new FantasyFootballException("Could not create a rules version for value '" + rulesVersion + "'");
+		}
 	}
 
 	public GameOptionFactory getFactory() {

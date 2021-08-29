@@ -53,6 +53,9 @@ public interface IServerProperty {
 	String ADMIN_URL_UNBLOCK = "admin.url.unblock";
 	String ADMIN_URL_UPLOAD = "admin.url.upload";
 
+	String GAMESTATE_URL_CHALLENGE = "gamestate.url.challenge";
+	String GAMESTATE_URL_BEHAVIORS = "gamestate.url.behaviours";
+
 	String BACKUP_DIR = "backup.dir";
 	String BACKUP_EXTENSION = "backup.extension";
 	String BACKUP_SALT = "backup.salt";

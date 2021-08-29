@@ -9,6 +9,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.server.admin.AdminServlet;
 import com.fumbbl.ffb.server.admin.BackupServlet;
+import com.fumbbl.ffb.server.admin.GameStateServlet;
 import com.fumbbl.ffb.server.commandline.InifileParamFilter;
 import com.fumbbl.ffb.server.commandline.InifileParamFilterResult;
 import com.fumbbl.ffb.server.db.DbConnectionManager;
@@ -176,6 +177,7 @@ public class FantasyFootballServer implements IFactorySource {
 				server.setHandler(context);
 				File httpDir = new File(httpDirProperty);
 				context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
+				context.addServlet(new ServletHolder(new GameStateServlet(this)), "/gamestate/*");
 				context.addServlet(new ServletHolder(new BackupServlet(this)), "/backup/*");
 				context.addServlet(new ServletHolder(new CommandServlet(this)), "/command/*");
 				ServletHolder fileServletHolder = new ServletHolder(new FileServlet(this));
