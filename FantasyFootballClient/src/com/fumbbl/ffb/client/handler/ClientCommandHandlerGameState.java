@@ -21,6 +21,7 @@ import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.SwingUtilities;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -101,15 +102,19 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		UtilClientThrowTeamMate.updateThrownPlayer(getClient());
 
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
-			SwingUtilities.invokeLater(() -> {
-				UserInterface userInterface = getClient().getUserInterface();
-				userInterface.init(game.getOptions());
-				getClient().updateClientState();
-				userInterface.getDialogManager().updateDialog();
-				userInterface.getGameMenuBar().updateMissingPlayers();
-				userInterface.getGameMenuBar().updateInducements();
-				userInterface.getChat().requestChatInputFocus();
-			});
+			try {
+				SwingUtilities.invokeAndWait(() -> {
+					UserInterface userInterface = getClient().getUserInterface();
+					userInterface.init(game.getOptions());
+					getClient().updateClientState();
+					userInterface.getDialogManager().updateDialog();
+					userInterface.getGameMenuBar().updateMissingPlayers();
+					userInterface.getGameMenuBar().updateInducements();
+					userInterface.getChat().requestChatInputFocus();
+				});
+			} catch (InterruptedException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return true;
