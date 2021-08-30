@@ -10,6 +10,7 @@ import com.fumbbl.ffb.util.StringTool;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.security.NoSuchAlgorithmException;
@@ -20,7 +21,11 @@ import java.util.regex.Pattern;
 
 public class GameStateConnector {
 
-	private static final String _USAGE = "java com.fumbbl.ffb.server.admin.GameStateConnector behaviours <gameId>";
+	private static final String _USAGE = "java com.fumbbl.ffb.server.admin.GameStateConnector behaviours <gameId>\n" +
+		"java com.fumbbl.ffb.server.admin.GameStateConnector get <gameId> <fromDb>\n" +
+		"  [fromDb being true or false]\n" +
+		"java com.fumbbl.ffb.server.admin.GameStateConnector set <file>\n" +
+		"  [file being an unzipped json file containing the new gameState]\n";
 
 	private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
 
@@ -67,6 +72,18 @@ public class GameStateConnector {
 					response, args[1]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
+				System.out.println(servletResponse);
+			} else if (GameStateServlet.GET.equals(args[0])) {
+				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_GET),
+					response, args[1], args[2]);
+				System.out.println(url);
+				String servletResponse = UtilServerHttpClient.fetchPage(url);
+				System.out.println(servletResponse);
+			} else if (GameStateServlet.SET.equals(args[0])) {
+				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_SET),
+					response);
+				System.out.println(url);
+				String servletResponse = UtilServerHttpClient.post(url, new File(args[1]));
 				System.out.println(servletResponse);
 			}
 
