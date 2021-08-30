@@ -42,6 +42,7 @@ public interface IServerProperty {
 	String ADMIN_URL_CLOSE = "admin.url.close";
 	String ADMIN_URL_CONCEDE = "admin.url.concede";
 	String ADMIN_URL_DELETE = "admin.url.delete";
+	String ADMIN_URL_FORCELOG = "admin.url.forcelog";
 	String ADMIN_URL_LIST_ID = "admin.url.list.id";
 	String ADMIN_URL_LIST_STATUS = "admin.url.list.status";
 	String ADMIN_URL_LOGLEVEL = "admin.url.loglevel";

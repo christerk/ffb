@@ -1,26 +1,5 @@
 package com.fumbbl.ffb.server.admin;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.PasswordChallenge;
@@ -44,6 +23,25 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.DateTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.eclipse.jetty.websocket.api.Session;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.sax.TransformerHandler;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 
@@ -67,6 +65,7 @@ public class AdminServlet extends HttpServlet {
 	public static final String STATS = "stats";
 	public static final String UNBLOCK = "unblock";
 	public static final String UPLOAD = "upload";
+	public static final String FORCE_LOG = "forcelog";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
@@ -98,6 +97,7 @@ public class AdminServlet extends HttpServlet {
 	private static final String _XML_TAG_UNBLOCK = "unblock";
 	private static final String _XML_TAG_STATUS = "status";
 	private static final String _XML_TAG_LOGLEVEL = "loglevel";
+	private static final String _XML_TAG_FORCE_LOG = "forcelog";
 
 	private static final String _XML_ATTRIBUTE_INITIATED = "initiated";
 	private static final String _XML_ATTRIBUTE_GAME_ID = "gameId";
@@ -110,7 +110,7 @@ public class AdminServlet extends HttpServlet {
 
 	private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // 2001-07-04T12:08:56.235
 
-	private FantasyFootballServer fServer;
+	private final FantasyFootballServer fServer;
 	private String fLastChallenge;
 
 	public AdminServlet(FantasyFootballServer pServer) {
@@ -179,6 +179,8 @@ public class AdminServlet extends HttpServlet {
 					isOk = handleSchedule(handler, parameters);
 				} else if (STATS.equals(command)) {
 					isOk = handleStats(handler);
+				} else if (FORCE_LOG.equals(command)) {
+					isOk = handleForceLog(handler, parameters);
 				} else {
 					isOk = false;
 				}
@@ -260,6 +262,21 @@ public class AdminServlet extends HttpServlet {
 		long gameId = parseGameId(gameIdString);
 		if (gameId > 0) {
 			getServer().getCommunication().handleCommand(new InternalServerCommandCloseGame(gameId));
+			return true;
+		} else {
+			UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
+			return false;
+		}
+	}
+
+	private boolean handleForceLog(TransformerHandler pHandler, Map<String, String[]> pParameters) {
+		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
+		AttributesImpl attributes = new AttributesImpl();
+		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdString);
+		UtilXml.addEmptyElement(pHandler, _XML_TAG_FORCE_LOG, attributes);
+		long gameId = parseGameId(gameIdString);
+		if (gameId > 0) {
+			getServer().getDebugLog().forceLog(gameId);
 			return true;
 		} else {
 			UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
