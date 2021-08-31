@@ -427,13 +427,13 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 		String modifiersString = modifiers.stream().map(modifier -> modifier.getClass().getName()).collect(Collectors.joining(", "));
 		getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
-			"Sorted modifiers for step " + step.getName().toUpperCase() + " are: " + modifiersString);
+			"Execute step hook: Sorted modifiers for step " + step.getName().toUpperCase() + " are: " + modifiersString);
 
 		for (StepModifier<? extends IStep, ?> modifier : modifiers) {
 			boolean stopProcessing = modifier.handleExecuteStep(step, state);
 			if (stopProcessing) {
 				getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
-					"Modifier " + modifier.getClass().getName().toUpperCase() + " stopped processing for step " + step.getName());
+					"Execute step hook: Modifier " + modifier.getClass().getName().toUpperCase() + " stopped processing for step " + step.getName());
 				return true;
 			}
 		}
