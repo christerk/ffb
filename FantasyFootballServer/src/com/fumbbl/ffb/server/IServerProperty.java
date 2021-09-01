@@ -42,6 +42,7 @@ public interface IServerProperty {
 	String ADMIN_URL_CLOSE = "admin.url.close";
 	String ADMIN_URL_CONCEDE = "admin.url.concede";
 	String ADMIN_URL_DELETE = "admin.url.delete";
+	String ADMIN_URL_FORCELOG = "admin.url.forcelog";
 	String ADMIN_URL_LIST_ID = "admin.url.list.id";
 	String ADMIN_URL_LIST_STATUS = "admin.url.list.status";
 	String ADMIN_URL_LOGLEVEL = "admin.url.loglevel";
@@ -55,6 +56,8 @@ public interface IServerProperty {
 
 	String GAMESTATE_URL_CHALLENGE = "gamestate.url.challenge";
 	String GAMESTATE_URL_BEHAVIORS = "gamestate.url.behaviours";
+	String GAMESTATE_URL_GET = "gamestate.url.get";
+	String GAMESTATE_URL_SET = "gamestate.url.set";
 
 	String BACKUP_DIR = "backup.dir";
 	String BACKUP_EXTENSION = "backup.extension";

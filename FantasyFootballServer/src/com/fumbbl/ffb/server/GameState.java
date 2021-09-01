@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -415,7 +416,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 				for (StepModifier<? extends IStep, ?> modifier : skillModifiers) {
 					if (modifier.appliesTo(step)) {
 						getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
-								"Detected StepModifier: " + modifier.getClass().getName());
+							"Detected StepModifier: " + modifier.getClass().getName());
 						modifiers.add(modifier);
 					}
 				}
@@ -424,9 +425,15 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 		modifiers.sort(StepModifier.Comparator);
 
+		String modifiersString = modifiers.stream().map(modifier -> modifier.getClass().getName()).collect(Collectors.joining(", "));
+		getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
+			"Execute step hook: Sorted modifiers for step " + step.getName().toUpperCase() + " are: " + modifiersString);
+
 		for (StepModifier<? extends IStep, ?> modifier : modifiers) {
 			boolean stopProcessing = modifier.handleExecuteStep(step, state);
 			if (stopProcessing) {
+				getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
+					"Execute step hook: Modifier " + modifier.getClass().getName().toUpperCase() + " stopped processing for step " + step.getName());
 				return true;
 			}
 		}

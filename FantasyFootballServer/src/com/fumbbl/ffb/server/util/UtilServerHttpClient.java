@@ -1,19 +1,21 @@
 package com.fumbbl.ffb.server.util;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -74,6 +76,28 @@ public class UtilServerHttpClient {
 
 			HttpPost request = new HttpPost(url);
 			request.setEntity(entityBuilder.build());
+
+			try (CloseableHttpResponse response = client.execute(request)) {
+				return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
+			}
+
+		}
+
+	}
+
+	public static String post(String url, File file) throws IOException {
+
+		RequestConfig.Builder requestBuilder = RequestConfig.custom();
+		requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
+		requestBuilder.setRedirectsEnabled(true);
+
+		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+		clientBuilder.setDefaultRequestConfig(requestBuilder.build());
+
+		try (CloseableHttpClient client = clientBuilder.build()) {
+
+			HttpPost request = new HttpPost(url);
+			request.setEntity(new FileEntity(file));
 
 			try (CloseableHttpResponse response = client.execute(request)) {
 				return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);

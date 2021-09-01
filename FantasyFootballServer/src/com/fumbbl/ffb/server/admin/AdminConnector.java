@@ -25,22 +25,23 @@ import java.util.regex.Pattern;
 public class AdminConnector {
 
 	private static final String _USAGE = "java com.fumbbl.ffb.server.admin.AdminConnector backup <gameId>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector block\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector cache\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector stats\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector close <gameId>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector concede <gameId> <teamId>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector delete <gameId>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector list <status>\n"
-			+ "  [status being one of: scheduled, starting, active, paused, finished, uploaded or backuped]\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector list <gameId>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector loglevel <value>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector message <message>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector refresh\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector shutdown\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector unblock\n"
-			+ "java com.fumbbl.ffb.server.admin.AdminConnector upload <gameId>";
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector block\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector cache\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector stats\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector close <gameId>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector concede <gameId> <teamId>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector delete <gameId>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector forcelog <gameId>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector list <status>\n"
+		+ "  [status being one of: scheduled, starting, active, paused, finished, uploaded or backuped]\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector list <gameId>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector loglevel <value>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector message <message>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector refresh\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector shutdown\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector unblock\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector upload <gameId>";
 
 	private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
 
@@ -126,7 +127,7 @@ public class AdminConnector {
 			}
 
 			if (AdminServlet.LIST.equals(args[0])) {
-				long gameId = 0;
+				long gameId;
 				try {
 					gameId = Long.parseLong(args[1]);
 				} catch (NumberFormatException pNfe) {
@@ -163,15 +164,23 @@ public class AdminConnector {
 
 			if (AdminServlet.CLOSE.equals(args[0])) {
 				String closeUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_CLOSE), response,
-						args[1]);
+					args[1]);
 				System.out.println(closeUrl);
 				String closeXml = UtilServerHttpClient.fetchPage(closeUrl);
 				System.out.println(closeXml);
 			}
 
+			if (AdminServlet.FORCE_LOG.equals(args[0])) {
+				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_FORCELOG), response,
+					args[1]);
+				System.out.println(url);
+				String xml = UtilServerHttpClient.fetchPage(url);
+				System.out.println(xml);
+			}
+
 			if (AdminServlet.CONCEDE.equals(args[0])) {
 				String concedeUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_CONCEDE), response,
-						args[1], args[2]);
+					args[1], args[2]);
 				System.out.println(concedeUrl);
 				String concedeXml = UtilServerHttpClient.fetchPage(concedeUrl);
 				System.out.println(concedeXml);
