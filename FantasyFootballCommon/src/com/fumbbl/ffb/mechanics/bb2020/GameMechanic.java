@@ -58,7 +58,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean eligibleForPro(Game game, Player<?> player) {
-		return game.getActingPlayer().getPlayer() == player && game.getTurnMode() == TurnMode.REGULAR;
+		return game.getActingPlayer().getPlayer() == player && (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ);
 	}
 
 	@Override
