@@ -102,7 +102,7 @@ public class StepRiotousRookies extends AbstractStep {
 				return name;
 			}
 		} catch (IOException e) {
-			getGameState().getServer().getDebugLog().log(e);
+			getGameState().getServer().getDebugLog().log(getGameState().getGame().getId(), e);
 		}
 		return fallback;
 	}

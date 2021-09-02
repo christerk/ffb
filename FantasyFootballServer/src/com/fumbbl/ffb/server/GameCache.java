@@ -36,7 +36,6 @@ import com.fumbbl.ffb.util.DateTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilTeamValue;
-
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.BufferedInputStream;
@@ -51,14 +50,13 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- *
  * @author Kalimar
  */
 public class GameCache {
 
-	private FantasyFootballServer fServer;
-	private Map<Long, GameState> fGameStateById;
-	private Map<String, Long> fGameIdByName;
+	private final FantasyFootballServer fServer;
+	private final Map<Long, GameState> fGameStateById;
+	private final Map<String, Long> fGameIdByName;
 	private RosterCache rosterCache;
 	private TeamCache teamCache; // used in standalone mode only
 
@@ -265,7 +263,7 @@ public class GameCache {
 			// load pitch properties
 			pitchProperties.load(propertyInputStream);
 		} catch (IOException pIoException) {
-			getServer().getDebugLog().log(pIoException);
+			getServer().getDebugLog().logWithOutGameId(pIoException);
 		}
 		// clear old pitch properties
 		for (String serverProperty : getServer().getProperties()) {

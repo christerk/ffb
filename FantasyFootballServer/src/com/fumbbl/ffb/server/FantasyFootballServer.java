@@ -258,46 +258,36 @@ public class FantasyFootballServer implements IFactorySource {
 		return fFortuna;
 	}
 
-	public void stop(int pStatus) {
-		setBlockingNewGames(true);
-		fDbKeepAliveTimer = null;
-		fNetworkEntropyTimer = null;
-		fServerGameTimeTimer = null;
-		if (fReplayer != null) {
-			fReplayer.stop();
-		}
-		if (getGameCache() != null) {
-			getGameCache().closeAllGames();
-			getDebugLog().log(IServerLogLevel.ERROR, "All games closed.");
-		}
-		if (getRequestProcessor() != null) {
-			getRequestProcessor().shutdown();
-			getDebugLog().log(IServerLogLevel.ERROR, "RequestProcessor shut down.");
-		}
-		if (getCommunication() != null) {
-			getCommunication().shutdown();
-			getDebugLog().log(IServerLogLevel.ERROR, "Communication shut down.");
-		}
-		if (getDbUpdater() != null) {
-			getDbUpdater().shutdown();
-			getDebugLog().log(IServerLogLevel.ERROR, "DbUpdater shut down.");
-		}
-		if (getDbQueryFactory() != null) {
+	public static void main(String[] origArgs) throws IOException, SQLException {
+
+		InifileParamFilterResult filterResult = new InifileParamFilter().filterForInifile(origArgs);
+
+		String[] args = filterResult.getFilteredArgs();
+
+		if (!ArrayTool.isProvided(args)) {
+
+			System.err.println(_USAGE);
+			System.exit(0);
+
+		} else {
+
+			ServerMode serverMode = ServerMode.fromArguments(args);
+			Properties properties = new Properties();
+
+			try (FileInputStream fileInputStream = new FileInputStream(filterResult.getInifileName());
+			     BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
+				properties.load(propertyInputStream);
+			}
+
+			FantasyFootballServer server = new FantasyFootballServer(serverMode, properties);
+
 			try {
-				getDbQueryFactory().closeDbConnection();
-			} catch (SQLException sqlE) {
-				getDebugLog().log(IServerLogLevel.ERROR, sqlE);
+				server.run();
+			} catch (Exception all) {
+				server.getDebugLog().logWithOutGameId(all);
+				server.stop(99);
 			}
 		}
-		if (getDbUpdateFactory() != null) {
-			try {
-				getDbUpdateFactory().closeDbConnection();
-			} catch (SQLException sqlE) {
-				getDebugLog().log(IServerLogLevel.ERROR, sqlE);
-			}
-		}
-		getDebugLog().log(IServerLogLevel.ERROR, "FantasyFootballServer shut down.");
-		System.exit(pStatus);
 	}
 
 	public String getProperty(String pProperty) {
@@ -340,36 +330,46 @@ public class FantasyFootballServer implements IFactorySource {
 		fBlockingNewGames = pBlockingNewGames;
 	}
 
-	public static void main(String[] origArgs) throws IOException, SQLException {
-
-		InifileParamFilterResult filterResult = new InifileParamFilter().filterForInifile(origArgs);
-
-		String[] args = filterResult.getFilteredArgs();
-
-		if (!ArrayTool.isProvided(args)) {
-
-			System.err.println(_USAGE);
-			System.exit(0);
-
-		} else {
-
-			ServerMode serverMode = ServerMode.fromArguments(args);
-			Properties properties = new Properties();
-
-			try (FileInputStream fileInputStream = new FileInputStream(filterResult.getInifileName());
-					BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
-				properties.load(propertyInputStream);
-			}
-
-			FantasyFootballServer server = new FantasyFootballServer(serverMode, properties);
-
+	public void stop(int pStatus) {
+		setBlockingNewGames(true);
+		fDbKeepAliveTimer = null;
+		fNetworkEntropyTimer = null;
+		fServerGameTimeTimer = null;
+		if (fReplayer != null) {
+			fReplayer.stop();
+		}
+		if (getGameCache() != null) {
+			getGameCache().closeAllGames();
+			getDebugLog().logWithOutGameId(IServerLogLevel.ERROR, "All games closed.");
+		}
+		if (getRequestProcessor() != null) {
+			getRequestProcessor().shutdown();
+			getDebugLog().logWithOutGameId(IServerLogLevel.ERROR, "RequestProcessor shut down.");
+		}
+		if (getCommunication() != null) {
+			getCommunication().shutdown();
+			getDebugLog().logWithOutGameId(IServerLogLevel.ERROR, "Communication shut down.");
+		}
+		if (getDbUpdater() != null) {
+			getDbUpdater().shutdown();
+			getDebugLog().logWithOutGameId(IServerLogLevel.ERROR, "DbUpdater shut down.");
+		}
+		if (getDbQueryFactory() != null) {
 			try {
-				server.run();
-			} catch (Exception all) {
-				server.getDebugLog().log(all);
-				server.stop(99);
+				getDbQueryFactory().closeDbConnection();
+			} catch (SQLException sqlE) {
+				getDebugLog().log(IServerLogLevel.ERROR, sqlE);
 			}
 		}
+		if (getDbUpdateFactory() != null) {
+			try {
+				getDbUpdateFactory().closeDbConnection();
+			} catch (SQLException sqlE) {
+				getDebugLog().log(IServerLogLevel.ERROR, sqlE);
+			}
+		}
+		getDebugLog().logWithOutGameId(IServerLogLevel.ERROR, "FantasyFootballServer shut down.");
+		System.exit(pStatus);
 	}
 
 	@Override
@@ -384,8 +384,8 @@ public class FantasyFootballServer implements IFactorySource {
 	}
 
 	@Override
-	public void logError(String message) {
-		fDebugLog.log(IServerLogLevel.ERROR, message);
+	public void logError(long gameId, String message) {
+		fDebugLog.log(IServerLogLevel.ERROR, gameId, message);
 	}
 
 	public IFactorySource getFactorySource() {

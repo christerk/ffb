@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.net;
 
-import java.util.TimerTask;
-
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -9,9 +7,11 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 
+import java.util.TimerTask;
+
 public class ServerGameTimeTask extends TimerTask {
 
-	private FantasyFootballServer fServer;
+	private final FantasyFootballServer fServer;
 
 	public ServerGameTimeTask(FantasyFootballServer server) {
 		fServer = server;
@@ -31,7 +31,7 @@ public class ServerGameTimeTask extends TimerTask {
 				}
 			}
 		} catch (Exception anyException) {
-			getServer().getDebugLog().log(anyException);
+			getServer().getDebugLog().logWithOutGameId(anyException);
 			System.exit(99);
 		}
 	}

@@ -37,7 +37,7 @@ public class FumbblRequestCheckGamestate extends ServerRequest {
 		if (true) {
 			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_CHECK),
 				new Object[]{game.getTeamHome().getId(), game.getTeamAway().getId()}));
-			server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+			server.getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 			FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
 			if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
 				UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);

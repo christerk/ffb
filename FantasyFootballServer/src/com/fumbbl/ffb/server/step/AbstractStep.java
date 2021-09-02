@@ -147,7 +147,7 @@ public abstract class AbstractStep implements IStep {
 			if (debugLog.isLogging(IServerLogLevel.TRACE)) {
 				String trace = getId() + " publishes " + pParameter.getKey() + "=" +
 					pParameter.getValue();
-				debugLog.log(IServerLogLevel.TRACE, trace);
+				debugLog.log(IServerLogLevel.TRACE, fGameState.getGame().getId(), trace);
 			}
 			setParameter(pParameter);
 			getGameState().getStepStack().publishStepParameter(pParameter);
@@ -165,7 +165,7 @@ public abstract class AbstractStep implements IStep {
 	public void consume(StepParameter pParameter) {
 		DebugLog debugLog = fGameState.getServer().getDebugLog();
 		if (debugLog.isLogging(IServerLogLevel.TRACE)) {
-			debugLog.log(IServerLogLevel.TRACE, getId() + " consumes " + pParameter.getKey() + "=" + pParameter.getValue());
+			debugLog.log(IServerLogLevel.TRACE, fGameState.getGame().getId(), getId() + " consumes " + pParameter.getKey() + "=" + pParameter.getValue());
 		}
 		pParameter.consume();
 	}

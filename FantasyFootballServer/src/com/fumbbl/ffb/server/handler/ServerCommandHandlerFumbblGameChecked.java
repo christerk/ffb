@@ -107,8 +107,8 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 	// this might be overkill, we'll see how it does in practice
 	private void handleInvalidRoster(String pTeamId, GameState gameState, FantasyFootballServer server, Throwable pThrowable) {
-		server.getDebugLog().log(IServerLogLevel.ERROR, StringTool.bind("Error loading Roster for Team $1.", pTeamId));
-		server.getDebugLog().log(pThrowable);
+		server.getDebugLog().log(IServerLogLevel.ERROR, gameState.getGame().getId(), StringTool.bind("Error loading Roster for Team $1.", pTeamId));
+		server.getDebugLog().log(gameState.getGame().getId(), pThrowable);
 		server.getCommunication().sendStatus(gameState, ServerStatus.FUMBBL_ERROR,
 			StringTool.bind("Unable to load Roster with for Team $1.", pTeamId));
 		UtilServerGame.closeGame(gameState);

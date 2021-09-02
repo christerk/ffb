@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.server.step;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -14,15 +11,17 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.IServerLogLevel;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * 
  * @author Kalimar
  */
 public class StepStack implements IJsonSerializable {
 
-	private List<IStep> fStack;
+	private final List<IStep> fStack;
 
-	private transient GameState fGameState;
+	private final transient GameState fGameState;
 
 	public StepStack(GameState pGameState) {
 		fGameState = pGameState;
@@ -79,8 +78,8 @@ public class StepStack implements IJsonSerializable {
 			if (debugLog.isLogging(IServerLogLevel.TRACE)) {
 				StringBuilder trace = new StringBuilder();
 				trace.append(step.getId()).append(" receives ").append(pParameter.getKey()).append("=")
-						.append(pParameter.getValue());
-				debugLog.log(IServerLogLevel.TRACE, trace.toString());
+					.append(pParameter.getValue());
+				debugLog.log(IServerLogLevel.TRACE, getGameState().getGame().getId(), trace.toString());
 			}
 
 			step.setParameter(pParameter);

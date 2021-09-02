@@ -1,21 +1,5 @@
 package com.fumbbl.ffb.server.admin;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.json.UtilJson;
@@ -28,14 +12,26 @@ import com.fumbbl.ffb.server.request.ServerRequestSaveReplay;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.UtilXml;
-
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 import zmq.Ctx;
 import zmq.Msg;
 import zmq.SocketBase;
 import zmq.ZMQ;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.sax.TransformerHandler;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+
 /**
- * 
  * @author Kalimar
  */
 public class BackupServlet extends HttpServlet {
@@ -58,7 +54,7 @@ public class BackupServlet extends HttpServlet {
 
 	private static final String _XML_ATTRIBUTE_GAME_ID = "gameId";
 
-	private FantasyFootballServer fServer;
+	private final FantasyFootballServer fServer;
 	private String fLastChallenge;
 
 	public BackupServlet(FantasyFootballServer pServer) {
@@ -197,10 +193,7 @@ public class BackupServlet extends HttpServlet {
 		long gameId = parseGameId(ArrayTool.firstElement(parameters.get(_PARAMETER_GAME_ID)));
 
 		String acceptEncoding = pRequest.getHeader("Accept-Encoding");
-		boolean doGzip = false;
-		if (StringTool.isProvided(acceptEncoding) && acceptEncoding.contains("gzip")) {
-			doGzip = true;
-		}
+		boolean doGzip = StringTool.isProvided(acceptEncoding) && acceptEncoding.contains("gzip");
 
 		// fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, doGzip ? "Requesting
 		// gzipped replay." : "Requesting plain replay.");
@@ -225,7 +218,7 @@ public class BackupServlet extends HttpServlet {
 
 				String logMessage = "Compressing json " + gameState.toJsonValue().toString().length() + " --> "
 						+ gzippedJson.length;
-				fServer.getDebugLog().log(IServerLogLevel.DEBUG, logMessage);
+				fServer.getDebugLog().log(IServerLogLevel.DEBUG, gameId, logMessage);
 
 				if (gzippedJson != null) {
 					((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
