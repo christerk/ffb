@@ -73,7 +73,7 @@ public class StepPushback extends AbstractStep {
 		public PushbackSquare[] pushbackSquares;
 	}
 
-	private final StepState state;
+	public final StepState state;
 
 	public StepPushback(GameState pGameState) {
 		super(pGameState);
