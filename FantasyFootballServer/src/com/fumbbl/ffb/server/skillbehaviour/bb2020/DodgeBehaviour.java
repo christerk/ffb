@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -28,16 +28,16 @@ import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.skill.Dodge;
 import com.fumbbl.ffb.util.ArrayTool;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 	public DodgeBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepBlockDodge, StepBlockDodge.StepState>() {
+		registerModifier(new StepModifier<StepBlockDodge, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepBlockDodge step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				state.usingDodge = useSkillCommand.isSkillUsed();
 				return StepCommandStatus.EXECUTE_STEP;
 			}
@@ -47,7 +47,6 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 				findDodgeChoice(step, state);
 				UtilServerDialog.hideDialog(step.getGameState());
 				Game game = step.getGameState().getGame();
-				boolean addReport = true;
 				boolean hasTacklezones = state.oldDefenderState.hasTacklezones();
 				if (!hasTacklezones) {
 					state.usingDodge = false;
@@ -56,17 +55,14 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
 						true);
 				} else {
-					if (addReport) {
-						if(hasTacklezones)
-						{
-							step.getResult()
+					if (hasTacklezones) {
+						step.getResult()
 							.addReport(new ReportSkillUse(game.getDefenderId(), skill, state.usingDodge, SkillUse.AVOID_FALLING));
-						}
-						else{
-							step.getResult()
+					} else {
+						step.getResult()
 							.addReport(new ReportSkillUse(game.getDefenderId(), skill, state.usingDodge, SkillUse.NO_TACKLEZONE));
-						}
 					}
+
 					if (state.usingDodge) {
 						game.getFieldModel().setPlayerState(game.getDefender(), state.oldDefenderState);
 					} else {
@@ -105,10 +101,10 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 			FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(attacker);
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 			PushbackSquare startingSquare = UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate,
-					game.isHomePlaying());
+				game.isHomePlaying());
 
 			PushbackSquare[] regularPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare,
-					PushbackMode.REGULAR);
+				PushbackMode.REGULAR);
 			if (ArrayTool.isProvided(regularPushbackSquares)) {
 				for (PushbackSquare pushbackSquare : regularPushbackSquares) {
 					FieldCoordinate coordinate = pushbackSquare.getCoordinate();
@@ -120,23 +116,23 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 
 			PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
 			if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
-					&& attacker.hasSkillProperty(NamedProperties.canPushBackToAnySquare)
-					&& !game.getDefender().hasSkillProperty(NamedProperties.canChooseOwnPushedBackSquare)) {
+				&& attacker.hasSkillProperty(NamedProperties.canPushBackToAnySquare)
+				&& !game.getDefender().hasSkillProperty(NamedProperties.canChooseOwnPushedBackSquare)) {
 				grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);
 			}
 			if (ArrayTool.isProvided(regularPushbackSquares)) {
 				for (PushbackSquare pushbackSquare : grabPushbackSquares) {
 					FieldCoordinate coordinate = pushbackSquare.getCoordinate();
 					if (FieldCoordinateBounds.SIDELINE_LOWER.isInBounds(coordinate)
-							|| FieldCoordinateBounds.SIDELINE_UPPER.isInBounds(coordinate)
-							|| FieldCoordinateBounds.ENDZONE_HOME.isInBounds(coordinate)
-							|| FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(coordinate)) {
+						|| FieldCoordinateBounds.SIDELINE_UPPER.isInBounds(coordinate)
+						|| FieldCoordinateBounds.ENDZONE_HOME.isInBounds(coordinate)
+						|| FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(coordinate)) {
 						sidelinePush = true;
 					}
 					if ((game.getTeamHome().hasPlayer(attacker) && FieldCoordinateBounds.HALF_HOME.isInBounds(coordinate)
-							&& game.getTurnDataHome().isFirstTurnAfterKickoff())
-							|| (game.getTeamAway().hasPlayer(attacker) && FieldCoordinateBounds.HALF_AWAY.isInBounds(coordinate)
-									&& game.getTurnDataAway().isFirstTurnAfterKickoff())) {
+						&& game.getTurnDataHome().isFirstTurnAfterKickoff())
+						|| (game.getTeamAway().hasPlayer(attacker) && FieldCoordinateBounds.HALF_AWAY.isInBounds(coordinate)
+						&& game.getTurnDataAway().isFirstTurnAfterKickoff())) {
 						attackerHalfPush = true;
 					}
 				}
