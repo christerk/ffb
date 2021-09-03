@@ -5,6 +5,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 
 /**
  * Some players are armed with special pieces of equipment that are called
@@ -29,4 +30,8 @@ public class SecretWeapon extends Skill {
 		registerProperty(NamedProperties.getsSentOffAtEndOfDrive);
 	}
 
+	@Override
+	public SkillValueEvaluator evaluator() {
+		return SkillValueEvaluator.ROLL;
+	}
 }
