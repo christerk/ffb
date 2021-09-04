@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.server.db;
 
+import com.fumbbl.ffb.server.FantasyFootballServer;
+import com.fumbbl.ffb.server.IServerLogLevel;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fumbbl.ffb.server.FantasyFootballServer;
-import com.fumbbl.ffb.server.IServerLogLevel;
 
 /**
  *
@@ -14,7 +14,7 @@ import com.fumbbl.ffb.server.IServerLogLevel;
 public class DbTransaction implements IDbUpdateParameter {
 
 	private int fUpdatedRows;
-	private List<IDbUpdateParameter> fDbUpdateParameters;
+	private final List<IDbUpdateParameter> fDbUpdateParameters;
 
 	public DbTransaction() {
 		fDbUpdateParameters = new ArrayList<>();
@@ -52,12 +52,12 @@ public class DbTransaction implements IDbUpdateParameter {
 				fUpdatedRows += dbUpdateParameter.getUpdatedRows();
 			} catch (SQLException pSqlException) {
 				doCommit = false;
-				pServer.getDebugLog().log(pSqlException);
-				pServer.getDebugLog().log(IServerLogLevel.ERROR, "*** DbTransaction Content ***");
+				pServer.getDebugLog().logWithOutGameId(pSqlException);
+				pServer.getDebugLog().logWithOutGameId(IServerLogLevel.ERROR, "*** DbTransaction Content ***");
 				for (int j = 0; j <= i; j++) {
 					try {
-						pServer.getDebugLog().log(IServerLogLevel.ERROR,
-								fDbUpdateParameters.get(j).getDbUpdateStatement(pServer).toString(fDbUpdateParameters.get(j)));
+						pServer.getDebugLog().logWithOutGameId(IServerLogLevel.ERROR,
+							fDbUpdateParameters.get(j).getDbUpdateStatement(pServer).toString(fDbUpdateParameters.get(j)));
 					} catch (SQLException pSqlException2) {
 						// just don't log
 					}
@@ -73,7 +73,7 @@ public class DbTransaction implements IDbUpdateParameter {
 				pServer.getDbUpdateFactory().rollback();
 			}
 		} catch (SQLException pCommitException) {
-			pServer.getDebugLog().log(pCommitException);
+			pServer.getDebugLog().logWithOutGameId(pCommitException);
 		}
 	}
 

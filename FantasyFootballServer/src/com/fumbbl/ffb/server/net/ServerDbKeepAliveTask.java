@@ -1,14 +1,14 @@
 package com.fumbbl.ffb.server.net;
 
-import java.util.TimerTask;
-
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.db.DbConnectionManager;
 
+import java.util.TimerTask;
+
 public class ServerDbKeepAliveTask extends TimerTask {
 
-	private FantasyFootballServer fServer;
-	private DbConnectionManager fDbConnectionManager;
+	private final FantasyFootballServer fServer;
+	private final DbConnectionManager fDbConnectionManager;
 
 	public ServerDbKeepAliveTask(FantasyFootballServer server, DbConnectionManager dbConnectionManager) {
 		fServer = server;
@@ -19,7 +19,7 @@ public class ServerDbKeepAliveTask extends TimerTask {
 		try {
 			getDbConnectionManager().doKeepAlivePing();
 		} catch (Exception anyException) {
-			getServer().getDebugLog().log(anyException);
+			getServer().getDebugLog().logWithOutGameId(anyException);
 			System.exit(99);
 		}
 	}

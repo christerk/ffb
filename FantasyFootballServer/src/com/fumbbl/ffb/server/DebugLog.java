@@ -138,13 +138,13 @@ public class DebugLog {
 		}
 	}
 
-	public void log(int pLogLevel, String pLogString) {
+	public void logWithOutGameId(int pLogLevel, String pLogString) {
 		if (isLogging(pLogLevel) && StringTool.isProvided(pLogString)) {
 			logInternal(-1, null, pLogString);
 		}
 	}
 
-	public void log(int pLogLevel, String pCommandFlag, String pLogString) {
+	public void logWithOutGameId(int pLogLevel, String pCommandFlag, String pLogString) {
 		if (isLogging(pLogLevel) && StringTool.isProvided(pLogString)) {
 			logInternal(-1, pCommandFlag, pLogString);
 		}
@@ -162,7 +162,7 @@ public class DebugLog {
 		}
 	}
 
-	public void log(Throwable pThrowable) {
+	public void logWithOutGameId(Throwable pThrowable) {
 		log(-1, pThrowable);
 	}
 

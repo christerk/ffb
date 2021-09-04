@@ -82,14 +82,6 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 					}
 				));
 
-		if (UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)
-			&& armorModifiers.stream().anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue))
-		) {
-			return armorModifiers.stream()
-				.filter(modifier -> !(modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)))
-				.collect(Collectors.toSet());
-		}
-
 		return armorModifiers;
 	}
 

@@ -1,13 +1,13 @@
 package com.fumbbl.ffb.server.request;
 
+import com.fumbbl.ffb.server.FantasyFootballServer;
+import com.fumbbl.ffb.server.IServerLogLevel;
+import com.fumbbl.ffb.util.StringTool;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import com.fumbbl.ffb.server.FantasyFootballServer;
-import com.fumbbl.ffb.server.IServerLogLevel;
-import com.fumbbl.ffb.util.StringTool;
 
 /**
  * 
@@ -32,14 +32,14 @@ public class ServerRequestProcessor extends Thread {
 		if (fStopped) {
 			return false;
 		}
-		getServer().getDebugLog().log(IServerLogLevel.DEBUG,
-				"Adding request to request processor queue: " + pServerRequest.getClass().getName());
+		getServer().getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG,
+			"Adding request to request processor queue: " + pServerRequest.getClass().getName());
 		return fRequestQueue.offer(pServerRequest);
 	}
 
 	@Override
 	public void run() {
-		getServer().getDebugLog().log(IServerLogLevel.INFO, "Request Processor Started.");
+		getServer().getDebugLog().logWithOutGameId(IServerLogLevel.INFO, "Request Processor Started.");
 		while (!fStopped) {
 			ServerRequest request = null;
 			try {
@@ -49,7 +49,7 @@ public class ServerRequestProcessor extends Thread {
 			}
 			handleRequestInternal(request, true);
 		}
-		getServer().getDebugLog().log(IServerLogLevel.INFO, "Request Processor Stopped.");
+		getServer().getDebugLog().logWithOutGameId(IServerLogLevel.INFO, "Request Processor Stopped.");
 	}
 
 	public void shutdown() {
@@ -66,14 +66,14 @@ public class ServerRequestProcessor extends Thread {
 		do {
 			try {
 				if (request != null) {
-					getServer().getDebugLog().log(IServerLogLevel.DEBUG,
-							"Processing request from request processor queue: " + request.getClass().getName());
+					getServer().getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG,
+						"Processing request from request processor queue: " + request.getClass().getName());
 					request.process(this);
 				}
 				sent = true;
 			} catch (Exception pAnyException) {
-				getServer().getDebugLog().log(IServerLogLevel.ERROR, StringTool.print(request.getRequestUrl()));
-				getServer().getDebugLog().log(pAnyException);
+				getServer().getDebugLog().logWithOutGameId(IServerLogLevel.ERROR, StringTool.print(request.getRequestUrl()));
+				getServer().getDebugLog().logWithOutGameId(pAnyException);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException pInterruptedException) {

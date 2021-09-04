@@ -68,9 +68,9 @@ public class UtilServerPlayerMove {
 		if ((playerCoordinate != null) && playerCoordinate.equals(coordinateFrom)) {
 			return true;
 		}
-		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG,
-				pHomeCommand ? DebugLog.COMMAND_CLIENT_HOME : DebugLog.COMMAND_CLIENT_AWAY,
-				"!Client move out of sync, Command dropped");
+		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(),
+			pHomeCommand ? DebugLog.COMMAND_CLIENT_HOME : DebugLog.COMMAND_CLIENT_AWAY,
+			"!Client move out of sync, Command dropped");
 		return false;
 	}
 

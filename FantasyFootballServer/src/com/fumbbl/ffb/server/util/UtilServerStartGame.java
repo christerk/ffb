@@ -176,11 +176,11 @@ public class UtilServerStartGame {
 			//ruleSet.setValue("BB2016");
 			game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
-			overtime.setDefault(true);
+			overtime.setValue(true);
 			//		game.getOptions().addOption(overtime);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
-			claw.setDefault(true);
-			//		game.getOptions().addOption(claw);
+			claw.setValue(false);
+			game.getOptions().addOption(claw);
 		}
 	}
 

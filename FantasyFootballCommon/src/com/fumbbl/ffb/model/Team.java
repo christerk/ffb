@@ -442,7 +442,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 				if (rule != null) {
 					specialRules.add(rule);
 				} else {
-					game.getApplicationSource().logError("Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
+					game.getApplicationSource().logError(game.getId(), "Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
 				}
 			}
 		}

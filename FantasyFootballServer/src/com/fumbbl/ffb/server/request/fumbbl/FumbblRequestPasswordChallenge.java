@@ -1,14 +1,5 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URLEncoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -18,17 +9,24 @@ import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
+import org.eclipse.jetty.websocket.api.Session;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * 
  * @author Kalimar
  */
 public class FumbblRequestPasswordChallenge extends ServerRequest {
 
 	private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
 
-	private String fCoach;
-	private Session fSession;
+	private final String fCoach;
+	private final Session fSession;
 
 	public FumbblRequestPasswordChallenge(String pCoach, Session pSession) {
 		fCoach = pCoach;
@@ -49,11 +47,11 @@ public class FumbblRequestPasswordChallenge extends ServerRequest {
 		FantasyFootballServer server = pRequestProcessor.getServer();
 		try {
 			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE),
-					URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
-			server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+				URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
+			server.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
 			String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
 			if (StringTool.isProvided(responseXml)) {
-				server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+				server.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
 					String line;
 					while ((line = xmlReader.readLine()) != null) {

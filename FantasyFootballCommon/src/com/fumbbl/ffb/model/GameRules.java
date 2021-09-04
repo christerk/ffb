@@ -38,8 +38,8 @@ public class GameRules implements IFactorySource {
 	}
 
 	@Override
-	public void logError(String message) {
-		applicationSource.logError(message);
+	public void logError(long gameId, String message) {
+		applicationSource.logError(gameId, message);
 	}
 
 	@Override

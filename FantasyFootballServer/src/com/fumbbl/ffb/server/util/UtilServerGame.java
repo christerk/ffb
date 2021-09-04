@@ -30,7 +30,6 @@ import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilActingPlayer;
-
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -243,8 +242,8 @@ public class UtilServerGame {
 
 	// this might be overkill, we'll see how it does in practice
 	public static void handleInvalidTeam(String pTeamId, GameState gameState, FantasyFootballServer server, Throwable pThrowable) {
-		server.getDebugLog().log(IServerLogLevel.ERROR, StringTool.bind("Error loading Team $1.", pTeamId));
-		server.getDebugLog().log(pThrowable);
+		server.getDebugLog().log(IServerLogLevel.ERROR, gameState.getGame().getId(), StringTool.bind("Error loading Team $1.", pTeamId));
+		server.getDebugLog().log(gameState.getGame().getId(), pThrowable);
 		server.getCommunication().sendStatus(gameState, ServerStatus.FUMBBL_ERROR,
 			StringTool.bind("Unable to load Team with id $1.", pTeamId));
 		UtilServerGame.closeGame(gameState);

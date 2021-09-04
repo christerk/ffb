@@ -327,7 +327,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		} else {
 			// repeat this step until it is finished
 			if (fCatchScatterThrowInMode != null) {
-				getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "pushCurrentStepOnStack()");
+				getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "pushCurrentStepOnStack()");
 				getGameState().pushCurrentStepOnStack();
 			} else {
 				Player<?> catcher;
@@ -417,9 +417,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private CatchScatterThrowInMode catchBall() {
 
-		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "catchBall()");
-
 		Game game = getGameState().getGame();
+		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "catchBall()");
+
 		state.catcher = game.getPlayerById(fCatcherId);
 		if ((state.catcher == null) || state.catcher.hasSkillProperty(NamedProperties.preventCatch)) {
 			return CatchScatterThrowInMode.SCATTER_BALL;
@@ -499,9 +499,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private CatchScatterThrowInMode scatterBall() {
 
-		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "scatterBall()");
-
 		Game game = getGameState().getGame();
+		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "scatterBall()");
+
 		setReRolledAction(null);
 		setReRollSource(null);
 		state = new StepState();
@@ -552,9 +552,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private CatchScatterThrowInMode bounceBall() {
 
-		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "bounceBall()");
-
 		Game game = getGameState().getGame();
+		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "bounceBall()");
+
 		setReRolledAction(null);
 		setReRollSource(null);
 		state = new StepState();
@@ -598,9 +598,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private CatchScatterThrowInMode scatterBomb() {
 
-		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "scatterBomb()");
-
 		Game game = getGameState().getGame();
+		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "scatterBomb()");
+
 		setReRolledAction(null);
 		setReRollSource(null);
 		state = new StepState();
@@ -651,9 +651,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private CatchScatterThrowInMode throwInBall() {
 
-		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "throwInBall()");
-
 		Game game = getGameState().getGame();
+		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "throwInBall()");
+
 		DiceRoller diceRoller = getGameState().getDiceRoller();
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 		FieldCoordinate ballCoordinateStart = fThrowInCoordinate;

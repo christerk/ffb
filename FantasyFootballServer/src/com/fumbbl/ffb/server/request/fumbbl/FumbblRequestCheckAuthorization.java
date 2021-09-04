@@ -1,18 +1,5 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.net.ServerStatus;
@@ -26,25 +13,36 @@ import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
+import org.eclipse.jetty.websocket.api.Session;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
- * 
  * @author Kalimar
  */
 public class FumbblRequestCheckAuthorization extends ServerRequest {
 
 	private static final Pattern _PATTERN_RESPONSE = Pattern.compile("<response>([^<]+)</response>");
 
-	private Session fSession;
-	private String fCoach;
-	private String fPassword;
-	private long fGameId;
-	private String fGameName;
-	private String fTeamId;
-	private ClientMode fMode;
+	private final Session fSession;
+	private final String fCoach;
+	private final String fPassword;
+	private final long fGameId;
+	private final String fGameName;
+	private final String fTeamId;
+	private final ClientMode fMode;
 
 	public FumbblRequestCheckAuthorization(Session pSession, String pCoach, String pPassword, long pGameId,
-			String pGameName, String pTeamId, ClientMode pMode) {
+	                                       String pGameName, String pTeamId, ClientMode pMode) {
 		fSession = pSession;
 		fCoach = pCoach;
 		fPassword = pPassword;
@@ -91,11 +89,11 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 		try {
 			if (getCoach() != null && getPassword() != null) {
 				setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_RESPONSE),
-						new String[] { URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING),
-								URLEncoder.encode(getPassword(), UtilFumbblRequest.CHARACTER_ENCODING) }));
-				server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+					new String[]{URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING),
+						URLEncoder.encode(getPassword(), UtilFumbblRequest.CHARACTER_ENCODING)}));
+				server.getDebugLog().log(IServerLogLevel.DEBUG, getGameId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 				String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
-				server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+				server.getDebugLog().log(IServerLogLevel.DEBUG, getGameId(), DebugLog.FUMBBL_RESPONSE, responseXml);
 				if (StringTool.isProvided(responseXml)) {
 					try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
 						String line;

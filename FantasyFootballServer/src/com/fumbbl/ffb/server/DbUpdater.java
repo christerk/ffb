@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.server;
 
+import com.fumbbl.ffb.server.db.DbTransaction;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import com.fumbbl.ffb.server.db.DbTransaction;
 
 /**
  * 
@@ -13,7 +13,7 @@ import com.fumbbl.ffb.server.db.DbTransaction;
  */
 public class DbUpdater implements Runnable {
 
-	private FantasyFootballServer fServer;
+	private final FantasyFootballServer fServer;
 	private boolean fStopped;
 	private final BlockingQueue<DbTransaction> fUpdateQueue;
 
@@ -42,7 +42,7 @@ public class DbUpdater implements Runnable {
 				handleUpdateInternal(update);
 			}
 		} catch (Exception pException) {
-			getServer().getDebugLog().log(pException);
+			getServer().getDebugLog().logWithOutGameId(pException);
 			System.exit(99);
 		}
 	}

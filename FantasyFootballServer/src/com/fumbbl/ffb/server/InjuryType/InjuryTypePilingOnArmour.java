@@ -10,6 +10,7 @@ import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.PilingOnArmour;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -19,6 +20,7 @@ import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
@@ -36,11 +38,36 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
+			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK) && !injuryContext.isArmorBroken()) {
 				ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
-						isFoul());
-				injuryContext.addArmorModifiers(armorModifiers);
+					isFoul());
+				Optional<ArmorModifier> claw = armorModifiers.stream()
+					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue)).findFirst();
+				if (claw.isPresent()) {
+					injuryContext.addArmorModifier(claw.get());
+					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+					if (!injuryContext.isArmorBroken()) {
+						if (UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)) {
+							armorModifiers.remove(claw.get());
+							injuryContext.clearArmorModifiers();
+							injuryContext.addArmorModifiers(armorModifiers);
+							injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+							if (!injuryContext.isArmorBroken()) {
+								// set claw as modifier as it should be displayed as used in the log when there is no stacking to avoid confusion
+								injuryContext.clearArmorModifiers();
+								injuryContext.addArmorModifier(claw.get());
+							}
+						} else {
+							injuryContext.addArmorModifiers(armorModifiers);
+						}
+						injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+					}
+				} else {
+					injuryContext.addArmorModifiers(armorModifiers);
+					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+
+				}
 			}
 		}
 
