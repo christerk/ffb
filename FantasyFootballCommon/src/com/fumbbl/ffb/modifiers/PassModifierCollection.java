@@ -3,7 +3,7 @@ package com.fumbbl.ffb.modifiers;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.model.skill.Skill;
 
-public class PassModifierCollection extends ModifierCollection<PassContext, PassModifier> {
+public abstract class PassModifierCollection extends ModifierCollection<PassContext, PassModifier> {
 
 	public PassModifierCollection() {
 		add(new PassModifier("Very Sunny", 1, ModifierType.REGULAR) {

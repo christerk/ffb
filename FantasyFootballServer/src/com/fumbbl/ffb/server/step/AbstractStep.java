@@ -31,6 +31,9 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 
  * @author Kalimar
@@ -110,12 +113,23 @@ public abstract class AbstractStep implements IStep {
 		Skill usedSkill = useSkillCommand.getSkill();
 		if (usedSkill != null) {
 			SkillBehaviour<? extends Skill> behaviour = (SkillBehaviour<? extends Skill>) usedSkill.getSkillBehaviour();
-			for (StepModifier<?, ?> modifier : behaviour.getStepModifiers()) {
+			List<StepModifier<? extends IStep, ?>> modifiers = behaviour.getStepModifiers();
+
+			String modifiersString = modifiers.stream().map(modifier -> modifier.getClass().getName()).collect(Collectors.joining(", "));
+			getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(),
+				"Handle skill command: Modifiers for step " + getName().toUpperCase() + " are: " + modifiersString);
+
+			for (StepModifier<?, ?> modifier : modifiers) {
 				if (modifier.appliesTo(this)) {
 					StepCommandStatus newStatus = modifier.handleCommand(this, state, useSkillCommand);
+					getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(),
+						"Handle skill command: Modifier " + modifier.getClass().getName() + " for step " + getName().toUpperCase() + " returns " + (newStatus == null ? "no status" : newStatus.name()));
 					if (newStatus != null) {
 						commandStatus = newStatus;
 					}
+				} else {
+					getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(),
+						"Handle skill command: Modifier " + modifier.getClass().getName() + " does not apply for step " + getName().toUpperCase());
 				}
 			}
 		}
@@ -133,7 +147,7 @@ public abstract class AbstractStep implements IStep {
 			if (debugLog.isLogging(IServerLogLevel.TRACE)) {
 				String trace = getId() + " publishes " + pParameter.getKey() + "=" +
 					pParameter.getValue();
-				debugLog.log(IServerLogLevel.TRACE, trace);
+				debugLog.log(IServerLogLevel.TRACE, fGameState.getGame().getId(), trace);
 			}
 			setParameter(pParameter);
 			getGameState().getStepStack().publishStepParameter(pParameter);
@@ -151,7 +165,7 @@ public abstract class AbstractStep implements IStep {
 	public void consume(StepParameter pParameter) {
 		DebugLog debugLog = fGameState.getServer().getDebugLog();
 		if (debugLog.isLogging(IServerLogLevel.TRACE)) {
-			debugLog.log(IServerLogLevel.TRACE, getId() + " consumes " + pParameter.getKey() + "=" + pParameter.getValue());
+			debugLog.log(IServerLogLevel.TRACE, fGameState.getGame().getId(), getId() + " consumes " + pParameter.getKey() + "=" + pParameter.getValue());
 		}
 		pParameter.consume();
 	}

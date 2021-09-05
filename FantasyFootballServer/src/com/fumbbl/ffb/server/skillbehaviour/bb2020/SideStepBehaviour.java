@@ -4,8 +4,8 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackMode;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -52,7 +52,9 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 					&& UtilCards.hasSkill(state.defender, skill)
 					&& !(cancellingSkill != null && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
 					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender)))
-					&& !playerState.isProne() && ((state.oldDefenderState == null) || state.oldDefenderState.hasTacklezones())) {
+					&& ((state.pushbackStack.isEmpty() && (state.oldDefenderState == null || state.oldDefenderState.hasTacklezones()))
+					|| !state.pushbackStack.isEmpty() && playerState.hasTacklezones())
+				) {
 					if (!state.sideStepping.containsKey(state.defender.getId())) {
 						UtilServerDialog.showDialog(step.getGameState(),
 							new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
@@ -79,8 +81,10 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 						step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
 					}
 					return true;
-				}
-				else if(UtilCards.hasSkill(state.defender, skill) && (state.oldDefenderState != null) && !state.oldDefenderState.hasTacklezones()) {
+				} else if (UtilCards.hasSkill(state.defender, skill) && (
+					(state.pushbackStack.isEmpty() && (state.oldDefenderState != null) && !state.oldDefenderState.hasTacklezones())
+						|| (!state.pushbackStack.isEmpty() && !playerState.hasTacklezones())
+				)) {
 					step.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skill, false, SkillUse.NO_TACKLEZONE));
 				}
 				return false;

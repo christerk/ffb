@@ -1,5 +1,13 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.BoxType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.model.FieldModel;
+
+import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -17,15 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.JPanel;
-import javax.swing.ToolTipManager;
-
-import com.fumbbl.ffb.BoxType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.model.FieldModel;
-
 /**
  *
  * @author Kalimar
@@ -36,12 +35,12 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	public static final int HEIGHT = 22;
 
 	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Dimension _BUTTON_DIMENSION = new Dimension(56, 22);
+	private static final Dimension _BUTTON_DIMENSION = new Dimension(72, 22);
 
-	private Map<BoxType, Rectangle> fButtonLocations;
+	private final Map<BoxType, Rectangle> fButtonLocations;
 
-	private SideBarComponent fSideBar;
-	private BufferedImage fImage;
+	private final SideBarComponent fSideBar;
+	private final BufferedImage fImage;
 	private BoxType fOpenBox;
 	private BoxType fSelectedBox;
 

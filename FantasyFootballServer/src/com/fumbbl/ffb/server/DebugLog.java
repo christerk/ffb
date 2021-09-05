@@ -1,5 +1,13 @@
 package com.fumbbl.ffb.server;
 
+import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
+import org.eclipse.jetty.websocket.api.Session;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,16 +16,9 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
-
-import org.eclipse.jetty.websocket.api.Session;
-
-import com.fumbbl.ffb.net.NetCommand;
-import com.fumbbl.ffb.net.NetCommandId;
-import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.net.SessionManager;
-import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.StringTool;
 
 public class DebugLog {
 
@@ -44,9 +45,10 @@ public class DebugLog {
 	private static final int _TIMESTAMP_LENGTH = 23;
 	private static final int _COMMAND_FLAG_LENGTH = 4;
 
-	private FantasyFootballServer fServer;
-	private File fLogFile;
+	private final FantasyFootballServer fServer;
+	private final File fLogFile;
 	private int fLogLevel;
+	private final Set<Long> forceLog = new HashSet<>();
 
 	public DebugLog(FantasyFootballServer server, File logFile, int logLevel) {
 		fServer = server;
@@ -70,9 +72,13 @@ public class DebugLog {
 		return fServer;
 	}
 
+	public void forceLog(long gameId) {
+		forceLog.add(gameId);
+	}
+
 	public void logClientCommand(int pLogLevel, ReceivedCommand pReceivedCommand) {
 		if (!isLogging(pLogLevel) || (pReceivedCommand == null) || (pReceivedCommand.getId() == null)
-				|| (pReceivedCommand.getId() == NetCommandId.CLIENT_PING)) {
+			|| (pReceivedCommand.getId() == NetCommandId.CLIENT_PING)) {
 			return;
 		}
 		GameState gameState = null;
@@ -132,31 +138,31 @@ public class DebugLog {
 		}
 	}
 
-	public void log(int pLogLevel, String pLogString) {
+	public void logWithOutGameId(int pLogLevel, String pLogString) {
 		if (isLogging(pLogLevel) && StringTool.isProvided(pLogString)) {
 			logInternal(-1, null, pLogString);
 		}
 	}
 
-	public void log(int pLogLevel, String pCommandFlag, String pLogString) {
+	public void logWithOutGameId(int pLogLevel, String pCommandFlag, String pLogString) {
 		if (isLogging(pLogLevel) && StringTool.isProvided(pLogString)) {
 			logInternal(-1, pCommandFlag, pLogString);
 		}
 	}
 
 	public void log(int pLogLevel, long pGameId, String pLogString) {
-		if (isLogging(pLogLevel) && StringTool.isProvided(pLogString)) {
+		if ((isLogging(pLogLevel) || forceLog.contains(pGameId)) && StringTool.isProvided(pLogString)) {
 			logInternal(pGameId, null, pLogString);
 		}
 	}
 
 	public void log(int pLogLevel, long pGameId, String pCommandFlag, String pLogString) {
-		if (isLogging(pLogLevel) && StringTool.isProvided(pLogString)) {
+		if ((isLogging(pLogLevel) || forceLog.contains(pGameId)) && StringTool.isProvided(pLogString)) {
 			logInternal(pGameId, pCommandFlag, pLogString);
 		}
 	}
 
-	public void log(Throwable pThrowable) {
+	public void logWithOutGameId(Throwable pThrowable) {
 		log(-1, pThrowable);
 	}
 
@@ -193,13 +199,13 @@ public class DebugLog {
 		if (pGameId > 0) {
 			String gameStateId = Long.toString(pGameId);
 			if (gameStateId.length() <= _GAME_ID_MAX_LENGTH) {
-				headerBuffer.append(_ZEROES.substring(0, _GAME_ID_MAX_LENGTH - gameStateId.length()));
+				headerBuffer.append(_ZEROES, 0, _GAME_ID_MAX_LENGTH - gameStateId.length());
 				headerBuffer.append(gameStateId);
 			} else {
-				headerBuffer.append(gameStateId.substring(0, _GAME_ID_MAX_LENGTH));
+				headerBuffer.append(gameStateId, 0, _GAME_ID_MAX_LENGTH);
 			}
 		} else {
-			headerBuffer.append(_LINES.substring(0, _GAME_ID_MAX_LENGTH));
+			headerBuffer.append(_LINES, 0, _GAME_ID_MAX_LENGTH);
 		}
 		headerBuffer.append(" ");
 		if (StringTool.isProvided(pCommandFlag)) {

@@ -109,6 +109,8 @@ public class DialogParameterFactory {
 				return new DialogInvalidSolidDefenceParameter();
 			case SELECT_SKILL:
 				return new DialogSelectSkillParameter();
+			case BRIBERY_AND_CORRUPTION_RE_ROLL:
+				return new DialogBriberyAndCorruptionParameter();
 			default:
 				return null;
 		}

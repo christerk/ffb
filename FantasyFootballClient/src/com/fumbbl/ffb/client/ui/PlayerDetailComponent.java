@@ -215,7 +215,7 @@ public class PlayerDetailComponent extends JPanel {
 			int moveLeft = movement;
 			int strength = getPlayer().getStrengthWithModifiers()
 				- findNewStatDecreases(playerResult, InjuryAttribute.ST);
-			int agility = mechanic.applyAgilityDecreases(getPlayer().getAgilityWithModifiers(), findNewStatDecreases(playerResult, InjuryAttribute.AG));
+			int agility = mechanic.applyInGameAgilityInjury(getPlayer().getAgilityWithModifiers(), findNewStatDecreases(playerResult, InjuryAttribute.AG));
 			int armour = getPlayer().getArmourWithModifiers() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
 			ActingPlayer actingPlayer = getSideBar().getClient().getGame().getActingPlayer();
 			if (fPlayer == actingPlayer.getPlayer()) {

@@ -1,11 +1,12 @@
 package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifierContext;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PassModifier;
@@ -38,17 +39,14 @@ public class Stunty extends Skill {
 		registerModifier(new StaticInjuryModifier("Stunty", 0, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
-				boolean applies = false;
-
-				if (!context.isStab() &&
+				boolean applies = !context.isStab() &&
 					!context.getDefender().hasSkillProperty(NamedProperties.preventDamagingInjuryModifications) &&
-					context.getDefender().hasSkillProperty(NamedProperties.isHurtMoreEasily)) {
-					applies = true;
-				}
+					context.getDefender().hasSkillProperty(NamedProperties.isHurtMoreEasily);
 
 				return applies;
 			}
 		});
+		registerModifier(new DodgeModifier("Stunty", 0, ModifierType.REGULAR));
 
 		registerProperty(NamedProperties.smallIcon);
 		registerProperty(NamedProperties.preventRaiseFromDead);

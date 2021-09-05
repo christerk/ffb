@@ -7,6 +7,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
@@ -441,7 +442,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 				if (rule != null) {
 					specialRules.add(rule);
 				} else {
-					game.getApplicationSource().logError("Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
+					game.getApplicationSource().logError(game.getId(), "Null value parsed from rules tag: '" + pValue + "' in roster with id '" + fId + "'");
 				}
 			}
 		}
@@ -502,7 +503,10 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(game, jsonObject);
 		fLogoUrl = IJsonOption.LOGO_URL.getFrom(game, jsonObject);
 		dedicatedFans = IJsonOption.DEDICATED_FANS.getFrom(game, jsonObject);
-		specialRules.addAll(Arrays.stream(IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject)).filter(Objects::nonNull).map(SpecialRule::valueOf).collect(Collectors.toSet()));
+		String[] rulesArray = IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject);
+		if (ArrayTool.isProvided(rulesArray)) {
+			specialRules.addAll(Arrays.stream(rulesArray).filter(Objects::nonNull).map(SpecialRule::valueOf).collect(Collectors.toSet()));
+		}
 
 		fPlayerById.clear();
 		fPlayerByNr.clear();

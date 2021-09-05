@@ -63,7 +63,12 @@ public interface SkillValueEvaluator {
 
 		@Override
 		protected String format(Skill skill, int intValue) {
-			return skill.getName() + " (" + intValue + "+)";
+
+			String name = skill.getName();
+			if (intValue < 1) {
+				return name;
+			}
+			return name + " (" + intValue + "+)";
 		}
 	};
 

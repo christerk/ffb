@@ -15,7 +15,6 @@ import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.XmlHandler;
-
 import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.InputSource;
 
@@ -44,7 +43,7 @@ public class UtilFumbblRequest {
 		}
 		try {
 			String responseXml = UtilServerHttpClient.fetchPage(pRequestUrl);
-			pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+			pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 			return processFumbblGameStateResponse(pServer, pRequestUrl, responseXml);
 		} catch (IOException ioe) {
 			throw new FantasyFootballException(ioe);
@@ -57,7 +56,7 @@ public class UtilFumbblRequest {
 			return null;
 		}
 		FumbblGameState gameState;
-		try (BufferedReader xmlReader = new BufferedReader(new StringReader(pResponseXml));) {
+		try (BufferedReader xmlReader = new BufferedReader(new StringReader(pResponseXml))) {
 			InputSource xmlSource = new InputSource(xmlReader);
 			gameState = new FumbblGameState(pRequestUrl);
 			XmlHandler.parse(null, xmlSource, gameState);
@@ -84,10 +83,8 @@ public class UtilFumbblRequest {
 		try {
 			byte[] encodedPassword = PasswordChallenge.fromHexString(pPassword);
 			return PasswordChallenge.createResponse(pChallenge, encodedPassword);
-		} catch (IOException pIoE) {
+		} catch (IOException | NoSuchAlgorithmException pIoE) {
 			throw new FantasyFootballException(pIoE);
-		} catch (NoSuchAlgorithmException pNsaE) {
-			throw new FantasyFootballException(pNsaE);
 		}
 	}
 
@@ -99,10 +96,10 @@ public class UtilFumbblRequest {
 			String challenge = null;
 			String challengeUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE),
 					URLEncoder.encode(pCoach, CHARACTER_ENCODING));
-			pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, challengeUrl);
+			pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, challengeUrl);
 			String responseXml = UtilServerHttpClient.fetchPage(challengeUrl);
 			if (StringTool.isProvided(responseXml)) {
-				pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+				pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
 					String line = null;
 					while ((line = xmlReader.readLine()) != null) {
@@ -127,10 +124,10 @@ public class UtilFumbblRequest {
 		FantasyFootballServer server = pGameState.getServer();
 		Session[] sessions = server.getSessionManager().getSessionsForGameId(pGameState.getId());
 		if (pFumbblState != null) {
-			server.getDebugLog().log(IServerLogLevel.ERROR, pFumbblState.toXml(false));
+			server.getDebugLog().log(IServerLogLevel.ERROR, pGameState.getGame().getId(), pFumbblState.toXml(false));
 			server.getCommunication().sendStatus(sessions, ServerStatus.FUMBBL_ERROR, pFumbblState.getDescription());
 		} else {
-			server.getDebugLog().log(IServerLogLevel.ERROR, _UNKNOWN_FUMBBL_ERROR);
+			server.getDebugLog().log(IServerLogLevel.ERROR, pGameState.getGame().getId(), _UNKNOWN_FUMBBL_ERROR);
 			server.getCommunication().sendStatus(sessions, ServerStatus.FUMBBL_ERROR, _UNKNOWN_FUMBBL_ERROR);
 		}
 	}

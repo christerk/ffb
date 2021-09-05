@@ -17,7 +17,6 @@ import com.fumbbl.ffb.server.util.UtilServerStartGame;
 import com.fumbbl.ffb.server.util.UtilSkillBehaviours;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.XmlHandler;
-
 import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
@@ -48,6 +47,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 		Team home = inflateIfNeeded(gameState.getGame().getTeamHome(), gameState);
 		Team away = inflateIfNeeded(gameState.getGame().getTeamAway(), gameState);
+		gameState.getGame().teamsAreInflated();
 
 		if (home == null || away == null) {
 			return false;
@@ -107,8 +107,8 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 	// this might be overkill, we'll see how it does in practice
 	private void handleInvalidRoster(String pTeamId, GameState gameState, FantasyFootballServer server, Throwable pThrowable) {
-		server.getDebugLog().log(IServerLogLevel.ERROR, StringTool.bind("Error loading Roster for Team $1.", pTeamId));
-		server.getDebugLog().log(pThrowable);
+		server.getDebugLog().log(IServerLogLevel.ERROR, gameState.getGame().getId(), StringTool.bind("Error loading Roster for Team $1.", pTeamId));
+		server.getDebugLog().log(gameState.getGame().getId(), pThrowable);
 		server.getCommunication().sendStatus(gameState, ServerStatus.FUMBBL_ERROR,
 			StringTool.bind("Unable to load Roster with for Team $1.", pTeamId));
 		UtilServerGame.closeGame(gameState);

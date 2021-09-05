@@ -15,15 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class DialogPlayerChoiceParameter implements IDialogParameter {
 
 	private String fTeamId;
 	private PlayerChoiceMode fPlayerChoiceMode;
-	private List<String> fPlayerIds;
-	private List<String> fDescriptions;
+	private final List<String> fPlayerIds;
+	private final List<String> fDescriptions;
 	private int fMaxSelects, minSelects;
 
 	public DialogPlayerChoiceParameter() {
@@ -32,7 +31,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 	}
 
 	public DialogPlayerChoiceParameter(String pTeamId, PlayerChoiceMode pPlayerChoiceMode, Player<?>[] pPlayers,
-			String[] pDescriptions, int pMaxSelects) {
+	                                   String[] pDescriptions, int pMaxSelects) {
 		this(pTeamId, pPlayerChoiceMode, findPlayerIds(pPlayers), pDescriptions, pMaxSelects, 0);
 	}
 
@@ -79,14 +78,14 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 
 	private void addPlayerIds(String[] pPlayerIds) {
 		if (ArrayTool.isProvided(pPlayerIds)) {
-			for (int i = 0; i < pPlayerIds.length; i++) {
-				addPlayerId(pPlayerIds[i]);
+			for (String pPlayerId : pPlayerIds) {
+				addPlayerId(pPlayerId);
 			}
 		}
 	}
 
 	public String[] getDescriptions() {
-		return fDescriptions.toArray(new String[fDescriptions.size()]);
+		return fDescriptions.toArray(new String[0]);
 	}
 
 	public void addDescription(String pDescription) {
@@ -97,8 +96,8 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 
 	private void addDescriptions(String[] pDescriptions) {
 		if (ArrayTool.isProvided(pDescriptions)) {
-			for (int i = 0; i < pDescriptions.length; i++) {
-				addDescription(pDescriptions[i]);
+			for (String pDescription : pDescriptions) {
+				addDescription(pDescription);
 			}
 		}
 	}

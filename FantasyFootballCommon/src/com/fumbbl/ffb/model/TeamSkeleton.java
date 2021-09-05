@@ -7,7 +7,6 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -32,6 +31,8 @@ public class TeamSkeleton extends Team {
 	private int fTeamValue;
 	private String fCoach;
 	private String xmlContent;
+
+	private transient boolean parsingPlayer;
 
 	public TeamSkeleton(IFactorySource game) {
 		super(game);
@@ -102,6 +103,9 @@ public class TeamSkeleton extends Team {
 		if (XML_TAG.equals(pXmlTag)) {
 			setId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID));
 		}
+		if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
+			parsingPlayer = true;
+		}
 		// when reading XML only
 		return xmlElement;
 	}
@@ -109,7 +113,7 @@ public class TeamSkeleton extends Team {
 	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		boolean complete = XML_TAG.equals(pXmlTag);
 		if (!complete) {
-			if (_XML_TAG_NAME.equals(pXmlTag)) {
+			if (_XML_TAG_NAME.equals(pXmlTag) && !parsingPlayer) {
 				fName = pValue;
 			}
 			if (_XML_TAG_COACH.equals(pXmlTag)) {
@@ -117,6 +121,9 @@ public class TeamSkeleton extends Team {
 			}
 			if (_XML_TAG_TEAM_VALUE.equals(pXmlTag)) {
 				setTeamValue(Integer.parseInt(pValue));
+			}
+			if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
+				parsingPlayer = false;
 			}
 		}
 		return complete;
@@ -132,6 +139,7 @@ public class TeamSkeleton extends Team {
 		IJsonOption.TEAM_NAME.addTo(jsonObject, fName);
 		IJsonOption.COACH.addTo(jsonObject, fCoach);
 		IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
+		IJsonOption.XML_CONTENT.addTo(jsonObject, xmlContent);
 
 		return jsonObject;
 	}
@@ -144,6 +152,7 @@ public class TeamSkeleton extends Team {
 		fName = IJsonOption.TEAM_NAME.getFrom(game, jsonObject);
 		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
 		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
+		xmlContent = IJsonOption.XML_CONTENT.getFrom(game, jsonObject);
 
 		return this;
 

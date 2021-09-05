@@ -11,12 +11,15 @@ import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
+import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
+import com.fumbbl.ffb.modifiers.PlayerStatLimit;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.xml.IXmlSerializable;
@@ -208,35 +211,37 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	public int getAgilityWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.AG, getAgility());
+		return getStatWithModifiers(PlayerStatKey.AG, getAgility());
 	}
 
 	public int getMovementWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.MA, getMovement());
+		return getStatWithModifiers(PlayerStatKey.MA, getMovement());
 	}
 
 	public int getStrengthWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.ST, getStrength());
+		return getStatWithModifiers(PlayerStatKey.ST, getStrength());
 	}
 
 	public int getPassingWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.PA, getPassing());
+		return getStatWithModifiers(PlayerStatKey.PA, getPassing());
 	}
 
 	public int getArmourWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStat.AV, getArmour());
+		return getStatWithModifiers(PlayerStatKey.AV, getArmour());
 	}
 
-	private int getStatWithModifiers(TemporaryStatModifier.PlayerStat stat, int baseValue) {
+	private int getStatWithModifiers(PlayerStatKey stat, int baseValue) {
 		int sum = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
 			.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
 
-		if (stat.getMax() != 0) {
-			sum = Math.min(stat.getMax(), sum);
+		Optional<PlayerStatLimit> limit = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat)).map(TemporaryStatModifier::getLimit).findFirst();
+
+		if (limit.isPresent() && limit.get().getMax() != 0) {
+			sum = Math.min(limit.get().getMax(), sum);
 		}
 
-		if (stat.getMin() != 0) {
-			sum = Math.max(baseValue == 0 ? 0 : stat.getMin(), sum);
+		if (limit.isPresent() && limit.get().getMin() != 0) {
+			sum = Math.max(baseValue == 0 ? 0 : limit.get().getMin(), sum);
 		}
 		return sum;
 	}
@@ -294,12 +299,12 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		removeTemporarySkills(sourceName);
 	}
 
-	public void addActivationEnhancements(Card card, SkillFactory factory) {
-		addEnhancement(card.getName(), card.activationEnhancement(), factory);
+	public void addActivationEnhancements(Card card, SkillFactory factory, StatsMechanic mechanic) {
+		addEnhancement(card.getName(), card.activationEnhancement(mechanic), factory);
 	}
 
-	public void addDeactivationEnhancements(Card card, SkillFactory factory) {
-		addEnhancement(card.getName(), card.deactivationEnhancement(), factory);
+	public void addDeactivationEnhancements(Card card, SkillFactory factory, StatsMechanic mechanic) {
+		addEnhancement(card.getName(), card.deactivationEnhancement(mechanic), factory);
 	}
 
 	public void addEnhancement(String name, TemporaryEnhancements enhancements, SkillFactory factory) {

@@ -199,8 +199,8 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Right Stuff prevents Tackle from negating Dodge for Pow/Pushback.");
 			case RULESVERSION:
-				return new GameOptionString(pOptionId).setDefault("BB2020")
-					.setMessage("Rules Version");
+				return new GameOptionString(pOptionId).setDefault("BB2016")
+					.setMessage("Rules Version $1");
 			case SNEAKY_GIT_AS_FOUL_GUARD:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Sneaky Git works like Guard for fouling assists.");

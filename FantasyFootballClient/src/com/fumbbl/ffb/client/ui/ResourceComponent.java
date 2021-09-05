@@ -14,15 +14,12 @@ import com.fumbbl.ffb.model.TurnData;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -38,6 +35,9 @@ public class ResourceComponent extends JPanel {
 
 	public static final int WIDTH = 145;
 	public static final int HEIGHT = 168; // 256
+	private static final int _SLOT_HEIGHT = 40;
+	private static final int _SLOT_WIDTH = 46;
+	private static final int COUNTER_SIZE = 15;
 
 	private final SideBarComponent fSideBar;
 	private final BufferedImage fImage;
@@ -46,9 +46,6 @@ public class ResourceComponent extends JPanel {
 	private final ResourceSlot[] fSlots;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
-
-	private static final int _SLOT_HEIGHT = 40;
-	private static final int _SLOT_WIDTH = 56;
 
 	private static final Font _NUMBER_FONT = new Font("Sans Serif", Font.BOLD, 16);
 
@@ -69,24 +66,32 @@ public class ResourceComponent extends JPanel {
 		ResourceSlot[] resourceSlots;
 		if (getSideBar().isHomeSide()) {
 			resourceSlots = new ResourceSlot[]{
-					new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
+				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
 		} else {
 			resourceSlots = new ResourceSlot[]{
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-					new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
+				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
 		}
 		return resourceSlots;
 	}
@@ -124,26 +129,27 @@ public class ResourceComponent extends JPanel {
 			g2d.drawImage(resourceIcon, x, y, null);
 			if (!pSlot.isEnabled()) {
 				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED);
-				x += (resourceIcon.getWidth() - disabledIcon.getWidth()) / 2;
-				y += (resourceIcon.getHeight() - disabledIcon.getHeight()) / 2;
-				g2d.drawImage(disabledIcon, x, y, null);
+				g2d.drawImage(disabledIcon, x + (resourceIcon.getWidth() - disabledIcon.getWidth()) / 2,
+					y + (resourceIcon.getHeight() - disabledIcon.getHeight()) / 2, null);
 			}
-			g2d.setFont(_NUMBER_FONT);
-			String resourceValue = Integer.toString(pSlot.getValue());
-			FontMetrics metrics = g2d.getFontMetrics();
-			Rectangle2D bounds = metrics.getStringBounds(resourceValue, g2d);
-			y = pSlot.getLocation().y + ((pSlot.getLocation().height + metrics.getHeight()) / 2) - metrics.getDescent();
-			if (getSideBar().isHomeSide()) {
-				x = pSlot.getLocation().x + 3;
-			} else {
-				x = pSlot.getLocation().x + pSlot.getLocation().width - (int) bounds.getWidth() - 3;
+
+			if (pSlot.getValue() > 1) {
+				Rectangle counterCrop = counterCrop(Math.min(pSlot.getValue() - 1, 15));
+				BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
+					.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
+
+				g2d.drawImage(counter, x + pSlot.getLocation().width - COUNTER_SIZE - 5,
+					y + pSlot.getLocation().height - COUNTER_SIZE, null);
 			}
-			g2d.setColor(Color.BLACK);
-			g2d.drawString(resourceValue, x + 1, y + 1);
-			g2d.setColor(Color.WHITE);
-			g2d.drawString(resourceValue, x, y);
 			g2d.dispose();
 		}
+	}
+
+	private Rectangle counterCrop(int elementIndex) {
+		int row = elementIndex / 4;
+		int column = elementIndex % 4;
+
+		return new Rectangle(column * COUNTER_SIZE, row * COUNTER_SIZE, COUNTER_SIZE, COUNTER_SIZE);
 	}
 
 	private void updateSlots() {
@@ -157,7 +163,7 @@ public class ResourceComponent extends JPanel {
 
 		fRefreshNecessary |= (turnData.getReRolls() != fCurrentReRolls);
 		fCurrentReRolls = turnData.getReRolls();
-		if ((team.getReRolls() > 0) || (turnData.getReRolls() > 0)) {
+		if (turnData.getReRolls() > 0) {
 			ResourceSlot reRollSlot = fSlots[slotIndex.getAndIncrement()];
 			reRollSlot.setSingular("Re-Roll");
 			reRollSlot.setPlural("Re-Rolls");
@@ -169,7 +175,7 @@ public class ResourceComponent extends JPanel {
 
 		fRefreshNecessary |= (turnData.getApothecaries() != fCurrentApothecaries);
 		fCurrentApothecaries = turnData.getApothecaries();
-		if ((team.getApothecaries() > 0) || (turnData.getApothecaries() > 0)) {
+		if (turnData.getApothecaries() > 0) {
 			ResourceSlot apothecarySlot = fSlots[slotIndex.getAndIncrement()];
 			apothecarySlot.setSingular("Apothecary");
 			apothecarySlot.setPlural("Apothecaries");
@@ -179,23 +185,23 @@ public class ResourceComponent extends JPanel {
 
 
 		turnData.getInducementSet().getInducementMapping().entrySet().stream()
-				.filter(entry -> entry.getValue() != null && entry.getKey().isUsingGenericSlot())
-				.sorted(Comparator.comparing(o -> o.getKey().getName()))
-				.forEach(entry -> {
-					InducementType type = entry.getKey();
-					Inducement inducement = entry.getValue();
+			.filter(entry -> entry.getValue() != null && entry.getKey().isUsingGenericSlot())
+			.sorted(Comparator.comparing(o -> o.getKey().getName()))
+			.forEach(entry -> {
+				InducementType type = entry.getKey();
+				Inducement inducement = entry.getValue();
 
-					int newValue = inducement.getValue() - inducement.getUses();
-					fRefreshNecessary |= (inducementValues.get(type) != null ? (newValue != inducementValues.get(type)) : newValue > 0);
-					inducementValues.put(type, newValue);
-					if (newValue > 0) {
-						ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
-						slot.setPlural(type.getPlural());
-						slot.setSingular(type.getSingular());
-						slot.setValue(newValue);
-						slot.setIconProperty(type.getSlotIconProperty());
-					}
-				});
+				int newValue = inducement.getValue() - inducement.getUses();
+				fRefreshNecessary |= (inducementValues.get(type) != null ? (newValue != inducementValues.get(type)) : newValue > 0);
+				inducementValues.put(type, newValue);
+				if (newValue > 0) {
+					ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
+					slot.setPlural(type.getPlural());
+					slot.setSingular(type.getSingular());
+					slot.setValue(newValue);
+					slot.setIconProperty(type.getSlotIconProperty());
+				}
+			});
 
 		Card[] availableCards = turnData.getInducementSet().getAvailableCards();
 		fRefreshNecessary |= (availableCards.length != fCurrentCards);
@@ -208,19 +214,17 @@ public class ResourceComponent extends JPanel {
 			cardsSlot.setIconProperty(IIconProperty.RESOURCE_CARD);
 		}
 
-		if (slotIndex.get() < fSlots.length - 1) {
-			Set<Prayer> prayers = turnData.getInducementSet().getPrayers();
-			fRefreshNecessary |= (prayers.size() != currentPrayers);
-			currentPrayers = prayers.size();
-			if (currentPrayers > 0) {
-				ResourceSlot prayerSlot = fSlots[slotIndex.getAndIncrement()];
-				prayerSlot.setPlural("Prayers");
-				prayerSlot.setSingular("Prayer");
-				prayerSlot.setValue(currentPrayers);
-				prayerSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
-				PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
-				prayerFactory.sort(prayers).stream().map(Prayer::getName).forEach(prayerSlot::addDetail);
-			}
+		Set<Prayer> prayers = turnData.getInducementSet().getPrayers();
+		fRefreshNecessary |= (prayers.size() != currentPrayers);
+		currentPrayers = prayers.size();
+		if (currentPrayers > 0) {
+			ResourceSlot prayerSlot = fSlots[slotIndex.getAndIncrement()];
+			prayerSlot.setPlural("Prayers");
+			prayerSlot.setSingular("Prayer");
+			prayerSlot.setValue(currentPrayers);
+			prayerSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
+			PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
+			prayerFactory.sort(prayers).stream().map(Prayer::getName).forEach(prayerSlot::addDetail);
 		}
 
 		fNrOfSlots = slotIndex.get();

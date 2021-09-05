@@ -1,12 +1,5 @@
 package com.fumbbl.ffb.server.db.query;
 
-import java.io.IOException;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.json.UtilJson;
@@ -18,8 +11,14 @@ import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.IDbTableGamesSerialized;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- * 
  * @author Kalimar
  */
 public class DbGamesSerializedQuery extends DbStatement {
@@ -57,9 +56,9 @@ public class DbGamesSerializedQuery extends DbStatement {
 					gameState.initFrom(gameState.getGame().getRules(), jsonValue);
 					if (getServer().getDebugLog().isLogging(IServerLogLevel.TRACE) && (gameState.getCurrentStep() != null)) {
 						String currentStepName = (gameState.getCurrentStep() != null) ? gameState.getCurrentStep().getId().getName()
-								: "null";
-						getServer().getDebugLog().log(IServerLogLevel.TRACE,
-								StringTool.bind("loaded CurrentStep $1", currentStepName));
+							: "null";
+						getServer().getDebugLog().log(IServerLogLevel.TRACE, gameState.getGame().getId(),
+							StringTool.bind("loaded CurrentStep $1", currentStepName));
 					}
 				}
 			}

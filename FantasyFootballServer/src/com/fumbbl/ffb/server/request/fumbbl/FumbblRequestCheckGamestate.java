@@ -19,7 +19,7 @@ import com.fumbbl.ffb.util.StringTool;
  */
 public class FumbblRequestCheckGamestate extends ServerRequest {
 
-	private GameState fGameState;
+	private final GameState fGameState;
 
 	public FumbblRequestCheckGamestate(GameState pGameState) {
 		fGameState = pGameState;
@@ -33,26 +33,35 @@ public class FumbblRequestCheckGamestate extends ServerRequest {
 	public void process(ServerRequestProcessor pRequestProcessor) {
 		Game game = getGameState().getGame();
 		FantasyFootballServer server = pRequestProcessor.getServer();
-		if (!game.isTesting()) {
+		if (game.isTesting()) {
+
+			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_OPTIONS),
+				new Object[]{game.getTeamHome().getId(), game.getTeamAway().getId()}));
+			server.getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
+			FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
+			game.getOptions().init(fumbblGameState.getOptions());
+			server.getDebugLog().log(IServerLogLevel.TRACE, getGameState().getId(),
+				game.getOptions().toJsonValue().toString());
+
+			InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(
+				getGameState().getId());
+			server.getCommunication().handleCommand(gameCheckedCommand);
+		} else {
 			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_CHECK),
-					new Object[] { game.getTeamHome().getId(), game.getTeamAway().getId() }));
-			server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+				new Object[]{game.getTeamHome().getId(), game.getTeamAway().getId()}));
+			server.getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 			FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
 			if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
 				UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
 			} else {
 				game.getOptions().init(fumbblGameState.getOptions());
 				server.getDebugLog().log(IServerLogLevel.TRACE, getGameState().getId(),
-						game.getOptions().toJsonValue().toString());
+					game.getOptions().toJsonValue().toString());
 				game.setTesting(game.isTesting() || UtilGameOption.isOptionEnabled(game, GameOptionId.TEST_MODE));
 				InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(
 						getGameState().getId());
 				server.getCommunication().handleCommand(gameCheckedCommand);
 			}
-		} else {
-			InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(
-					getGameState().getId());
-			server.getCommunication().handleCommand(gameCheckedCommand);
 		}
 	}
 

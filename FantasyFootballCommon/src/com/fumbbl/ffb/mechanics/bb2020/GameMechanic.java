@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
@@ -57,7 +58,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean eligibleForPro(Game game, Player<?> player) {
-		return game.getActingPlayer().getPlayer() == player && game.getTurnMode() == TurnMode.REGULAR;
+		return game.getActingPlayer().getPlayer() == player && (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			messages[0] = "Do you want to concede this game?";
 			messages[1] = "You will lose D3 dedicated fans (to a minimum of 1).";
 			messages[2] = "You will lose your player award and all your winnings.";
-			messages[3] = "Some valuable players (more than 3 advancements) may decide to leave your team.";
+			messages[3] = "Some valuable players (3 or more advancements) may decide to leave your team.";
 		}
 		return messages;
 	}
@@ -105,6 +106,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
 		return !(fieldModel.wasMultiBlockTargetSquare(coordinate));
+	}
+
+	@Override
+	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
+		return team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE) && teamResult.getRaisedDead() == 0;
+	}
+
+	@Override
+	public boolean infectedGoesToReserves() {
+		return true;
 	}
 
 	@Override
@@ -227,5 +238,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			.map(player -> game.getFieldModel().getPlayerState(player))
 			.filter(PlayerState::canBeSetUp)
 			.count() <= 3;
+	}
+
+	@Override
+	public boolean starPairCountsAsTwo() {
+		return true;
 	}
 }

@@ -26,6 +26,9 @@
 		<skillList>
 			<skill>Guard</skill>
 			<skill>Mighty Blow</skill>
+			<skill>Piling On</skill>
+			<skill>Claw</skill>
+			<skill>Claws</skill>
 		</skillList>
 		<injuryList>
 			<injury>Broken Neck (-1 AG)</injury>
@@ -40,6 +43,9 @@
 		<skillList>
 			<skill>Guard</skill>
 			<skill>Mighty Blow</skill>
+			<skill>Piling On</skill>
+			<skill>Claw</skill>
+			<skill>Claws</skill>
 			<skill>+ST</skill>
 		</skillList>
 		<injuryList>
@@ -55,6 +61,9 @@
 		<skillList>
 			<skill>Tackle</skill>
 			<skill>Mighty Blow</skill>
+			<skill>Piling On</skill>
+			<skill>Claw</skill>
+			<skill>Claws</skill>
 			<skill>Shadowing</skill>
 			<skill>Pro</skill>
 			<skill>+MA</skill>
@@ -73,6 +82,9 @@
 		<skillList>
 			<skill>Tackle</skill>
 			<skill>Mighty Blow</skill>
+			<skill>Piling On</skill>
+			<skill>Claw</skill>
+			<skill>Claws</skill>
 			<skill>Shadowing</skill>
 			<skill>Pro</skill>
 		</skillList>

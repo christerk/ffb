@@ -21,9 +21,9 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 
 /**
  * Step in block sequence to handle skill DUMP_OFF.
- * 
+ * <p>
  * Expects stepParameter DEFENDER_POSITION to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
@@ -36,7 +36,7 @@ public class StepDumpOff extends AbstractStep {
 		public TurnMode oldTurnMode;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepDumpOff(GameState pGameState) {
 		super(pGameState);

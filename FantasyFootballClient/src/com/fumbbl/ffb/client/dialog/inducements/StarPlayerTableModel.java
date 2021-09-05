@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
@@ -27,7 +30,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 
 	public StarPlayerTableModel(AbstractBuyInducementsDialog pDialog, GameOptions gameOptions) {
 		fDialog = pDialog;
-		fColumnNames = new String[] { "", "Icon", "Name", "Gold" };
+		fColumnNames = new String[]{"", "Icon", "Name", "Gold"};
 		fRowData = buildRowData();
 		fMaxNrOfStars = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
 	}
@@ -85,15 +88,20 @@ public class StarPlayerTableModel extends AbstractTableModel {
 					}
 				}
 				if (partnerRowId >= 0) {
+					boolean countAsTwo = ((GameMechanic) fDialog.getClient().getGame().getFactory(FactoryType.Factory.MECHANIC)
+						.forName(Mechanic.Type.GAME.name())).starPairCountsAsTwo();
 					if ((Boolean) pValue) {
 						cost += ((Player<?>) fRowData[partnerRowId][4]).getPosition().getCost();
-						if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < fMaxNrOfStars)
-								&& (fDialog.getFreeSlotsInRoster() > 1)) {
+						boolean hasRoomForPair = countAsTwo ? fNrOfCheckedRows + 1 < fMaxNrOfStars : fNrOfCheckedRows < fMaxNrOfStars;
+						if ((cost <= fDialog.getAvailableGold()) && hasRoomForPair
+							&& (fDialog.getFreeSlotsInRoster() > 1)) {
 							fRowData[pRowIndex][pColumnIndex] = true;
 							fireTableCellUpdated(pRowIndex, pColumnIndex);
 							fRowData[partnerRowId][pColumnIndex] = true;
 							fireTableCellUpdated(partnerRowId, pColumnIndex);
-							setMaxNrOfStars(fMaxNrOfStars + 1);
+							if (!countAsTwo) {
+								setMaxNrOfStars(fMaxNrOfStars + 1);
+							}
 							fDialog.recalculateGold();
 							fNrOfCheckedRows = getCheckedRows();
 						}
@@ -102,7 +110,9 @@ public class StarPlayerTableModel extends AbstractTableModel {
 						fireTableCellUpdated(pRowIndex, pColumnIndex);
 						fRowData[partnerRowId][pColumnIndex] = false;
 						fireTableCellUpdated(partnerRowId, pColumnIndex);
-						setMaxNrOfStars(fMaxNrOfStars - 1);
+						if (!countAsTwo) {
+							setMaxNrOfStars(fMaxNrOfStars - 1);
+						}
 						fDialog.recalculateGold();
 						fNrOfCheckedRows = getCheckedRows();
 					}
@@ -110,7 +120,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 			} else {
 				if ((Boolean) pValue) {
 					if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < fMaxNrOfStars)
-							&& (fDialog.getFreeSlotsInRoster() > 0)) {
+						&& (fDialog.getFreeSlotsInRoster() > 0)) {
 						fRowData[pRowIndex][pColumnIndex] = pValue;
 						fireTableCellUpdated(pRowIndex, pColumnIndex);
 						fDialog.recalculateGold();

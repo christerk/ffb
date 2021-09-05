@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.report.ReportFumbblResultUpload;
@@ -21,8 +16,12 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * 
  * @author Kalimar
  */
 public class FumbblRequestUploadResults extends ServerRequest {
@@ -30,7 +29,7 @@ public class FumbblRequestUploadResults extends ServerRequest {
 	private static final Pattern _PATTERN_RESULT = Pattern.compile("<result>([^<]+)</result>");
 	private static final Pattern _PATTERN_DESCRIPTION = Pattern.compile("<description>([^<]+)</description>");
 
-	private GameState fGameState;
+	private final GameState fGameState;
 	private boolean fUploadSuccessful;
 	private String fUploadStatus;
 
@@ -57,13 +56,13 @@ public class FumbblRequestUploadResults extends ServerRequest {
 		String challengeResponse = UtilFumbblRequest.getFumbblAuthChallengeResponseForFumbblUser(server);
 		FumbblResult fumbblResult = new FumbblResult(getGameState().getGame());
 		String resultXml = fumbblResult.toXml(true);
-		server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getId(), resultXml);
+		server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(), resultXml);
 		setRequestUrl(server.getProperty(IServerProperty.FUMBBL_RESULT));
-		server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
+		server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 		try {
 
 			String responseXml = UtilServerHttpClient.postMultipartXml(getRequestUrl(), challengeResponse, resultXml);
-			server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+			server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(), DebugLog.FUMBBL_RESPONSE, responseXml);
 
 			if (StringTool.isProvided(responseXml)) {
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {

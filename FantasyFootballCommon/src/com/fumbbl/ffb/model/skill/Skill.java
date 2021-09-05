@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class Skill implements INamedObject {
 
@@ -86,8 +87,17 @@ public abstract class Skill implements INamedObject {
 		return category;
 	}
 
-	public boolean equals(Object other) {
-		return name != null && other instanceof Skill && name.equals(((Skill) other).name);
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Skill skill = (Skill) o;
+		return Objects.equals(name, skill.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
 	}
 
 	public static Comparator<Skill> getComparator() {

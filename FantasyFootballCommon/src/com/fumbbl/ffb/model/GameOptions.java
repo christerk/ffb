@@ -1,17 +1,10 @@
 package com.fumbbl.ffb.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.factory.GameOptionFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -24,19 +17,23 @@ import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.Attributes;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class GameOptions implements IXmlSerializable, IJsonSerializable {
 
 	public static final String XML_TAG = "options";
 
-	private Map<GameOptionId, IGameOption> fOptionById;
+	private final Map<GameOptionId, IGameOption> fOptionById;
 
-	private transient Game fGame;
-	private transient GameOptionFactory fGameOptionFactory;
+	private final transient Game fGame;
+	private final transient GameOptionFactory fGameOptionFactory;
 
 	public GameOptions(Game pGame) {
 		fGame = pGame;
@@ -50,11 +47,11 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 
 	public RulesCollection.Rules getRulesVersion() {
 		String rulesVersion = getOptionWithDefault(GameOptionId.RULESVERSION).getValueAsString();
-		RulesCollection.Rules rules = Rules.BB2020;
 		try {
-			rules = RulesCollection.Rules.valueOf(rulesVersion);
-		} catch (IllegalArgumentException e) { }
-		return rules;
+			return RulesCollection.Rules.valueOf(rulesVersion);
+		} catch (IllegalArgumentException e) {
+			throw new FantasyFootballException("Could not create a rules version for value '" + rulesVersion + "'");
+		}
 	}
 
 	public GameOptionFactory getFactory() {
@@ -193,6 +190,9 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		for (int i = 0; i < nrOfOptions; i++) {
 			IGameOption gameOption = optionFactory.fromJsonValue(game, optionArray.get(i));
 			addOption(gameOption);
+		}
+		if (!fOptionById.containsKey(GameOptionId.RULESVERSION)) {
+			addOption(optionFactory.createGameOption(GameOptionId.RULESVERSION).setValue("BB2016"));
 		}
 		return this;
 	}

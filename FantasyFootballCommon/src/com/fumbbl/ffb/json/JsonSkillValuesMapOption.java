@@ -36,7 +36,9 @@ public class JsonSkillValuesMapOption extends JsonAbstractOption {
 	public void addTo(JsonObject pJsonObject, Map<Skill, String> map) {
 		JsonObject jsonObject = new JsonObject();
 		for (Map.Entry<Skill, String> entry : map.entrySet()) {
-			jsonObject.add(entry.getKey().getName(), entry.getValue());
+			if (entry != null && entry.getKey() != null) {
+				jsonObject.add(entry.getKey().getName(), entry.getValue());
+			}
 		}
 
 		addValueTo(pJsonObject, jsonObject);

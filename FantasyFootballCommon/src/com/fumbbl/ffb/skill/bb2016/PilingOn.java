@@ -1,9 +1,8 @@
 package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.model.property.CancelSkillProperty;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -27,6 +26,6 @@ public class PilingOn extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(new CancelSkillProperty(NamedProperties.canPileOnOpponent));
+		registerProperty(NamedProperties.canPileOnOpponent);
 	}
 }

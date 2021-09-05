@@ -61,6 +61,7 @@ public interface IJsonOption {
 	JsonBooleanOption BOMB_USED = new JsonBooleanOption("bombUsed");
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
 	JsonBooleanOption BRAWLER_OPTION = new JsonBooleanOption("brawlerOption");
+	JsonStringOption BRIBERY_AND_CORRUPTION_ACTION = new JsonStringOption("briberyAncCorruptionAction");
 	JsonBooleanOption CAN_BUY_CARDS = new JsonBooleanOption("canBuyCards");
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);
 	JsonStringArrayOption CARDS = new JsonStringArrayOption("cards");
@@ -207,6 +208,7 @@ public interface IJsonOption {
 	JsonStringArrayOption ICON_URLS_AWAY_STANDING = new JsonStringArrayOption("iconUrlsAwayStanding");
 	JsonStringArrayOption ICON_URLS_HOME_MOVING = new JsonStringArrayOption("iconUrlsHomeMoving");
 	JsonStringArrayOption ICON_URLS_HOME_STANDING = new JsonStringArrayOption("iconUrlsHomeStanding");
+	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);
@@ -310,6 +312,8 @@ public interface IJsonOption {
 	JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
 	JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
 	JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
+	JsonStringArrayOption PLAYER_IDS_NATURAL_ONES = new JsonStringArrayOption("playerIdsNaturalOnes");
+	JsonStringArrayOption PLAYER_IDS_COACH_BANNED = new JsonStringArrayOption("playerIdsCoachBanned");
 	JsonArrayOption PLAYER_MARKER_ARRAY = new JsonArrayOption("playerMarkerArray");
 	JsonStringOption PLAYER_NAME = new JsonStringOption("playerName");
 	JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");
@@ -466,6 +470,7 @@ public interface IJsonOption {
 	JsonBooleanOption TEAM_RE_ROLL_OPTION = new JsonBooleanOption("teamReRollOption");
 	JsonObjectOption TEAM_RESULT_AWAY = new JsonObjectOption("teamResultAway");
 	JsonObjectOption TEAM_RESULT_HOME = new JsonObjectOption("teamResultHome");
+	JsonStringOption TEAM_STATE = new JsonStringOption("teamState");
 	JsonEnumWithNameOption TEAM_STATUS = new JsonEnumWithNameOption("teamStatus", Factory.TEAM_STATUS);
 	JsonIntOption TEAM_VALUE = new JsonIntOption("teamValue");
 	JsonStringOption TEAM_WITH_POSITION_ID = new JsonStringOption("teamWithPositionId");
@@ -526,5 +531,5 @@ public interface IJsonOption {
 	JsonBooleanOption WITH_BALL = new JsonBooleanOption("withBall");
 	JsonBooleanOption WIZARD_AVAILABLE = new JsonBooleanOption("wizardAvailable");
 	JsonEnumWithNameOption WIZARD_SPELL = new JsonEnumWithNameOption("wizardSpell", Factory.SPECIAL_EFFECT);
-
+	JsonStringOption XML_CONTENT = new JsonStringOption("xmlContent");
 }

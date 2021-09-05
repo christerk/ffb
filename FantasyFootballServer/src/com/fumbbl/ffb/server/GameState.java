@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.change.IModelChangeObserver;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -319,10 +321,26 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 // JSON serialization
 
 	public JsonObject toJsonValue() {
+		return toJsonValue(true, 0);
+	}
+
+	public JsonObject toJsonValue(boolean includeLog, int logLimit) {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
 		IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
-		IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+		if (includeLog) {
+			if (logLimit > 0) {
+				GameLog tmpLog = new GameLog(this);
+				List<ServerCommand> message = Arrays.asList(fGameLog.getServerCommands());
+				if (!message.isEmpty()) {
+					int startIndex = Math.max(0, message.size() - logLimit);
+					message.subList(startIndex, message.size()).forEach(tmpLog::add);
+				}
+				IServerJsonOption.GAME_LOG.addTo(jsonObject, tmpLog.toJsonValue());
+			} else {
+				IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+			}
+		}
 		if (fCurrentStep != null) {
 			IServerJsonOption.CURRENT_STEP.addTo(jsonObject, fCurrentStep.toJsonValue());
 		}
@@ -415,7 +433,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 				for (StepModifier<? extends IStep, ?> modifier : skillModifiers) {
 					if (modifier.appliesTo(step)) {
 						getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
-								"Detected StepModifier: " + modifier.getClass().getName());
+							"Detected StepModifier: " + modifier.getClass().getName());
 						modifiers.add(modifier);
 					}
 				}
@@ -424,9 +442,15 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 		modifiers.sort(StepModifier.Comparator);
 
+		String modifiersString = modifiers.stream().map(modifier -> modifier.getClass().getName()).collect(Collectors.joining(", "));
+		getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
+			"Execute step hook: Sorted modifiers for step " + step.getName().toUpperCase() + " are: " + modifiersString);
+
 		for (StepModifier<? extends IStep, ?> modifier : modifiers) {
 			boolean stopProcessing = modifier.handleExecuteStep(step, state);
 			if (stopProcessing) {
+				getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
+					"Execute step hook: Modifier " + modifier.getClass().getName().toUpperCase() + " stopped processing for step " + step.getName());
 				return true;
 			}
 		}

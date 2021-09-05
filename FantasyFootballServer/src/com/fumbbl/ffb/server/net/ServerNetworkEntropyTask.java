@@ -1,14 +1,14 @@
 package com.fumbbl.ffb.server.net;
 
-import java.util.TimerTask;
-
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.util.rng.NetworkEntropySource;
 
+import java.util.TimerTask;
+
 public class ServerNetworkEntropyTask extends TimerTask {
 
-	private FantasyFootballServer fServer;
-	private NetworkEntropySource fNetworkEntropySource;
+	private final FantasyFootballServer fServer;
+	private final NetworkEntropySource fNetworkEntropySource;
 
 	public ServerNetworkEntropyTask(FantasyFootballServer server) {
 		fServer = server;
@@ -26,7 +26,7 @@ public class ServerNetworkEntropyTask extends TimerTask {
 				getServer().getFortuna().addEntropy(fNetworkEntropySource.getEntropy());
 			}
 		} catch (Exception anyException) {
-			getServer().getDebugLog().log(anyException);
+			getServer().getDebugLog().logWithOutGameId(anyException);
 			System.exit(99);
 		}
 	}

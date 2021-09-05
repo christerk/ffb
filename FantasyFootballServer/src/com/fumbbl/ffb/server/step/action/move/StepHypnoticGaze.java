@@ -94,7 +94,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		boolean doGaze = ((actingPlayer.getPlayerAction() == PlayerAction.GAZE) && (game.getDefender() != null));
+		boolean doGaze = ((actingPlayer.getPlayerAction() == PlayerAction.GAZE) && (game.getDefender() != null)) && game.getDefender().getTeam() != game.getActingTeam();
 		Optional<Skill> gazeSkill = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion);
 		if (!doGaze) {
 			getResult().setNextAction(StepAction.NEXT_STEP);

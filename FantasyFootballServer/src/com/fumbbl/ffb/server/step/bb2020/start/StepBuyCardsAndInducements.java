@@ -21,6 +21,7 @@ import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
@@ -29,6 +30,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.change.ModelChange;
@@ -40,6 +42,7 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDoubleHiredStarPlayer;
+import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportCardsAndInducementsBought;
 import com.fumbbl.ffb.server.CardDeck;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -499,14 +502,16 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 	}
 
 	private void leaveStep() {
+		Team teamHome = getGameState().getGame().getTeamHome();
+		Team teamAway = getGameState().getGame().getTeamAway();
 
 		int spentMoneyHome = usedInducementGoldHome + cardCost(getGameState().getGame().getTurnDataHome().getInducementSet());
 		int spentMoneyAway = usedInducementGoldAway + cardCost(getGameState().getGame().getTurnDataAway().getInducementSet());
-		int newTvHome = getGameState().getGame().getTeamHome().getTeamValue() + spentMoneyHome;
-		int newTvAway = getGameState().getGame().getTeamAway().getTeamValue() + spentMoneyAway;
+		int newTvHome = teamHome.getTeamValue() + spentMoneyHome;
+		int newTvAway = teamAway.getTeamValue() + spentMoneyAway;
 
-		getResult().addReport(generateReport(getGameState().getGame().getTeamHome(), usedInducementGoldHome, newTvHome));
-		getResult().addReport(generateReport(getGameState().getGame().getTeamAway(), usedInducementGoldAway, newTvAway));
+		getResult().addReport(generateReport(teamHome, usedInducementGoldHome, newTvHome));
+		getResult().addReport(generateReport(teamAway, usedInducementGoldAway, newTvAway));
 
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
@@ -546,6 +551,23 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		int unspentMoneyAway = availableInducementGoldAway - usedInducementGoldAway;
 		int spentTreasuryAway = Math.max(0, game.getTeamAway().getTreasury() - unspentMoneyAway);
 		game.getGameResult().getTeamResultAway().setTreasurySpentOnInducements(spentTreasuryAway);
+
+		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
+
+		inducementTypeFactory.allTypes().stream().filter(type -> type.getUsage() == Usage.REROLL_ARGUE).findFirst()
+			.ifPresent(inducementType -> {
+
+				if (teamHome.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
+					game.getTurnDataHome().getInducementSet().addInducement(new Inducement(inducementType, 1));
+					getResult().addReport(new ReportBriberyAndCorruptionReRoll(teamHome.getId(), BriberyAndCorruptionAction.ADDED));
+				}
+
+				if (teamAway.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
+					game.getTurnDataAway().getInducementSet().addInducement(new Inducement(inducementType, 1));
+					getResult().addReport(new ReportBriberyAndCorruptionReRoll(teamAway.getId(), BriberyAndCorruptionAction.ADDED));
+				}
+
+			});
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

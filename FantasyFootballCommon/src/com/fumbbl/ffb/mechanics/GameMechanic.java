@@ -11,6 +11,7 @@ import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 
 public abstract class GameMechanic implements Mechanic {
@@ -44,6 +45,10 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate);
 
+	public abstract boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult);
+
+	public abstract boolean infectedGoesToReserves();
+
 	public abstract boolean canRaiseDead(Team team);
 
 	public abstract boolean canPreventStripBall(PlayerState playerState);
@@ -71,4 +76,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract RosterPosition riotousRookiesPosition(Roster roster);
 
 	public abstract boolean isLegalConcession(Game game, Team team);
+
+	public abstract boolean starPairCountsAsTwo();
 }

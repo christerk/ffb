@@ -7,6 +7,7 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardReport;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
+import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -16,11 +17,11 @@ import com.fumbbl.ffb.modifiers.InterceptionContext;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PassModifier;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatIncrementer;
-import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.skill.Catch;
 import com.fumbbl.ffb.skill.DisturbingPresence;
 import com.fumbbl.ffb.skill.Fend;
@@ -67,8 +68,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Hypnotic Gaze, Side Step & Bone-Head") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(
 					new HashSet<SkillClassWithValue>() {{
 						add(new SkillClassWithValue(BoneHead.class));
 						add(new SkillClassWithValue(HypnoticGaze.class));
@@ -93,8 +94,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			false, new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
 			InducementDuration.UNTIL_END_OF_GAME, "No modifiers or re-rolls on armour rolls") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement()
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic)
 					.withProperties(Collections.singleton(NamedProperties.preventArmourModifications));
 			}
 		});
@@ -125,8 +126,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			}
 
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(
 					new HashSet<SkillClassWithValue>() {{
 						add(new SkillClassWithValue(Pass.class));
 						add(new SkillClassWithValue(Accurate.class));
@@ -149,8 +150,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
 			InducementDuration.WHILE_HOLDING_THE_BALL, "Player gets Sure Hands & Fend", CardHandlerKey.FORCE_SHIELD) {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(
 					new HashSet<SkillClassWithValue>() {{
 						add(new SkillClassWithValue(Fend.class));
 						add(new SkillClassWithValue(SureHands.class));
@@ -172,15 +173,15 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			InducementDuration.UNTIL_END_OF_DRIVE,
 			"Player gets +1 ST for this drive, then -1 ST for the remainder of the game") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement()
-					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStat.ST)));
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic)
+					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(PlayerStatKey.ST, mechanic)));
 			}
 
 			@Override
-			public TemporaryEnhancements deactivationEnhancement() {
-				return super.deactivationEnhancement()
-					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStat.ST)));
+			public TemporaryEnhancements deactivationEnhancement(StatsMechanic mechanic) {
+				return super.deactivationEnhancement(mechanic)
+					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(PlayerStatKey.ST, mechanic)));
 			}
 		});
 
@@ -198,8 +199,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.BEFORE_KICKOFF_SCATTER}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Catch & Sure Hands, but may not Pass or Hand-off") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement()
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic)
 					.withSkills(
 						new HashSet<SkillClassWithValue>() {{
 							add(new SkillClassWithValue(Catch.class));
@@ -229,8 +230,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT},
 			InducementDuration.UNTIL_END_OF_DRIVE, "Opponents get -1 ST to Blitzing from 1 or more squares away") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement()
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic)
 					.withProperties(Collections.singleton(NamedProperties.weakenOpposingBlitzer));
 			}
 		});
@@ -249,8 +250,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.AFTER_INDUCEMENTS_PURCHASED}, InducementDuration.UNTIL_USED,
 			"Ignore first armour break roll") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement()
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic)
 					.withProperties(Collections.singleton(NamedProperties.ignoreFirstArmourBreak));
 			}
 		});
@@ -280,8 +281,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			}
 
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(new SkillClassWithValue(PassBlock.class)));
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(Collections.singleton(new SkillClassWithValue(PassBlock.class)));
 			}
 
 		});
@@ -302,8 +303,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			InducementDuration.UNTIL_END_OF_GAME, "Player cannot be fouled and no modifiers to injury rolls") {
 
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withProperties(new HashSet<ISkillProperty>() {{
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withProperties(new HashSet<ISkillProperty>() {{
 					add(NamedProperties.preventDamagingInjuryModifications);
 					add(NamedProperties.preventBeingFouled);
 				}});
@@ -322,8 +323,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.START_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Pro (not playable on a Loner)", CardHandlerKey.RABBITS_FOOT) {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(new SkillClassWithValue(Pro.class)));
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(Collections.singleton(new SkillClassWithValue(Pro.class)));
 			}
 
 		});
@@ -341,10 +342,10 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			"Player gets +1 ST & Mighty Blow") {
 
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement()
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic)
 					.withSkills(Collections.singleton(new SkillClassWithValue(MightyBlow.class)))
-					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStat.ST)));
+					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(PlayerStatKey.ST, mechanic)));
 			}
 		});
 
@@ -419,8 +420,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 			"Player gets Disturbing Presence & opponents in 3 squares get Bone-head", CardHandlerKey.DISTRACT) {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(Collections.singleton(new SkillClassWithValue(DisturbingPresence.class)));
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(Collections.singleton(new SkillClassWithValue(DisturbingPresence.class)));
 			}
 		});
 
@@ -466,8 +467,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			}
 
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(
 					new HashSet<SkillClassWithValue>() {{
 						add(new SkillClassWithValue(NoHands.class));
 						add(new SkillClassWithValue(Bombardier.class));
@@ -501,14 +502,14 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.BEFORE_KICKOFF_SCATTER}, InducementDuration.UNTIL_END_OF_GAME,
 			"Player gets Kick, Dirty Player & -1 MA") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement()
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic)
 					.withSkills(
 						new HashSet<SkillClassWithValue>() {{
 							add(new SkillClassWithValue(Kick.class));
 							add(new SkillClassWithValue(DirtyPlayer.class));
 						}})
-					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStat.MA)));
+					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(PlayerStatKey.MA, mechanic)));
 			}
 		});
 
@@ -557,8 +558,8 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			new InducementPhase[]{InducementPhase.END_OF_OWN_TURN}, InducementDuration.UNTIL_END_OF_DRIVE,
 			"Player gets Pass Block and Shadowing") {
 			@Override
-			public TemporaryEnhancements activationEnhancement() {
-				return super.activationEnhancement().withSkills(
+			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
+				return super.activationEnhancement(mechanic).withSkills(
 					new HashSet<SkillClassWithValue>() {{
 						add(new SkillClassWithValue(PassBlock.class));
 						add(new SkillClassWithValue(Shadowing.class));

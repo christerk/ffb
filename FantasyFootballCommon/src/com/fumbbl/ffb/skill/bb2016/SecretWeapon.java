@@ -1,11 +1,12 @@
 package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 
 /**
  * Some players are armed with special pieces of equipment that are called
@@ -32,4 +33,8 @@ public class SecretWeapon extends Skill {
 		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
 	}
 
+	@Override
+	public SkillValueEvaluator evaluator() {
+		return SkillValueEvaluator.ROLL;
+	}
 }

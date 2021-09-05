@@ -1,9 +1,5 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -15,6 +11,10 @@ import com.fumbbl.ffb.modifiers.PassModifierCollection;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.util.Scanner;
 
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 /**
  * @author Kalimar
  */
@@ -22,7 +22,7 @@ import com.fumbbl.ffb.util.Scanner;
 @RulesCollection(Rules.COMMON)
 public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, PassModifier, PassModifierCollection> {
 
-	private PassModifierCollection passModifierCollection = new PassModifierCollection();
+	private PassModifierCollection passModifierCollection;
 
 	public PassModifier forName(String name) {
 		return Stream.concat(

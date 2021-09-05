@@ -1,16 +1,5 @@
 package com.fumbbl.ffb.server.net;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WebSocketException;
-
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.GameList;
@@ -60,6 +49,16 @@ import com.fumbbl.ffb.server.net.commands.InternalServerCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandSocketClosed;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WebSocketException;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 
@@ -69,7 +68,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 	private boolean fStopped;
 	private final BlockingQueue<ReceivedCommand> fCommandQueue;
-	private FantasyFootballServer fServer;
+	private final FantasyFootballServer fServer;
 	private boolean fCommandCompression;
 
 	public ServerCommunication(FantasyFootballServer pServer) {
@@ -105,7 +104,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 				handleCommandInternal(command);
 			}
 		} catch (Exception pException) {
-			getServer().getDebugLog().log(pException);
+			getServer().getDebugLog().logWithOutGameId(pException);
 			System.exit(99);
 		}
 	}
@@ -259,7 +258,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		try {
 			// Future<Void> future = session.getRemote().sendStringByFuture(textMessage);
 			Future<Void> future = session.getRemote()
-					.sendBytesByFuture(ByteBuffer.wrap(textMessage.getBytes(Charset.forName("UTF8"))));
+				.sendBytesByFuture(ByteBuffer.wrap(textMessage.getBytes(StandardCharsets.UTF_8)));
 			return future;
 		} catch (WebSocketException webSocketException) {
 			// getServer().getDebugLog().log(IServerLogLevel.WARN,

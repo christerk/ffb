@@ -158,6 +158,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 	}
 
 	private void lashOut(Game game, StepAnimalSavagery step, Player<?> player) {
+		if (StringTool.isProvided(game.getDefenderId())) {
+			step.publishParameter(StepParameter.from(StepParameterKey.GAZE_VICTIM_ID, game.getDefenderId()));
+		}
 		game.setDefenderId(player.getId());
 		step.getResult().addReport(new ReportAnimalSavagery(game.getActingPlayer().getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());

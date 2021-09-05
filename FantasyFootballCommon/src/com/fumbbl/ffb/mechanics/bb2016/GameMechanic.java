@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -94,6 +95,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
 		return true;
+	}
+
+	@Override
+	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
+		return true;
+	}
+
+	@Override
+	public boolean infectedGoesToReserves() {
+		return false;
 	}
 
 	@Override
@@ -205,5 +216,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isLegalConcession(Game game, Team team) {
 		return UtilPlayer.findPlayersInReserveOrField(game, team).length <= 2;
+	}
+
+	@Override
+	public boolean starPairCountsAsTwo() {
+		return false;
 	}
 }

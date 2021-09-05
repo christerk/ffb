@@ -184,6 +184,9 @@ public class DialogManager {
 					case SELECT_SKILL:
 						setDialogHandler(new DialogSelectSkillHandler(getClient()));
 						break;
+					case BRIBERY_AND_CORRUPTION_RE_ROLL:
+						setDialogHandler(new DialogBriberyAndCorruptionHandler(getClient()));
+						break;
 					default:
 						break;
 				}

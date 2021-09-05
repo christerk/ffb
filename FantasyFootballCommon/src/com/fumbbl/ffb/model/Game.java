@@ -73,6 +73,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private final FactoryManager factoryManager;
 	private final IFactorySource applicationSource;
 	private ModifierAggregator modifierAggregator;
+	private TeamState teamState = TeamState.FULL;
 
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
 		this.applicationSource = applicationSource;
@@ -559,6 +560,14 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		notifyObservers(ModelChangeId.GAME_SET_CONCEDED_LEGALLY, null, concededLegally);
 	}
 
+	public void teamsAreInflated() {
+		teamState = TeamState.FULL;
+	}
+
+	public void teamsAreSkeletons() {
+		teamState = TeamState.SKELETON;
+	}
+
 	// transformation
 
 	public Game transform() {
@@ -609,6 +618,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		transformedGame.fGameResult = getGameResult().transform();
 
 		transformedGame.concededLegally = concededLegally;
+		transformedGame.teamState = teamState;
 		return transformedGame;
 
 	}
@@ -641,6 +651,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		IJsonOption.THROWER_ID.addTo(jsonObject, fThrowerId);
 		IJsonOption.THROWER_ACTION.addTo(jsonObject, fThrowerAction);
 
+		IJsonOption.TEAM_STATE.addTo(jsonObject, teamState.name());
 		IJsonOption.TEAM_AWAY.addTo(jsonObject, fTeamAway.toJsonValue());
 		IJsonOption.TURN_DATA_AWAY.addTo(jsonObject, fTurnDataAway.toJsonValue());
 		IJsonOption.TEAM_HOME.addTo(jsonObject, fTeamHome.toJsonValue());
@@ -693,9 +704,20 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		fThrowerId = IJsonOption.THROWER_ID.getFrom(source, jsonObject);
 		fThrowerAction = (PlayerAction) IJsonOption.THROWER_ACTION.getFrom(source, jsonObject);
 
-		fTeamAway.initFrom(source, IJsonOption.TEAM_AWAY.getFrom(source, jsonObject));
+		String teamStateString = IJsonOption.TEAM_STATE.getFrom(source, jsonObject);
+
+		if (StringTool.isProvided(teamStateString)) {
+			teamState = TeamState.valueOf(teamStateString);
+		}
+
+		if (teamState == TeamState.SKELETON) {
+			fTeamAway = new TeamSkeleton(source).initFrom(source, IJsonOption.TEAM_AWAY.getFrom(source, jsonObject));
+			fTeamHome = new TeamSkeleton(source).initFrom(source, IJsonOption.TEAM_HOME.getFrom(source, jsonObject));
+		} else {
+			fTeamAway.initFrom(source, IJsonOption.TEAM_AWAY.getFrom(source, jsonObject));
+			fTeamHome.initFrom(source, IJsonOption.TEAM_HOME.getFrom(source, jsonObject));
+		}
 		fTurnDataAway.initFrom(source, IJsonOption.TURN_DATA_AWAY.getFrom(source, jsonObject));
-		fTeamHome.initFrom(source, IJsonOption.TEAM_HOME.getFrom(source, jsonObject));
 		fTurnDataHome.initFrom(source, IJsonOption.TURN_DATA_HOME.getFrom(source, jsonObject));
 		fFieldModel.initFrom(source, IJsonOption.FIELD_MODEL.getFrom(source, jsonObject));
 		fActingPlayer.initFrom(source, IJsonOption.ACTING_PLAYER.getFrom(source, jsonObject));
@@ -706,13 +728,18 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		if (dialogParameterObject != null) {
 			fDialogParameter = new DialogParameterFactory().forJsonValue(source, dialogParameterObject);
 		}
-		concededLegally = IJsonOption.CONCEDED_LEGALLY.getFrom(source, jsonObject);
+		Boolean concededValue = IJsonOption.CONCEDED_LEGALLY.getFrom(source, jsonObject);
+		concededLegally = concededValue != null && concededValue;
 
 		return this;
 
 	}
-	
+
 	public <T extends INamedObjectFactory<?>> T getFactory(Factory factory) {
 		return getRules().getFactory(factory);
+	}
+
+	private enum TeamState {
+		SKELETON, FULL
 	}
 }

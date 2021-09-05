@@ -30,7 +30,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepPushback.StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				state.standingFirm.put(useSkillCommand.getPlayerId(), useSkillCommand.isSkillUsed());
 				return StepCommandStatus.EXECUTE_STEP;
 			}
@@ -43,12 +43,13 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 				Skill cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
 				// handle auto-stand firm
 				PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);
+				boolean hasSkill = UtilCards.hasSkill(state.defender, skill);
 				if (playerState.isRooted()) {
 					state.standingFirm.put(state.defender.getId(), true);
 				} else if ((playerState.isProne() || playerState.isStunned()) || ((state.oldDefenderState != null) && (state.oldDefenderState.isProne() || state.oldDefenderState.isStunned()))) {
 					state.standingFirm.put(state.defender.getId(), false);
 				} else if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && cancellingSkill != null
-					&& UtilCards.hasSkill(state.defender, skill) &&game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
+					&& hasSkill && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
 					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender))) {
 					state.standingFirm.put(state.defender.getId(), false);
 					step.getResult().addReport(
@@ -56,23 +57,18 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 				}
 
 				// handle stand firm
-				if (UtilCards.hasSkill(state.defender, skill)
-						&& state.standingFirm.getOrDefault(state.defender.getId(), true)) {
+				if (hasSkill
+					&& state.standingFirm.getOrDefault(state.defender.getId(), true)) {
 					if (!state.standingFirm.containsKey(state.defender.getId())) {
 						UtilServerDialog.showDialog(step.getGameState(),
-								new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
+							new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
 					}
 					if (state.standingFirm.containsKey(state.defender.getId())) {
-						if (state.standingFirm.containsKey(state.defender.getId())) {
-							state.doPush = true;
-							state.pushbackStack.clear();
-							step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
-							step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
-							step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, true, SkillUse.AVOID_PUSH));
-						} else {
-							step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, false, null));
-						}
-
+						state.doPush = true;
+						state.pushbackStack.clear();
+						step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
+						step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
+						step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, true, SkillUse.AVOID_PUSH));
 					}
 					return true;
 				}

@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
@@ -33,6 +33,6 @@ public class Animosity extends Skill {
 
 	@Override
 	public SkillValueEvaluator evaluator() {
-		return SkillValueEvaluator.ANIMOSITY;
+		return SkillValueEvaluator.DEFAULT;
 	}
 }

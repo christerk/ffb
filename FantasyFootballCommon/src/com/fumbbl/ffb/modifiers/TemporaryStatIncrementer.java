@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.modifiers;
 
+import com.fumbbl.ffb.mechanics.StatsMechanic;
+
 public class TemporaryStatIncrementer extends TemporaryStatModifier {
-	public TemporaryStatIncrementer(PlayerStat stat) {
-		super(stat);
+	public TemporaryStatIncrementer(PlayerStatKey stat, StatsMechanic mechanic) {
+		super(stat, mechanic);
 	}
 
 	@Override

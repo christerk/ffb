@@ -7,9 +7,9 @@ public enum PlayerChoiceMode implements INamedObject {
 
 	TENTACLES("tentacles"), SHADOWING("shadowing"), DIVING_TACKLE("divingTackle"), FEED("feed"),
 	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card", false), BLOCK("block"),
-	MVP("mvp"), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
+	MVP("mvp", false), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
-	ASSIGN_TOUCHDOWN("assignTouchdown", false);
+	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false);
 
 	private final String name;
 	private final boolean usePlayerPosition;
@@ -76,6 +76,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ASSIGN_TOUCHDOWN:
 				header.append("Assign a touchdown to one of your players");
 				break;
+			case BRIBERY_AND_CORRUPTION:
+				header.append("Select a player to use Bribery and Corruption for");
+				break;
 			default:
 				break;
 		}
@@ -127,6 +130,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ASSIGN_TOUCHDOWN:
 				title.append("Touchdown from Concession");
 				break;
+			case BRIBERY_AND_CORRUPTION:
+				title.append("Bribery and Corruption");
+				break;
 			default:
 				break;
 		}
@@ -177,6 +183,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case ASSIGN_TOUCHDOWN:
 				message.append("Waiting for coach to assign touchdown");
+				break;
+			case BRIBERY_AND_CORRUPTION:
+				message.append("Waiting for coach to use Bribery and Corruption");
 				break;
 			default:
 				break;
