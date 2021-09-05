@@ -22,8 +22,9 @@ import java.util.regex.Pattern;
 public class GameStateConnector {
 
 	private static final String _USAGE = "java com.fumbbl.ffb.server.admin.GameStateConnector behaviours <gameId>\n" +
-		"java com.fumbbl.ffb.server.admin.GameStateConnector get <gameId> <fromDb>\n" +
+		"java com.fumbbl.ffb.server.admin.GameStateConnector get <gameId> <fromDb> <includeLog>\n" +
 		"  [fromDb being true, false or auto where auto tries in memory first and falls back to db if needed]\n" +
+		"  [includeLog being true or false]\n" +
 		"java com.fumbbl.ffb.server.admin.GameStateConnector set <file>\n" +
 		"  [file being an unzipped json file containing the new gameState]\n";
 
@@ -75,7 +76,7 @@ public class GameStateConnector {
 				System.out.println(servletResponse);
 			} else if (GameStateServlet.GET.equals(args[0])) {
 				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_GET),
-					response, args[1], args[2]);
+					response, args[1], args[2], args[3]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
 				System.out.println(servletResponse);

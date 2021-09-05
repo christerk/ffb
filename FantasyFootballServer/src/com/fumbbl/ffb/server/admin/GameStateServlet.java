@@ -45,6 +45,7 @@ public class GameStateServlet extends HttpServlet {
 	private static final String _PARAMETER_RESPONSE = "response";
 	private static final String _PARAMETER_GAME_ID = "gameId";
 	private static final String _PARAMETER_FROM_DB = "fromDb";
+	private static final String _PARAMETER_INCLUDE_LOG = "includeLog";
 
 	private static final String _XML_TAG_ADMIN = "admin";
 	private static final String _XML_TAG_CHALLENGE = "challenge";
@@ -137,6 +138,9 @@ public class GameStateServlet extends HttpServlet {
 			fromDb = Boolean.parseBoolean(fromDbString);
 		}
 
+		String includeString = ArrayTool.firstElement(pParameters.get(_PARAMETER_INCLUDE_LOG));
+		boolean include = Boolean.parseBoolean(includeString);
+
 		GameCache gameCache = getServer().getGameCache();
 		GameState gameState = null;
 		if (fromDb == null || !fromDb) {
@@ -152,7 +156,7 @@ public class GameStateServlet extends HttpServlet {
 			pResponse.setStatus(404);
 			return jsonObject.add("message", "Game '" + gameId + "' not found").toString();
 		} else {
-			return gameState.toJsonValue().toString();
+			return gameState.toJsonValue(include).toString();
 		}
 	}
 

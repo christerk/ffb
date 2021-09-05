@@ -43,11 +43,15 @@ public class StringTool {
 	}
 
 	public static String bind(String pTemplate, Object pParameter1, Object pParameter2) {
-		return bind(pTemplate, new Object[] { pParameter1, pParameter2 });
+		return bind(pTemplate, new Object[]{pParameter1, pParameter2});
 	}
 
 	public static String bind(String pTemplate, Object pParameter1, Object pParameter2, Object pParameter3) {
-		return bind(pTemplate, new Object[] { pParameter1, pParameter2, pParameter3 });
+		return bind(pTemplate, new Object[]{pParameter1, pParameter2, pParameter3});
+	}
+
+	public static String bind(String pTemplate, Object pParameter1, Object pParameter2, Object pParameter3, Object param4) {
+		return bind(pTemplate, new Object[]{pParameter1, pParameter2, pParameter3, param4});
 	}
 
 	public static String bind(String pTemplate, Object[] pParameters) {
