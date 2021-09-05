@@ -139,7 +139,13 @@ public class GameStateServlet extends HttpServlet {
 		}
 
 		String includeString = ArrayTool.firstElement(pParameters.get(_PARAMETER_INCLUDE_LOG));
-		boolean include = Boolean.parseBoolean(includeString);
+		boolean include = true;
+		int logLimit = 0;
+		if (includeString != null && StringTool.isNumber(includeString)) {
+			logLimit = Integer.parseInt(includeString);
+		} else {
+			include = Boolean.parseBoolean(includeString);
+		}
 
 		GameCache gameCache = getServer().getGameCache();
 		GameState gameState = null;
@@ -156,7 +162,7 @@ public class GameStateServlet extends HttpServlet {
 			pResponse.setStatus(404);
 			return jsonObject.add("message", "Game '" + gameId + "' not found").toString();
 		} else {
-			return gameState.toJsonValue(include).toString();
+			return gameState.toJsonValue(include, logLimit).toString();
 		}
 	}
 

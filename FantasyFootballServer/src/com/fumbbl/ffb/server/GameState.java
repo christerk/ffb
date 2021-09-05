@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.change.IModelChangeObserver;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -320,15 +321,25 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 // JSON serialization
 
 	public JsonObject toJsonValue() {
-		return toJsonValue(true);
+		return toJsonValue(true, 0);
 	}
 
-	public JsonObject toJsonValue(boolean includeLog) {
+	public JsonObject toJsonValue(boolean includeLog, int logLimit) {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
 		IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
 		if (includeLog) {
-			IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+			if (logLimit > 0) {
+				GameLog tmpLog = new GameLog(this);
+				List<ServerCommand> message = Arrays.asList(fGameLog.getServerCommands());
+				if (!message.isEmpty()) {
+					int startIndex = Math.max(0, message.size() - logLimit);
+					message.subList(startIndex, message.size()).forEach(tmpLog::add);
+				}
+				IServerJsonOption.GAME_LOG.addTo(jsonObject, tmpLog.toJsonValue());
+			} else {
+				IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+			}
 		}
 		if (fCurrentStep != null) {
 			IServerJsonOption.CURRENT_STEP.addTo(jsonObject, fCurrentStep.toJsonValue());
