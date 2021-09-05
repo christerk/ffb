@@ -83,10 +83,8 @@ public class UtilFumbblRequest {
 		try {
 			byte[] encodedPassword = PasswordChallenge.fromHexString(pPassword);
 			return PasswordChallenge.createResponse(pChallenge, encodedPassword);
-		} catch (IOException pIoE) {
+		} catch (IOException | NoSuchAlgorithmException pIoE) {
 			throw new FantasyFootballException(pIoE);
-		} catch (NoSuchAlgorithmException pNsaE) {
-			throw new FantasyFootballException(pNsaE);
 		}
 	}
 
