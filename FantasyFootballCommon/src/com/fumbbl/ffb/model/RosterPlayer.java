@@ -15,9 +15,12 @@ import com.fumbbl.ffb.factory.SeriousInjuryFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.IXmlSerializable;
@@ -276,32 +279,33 @@ public class RosterPlayer extends Player<RosterPosition> {
 			int oldAgility = getAgility();
 			int oldStrength = getStrength();
 			int oldPassing = getPassing();
+			StatsMechanic mechanic = (StatsMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 			for (SeriousInjury injury : getLastingInjuries()) {
 				if (injury.getInjuryAttribute() != null) {
 					switch (injury.getInjuryAttribute()) {
 						case MA:
 							if ((fMovement > 1) && ((oldMovement - fMovement) < 2)) {
-								fMovement--;
+								fMovement = mechanic.applyLastingInjury(fMovement, PlayerStatKey.MA);
 							}
 							break;
 						case AV:
 							if ((fArmour > 1) && ((oldArmour - fArmour) < 2)) {
-								fArmour--;
+								fArmour = mechanic.applyLastingInjury(fArmour, PlayerStatKey.AV);
 							}
 							break;
 						case AG:
 							if ((fAgility > 1) && ((oldAgility - fAgility) < 2)) {
-								fAgility--;
+								fAgility = mechanic.applyLastingInjury(fAgility, PlayerStatKey.AG);
 							}
 							break;
 						case ST:
 							if ((fStrength > 1) && ((oldStrength - fStrength) < 2)) {
-								fStrength--;
+								fStrength = mechanic.applyLastingInjury(fStrength, PlayerStatKey.ST);
 							}
 							break;
 						case PA:
 							if ((fPassing > 1) && ((oldPassing - fPassing) < 2)) {
-								fPassing--;
+								fPassing = mechanic.applyLastingInjury(fPassing, PlayerStatKey.PA);
 							}
 							break;
 						default:

@@ -3,8 +3,8 @@ package com.fumbbl.ffb.mechanics;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.PlayerStatLimit;
-import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 
 import java.util.Arrays;
 
@@ -23,7 +23,7 @@ public abstract class StatsMechanic implements Mechanic {
 
 	public abstract StatsDrawingModifier agilityModifier(int modifier);
 
-	public abstract int applyAgilityDecreases(int agility, int decreases);
+	public abstract int applyInGameAgilityInjury(int agility, int decreases);
 
 	protected int reduceArmour(InjuryContext context, int armour, int reductionValue) {
 		if ((armour > reductionValue) &&
@@ -34,5 +34,7 @@ public abstract class StatsMechanic implements Mechanic {
 		return armour;
 	}
 
-	public abstract PlayerStatLimit limit(TemporaryStatModifier.PlayerStatKey key);
+	public abstract PlayerStatLimit limit(PlayerStatKey key);
+
+	public abstract int applyLastingInjury(int startingValue, PlayerStatKey key);
 }

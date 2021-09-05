@@ -29,8 +29,4 @@ public abstract class TemporaryStatModifier implements INamedObject {
 		return limit;
 	}
 
-	public enum PlayerStatKey {
-		MA, ST, AG, PA, AV
-	}
-
 }

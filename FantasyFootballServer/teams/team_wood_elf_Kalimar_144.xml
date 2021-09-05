@@ -20,18 +20,28 @@
         <positionId>woodelf.wardancer</positionId>
         <skillList>
             <skill>Strip Ball</skill>
-            <skill>-MA</skill>
-        <skill>-ST</skill>
-        <skill>-AG</skill>
-        <skill>-PA</skill>
-        <skill>-AV</skill>
-        <skill>-MA</skill>
-        <skill>-ST</skill>
-        <skill>-AG</skill>
-        <skill>-PA</skill>
-        <skill>-AV</skill>
-    </skillList>
-  </player>
+        </skillList>
+        <injuryList>
+            <injury>Smashed Hip (-MA)</injury>
+            <injury>Serious Concussion (-AV)</injury>
+            <injury>Broken Neck (-AG)</injury>
+            <injury>Smashed Collar Bone (-ST)</injury>
+            <injury>Head Injury (-AV)</injury>
+            <injury>Smashed Knee (-MA)</injury>
+            <injury>Neck Injury (-AG)</injury>
+            <injury>Dislocated Shoulder (-ST)</injury>
+            <injury>Broken Arm (-PA)</injury>
+            <injury>Smashed Hip (-MA)</injury>
+            <injury>Serious Concussion (-AV)</injury>
+            <injury>Broken Neck (-AG)</injury>
+            <injury>Smashed Collar Bone (-ST)</injury>
+            <injury>Head Injury (-AV)</injury>
+            <injury>Smashed Knee (-MA)</injury>
+            <injury>Neck Injury (-AG)</injury>
+            <injury>Dislocated Shoulder (-ST)</injury>
+            <injury>Broken Arm (-PA)</injury>
+        </injuryList>
+    </player>
 
   <player nr="2" id="teamWoodElfKalimar2">
   	<name>Wardancer2</name>
@@ -47,18 +57,25 @@
     </skillList>
   </player>
 
-  <player nr="3" id="teamWoodElfKalimar3">
-  	<name>Catcher1</name>
-  	<gender>male</gender>
-  	<positionId>woodelf.catcher</positionId>
-  	<skillList>
-        <skill>-MA</skill>
-        <skill>-ST</skill>
-        <skill>-AG</skill>
-        <skill>-PA</skill>
-        <skill>-AV</skill>
-    </skillList>
-  </player>
+    <player nr="3" id="teamWoodElfKalimar3">
+        <name>Catcher1</name>
+        <gender>male</gender>
+        <positionId>woodelf.catcher</positionId>
+        <skillList>
+        </skillList>
+        <injuryList>
+            <injury>Smashed Hip (-MA)</injury>
+            <injury>Serious Concussion (-AV)</injury>
+            <injury>Broken Neck (-AG)</injury>
+            <injury>Smashed Collar Bone (-ST)</injury>
+            <injury>Head Injury (-AV)</injury>
+            <injury>Smashed Knee (-MA)</injury>
+            <injury>Neck Injury (-AG)</injury>
+            <injury>Dislocated Shoulder (-ST)</injury>
+            <injury>Broken Arm (-PA)</injury>
+        </injuryList>
+
+    </player>
 
   <player nr="4" id="teamWoodElfKalimar4">
   	<name>Catcher2</name>

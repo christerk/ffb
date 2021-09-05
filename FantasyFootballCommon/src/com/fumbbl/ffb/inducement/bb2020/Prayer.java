@@ -4,6 +4,7 @@ import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatIncrementer;
@@ -39,7 +40,7 @@ public enum Prayer implements INamedObject {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
-				add(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStatKey.AV, mechanic));
+				add(new TemporaryStatIncrementer(PlayerStatKey.AV, mechanic));
 			}});
 		}
 
@@ -81,7 +82,7 @@ public enum Prayer implements INamedObject {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
-				add(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStatKey.MA, mechanic));
+				add(new TemporaryStatDecrementer(PlayerStatKey.MA, mechanic));
 			}});
 		}
 
