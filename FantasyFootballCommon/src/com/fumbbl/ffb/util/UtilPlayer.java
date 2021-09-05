@@ -335,12 +335,13 @@ public class UtilPlayer {
 	public static boolean isBallAvailable(Game pGame, Player<?> pPlayer) {
 		return ((pPlayer != null) && (pGame != null) && pGame.getFieldModel().isBallInPlay()
 			&& (pGame.getFieldModel().isBallMoving()
-			|| pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer))));
+			|| (pGame.getFieldModel().getBallCoordinate() != null && pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer)))));
 	}
 
 	public static boolean hasBall(Game pGame, Player<?> pPlayer) {
 		return ((pPlayer != null) && (pGame != null) && pGame.getFieldModel().isBallInPlay()
 			&& !pGame.getFieldModel().isBallMoving()
+			&& pGame.getFieldModel().getBallCoordinate() != null
 			&& pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer)));
 	}
 

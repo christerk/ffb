@@ -320,10 +320,16 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 // JSON serialization
 
 	public JsonObject toJsonValue() {
+		return toJsonValue(true);
+	}
+
+	public JsonObject toJsonValue(boolean includeLog) {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
 		IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
-		IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+		if (includeLog) {
+			IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+		}
 		if (fCurrentStep != null) {
 			IServerJsonOption.CURRENT_STEP.addTo(jsonObject, fCurrentStep.toJsonValue());
 		}

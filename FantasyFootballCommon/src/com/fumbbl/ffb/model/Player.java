@@ -17,6 +17,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.PlayerStatLimit;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
@@ -209,26 +210,26 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	public int getAgilityWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStatKey.AG, getAgility());
+		return getStatWithModifiers(PlayerStatKey.AG, getAgility());
 	}
 
 	public int getMovementWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStatKey.MA, getMovement());
+		return getStatWithModifiers(PlayerStatKey.MA, getMovement());
 	}
 
 	public int getStrengthWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStatKey.ST, getStrength());
+		return getStatWithModifiers(PlayerStatKey.ST, getStrength());
 	}
 
 	public int getPassingWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStatKey.PA, getPassing());
+		return getStatWithModifiers(PlayerStatKey.PA, getPassing());
 	}
 
 	public int getArmourWithModifiers() {
-		return getStatWithModifiers(TemporaryStatModifier.PlayerStatKey.AV, getArmour());
+		return getStatWithModifiers(PlayerStatKey.AV, getArmour());
 	}
 
-	private int getStatWithModifiers(TemporaryStatModifier.PlayerStatKey stat, int baseValue) {
+	private int getStatWithModifiers(PlayerStatKey stat, int baseValue) {
 		int sum = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
 			.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
 

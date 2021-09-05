@@ -17,11 +17,11 @@ import com.fumbbl.ffb.modifiers.InterceptionContext;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PassModifier;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatIncrementer;
-import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.skill.Catch;
 import com.fumbbl.ffb.skill.DisturbingPresence;
 import com.fumbbl.ffb.skill.Fend;
@@ -175,13 +175,13 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			@Override
 			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
 				return super.activationEnhancement(mechanic)
-					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStatKey.ST, mechanic)));
+					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(PlayerStatKey.ST, mechanic)));
 			}
 
 			@Override
 			public TemporaryEnhancements deactivationEnhancement(StatsMechanic mechanic) {
 				return super.deactivationEnhancement(mechanic)
-					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStatKey.ST, mechanic)));
+					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(PlayerStatKey.ST, mechanic)));
 			}
 		});
 
@@ -345,7 +345,7 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			public TemporaryEnhancements activationEnhancement(StatsMechanic mechanic) {
 				return super.activationEnhancement(mechanic)
 					.withSkills(Collections.singleton(new SkillClassWithValue(MightyBlow.class)))
-					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(TemporaryStatModifier.PlayerStatKey.ST, mechanic)));
+					.withModifiers(Collections.singleton(new TemporaryStatIncrementer(PlayerStatKey.ST, mechanic)));
 			}
 		});
 
@@ -509,7 +509,7 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 							add(new SkillClassWithValue(Kick.class));
 							add(new SkillClassWithValue(DirtyPlayer.class));
 						}})
-					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(TemporaryStatModifier.PlayerStatKey.MA, mechanic)));
+					.withModifiers(Collections.singleton(new TemporaryStatDecrementer(PlayerStatKey.MA, mechanic)));
 			}
 		});
 
