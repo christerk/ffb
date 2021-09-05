@@ -23,7 +23,7 @@ public class GameStateConnector {
 
 	private static final String _USAGE = "java com.fumbbl.ffb.server.admin.GameStateConnector behaviours <gameId>\n" +
 		"java com.fumbbl.ffb.server.admin.GameStateConnector get <gameId> <fromDb>\n" +
-		"  [fromDb being true or false]\n" +
+		"  [fromDb being true, false or auto where auto tries in memory first and falls back to db if needed]\n" +
 		"java com.fumbbl.ffb.server.admin.GameStateConnector set <file>\n" +
 		"  [file being an unzipped json file containing the new gameState]\n";
 

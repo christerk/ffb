@@ -37,6 +37,7 @@ public class GameStateServlet extends HttpServlet {
 	public static final String CHALLENGE = "challenge";
 	public static final String GET = "get";
 	public static final String SET = "set";
+	public static final String AUTO = "auto";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
@@ -131,10 +132,20 @@ public class GameStateServlet extends HttpServlet {
 		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
 		long gameId = parseGameId(gameIdString);
 		String fromDbString = ArrayTool.firstElement(pParameters.get(_PARAMETER_FROM_DB));
-		boolean fromDb = Boolean.parseBoolean(fromDbString);
+		Boolean fromDb = null;
+		if (StringTool.isProvided(fromDbString) && !AUTO.equals(fromDbString)) {
+			fromDb = Boolean.parseBoolean(fromDbString);
+		}
 
 		GameCache gameCache = getServer().getGameCache();
-		GameState gameState = fromDb ? gameCache.queryFromDb(gameId) : gameCache.getGameStateById(gameId);
+		GameState gameState = null;
+		if (fromDb == null || !fromDb) {
+			gameState = gameCache.getGameStateById(gameId);
+		}
+
+		if (gameState == null && (fromDb == null || fromDb)) {
+			gameState = gameCache.queryFromDb(gameId);
+		}
 		JsonObject jsonObject = new JsonObject();
 
 		if (gameState == null) {
