@@ -1,15 +1,16 @@
 package com.fumbbl.ffb.skill.bb2016;
 
-import java.util.Arrays;
-
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.InjuryModifierContext;
 import com.fumbbl.ffb.modifiers.StaticArmourModifier;
 import com.fumbbl.ffb.modifiers.StaticInjuryModifierAttacker;
+
+import java.util.Arrays;
 
 /**
  * Add 1 to any Armour or Injury roll made by a player with this skill when an
@@ -27,7 +28,12 @@ public class MightyBlow extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new StaticArmourModifier("Mighty Blow", 1, false));
+		registerModifier(new StaticArmourModifier("Mighty Blow", 1, false) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				return super.appliesToContext(context) && !context.isFoul();
+			}
+		});
 		registerModifier(new StaticInjuryModifierAttacker("Mighty Blow", 1, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
