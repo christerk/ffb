@@ -63,7 +63,7 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean areSpecialBlockActionsAllowed(TurnMode turnMode);
 
-	public abstract boolean allowesCancellingGuard(TurnMode turnMode);
+	public abstract boolean allowsCancellingGuard(TurnMode turnMode);
 
 	public abstract boolean isBlockActionAllowed(TurnMode turnMode);
 
@@ -78,4 +78,15 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean isLegalConcession(Game game, Team team);
 
 	public abstract boolean starPairCountsAsTwo();
+
+	public abstract String fanModificationName();
+
+	public abstract int fanModification(TeamResult teamResult);
+
+	public abstract int fans(Team team);
+
+	public abstract String audienceName();
+
+	public abstract int audience(TeamResult teamResult);
+
 }

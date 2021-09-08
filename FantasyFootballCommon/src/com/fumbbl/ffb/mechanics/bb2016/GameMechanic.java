@@ -143,7 +143,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean allowesCancellingGuard(TurnMode turnMode) {
+	public boolean allowsCancellingGuard(TurnMode turnMode) {
 		return false;
 	}
 
@@ -221,5 +221,30 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean starPairCountsAsTwo() {
 		return false;
+	}
+
+	@Override
+	public String fanModificationName() {
+		return "Fan Factor";
+	}
+
+	@Override
+	public int fanModification(TeamResult teamResult) {
+		return teamResult.getFanFactorModifier();
+	}
+
+	@Override
+	public int fans(Team team) {
+		return team.getFanFactor();
+	}
+
+	@Override
+	public String audienceName() {
+		return "Fame";
+	}
+
+	@Override
+	public int audience(TeamResult teamResult) {
+		return teamResult.getFame();
 	}
 }

@@ -210,7 +210,7 @@ public class UtilPlayer {
 			if (offensiveAssist != pAttacker) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
 				Player<?>[] adjacentPlayersWithTacklezones = findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false);
-				boolean guardIsCanceled = mechanic.allowesCancellingGuard(pGame.getTurnMode())
+				boolean guardIsCanceled = mechanic.allowsCancellingGuard(pGame.getTurnMode())
 					&& Arrays.stream(adjacentPlayersWithTacklezones)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsFoulsInTacklezones));

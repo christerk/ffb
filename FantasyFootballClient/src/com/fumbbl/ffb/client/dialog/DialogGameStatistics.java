@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
@@ -79,6 +82,7 @@ public class DialogGameStatistics extends Dialog {
 
 		Game game = getClient().getGame();
 		GameResult gameResult = game.getGameResult();
+		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		StringBuilder statistics = new StringBuilder();
 		statistics.append("<html>\n");
 		statistics.append("<body>\n");
@@ -190,32 +194,34 @@ public class DialogGameStatistics extends Dialog {
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
 		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Fouls").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
+			.append("</td>\n");
 		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
-				.append(gameResult.getTeamResultHome().totalFouls()).append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(gameResult.getTeamResultHome().totalFouls()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
-				.append(gameResult.getTeamResultAway().totalFouls()).append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(gameResult.getTeamResultAway().totalFouls()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Fan Factor").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append(gameMechanic.fanModificationName()).append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
 		StringBuilder fanFactorHome = new StringBuilder();
-		fanFactorHome.append(game.getTeamHome().getFanFactor());
-		if (gameResult.getTeamResultHome().getFanFactorModifier() > 0) {
-			fanFactorHome.append(" + ").append(gameResult.getTeamResultHome().getFanFactorModifier());
+		fanFactorHome.append(gameMechanic.fans(game.getTeamHome()));
+		int fanModifierHome = gameMechanic.fanModification(gameResult.getTeamResultHome());
+		if (fanModifierHome > 0) {
+			fanFactorHome.append(" + ").append(fanModifierHome);
 		}
-		if (gameResult.getTeamResultHome().getFanFactorModifier() < 0) {
-			fanFactorHome.append(" - ").append(Math.abs(gameResult.getTeamResultHome().getFanFactorModifier()));
+		if (fanModifierHome < 0) {
+			fanFactorHome.append(" - ").append(Math.abs(fanModifierHome));
 		}
 		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN).append(fanFactorHome)
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		StringBuilder fanFactorAway = new StringBuilder();
-		fanFactorAway.append(game.getTeamAway().getFanFactor());
-		if (gameResult.getTeamResultAway().getFanFactorModifier() > 0) {
-			fanFactorAway.append(" + ").append(gameResult.getTeamResultAway().getFanFactorModifier());
+		fanFactorAway.append(gameMechanic.fans(game.getTeamAway()));
+		int fanModifierAway = gameMechanic.fanModification(gameResult.getTeamResultAway());
+		if (fanModifierAway > 0) {
+			fanFactorAway.append(" + ").append(fanModifierAway);
 		}
-		if (gameResult.getTeamResultAway().getFanFactorModifier() < 0) {
-			fanFactorAway.append(" - ").append(Math.abs(gameResult.getTeamResultAway().getFanFactorModifier()));
+		if (fanModifierAway < 0) {
+			fanFactorAway.append(" - ").append(Math.abs(fanModifierAway));
 		}
 		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN).append(fanFactorAway)
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
@@ -245,12 +251,12 @@ public class DialogGameStatistics extends Dialog {
 				.append(gameResult.getTeamResultAway().getSpectators()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Fame").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
+		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append(gameMechanic.audienceName()).append(_FONT_BOLD_CLOSE)
+			.append("</td>\n");
 		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
-				.append(gameResult.getTeamResultHome().getFame()).append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(gameMechanic.audience(gameResult.getTeamResultHome())).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
-				.append(gameResult.getTeamResultAway().getFame()).append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(gameMechanic.audience(gameResult.getTeamResultAway())).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		if ((gameResult.getTeamResultHome().getWinnings() > 0) || (gameResult.getTeamResultAway().getWinnings() > 0)) {
 			statistics.append("<tr>\n");
