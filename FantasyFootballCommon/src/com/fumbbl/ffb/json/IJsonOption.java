@@ -310,10 +310,10 @@ public interface IJsonOption {
 	JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
 	JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
 	JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
+	JsonStringArrayOption PLAYER_IDS_FAILED_BRIBE = new JsonStringArrayOption("playerIdsFailedBribe");
 	JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
 	JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
 	JsonStringArrayOption PLAYER_IDS_NATURAL_ONES = new JsonStringArrayOption("playerIdsNaturalOnes");
-	JsonStringArrayOption PLAYER_IDS_COACH_BANNED = new JsonStringArrayOption("playerIdsCoachBanned");
 	JsonArrayOption PLAYER_MARKER_ARRAY = new JsonArrayOption("playerMarkerArray");
 	JsonStringOption PLAYER_NAME = new JsonStringOption("playerName");
 	JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");
