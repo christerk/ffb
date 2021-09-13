@@ -91,6 +91,9 @@ public class StepEndFeeding extends AbstractStep {
 					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
 							game.isHomePlaying()));
+				} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+					SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
+					((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name())).pushSequence(endTurnParams);
 				}
 			}
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
