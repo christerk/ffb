@@ -92,7 +92,7 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	BLESSED_STATUE_OF_NUFFLE("Blessed Statue of Nuffle",
-		"One chosen player available to play during this drive without Loner gains Pro") {
+		"One chosen player available to play during this drive without Loner gains Pro", InducementDuration.UNTIL_END_OF_GAME) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
