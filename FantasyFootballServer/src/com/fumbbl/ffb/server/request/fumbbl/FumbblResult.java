@@ -74,6 +74,7 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_PETTY_CASH_TRANSFERRED = "pettyCashTransferred";
 	private static final String _XML_TAG_PETTY_CASH_USED = "pettyCashUsed";
 	private static final String _XML_TAG_TEAM_VALUE = "teamValue";
+	private static final String _XML_TAG_TREASURY_SPENT_ON_INDUCEMENTS = "treasurySpentOnInducements";
 
 	private static final String _XML_TAG_PLAYER_RESULT_LIST = "playerResultList";
 
@@ -185,6 +186,10 @@ public class FumbblResult implements IXmlWriteable {
 			}
 			if (pTeamResult.getTeamValue() > 0) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_TEAM_VALUE, pTeamResult.getTeamValue());
+			}
+
+			if (pTeamResult.getTreasurySpentOnInducements() > 0) {
+				UtilXml.addValueElement(pHandler, _XML_TAG_TREASURY_SPENT_ON_INDUCEMENTS, pTeamResult.getTreasurySpentOnInducements());
 			}
 
 			attributes = new AttributesImpl();
