@@ -156,8 +156,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player) {
-		int[] roll = injuryContext.getCasualtyRoll();
+	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player, boolean useDecayRoll) {
+		int[] roll = useDecayRoll ? injuryContext.getCasualtyRollDecay() : injuryContext.getCasualtyRoll();
 		if (ArrayTool.isProvided(roll)) {
 			switch (roll[0]) {
 				case 6:

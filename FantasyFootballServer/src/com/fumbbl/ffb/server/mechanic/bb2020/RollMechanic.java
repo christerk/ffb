@@ -93,7 +93,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player) {
+	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player, boolean useDecayRoll) {
 		if (player instanceof ZappedPlayer) {
 			return new PlayerState(PlayerState.BADLY_HURT);
 		}
