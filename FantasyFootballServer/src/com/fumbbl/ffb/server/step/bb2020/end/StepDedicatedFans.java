@@ -82,7 +82,7 @@ public class StepDedicatedFans extends AbstractStep {
 
 	private int modifier(int roll, int dedicatedFans, boolean winning, boolean conceded) {
 		if (conceded) {
-			return Math.max(Math.min(roll, dedicatedFans - 1), 0);
+			return Math.max(Math.min(roll, dedicatedFans - 1), 0) * -1;
 		} else if (winning) {
 			return (roll >= dedicatedFans) ? 1 : 0;
 		} else {
