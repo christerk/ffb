@@ -189,7 +189,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	private boolean canBeReduced(InjuryAttribute attribute, int currentValue) {
-		return reductionThresholds.get(attribute) != currentValue;
+		return currentValue > 0 && reductionThresholds.get(attribute) != currentValue;
 	}
 
 	private SeriousInjury mapSIRoll(int roll) {
