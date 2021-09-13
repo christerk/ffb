@@ -92,7 +92,7 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	BLESSED_STATUE_OF_NUFFLE("Blessed Statue of Nuffle",
-		"One chosen player available to play during this drive without Loner gains Pro") {
+		"One chosen player available to play during this drive without Loner gains Pro", InducementDuration.UNTIL_END_OF_GAME) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
@@ -116,7 +116,7 @@ public enum Prayer implements INamedObject {
 	FOULING_FRENZY("Fouling Frenzy",
 		"Casualties caused by fouls generate 2 spp"),
 	THROW_A_ROCK("Throw a Rock",
-		"If an opposing player should stall they get hit by a rock on a 5+ and knocked down immediately"),
+		"If an opposing player should stall they get hit by a rock on a 5+ and are knocked down immediately"),
 	UNDER_SCRUTINY("Under Scrutiny",
 		"Fouls by opposing players are always spotted",
 		InducementDuration.UNTIL_END_OF_HALF),

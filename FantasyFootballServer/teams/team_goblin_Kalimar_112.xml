@@ -13,6 +13,8 @@
 	<currentTeamValue>100</currentTeamValue>
 	<teamStrength>88</teamStrength>
 	<division>[X]</division>
+	<dedicatedFans>1</dedicatedFans>
+
 	<treasury>500000</treasury>
 	<specialRules>
 		<rule>Bribery and Corruption</rule>

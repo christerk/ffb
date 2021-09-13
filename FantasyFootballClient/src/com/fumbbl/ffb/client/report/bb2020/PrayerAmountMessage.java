@@ -24,7 +24,8 @@ public class PrayerAmountMessage extends ReportMessageBase<ReportPrayerAmount> {
 		} else {
 			print(getIndent() + 2, TextStyle.AWAY, game.getTeamAway().getName());
 		}
-		println(getIndent() + 2, TextStyle.EXPLANATION, " is granted " + report.getPrayerAmount() + " Prayers to Nuffle");
+		String prayers = report.getPrayerAmount() == 1 ? "Prayer" : "Prayers";
+		println(getIndent() + 2, TextStyle.EXPLANATION, " is granted " + report.getPrayerAmount() + " " + prayers + " to Nuffle");
 	}
 
 	private String getTvText(int tv) {

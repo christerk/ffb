@@ -43,7 +43,7 @@ public class ServerUtilPlayer {
 						defendingPlayersOtherThanBlocker++;
 				}
 
-				boolean guardIsCanceled = mechanic.allowesCancellingGuard(game.getTurnMode())
+				boolean guardIsCanceled = mechanic.allowsCancellingGuard(game.getTurnMode())
 					&& game.getActingTeam().hasPlayer(attacker) && Arrays.stream(defensiveAssists)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsBlocksInTacklezones));
