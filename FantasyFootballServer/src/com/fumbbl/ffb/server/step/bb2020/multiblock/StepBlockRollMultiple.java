@@ -223,6 +223,8 @@ public class StepBlockRollMultiple extends AbstractStep {
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 		for (int i = 0; i < blockRoll.getNrOfDice(); i++) {
 			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN && !blockRoll.indexWasReRolled(i)) {
+				int[] oldRoll = blockRoll.getBlockRoll();
+				blockRoll.setBlockRoll(Arrays.copyOf(oldRoll, oldRoll.length));
 				blockRoll.getBlockRoll()[i] = reRolledDie;
 				brawlerIndex = i;
 				break;
@@ -300,6 +302,8 @@ public class StepBlockRollMultiple extends AbstractStep {
 				actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 				int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
 				getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), ReRollSources.PRO));
+				int[] oldRoll = roll.getBlockRoll();
+				roll.setBlockRoll(Arrays.copyOf(oldRoll, oldRoll.length));
 				roll.getBlockRoll()[roll.getProIndex()] = reRolledWithPro[0];
 				roll.setReRollDiceIndexes(add(roll.getReRollDiceIndexes(), roll.getProIndex()));
 				roll.remove(ReRollSources.PRO);
