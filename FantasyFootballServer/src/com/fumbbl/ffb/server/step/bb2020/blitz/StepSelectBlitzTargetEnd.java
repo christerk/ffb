@@ -1,12 +1,17 @@
 package com.fumbbl.ffb.server.step.bb2020.blitz;
 
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -14,12 +19,16 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.Select;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepSelectBlitzTargetEnd extends AbstractStep {
+
+	private boolean endTurn;
+
 	public StepSelectBlitzTargetEnd(GameState pGameState) {
 		super(pGameState);
 	}
@@ -30,6 +39,16 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 	}
 
 	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.END_TURN) {
+			endTurn = parameter.getValue() != null && (boolean) parameter.getValue();
+			return true;
+		}
+
+		return super.setParameter(parameter);
+	}
+
+	@Override
 	public void start() {
 		super.start();
 		executeStep();
@@ -37,24 +56,26 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		BlitzState blitzState = game.getFieldModel().getBlitzState();
-		if (blitzState != null) {
+		if (endTurn) {
+			EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
+			game.setDefenderId(null); // clear defender for next multi block
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, endTurn));
+		} else if (blitzState != null) {
 			if (blitzState.isCanceled()) {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
 				game.getFieldModel().setBlitzState(null);
-				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
 			} else if (blitzState.isSelected()) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
-				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
 				game.getTurnData().setBlitzUsed(true);
 				game.getActingPlayer().setHasMoved(true);
 			} else if (blitzState.isSkipped()) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
-				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
 				getResult().setSound(SoundId.CLICK);
@@ -66,5 +87,21 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 		}
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
+		return jsonObject;
+	}
+
+	@Override
+	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		Boolean endTurnObject = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		endTurn = endTurnObject != null && endTurnObject;
+		return this;
 	}
 }
