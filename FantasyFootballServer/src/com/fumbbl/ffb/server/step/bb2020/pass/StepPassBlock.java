@@ -181,6 +181,7 @@ public class StepPassBlock extends AbstractStep {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
 					getGameState().pushCurrentStepOnStack();
 					selectGenerator.pushSequence(selectParams);
+					fEndPlayerAction = false;
 				}
 			}
 
