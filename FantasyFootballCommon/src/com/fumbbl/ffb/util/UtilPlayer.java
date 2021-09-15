@@ -227,7 +227,7 @@ public class UtilPlayer {
 			false)) {
 			if (defensiveAssist != pDefender) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(defensiveAssist);
-				if (findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
+				if (defensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones) || findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
 					foulAssists--;
 				}
 			}
