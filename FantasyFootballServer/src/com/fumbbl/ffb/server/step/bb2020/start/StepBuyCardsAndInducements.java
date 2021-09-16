@@ -32,6 +32,7 @@ import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
@@ -489,7 +490,6 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 	}
 
 	private int inducementCosts(Team team, InducementSet inducementSet) {
-		Roster roster = team.getRoster();
 		Game game = getGameState().getGame();
 		return Arrays.stream(inducementSet.getInducements())
 			.filter(inducement -> inducement.getType().getActualCostId(team) != null)
@@ -547,10 +547,15 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		Game game = getGameState().getGame();
 		int unspentMoneyHome = availableInducementGoldHome - usedInducementGoldHome;
 		int spentTreasuryHome = Math.max(0, game.getTeamHome().getTreasury() - unspentMoneyHome);
-		game.getGameResult().getTeamResultHome().setTreasurySpentOnInducements(spentTreasuryHome);
+		TeamResult teamResultHome = game.getGameResult().getTeamResultHome();
+		teamResultHome.setTreasurySpentOnInducements(spentTreasuryHome);
+		teamResultHome.setPettyCashUsed(Math.min(usedInducementGoldHome, teamResultHome.getPettyCashFromTvDiff()));
+
 		int unspentMoneyAway = availableInducementGoldAway - usedInducementGoldAway;
 		int spentTreasuryAway = Math.max(0, game.getTeamAway().getTreasury() - unspentMoneyAway);
-		game.getGameResult().getTeamResultAway().setTreasurySpentOnInducements(spentTreasuryAway);
+		TeamResult teamResultAway = game.getGameResult().getTeamResultAway();
+		teamResultAway.setTreasurySpentOnInducements(spentTreasuryAway);
+		teamResultAway.setPettyCashUsed(Math.min(usedInducementGoldAway, teamResultAway.getPettyCashFromTvDiff()));
 
 		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
 
