@@ -2,6 +2,7 @@ package com.fumbbl.ffb.mechanics;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.FieldModel;
@@ -89,4 +90,5 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract int audience(TeamResult teamResult);
 
+	public abstract PlayerType raisedNurgleType();
 }
