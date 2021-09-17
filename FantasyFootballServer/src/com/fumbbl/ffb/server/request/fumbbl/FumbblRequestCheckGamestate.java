@@ -39,13 +39,17 @@ public class FumbblRequestCheckGamestate extends ServerRequest {
 				new Object[]{game.getTeamHome().getId(), game.getTeamAway().getId()}));
 			server.getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 			FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
-			game.getOptions().init(fumbblGameState.getOptions());
-			server.getDebugLog().log(IServerLogLevel.TRACE, getGameState().getId(),
-				game.getOptions().toJsonValue().toString());
+			if ((fumbblGameState == null)) {
+				UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
+			} else {
+				game.getOptions().init(fumbblGameState.getOptions());
+				server.getDebugLog().log(IServerLogLevel.TRACE, getGameState().getId(),
+					game.getOptions().toJsonValue().toString());
 
-			InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(
-				getGameState().getId());
-			server.getCommunication().handleCommand(gameCheckedCommand);
+				InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(
+					getGameState().getId());
+				server.getCommunication().handleCommand(gameCheckedCommand);
+			}
 		} else {
 			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_CHECK),
 				new Object[]{game.getTeamHome().getId(), game.getTeamAway().getId()}));

@@ -18,7 +18,7 @@ public abstract class RollMechanic implements Mechanic {
 
 	public abstract PlayerState interpretInjuryRoll(Game game, InjuryContext pInjuryContext);
 
-	public abstract PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player);
+	public abstract PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player, boolean useDecayRoll);
 
 	public abstract SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext);
 	public abstract SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext, boolean useDecay);

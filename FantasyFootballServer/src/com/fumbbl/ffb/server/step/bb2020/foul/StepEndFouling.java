@@ -20,8 +20,8 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 /**
  * Final step of the foul sequence. Consumes all expected stepParameters.
@@ -81,6 +81,7 @@ public class StepEndFouling extends AbstractStep {
 				.pushSequence(new Select.SequenceParams(getGameState(), true));
 			UtilServerSteps.changePlayerAction(this, player.getId(),
 				PlayerAction.MOVE, false);
+			actingPlayer.setStandingUp(false);
 		} else {
 			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
 				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));

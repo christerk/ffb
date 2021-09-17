@@ -11,6 +11,7 @@ import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
@@ -141,6 +142,7 @@ public class StepEndBlocking extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		FieldModel fieldModel = game.getFieldModel();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UtilServerDialog.hideDialog(getGameState());
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
@@ -153,7 +155,7 @@ public class StepEndBlocking extends AbstractStep {
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
-		game.getFieldModel().clearMultiBlockTargets();
+		fieldModel.clearMultiBlockTargets();
 		if (fEndTurn || fEndPlayerAction) {
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
@@ -170,10 +172,10 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.setStrength(activePlayer.getStrengthWithModifiers());
 			}
 
-			FieldCoordinate defenderPosition = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-			FieldCoordinate attackerPosition = game.getFieldModel().getPlayerCoordinate(activePlayer);
-			PlayerState attackerState = game.getFieldModel().getPlayerState(activePlayer);
-			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
+			FieldCoordinate defenderPosition = fieldModel.getPlayerCoordinate(game.getDefender());
+			FieldCoordinate attackerPosition = fieldModel.getPlayerCoordinate(activePlayer);
+			PlayerState attackerState = fieldModel.getPlayerState(activePlayer);
+			PlayerState defenderState = fieldModel.getPlayerState(game.getDefender());
 
 			Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
 				NamedProperties.forceSecondBlock);
@@ -196,18 +198,18 @@ public class StepEndBlocking extends AbstractStep {
 				}
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
-				game.getFieldModel().clearDiceDecorations();
+				fieldModel.clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
-				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(activePlayer);
+				FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(activePlayer);
 				knockedDownPlayers = knockedDownPlayers.stream().filter(player -> {
-					Player<?> playerById = game.getPlayerById(player);
-					PlayerState playerState = game.getFieldModel().getPlayerState(playerById);
-					return game.getFieldModel().getPlayerCoordinate(playerById).isAdjacent(attackerCoordinate)
-						&& (playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED);
+						Player<?> playerById = game.getPlayerById(player);
+						PlayerState playerState = fieldModel.getPlayerState(playerById);
+						return fieldModel.getPlayerCoordinate(playerById).isAdjacent(attackerCoordinate)
+							&& (playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED);
 					}
 				).collect(Collectors.toList());
 
-				PlayerState playerState = game.getFieldModel().getPlayerState(activePlayer);
+				PlayerState playerState = fieldModel.getPlayerState(activePlayer);
 
 				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
 
