@@ -245,6 +245,9 @@ public class UtilServerInjury {
 		RosterPlayer raisedPlayer = null;
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
+			GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			PlayerType playerType = pNurglesRot ? mechanic.raisedNurgleType() : PlayerType.RAISED_FROM_DEAD;
+
 			pNecroTeamResult.setRaisedDead(pNecroTeamResult.getRaisedDead() + 1);
 			raisedPlayer = new RosterPlayer();
 			String raisedPlayerId = killedId + "R" +
@@ -253,13 +256,12 @@ public class UtilServerInjury {
 			raisedPlayer.updatePosition(zombiePosition, pGame.getRules());
 			raisedPlayer.setName(pPlayerName);
 			raisedPlayer.setNr(pNecroTeam.getMaxPlayerNr() + 1);
-			raisedPlayer.setType(PlayerType.RAISED_FROM_DEAD);
+			raisedPlayer.setType(playerType);
 			pNecroTeam.addPlayer(raisedPlayer);
 			PlayerResult playerResult = pGame.getGameResult().getPlayerResult(raisedPlayer);
 			playerResult.setSendToBoxHalf(pGame.getHalf());
 			playerResult.setSendToBoxTurn(pGame.getTurnData().getTurnNr());
 			if (pNurglesRot) {
-				GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 				int newPlayerState = mechanic.infectedGoesToReserves() ? PlayerState.RESERVE : PlayerState.MISSING;
 				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(newPlayerState));
 				playerResult.setSendToBoxReason(mechanic.raisedByNurgleReason());

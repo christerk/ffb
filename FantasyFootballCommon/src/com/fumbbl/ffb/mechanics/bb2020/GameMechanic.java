@@ -2,6 +2,7 @@ package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SkillCategory;
@@ -268,5 +269,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public int audience(TeamResult teamResult) {
 		return teamResult.getFanFactor();
+	}
+
+	@Override
+	public PlayerType raisedNurgleType() {
+		return PlayerType.PLAGUE_RIDDEN;
 	}
 }
