@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
@@ -208,13 +209,16 @@ public final class StepMvp extends AbstractStep {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		for (Player<?> player : pTeam.getPlayers()) {
+			if (player.getPlayerType() == PlayerType.STAR || player.getPlayerType() == PlayerType.MERCENARY) {
+				continue;
+			}
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.isKilled()) {
 				continue;
 			}
 			PlayerResult playerResult = gameResult.getPlayerResult(player);
 			if ((player.getRecoveringInjury() != null)
-					|| (SendToBoxReason.NURGLES_ROT == playerResult.getSendToBoxReason())) {
+				|| (SendToBoxReason.NURGLES_ROT == playerResult.getSendToBoxReason())) {
 				continue;
 			}
 			playerIds.add(player.getId());
