@@ -9,6 +9,7 @@ import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
@@ -36,8 +37,8 @@ public class InjuryTypeStab extends InjuryTypeServer<Stab> {
 		if (!injuryContext.isArmorBroken()) {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
-			armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
-
+			Set<ArmorModifier> modifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
+			injuryContext.addArmorModifiers(modifiers);
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}

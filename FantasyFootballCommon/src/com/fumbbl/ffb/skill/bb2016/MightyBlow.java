@@ -31,7 +31,7 @@ public class MightyBlow extends Skill {
 		registerModifier(new StaticArmourModifier("Mighty Blow", 1, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
-				return super.appliesToContext(context) && !context.isFoul();
+				return super.appliesToContext(context) && !context.isFoul() && !context.isStab();
 			}
 		});
 		registerModifier(new StaticInjuryModifierAttacker("Mighty Blow", 1, false) {
@@ -39,6 +39,7 @@ public class MightyBlow extends Skill {
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)
 					&& !context.isFoul()
+					&& !context.isStab()
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
 					.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock));
 			}
