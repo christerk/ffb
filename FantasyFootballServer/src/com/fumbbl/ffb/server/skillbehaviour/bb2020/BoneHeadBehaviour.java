@@ -3,8 +3,8 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlitzState;
@@ -111,18 +111,20 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
-		case BLITZ:
-		case BLITZ_MOVE:
-		case KICK_TEAM_MATE:
-		case KICK_TEAM_MATE_MOVE:
-			game.getTurnData().setBlitzUsed(true);
-			break;
-		case PASS:
-		case PASS_MOVE:
-		case THROW_TEAM_MATE:
-		case THROW_TEAM_MATE_MOVE:
-			game.getTurnData().setPassUsed(true);
-			break;
+			case BLITZ:
+			case BLITZ_MOVE:
+				game.getTurnData().setBlitzUsed(true);
+				break;
+			case KICK_TEAM_MATE:
+			case KICK_TEAM_MATE_MOVE:
+				game.getTurnData().setKtmUsed(true);
+				break;
+			case PASS:
+			case PASS_MOVE:
+			case THROW_TEAM_MATE:
+			case THROW_TEAM_MATE_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
 		case HAND_OVER:
 		case HAND_OVER_MOVE:
 			game.getTurnData().setHandOverUsed(true);
