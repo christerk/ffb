@@ -230,7 +230,7 @@ public final class StepInitSelecting extends AbstractStep {
 				case CLIENT_THROW_TEAM_MATE:
 					ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
-						&& !game.getTurnData().isPassUsed()) {
+						&& (!game.getTurnData().isPassUsed() || throwTeamMateCommand.isKicked())) {
 						if (throwTeamMateCommand.getTargetCoordinate() != null) {
 							if (game.isHomePlaying()) {
 								publishParameter(

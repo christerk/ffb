@@ -16,6 +16,10 @@ public enum Usage {
 	public static Set<Usage> EXCLUDE_FROM_RESULT = new HashSet<Usage>() {{
 		add(LONER);
 		add(STAR);
+		add(REROLL_ARGUE);
 	}};
 
+	public static Set<Usage> EXCLUDE_FROM_COUNT = new HashSet<Usage>() {{
+		add(REROLL_ARGUE);
+	}};
 }
