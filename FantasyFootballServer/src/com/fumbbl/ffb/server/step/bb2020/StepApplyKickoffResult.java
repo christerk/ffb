@@ -718,7 +718,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			affectedPlayers.addAll(stunPlayers(game.getTeamAway(), game.getFieldModel(), stunned));
 		}
 
-		getResult().addReport(new ReportKickoffPitchInvasion(rollHome, rollAway, affectedPlayers));
+		getResult().addReport(new ReportKickoffPitchInvasion(rollHome, rollAway, affectedPlayers, stunned));
 
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_PITCH_INVASION));
 		getResult().setNextAction(StepAction.NEXT_STEP);

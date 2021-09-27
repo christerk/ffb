@@ -22,15 +22,16 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportKickoffPitchInvasion implements IReport {
 
-	private int rollHome, rollAway;
+	private int rollHome, rollAway, amount;
 	private final List<String> affectedPlayers = new ArrayList<>();
 
 	public ReportKickoffPitchInvasion() {
 	}
 
-	public ReportKickoffPitchInvasion(int rollHome, int rollAway, List<String> affectedPlayers) {
+	public ReportKickoffPitchInvasion(int rollHome, int rollAway, List<String> affectedPlayers, int amount) {
 		this.rollHome = rollHome;
 		this.rollAway = rollAway;
+		this.amount = amount;
 		this.affectedPlayers.addAll(affectedPlayers);
 	}
 
@@ -46,6 +47,10 @@ public class ReportKickoffPitchInvasion implements IReport {
 		return affectedPlayers;
 	}
 
+	public int getAmount() {
+		return amount;
+	}
+
 	public ReportId getId() {
 		return ReportId.KICKOFF_PITCH_INVASION;
 	}
@@ -53,7 +58,7 @@ public class ReportKickoffPitchInvasion implements IReport {
 	// transformation
 
 	public ReportKickoffPitchInvasion transform(IFactorySource source) {
-		return new ReportKickoffPitchInvasion(rollAway, rollHome, affectedPlayers);
+		return new ReportKickoffPitchInvasion(rollAway, rollHome, affectedPlayers, amount);
 	}
 
 	// JSON serialization
@@ -63,6 +68,7 @@ public class ReportKickoffPitchInvasion implements IReport {
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.ROLL_HOME.addTo(jsonObject, rollHome);
 		IJsonOption.ROLL_AWAY.addTo(jsonObject, rollAway);
+		IJsonOption.AMOUNT.addTo(jsonObject, amount);
 		IJsonOption.PLAYER_IDS.addTo(jsonObject, affectedPlayers);
 		return jsonObject;
 	}
@@ -72,6 +78,7 @@ public class ReportKickoffPitchInvasion implements IReport {
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		rollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
 		rollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
+		amount = IJsonOption.AMOUNT.getFrom(game, jsonObject);
 		affectedPlayers.clear();
 		String[] affected = IJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(affected)) {

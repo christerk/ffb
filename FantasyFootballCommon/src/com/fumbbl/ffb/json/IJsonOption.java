@@ -13,6 +13,7 @@ public interface IJsonOption {
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
+	JsonIntOption AMOUNT = new JsonIntOption("amount");
 	JsonObjectOption ANIMATION = new JsonObjectOption("animation");
 	JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", Factory.ANIMATION_TYPE);
 	JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
