@@ -48,20 +48,21 @@ public class UtilBlockSequence {
 			Skill skillCanCounterOpponentForcingDropBall = UtilCards.getSkillCancelling(game.getDefender(),
 				skillCanForceOpponentToDropBall);
 			
-			boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones(); 
 
-			if ((game.getDefender() != null) && skillCanCounterOpponentForcingDropBall != null && mechanic.canPreventStripBall(game.getFieldModel().getPlayerState(game.getDefender())) && defenderHasTacklezones) {
+			if ((game.getDefender() != null) && skillCanCounterOpponentForcingDropBall != null && mechanic.canPreventStripBall(game.getFieldModel().getPlayerState(game.getDefender()))) {
 				pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillCanCounterOpponentForcingDropBall,
 					true, SkillUse.CANCEL_STRIP_BALL));
 			} else {
-				if(!defenderHasTacklezones && skillCanCounterOpponentForcingDropBall != null) {	
-					pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillCanCounterOpponentForcingDropBall, false, SkillUse.NO_TACKLEZONE));
-				}
-				pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
-					skillCanCounterOpponentForcingDropBall, true, SkillUse.STEAL_BALL));
+				pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillCanForceOpponentToDropBall, true, SkillUse.STEAL_BALL));
 				parameterSet
 					.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-				actingPlayer.markSkillUsed(skillCanCounterOpponentForcingDropBall);
+				actingPlayer.markSkillUsed(skillCanForceOpponentToDropBall);
+				if (game.getDefender() != null) {
+					boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
+					if (!defenderHasTacklezones && skillCanCounterOpponentForcingDropBall != null) {
+						pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillCanCounterOpponentForcingDropBall, false, SkillUse.NO_TACKLEZONE));
+					}
+				}
 			}
 		}
 		return parameterSet;
