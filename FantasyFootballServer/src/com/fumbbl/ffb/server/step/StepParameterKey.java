@@ -2,13 +2,14 @@ package com.fumbbl.ffb.server.step;
 
 /**
  * Parameters used by Steps.
- * 
+ *
  * @author Kalimar
  */
 public enum StepParameterKey {
 
 	ACTING_TEAM, // Boolean
 	ADMIN_MODE, // Boolean
+	ALTERNATE_GOTO_LABEL, // String
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
@@ -123,6 +124,7 @@ public enum StepParameterKey {
 	TV_AWAY, // Integer
 	TV_HOME, // Integer
 	UPDATE_PERSISTENCE, // Boolean
+	USE_ALTERNATE_LABEL, // Boolean
 	USING_BREAK_TACKLE, // Boolean
 	USING_CHAINSAW, // Boolean
 	USING_DIVING_TACKLE, // Boolean
