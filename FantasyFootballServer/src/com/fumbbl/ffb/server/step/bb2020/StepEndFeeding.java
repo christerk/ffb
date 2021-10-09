@@ -78,6 +78,7 @@ public class StepEndFeeding extends AbstractStep {
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
+		game.setDefenderId(null);
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
