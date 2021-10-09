@@ -224,6 +224,10 @@ public class ClientStateMove extends ClientState {
 		}
 	}
 
+	protected boolean showGridForKTM(Game game, ActingPlayer actingPlayer) {
+		return false;
+	}
+
 	protected void createAndShowPopupMenuForActingPlayer() {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
@@ -241,6 +245,7 @@ public class ClientStateMove extends ClientState {
 		}
 		if (((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
+			|| showGridForKTM(game, actingPlayer)
 			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), true))) {
 			JMenuItem toggleRangeGridAction = new JMenuItem("Range Grid on/off",

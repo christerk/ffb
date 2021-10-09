@@ -349,9 +349,10 @@ public class UtilPlayer {
 		List<Player<?>> kickablePlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
+		TtmMechanic mechanic = (TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 		Player<?>[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
 		for (Player<?> adjacentPlayer : adjacentPlayers) {
-			if (adjacentPlayer.hasSkillProperty(NamedProperties.canBeKicked)) {
+			if (mechanic.canBeKicked(pGame, adjacentPlayer)) {
 				kickablePlayers.add(adjacentPlayer);
 			}
 		}

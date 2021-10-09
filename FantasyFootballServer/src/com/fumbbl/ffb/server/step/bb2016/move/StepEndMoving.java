@@ -23,11 +23,11 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.Pass;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.Foul;
 import com.fumbbl.ffb.server.step.generator.KickTeamMate;
 import com.fumbbl.ffb.server.step.generator.Move;
+import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
@@ -177,7 +177,7 @@ public class StepEndMoving extends AbstractStep {
 			&& UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
 			|| ((PlayerAction.MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canGaze(game, actingPlayer.getPlayer()))
 			|| ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
+			&& UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), true))
 			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());

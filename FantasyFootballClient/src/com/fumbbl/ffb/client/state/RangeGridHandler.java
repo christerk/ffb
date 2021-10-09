@@ -35,11 +35,16 @@ public class RangeGridHandler {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			if ((!fThrowTeamMate && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-				|| (fThrowTeamMate && (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE || actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE))
+				|| (fThrowTeamMate &&
+				(actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE
+					|| actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE
+					|| actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE
+					|| actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
+			)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)) {
 				FieldCoordinate actingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				if (userInterface.getFieldComponent().getLayerRangeGrid().drawRangeGrid(actingPlayerCoordinate,
-						fThrowTeamMate)) {
+					fThrowTeamMate)) {
 					userInterface.getFieldComponent().refresh();
 				}
 				gridDrawn = true;

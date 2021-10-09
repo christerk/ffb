@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.ttm;
+package com.fumbbl.ffb.server.step.bb2020.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -33,20 +33,21 @@ import com.fumbbl.ffb.util.UtilCards;
  * Step in ttm sequence to handle skill ALWAYS_HUNGRY. Failure or success refer
  * to the escape roll of a picked up player. Continues with next step if
  * ALWAYS_HUNGRY roll fails (no attempt to eat player).
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE. Needs to be
  * initialized with stepParameter GOTO_LABEL_ON_SUCCESS.
- *
+ * <p>
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step.
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
 	private String fGotoLabelOnSuccess;
 	private String fThrownPlayerId;
+	private boolean isKicked;
 
 	public StepAlwaysHungry(GameState pGameState) {
 		super(pGameState);
@@ -61,16 +62,19 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
-					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				// mandatory
-				case GOTO_LABEL_ON_SUCCESS:
-					fGotoLabelOnSuccess = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_FAILURE:
+						fGotoLabelOnFailure = (String) parameter.getValue();
+						break;
+					// mandatory
+					case GOTO_LABEL_ON_SUCCESS:
+						fGotoLabelOnSuccess = (String) parameter.getValue();
+						break;
+					case IS_KICKED_PLAYER:
+						isKicked = (boolean) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -118,7 +122,11 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 		boolean doAlwaysHungry = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.mightEatPlayerToThrow);
 		boolean doEscape = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.mightEatPlayerToThrow) && !doAlwaysHungry;
 		if (doAlwaysHungry) {
-			game.getTurnData().setPassUsed(true);
+			if (isKicked) {
+				game.getTurnData().setKtmUsed(true);
+			} else {
+				game.getTurnData().setPassUsed(true);
+			}
 			if (ReRolledActions.ALWAYS_HUNGRY == getReRolledAction()) {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
@@ -131,7 +139,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 				boolean successful = DiceInterpreter.getInstance().isAlwaysHungrySuccessful(roll);
 				boolean reRolled = ((getReRolledAction() == ReRolledActions.ALWAYS_HUNGRY) && (getReRollSource() != null));
 				getResult().addReport(new ReportAlwaysHungryRoll(actingPlayer.getPlayerId(), successful,
-						roll, 2, reRolled, null));
+					roll, 2, reRolled, null));
 				if (successful) {
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
@@ -139,7 +147,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 					if (getReRolledAction() != ReRolledActions.ALWAYS_HUNGRY) {
 						setReRolledAction(ReRolledActions.ALWAYS_HUNGRY);
 						if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-								ReRolledActions.ALWAYS_HUNGRY, 2, false)) {
+							ReRolledActions.ALWAYS_HUNGRY, 2, false)) {
 							doEscape = false;
 						}
 					}
@@ -158,7 +166,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isEscapeFromAlwaysHungrySuccessful(roll);
 			getResult().addReport(
-					new ReportEscapeRoll(fThrownPlayerId, successful, roll, 2, false, null));
+				new ReportEscapeRoll(fThrownPlayerId, successful, roll, 2, false, null));
 			if (successful) {
 				publishParameter(StepParameter.from(StepParameterKey.PASS_RESULT, PassResult.FUMBLE));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
@@ -166,7 +174,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 				if (getReRolledAction() != ReRolledActions.ESCAPE) {
 					setReRolledAction(ReRolledActions.ESCAPE);
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.ESCAPE, 2,
-							false)) {
+						false)) {
 						return;
 					}
 				}
@@ -186,6 +194,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
 		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, isKicked);
 		return jsonObject;
 	}
 
@@ -196,6 +205,8 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
 		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		Boolean isKickedBoolean = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
+		isKicked = isKickedBoolean != null && isKickedBoolean;
 		return this;
 	}
 
