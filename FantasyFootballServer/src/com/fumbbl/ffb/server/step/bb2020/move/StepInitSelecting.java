@@ -316,6 +316,9 @@ public final class StepInitSelecting extends AbstractStep {
 					prepareStandingUp();
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
+					if (forceGotoOnDispatch) {
+						prepareStandingUp();
+					}
 					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 				}
 			}
