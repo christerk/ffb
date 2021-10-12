@@ -373,10 +373,12 @@ public class TurnDiceStatusComponent extends JPanel
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
 				&& _BUTTON_AREA.contains(pMouseEvent.getPoint())) {
 			if (userInterface.getDialogManager().isEndTurnAllowed()) {
+				fEndTurnButtonShown = false;
+				fTimeoutButtonShown = false;
 				fButtonSelected = false;
 				if (fHomePlaying) {
 					if (((fTurnMode == TurnMode.REGULAR) || (fTurnMode == TurnMode.BLITZ))
-							&& UtilPlayer.testPlayersAbleToAct(game, game.getTeamHome())) {
+						&& UtilPlayer.testPlayersAbleToAct(game, game.getTeamHome())) {
 						DialogEndTurn endTurnDialog = new DialogEndTurn(getSideBar().getClient());
 						endTurnDialog.showDialog(this);
 					} else {
