@@ -91,6 +91,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private final List<BlockRoll> blockRolls = new ArrayList<>();
 
 	private boolean fRefreshNecessary;
+	private boolean buttonEnabled = true;
 
 	public TurnDiceStatusComponent(SideBarComponent pSideBar) {
 		fSideBar = pSideBar;
@@ -136,6 +137,7 @@ public class TurnDiceStatusComponent extends JPanel
 			case HIGH_KICK:
 				drawButton(_LABEL_END_SETUP);
 				fEndTurnButtonShown = true;
+				buttonEnabled = true;
 				break;
 			case KICKOFF_RETURN:
 			case SWARMING:
@@ -143,14 +145,17 @@ public class TurnDiceStatusComponent extends JPanel
 			case ILLEGAL_SUBSTITUTION:
 				drawButton(_LABEL_CONTINUE);
 				fEndTurnButtonShown = true;
+				buttonEnabled = true;
 				break;
 			case KICKOFF:
 				drawButton(_LABEL_KICKOFF);
 				fEndTurnButtonShown = true;
+				buttonEnabled = true;
 				break;
 			default:
 				drawButton(_LABEL_END_TURN);
 				fEndTurnButtonShown = true;
+				buttonEnabled = true;
 				break;
 			}
 		}
@@ -371,10 +376,9 @@ public class TurnDiceStatusComponent extends JPanel
 		Game game = client.getGame();
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
-				&& _BUTTON_AREA.contains(pMouseEvent.getPoint())) {
+			&& _BUTTON_AREA.contains(pMouseEvent.getPoint()) && buttonEnabled) {
 			if (userInterface.getDialogManager().isEndTurnAllowed()) {
-				fEndTurnButtonShown = false;
-				fTimeoutButtonShown = false;
+				buttonEnabled = false;
 				fButtonSelected = false;
 				if (fHomePlaying) {
 					if (((fTurnMode == TurnMode.REGULAR) || (fTurnMode == TurnMode.BLITZ))
@@ -434,8 +438,14 @@ public class TurnDiceStatusComponent extends JPanel
 			FantasyFootballClient client = getSideBar().getClient();
 			if (dialogEndTurn.getChoice() == DialogEndTurn.YES) {
 				client.getClientState().endTurn();
+			} else {
+				buttonEnabled = true;
 			}
 		}
 	}
 
+	public void enableButton() {
+		buttonEnabled = true;
+		repaint(_BUTTON_AREA);
+	}
 }
