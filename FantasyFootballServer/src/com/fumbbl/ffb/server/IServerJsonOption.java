@@ -91,6 +91,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
 	JsonBooleanOption IGNORE_ACTED_FLAG = new JsonBooleanOption("ignoreActedFlag");
 	JsonBooleanOption ILLEGAL_SUBSTITUTION = new JsonBooleanOption("illegalSubstitution");
+	JsonArrayOption INDUCEMENT_COMMANDS = new JsonArrayOption("inducementCommands");
 	JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
 	JsonIntOption INDUCEMENT_GOLD_HOME = new JsonIntOption("inducementGoldHome");
 	JsonEnumWithNameOption INDUCEMENT_PHASE = new JsonEnumWithNameOption("inducementPhase", Factory.INDUCEMENT_PHASE);
