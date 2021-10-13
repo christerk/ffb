@@ -397,6 +397,7 @@ public class PlayerResult implements IJsonSerializable {
 		IJsonOption.PASSING.addTo(jsonObject, fPassing);
 		IJsonOption.CURRENT_SPPS.addTo(jsonObject, fCurrentSpps);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+		IJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, fSeriousInjuryDecay);
 		IJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, fSendToBoxReason);
 		IJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, fSendToBoxTurn);
 		IJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, fSendToBoxHalf);
@@ -424,6 +425,7 @@ public class PlayerResult implements IJsonSerializable {
 		fPassing = IJsonOption.PASSING.getFrom(source, jsonObject);
 		fCurrentSpps = IJsonOption.CURRENT_SPPS.getFrom(source, jsonObject);
 		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
+		fSeriousInjuryDecay = (SeriousInjury) IJsonOption.SERIOUS_INJURY_DECAY.getFrom(source, jsonObject);
 		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(source, jsonObject);
 		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(source, jsonObject);
 		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(source, jsonObject);
