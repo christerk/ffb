@@ -23,7 +23,7 @@ public class SelectBlitzTarget extends com.fumbbl.ffb.server.step.generator.Sele
 		sequence.add(StepId.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
-			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));

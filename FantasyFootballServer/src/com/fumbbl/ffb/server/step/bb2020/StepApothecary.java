@@ -154,7 +154,6 @@ public class StepApothecary extends AbstractStep {
 					InjuryResult injuryResult = (InjuryResult) pParameter.getValue();
 					if ((injuryResult != null) && (fApothecaryMode == injuryResult.injuryContext().getApothecaryMode())) {
 						fInjuryResult = injuryResult;
-						consume(pParameter);
 						return true;
 					}
 					return false;

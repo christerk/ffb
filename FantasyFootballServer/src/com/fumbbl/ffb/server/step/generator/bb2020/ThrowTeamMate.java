@@ -31,7 +31,7 @@ public class ThrowTeamMate extends com.fumbbl.ffb.server.step.generator.ThrowTea
 		sequence.add(StepId.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
-			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.SET_DEFENDER, from(StepParameterKey.BLOCK_DEFENDER_ID, params.getThrownPlayerId()));
 		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
