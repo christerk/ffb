@@ -21,6 +21,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -410,16 +411,7 @@ public class ClientStateSelect extends ClientState {
 			}
 		}
 
-		boolean rightStuffAdjacent = false;
-		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
-			playerCoordinate, false);
-		for (Player<?> adjacentTeamPlayer : adjacentTeamPlayers) {
-			if (mechanic.canBeThrown(game, adjacentTeamPlayer)) {
-				rightStuffAdjacent = true;
-				break;
-			}
-		}
+		boolean rightStuffAdjacent = ArrayTool.isProvided(mechanic.findThrowableTeamMates(game, pPlayer));
 
 		return (!game.getTurnData().isPassUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)

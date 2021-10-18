@@ -248,7 +248,7 @@ public class StepApothecary extends AbstractStep {
 									: game.getTurnDataAway().getInducementSet();
 								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream().anyMatch(type -> type.getUsage() == Usage.REGENERATION
 									&& inducementSet.hasUsesLeft(type));
-									if (hasInducement && player.getPlayerType() != PlayerType.STAR) {
+									if (hasInducement && player.getPlayerType() != PlayerType.STAR && player.getPlayerType() != PlayerType.MERCENARY) {
 										game.setDialogParameter(new DialogUseIgorParameter(player.getId()));
 										fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
 										doNextStep = false;
