@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<team id="1050157" status="1">
+    <coach>Java</coach>
+    <name>Test Mod</name>
+    <rosterId>4958</rosterId>
+    <reRolls>1</reRolls>
+    <dedicatedFans>1</dedicatedFans>
+    <apothecaries>1</apothecaries>
+    <cheerleaders>0</cheerleaders>
+    <assistantCoaches>0</assistantCoaches>
+    <rating>97</rating>
+    <teamValue>965000</teamValue>
+    <currentTeamValue>965000</currentTeamValue>
+    <strength>97</strength>
+    <division>200</division>
+    <treasury>1335000</treasury>
+    <tournamentWeight>970000</tournamentWeight>
+    <specialRules>
+        <rule>Favoured of Nurgle</rule>
+    </specialRules>
+    <record>
+        <form></form>
+        <wins>0</wins>
+        <ties>0</ties>
+        <losses>0</losses>
+    </record>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <player status="Active" nr="1" id="14448666">
+        <name>Paisley Gakroth</name>
+        <gender>female</gender>
+        <positionId>37733</positionId>
+        <position>Renegade Rat Ogre</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="2" id="14448667">
+        <name>Emmanuel Horse-eater</name>
+        <gender>male</gender>
+        <positionId>37731</positionId>
+        <position>Renegade Ogre</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="3" id="14448668">
+        <name>Emerson Khan</name>
+        <gender>female</gender>
+        <positionId>37730</positionId>
+        <position>Renegade Troll</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="4" id="14448670">
+        <name>Sydney Ulfo</name>
+        <gender>female</gender>
+        <positionId>37729</positionId>
+        <position>Renegade Dark Elf</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="5" id="14448672">
+        <name>Addison Harveywotan</name>
+        <gender>female</gender>
+        <positionId>37725</positionId>
+        <position>Renegade Human Thrower</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="6" id="14448673">
+        <name>Giselle Bloodmask</name>
+        <gender>female</gender>
+        <positionId>37727</positionId>
+        <position>Renegade Orc</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="7" id="14448674">
+        <name>Dakota Naurthang</name>
+        <gender>female</gender>
+        <positionId>37728</positionId>
+        <position>Renegade Skaven</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="8" id="14448675">
+        <name>Edward the Cruel</name>
+        <gender>male</gender>
+        <positionId>37726</positionId>
+        <position>Renegade Goblin</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="9" id="14448676">
+        <name>Santiago Madeye</name>
+        <gender>male</gender>
+        <positionId>37724</positionId>
+        <position>Renegade Human Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="10" id="14448677">
+        <name>Zachary Grundrin</name>
+        <gender>male</gender>
+        <positionId>37724</positionId>
+        <position>Renegade Human Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="11" id="14448678">
+        <name>Thomas Blackfang</name>
+        <gender>nonbinary</gender>
+        <positionId>37724</positionId>
+        <position>Renegade Human Lineman</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+</team>

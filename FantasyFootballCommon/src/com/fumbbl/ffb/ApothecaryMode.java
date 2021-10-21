@@ -7,7 +7,7 @@ public enum ApothecaryMode implements INamedObject {
 
 	ATTACKER("attacker"), AWAY("away"), CROWD_PUSH("crowdPush"), DEFENDER("defender"), FEEDING("feeding"), HOME("home"),
 	SPECIAL_EFFECT("specialEffect"), THROWN_PLAYER("thrownPlayer"), KICKED_PLAYER("kickedPlayer"),
-	HIT_PLAYER("hitPlayer"), CATCHER("catcher"), TRAP_DOOR("trapDoor");
+	HIT_PLAYER("hitPlayer"), CATCHER("catcher"), TRAP_DOOR("trapDoor"), ANIMAL_SAVAGERY("animalSavagery");
 
 	private final String fName;
 

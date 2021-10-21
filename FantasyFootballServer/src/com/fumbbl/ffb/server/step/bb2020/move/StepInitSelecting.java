@@ -172,6 +172,7 @@ public final class StepInitSelecting extends AbstractStep {
 						publishParameter(new StepParameter(StepParameterKey.USING_STAB, blockCommand.isUsingStab()));
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 						publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
+						publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 						if (game.getFieldModel().getBlitzState() != null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ;
 						} else {
@@ -315,6 +316,9 @@ public final class StepInitSelecting extends AbstractStep {
 					prepareStandingUp();
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
+					if (forceGotoOnDispatch) {
+						prepareStandingUp();
+					}
 					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 				}
 			}

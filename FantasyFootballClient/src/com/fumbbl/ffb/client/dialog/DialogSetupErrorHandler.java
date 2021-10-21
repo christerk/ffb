@@ -31,6 +31,8 @@ public class DialogSetupErrorHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
+		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
+		sideBarHome.getTurnDiceStatusComponent().enableButton();
 	}
 
 }

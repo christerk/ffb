@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roster team="1050157">
+    <name>Chaos Renegade</name>
+    <type>Regular</type>
+    <reRollCost>70000</reRollCost>
+    <maxReRolls>8</maxReRolls>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <logo>i/603755</logo>
+    <raisedPositionId></raisedPositionId>
+    <apothecary>true</apothecary>
+    <necromancer>false</necromancer>
+    <undead>false</undead>
+    <nameGenerator>chaos</nameGenerator>
+    <specialRules>
+        <rule>Favoured of...</rule>
+    </specialRules>
+    <maxBigGuys>3</maxBigGuys>
+    <position id="37733">
+        <race>Renegade Rat Ogre</race>
+        <quantity>1</quantity>
+        <name>Renegade Rat Ogre</name>
+        <shorthand>RO</shorthand>
+        <type>Big Guy</type>
+        <gender>random</gender>
+        <cost>150000</cost>
+        <movement>6</movement>
+        <strength>5</strength>
+        <agility>4</agility>
+        <passing>0</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674126</portrait>
+        <iconSet size="1" mimeType="image/png">i/674127.png</iconSet>
+        <skillList>
+            <skill>Animal Savagery</skill>
+            <skill>Frenzy</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Prehensile Tail</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Mutations</double>
+        </skillCategoryList>
+    </position>
+    <position id="37731">
+        <race>Renegade Ogre</race>
+        <quantity>1</quantity>
+        <name>Renegade Ogre</name>
+        <shorthand>O</shorthand>
+        <type>Big Guy</type>
+        <gender>random</gender>
+        <cost>140000</cost>
+        <movement>5</movement>
+        <strength>5</strength>
+        <agility>4</agility>
+        <passing>5</passing>
+        <armour>10</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318589</portrait>
+        <iconSet size="1" mimeType="image/png">i/436344.png</iconSet>
+        <skillList>
+            <skill>Bone Head</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Thick Skull</skill>
+            <skill>Throw Team-mate</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Mutations</double>
+        </skillCategoryList>
+    </position>
+    <position id="37730">
+        <race>Renegade Troll</race>
+        <quantity>1</quantity>
+        <name>Renegade Troll</name>
+        <shorthand>T</shorthand>
+        <type>Big Guy</type>
+        <gender>random</gender>
+        <cost>115000</cost>
+        <movement>4</movement>
+        <strength>5</strength>
+        <agility>5</agility>
+        <passing>5</passing>
+        <armour>10</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318590</portrait>
+        <iconSet size="1" mimeType="image/png">i/436343.png</iconSet>
+        <skillList>
+            <skill>Always Hungry</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Projectile Vomit</skill>
+            <skill>Really Stupid</skill>
+            <skill>Regeneration</skill>
+            <skill>Throw Team-mate</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Mutations</double>
+        </skillCategoryList>
+    </position>
+    <position id="37729">
+        <race>Renegade Dark Elf</race>
+        <quantity>1</quantity>
+        <name>Renegade Dark Elf</name>
+        <shorthand>DE</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>75000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>3</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318591</portrait>
+        <iconSet size="1" mimeType="image/png">i/436379.png</iconSet>
+        <skillList>
+            <skill value="All">Animosity</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <normal>Mutations</normal>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="37725">
+        <race>Renegade Human Thrower</race>
+        <quantity>1</quantity>
+        <name>Renegade Human Thrower</name>
+        <shorthand>T</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>75000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing>3</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674125</portrait>
+        <iconSet size="1" mimeType="image/png">i/674124.png</iconSet>
+        <skillList>
+            <skill value="All">Animosity</skill>
+            <skill>Pass</skill>
+            <skill>Safe Pair of Hands</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Passing</normal>
+            <normal>Mutations</normal>
+            <double>Agility</double>
+            <double>Strength</double>
+        </skillCategoryList>
+    </position>
+    <position id="37727">
+        <quantity>1</quantity>
+        <name>Renegade Orc</name>
+        <shorthand>O</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>50000</cost>
+        <movement>5</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing>5</passing>
+        <armour>10</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/568460</portrait>
+        <iconSet size="1" mimeType="image/png">i/568459.png</iconSet>
+        <skillList>
+            <skill value="All">Animosity</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Mutations</normal>
+            <double>Agility</double>
+            <double>Strength</double>
+        </skillCategoryList>
+    </position>
+    <position id="37728">
+        <race>Renegade Skaven</race>
+        <quantity>1</quantity>
+        <name>Renegade Skaven</name>
+        <shorthand>S</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>50000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing>4</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318593</portrait>
+        <iconSet size="1" mimeType="image/png">i/436380.png</iconSet>
+        <skillList>
+            <skill value="All">Animosity</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Mutations</normal>
+            <double>Agility</double>
+            <double>Strength</double>
+        </skillCategoryList>
+    </position>
+    <position id="37726">
+        <race>Renegade Goblin</race>
+        <quantity>1</quantity>
+        <name>Renegade Goblin</name>
+        <shorthand>G</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>40000</cost>
+        <movement>6</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>4</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318594</portrait>
+        <iconSet size="1" mimeType="image/png">i/674141.png</iconSet>
+        <skillList>
+            <skill value="All">Animosity</skill>
+            <skill>Dodge</skill>
+            <skill>Right Stuff</skill>
+            <skill>Stunty</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Agility</normal>
+            <normal>Mutations</normal>
+            <double>General</double>
+            <double>Passing</double>
+        </skillCategoryList>
+    </position>
+    <position id="37724">
+        <race>Renegade Human Lineman</race>
+        <quantity>12</quantity>
+        <name>Renegade Human Lineman</name>
+        <shorthand>L</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>50000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing>4</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318592</portrait>
+        <iconSet size="8" mimeType="image/png">i/440149.png</iconSet>
+        <skillList/>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Mutations</normal>
+            <double>Agility</double>
+            <double>Strength</double>
+        </skillCategoryList>
+    </position>
+    <position id="37732">
+        <race>Renegade Minotaur</race>
+        <quantity>1</quantity>
+        <name>Renegade Minotaur</name>
+        <shorthand>M</shorthand>
+        <type>Big Guy</type>
+        <gender>random</gender>
+        <cost>150000</cost>
+        <movement>5</movement>
+        <strength>5</strength>
+        <agility>4</agility>
+        <passing>0</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/318588</portrait>
+        <iconSet size="1" mimeType="image/png">i/436345.png</iconSet>
+        <skillList>
+            <skill>Frenzy</skill>
+            <skill>Horns</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Thick Skull</skill>
+            <skill>Unchannelled Fury</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>Strength</normal>
+            <double>General</double>
+            <double>Agility</double>
+            <double>Mutations</double>
+        </skillCategoryList>
+    </position>
+    <position id="39399">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Glart Smashrip</name>
+        <shorthand>GS</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>195000</cost>
+        <movement>5</movement>
+        <strength>4</strength>
+        <agility>4</agility>
+        <passing>0</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674097</portrait>
+        <iconSet size="1" mimeType="image/png">i/674098.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Claws</skill>
+            <skill>Frenzied Rush</skill>
+            <skill>Grab</skill>
+            <skill>Juggernaut</skill>
+            <skill value="4">Loner</skill>
+            <skill>Stand Firm</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="39459">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Grak</name>
+        <shorthand>Gr</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>250000</cost>
+        <movement>5</movement>
+        <strength>5</strength>
+        <agility>4</agility>
+        <passing>4</passing>
+        <armour>10</armour>
+        <teamWithPositionId>39460</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674104</portrait>
+        <iconSet size="1" mimeType="image/gif">i/674105.gif</iconSet>
+        <skillList>
+            <skill>Bone Head</skill>
+            <skill>Kick Team-mate</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Thick Skull</skill>
+            <skill>Two for One</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="39460">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Crumbleberry</name>
+        <shorthand>Cr</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>0</cost>
+        <movement>5</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>6</passing>
+        <armour>7</armour>
+        <teamWithPositionId>39459</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674107</portrait>
+        <iconSet size="1" mimeType="image/gif">i/674106.gif</iconSet>
+        <skillList>
+            <skill>Dodge</skill>
+            <skill value="4">Loner</skill>
+            <skill>Right Stuff</skill>
+            <skill>Stunty</skill>
+            <skill>Sure Hands</skill>
+            <skill>Two for One</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="39464">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Hakflem Skuttlespike</name>
+        <shorthand>HS</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>180000</cost>
+        <movement>9</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>3</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674064</portrait>
+        <iconSet size="1" mimeType="image/png">i/674063.png</iconSet>
+        <skillList>
+            <skill>Dodge</skill>
+            <skill>Extra Arms</skill>
+            <skill value="4">Loner</skill>
+            <skill>Prehensile Tail</skill>
+            <skill>Treacherous</skill>
+            <skill>Two Heads</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="39465">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Helmut Wulf</name>
+        <shorthand>HW</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>140000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing>0</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674065</portrait>
+        <iconSet size="1" mimeType="image/png">i/674066.png</iconSet>
+        <skillList>
+            <skill>Chainsaw</skill>
+            <skill value="4">Loner</skill>
+            <skill>Old Pro</skill>
+            <skill>Pro</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stand Firm</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="39467">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Lord Borak the Despoiler</name>
+        <shorthand>LB</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>260000</cost>
+        <movement>5</movement>
+        <strength>5</strength>
+        <agility>3</agility>
+        <passing>5</passing>
+        <armour>10</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674070</portrait>
+        <iconSet size="1" mimeType="image/png">i/674071.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill value="2">Dirty Player</skill>
+            <skill value="4">Loner</skill>
+            <skill>Lord of Chaos</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Sneaky Git</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+    <position id="39549">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Morg 'n' Thorg</name>
+        <shorthand>MT</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>340000</cost>
+        <movement>6</movement>
+        <strength>6</strength>
+        <agility>3</agility>
+        <passing>4</passing>
+        <armour>11</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <portrait>i/674074</portrait>
+        <iconSet size="1" mimeType="image/png">i/674075.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill value="4">Loner</skill>
+            <skill value="2">Mighty Blow</skill>
+            <skill>The Ballista</skill>
+            <skill>Thick Skull</skill>
+            <skill>Throw Team-mate</skill>
+        </skillList>
+        <skillCategoryList/>
+    </position>
+</roster>
+        <!-- Time: 0.042462110519409 -->

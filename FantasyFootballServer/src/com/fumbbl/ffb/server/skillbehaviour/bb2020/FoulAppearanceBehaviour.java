@@ -92,7 +92,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			}
 
 			private void handleFailure(StepFoulAppearance step, StepState state, Game game, ActingPlayer actingPlayer) {
-				if (actingPlayer.isStandingUp()) {
+				if (actingPlayer.isStandingUp() && (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
 					Player<?> player = actingPlayer.getPlayer();
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));

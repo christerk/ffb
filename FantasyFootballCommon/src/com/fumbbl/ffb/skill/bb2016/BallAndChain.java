@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -58,6 +58,7 @@ public class BallAndChain extends Skill {
 		registerProperty(NamedProperties.preventKickTeamMateAction);
 		registerProperty(NamedProperties.goForItAfterBlock);
 		registerProperty(NamedProperties.movesRandomly);
+		registerProperty(NamedProperties.blocksDuringMove);
 		registerProperty(NamedProperties.ignoreTacklezonesWhenMoving);
 		registerProperty(NamedProperties.convertStunToKO);
 		registerProperty(new CancelSkillProperty(NamedProperties.canBlockMoreThanOnce));

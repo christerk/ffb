@@ -310,10 +310,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	public String[] getSelectedStarPlayerIds() {
 		List<String> starPlayerPositionIds = new ArrayList<>();
-		for (int i = 0; i < fTableModelStarPlayers.getRowCount(); i++) {
-			if ((Boolean) fTableModelStarPlayers.getValueAt(i, 0)) {
-				Player<?> starPlayer = (Player<?>) fTableModelStarPlayers.getValueAt(i, 4);
-				starPlayerPositionIds.add(starPlayer.getPositionId());
+		if (fTableModelStarPlayers != null) {
+			for (int i = 0; i < fTableModelStarPlayers.getRowCount(); i++) {
+				if ((Boolean) fTableModelStarPlayers.getValueAt(i, 0)) {
+					Player<?> starPlayer = (Player<?>) fTableModelStarPlayers.getValueAt(i, 4);
+					starPlayerPositionIds.add(starPlayer.getPositionId());
+				}
 			}
 		}
 		return starPlayerPositionIds.toArray(new String[0]);
@@ -321,10 +323,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	public String[] getSelectedMercenaryIds() {
 		List<String> mercenaryPositionIds = new ArrayList<>();
-		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
-			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Player<?> mercenary = (Player<?>) fTableModelMercenaries.getValueAt(i, 5);
-				mercenaryPositionIds.add(mercenary.getPositionId());
+		if (fTableMercenaries != null) {
+			for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
+				if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
+					Player<?> mercenary = (Player<?>) fTableModelMercenaries.getValueAt(i, 5);
+					mercenaryPositionIds.add(mercenary.getPositionId());
+				}
 			}
 		}
 		return mercenaryPositionIds.toArray(new String[0]);
