@@ -21,6 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -269,10 +270,7 @@ public class FumbblResult implements IXmlWriteable {
 				// Mercenaries
 				for (Player<?> mercenary : mercenaries) {
 					Skill addedSkill = null;
-					Set<Skill> rosterSkills = new HashSet<>();
-					for (Skill skill : mercenary.getPosition().getSkills()) {
-						rosterSkills.add(skill);
-					}
+					Set<Skill> rosterSkills = new HashSet<>(Arrays.asList(mercenary.getPosition().getSkills()));
 					for (Skill skill : mercenary.getSkills()) {
 						if (!rosterSkills.contains(skill) && (!skill.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll))) {
 							addedSkill = skill;
