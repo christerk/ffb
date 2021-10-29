@@ -523,6 +523,7 @@ public interface IJsonOption {
 	JsonIntOption VALUE = new JsonIntOption("value");
 	JsonStringOption VICTIM_ID = new JsonStringOption("victimId");
 	JsonBooleanOption WAITING_FOR_OPPONENT = new JsonBooleanOption("waitingForOpponent");
+	JsonIntOption WANDERING_APOTHECARIES = new JsonIntOption("wanderingApothecaries");
 	JsonEnumWithNameOption WEATHER = new JsonEnumWithNameOption("weather", Factory.WEATHER);
 	JsonIntArrayOption WEATHER_ROLL = new JsonIntArrayOption("weatherRoll");
 	JsonIntOption WINNINGS = new JsonIntOption("winnings");

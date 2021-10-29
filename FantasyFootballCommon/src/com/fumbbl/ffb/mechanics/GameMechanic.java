@@ -91,4 +91,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract int audience(TeamResult teamResult);
 
 	public abstract PlayerType raisedNurgleType();
+
+	public abstract boolean canUseApo(Game game, Player<?> defender);
 }

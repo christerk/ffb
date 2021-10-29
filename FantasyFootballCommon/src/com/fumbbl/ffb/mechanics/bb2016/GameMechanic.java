@@ -253,4 +253,11 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public PlayerType raisedNurgleType() {
 		return PlayerType.RAISED_FROM_DEAD;
 	}
+
+	@Override
+	public boolean canUseApo(Game game, Player<?> defender) {
+		return defender.getPlayerType() != PlayerType.STAR &&
+			((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
+				|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0));
+	}
 }

@@ -275,4 +275,19 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public PlayerType raisedNurgleType() {
 		return PlayerType.PLAGUE_RIDDEN;
 	}
+
+	@Override
+	public boolean canUseApo(Game game, Player<?> defender) {
+		if (defender.getPlayerType() == PlayerType.STAR) {
+			return false;
+		}
+
+		if (defender.getPlayerType() == PlayerType.MERCENARY || defender.isJourneyman()) {
+			return ((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getWanderingApothecaries() > 0)
+				|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getWanderingApothecaries() > 0));
+		}
+
+		return ((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
+			|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0));
+	}
 }

@@ -23,6 +23,7 @@ public class TurnData implements IJsonSerializable {
 	private int fReRolls;
 	private int reRollsBrilliantCoachingOneDrive;
 	private int fApothecaries;
+	private int wanderingApothecaries;
 	private boolean fBlitzUsed;
 	private boolean fFoulUsed;
 	private boolean fReRollUsed;
@@ -215,6 +216,19 @@ public class TurnData implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TURN_DATA_SET_APOTHECARIES, fApothecaries);
 	}
 
+	public int getWanderingApothecaries() {
+		return wanderingApothecaries;
+	}
+
+	public void setWanderingApothecaries(int apothecaries) {
+		if (apothecaries == wanderingApothecaries) {
+			return;
+		}
+		wanderingApothecaries = apothecaries;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_WANDERING_APOTHECARIES, wanderingApothecaries);
+	}
+
+
 	public boolean isHomeData() {
 		return fHomeData;
 	}
@@ -227,7 +241,7 @@ public class TurnData implements IJsonSerializable {
 		fGame = pGame;
 	}
 
-	public boolean isApothecaryAvailable() {
+	private boolean isApothecaryAvailable() {
 		return (getApothecaries() > 0);
 	}
 
@@ -310,6 +324,7 @@ public class TurnData implements IJsonSerializable {
 		if (fInducementSet != null) {
 			IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
 		}
+		IJsonOption.WANDERING_APOTHECARIES.addTo(jsonObject, wanderingApothecaries);
 		return jsonObject;
 	}
 
@@ -337,6 +352,8 @@ public class TurnData implements IJsonSerializable {
 		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(source, jsonObject);
 		fInducementSet = new InducementSet(this);
 		fInducementSet.initFrom(source, IJsonOption.INDUCEMENT_SET.getFrom(source, jsonObject));
+
+		wanderingApothecaries = IJsonOption.WANDERING_APOTHECARIES.getFrom(source, jsonObject);
 		return this;
 	}
 

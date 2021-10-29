@@ -111,14 +111,12 @@ public class UtilServerInjury {
 
 		if (injuryContext.getPlayerState() != null) {
 			if (injuryContext.isCasualty() || injuryContext.isKnockedOut()) {
+				GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
 				if (!pInjuryType.canUseApo() || (injuryContext.isKnockedOut()
-						&& pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
+					&& pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-				} else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0)
-						&& pDefender.getPlayerType() != PlayerType.STAR)
-						|| (game.getTeamAway().hasPlayer(pDefender) && (game.getTurnDataAway().getApothecaries() > 0)
-								&& pDefender.getPlayerType() != PlayerType.STAR)) {
+				} else if (gameMechanic.canUseApo(game, pDefender)) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 				} else {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);

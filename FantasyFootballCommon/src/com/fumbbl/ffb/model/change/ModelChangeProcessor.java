@@ -475,6 +475,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_COACH_BANNED:
 				getTurnData(pGame, isHomeData(pModelChange)).setCoachBanned((Boolean) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_WANDERING_APOTHECARIES:
+				getTurnData(pGame, isHomeData(pModelChange)).setWanderingApothecaries((Integer) pModelChange.getValue());
+				return true;
 		}
 
 		return false;
@@ -586,6 +589,7 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_FAN_FACTOR:
 			case TEAM_RESULT_SET_WINNINGS:
 			case TURN_DATA_SET_APOTHECARIES:
+			case TURN_DATA_SET_WANDERING_APOTHECARIES:
 			case TURN_DATA_SET_BLITZ_USED:
 			case TURN_DATA_SET_BOMB_USED:
 			case TURN_DATA_SET_FIRST_TURN_AFTER_KICKOFF:
