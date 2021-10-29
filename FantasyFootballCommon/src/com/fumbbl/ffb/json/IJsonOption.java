@@ -325,6 +325,7 @@ public interface IJsonOption {
 	JsonPlayerStateOption PLAYER_STATE = new JsonPlayerStateOption("playerState");
 	JsonPlayerStateOption PLAYER_STATE_NEW = new JsonPlayerStateOption("playerStateNew");
 	JsonPlayerStateOption PLAYER_STATE_OLD = new JsonPlayerStateOption("playerStateOld");
+	JsonStringOption PLAYER_STATUS = new JsonStringOption("playerStatus");
 	JsonEnumWithNameOption PLAYER_TYPE = new JsonEnumWithNameOption("playerType", Factory.PLAYER_TYPE);
 	JsonBooleanOption PLAYER_WAS_PUSHED = new JsonBooleanOption("playerWasPushed");
 	JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
