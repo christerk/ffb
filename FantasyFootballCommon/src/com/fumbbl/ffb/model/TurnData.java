@@ -250,7 +250,7 @@ public class TurnData implements IJsonSerializable {
 	}
 
 	public void useApothecary(boolean wandering) {
-		if ((!isApothecaryAvailable() || wandering) && wanderingApothecaries > 0) {
+		if ((fApothecaries <= wanderingApothecaries || wandering) && wanderingApothecaries > 0) {
 			setWanderingApothecaries(wanderingApothecaries - 1);
 		}
 
