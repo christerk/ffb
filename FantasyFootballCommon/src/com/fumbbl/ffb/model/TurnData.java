@@ -250,14 +250,13 @@ public class TurnData implements IJsonSerializable {
 	}
 
 	public void useApothecary(boolean wandering) {
-		if (isApothecaryAvailable()) {
-			setApothecaries(getApothecaries() - 1);
-		}
-
-		if (wandering && wanderingApothecaries > 0) {
+		if ((!isApothecaryAvailable() || wandering) && wanderingApothecaries > 0) {
 			setWanderingApothecaries(wanderingApothecaries - 1);
 		}
 
+		if (isApothecaryAvailable()) {
+			setApothecaries(getApothecaries() - 1);
+		}
 	}
 
 	public LeaderState getLeaderState() {
