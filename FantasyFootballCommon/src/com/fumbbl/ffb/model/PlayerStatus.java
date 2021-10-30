@@ -11,7 +11,11 @@ public enum PlayerStatus implements INamedObject {
 		if (!StringTool.isProvided(name)) {
 			return null;
 		}
-		return valueOf(name.toUpperCase());
+		try {
+			return valueOf(name.toUpperCase());
+		} catch (IllegalArgumentException ex) {
+			return null;
+		}
 	}
 
 	@Override
