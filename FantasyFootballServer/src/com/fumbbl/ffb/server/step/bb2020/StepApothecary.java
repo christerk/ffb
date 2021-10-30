@@ -270,10 +270,11 @@ public class StepApothecary extends AbstractStep {
 	private boolean rollApothecary() {
 		Game game = getGameState().getGame();
 		Player<?> defender = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
+		boolean requiresWanderingApothecary = defender.isJourneyman() || defender.getPlayerType() == PlayerType.MERCENARY;
 		if (game.getTeamHome().hasPlayer(defender)) {
-			game.getTurnDataHome().useApothecary();
+			game.getTurnDataHome().useApothecary(requiresWanderingApothecary);
 		} else {
-			game.getTurnDataAway().useApothecary();
+			game.getTurnDataAway().useApothecary(requiresWanderingApothecary);
 		}
 		boolean apothecaryChoice = ((fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT)
 			&& (fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.KNOCKED_OUT));
