@@ -732,7 +732,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		skillValues = IJsonOption.SKILL_VALUES_MAP.getFrom(source, jsonObject);
 		displayValues = IJsonOption.SKILL_DISPLAY_VALUES_MAP.getFrom(source, jsonObject);
 
-		playerStatus = PlayerStatus.valueOf(IJsonOption.PLAYER_STATUS.getFrom(source, jsonObject));
+		playerStatus = PlayerStatus.forName(IJsonOption.PLAYER_STATUS.getFrom(source, jsonObject));
 		return this;
 
 	}
