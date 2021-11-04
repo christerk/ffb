@@ -5,6 +5,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -93,4 +94,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract PlayerType raisedNurgleType();
 
 	public abstract boolean canUseApo(Game game, Player<?> defender);
+
+	public abstract String weatherDescription(Weather weather);
 }

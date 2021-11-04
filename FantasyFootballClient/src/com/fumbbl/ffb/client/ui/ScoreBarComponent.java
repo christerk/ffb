@@ -1,5 +1,20 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.util.UtilClientGraphics;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.util.StringTool;
+
+import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -11,19 +26,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
-import javax.swing.ToolTipManager;
-
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.util.UtilClientGraphics;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.util.StringTool;
-
 /**
  * 
  * @author Kalimar
@@ -33,7 +35,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	public static final int WIDTH = 782;
 	public static final int HEIGHT = 32;
 
-//  private static final String _HOME = "Home";
+	//  private static final String _HOME = "Home";
 //  private static final String _GUEST = "Guest";
 	private static final String _TURN = "Turn";
 
@@ -43,13 +45,13 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private static final Font _SPECTATOR_FONT = new Font("Sans Serif", Font.BOLD, 14);
 
-	private Rectangle _WEATHER_LOCATION = new Rectangle(WIDTH - 101, 0, 100, 32);
-	private Rectangle _SPECTATOR_LOCATION = new Rectangle((WIDTH / 2 + 160), 0, 130, 32);
-	private Rectangle _COACH_BANNED_HOME = new Rectangle((WIDTH / 2 - 130 - 36), 0, 36, 32);
-	private Rectangle _COACH_BANNED_AWAY = new Rectangle((WIDTH / 2 + 130), 0, 36, 32);
+	private final Rectangle _WEATHER_LOCATION = new Rectangle(WIDTH - 101, 0, 100, 32);
+	private final Rectangle _SPECTATOR_LOCATION = new Rectangle((WIDTH / 2 + 160), 0, 130, 32);
+	private final Rectangle _COACH_BANNED_HOME = new Rectangle((WIDTH / 2 - 130 - 36), 0, 36, 32);
+	private final Rectangle _COACH_BANNED_AWAY = new Rectangle((WIDTH / 2 + 130), 0, 36, 32);
 
-	private FantasyFootballClient fClient;
-	private BufferedImage fImage;
+	private final FantasyFootballClient fClient;
+	private final BufferedImage fImage;
 
 	private int fTurnHome;
 	private int fTurnAway;
@@ -262,20 +264,17 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	public String getToolTipText(MouseEvent pMouseEvent) {
 		String toolTip = null;
-		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		Game game = getClient().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		FieldModel fieldModel = game.getFieldModel();
 		if ((fWeather != null) && _WEATHER_LOCATION.contains(pMouseEvent.getPoint())) {
-			StringBuilder weatherInfo = new StringBuilder();
-			weatherInfo.append("<html><b>").append(fieldModel.getWeather().getName()).append("</b><br>")
-					.append(fieldModel.getWeather().getDescription()).append("</html>");
-			toolTip = weatherInfo.toString();
+			toolTip = "<html><b>" + fieldModel.getWeather().getName() + "</b><br>" +
+				mechanic.weatherDescription(fWeather) + "</html>";
 		}
 		if ((fSpectators > 0) && _SPECTATOR_LOCATION.contains(pMouseEvent.getPoint())) {
-			StringBuilder spectatorInfo = new StringBuilder();
-			spectatorInfo.append("<html>").append(fSpectators);
-			spectatorInfo
-					.append((fSpectators == 1) ? " spectator is watching the game." : " spectators are watching the game.");
-			spectatorInfo.append("</html>");
-			toolTip = spectatorInfo.toString();
+			toolTip = "<html>" + fSpectators +
+				((fSpectators == 1) ? " spectator is watching the game." : " spectators are watching the game.") +
+				"</html>";
 		}
 		return toolTip;
 	}

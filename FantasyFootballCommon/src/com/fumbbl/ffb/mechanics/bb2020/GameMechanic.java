@@ -7,6 +7,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -290,4 +291,25 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		return ((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
 			|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0));
 	}
+
+	@Override
+	public String weatherDescription(Weather weather) {
+
+		switch (weather) {
+			case SWELTERING_HEAT:
+				return "D3 random players from each team on the pitch will suffer from heat exhaustion before the next kick-off.";
+			case VERY_SUNNY:
+				return "A -1 modifier applies to all passing rolls.";
+			case NICE:
+				return "Perfect Fantasy Football weather.";
+			case POURING_RAIN:
+				return "A -1 modifier applies to all catch, intercept, or pick-up rolls.";
+			case BLIZZARD:
+				return "Going For It fails on a roll of 1 or 2 and only quick or short passes can be attempted.";
+			default:
+				return "No weather at all, but the intro screen shown by the client.";
+		}
+
+	}
+
 }
