@@ -25,6 +25,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import java.util.Arrays;
@@ -49,6 +50,12 @@ public class ClientStateKickTeamMateLikeThrow extends ClientStateMove {
 		setSelectable(true);
 		markThrowablePlayers();
 		fRangeGridHandler.refreshSettings();
+	}
+
+	@Override
+	protected boolean showGridForKTM(Game game, ActingPlayer actingPlayer) {
+		return ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false));
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {

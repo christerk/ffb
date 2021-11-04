@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -12,22 +9,22 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogEndTurn extends Dialog implements ActionListener, KeyListener {
 
 	public static int YES = 1;
 	public static int NO = 2;
-	public static int WIZARD = 3;
 
-	private JButton fButtonYes;
-	private JButton fButtonNo;
+	private final JButton fButtonYes;
+	private final JButton fButtonNo;
 	private int fChoice;
 
 	public DialogEndTurn(FantasyFootballClient pClient) {

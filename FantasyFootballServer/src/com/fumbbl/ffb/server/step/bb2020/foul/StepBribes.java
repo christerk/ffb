@@ -137,9 +137,6 @@ public class StepBribes extends AbstractStepWithReRoll {
 						int roll = getGameState().getDiceRoller().rollBribes();
 						fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
 						getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
-						if (!fBribeSuccessful) {
-							askForBribes();
-						}
 					}
 				});
 		}

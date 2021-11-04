@@ -9,6 +9,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.GameState;
@@ -20,8 +21,9 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Final step of the foul sequence. Consumes all expected stepParameters.
@@ -71,16 +73,18 @@ public class StepEndFouling extends AbstractStep {
 	}
 
 	private void executeStep() {
-		ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
-		boolean isOnPitch = FieldCoordinateBounds.FIELD.isInBounds(getGameState().getGame().getFieldModel().getPlayerCoordinate(player));
-		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		boolean isOnPitch = FieldCoordinateBounds.FIELD.isInBounds(game.getFieldModel().getPlayerCoordinate(player));
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-		if (!fEndTurn && isOnPitch && player.hasSkillProperty(NamedProperties.canMoveAfterFoul)) {
+		if (!fEndTurn && isOnPitch && player.hasSkillProperty(NamedProperties.canMoveAfterFoul) && UtilPlayer.isNextMovePossible(game, false)) {
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 				.pushSequence(new Select.SequenceParams(getGameState(), true));
 			UtilServerSteps.changePlayerAction(this, player.getId(),
 				PlayerAction.MOVE, false);
+			actingPlayer.setStandingUp(false);
 		} else {
 			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
 				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));

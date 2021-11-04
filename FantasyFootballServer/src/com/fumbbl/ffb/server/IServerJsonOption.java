@@ -23,6 +23,7 @@ public interface IServerJsonOption extends IJsonOption {
 
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonBooleanOption ALREADY_REPORTED = new JsonBooleanOption("alreadyReported");
+	JsonStringOption ALTERNATE_GOTO_LABEL = new JsonStringOption("gotoLabelOnBlock");
 	JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
 	JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
 	JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
@@ -90,6 +91,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
 	JsonBooleanOption IGNORE_ACTED_FLAG = new JsonBooleanOption("ignoreActedFlag");
 	JsonBooleanOption ILLEGAL_SUBSTITUTION = new JsonBooleanOption("illegalSubstitution");
+	JsonArrayOption INDUCEMENT_COMMANDS = new JsonArrayOption("inducementCommands");
 	JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
 	JsonIntOption INDUCEMENT_GOLD_HOME = new JsonIntOption("inducementGoldHome");
 	JsonEnumWithNameOption INDUCEMENT_PHASE = new JsonEnumWithNameOption("inducementPhase", Factory.INDUCEMENT_PHASE);
@@ -165,6 +167,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonBooleanOption TOUCHBACK = new JsonBooleanOption("touchback");
 	JsonFieldCoordinateOption TOUCHBACK_COORDINATE = new JsonFieldCoordinateOption("touchbackCoordinate");
 	JsonBooleanOption TOUCHDOWN = new JsonBooleanOption("touchdown");
+	JsonBooleanOption USE_ALTERNATE_LABEL = new JsonBooleanOption("useAlternateLabel");
 	JsonBooleanOption USE_KICK_CHOICE = new JsonBooleanOption("useKickChoice");
 	JsonBooleanOption USING_BREAK_TACKLE = new JsonBooleanOption("usingBreakTackle");
 	JsonBooleanOption USING_DIVING_TACKLE = new JsonBooleanOption("usingDivingTackle");

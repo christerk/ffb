@@ -57,6 +57,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private Team fTeam;
 	private String fName;
 	private PlayerType fPlayerType;
+	private PlayerStatus playerStatus;
 	private PlayerGender fPlayerGender;
 	private int fMovement;
 	private int fStrength;
@@ -423,11 +424,14 @@ public class RosterPlayer extends Player<RosterPosition> {
 		AttributesImpl attributes = new AttributesImpl();
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getId());
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NR, getNr());
+		if (playerStatus != null) {
+			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STATUS, playerStatus.getName());
+		}
 		UtilXml.startElement(pHandler, XML_TAG, attributes);
 
 		UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
 		UtilXml.addValueElement(pHandler, _XML_TAG_GENDER,
-				(getPlayerGender() != null) ? getPlayerGender().getName() : null);
+			(getPlayerGender() != null) ? getPlayerGender().getName() : null);
 		UtilXml.addValueElement(pHandler, _XML_TAG_POSITION_ID, getPositionId());
 		UtilXml.addValueElement(pHandler, _XML_TAG_TYPE, (getPlayerType() != null) ? getPlayerType().getName() : null);
 
@@ -497,6 +501,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 			if (XML_TAG.equals(pXmlTag)) {
 				fId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
 				setNr(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_NR));
+				playerStatus = PlayerStatus.forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STATUS));
 			}
 			if (_XML_TAG_INJURY_LIST.equals(pXmlTag)) {
 				fInsideInjuryList = true;
@@ -626,6 +631,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 		for (Skill skill : pPlayer.getSkills()) {
 			addSkill(skill);
 		}
+
+		playerStatus = pPlayer.playerStatus;
 	}
 
 	// JSON serialization
@@ -671,6 +678,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 		IJsonOption.TEMPORARY_PROPERTIES_MAP.addTo(jsonObject, temporaryProperties);
 		IJsonOption.SKILL_VALUES_MAP.addTo(jsonObject, skillValues);
 		IJsonOption.SKILL_DISPLAY_VALUES_MAP.addTo(jsonObject, displayValues);
+
+		if (playerStatus != null) {
+			IJsonOption.PLAYER_STATUS.addTo(jsonObject, playerStatus.getName());
+		}
 		JsonArray usedSkillsArray = new JsonArray();
 		usedSkills.stream().map(UtilJson::toJsonValue).forEach(usedSkillsArray::add);
 		IJsonOption.USED_SKILLS.addTo(jsonObject, usedSkillsArray);
@@ -730,6 +741,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 		skillValues = IJsonOption.SKILL_VALUES_MAP.getFrom(source, jsonObject);
 		displayValues = IJsonOption.SKILL_DISPLAY_VALUES_MAP.getFrom(source, jsonObject);
 
+		playerStatus = PlayerStatus.forName(IJsonOption.PLAYER_STATUS.getFrom(source, jsonObject));
+
 		JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(source, jsonObject);
 
 		if (usedSkillsArray != null) {
@@ -783,6 +796,16 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	public void removeTemporaryProperties(String source) {
 		temporaryProperties.remove(source);
+	}
+
+	@Override
+	public PlayerStatus getPlayerStatus() {
+		return playerStatus;
+	}
+
+	@Override
+	public boolean isJourneyman() {
+		return playerStatus == PlayerStatus.JOURNEYMAN;
 	}
 
 	@Override

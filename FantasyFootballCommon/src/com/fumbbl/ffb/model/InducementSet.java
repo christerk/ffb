@@ -10,6 +10,7 @@ import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -243,7 +244,9 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	public int totalInducements() {
 		int total = 0;
 		for (Inducement inducement : getInducements()) {
-			total += inducement.getValue();
+			if (!Usage.EXCLUDE_FROM_COUNT.contains(inducement.getType().getUsage())) {
+				total += inducement.getValue();
+			}
 		}
 		total += getAllCards().length;
 		return total;

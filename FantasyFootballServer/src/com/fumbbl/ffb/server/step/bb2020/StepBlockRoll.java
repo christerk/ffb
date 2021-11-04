@@ -137,6 +137,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 						int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
 						getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), getReRollSource()));
+						fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 						fBlockRoll[proIndex] = reRolledWithPro[0];
 						reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
 					} else {
@@ -172,6 +173,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			}
 		}
 		if (brawlerIndex >= 0) {
+			fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 			fBlockRoll[brawlerIndex] = rerolledDie;
 			this.reRolledDiceIndexes = add(reRolledDiceIndexes, brawlerIndex);
 		}

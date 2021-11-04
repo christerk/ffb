@@ -78,6 +78,7 @@ public class StepEndFeeding extends AbstractStep {
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
+		game.setDefenderId(null);
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
@@ -91,6 +92,9 @@ public class StepEndFeeding extends AbstractStep {
 					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
 							game.isHomePlaying()));
+				} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+					SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
+					((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name())).pushSequence(endTurnParams);
 				}
 			}
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {

@@ -29,11 +29,9 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilPassing;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Set;
@@ -143,16 +141,14 @@ public class StepPassBlock extends AbstractStep {
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
 		Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
 		Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), false);
 
 		if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-			Set<FieldCoordinate> validEndCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
 			// check if actingPlayer has dropped (failed dodge)
 			if (actingPlayer.getPlayer() != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (!playerState.hasTacklezones() || (fEndPlayerAction && actingPlayer.hasActed())) {
+				if (!playerState.hasTacklezones()) {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
 					fEndTurn = true;
 					fEndPlayerAction = false;
@@ -161,36 +157,21 @@ public class StepPassBlock extends AbstractStep {
 
 			if (fEndPlayerAction) {
 				if (actingPlayer.hasActed()) {
-					FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-					if (validEndCoordinates.contains(playerCoordinate) || !actingPlayer.hasActed()) {
-						UtilServerSteps.changePlayerAction(this, null, null, false);
-						if (checkNoPlayerActive(passBlockers)) {
-							fEndTurn = true;
-						} else {
-							fEndPlayerAction = false;
-							getGameState().pushCurrentStepOnStack();
-
-							selectGenerator.pushSequence(selectParams);
-						}
+					UtilServerSteps.changePlayerAction(this, null, null, false);
+					if (checkNoPlayerActive(passBlockers)) {
+						fEndTurn = true;
 					} else {
 						fEndPlayerAction = false;
 						getGameState().pushCurrentStepOnStack();
-						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+						selectGenerator.pushSequence(selectParams);
 					}
 				} else {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
 					getGameState().pushCurrentStepOnStack();
 					selectGenerator.pushSequence(selectParams);
+					fEndPlayerAction = false;
 				}
-			}
 
-			if (fEndTurn && (actingPlayer.getPlayer() != null)) {
-				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				if (!validEndCoordinates.contains(playerCoordinate)) {
-					fEndTurn = false;
-					getGameState().pushCurrentStepOnStack();
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-				}
 			}
 
 			if (fEndTurn) {

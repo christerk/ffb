@@ -91,6 +91,8 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 			case PASS_MOVE:
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.PASS,
 					actingPlayer.isJumping());
+				game.setThrowerId(actingPlayer.getPlayerId());
+				game.setThrowerAction(PlayerAction.PASS);
 				break;
 			case THROW_TEAM_MATE_MOVE:
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.THROW_TEAM_MATE,
@@ -103,6 +105,8 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 			case HAND_OVER_MOVE:
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.HAND_OVER,
 					actingPlayer.isJumping());
+				game.setThrowerId(actingPlayer.getPlayerId());
+				game.setThrowerAction(PlayerAction.HAND_OVER);
 				break;
 			case FOUL_MOVE:
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.FOUL,

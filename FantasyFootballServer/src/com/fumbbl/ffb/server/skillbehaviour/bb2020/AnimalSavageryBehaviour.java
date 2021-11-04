@@ -165,9 +165,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		step.getResult().addReport(new ReportAnimalSavagery(game.getActingPlayer().getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES),
-			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.DEFENDER);
+			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 		step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
-		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
+		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.ANIMAL_SAVAGERY, true));
 
 		step.getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -176,18 +176,20 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
-		case BLITZ:
-		case BLITZ_MOVE:
-		case KICK_TEAM_MATE:
-		case KICK_TEAM_MATE_MOVE:
-			game.getTurnData().setBlitzUsed(true);
-			break;
-		case PASS:
-		case PASS_MOVE:
-		case THROW_TEAM_MATE:
-		case THROW_TEAM_MATE_MOVE:
-			game.getTurnData().setPassUsed(true);
-			break;
+			case BLITZ:
+			case BLITZ_MOVE:
+				game.getTurnData().setBlitzUsed(true);
+				break;
+			case KICK_TEAM_MATE:
+			case KICK_TEAM_MATE_MOVE:
+				game.getTurnData().setKtmUsed(true);
+				break;
+			case PASS:
+			case PASS_MOVE:
+			case THROW_TEAM_MATE:
+			case THROW_TEAM_MATE_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
 		case HAND_OVER:
 		case HAND_OVER_MOVE:
 			game.getTurnData().setHandOverUsed(true);

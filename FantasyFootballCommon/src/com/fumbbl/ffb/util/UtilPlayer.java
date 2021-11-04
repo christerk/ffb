@@ -210,7 +210,7 @@ public class UtilPlayer {
 			if (offensiveAssist != pAttacker) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
 				Player<?>[] adjacentPlayersWithTacklezones = findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false);
-				boolean guardIsCanceled = mechanic.allowesCancellingGuard(pGame.getTurnMode())
+				boolean guardIsCanceled = mechanic.allowsCancellingGuard(pGame.getTurnMode())
 					&& Arrays.stream(adjacentPlayersWithTacklezones)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsFoulsInTacklezones));
@@ -227,7 +227,7 @@ public class UtilPlayer {
 			false)) {
 			if (defensiveAssist != pDefender) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(defensiveAssist);
-				if (findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
+				if (defensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones) || findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
 					foulAssists--;
 				}
 			}
@@ -349,9 +349,10 @@ public class UtilPlayer {
 		List<Player<?>> kickablePlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
+		TtmMechanic mechanic = (TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 		Player<?>[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
 		for (Player<?> adjacentPlayer : adjacentPlayers) {
-			if (adjacentPlayer.hasSkillProperty(NamedProperties.canBeKicked)) {
+			if (mechanic.canBeKicked(pGame, adjacentPlayer)) {
 				kickablePlayers.add(adjacentPlayer);
 			}
 		}

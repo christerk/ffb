@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- *
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.INJURY_MODIFIER)
@@ -74,13 +73,21 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 			.collect(Collectors.toSet());
 	}
 
-	public Set<InjuryModifier> getInjuryModifiers(InjuryModifierContext context) {
-		return Stream.concat(
-			Arrays.stream(UtilCards.findAllSkills(context.getAttacker())),
-			Arrays.stream(UtilCards.findAllSkills(context.getDefender()))
-		).flatMap(skill -> skill.getInjuryModifiers().stream())
+	private Set<InjuryModifier> getInjuryModifiers(InjuryModifierContext context) {
+
+		Set<InjuryModifier> modifiers = Arrays.stream(UtilCards.findAllSkills(context.getAttacker()))
+			.flatMap(skill -> skill.getInjuryModifiers().stream())
 			.filter(modifier -> modifier.appliesToContext(context))
 			.collect(Collectors.toSet());
+
+		context.setDefenderMode();
+
+		Arrays.stream(UtilCards.findAllSkills(context.getDefender()))
+			.flatMap(skill -> skill.getInjuryModifiers().stream())
+			.filter(modifier -> modifier.appliesToContext(context))
+			.forEach(modifiers::add);
+
+		return modifiers;
 	}
 
 	@Override

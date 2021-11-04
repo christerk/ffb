@@ -93,6 +93,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
@@ -119,6 +120,7 @@ public class StepEndTurn extends AbstractStep {
 	private boolean fWithinSecretWeaponHandling;
 	private int turnNr, half;
 	private List<String> playerIdsNaturalOnes = new ArrayList<>();
+	private Set<String> playerIdsFailedBribes = new HashSet<>();
 
 	public StepEndTurn(GameState pGameState) {
 		super(pGameState);
@@ -187,7 +189,7 @@ public class StepEndTurn extends AbstractStep {
 							if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 								fBribesChoiceHome = null;
 							} else {
-								fBribesChoiceHome = null;
+								fBribesChoiceAway = null;
 							}
 						}
 					}
@@ -725,6 +727,7 @@ public class StepEndTurn extends AbstractStep {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);
 					} else {
+						playerIdsFailedBribes.add(playerId);
 						allSuccessful = false;
 					}
 				}
@@ -791,7 +794,7 @@ public class StepEndTurn extends AbstractStep {
 
 	private boolean askForSecretWeaponBribes(Team team) {
 		Game game = getGameState().getGame();
-		List<String> playerIds = getPlayerIds(team, game);
+		List<String> playerIds = getPlayerIds(team, game).stream().filter(id -> !playerIdsFailedBribes.contains(id)).collect(Collectors.toList());
 		if (playerIds.size() > 0) {
 			InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
@@ -859,6 +862,7 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.HALF.addTo(jsonObject, half);
 		IServerJsonOption.TURN_NR.addTo(jsonObject, turnNr);
 		IServerJsonOption.PLAYER_IDS_NATURAL_ONES.addTo(jsonObject, playerIdsNaturalOnes);
+		IServerJsonOption.PLAYER_IDS_FAILED_BRIBE.addTo(jsonObject, playerIdsFailedBribes);
 		return jsonObject;
 	}
 
@@ -880,6 +884,10 @@ public class StepEndTurn extends AbstractStep {
 		half = IServerJsonOption.HALF.getFrom(source, jsonObject);
 		turnNr = IServerJsonOption.TURN_NR.getFrom(source, jsonObject);
 		playerIdsNaturalOnes = Arrays.stream(IServerJsonOption.PLAYER_IDS_NATURAL_ONES.getFrom(source, jsonObject)).collect(Collectors.toList());
+		String[] failedBribes = IServerJsonOption.PLAYER_IDS_FAILED_BRIBE.getFrom(source, jsonObject);
+		if (ArrayTool.isProvided(failedBribes)) {
+			playerIdsFailedBribes = Arrays.stream(failedBribes).collect(Collectors.toSet());
+		}
 		return this;
 	}
 

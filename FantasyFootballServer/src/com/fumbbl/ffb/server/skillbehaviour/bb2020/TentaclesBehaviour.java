@@ -17,6 +17,8 @@ import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.move.StepTentacles;
 import com.fumbbl.ffb.server.step.action.move.StepTentacles.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -119,6 +121,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 							actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovementWithModifiers() + (canSprint ? 3 : 2));
 							UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 							game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), state.coordinateFrom);
+							step.publishParameter(StepParameter.from(StepParameterKey.COORDINATE_FROM, null));
 						}
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					}

@@ -111,14 +111,12 @@ public class UtilServerInjury {
 
 		if (injuryContext.getPlayerState() != null) {
 			if (injuryContext.isCasualty() || injuryContext.isKnockedOut()) {
+				GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
 				if (!pInjuryType.canUseApo() || (injuryContext.isKnockedOut()
-						&& pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
+					&& pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-				} else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0)
-						&& pDefender.getPlayerType() != PlayerType.STAR)
-						|| (game.getTeamAway().hasPlayer(pDefender) && (game.getTurnDataAway().getApothecaries() > 0)
-								&& pDefender.getPlayerType() != PlayerType.STAR)) {
+				} else if (gameMechanic.canUseApo(game, pDefender)) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 				} else {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
@@ -245,6 +243,9 @@ public class UtilServerInjury {
 		RosterPlayer raisedPlayer = null;
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
+			GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			PlayerType playerType = pNurglesRot ? mechanic.raisedNurgleType() : PlayerType.RAISED_FROM_DEAD;
+
 			pNecroTeamResult.setRaisedDead(pNecroTeamResult.getRaisedDead() + 1);
 			raisedPlayer = new RosterPlayer();
 			String raisedPlayerId = killedId + "R" +
@@ -253,13 +254,12 @@ public class UtilServerInjury {
 			raisedPlayer.updatePosition(zombiePosition, pGame.getRules());
 			raisedPlayer.setName(pPlayerName);
 			raisedPlayer.setNr(pNecroTeam.getMaxPlayerNr() + 1);
-			raisedPlayer.setType(PlayerType.RAISED_FROM_DEAD);
+			raisedPlayer.setType(playerType);
 			pNecroTeam.addPlayer(raisedPlayer);
 			PlayerResult playerResult = pGame.getGameResult().getPlayerResult(raisedPlayer);
 			playerResult.setSendToBoxHalf(pGame.getHalf());
 			playerResult.setSendToBoxTurn(pGame.getTurnData().getTurnNr());
 			if (pNurglesRot) {
-				GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 				int newPlayerState = mechanic.infectedGoesToReserves() ? PlayerState.RESERVE : PlayerState.MISSING;
 				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(newPlayerState));
 				playerResult.setSendToBoxReason(mechanic.raisedByNurgleReason());

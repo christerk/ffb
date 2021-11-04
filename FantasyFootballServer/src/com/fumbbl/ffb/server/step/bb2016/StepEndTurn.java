@@ -130,7 +130,7 @@ public class StepEndTurn extends AbstractStep {
 						if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 							fBribesChoiceHome = null;
 						} else {
-							fBribesChoiceHome = null;
+							fBribesChoiceAway = null;
 						}
 					}
 				}

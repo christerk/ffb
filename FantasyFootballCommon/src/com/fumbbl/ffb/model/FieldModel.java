@@ -47,7 +47,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Kalimar
  */
 public class FieldModel implements IJsonSerializable {
@@ -121,17 +120,36 @@ public class FieldModel implements IJsonSerializable {
 		return new HashSet<>(trapDoors);
 	}
 
-	public void addMultiBlockTarget(String playerId, FieldCoordinate coordinate) {
+	public void addMultiBlockTarget(String playerId, BlockKind blockKind) {
+		Player<?> player = getGame().getPlayerById(playerId);
+		PlayerState playerState = getPlayerState(player);
+		if (blockKind == BlockKind.STAB) {
+			playerState = playerState.changeSelectedStabTarget(true);
+		} else {
+			playerState = playerState.changeSelectedBlockTarget(true);
+		}
+		setPlayerState(player, playerState);
 		multiBlockTargets.add(playerId);
-		multiBlockTargetCoordinates.add(coordinate);
+		multiBlockTargetCoordinates.add(getPlayerCoordinate(player));
 	}
 
-	public void removeMultiBlockTarget(String playerId, FieldCoordinate coordinate) {
+	public void removeMultiBlockTarget(String playerId) {
+		Player<?> player = getGame().getPlayerById(playerId);
+		PlayerState playerState = getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false);
+		setPlayerState(player, playerState);
+
 		multiBlockTargets.remove(playerId);
-		multiBlockTargetCoordinates.remove(coordinate);
+		multiBlockTargetCoordinates.remove(getPlayerCoordinate(player));
 	}
 
 	public void clearMultiBlockTargets() {
+
+		multiBlockTargets.forEach(target -> {
+			Player<?> player = getGame().getPlayerById(target);
+			PlayerState playerState = getPlayerState(player);
+			setPlayerState(player, playerState.changeSelectedStabTarget(false).changeSelectedBlockTarget(false));
+		});
+
 		multiBlockTargets.clear();
 		multiBlockTargetCoordinates.clear();
 	}
@@ -142,10 +160,6 @@ public class FieldModel implements IJsonSerializable {
 
 	public boolean wasMultiBlockTargetSquare(FieldCoordinate coordinate) {
 		return multiBlockTargetCoordinates.contains(coordinate);
-	}
-
-	public int selectedMultiBlockTargets() {
-		return multiBlockTargets.size();
 	}
 
 	public Player<?> getPlayer(FieldCoordinate pPlayerPosition) {
@@ -452,7 +466,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public FieldCoordinate[] findAdjacentCoordinates(FieldCoordinate pCoordinate, FieldCoordinateBounds pBounds,
-			int pSteps, boolean pWithStartCoordinate) {
+	                                                 int pSteps, boolean pWithStartCoordinate) {
 		List<FieldCoordinate> adjacentCoordinates = new ArrayList<>();
 		if ((pCoordinate != null) && (pBounds != null)) {
 			for (int y = -pSteps; y <= pSteps; y++) {

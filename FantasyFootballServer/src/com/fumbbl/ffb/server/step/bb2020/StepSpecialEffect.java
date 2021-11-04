@@ -151,9 +151,14 @@ public final class StepSpecialEffect extends AbstractStep {
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
-					suppressEndTurn = !game.getActingTeam().hasPlayer(player) || !UtilPlayer.hasBall(game, player);
+					boolean bombFromHome = game.getTurnMode() == TurnMode.BOMB_HOME || game.getTurnMode() == TurnMode.BOMB_HOME_BLITZ;
+					boolean bombFromAway = game.getTurnMode() == TurnMode.BOMB_AWAY || game.getTurnMode() == TurnMode.BOMB_AWAY_BLITZ;
+
+					boolean playerHitIsFromBombTeam = (bombFromHome && game.getTeamHome().hasPlayer(player)) || (bombFromAway && game.getTeamAway().hasPlayer(player));
+
+					suppressEndTurn = !(playerHitIsFromBombTeam && UtilPlayer.hasBall(game, player));
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
-							new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
+						new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
 					StepParameterSet parameterSet = UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true);
 					if (suppressEndTurn) {
 						parameterSet.remove(StepParameterKey.END_TURN);

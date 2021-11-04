@@ -5,13 +5,11 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -174,6 +172,7 @@ public final class StepInitSelecting extends AbstractStep {
 						publishParameter(new StepParameter(StepParameterKey.USING_STAB, blockCommand.isUsingStab()));
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 						publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
+						publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 						if (game.getFieldModel().getBlitzState() != null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ;
 						} else {
@@ -232,7 +231,7 @@ public final class StepInitSelecting extends AbstractStep {
 				case CLIENT_THROW_TEAM_MATE:
 					ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
-						&& !game.getTurnData().isPassUsed()) {
+						&& (!game.getTurnData().isPassUsed() || throwTeamMateCommand.isKicked())) {
 						if (throwTeamMateCommand.getTargetCoordinate() != null) {
 							if (game.isHomePlaying()) {
 								publishParameter(
@@ -317,6 +316,9 @@ public final class StepInitSelecting extends AbstractStep {
 					prepareStandingUp();
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
+					if (forceGotoOnDispatch) {
+						prepareStandingUp();
+					}
 					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 				}
 			}
@@ -354,25 +356,15 @@ public final class StepInitSelecting extends AbstractStep {
 	}
 
 	private void handleSetBlockTarget(Game game, ClientCommandSetBlockTargetSelection command) {
-		Player<?> player = game.getPlayerById(command.getPlayerId());
 		FieldModel fieldModel = game.getFieldModel();
-		PlayerState playerState = fieldModel.getPlayerState(player);
-		if (command.getKind() == BlockKind.STAB) {
-			playerState = playerState.changeSelectedStabTarget(true);
-		} else {
-			playerState = playerState.changeSelectedBlockTarget(true);
-		}
-		fieldModel.setPlayerState(player, playerState);
-		fieldModel.addMultiBlockTarget(player.getId(), fieldModel.getPlayerCoordinate(player));
+
+		fieldModel.addMultiBlockTarget(command.getPlayerId(), command.getKind());
 		ServerUtilBlock.updateDiceDecorations(game);
 	}
 
 	private void handleUnsetBlockTarget(Game game, ClientCommandUnsetBlockTargetSelection command) {
-		Player<?> player = game.getPlayerById(command.getPlayerId());
 		FieldModel fieldModel = game.getFieldModel();
-		PlayerState playerState = fieldModel.getPlayerState(player).changeSelectedStabTarget(false).changeSelectedBlockTarget(false);
-		fieldModel.setPlayerState(player, playerState);
-		fieldModel.removeMultiBlockTarget(player.getId(), fieldModel.getPlayerCoordinate(player));
+		fieldModel.removeMultiBlockTarget(command.getPlayerId());
 		ServerUtilBlock.updateDiceDecorations(game);
 	}
 

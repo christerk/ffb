@@ -329,6 +329,16 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
+	public PlayerStatus getPlayerStatus() {
+		return originalPlayer.getPlayerStatus();
+	}
+
+	@Override
+	public boolean isJourneyman() {
+		return originalPlayer.isJourneyman();
+	}
+
+	@Override
 	public ZappedPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
 		originalPlayer = new RosterPlayer().initFrom(game, IJsonOption.PLAYER.getFrom(game, (JsonObject) pJsonValue));
 		return this;

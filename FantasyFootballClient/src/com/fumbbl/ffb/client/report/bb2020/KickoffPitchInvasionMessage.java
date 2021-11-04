@@ -18,6 +18,18 @@ public class KickoffPitchInvasionMessage extends ReportMessageBase<ReportKickoff
 		GameResult gameResult = game.getGameResult();
 
 		StringBuilder status = new StringBuilder();
+		if (report.getAmount() > 0) {
+			status.append("Pitch Invasion Roll [ ").append(report.getAmount()).append(" ]");
+			println(getIndent(), TextStyle.ROLL, status.toString());
+			status = new StringBuilder();
+			status.append("Affected Teams will have ").append(report.getAmount()).append(" player");
+			if (report.getAmount() > 1) {
+				status.append("s");
+			}
+			status.append(" stunned.");
+			println(getIndent() + 1, TextStyle.EXPLANATION, status.toString());
+			status = new StringBuilder();
+		}
 		status.append("Pitch Invasion Roll Home Team [ ").append(report.getRollHome()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		int totalHome = report.getRollHome() + gameResult.getTeamResultHome().getFanFactor();

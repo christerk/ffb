@@ -8,12 +8,11 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
- * 
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.PLAYER_TYPE)
 @RulesCollection(Rules.COMMON)
-public class PlayerTypeFactory implements INamedObjectFactory {
+public class PlayerTypeFactory implements INamedObjectFactory<PlayerType> {
 
 	public PlayerType forName(String pName) {
 		if (StringTool.isProvided(pName)) {

@@ -13,4 +13,9 @@ public class ProjectileVomit extends InjuryType {
 	public boolean isVomit() {
 		return true;
 	}
+
+	@Override
+	public boolean isCausedByOpponent() {
+		return true;
+	}
 }

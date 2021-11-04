@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -19,7 +19,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifierContext;
-import com.fumbbl.ffb.report.ReportHypnoticGazeRoll;
+import com.fumbbl.ffb.report.bb2020.ReportHypnoticGazeRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -41,14 +41,14 @@ import java.util.Set;
 
 /**
  * Step in move sequence to handle skill HYPNOTIC_GAZE.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
- * 
+ * <p>
  * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepHypnoticGaze extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnEnd;
@@ -123,7 +123,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 				getResult().setSound(SoundId.HYPNO);
 			}
 			getResult().addReport(new ReportHypnoticGazeRoll(actingPlayer.getPlayerId(), successful,
-				roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0])));
+				roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0]), game.getDefenderId()));
 			if (successful) {
 				PlayerState oldVictimState = game.getFieldModel().getPlayerState(game.getDefender());
 				if (!oldVictimState.isConfused() && !oldVictimState.isHypnotized()) {
@@ -131,7 +131,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 				}
 			} else {
 				if ((getReRolledAction() != ReRolledActions.HYPNOTIC_GAZE) && UtilServerReRoll.askForReRollIfAvailable(
-						getGameState(), actingPlayer.getPlayer(), ReRolledActions.HYPNOTIC_GAZE, minimumRoll, false)) {
+					getGameState(), actingPlayer.getPlayer(), ReRolledActions.HYPNOTIC_GAZE, minimumRoll, false)) {
 					gotoEndLabel = false;
 				}
 			}

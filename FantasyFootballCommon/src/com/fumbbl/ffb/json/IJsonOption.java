@@ -13,6 +13,7 @@ public interface IJsonOption {
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
+	JsonIntOption AMOUNT = new JsonIntOption("amount");
 	JsonObjectOption ANIMATION = new JsonObjectOption("animation");
 	JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", Factory.ANIMATION_TYPE);
 	JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
@@ -310,10 +311,10 @@ public interface IJsonOption {
 	JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
 	JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
 	JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
+	JsonStringArrayOption PLAYER_IDS_FAILED_BRIBE = new JsonStringArrayOption("playerIdsFailedBribe");
 	JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
 	JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
 	JsonStringArrayOption PLAYER_IDS_NATURAL_ONES = new JsonStringArrayOption("playerIdsNaturalOnes");
-	JsonStringArrayOption PLAYER_IDS_COACH_BANNED = new JsonStringArrayOption("playerIdsCoachBanned");
 	JsonArrayOption PLAYER_MARKER_ARRAY = new JsonArrayOption("playerMarkerArray");
 	JsonStringOption PLAYER_NAME = new JsonStringOption("playerName");
 	JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");
@@ -324,6 +325,7 @@ public interface IJsonOption {
 	JsonPlayerStateOption PLAYER_STATE = new JsonPlayerStateOption("playerState");
 	JsonPlayerStateOption PLAYER_STATE_NEW = new JsonPlayerStateOption("playerStateNew");
 	JsonPlayerStateOption PLAYER_STATE_OLD = new JsonPlayerStateOption("playerStateOld");
+	JsonStringOption PLAYER_STATUS = new JsonStringOption("playerStatus");
 	JsonEnumWithNameOption PLAYER_TYPE = new JsonEnumWithNameOption("playerType", Factory.PLAYER_TYPE);
 	JsonBooleanOption PLAYER_WAS_PUSHED = new JsonBooleanOption("playerWasPushed");
 	JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
@@ -521,6 +523,7 @@ public interface IJsonOption {
 	JsonIntOption VALUE = new JsonIntOption("value");
 	JsonStringOption VICTIM_ID = new JsonStringOption("victimId");
 	JsonBooleanOption WAITING_FOR_OPPONENT = new JsonBooleanOption("waitingForOpponent");
+	JsonIntOption WANDERING_APOTHECARIES = new JsonIntOption("wanderingApothecaries");
 	JsonEnumWithNameOption WEATHER = new JsonEnumWithNameOption("weather", Factory.WEATHER);
 	JsonIntArrayOption WEATHER_ROLL = new JsonIntArrayOption("weatherRoll");
 	JsonIntOption WINNINGS = new JsonIntOption("winnings");

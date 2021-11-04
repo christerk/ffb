@@ -33,6 +33,7 @@ public class MightyBlow extends Skill {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
 				return super.appliesToContext(context)
+					&& !context.isStab()
 					&& !context.isFoul();
 			}
 		});

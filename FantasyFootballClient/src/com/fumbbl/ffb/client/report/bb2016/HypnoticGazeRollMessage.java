@@ -1,9 +1,11 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
-import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Player;
@@ -11,7 +13,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 
 @ReportMessageType(ReportId.HYPNOTIC_GAZE_ROLL)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class HypnoticGazeRollMessage extends ReportMessageBase<ReportSkillRoll> {
 
     @Override

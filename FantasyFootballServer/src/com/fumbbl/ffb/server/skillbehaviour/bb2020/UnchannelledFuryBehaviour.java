@@ -113,18 +113,20 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
-		case BLITZ:
-		case BLITZ_MOVE:
-		case KICK_TEAM_MATE:
-		case KICK_TEAM_MATE_MOVE:
-			game.getTurnData().setBlitzUsed(true);
-			break;
-		case PASS:
-		case PASS_MOVE:
-		case THROW_TEAM_MATE:
-		case THROW_TEAM_MATE_MOVE:
-			game.getTurnData().setPassUsed(true);
-			break;
+			case BLITZ:
+			case BLITZ_MOVE:
+				game.getTurnData().setBlitzUsed(true);
+				break;
+			case KICK_TEAM_MATE:
+			case KICK_TEAM_MATE_MOVE:
+				game.getTurnData().setKtmUsed(true);
+				break;
+			case PASS:
+			case PASS_MOVE:
+			case THROW_TEAM_MATE:
+			case THROW_TEAM_MATE_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
 		case HAND_OVER:
 		case HAND_OVER_MOVE:
 			game.getTurnData().setHandOverUsed(true);

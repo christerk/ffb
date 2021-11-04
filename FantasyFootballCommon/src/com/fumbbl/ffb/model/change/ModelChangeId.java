@@ -158,6 +158,7 @@ public enum ModelChangeId implements INamedObject {
 	TURN_DATA_SET_RE_ROLL_USED("turnDataSetReRollUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_TURN_NR("turnDataSetTurnNr", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_TURN_STARTED("turnDataSetTurnStarted", ModelChangeDataType.BOOLEAN),
+	TURN_DATA_SET_WANDERING_APOTHECARIES("turnDataSetWanderingApothecaries", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_COACH_BANNED("turnDataSetCoachBanned", ModelChangeDataType.BOOLEAN);
 
 	private final String fName;

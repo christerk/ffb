@@ -21,6 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,6 +75,7 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_PETTY_CASH_TRANSFERRED = "pettyCashTransferred";
 	private static final String _XML_TAG_PETTY_CASH_USED = "pettyCashUsed";
 	private static final String _XML_TAG_TEAM_VALUE = "teamValue";
+	private static final String _XML_TAG_TREASURY_SPENT_ON_INDUCEMENTS = "treasurySpentOnInducements";
 
 	private static final String _XML_TAG_PLAYER_RESULT_LIST = "playerResultList";
 
@@ -187,6 +189,10 @@ public class FumbblResult implements IXmlWriteable {
 				UtilXml.addValueElement(pHandler, _XML_TAG_TEAM_VALUE, pTeamResult.getTeamValue());
 			}
 
+			if (pTeamResult.getTreasurySpentOnInducements() > 0) {
+				UtilXml.addValueElement(pHandler, _XML_TAG_TREASURY_SPENT_ON_INDUCEMENTS, pTeamResult.getTreasurySpentOnInducements());
+			}
+
 			attributes = new AttributesImpl();
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BADLY_HURT, pTeamResult.getBadlyHurtSuffered());
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERIOUS_INJURY, pTeamResult.getSeriousInjurySuffered());
@@ -264,10 +270,7 @@ public class FumbblResult implements IXmlWriteable {
 				// Mercenaries
 				for (Player<?> mercenary : mercenaries) {
 					Skill addedSkill = null;
-					Set<Skill> rosterSkills = new HashSet<>();
-					for (Skill skill : mercenary.getPosition().getSkills()) {
-						rosterSkills.add(skill);
-					}
+					Set<Skill> rosterSkills = new HashSet<>(Arrays.asList(mercenary.getPosition().getSkills()));
 					for (Skill skill : mercenary.getSkills()) {
 						if (!rosterSkills.contains(skill) && (!skill.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll))) {
 							addedSkill = skill;

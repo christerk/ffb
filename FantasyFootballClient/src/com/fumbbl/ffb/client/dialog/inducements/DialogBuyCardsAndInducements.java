@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -160,6 +161,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private JPanel goldPanel() {
 		JPanel panelGold = new JPanel();
 		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
+		updateColors();
+
 		labelAvailableGold.setFont(BOLD_FONT);
 		labelPettyCash.setFont(BOLD_FONT);
 		labelTreasury.setFont(BOLD_FONT);
@@ -172,6 +175,16 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		panelGold.add(labelTreasury);
 		panelGold.add(Box.createHorizontalGlue());
 		return panelGold;
+	}
+
+	private void updateColors() {
+		Color foreGround = Color.BLACK;
+
+		if (maximumTreasury > treasury) {
+			foreGround = Color.ORANGE.darker();
+		}
+		labelAvailableGold.setForeground(foreGround);
+		labelTreasury.setForeground(foreGround);
 	}
 
 	private void showDialog() {
@@ -281,6 +294,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 			labelPettyCash.setText("Petty Cash (free): " + StringTool.formatThousands(pettyCash) + " gp");
 
 			labelTreasury.setText("Team Treasury: " + StringTool.formatThousands(treasury) + " gp");
+
+			updateColors();
 
 			getContentPane().validate();
 		}

@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
@@ -186,16 +187,20 @@ public final class StepMvp extends AbstractStep {
 		if ((fHomePlayersMvp.size() >= fNrOfHomeMvps) || (fAwayPlayersMvp.size() >= fNrOfAwayMvps)) {
 			ReportMostValuablePlayers mvpReport = new ReportMostValuablePlayers();
 			for (String playerIdHome : fHomePlayersMvp) {
-				Player<?> playerHome = game.getPlayerById(playerIdHome);
-				PlayerResult playerResultHome = gameResult.getPlayerResult(playerHome);
-				playerResultHome.setPlayerAwards(playerResultHome.getPlayerAwards() + 1);
-				mvpReport.addPlayerIdHome(playerIdHome);
+				if (playerIdHome != null) {
+					Player<?> playerHome = game.getPlayerById(playerIdHome);
+					PlayerResult playerResultHome = gameResult.getPlayerResult(playerHome);
+					playerResultHome.setPlayerAwards(playerResultHome.getPlayerAwards() + 1);
+					mvpReport.addPlayerIdHome(playerIdHome);
+				}
 			}
 			for (String playerIdAway : fAwayPlayersMvp) {
-				Player<?> playerAway = game.getPlayerById(playerIdAway);
-				PlayerResult playerResultAway = gameResult.getPlayerResult(playerAway);
-				playerResultAway.setPlayerAwards(playerResultAway.getPlayerAwards() + 1);
-				mvpReport.addPlayerIdAway(playerIdAway);
+				if (playerIdAway != null) {
+					Player<?> playerAway = game.getPlayerById(playerIdAway);
+					PlayerResult playerResultAway = gameResult.getPlayerResult(playerAway);
+					playerResultAway.setPlayerAwards(playerResultAway.getPlayerAwards() + 1);
+					mvpReport.addPlayerIdAway(playerIdAway);
+				}
 			}
 			getResult().addReport(mvpReport);
 			getResult().setNextAction(StepAction.NEXT_STEP);
@@ -208,13 +213,16 @@ public final class StepMvp extends AbstractStep {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		for (Player<?> player : pTeam.getPlayers()) {
+			if (player.getPlayerType() == PlayerType.STAR || player.getPlayerType() == PlayerType.MERCENARY) {
+				continue;
+			}
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.isKilled()) {
 				continue;
 			}
 			PlayerResult playerResult = gameResult.getPlayerResult(player);
 			if ((player.getRecoveringInjury() != null)
-					|| (SendToBoxReason.NURGLES_ROT == playerResult.getSendToBoxReason())) {
+				|| (SendToBoxReason.NURGLES_ROT == playerResult.getSendToBoxReason())) {
 				continue;
 			}
 			playerIds.add(player.getId());

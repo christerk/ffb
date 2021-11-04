@@ -44,6 +44,7 @@ import static com.fumbbl.ffb.model.skill.SkillValueEvaluator.ANIMOSITY_TO_ALL;
 public abstract class Player<T extends Position> implements IXmlSerializable, IJsonSerializable {
 
 	static final String _XML_ATTRIBUTE_ID = "id";
+	static final String _XML_ATTRIBUTE_STATUS = "status";
 
 	static final String _XML_ATTRIBUTE_NR = "nr";
 	static final String _XML_ATTRIBUTE_SIZE = "size";
@@ -353,6 +354,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public boolean canBeThrown() {
 		return hasSkillProperty(NamedProperties.canBeThrown) || (hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs3orLess) && getStrengthWithModifiers() <= 3);
 	}
+
+	public abstract PlayerStatus getPlayerStatus();
+
+	public abstract boolean isJourneyman();
 
 	public boolean isUsed(ISkillProperty property) {
 		Optional<Skill> skill = getSkillsIncludingTemporaryOnes().stream().filter(s -> s.hasSkillProperty(property)).findFirst();
