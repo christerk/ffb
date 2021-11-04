@@ -478,6 +478,8 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				DbTransaction transaction = new DbTransaction();
 				for (Player<?> player : removedPlayerList) {
 					server.getCommunication().sendRemovePlayer(getGameState(), player.getId());
+					otherTeam.removePlayer(player);
+					game.getFieldModel().remove(player);
 					getResult().addReport(new ReportDoubleHiredStarPlayer(player.getName()));
 				}
 				server.getDbUpdater().add(transaction);
