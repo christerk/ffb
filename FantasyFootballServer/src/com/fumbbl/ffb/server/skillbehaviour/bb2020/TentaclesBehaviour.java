@@ -117,6 +117,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 						if (state.usingTentacles) {
 							actingPlayer.setGoingForIt(true);
 							actingPlayer.setDodging(false);
+							actingPlayer.setJumping(false);
 							boolean canSprint = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi);
 							actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovementWithModifiers() + (canSprint ? 3 : 2));
 							UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
