@@ -183,7 +183,7 @@ public class PathFinderWithPassBlockSupport {
 		// Handle the square with the ball by marking it as a TZ.
 		// This allows the player to move into the ball, but not through it.
 		FieldCoordinate ballCoord = fieldModel.getBallCoordinate();
-		if (isOnField(pGame, ballCoord) && context.blockTacklezones) {
+		if (isOnField(pGame, ballCoord) && context.blockTacklezones && fieldModel.isBallInPlay()) {
 			data.setNode(ballCoord, new PathFindNode(normalState, ballCoord, 1000, true, pEndCoords, null));
 		}
 
