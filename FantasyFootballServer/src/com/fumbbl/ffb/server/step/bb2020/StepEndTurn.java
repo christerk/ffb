@@ -623,13 +623,15 @@ public class StepEndTurn extends AbstractStep {
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 			if (playerResult.hasUsedSecretWeapon()) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
-				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.BANNED));
-				playerResult.setSendToBoxByPlayerId(null);
-				playerResult.setSendToBoxReason(SendToBoxReason.SECRET_WEAPON_BAN);
-				playerResult.setSendToBoxTurn(turnNr);
-				playerResult.setSendToBoxHalf(half);
-				UtilBox.putPlayerIntoBox(game, player);
 				playerResult.setHasUsedSecretWeapon(false);
+				if (!PlayerState.REMOVED_FROM_PLAY.contains(playerState.getBase())) {
+					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.BANNED));
+					playerResult.setSendToBoxByPlayerId(null);
+					playerResult.setSendToBoxReason(SendToBoxReason.SECRET_WEAPON_BAN);
+					playerResult.setSendToBoxTurn(turnNr);
+					playerResult.setSendToBoxHalf(half);
+					UtilBox.putPlayerIntoBox(game, player);
+				}
 			}
 		}
 		UtilServerGame.updateLeaderReRolls(this);
@@ -837,7 +839,7 @@ public class StepEndTurn extends AbstractStep {
 		for (Player<?> player : team.getPlayers()) {
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
+			if (playerResult.hasUsedSecretWeapon() && !PlayerState.REMOVED_FROM_PLAY.contains(playerState.getBase())) {
 				playerIds.add(player.getId());
 			}
 		}
