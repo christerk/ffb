@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -25,14 +26,14 @@ public class ServerUtilBlock {
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
 
 		if ((actingPlayer.getPlayer() != null)
-				&& (blocksDuringMove || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)))) {
+			&& (blocksDuringMove || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)))) {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
 			addDiceDecorations(pGame, UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, coordinateAttacker));
 			if (canBlockSameTeamPlayer) {
 				addDiceDecorations(pGame,
-						UtilPlayer.findAdjacentBlockablePlayers(pGame, actingPlayer.getPlayer().getTeam(), coordinateAttacker));
+					UtilPlayer.findAdjacentBlockablePlayers(pGame, actingPlayer.getPlayer().getTeam(), coordinateAttacker));
 			}
 		}
 	}
@@ -50,16 +51,21 @@ public class ServerUtilBlock {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		if (pPlayers.length > 0) {
 			boolean usingMultiBlock = (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK);
+			BlitzState blitzState = pGame.getFieldModel().getBlitzState();
+			boolean performsBlitz = blitzState != null && blitzState.isSelected();
 			for (Player<?> pPlayer : pPlayers) {
-				if (!usingMultiBlock || (pPlayer != pGame.getDefender())) {
-					int nrOfDice = 0;
-					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.needsNoDiceDecorations)) {
-						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayer,
-							usingMultiBlock, false);
-					}
-					FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-					pGame.getFieldModel().add(new DiceDecoration(coordinateOpponent, nrOfDice));
+				boolean isBystanderDuringBlitz = performsBlitz && !pPlayer.getId().equals(blitzState.getSelectedPlayerId());
+				if (isBystanderDuringBlitz) {
+					continue;
 				}
+				int nrOfDice = 0;
+				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.needsNoDiceDecorations)) {
+					nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayer,
+						usingMultiBlock, false);
+				}
+				FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
+				pGame.getFieldModel().add(new DiceDecoration(coordinateOpponent, nrOfDice));
+
 			}
 		}
 	}
@@ -87,8 +93,8 @@ public class ServerUtilBlock {
 		return Math.max(strength, 1);
 	}
 
-	public static int findNrOfBlockDice(Game game, Player<?> attacker,  Player<?> defender,
-			boolean usingMultiBlock, boolean successfulDauntless) {
+	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
+	                                    boolean usingMultiBlock, boolean successfulDauntless) {
 		int nrOfDice = 0;
 		if ((attacker != null) && (defender != null)) {
 			nrOfDice = 1;
