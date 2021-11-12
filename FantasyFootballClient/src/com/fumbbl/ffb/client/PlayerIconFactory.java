@@ -241,8 +241,9 @@ public class PlayerIconFactory {
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
 		}
-		PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(pPlayer.getId());
-		if ((playerMarker != null) && (ClientMode.PLAYER == pClient.getMode())) {
+
+		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
+		if ((playerMarker != null)) {
 			markIcon(icon, playerMarker.getHomeText());
 		}
 
