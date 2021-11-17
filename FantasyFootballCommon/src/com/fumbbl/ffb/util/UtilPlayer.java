@@ -17,6 +17,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 
@@ -269,6 +270,7 @@ public class UtilPlayer {
 		FieldModel fieldModel = pGame.getFieldModel();
 		Player<?>[] players = pGame.getPlayers();
 		for (Player<?> player : players) {
+			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN, pGame);
 			PlayerState newPlayerState = null;
 			PlayerState oldPlayerState = fieldModel.getPlayerState(player);
 			switch (oldPlayerState.getBase()) {
@@ -286,6 +288,8 @@ public class UtilPlayer {
 						|| (!pGame.isHomePlaying() && pGame.getTeamAway().hasPlayer(player))) {
 						newPlayerState = oldPlayerState.changeBase(PlayerState.PRONE).changeActive(false);
 					}
+					break;
+				default:
 					break;
 			}
 			if ((newPlayerState != null) && newPlayerState.hasUsedPro()) {

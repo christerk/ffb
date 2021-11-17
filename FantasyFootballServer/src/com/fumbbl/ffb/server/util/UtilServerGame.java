@@ -126,29 +126,22 @@ public class UtilServerGame {
 			}
 		}
 		resetLeaderState(game);
-		resetSpecialSkills(game, SkillUsageType.ONCE_PER_HALF);
 		updateLeaderReRolls(pStep);
+		resetSpecialSkills(game);
 
 	}
 
-	protected static void resetLeaderState(Game pGame) {
+	private static void resetLeaderState(Game pGame) {
 		if (pGame.getHalf() <= 2) {
 			pGame.getTurnDataHome().setLeaderState(LeaderState.NONE);
 			pGame.getTurnDataAway().setLeaderState(LeaderState.NONE);
 		}
 	}
-	
-	protected static void resetSpecialSkills(Game pGame, SkillUsageType type) {
-		if (pGame.getHalf() <= 2) {
-			resetSpecialSkillsForTeam(pGame, pGame.getTeamHome(), type);
-			resetSpecialSkillsForTeam(pGame, pGame.getTeamAway(), type);
-			}
-	}
-	
-	protected static void resetSpecialSkillsForTeam(Game pGame, Team team, SkillUsageType type) {
-			for (Player<?> player : team.getPlayers()) {
-				player.resetUsedSkills(type, pGame);
-			}
+
+	private static void resetSpecialSkills(Game game) {
+		for (Player<?> player : game.getPlayers()) {
+			player.resetUsedSkills(SkillUsageType.ONCE_PER_HALF, game);
+		}
 	}
 
 	public static void updateLeaderReRolls(IStep pStep) {
@@ -158,7 +151,7 @@ public class UtilServerGame {
 	}
 
 	private static void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
-	                                                 IStep pStep) {
+	                                               IStep pStep) {
 		if (!LeaderState.USED.equals(pTurnData.getLeaderState())) {
 			if (teamHasLeaderOnField(pTeam, pFieldModel)) {
 				if (LeaderState.NONE.equals(pTurnData.getLeaderState())) {
@@ -198,14 +191,14 @@ public class UtilServerGame {
 		turnData.setApothecaries(team.getApothecaries());
 		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.APOTHECARY)
 			.findFirst().ifPresent(entry -> {
-			Inducement wanderingApothecaries = entry.getValue();
-			if (wanderingApothecaries.getValue() > 0) {
-				turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
-				turnData.setWanderingApothecaries(wanderingApothecaries.getValue());
-				pStep.getResult().addReport(
-					new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
-			}
-		});
+				Inducement wanderingApothecaries = entry.getValue();
+				if (wanderingApothecaries.getValue() > 0) {
+					turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
+					turnData.setWanderingApothecaries(wanderingApothecaries.getValue());
+					pStep.getResult().addReport(
+						new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
+				}
+			});
 	}
 
 	private static void addReRolls(IStep pStep, boolean pHomeTeam) {
@@ -215,13 +208,13 @@ public class UtilServerGame {
 		turnData.setReRolls(team.getReRolls());
 		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.REROLL)
 			.findFirst().ifPresent(entry -> {
-			Inducement extraTraining = entry.getValue();
-			if (extraTraining.getValue() > 0) {
-				turnData.setReRolls(turnData.getReRolls() + extraTraining.getValue());
-				pStep.getResult()
-					.addReport(new ReportInducement(team.getId(), entry.getKey(), extraTraining.getValue()));
-			}
-		});
+				Inducement extraTraining = entry.getValue();
+				if (extraTraining.getValue() > 0) {
+					turnData.setReRolls(turnData.getReRolls() + extraTraining.getValue());
+					pStep.getResult()
+						.addReport(new ReportInducement(team.getId(), entry.getKey(), extraTraining.getValue()));
+				}
+			});
 	}
 
 	private static int rollMasterChef(IStep pStep, boolean pHomeTeam) {
@@ -233,15 +226,15 @@ public class UtilServerGame {
 		inducementSet.getInducementMapping().entrySet().stream()
 			.filter(entry -> entry.getKey().getUsage() == Usage.STEAL_REROLL
 				&& entry.getValue().getValue() > 0).findFirst().ifPresent(entry -> {
-			Inducement masterChef = entry.getValue();
-			for (int i = 0; i < masterChef.getValue(); i++) {
-				Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
-				int[] masterChefRoll = gameState.getDiceRoller().rollMasterChef();
-				int reRollsStolen = DiceInterpreter.getInstance().interpretMasterChefRoll(masterChefRoll);
-				pStep.getResult().addReport(new ReportMasterChefRoll(team.getId(), masterChefRoll, reRollsStolen));
-				reRollsStolenTotal.addAndGet(reRollsStolen);
-			}
-		});
+				Inducement masterChef = entry.getValue();
+				for (int i = 0; i < masterChef.getValue(); i++) {
+					Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
+					int[] masterChefRoll = gameState.getDiceRoller().rollMasterChef();
+					int reRollsStolen = DiceInterpreter.getInstance().interpretMasterChefRoll(masterChefRoll);
+					pStep.getResult().addReport(new ReportMasterChefRoll(team.getId(), masterChefRoll, reRollsStolen));
+					reRollsStolenTotal.addAndGet(reRollsStolen);
+				}
+			});
 		return reRollsStolenTotal.get();
 	}
 
