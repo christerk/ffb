@@ -12,7 +12,6 @@ import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
@@ -137,7 +136,7 @@ public class ActingPlayer implements IJsonSerializable {
 		if ((pSkill == null) || isSkillUsed(pSkill)) {
 			return;
 		}
-		if (pSkill.getSkillUsageType() != SkillUsageType.ONCE_PER_TURN) {
+		if (pSkill.getSkillUsageType().isTrackOutsideActivation()) {
 			getPlayer().markUsed(pSkill, getGame());
 		} else {
 			fUsedSkills.add(pSkill);
