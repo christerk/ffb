@@ -1,18 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
-import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -27,8 +14,18 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
 
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
 /**
- *
  * @author Kalimar
  */
 public abstract class ClientState implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
@@ -170,7 +167,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
 			Player<?> player = getClient().getGame().getFieldModel().getPlayer(coordinate);
-			if (pMouseEvent.isShiftDown() && (ClientMode.PLAYER == getClient().getMode())) {
+			if (pMouseEvent.isShiftDown()) {
 				hideSelectSquare();
 				if (player != null) {
 					int x = (coordinate.getX() + 1) * FIELD_SQUARE_SIZE;

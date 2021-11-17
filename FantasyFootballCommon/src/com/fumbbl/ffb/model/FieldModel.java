@@ -69,6 +69,8 @@ public class FieldModel implements IJsonSerializable {
 	private final Set<DiceDecoration> fDiceDecorations;
 	private final Set<FieldMarker> fFieldMarkers;
 	private final Set<PlayerMarker> fPlayerMarkers;
+	private final Set<PlayerMarker> transientPlayerMarkers;
+	private final Set<FieldMarker> transientFieldMarkers;
 	private final Map<String, Set<Card>> fCardsByPlayerId;
 	private final Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
 	private BlitzState blitzState;
@@ -94,6 +96,8 @@ public class FieldModel implements IJsonSerializable {
 		fPlayerMarkers = new HashSet<>();
 		fCardsByPlayerId = new HashMap<>();
 		fCardEffectsByPlayerId = new HashMap<>();
+		transientFieldMarkers = new HashSet<>();
+		transientPlayerMarkers = new HashSet<>();
 	}
 
 	public void add(TrapDoor trapDoor) {
@@ -676,6 +680,15 @@ public class FieldModel implements IJsonSerializable {
 		return null;
 	}
 
+	public void addTransient(FieldMarker pFieldMarker) {
+		transientFieldMarkers.remove(pFieldMarker);
+		transientFieldMarkers.add(pFieldMarker);
+	}
+
+	public void removeTransient(FieldMarker fieldMarker) {
+		transientFieldMarkers.remove(fieldMarker);
+	}
+
 	public void add(FieldMarker pFieldMarker) {
 		if (pFieldMarker == null) {
 			return;
@@ -685,16 +698,19 @@ public class FieldModel implements IJsonSerializable {
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_FIELD_MARKER, null, pFieldMarker);
 	}
 
-	public boolean remove(FieldMarker pFieldMarker) {
+	public void remove(FieldMarker pFieldMarker) {
 		if (fFieldMarkers.remove(pFieldMarker)) {
 			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_FIELD_MARKER, null, pFieldMarker);
-			return true;
 		}
-		return false;
 	}
 
 	public FieldMarker[] getFieldMarkers() {
 		return fFieldMarkers.toArray(new FieldMarker[0]);
+	}
+
+
+	public FieldMarker[] getTransientFieldMarkers() {
+		return transientFieldMarkers.toArray(new FieldMarker[0]);
 	}
 
 	public FieldMarker getFieldMarker(FieldCoordinate pCoordinate) {
@@ -706,6 +722,24 @@ public class FieldModel implements IJsonSerializable {
 		return null;
 	}
 
+	public FieldMarker getTransientFieldMarker(FieldCoordinate pCoordinate) {
+		for (FieldMarker fieldMarker : transientFieldMarkers) {
+			if (fieldMarker.getCoordinate().equals(pCoordinate)) {
+				return fieldMarker;
+			}
+		}
+		return null;
+	}
+
+	public void addTransient(PlayerMarker playerMarker) {
+		removeTransient(playerMarker);
+		transientPlayerMarkers.add(playerMarker);
+	}
+
+	public void removeTransient(PlayerMarker playerMarker) {
+		transientPlayerMarkers.remove(playerMarker);
+	}
+
 	public void add(PlayerMarker pPlayerMarker) {
 		if (pPlayerMarker == null) {
 			return;
@@ -715,12 +749,10 @@ public class FieldModel implements IJsonSerializable {
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER, null, pPlayerMarker);
 	}
 
-	public boolean remove(PlayerMarker pPlayerMarker) {
+	public void remove(PlayerMarker pPlayerMarker) {
 		if (fPlayerMarkers.remove(pPlayerMarker)) {
 			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER_MARKER, null, pPlayerMarker);
-			return true;
 		}
-		return false;
 	}
 
 	public PlayerMarker[] getPlayerMarkers() {
@@ -729,6 +761,15 @@ public class FieldModel implements IJsonSerializable {
 
 	public PlayerMarker getPlayerMarker(String pPlayerId) {
 		for (PlayerMarker playerMarker : fPlayerMarkers) {
+			if (playerMarker.getPlayerId().equals(pPlayerId)) {
+				return playerMarker;
+			}
+		}
+		return null;
+	}
+
+	public PlayerMarker getTransientPlayerMarker(String pPlayerId) {
+		for (PlayerMarker playerMarker : transientPlayerMarkers) {
 			if (playerMarker.getPlayerId().equals(pPlayerId)) {
 				return playerMarker;
 			}

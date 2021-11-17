@@ -1,15 +1,6 @@
 package com.fumbbl.ffb.client.util;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
-
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.PlayerMarker;
@@ -19,8 +10,14 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.StringTool;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+
 /**
- *
  * @author Kalimar
  */
 public class UtilClientMarker {
@@ -29,17 +26,29 @@ public class UtilClientMarker {
 
 	public static void showMarkerPopup(final FantasyFootballClient pClient, final Player<?> pPlayer, int pX, int pY) {
 		if (pPlayer != null) {
+			boolean persistMarker = ClientMode.PLAYER == pClient.getMode();
 			final JPopupMenu markerPopupMenu = new JPopupMenu();
-			PlayerMarker playerMarker = pClient.getGame().getFieldModel().getPlayerMarker(pPlayer.getId());
+			PlayerMarker playerMarker = persistMarker ? pClient.getGame().getFieldModel().getPlayerMarker(pPlayer.getId()) : pClient.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 			String markerText = (playerMarker != null) ? playerMarker.getHomeText() : null;
 			final JTextField markerField = createMarkerPopup(pClient.getUserInterface().getFieldComponent(), markerPopupMenu,
-					"Mark Player", StringTool.print(markerText), pX, pY);
-			markerField.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent pActionEvent) {
-					String text = StringTool.print(markerField.getText());
+				"Mark Player", StringTool.print(markerText), pX, pY);
+			markerField.addActionListener(pActionEvent -> {
+				String text = StringTool.print(markerField.getText());
+				if (persistMarker) {
 					pClient.getCommunication().sendSetMarker(pPlayer.getId(), text);
-					markerPopupMenu.setVisible(false);
+				} else {
+					if (StringTool.isProvided(text)) {
+						PlayerMarker transientMarker = new PlayerMarker(pPlayer.getId());
+						transientMarker.setHomeText(text);
+						pClient.getGame().getFieldModel().addTransient(transientMarker);
+						pClient.getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(transientMarker);
+					} else {
+						pClient.getGame().getFieldModel().removeTransient(playerMarker);
+						pClient.getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
+					}
+					pClient.getUserInterface().getFieldComponent().refresh();
 				}
+				markerPopupMenu.setVisible(false);
 			});
 		}
 	}
@@ -48,18 +57,30 @@ public class UtilClientMarker {
 		if (pCoordinate != null) {
 			Game game = pClient.getGame();
 			final JPopupMenu markerPopupMenu = new JPopupMenu();
-			FieldMarker fieldMarker = game.getFieldModel().getFieldMarker(pCoordinate);
+			boolean persistMarker = ClientMode.PLAYER == pClient.getMode();
+			FieldMarker fieldMarker = persistMarker ? game.getFieldModel().getFieldMarker(pCoordinate) : game.getFieldModel().getTransientFieldMarker(pCoordinate);
 			String markerText = (fieldMarker != null) ? fieldMarker.getHomeText() : null;
 			int x = (pCoordinate.getX() + 1) * _FIELD_SQUARE_SIZE;
 			int y = (pCoordinate.getY() + 1) * _FIELD_SQUARE_SIZE;
 			final JTextField markerField = createMarkerPopup(pClient.getUserInterface().getFieldComponent(), markerPopupMenu,
-					"Mark Field", StringTool.print(markerText), x, y);
-			markerField.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent pActionEvent) {
-					String text = StringTool.print(markerField.getText());
+				"Mark Field", StringTool.print(markerText), x, y);
+			markerField.addActionListener(pActionEvent -> {
+				String text = StringTool.print(markerField.getText());
+				if (persistMarker) {
 					pClient.getCommunication().sendSetMarker(pCoordinate, text);
-					markerPopupMenu.setVisible(false);
+				} else {
+					if (StringTool.isProvided(text)) {
+						pClient.getUserInterface().getFieldComponent().getLayerMarker().removeFieldMarker(fieldMarker, true);
+						FieldMarker transientMarker = new FieldMarker(pCoordinate, text, null);
+						pClient.getGame().getFieldModel().addTransient(transientMarker);
+						pClient.getUserInterface().getFieldComponent().getLayerMarker().drawFieldMarker(transientMarker, true);
+					} else {
+						pClient.getGame().getFieldModel().removeTransient(fieldMarker);
+						pClient.getUserInterface().getFieldComponent().getLayerMarker().removeFieldMarker(fieldMarker, true);
+					}
+					pClient.getUserInterface().getFieldComponent().refresh();
 				}
+				markerPopupMenu.setVisible(false);
 			});
 		}
 	}
