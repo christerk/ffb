@@ -4,12 +4,12 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.skill.Pass;
+import com.fumbbl.ffb.skill.bb2020.special.TheBallista;
 
 @RulesCollection(Rules.BB2020)
-public class PassBehaviour extends AbstractPassBehaviour<Pass> {
+public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
 	@Override
 	protected ReRollSource getReRollSource() {
-		return ReRollSources.PASS;
+		return ReRollSources.THE_BALLISTA;
 	}
 }
