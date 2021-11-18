@@ -16,7 +16,10 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 public class BlindRage extends Skill {
 	public BlindRage() {
 		super("Blind Rage", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerRerollSource(ReRolledActions.DAUNTLESS, ReRollSources.BLIND_RAGE);
 	}
 }

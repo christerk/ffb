@@ -16,7 +16,10 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 public class TheBallista extends Skill {
 	public TheBallista() {
 		super("The Ballista", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerRerollSource(ReRolledActions.PASS, ReRollSources.THE_BALLISTA);
 		registerRerollSource(ReRolledActions.THROW_TEAM_MATE, ReRollSources.THE_BALLISTA);
 	}

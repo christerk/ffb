@@ -17,8 +17,10 @@ public class MesmerizingDance extends Skill {
 
 	public MesmerizingDance() {
 		super("Mesmerizing Dance", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerRerollSource(ReRolledActions.HYPNOTIC_GAZE, ReRollSources.MESMERIZING_DANCE);
-
 	}
 }
