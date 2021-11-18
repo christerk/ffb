@@ -21,7 +21,7 @@ public class ReRollSources {
 	public static final ReRollSource BRAWLER = new ReRollSource("Brawler");
 	public static final ReRollSource BRIBERY_AND_CORRUPTION = new ReRollSource("Bribery and Corruption");
 	public static final ReRollSource BLIND_RAGE = new ReRollSource("Blind Rage");
-	public static final ReRollSource THE_BALLISTA = new ReRollSource("The Ballista");
+	public static final ReRollSource THE_BALLISTA = new ReRollSource("The Ballista", 2);
 	public static final ReRollSource MESMERIZING_DANCE = new ReRollSource("Mesmerizing Dance");
 
 	private final Map<String, ReRollSource> values;
