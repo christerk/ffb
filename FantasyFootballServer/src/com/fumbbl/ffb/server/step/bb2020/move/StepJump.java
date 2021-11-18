@@ -144,7 +144,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
+		boolean doLeap = (actingPlayer.isJumping() && mechanic.isAvailableAsNextMove(game, actingPlayer, actingPlayer.isJumping()));
 		if (doLeap) {
 			if (ReRolledActions.JUMP == getReRolledAction()) {
 				if ((getReRollSource() == null)

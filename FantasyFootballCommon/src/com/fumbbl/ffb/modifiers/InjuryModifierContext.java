@@ -12,6 +12,7 @@ public class InjuryModifierContext {
 	private final boolean isStab;
 	private final boolean isFoul;
 	private final boolean isVomit;
+	private Mode mode;
 
 	public InjuryModifierContext(Game game, InjuryContext injuryContext, Player<?> attacker, Player<?> defender,
 	                             boolean isStab, boolean isFoul, boolean isVomit) {
@@ -22,6 +23,7 @@ public class InjuryModifierContext {
 		this.isStab = isStab;
 		this.isFoul = isFoul;
 		this.isVomit = isVomit;
+		this.mode = Mode.ATTACKER;
 	}
 
 	public Game getGame() {
@@ -50,5 +52,21 @@ public class InjuryModifierContext {
 
 	public boolean isVomit() {
 		return isVomit;
+	}
+
+	public void setDefenderMode() {
+		mode = Mode.DEFENDER;
+	}
+
+	public boolean isAttackerMode() {
+		return mode == Mode.ATTACKER;
+	}
+
+	public boolean isDefnderMode() {
+		return mode == Mode.DEFENDER;
+	}
+
+	private enum Mode {
+		ATTACKER, DEFENDER
 	}
 }

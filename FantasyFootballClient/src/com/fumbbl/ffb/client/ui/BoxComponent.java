@@ -1,5 +1,22 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.BoxType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.layer.FieldLayer;
+import com.fumbbl.ffb.client.util.UtilClientGraphics;
+import com.fumbbl.ffb.client.util.UtilClientMarker;
+import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+
+import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -15,25 +32,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JPanel;
-import javax.swing.ToolTipManager;
-
-import com.fumbbl.ffb.BoxType;
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.layer.FieldLayer;
-import com.fumbbl.ffb.client.util.UtilClientGraphics;
-import com.fumbbl.ffb.client.util.UtilClientMarker;
-import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 
 /**
  *
@@ -51,10 +49,10 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	private static final Font _BOX_FONT = new Font("Sans Serif", Font.BOLD, 12);
 
-	private SideBarComponent fSideBar;
-	private BufferedImage fImage;
+	private final SideBarComponent fSideBar;
+	private final BufferedImage fImage;
 	private BoxType fOpenBox;
-	private List<BoxSlot> fBoxSlots;
+	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
 
 	public BoxComponent(SideBarComponent pSideBar) {
@@ -199,7 +197,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		if (pMouseEvent.isShiftDown() && (ClientMode.PLAYER == getSideBar().getClient().getMode())) {
+		if (pMouseEvent.isShiftDown()) {
 			BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 			if (boxSlot != null) {
 				int x = getSideBar().isHomeSide() ? 5 : FieldLayer.FIELD_IMAGE_WIDTH - 135;

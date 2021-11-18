@@ -251,19 +251,19 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		Game game = getGameState().getGame();
 		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
 			.findFirst().ifPresent(bribesType -> {
-			InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
-			Inducement bribesHome = inducementSetHome.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
-				.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
-			bribesHome.setValue(bribesHome.getValue() + 1);
-			inducementSetHome.addInducement(bribesHome);
+				InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
+				Inducement bribesHome = inducementSetHome.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
+				bribesHome.setValue(bribesHome.getValue() + 1);
+				inducementSetHome.addInducement(bribesHome);
 
-			InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
-			Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
-				.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
-			bribesAway.setValue(bribesAway.getValue() + 1);
-			inducementSetAway.addInducement(bribesAway);
+				InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
+				Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
+				bribesAway.setValue(bribesAway.getValue() + 1);
+				inducementSetAway.addInducement(bribesAway);
 
-		});
+			});
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_GET_THE_REF));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -273,7 +273,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (game.getTurnMode() == TurnMode.SOLID_DEFENCE) {
 			if (fEndKickoff) {
 				int movedPlayers = (int) playersAtCoordinates.keySet().stream().filter(playerId ->
-					!game.getFieldModel().getPlayerCoordinate(game.getPlayerById(playerId)).equals(playersAtCoordinates.get(playerId)))
+						!game.getFieldModel().getPlayerCoordinate(game.getPlayerById(playerId)).equals(playersAtCoordinates.get(playerId)))
 					.count();
 				if (validSolidDefence(movedPlayers) && UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
 					getGameState().setKickingSwarmers(0);
@@ -597,11 +597,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			nrOfPlayersAllowed = roll + 3;
 			getResult().addReport(new ReportQuickSnapRoll(game.getActingTeam().getId(), roll, nrOfPlayersAllowed));
 			Arrays.stream(game.getActingTeam().getPlayers()).filter(player -> ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(
-				getGameState().getGame(),
-				game.getOtherTeam(game.getActingTeam()),
-				game.getFieldModel().getPlayerCoordinate(player),
-				false
-			)))
+					getGameState().getGame(),
+					game.getOtherTeam(game.getActingTeam()),
+					game.getFieldModel().getPlayerCoordinate(player),
+					false
+				)))
 				.forEach(player -> game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false)));
 
 			if (Arrays.stream(game.getActingTeam().getPlayers()).noneMatch(player -> game.getFieldModel().getPlayerState(player).isActive())) {

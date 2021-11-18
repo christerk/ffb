@@ -1,5 +1,8 @@
 package com.fumbbl.ffb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // immutable object
 public class PlayerState {
 
@@ -42,15 +45,22 @@ public class PlayerState {
 			0x00000, // BADLY_HURT
 			0x00000, // SERIOUS_INJURY
 			0x00000, // RIP
-			0x00000, // RESERVE
-			0x00000, // MISSING
-			0xfff00, // FALLING
-			0xfff00, // BLOCKED
-			0x00000, // BANNED
-			0xfff00, // EXHAUSTED
-			0xfff00, // BEING_DRAGGED
-			0xfff00, // PICKED_UP
+		0x00000, // RESERVE
+		0x00000, // MISSING
+		0xfff00, // FALLING
+		0xfff00, // BLOCKED
+		0x00000, // BANNED
+		0xfff00, // EXHAUSTED
+		0xfff00, // BEING_DRAGGED
+		0xfff00, // PICKED_UP
 	};
+
+	public static List<Integer> REMOVED_FROM_PLAY = new ArrayList<Integer>() {{
+		add(BANNED);
+		add(BADLY_HURT);
+		add(SERIOUS_INJURY);
+		add(RIP);
+	}};
 
 	private final int fId;
 

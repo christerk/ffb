@@ -114,6 +114,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 							step.publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
 							step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
+							step.publishParameter(StepParameter.from(StepParameterKey.COORDINATE_FROM, null));
 						} else {
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 						}

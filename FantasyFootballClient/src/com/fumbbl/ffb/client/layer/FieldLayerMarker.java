@@ -1,5 +1,13 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldMarker;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.util.StringTool;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,14 +17,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldMarker;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.util.StringTool;
-
 /**
  *
  * @author Kalimar
@@ -25,7 +25,7 @@ public class FieldLayerMarker extends FieldLayer {
 
 	public static final Color COLOR_MARKER = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-	private Map<FieldCoordinate, Rectangle> fFieldMarkerBounds;
+	private final Map<FieldCoordinate, Rectangle> fFieldMarkerBounds;
 
 	public FieldLayerMarker(FantasyFootballClient pClient) {
 		super(pClient);
@@ -33,8 +33,12 @@ public class FieldLayerMarker extends FieldLayer {
 	}
 
 	public void drawFieldMarker(FieldMarker pFieldMarker) {
+		drawFieldMarker(pFieldMarker, getClient().getParameters().getMode() == ClientMode.PLAYER);
+	}
+
+	public void drawFieldMarker(FieldMarker pFieldMarker, boolean draw) {
 		if ((pFieldMarker != null) && StringTool.isProvided(pFieldMarker.getHomeText())
-				&& (getClient().getParameters().getMode() == ClientMode.PLAYER)) {
+			&& draw) {
 			removeFieldMarker(pFieldMarker);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setColor(COLOR_MARKER);
@@ -46,12 +50,12 @@ public class FieldLayerMarker extends FieldLayer {
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pFieldMarker.getHomeText(), g2d);
 			int x = FIELD_IMAGE_OFFSET_CENTER_X + (pFieldMarker.getCoordinate().getX() * FIELD_SQUARE_SIZE)
-					- (int) (textBounds.getWidth() / 2) + 1;
+				- (int) (textBounds.getWidth() / 2) + 1;
 			int y = FIELD_IMAGE_OFFSET_CENTER_Y + (pFieldMarker.getCoordinate().getY() * FIELD_SQUARE_SIZE)
-					+ (int) (textBounds.getHeight() / 2) - 2;
+				+ (int) (textBounds.getHeight() / 2) - 2;
 			g2d.drawString(pFieldMarker.getHomeText(), x, y);
 			Rectangle bounds = new Rectangle(x, y - (int) textBounds.getHeight(), (int) Math.ceil(textBounds.getWidth()),
-					(int) Math.ceil(textBounds.getHeight()));
+				(int) Math.ceil(textBounds.getHeight()));
 			fFieldMarkerBounds.put(pFieldMarker.getCoordinate(), bounds);
 			addUpdatedArea(bounds);
 			g2d.dispose();
@@ -59,7 +63,11 @@ public class FieldLayerMarker extends FieldLayer {
 	}
 
 	public void removeFieldMarker(FieldMarker pFieldMarker) {
-		if ((pFieldMarker != null) && (ClientMode.PLAYER == getClient().getMode())) {
+		removeFieldMarker(pFieldMarker, ClientMode.PLAYER == getClient().getMode());
+	}
+
+	public void removeFieldMarker(FieldMarker pFieldMarker, boolean forceRemove) {
+		if ((pFieldMarker != null) && forceRemove) {
 			Rectangle bounds = fFieldMarkerBounds.get(pFieldMarker.getCoordinate());
 			if (bounds != null) {
 				clear(bounds.x, bounds.y, bounds.width, bounds.height, true);
@@ -76,6 +84,9 @@ public class FieldLayerMarker extends FieldLayer {
 		if (fieldModel != null) {
 			for (FieldMarker fieldMarker : fieldModel.getFieldMarkers()) {
 				drawFieldMarker(fieldMarker);
+			}
+			for (FieldMarker fieldMarker : fieldModel.getTransientFieldMarkers()) {
+				drawFieldMarker(fieldMarker, true);
 			}
 		}
 	}

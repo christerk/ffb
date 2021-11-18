@@ -186,6 +186,7 @@ public class UtilServerGame {
 			Inducement wanderingApothecaries = entry.getValue();
 			if (wanderingApothecaries.getValue() > 0) {
 				turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
+				turnData.setWanderingApothecaries(wanderingApothecaries.getValue());
 				pStep.getResult().addReport(
 					new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
 			}

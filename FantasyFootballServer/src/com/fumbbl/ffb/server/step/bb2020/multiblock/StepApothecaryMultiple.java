@@ -289,6 +289,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 							&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
 							&& injuryResult.injuryContext().getInjuryType().canUseApo()
 							&& player.getPlayerType() != PlayerType.STAR
+							&& player.getPlayerType() != PlayerType.MERCENARY
 							&& !UtilServerInjury.handleRegeneration(this, player, playerState)) {
 							injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
 							regenerationFailedResults.add(injuryResult);
@@ -360,10 +361,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 	private boolean rollApothecary(InjuryResult injuryResult) {
 		Game game = getGameState().getGame();
 		Player<?> defender = game.getPlayerById(injuryResult.injuryContext().getDefenderId());
+		boolean requiresWanderingApothecary = defender.isJourneyman() || defender.getPlayerType() == PlayerType.MERCENARY;
 		if (game.getTeamHome().hasPlayer(defender)) {
-			game.getTurnDataHome().useApothecary();
+			game.getTurnDataHome().useApothecary(requiresWanderingApothecary);
 		} else {
-			game.getTurnDataAway().useApothecary();
+			game.getTurnDataAway().useApothecary(requiresWanderingApothecary);
 		}
 		boolean apothecaryChoice = ((injuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT)
 			&& (injuryResult.injuryContext().getPlayerState().getBase() != PlayerState.KNOCKED_OUT));

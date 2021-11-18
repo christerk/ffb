@@ -325,6 +325,7 @@ public interface IJsonOption {
 	JsonPlayerStateOption PLAYER_STATE = new JsonPlayerStateOption("playerState");
 	JsonPlayerStateOption PLAYER_STATE_NEW = new JsonPlayerStateOption("playerStateNew");
 	JsonPlayerStateOption PLAYER_STATE_OLD = new JsonPlayerStateOption("playerStateOld");
+	JsonStringOption PLAYER_STATUS = new JsonStringOption("playerStatus");
 	JsonEnumWithNameOption PLAYER_TYPE = new JsonEnumWithNameOption("playerType", Factory.PLAYER_TYPE);
 	JsonBooleanOption PLAYER_WAS_PUSHED = new JsonBooleanOption("playerWasPushed");
 	JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
@@ -522,6 +523,7 @@ public interface IJsonOption {
 	JsonIntOption VALUE = new JsonIntOption("value");
 	JsonStringOption VICTIM_ID = new JsonStringOption("victimId");
 	JsonBooleanOption WAITING_FOR_OPPONENT = new JsonBooleanOption("waitingForOpponent");
+	JsonIntOption WANDERING_APOTHECARIES = new JsonIntOption("wanderingApothecaries");
 	JsonEnumWithNameOption WEATHER = new JsonEnumWithNameOption("weather", Factory.WEATHER);
 	JsonIntArrayOption WEATHER_ROLL = new JsonIntArrayOption("weatherRoll");
 	JsonIntOption WINNINGS = new JsonIntOption("winnings");

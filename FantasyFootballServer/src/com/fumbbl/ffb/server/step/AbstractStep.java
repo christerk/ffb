@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogConcedeGameParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -11,8 +12,10 @@ import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandConcedeGame;
+import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.report.ReportTimeoutEnforced;
@@ -35,7 +38,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 
  * @author Kalimar
  */
 public abstract class AbstractStep implements IStep {
@@ -96,16 +98,40 @@ public abstract class AbstractStep implements IStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
 		switch (pReceivedCommand.getId()) {
-		case CLIENT_CONCEDE_GAME:
-			commandStatus = handleConcedeGame(pReceivedCommand);
-			break;
-		case CLIENT_ILLEGAL_PROCEDURE:
-			commandStatus = handleIllegalProcedure(pReceivedCommand);
-			break;
-		default:
-			break;
+			case CLIENT_CONCEDE_GAME:
+				commandStatus = handleConcedeGame(pReceivedCommand);
+				break;
+			case CLIENT_ILLEGAL_PROCEDURE:
+				commandStatus = handleIllegalProcedure(pReceivedCommand);
+				break;
+			case CLIENT_SETUP_PLAYER:
+				commandStatus = handleSetupCommand(pReceivedCommand);
+				break;
+			default:
+				break;
 		}
 		return commandStatus;
+	}
+
+	private StepCommandStatus handleSetupCommand(ReceivedCommand command) {
+		// Network lag during some kick off events (e.g. quick snack 2020) might result in a client sending a setup command
+		// even if the allowed amount of players is already exhausted
+
+		// This is a hacky try to fix this. Commands sent during the lag period arrive while we are still in the KICKOFF turn mode.
+
+		Game game = getGameState().getGame();
+		if (game.getTurnMode() != TurnMode.KICKOFF) {
+			return StepCommandStatus.UNHANDLED_COMMAND;
+		}
+
+		// Try to fix the issue by resetting the player position on client side with the server side position
+		ClientCommandSetupPlayer commandSetupPlayer = (ClientCommandSetupPlayer) command.getCommand();
+		Player<?> player = game.getPlayerById(commandSetupPlayer.getPlayerId());
+		if (player != null) {
+			game.getFieldModel().setPlayerCoordinate(player, game.getFieldModel().getPlayerCoordinate(player));
+		}
+
+		return StepCommandStatus.SKIP_STEP;
 	}
 
 	protected StepCommandStatus handleSkillCommand(ClientCommandUseSkill useSkillCommand, Object state) {
@@ -202,9 +228,9 @@ public abstract class AbstractStep implements IStep {
 		if (concedeGameCommand.getConcedeGameStatus() != null) {
 			SessionManager sessionManager = getGameState().getServer().getSessionManager();
 			boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState().getId()) == pReceivedCommand
-					.getSession());
+				.getSession());
 			boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState().getId()) == pReceivedCommand
-					.getSession());
+				.getSession());
 			switch (concedeGameCommand.getConcedeGameStatus()) {
 				case REQUESTED:
 					if (game.isConcessionPossible()
@@ -227,7 +253,7 @@ public abstract class AbstractStep implements IStep {
 			if (gameResult.getTeamResultHome().hasConceded() || gameResult.getTeamResultAway().hasConceded()) {
 				getGameState().getStepStack().clear();
 				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-				((EndGame)factory.forName(SequenceGenerator.Type.EndGame.name()))
+				((EndGame) factory.forName(SequenceGenerator.Type.EndGame.name()))
 					.pushSequence(new EndGame.SequenceParams(getGameState(), false));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}

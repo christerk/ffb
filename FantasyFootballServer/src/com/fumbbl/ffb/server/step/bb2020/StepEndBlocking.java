@@ -201,10 +201,11 @@ public class StepEndBlocking extends AbstractStep {
 				fieldModel.clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(activePlayer);
-				knockedDownPlayers = knockedDownPlayers.stream().filter(player -> {
-						Player<?> playerById = game.getPlayerById(player);
-						PlayerState playerState = fieldModel.getPlayerState(playerById);
-						return fieldModel.getPlayerCoordinate(playerById).isAdjacent(attackerCoordinate)
+				knockedDownPlayers = knockedDownPlayers.stream().filter(playerId -> {
+						Player<?> player = game.getPlayerById(playerId);
+						PlayerState playerState = fieldModel.getPlayerState(player);
+
+						return !game.getActingTeam().hasPlayer(player) && fieldModel.getPlayerCoordinate(player).isAdjacent(attackerCoordinate)
 							&& (playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED);
 					}
 				).collect(Collectors.toList());
