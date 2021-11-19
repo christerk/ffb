@@ -73,7 +73,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		public PassResult result;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepPass(GameState pGameState) {
 		super(pGameState);
@@ -295,9 +295,9 @@ public class StepPass extends AbstractStepWithReRoll {
 		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
 		if (state.result == null) {
-			boolean successful = IServerJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
-			boolean fumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
-			boolean holdingSafeThrow = IServerJsonOption.HOLDING_SAFE_THROW.getFrom(game, jsonObject);
+			boolean successful = toPrimitive(IServerJsonOption.SUCCESSFUL.getFrom(game, jsonObject));
+			boolean fumble = toPrimitive(IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject));
+			boolean holdingSafeThrow = toPrimitive(IServerJsonOption.HOLDING_SAFE_THROW.getFrom(game, jsonObject));
 			if (successful) {
 				state.result = PassResult.ACCURATE;
 			} else if (fumble) {
@@ -310,4 +310,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		return this;
 	}
 
+	private boolean toPrimitive(Boolean bool) {
+		return bool != null && bool;
+	}
 }
