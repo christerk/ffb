@@ -181,7 +181,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			if (mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
 				setReRolledAction(ReRolledActions.PASS);
 
-				ReRollSource passingReroll = UtilCards.getRerollSource(game.getThrower(), ReRolledActions.PASS);
+				ReRollSource passingReroll = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.PASS);
 				if (passingReroll != null && !state.isPassSkillUsed()) {
 					doNextStep = false;
 					state.setPassSkillUsed(true);

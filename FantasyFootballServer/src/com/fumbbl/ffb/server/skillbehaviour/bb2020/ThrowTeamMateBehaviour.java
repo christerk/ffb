@@ -3,10 +3,12 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -15,6 +17,7 @@ import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -30,6 +33,7 @@ import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.ThrowTeamMate;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
 
@@ -92,7 +96,14 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					} else {
 						if (step.getReRolledAction() != rerolledAction && playerCanPass) {
 							step.setReRolledAction(rerolledAction);
-							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+
+							ReRollSource ttmReRoll = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.THROW_TEAM_MATE);
+							if (!reRolled && ttmReRoll != null) {
+								Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+								UtilServerDialog.showDialog(step.getGameState(),
+									new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), ttmReRoll.getSkill(game), minimumRoll),
+									actingTeam.hasPlayer(actingPlayer.getPlayer()));
+							} else if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 								rerolledAction, minimumRoll, false)) {
 								handlePassResult(state.passResult, step);
 							}
@@ -111,8 +122,8 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 			}
 
 			private PassResult evaluatePass(boolean playerCanPass, int passValue, int roll, int modifierSum) {
-				if(!playerCanPass) {
-					return  PassResult.FUMBLE;
+				if (!playerCanPass) {
+					return PassResult.FUMBLE;
 				}
 				if (passValue <= 0) {
 					return PassResult.FUMBLE;
