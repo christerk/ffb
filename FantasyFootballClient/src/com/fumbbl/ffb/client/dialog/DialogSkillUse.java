@@ -11,7 +11,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  */
 public class DialogSkillUse extends DialogYesOrNoQuestion {
 
-	private DialogSkillUseParameter fDialogParameter;
+	private final DialogSkillUseParameter fDialogParameter;
 
 	public DialogSkillUse(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter) {
 		super(pClient, "Use a skill", createMessages(pDialogParameter), null);
@@ -57,10 +57,8 @@ public class DialogSkillUse extends DialogYesOrNoQuestion {
 	}
 
 	private static String createDefaultMinimumRoll(DialogSkillUseParameter pDialogParameter) {
-		StringBuilder minimumRollMessage = new StringBuilder();
-		minimumRollMessage.append("You will need a roll of ").append(pDialogParameter.getMinimumRoll())
-				.append("+ to succeed.");
-		return minimumRollMessage.toString();
+		return "You will need a roll of " + pDialogParameter.getMinimumRoll() +
+			"+ to succeed.";
 	}
 
 }

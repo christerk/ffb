@@ -15,7 +15,7 @@ import com.fumbbl.ffb.skill.bb2020.special.TheBallista;
 public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
 	public TheBallistaBehaviour() {
 		super();
-		registerModifier(new StepModifier<StepThrowTeamMate, StepThrowTeamMate.StepState>() {
+		registerModifier(new StepModifier<StepThrowTeamMate, StepThrowTeamMate.StepState>(1) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepThrowTeamMate step, StepThrowTeamMate.StepState state,

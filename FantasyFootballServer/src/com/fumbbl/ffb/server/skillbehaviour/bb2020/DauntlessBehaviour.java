@@ -1,14 +1,17 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
@@ -25,6 +28,7 @@ import com.fumbbl.ffb.server.step.action.block.StepDauntless;
 import com.fumbbl.ffb.server.step.action.block.StepDauntless.StepState;
 import com.fumbbl.ffb.server.step.bb2020.multiblock.StepDauntlessMultiple;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.Dauntless;
 import com.fumbbl.ffb.util.UtilCards;
@@ -34,11 +38,11 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 	public DauntlessBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepDauntless, StepState>() {
+		registerModifier(new StepModifier<StepDauntless, StepState>(2) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepDauntless step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+			                                           ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -73,9 +77,19 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 							actingPlayer.markSkillUsed(skill);
 							step.publishParameter(new StepParameter(StepParameterKey.SUCCESSFUL_DAUNTLESS, true));
 						} else {
-							if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+							if (!reRolled) {
+								ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.DAUNTLESS);
+
+								if (reRollSource != null) {
+									Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+									UtilServerDialog.showDialog(step.getGameState(),
+										new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), minimumRoll),
+										actingTeam.hasPlayer(actingPlayer.getPlayer()));
+									doNextStep = false;
+								} else if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 									ReRolledActions.DAUNTLESS, minimumRoll, false)) {
-								doNextStep = false;
+									doNextStep = false;
+								}
 							}
 						}
 					}

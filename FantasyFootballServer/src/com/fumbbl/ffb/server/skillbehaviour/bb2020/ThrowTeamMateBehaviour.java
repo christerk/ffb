@@ -42,7 +42,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 	public ThrowTeamMateBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepThrowTeamMate, StepState>() {
+		registerModifier(new StepModifier<StepThrowTeamMate, StepState>(2) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepThrowTeamMate step, StepState state,

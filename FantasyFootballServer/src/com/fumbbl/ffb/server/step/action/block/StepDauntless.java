@@ -5,6 +5,8 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -13,6 +15,8 @@ import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.util.StringTool;
 
 /**
  * Step in block sequence to handle skill DAUNTLESS.
@@ -29,7 +33,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
 		public Boolean usingStab;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepDauntless(GameState pGameState) {
 		super(pGameState);
@@ -49,6 +53,11 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
+		}
+
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -58,12 +67,9 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case USING_STAB:
+			if (pParameter.getKey() == StepParameterKey.USING_STAB) {
 				state.usingStab = (Boolean) pParameter.getValue();
 				return true;
-			default:
-				break;
 			}
 		}
 		return false;
@@ -79,6 +85,9 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.USING_STAB.addTo(jsonObject, state.usingStab);
+		if (state.status != null) {
+			IServerJsonOption.STATUS.addTo(jsonObject, state.status.name());
+		}
 		return jsonObject;
 	}
 
@@ -87,6 +96,10 @@ public class StepDauntless extends AbstractStepWithReRoll {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.usingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
+		String statusString = IServerJsonOption.STATUS.getFrom(game, jsonObject);
+		if (StringTool.isProvided(statusString)) {
+			state.status = ActionStatus.valueOf(statusString);
+		}
 		return this;
 	}
 

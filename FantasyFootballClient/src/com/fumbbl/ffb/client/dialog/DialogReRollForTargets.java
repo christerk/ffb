@@ -5,6 +5,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -126,6 +127,10 @@ public class DialogReRollForTargets extends Dialog {
 				}
 				if (parameter.isProReRollAvailable()) {
 					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'o'));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
+				if (parameter.getReRollSkill() != null) {
+					buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll", parameter.getReRollSkill().getRerollSource(ReRolledActions.DAUNTLESS), index == 0 ? 'S' : 'k'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				targetPanel.add(Box.createVerticalStrut(3));
