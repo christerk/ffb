@@ -768,6 +768,10 @@ public class FieldModel implements IJsonSerializable {
 		return null;
 	}
 
+	public PlayerMarker[] getTransientPlayerMarkers() {
+		return transientPlayerMarkers.toArray(new PlayerMarker[0]);
+	}
+
 	public PlayerMarker getTransientPlayerMarker(String pPlayerId) {
 		for (PlayerMarker playerMarker : transientPlayerMarkers) {
 			if (playerMarker.getPlayerId().equals(pPlayerId)) {
