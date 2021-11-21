@@ -53,7 +53,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 	private int fNrOfDice, fDiceIndex, proIndex, brawlerIndex = -1;
 	private int[] fBlockRoll, reRolledDiceIndexes = new int[0];
 	private BlockResult fBlockResult;
-	private boolean successfulDauntless;
+	private boolean successfulDauntless, doubleTargetStrength;
 
 	public StepBlockRoll(GameState pGameState) {
 		super(pGameState);
@@ -104,10 +104,19 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
-		if (parameter != null && parameter.getKey() == StepParameterKey.SUCCESSFUL_DAUNTLESS) {
-			successfulDauntless = (boolean) parameter.getValue();
-			consume(parameter);
-			return true;
+		if (parameter != null) {
+			switch (parameter.getKey()) {
+				case SUCCESSFUL_DAUNTLESS:
+					successfulDauntless = (boolean) parameter.getValue();
+					consume(parameter);
+					return true;
+				case DOUBLE_TARGET_STRENGTH:
+					doubleTargetStrength = (boolean) parameter.getValue();
+					consume(parameter);
+					return true;
+				default:
+					break;
+			}
 		}
 		return false;
 	}

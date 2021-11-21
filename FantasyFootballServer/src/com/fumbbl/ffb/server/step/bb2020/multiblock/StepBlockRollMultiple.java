@@ -110,6 +110,10 @@ public class StepBlockRollMultiple extends AbstractStep {
 						.ifPresent(roll -> roll.setSuccessFulDauntless(true));
 					consume(parameter);
 					return true;
+				case DOUBLE_TARGET_STRENGTH_FOR_PLAYER:
+					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(parameter.getValue())).findFirst()
+						.ifPresent(roll -> roll.setDoubleTargetStrength(true));
+					break;
 				default:
 					break;
 			}
@@ -170,7 +174,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 
 			state.blockRolls.forEach(roll -> {
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
-				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless());
+				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength());
 				roll.setNrOfDice(Math.abs(nrOfDice));
 				roll.setOwnChoice(nrOfDice > 0);
 				roll(roll, false, actingPlayer);

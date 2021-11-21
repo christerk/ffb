@@ -38,6 +38,7 @@ public class NamedProperties {
 	public static final ISkillProperty canCancelInterceptions = new NamedProperty("Can Force Interception Reroll");
 	public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty(
 		"Can Choose Own Pushed Back Square");
+	public static final ISkillProperty canDoubleStrengthAfterDauntless = new NamedProperty("Can Double Strength After Dauntless");
 	public static final ISkillProperty canDropBall = new NamedProperty("Can Drop Ball");
 	public static final ISkillProperty canFollowPlayerLeavingTacklezones = new NamedProperty("Can Follow Player Leaving Tacklezones");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {

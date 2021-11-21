@@ -310,7 +310,4 @@ public class StepPass extends AbstractStepWithReRoll {
 		return this;
 	}
 
-	private boolean toPrimitive(Boolean bool) {
-		return bool != null && bool;
-	}
 }

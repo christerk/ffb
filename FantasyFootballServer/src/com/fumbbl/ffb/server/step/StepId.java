@@ -43,6 +43,7 @@ public enum StepId implements INamedObject {
 	DISPATCH_PASSING("dispatchPassing"), // action.pass
 	DISPATCH_SCATTER_PLAYER("dispatchScatterPlayer"), // action.ttm 2020
 	DIVING_TACKLE("divingTackle"), // action.move
+	DOUBLE_STRENGTH("doubleStrength"), // action.multiBlock 2020
 	DROP_ACTING_PLAYER("dropPileDriverPlayer"), // action.block
 	DROP_DIVING_TACKLER("dropDivingTackler"), // action.move
 	DROP_FALLING_PLAYERS("dropFallingPlayers"), // action.block

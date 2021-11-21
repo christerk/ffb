@@ -277,4 +277,8 @@ public abstract class AbstractStep implements IStep {
 		return commandStatus;
 	}
 
+	protected boolean toPrimitive(Boolean bool) {
+		return bool != null && bool;
+	}
+
 }

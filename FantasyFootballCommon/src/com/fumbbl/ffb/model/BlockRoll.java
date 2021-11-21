@@ -20,7 +20,7 @@ import java.util.Set;
 public class BlockRoll implements IJsonSerializable {
 	private String targetId;
 	private PlayerState oldPlayerState;
-	private boolean successFulDauntless, ownChoice;
+	private boolean successFulDauntless, ownChoice, doubleTargetStrength;
 	private int nrOfDice, id, proIndex;
 	private int[] blockRoll, reRollDiceIndexes = new int[0];
 	private int selectedIndex = -1;
@@ -49,6 +49,14 @@ public class BlockRoll implements IJsonSerializable {
 
 	public void setSuccessFulDauntless(boolean successFulDauntless) {
 		this.successFulDauntless = successFulDauntless;
+	}
+
+	public boolean isDoubleTargetStrength() {
+		return doubleTargetStrength;
+	}
+
+	public void setDoubleTargetStrength(boolean doubleTargetStrength) {
+		this.doubleTargetStrength = doubleTargetStrength;
 	}
 
 	public int getNrOfDice() {
@@ -175,6 +183,7 @@ public class BlockRoll implements IJsonSerializable {
 		}
 		reRollDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(game, jsonObject);
 		proIndex = IJsonOption.PRO_INDEX.getFrom(game, jsonObject);
+		doubleTargetStrength = toPrimitive(IJsonOption.DOUBLE_TARGET_STRENGTH.getFrom(game, jsonObject));
 		return this;
 	}
 
@@ -194,6 +203,12 @@ public class BlockRoll implements IJsonSerializable {
 		IJsonOption.RE_ROLL_SOURCES.addTo(jsonObject, sourcesArray);
 		IJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRollDiceIndexes);
 		IJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
+		IJsonOption.DOUBLE_TARGET_STRENGTH.addTo(jsonObject, doubleTargetStrength);
 		return jsonObject;
 	}
+
+	private boolean toPrimitive(Boolean bool) {
+		return bool != null && bool;
+	}
+
 }
