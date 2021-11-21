@@ -40,9 +40,9 @@ import java.util.Set;
 
 /**
  * Step in pass sequence to handle skill PASS_BLOCK.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
- *
+ * <p>
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * (parameter is consumed on TurnMode.PASS_BLOCK) Expects stepParameter END_TURN
  * to be set by a preceding step. (parameter is consumed on TurnMode.PASS_BLOCK)
@@ -71,12 +71,12 @@ public class StepPassBlock extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_END:
-					fGotoLabelOnEnd = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_END:
+						fGotoLabelOnEnd = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -90,20 +90,20 @@ public class StepPassBlock extends AbstractStep {
 		Game game = getGameState().getGame();
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case END_PLAYER_ACTION:
-				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-					consume(pParameter);
-				}
-				return true;
-			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-					consume(pParameter);
-				}
-				return true;
-			default:
-				break;
+				case END_PLAYER_ACTION:
+					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+						consume(pParameter);
+					}
+					return true;
+				case END_TURN:
+					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+						consume(pParameter);
+					}
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -126,8 +126,8 @@ public class StepPassBlock extends AbstractStep {
 
 		// no pass block for bombs or hand over or dump off (atm)
 		if (game.getTurnMode().isBombTurn() || (game.getThrowerAction() == PlayerAction.DUMP_OFF)
-				|| (game.getThrowerAction() == PlayerAction.HAND_OVER)
-				|| (game.getThrowerAction() == PlayerAction.HAND_OVER_MOVE)) {
+			|| (game.getThrowerAction() == PlayerAction.HAND_OVER)
+			|| (game.getThrowerAction() == PlayerAction.HAND_OVER_MOVE)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
@@ -178,7 +178,7 @@ public class StepPassBlock extends AbstractStep {
 						getGameState().pushCurrentStepOnStack();
 						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 					}
-				} else {
+				} else if (!fEndTurn) {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
 					getGameState().pushCurrentStepOnStack();
 					selectGenerator.pushSequence(selectParams);
@@ -252,7 +252,7 @@ public class StepPassBlock extends AbstractStep {
 					if ((playerPosition != null) && !playerPosition.isBoxCoordinate()) {
 						fOldPlayerStates[i] = playerState;
 						game.getFieldModel().setPlayerState(players[i],
-								playerState.changeActive(availablePassBlockers.contains(players[i])));
+							playerState.changeActive(availablePassBlockers.contains(players[i])));
 					}
 				}
 
@@ -290,7 +290,6 @@ public class StepPassBlock extends AbstractStep {
 		}
 		return true;
 	}
-
 
 
 	// JSON serialization

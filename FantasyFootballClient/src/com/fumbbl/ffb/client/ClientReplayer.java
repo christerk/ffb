@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.FieldMarker;
+import com.fumbbl.ffb.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
@@ -21,6 +23,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
 import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
 
 import javax.swing.SwingUtilities;
@@ -28,6 +31,7 @@ import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -279,9 +283,28 @@ public class ClientReplayer implements ActionListener {
 			start = fLastReplayPosition;
 		}
 		if (start == 0) {
+			Game oldGame = getClient().getGame();
+			FieldMarker[] oldFieldMarker = null;
+			PlayerMarker[] oldPlayerMarker = null;
+			if (oldGame != null) {
+				oldFieldMarker = oldGame.getFieldModel().getTransientFieldMarkers();
+				oldPlayerMarker = oldGame.getFieldModel().getTransientPlayerMarkers();
+			}
 			Game game = createGame();
 			getClient().setGame(game);
+
+			if (ArrayTool.isProvided(oldFieldMarker)) {
+				Arrays.stream(oldFieldMarker).forEach(marker -> game.getFieldModel().addTransient(marker));
+			}
+
+			if (ArrayTool.isProvided(oldPlayerMarker)) {
+				Arrays.stream(oldPlayerMarker).forEach(marker -> {
+					game.getFieldModel().addTransient(marker);
+					getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(marker);
+				});
+			}
 			getClient().getUserInterface().init(game.getOptions());
+
 		}
 		ServerCommand serverCommand = null;
 		for (int i = start; i < pReplayPosition; i++) {

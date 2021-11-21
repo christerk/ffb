@@ -38,7 +38,7 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 		public boolean passSkillUsed;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepHailMaryPass(GameState pGameState) {
 		super(pGameState);
@@ -104,7 +104,8 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
 		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
 		if (state.result == null) {
-			boolean passFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+			Boolean fumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+			boolean passFumble = fumble != null && fumble;
 			state.result = passFumble ? PassResult.FUMBLE : PassResult.INACCURATE;
 		}
 		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
