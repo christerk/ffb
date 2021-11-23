@@ -45,9 +45,6 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 			@Override
 			public StepCommandStatus handleCommandHook(StepDauntless step, StepState state,
 			                                           ClientCommandUseSkill useSkillCommand) {
-				if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.canDoubleStrengthAfterDauntless)) {
-					state.status = useSkillCommand.isSkillUsed() ? ActionStatus.SKILL_CHOICE_YES : ActionStatus.SKILL_CHOICE_NO;
-				}
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -59,6 +56,7 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 				int defenderStrength = game.getDefender().getStrengthWithModifiers();
 				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < defenderStrength);
 				boolean usesSpecialBlockingRules = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.makesStrengthTestObsolete);
+				boolean stopProcessing = false;
 
 				if (state.status == null && UtilCards.hasSkill(actingPlayer, skill) && lessStrengthThanDefender
 					&& ((state.usingStab == null) || !state.usingStab) && !usesSpecialBlockingRules) {
@@ -100,30 +98,21 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 										new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), minimumRoll),
 										actingTeam.hasPlayer(actingPlayer.getPlayer()));
 									doNextStep = false;
+									stopProcessing = true;
 								} else if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 									ReRolledActions.DAUNTLESS, minimumRoll, false)) {
 									doNextStep = false;
+									stopProcessing = true;
 								}
 							}
 						}
 					}
-				} else if (state.status != null) {
-					switch (state.status) {
-						case SKILL_CHOICE_YES:
-							actingPlayer.markSkillUsed(NamedProperties.canDoubleStrengthAfterDauntless);
-							step.publishParameter(new StepParameter(StepParameterKey.DOUBLE_TARGET_STRENGTH, true));
-							break;
-						case WAITING_FOR_SKILL_USE:
-							doNextStep = false;
-							break;
-						default:
-							break;
-					}
 				}
+
 				if (doNextStep) {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}
-				return false;
+				return stopProcessing;
 			}
 		});
 

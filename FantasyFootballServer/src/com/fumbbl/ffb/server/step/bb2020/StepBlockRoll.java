@@ -141,7 +141,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					handleBrawler(actingPlayer);
 				} else {
 					fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
-						game.getDefender(), false, successfulDauntless);
+						game.getDefender(), false, successfulDauntless, doubleTargetStrength);
 					if (getReRollSource() == ReRollSources.PRO) {
 						actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 						int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);

@@ -16,6 +16,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.bb2020.ReportIndomitable;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -64,11 +65,14 @@ public class StepDoubleStrength extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill command = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					if (command.getSkill().hasSkillProperty(NamedProperties.canDoubleStrengthAfterDauntless)) {
 						publishParameter(new StepParameter(StepParameterKey.DOUBLE_TARGET_STRENGTH_FOR_PLAYER, playerIds.get(0)));
+						getResult().addReport(new ReportIndomitable(getGameState().getGame().getActingPlayer().getPlayerId(), playerIds.get(0)));
+						actingPlayer.markSkillUsed(NamedProperties.canDoubleStrengthAfterDauntless);
 						playerIds.clear();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -77,6 +81,8 @@ public class StepDoubleStrength extends AbstractStep {
 					ClientCommandPlayerChoice clientCommandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 					if (clientCommandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.INDOMITABLE) {
 						publishParameter(new StepParameter(StepParameterKey.DOUBLE_TARGET_STRENGTH_FOR_PLAYER, clientCommandPlayerChoice.getPlayerId()));
+						getResult().addReport(new ReportIndomitable(getGameState().getGame().getActingPlayer().getPlayerId(), clientCommandPlayerChoice.getPlayerId()));
+						actingPlayer.markSkillUsed(NamedProperties.canDoubleStrengthAfterDauntless);
 						playerIds.clear();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
