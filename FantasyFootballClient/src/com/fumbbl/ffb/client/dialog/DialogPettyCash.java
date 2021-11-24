@@ -1,13 +1,9 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.IntegerField;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,30 +14,33 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ui.IntegerField;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogPettyCash extends Dialog implements ActionListener, KeyListener {
 
-	private IntegerField fIntegerFieldPettyCash;
-	private JLabel fLabelTreasury;
-	private JLabel fLabelTeamValue;
-	private JLabel fLabelOpponentTeamValue;
-	private JLabel fLabelInducements;
-	private JButton fButtonTransfer;
+	private final IntegerField fIntegerFieldPettyCash;
+	private final JLabel fLabelTreasury;
+	private final JLabel fLabelTeamValue;
+	private final JLabel fLabelOpponentTeamValue;
+	private final JLabel fLabelInducements;
+	private final JButton fButtonTransfer;
 
-	private int fOriginalTeamValue;
+	private final int fOriginalTeamValue;
 	private int fTeamValue;
-	private int fOriginalTreasury;
+	private final int fOriginalTreasury;
 	private int fTreasury;
-	private int fOpponentTeamValue;
+	private final int fOpponentTeamValue;
 	private int fPettyCash;
 
 	public DialogPettyCash(FantasyFootballClient pClient, int pTeamValue, int pTreasury, int pOpponentTeamValue) {
@@ -92,7 +91,7 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 		});
 		fIntegerFieldPettyCash.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent pE) {
-				if (fIntegerFieldPettyCash.getInt() != fPettyCash / 1000) {
+				if (getEnteredValue() != fPettyCash / 1000) {
 					fIntegerFieldPettyCash.setInt(fPettyCash / 1000);
 				}
 			}
@@ -166,7 +165,7 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 	private String createOpponentTeamValueText() {
 		StringBuilder line = new StringBuilder();
 		line.append("Your opponent's team value is ").append(StringTool.formatThousands(fOpponentTeamValue / 1000))
-				.append("k.");
+			.append("k.");
 		return line.toString();
 	}
 
@@ -177,21 +176,36 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 			line.append("You don't gain or give away any free inducements.");
 		} else if (inducements > 0) {
 			line.append("You gain free inducements for ").append(StringTool.formatThousands(inducements / 1000))
-					.append("k gold.");
+				.append("k gold.");
 		} else {
 			line.append("You give away free inducements for ").append(StringTool.formatThousands(-inducements / 1000))
-					.append("k gold.");
+				.append("k gold.");
 		}
 		return line.toString();
 	}
 
 	private void updatePettyCash() {
-		fPettyCash = Math.min(fIntegerFieldPettyCash.getInt() * 1000, fOriginalTreasury);
+		fPettyCash = Math.min(getEnteredValue() * 1000, fOriginalTreasury);
 		fTreasury = fOriginalTreasury - fPettyCash;
 		fLabelTreasury.setText(createTreasuryText());
 		fTeamValue = fOriginalTeamValue + fPettyCash;
 		fLabelTeamValue.setText(createTeamValueText());
 		fLabelInducements.setText(createInducementsText());
+	}
+
+	private int getEnteredValue() {
+		int enteredValue = 0;
+
+		try {
+			enteredValue = fIntegerFieldPettyCash.getInt();
+		} catch (NumberFormatException ex) {
+			Toolkit.getDefaultToolkit().beep();
+		}
+
+		if (enteredValue > fTreasury) {
+			enteredValue = fTreasury;
+		}
+		return enteredValue;
 	}
 
 	public int getPettyCash() {
@@ -210,14 +224,14 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 	public void keyReleased(KeyEvent pKeyEvent) {
 		boolean keyHandled = true;
 		switch (pKeyEvent.getKeyCode()) {
-		case KeyEvent.VK_C:
-			fPettyCash = 0;
-			break;
-		case KeyEvent.VK_T:
-			break;
-		default:
-			keyHandled = false;
-			break;
+			case KeyEvent.VK_C:
+				fPettyCash = 0;
+				break;
+			case KeyEvent.VK_T:
+				break;
+			default:
+				keyHandled = false;
+				break;
 		}
 		if (keyHandled) {
 			if (getCloseListener() != null) {
