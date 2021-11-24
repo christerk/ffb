@@ -164,7 +164,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		game.setDefenderId(player.getId());
 		step.getResult().addReport(new ReportAnimalSavagery(game.getActingPlayer().getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES),
+		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES, false),
 			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 		step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.ANIMAL_SAVAGERY, true));

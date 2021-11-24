@@ -26,14 +26,24 @@ import java.util.Set;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	private final Mode mode;
+	private final boolean allowAttackerChainsaw;
 
 	public InjuryTypeBlock() {
-		this(Mode.REGULAR);
+		this(Mode.REGULAR, true);
 	}
 
 	public InjuryTypeBlock(Mode mode) {
+		this(mode, true);
+	}
+
+	public InjuryTypeBlock(boolean allowAttackerChainsaw) {
+		this(Mode.REGULAR, allowAttackerChainsaw);
+	}
+
+	public InjuryTypeBlock(Mode mode, boolean allowAttackerChainsaw) {
 		super(new Block());
 		this.mode = mode;
+		this.allowAttackerChainsaw = allowAttackerChainsaw;
 	}
 
 	@Override
@@ -47,8 +57,10 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
-			Skill chainsaw = Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
-				.orElse(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
+			Skill chainsaw = allowAttackerChainsaw ? pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
+			if (chainsaw == null) {
+				chainsaw = pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw);
+			}
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
