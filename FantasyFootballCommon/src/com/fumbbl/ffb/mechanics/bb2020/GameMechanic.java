@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 
@@ -279,7 +280,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean canUseApo(Game game, Player<?> defender) {
-		if (defender.getPlayerType() == PlayerType.STAR) {
+		if (defender instanceof ZappedPlayer || defender.getPlayerType() == PlayerType.STAR) {
 			return false;
 		}
 
