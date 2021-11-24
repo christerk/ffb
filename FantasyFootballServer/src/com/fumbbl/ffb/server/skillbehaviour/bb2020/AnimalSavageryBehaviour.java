@@ -63,7 +63,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				Game game = step.getGameState().getGame();
 
 				if (StringTool.isProvided(state.playerId)) {
-					lashOut(game, step, game.getPlayerById(state.playerId));
+					lashOut(game, step, game.getPlayerById(state.playerId), state);
 					return false;
 				}
 
@@ -125,7 +125,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 						if (ArrayTool.isProvided(players)) {
 							if (players.length == 1) {
-								lashOut(game, step, players[0]);
+								lashOut(game, step, players[0], state);
 							} else {
 								state.playerIds = Arrays.stream(players).map(Player::getId).collect(Collectors.toSet());
 								UtilServerDialog.showDialog(step.getGameState(),
@@ -157,10 +157,11 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		});
 	}
 
-	private void lashOut(Game game, StepAnimalSavagery step, Player<?> player) {
+	private void lashOut(Game game, StepAnimalSavagery step, Player<?> player, StepState state) {
 		if (StringTool.isProvided(game.getDefenderId())) {
 			step.publishParameter(StepParameter.from(StepParameterKey.GAZE_VICTIM_ID, game.getDefenderId()));
 		}
+
 		game.setDefenderId(player.getId());
 		step.getResult().addReport(new ReportAnimalSavagery(game.getActingPlayer().getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
@@ -168,6 +169,17 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 		step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.ANIMAL_SAVAGERY, true));
+
+		if (player.getId().equals(state.thrownPlayerId)) {
+			PlayerAction action = game.getActingPlayer().getPlayerAction();
+			if ((action == PlayerAction.KICK_TEAM_MATE || action == PlayerAction.KICK_TEAM_MATE_MOVE) || ((action == PlayerAction.THROW_TEAM_MATE || action == PlayerAction.THROW_TEAM_MATE_MOVE) && (injuryResult.injuryContext().isKnockedOut() || injuryResult.injuryContext().isCasualty()))) {
+				game.getActingPlayer().setStandingUp(false);
+				cancelPlayerAction(step);
+				step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+				step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+				return;
+			}
+		}
 
 		step.getResult().setNextAction(StepAction.NEXT_STEP);
 	}
