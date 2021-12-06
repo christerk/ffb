@@ -34,12 +34,12 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(Rules.BB2020)
@@ -119,18 +119,20 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (status == ActionStatus.FAILURE) {
+						Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()))).collect(Collectors.toSet());
 
+						if (StringTool.isProvided(state.thrownPlayerId)) {
+							players.add(game.getPlayerById(state.thrownPlayerId));
+						}
 
-						Player<?>[] players = UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
-
-						if (ArrayTool.isProvided(players)) {
-							if (players.length == 1) {
-								lashOut(game, step, players[0], state);
+						if (!players.isEmpty()) {
+							if (players.size() == 1) {
+								lashOut(game, step, players.stream().findFirst().get(), state);
 							} else {
-								state.playerIds = Arrays.stream(players).map(Player::getId).collect(Collectors.toSet());
+								state.playerIds = players.stream().map(Player::getId).collect(Collectors.toSet());
 								UtilServerDialog.showDialog(step.getGameState(),
 									new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.ANIMAL_SAVAGERY, state.playerIds.toArray(new String[0]),
-										null, 1, 1 ),
+										null, 1, 1),
 									false);
 							}
 						} else {
@@ -172,11 +174,13 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 		if (player.getId().equals(state.thrownPlayerId)) {
 			PlayerAction action = game.getActingPlayer().getPlayerAction();
-			if ((action == PlayerAction.KICK_TEAM_MATE || action == PlayerAction.KICK_TEAM_MATE_MOVE) || ((action == PlayerAction.THROW_TEAM_MATE || action == PlayerAction.THROW_TEAM_MATE_MOVE) && (injuryResult.injuryContext().isKnockedOut() || injuryResult.injuryContext().isCasualty()))) {
+			if (state.endTurn || (action == PlayerAction.KICK_TEAM_MATE || action == PlayerAction.KICK_TEAM_MATE_MOVE) || ((action == PlayerAction.THROW_TEAM_MATE || action == PlayerAction.THROW_TEAM_MATE_MOVE) && (injuryResult.injuryContext().isKnockedOut() || injuryResult.injuryContext().isCasualty()))) {
 				game.getActingPlayer().setStandingUp(false);
 				cancelPlayerAction(step);
 				step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-				step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+				step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
+				step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
+				step.getResult().setNextAction(StepAction.NEXT_STEP);
 				return;
 			}
 		}

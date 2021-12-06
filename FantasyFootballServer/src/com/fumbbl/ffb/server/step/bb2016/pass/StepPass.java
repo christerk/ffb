@@ -309,8 +309,4 @@ public class StepPass extends AbstractStepWithReRoll {
 		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
 		return this;
 	}
-
-	private boolean toPrimitive(Boolean bool) {
-		return bool != null && bool;
-	}
 }

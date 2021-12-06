@@ -43,8 +43,17 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
-		if (pParameter != null && pParameter.getKey() == StepParameterKey.THROWN_PLAYER_ID) {
-			state.thrownPlayerId = (String) pParameter.getValue();
+		if (pParameter != null) {
+			switch (pParameter.getKey()) {
+				case THROWN_PLAYER_ID:
+					state.thrownPlayerId = (String) pParameter.getValue();
+					break;
+				case END_TURN:
+					state.endTurn = (boolean) pParameter.getValue();
+					break;
+				default:
+					break;
+			}
 		}
 
 		return super.setParameter(pParameter);
@@ -62,14 +71,20 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
-		IServerJsonOption.PLAYER_ID.addTo(jsonObject, state.playerId);
-		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, state.playerIds);
-		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, state.thrownPlayerId);
-		return jsonObject;
+	public StepAnimalSavagery initFrom(IFactorySource game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		state.playerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		state.thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
+		String[] playerArray = IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
+		if (playerArray != null) {
+			state.playerIds = Arrays.stream(playerArray).collect(Collectors.toSet());
+		}
+		state.endTurn = toPrimitive(IServerJsonOption.END_TURN.getFrom(game, jsonObject));
+		return this;
 	}
+
 
 	@Override
 	public void start() {
@@ -104,17 +119,14 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 	// JSON serialization
 
 	@Override
-	public StepAnimalSavagery initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		state.playerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		state.thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		String[] playerArray = IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
-		if (playerArray != null) {
-			state.playerIds = Arrays.stream(playerArray).collect(Collectors.toSet());
-		}
-		return this;
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, state.playerId);
+		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, state.playerIds);
+		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, state.thrownPlayerId);
+		IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
+		return jsonObject;
 	}
 
 	public static class StepState {
@@ -122,6 +134,8 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		public String playerId;
 		public String thrownPlayerId;
 		public Set<String> playerIds;
+		public boolean endTurn;
 	}
+
 
 }
