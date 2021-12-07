@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class VersionChangeList {
 
@@ -31,4 +32,48 @@ public class VersionChangeList {
 		return add(features, feature);
 	}
 
+	public List<String> getBugfixes() {
+		return bugfixes;
+	}
+
+	public List<String> getFeatures() {
+		return features;
+	}
+
+	public List<String> getImprovements() {
+		return improvements;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public boolean hasBugfixes() {
+		return !bugfixes.isEmpty();
+	}
+
+	public boolean hasImprovements() {
+		return !improvements.isEmpty();
+	}
+
+	public boolean hasFeatures() {
+		return !features.isEmpty();
+	}
+
+	public boolean hasEntries() {
+		return hasBugfixes() || hasFeatures() || hasImprovements();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		VersionChangeList that = (VersionChangeList) o;
+		return bugfixes.equals(that.bugfixes) && features.equals(that.features) && improvements.equals(that.improvements) && version.equals(that.version);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(bugfixes, features, improvements, version);
+	}
 }

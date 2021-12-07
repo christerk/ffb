@@ -453,7 +453,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fChatCommandsMenuItem.addActionListener(this);
 		fHelpMenu.add(fChatCommandsMenuItem);
 
-		changeListItem = new JMenuItem("Change List", KeyEvent.VK_L);
+		changeListItem = new JMenuItem("What's new?", KeyEvent.VK_L);
 		changeListItem.addActionListener(this);
 		fHelpMenu.add(changeListItem);
 

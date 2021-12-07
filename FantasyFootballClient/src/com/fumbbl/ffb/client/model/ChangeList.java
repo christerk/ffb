@@ -19,4 +19,11 @@ public class ChangeList {
 		);
 	}
 
+	public List<VersionChangeList> getVersions() {
+		return versions;
+	}
+
+	public String fingerPrint() {
+		return String.valueOf(versions.get(0).hashCode());
+	}
 }

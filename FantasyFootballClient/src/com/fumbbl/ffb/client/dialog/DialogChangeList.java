@@ -15,7 +15,7 @@ public class DialogChangeList extends Dialog {
 
 	public DialogChangeList(FantasyFootballClient pClient) {
 
-		super(pClient, "Change List", true);
+		super(pClient, "What's new?", true);
 
 		JScrollPane mainPane = new JScrollPane(createEditorPane());
 
