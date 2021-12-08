@@ -10,13 +10,12 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.3.0")
-			.addImprovement("Added Change List Dialog")
-			.addBugfix("Prevent to throw/kick player that was injured to severe by Animal Savagery")
+			.addImprovement("Added \"What's new?\" dialog")
+			.addBugfix("Prevent throwing throw/kick player that was injured too severe by Animal Savagery")
 			.addBugfix("Prevent apothecary usage on zapped players")
 			.addBugfix("Do not use Chainsaw modifier when player throws regular block")
 			.addBugfix("Prevent overflow in 2016 petty cash dialog")
 			.addBugfix("Preserve labels in replay mode when playing/moving backwards")
-			.addBugfix("Preserve labels in replay mode when playing/moving backwards sadjnda alsknd asklmal ksdmn laksd alkmsdk lamd alksdm alksmd klasm daksmd lkasmdl kaMSLDFKNN ASMIODM LÖK<AJDF M<ÖYSMDFP<MY ÖLKM<YFM KY<MC KLÖ<MYKMÖ< L")
 
 		);
 

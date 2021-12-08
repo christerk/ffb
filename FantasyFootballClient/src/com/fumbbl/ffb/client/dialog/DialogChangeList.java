@@ -59,7 +59,7 @@ public class DialogChangeList extends Dialog {
 			.map(this::renderVersionChanges)
 			.collect(Collectors.joining());
 
-		contentPane.setText(text);
+		contentPane.setText("<div style=\"padding:10px\">" + text + "</div>");
 		contentPane.setCaretPosition(0);
 
 		return contentPane;
@@ -69,7 +69,7 @@ public class DialogChangeList extends Dialog {
 	private String renderVersionChanges(VersionChangeList list) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("<h1>").append(list.getVersion()).append("</h1>");
+		builder.append("<font face=\"Sans Serif\" size=\"+2\"> <b>").append(list.getVersion()).append("</b> </font><br/>");
 
 		if (list.hasFeatures()) {
 			builder.append(renderEntries("Features", list.getFeatures()));
@@ -89,9 +89,9 @@ public class DialogChangeList extends Dialog {
 	private String renderEntries(String title, List<String> entries) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("<h2>").append(title).append("</h2>").append("<ul>");
+		builder.append("<font face=\"Sans Serif\" size=\"+1\"> <b>").append(title).append("</b> </font>").append("<ul>");
 
-		entries.stream().map(entry -> "<li>" + entry + "</li>").forEach(builder::append);
+		entries.stream().map(entry -> "<li style=\"padding-bottom:3px;list-style-type:decimal\">" + entry + "</li>").forEach(builder::append);
 
 		builder.append("</ul>");
 		return builder.toString();
