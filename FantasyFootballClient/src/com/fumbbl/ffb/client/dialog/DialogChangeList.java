@@ -4,7 +4,6 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.model.ChangeList;
 import com.fumbbl.ffb.client.model.VersionChangeList;
 import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.model.Game;
 
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
@@ -23,12 +22,8 @@ public class DialogChangeList extends Dialog {
 
 		JScrollPane mainPane = new JScrollPane(createEditorPane());
 
-		Game game = getClient().getGame();
-		if (game.isTesting()) {
-			mainPane.setPreferredSize(new Dimension(mainPane.getPreferredSize().width + 100, 500));
-		} else {
-			mainPane.setPreferredSize(new Dimension(mainPane.getPreferredSize().width + 10, 300));
-		}
+		Dimension clientDimension = getClient().getUserInterface().getSize();
+		mainPane.setPreferredSize(new Dimension(clientDimension.width - 150, clientDimension.height - 150));
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
@@ -55,9 +50,9 @@ public class DialogChangeList extends Dialog {
 
 	private JEditorPane createEditorPane() {
 
-		JEditorPane aboutPane = new JEditorPane();
-		aboutPane.setEditable(false);
-		aboutPane.setContentType("text/html");
+		JEditorPane contentPane = new JEditorPane();
+		contentPane.setEditable(false);
+		contentPane.setContentType("text/html");
 
 		String text = new ChangeList().getVersions().stream()
 			.filter(VersionChangeList::hasEntries)
@@ -106,7 +101,6 @@ public class DialogChangeList extends Dialog {
 		Dimension dialogSize = getSize();
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
-		// Dimension menuBarSize = getClient().getGameMenuBar().getSize();
 		setLocation((frameSize.width - dialogSize.width) / 2,
 			((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
 	}

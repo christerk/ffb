@@ -16,7 +16,10 @@ public class ChangeList {
 			.addBugfix("Do not use Chainsaw modifier when player throws regular block")
 			.addBugfix("Prevent overflow in 2016 petty cash dialog")
 			.addBugfix("Preserve labels in replay mode when playing/moving backwards")
+			.addBugfix("Preserve labels in replay mode when playing/moving backwards sadjnda alsknd asklmal ksdmn laksd alkmsdk lamd alksdm alksmd klasm daksmd lkasmdl kaMSLDFKNN ASMIODM LÖK<AJDF M<ÖYSMDFP<MY ÖLKM<YFM KY<MC KLÖ<MYKMÖ< L")
+
 		);
+
 	}
 
 	public List<VersionChangeList> getVersions() {
