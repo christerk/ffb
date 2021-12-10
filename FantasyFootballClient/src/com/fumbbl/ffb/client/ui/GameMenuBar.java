@@ -72,12 +72,6 @@ import java.util.stream.Collectors;
  */
 public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener {
 
-	private static final String[] _SAVED_USER_SETTINGS = { IClientProperty.SETTING_SOUND_MODE,
-			IClientProperty.SETTING_SOUND_VOLUME, IClientProperty.SETTING_ICONS, IClientProperty.SETTING_CHATLOG,
-			IClientProperty.SETTING_AUTOMOVE, IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientProperty.SETTING_PITCH_CUSTOMIZATION,
-			IClientProperty.SETTING_PITCH_MARKINGS, IClientProperty.SETTING_TEAM_LOGOS, IClientProperty.SETTING_PITCH_WEATHER,
-			IClientProperty.SETTING_RANGEGRID };
-
 	private static final String _REPLAY_MODE_ON = "Replay Mode";
 	private static final String _REPLAY_MODE_OFF = "Spectator Mode";
 
@@ -694,11 +688,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void saveUserSettings(boolean pUserinterfaceInit) {
-		String[] settingValues = new String[_SAVED_USER_SETTINGS.length];
-		for (int i = 0; i < _SAVED_USER_SETTINGS.length; i++) {
-			settingValues[i] = getClient().getProperty(_SAVED_USER_SETTINGS[i]);
+		String[] settingValues = new String[IClientProperty._SAVED_USER_SETTINGS.length];
+		for (int i = 0; i < IClientProperty._SAVED_USER_SETTINGS.length; i++) {
+			settingValues[i] = getClient().getProperty(IClientProperty._SAVED_USER_SETTINGS[i]);
 		}
-		getClient().getCommunication().sendUserSettings(_SAVED_USER_SETTINGS, settingValues);
+		getClient().getCommunication().sendUserSettings(IClientProperty._SAVED_USER_SETTINGS, settingValues);
 		getClient().getClientState().refreshSettings();
 		if (pUserinterfaceInit) {
 			getClient().getUserInterface().init(getClient().getGame().getOptions());

@@ -7,6 +7,8 @@ public class ChangeList {
 
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
+	public static final ChangeList INSTANCE = new ChangeList();
+
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.3.0")

@@ -1,15 +1,14 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.FantasyFootballClient;
+
+import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.JPanel;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
 
 /**
  * 

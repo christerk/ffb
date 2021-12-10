@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.ActionKey;
@@ -17,6 +14,9 @@ import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

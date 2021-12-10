@@ -54,12 +54,14 @@ public class DialogChangeList extends Dialog {
 		contentPane.setEditable(false);
 		contentPane.setContentType("text/html");
 
-		String text = new ChangeList().getVersions().stream()
+		String versionsText = ChangeList.INSTANCE.getVersions().stream()
 			.filter(VersionChangeList::hasEntries)
 			.map(this::renderVersionChanges)
 			.collect(Collectors.joining());
 
-		contentPane.setText("<div style=\"padding:10px\">" + text + "</div>");
+		String info = "<div style=\"padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>";
+
+		contentPane.setText("<div style=\"padding:10px\">" + info + "<div>" + versionsText + "</div></div>");
 		contentPane.setCaretPosition(0);
 
 		return contentPane;

@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.GameList;
@@ -31,8 +26,12 @@ import com.fumbbl.ffb.net.commands.ServerCommandTeamList;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * 
  * @author Kalimar
  */
 public class ClientStateLogin extends ClientState implements IDialogCloseListener {
@@ -80,46 +79,46 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
 		switch (pDialog.getId()) {
-		case GAME_COACH_PASSWORD:
-			DialogLogin loginDialog = (DialogLogin) pDialog;
-			fGameName = loginDialog.getGameName();
-			fListGames = loginDialog.isListGames();
-			fEncodedPassword = loginDialog.getEncodedPassword();
-			fPasswordLength = loginDialog.getPasswordLength();
-			sendChallenge();
-			break;
-		case INFORMATION:
-			DialogInformation informationDialog = (DialogInformation) pDialog;
-			if (informationDialog.getOptionType() == DialogInformation.OK_DIALOG) {
-				showLoginDialog();
-			} else {
-				getClient().exitClient();
-			}
-			break;
-		case TEAM_CHOICE:
-			DialogTeamChoice teamChoiceDialog = (DialogTeamChoice) pDialog;
-			TeamListEntry selectedTeamEntry = teamChoiceDialog.getSelectedTeamEntry();
-			if (selectedTeamEntry != null) {
-				fTeamHomeId = selectedTeamEntry.getTeamId();
-				fTeamHomeName = selectedTeamEntry.getTeamName();
+			case GAME_COACH_PASSWORD:
+				DialogLogin loginDialog = (DialogLogin) pDialog;
+				fGameName = loginDialog.getGameName();
+				fListGames = loginDialog.isListGames();
+				fEncodedPassword = loginDialog.getEncodedPassword();
+				fPasswordLength = loginDialog.getPasswordLength();
 				sendChallenge();
-			} else {
-				showLoginDialog();
-			}
-			break;
-		case GAME_CHOICE:
-			DialogGameChoice gameChoiceDialog = (DialogGameChoice) pDialog;
-			GameListEntry selectedGameEntry = gameChoiceDialog.getSelectedGameEntry();
-			if (selectedGameEntry != null) {
-				fGameId = selectedGameEntry.getGameId();
-				fListGames = false;
-				sendChallenge();
-			} else {
-				showLoginDialog();
-			}
-			break;
-		default:
-			break;
+				break;
+			case INFORMATION:
+				DialogInformation informationDialog = (DialogInformation) pDialog;
+				if (informationDialog.getOptionType() == DialogInformation.OK_DIALOG) {
+					showLoginDialog();
+				} else {
+					getClient().exitClient();
+				}
+				break;
+			case TEAM_CHOICE:
+				DialogTeamChoice teamChoiceDialog = (DialogTeamChoice) pDialog;
+				TeamListEntry selectedTeamEntry = teamChoiceDialog.getSelectedTeamEntry();
+				if (selectedTeamEntry != null) {
+					fTeamHomeId = selectedTeamEntry.getTeamId();
+					fTeamHomeName = selectedTeamEntry.getTeamName();
+					sendChallenge();
+				} else {
+					showLoginDialog();
+				}
+				break;
+			case GAME_CHOICE:
+				DialogGameChoice gameChoiceDialog = (DialogGameChoice) pDialog;
+				GameListEntry selectedGameEntry = gameChoiceDialog.getSelectedGameEntry();
+				if (selectedGameEntry != null) {
+					fGameId = selectedGameEntry.getGameId();
+					fListGames = false;
+					sendChallenge();
+				} else {
+					showLoginDialog();
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -127,66 +126,66 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		switch (pNetCommand.getId()) {
-		case SERVER_VERSION:
-			ServerCommandVersion versionCommand = (ServerCommandVersion) pNetCommand;
-			if (checkVersion(versionCommand.getServerVersion(), versionCommand.getClientVersion())) {
-				String[] properties = versionCommand.getClientProperties();
-				for (String property : properties) {
-					getClient().setProperty(property, versionCommand.getClientPropertyValue(property));
+			case SERVER_VERSION:
+				ServerCommandVersion versionCommand = (ServerCommandVersion) pNetCommand;
+				if (checkVersion(versionCommand.getServerVersion(), versionCommand.getClientVersion())) {
+					String[] properties = versionCommand.getClientProperties();
+					for (String property : properties) {
+						getClient().setProperty(property, versionCommand.getClientPropertyValue(property));
+					}
+					showLoginDialog();
 				}
-				showLoginDialog();
-			}
-			break;
-		case SERVER_STATUS:
-			ServerCommandStatus errorCommand = (ServerCommandStatus) pNetCommand;
-			fLastServerError = errorCommand.getServerStatus();
-			DialogInformation informationDialog = null;
-			if (fLastServerError == ServerStatus.FUMBBL_ERROR) {
-				informationDialog = new DialogInformation(getClient(), "Fumbbl Error", errorCommand.getMessage(),
+				break;
+			case SERVER_STATUS:
+				ServerCommandStatus errorCommand = (ServerCommandStatus) pNetCommand;
+				fLastServerError = errorCommand.getServerStatus();
+				DialogInformation informationDialog = null;
+				if (fLastServerError == ServerStatus.FUMBBL_ERROR) {
+					informationDialog = new DialogInformation(getClient(), "Fumbbl Error", errorCommand.getMessage(),
 						DialogInformation.CANCEL_DIALOG);
-			} else {
-				informationDialog = new DialogInformation(getClient(), "Server Error", fLastServerError.getMessage(),
+				} else {
+					informationDialog = new DialogInformation(getClient(), "Server Error", fLastServerError.getMessage(),
 						DialogInformation.OK_DIALOG);
-			}
-			informationDialog.showDialog(this);
-			break;
-		case SERVER_TEAM_LIST:
-			ServerCommandTeamList teamListCommand = (ServerCommandTeamList) pNetCommand;
-			DialogTeamChoice teamChoiceDialog = new DialogTeamChoice(getClient(), teamListCommand.getTeamList());
-			teamChoiceDialog.showDialog(this);
-			break;
-		case SERVER_GAME_LIST:
-			ServerCommandGameList gameListCommand = (ServerCommandGameList) pNetCommand;
-			GameList gameList = gameListCommand.getGameList();
-			if (gameList.size() > 0) {
-				DialogGameChoice gameChoiceDialog = new DialogGameChoice(getClient(), gameListCommand.getGameList());
-				gameChoiceDialog.showDialog(this);
-			} else {
-				DialogInformation noGamesDialog = new DialogInformation(getClient(), "No Open Games",
-						"You do not have any open games to join.", DialogInformation.OK_DIALOG);
-				noGamesDialog.showDialog(this);
-			}
-			break;
-		case SERVER_JOIN:
-			ServerCommandJoin joinCommand = (ServerCommandJoin) pNetCommand;
-			if (joinCommand.getPlayerNames().length <= 1) {
-				if ((getClient().getParameters().getGameId() == 0) && StringTool.isProvided(fGameName)) {
-					getClient().getUserInterface().getStatusReport().reportGameName(fGameName);
 				}
-				game.setDialogParameter(new DialogJoinParameter());
-			} else {
-				game.setDialogParameter(null);
-			}
-			userInterface.getDialogManager().updateDialog();
-			break;
-		case SERVER_PASSWORD_CHALLENGE:
-			ServerCommandPasswordChallenge passwordChallengeCommand = (ServerCommandPasswordChallenge) pNetCommand;
-			String response = createResponse(passwordChallengeCommand.getChallenge());
-			sendJoin(response);
-			break;
-		default:
-			super.handleCommand(pNetCommand);
-			break;
+				informationDialog.showDialog(this);
+				break;
+			case SERVER_TEAM_LIST:
+				ServerCommandTeamList teamListCommand = (ServerCommandTeamList) pNetCommand;
+				DialogTeamChoice teamChoiceDialog = new DialogTeamChoice(getClient(), teamListCommand.getTeamList());
+				teamChoiceDialog.showDialog(this);
+				break;
+			case SERVER_GAME_LIST:
+				ServerCommandGameList gameListCommand = (ServerCommandGameList) pNetCommand;
+				GameList gameList = gameListCommand.getGameList();
+				if (gameList.size() > 0) {
+					DialogGameChoice gameChoiceDialog = new DialogGameChoice(getClient(), gameListCommand.getGameList());
+					gameChoiceDialog.showDialog(this);
+				} else {
+					DialogInformation noGamesDialog = new DialogInformation(getClient(), "No Open Games",
+						"You do not have any open games to join.", DialogInformation.OK_DIALOG);
+					noGamesDialog.showDialog(this);
+				}
+				break;
+			case SERVER_JOIN:
+				ServerCommandJoin joinCommand = (ServerCommandJoin) pNetCommand;
+				if (joinCommand.getPlayerNames().length <= 1) {
+					if ((getClient().getParameters().getGameId() == 0) && StringTool.isProvided(fGameName)) {
+						getClient().getUserInterface().getStatusReport().reportGameName(fGameName);
+					}
+					game.setDialogParameter(new DialogJoinParameter());
+				} else {
+					game.setDialogParameter(null);
+				}
+				userInterface.getDialogManager().updateDialog();
+				break;
+			case SERVER_PASSWORD_CHALLENGE:
+				ServerCommandPasswordChallenge passwordChallengeCommand = (ServerCommandPasswordChallenge) pNetCommand;
+				String response = createResponse(passwordChallengeCommand.getChallenge());
+				sendJoin(response);
+				break;
+			default:
+				super.handleCommand(pNetCommand);
+				break;
 		}
 	}
 
@@ -198,7 +197,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 			messages[1] = "Client version is " + FantasyFootballConstants.CLIENT_VERSION + ".";
 			messages[2] = "Please update your client!";
 			fWaitingDialog = new DialogInformation(getClient(), "Client Version Conflict", messages,
-					DialogInformation.CANCEL_DIALOG, false);
+				DialogInformation.CANCEL_DIALOG, false);
 			fWaitingDialog.showDialog(this);
 			return false;
 		}
@@ -209,7 +208,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 			messages[1] = "Server version is " + pServerVersion + ".";
 			messages[2] = "Please wait for a server update!";
 			fWaitingDialog = new DialogInformation(getClient(), "Server Version Conflict", messages,
-					DialogInformation.CANCEL_DIALOG, false);
+				DialogInformation.CANCEL_DIALOG, false);
 			fWaitingDialog.showDialog(this);
 			return false;
 		}
@@ -241,7 +240,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 		}
 
 		return ((majorVersionIs < majorVersionExpected) || (minorVersionIs < minorVersionExpected)
-				|| (releaseIs < releaseExpected));
+			|| (releaseIs < releaseExpected));
 
 	}
 
@@ -249,9 +248,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 		String response;
 		try {
 			response = PasswordChallenge.createResponse(pChallenge, fEncodedPassword);
-		} catch (IOException ioe) {
-			response = null;
-		} catch (NoSuchAlgorithmException nsa) {
+		} catch (IOException | NoSuchAlgorithmException ioe) {
 			response = null;
 		}
 		return response;
@@ -272,7 +269,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 
 		} else {
 			getClient().getCommunication().sendJoin(getClient().getParameters().getCoach(), pResponse,
-					(fGameId > 0L) ? fGameId : getClient().getParameters().getGameId(), fGameName, fTeamHomeId, fTeamHomeName);
+				(fGameId > 0L) ? fGameId : getClient().getParameters().getGameId(), fGameName, fTeamHomeId, fTeamHomeName);
 		}
 	}
 
@@ -282,7 +279,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 			fPasswordLength = -1;
 		}
 		DialogLogin loginDialog = new DialogLogin(getClient(), fEncodedPassword, fPasswordLength, fTeamHomeName,
-				fTeamAwayName, !hasGameId);
+			fTeamAwayName, !hasGameId);
 		if (hasGameId && (fPasswordLength < 0)) {
 			dialogClosed(loginDialog); // close dialog right away if no game name or password is necessary
 		} else if (fLastServerError == ServerStatus.ERROR_GAME_IN_USE) {
