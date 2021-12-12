@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Do not use Chainsaw modifier when player throws regular block")
 			.addBugfix("Prevent overflow in 2016 petty cash dialog")
 			.addBugfix("Preserve labels in replay mode when playing/moving backwards")
+			.addBugfix("Potential fix for missing stat upgrades")
 
 		);
 
