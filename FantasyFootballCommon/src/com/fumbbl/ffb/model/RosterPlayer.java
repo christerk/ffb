@@ -275,6 +275,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					}
 				}
 			}
+			applyPlayerModifiersFromBehaviours();
 			int oldMovement = getMovement();
 			int oldArmour = getArmour();
 			int oldAgility = getAgility();
@@ -681,7 +682,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void applyPlayerModifiers() {
+	public void applyPlayerModifiersFromBehaviours() {
 		fSkills.stream().map(Skill::getSkillBehaviour).filter(Objects::nonNull)
 			.flatMap(behaviour -> behaviour.getPlayerModifiers().stream()).forEach(playerModifier -> playerModifier.apply(this));
 	}
