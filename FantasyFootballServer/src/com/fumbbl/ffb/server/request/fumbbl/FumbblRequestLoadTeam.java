@@ -86,10 +86,9 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 			if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId())) {
 				// log game scheduled -->
 				if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
-					StringBuilder logEntry = new StringBuilder();
-					logEntry.append("GAME SCHEDULED ").append(StringTool.print(game.getTeamHome().getName())).append(" vs. ")
-							.append(StringTool.print(game.getTeamAway().getName()));
-					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), logEntry.toString());
+					String logEntry = "GAME SCHEDULED " + StringTool.print(game.getTeamHome().getName()) + " vs. " +
+						StringTool.print(game.getTeamAway().getName());
+					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), logEntry);
 				}
 				// <-- log game scheduled
 			}
