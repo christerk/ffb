@@ -96,7 +96,7 @@ public class GameCache {
 	}
 
 	public GameState[] allGameStates() {
-		return fGameStateById.values().toArray(new GameState[fGameStateById.size()]);
+		return fGameStateById.values().toArray(new GameState[0]);
 	}
 
 	public void addGame(GameState gameState) {
@@ -123,7 +123,7 @@ public class GameCache {
 		}
 		// remove dead games from cache if there are no connections to the session
 		SessionManager sessionManager = getServer().getSessionManager();
-		Long[] gameIds = fGameStateById.keySet().toArray(new Long[fGameStateById.size()]);
+		Long[] gameIds = fGameStateById.keySet().toArray(new Long[0]);
 		for (Long gameId : gameIds) {
 			GameStatus status = fGameStateById.get(gameId).getStatus();
 			if ((gameId == null) || (gameId == gameState.getId()) || (status == GameStatus.LOADING)) {
@@ -138,7 +138,7 @@ public class GameCache {
 		}
 	}
 
-	public GameState getGameStateByName(String pGameName, boolean pLoadFromDb) {
+	public GameState getGameStateByName(String pGameName) {
 		Long gameId = fGameIdByName.get(pGameName);
 		return (gameId != null) ? getGameStateById(gameId) : null;
 	}
@@ -154,23 +154,22 @@ public class GameCache {
 			// remove gameState from db if only one team has joined
 			// or the game hasn't even started yet (and isn't scheduled)
 			if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())
-					|| ((game.getScheduled() == null)
-							&& ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))) {
+				|| ((game.getScheduled() == null)
+				&& ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))) {
 				queueDbDelete(cachedGameState.getId(), true);
 			}
 		}
 	}
 
-	public boolean mapGameNameToId(String pGameName, long pGameId) {
-		GameState gameState = getGameStateByName(pGameName, true);
+	public void mapGameNameToId(String pGameName, long pGameId) {
+		GameState gameState = getGameStateByName(pGameName);
 		boolean mappingOk = ((gameState == null) || (pGameId == gameState.getId()));
 		if (mappingOk) {
 			fGameIdByName.put(pGameName, pGameId);
 		}
-		return mappingOk;
 	}
 
-	public boolean removeMappingForGameId(long pGameId) {
+	public void removeMappingForGameId(long pGameId) {
 		String gameNameForId = null;
 		for (String gameName : fGameIdByName.keySet()) {
 			long gameId = fGameIdByName.get(gameName);
@@ -179,7 +178,7 @@ public class GameCache {
 				break;
 			}
 		}
-		return (fGameIdByName.remove(gameNameForId) != null);
+		fGameIdByName.remove(gameNameForId);
 	}
 
 	public GameList findActiveGames() {
@@ -272,7 +271,7 @@ public class GameCache {
 			}
 		}
 		// add new pitch properties
-		String[] pitchKeys = pitchProperties.keySet().toArray(new String[pitchProperties.size()]);
+		String[] pitchKeys = pitchProperties.keySet().stream().map(o -> (String) o).toArray(String[]::new);
 		for (String pitchKey : pitchKeys) {
 			String pitchUrl = pitchProperties.getProperty(pitchKey);
 			if (!pitchKey.startsWith(_PITCH_PROPERTY_PREFIX)) {
@@ -372,9 +371,9 @@ public class GameCache {
 		}
 	}
 
-	public GameState closeGame(long gameId) {
+	public void closeGame(long gameId) {
 		if (gameId <= 0) {
-			return null;
+			return;
 		}
 		GameState gameState = getGameStateById(gameId);
 		if (gameState != null) {
@@ -389,7 +388,6 @@ public class GameCache {
 				getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(gameState));
 			}
 		}
-		return gameState;
 	}
 
 	public void queueDbPlayerMarkersUpdate(GameState pGameState) {
