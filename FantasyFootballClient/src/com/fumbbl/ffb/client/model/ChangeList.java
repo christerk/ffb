@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Prevent overflow in 2016 petty cash dialog")
 			.addBugfix("Preserve labels in replay mode when playing/moving backwards")
 			.addBugfix("Potential fix for missing stat upgrades")
+			.addBugfix("Allow Chainsaw players to continue blitz move after performing regular block")
 
 		);
 

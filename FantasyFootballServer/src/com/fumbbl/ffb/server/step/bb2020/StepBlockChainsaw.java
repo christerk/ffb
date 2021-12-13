@@ -87,7 +87,6 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 	public boolean setParameter(StepParameter parameter) {
 		if (parameter != null && parameter.getKey() == StepParameterKey.USING_CHAINSAW) {
 			usingChainsaw = (boolean) parameter.getValue();
-			consume(parameter);
 			return true;
 		}
 
