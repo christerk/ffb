@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Allow Chainsaw players to continue blitz move after performing regular block")
 			.addBugfix("Prone/stunned players hit by B&C failing a rush suffer av roll")
 			.addBugfix("Rooted players can uproot themselves with Diving Tackle")
+			.addBugfix("Do not use Claws or Mighty Blow when attacker is knocked down as well")
 
 		);
 
