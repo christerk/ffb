@@ -59,9 +59,10 @@ public class DialogChangeList extends Dialog {
 			.map(this::renderVersionChanges)
 			.collect(Collectors.joining());
 
-		String info = "<div style=\"padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>";
+		String info = "<div style=\"padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>" +
+			"<div>Unless stated otherwise the changes apply to 2020 rules.</div>";
 
-		contentPane.setText("<div style=\"padding:10px\">" + info + "<div>" + versionsText + "</div></div>");
+		contentPane.setText("<div style=\"padding:10px\"><div>" + info + "</div><div>" + versionsText + "</div></div>");
 		contentPane.setCaretPosition(0);
 
 		return contentPane;

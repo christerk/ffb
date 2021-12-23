@@ -156,7 +156,7 @@ public class StepEndBlocking extends AbstractStep {
 				&& UtilPlayer.isNextMovePossible(game, false)) {
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
-				blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null));
+				blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab,  true,null));
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
 				game.getFieldModel().clearDiceDecorations();
