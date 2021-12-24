@@ -26,7 +26,8 @@ public class ChangeList {
             .addBugfix("Roll for Foul Appearance on Frenzy blocks during blitz actions as well")
 			.addBugfix("BB2016: Do not roll for Foul Appearance on Frenzy blocks")
 			.addBugfix("Tentacles can be used to hold players following up a block")
-
+            .addBugfix("Safe Pass prevents bombs from exploding")
+            .addBugfix("Safe Pass working correctly with Hail Mary Pass")
         );
 
     }

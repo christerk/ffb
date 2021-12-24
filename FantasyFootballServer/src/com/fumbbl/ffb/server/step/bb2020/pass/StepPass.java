@@ -207,8 +207,13 @@ public class StepPass extends AbstractStepWithReRoll {
 		PassState state = getGameState().getPassState();
 		publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, PassResult.FUMBLE == state.getResult()));
 		if (PassResult.SAVED_FUMBLE == state.getResult()) {
-			game.getFieldModel().setBallCoordinate(throwerCoordinate);
-			game.getFieldModel().setBallMoving(false);
+			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+				game.getFieldModel().setBombCoordinate(null);
+				game.getFieldModel().setBombMoving(false);
+			} else {
+				game.getFieldModel().setBallCoordinate(throwerCoordinate);
+				game.getFieldModel().setBallMoving(false);
+			}
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnSavedFumble);
 		} else if (PassResult.FUMBLE == state.getResult()) {
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {

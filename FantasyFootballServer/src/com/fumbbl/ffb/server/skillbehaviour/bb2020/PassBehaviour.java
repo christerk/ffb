@@ -116,7 +116,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
 						modifiers.toArray(new PassModifier[0]), passingDistance, bombAction, state.result, true));
 					doNextStep = true;
-					if (PassResult.FUMBLE == state.result || PassResult.WILDLY_INACCURATE == state.result) {
+					if (PassResult.FUMBLE == state.result || PassResult.WILDLY_INACCURATE == state.result || PassResult.SAVED_FUMBLE == state.result) {
 						if (step.getReRolledAction() != ReRolledActions.PASS) {
 							step.setReRolledAction(ReRolledActions.PASS);
 							if (UtilCards.hasSkill(game.getThrower(), skill) && !state.passSkillUsed) {
@@ -147,6 +147,16 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 								CatchScatterThrowInMode.SCATTER_BALL));
 						}
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+					} else if (PassResult.SAVED_FUMBLE == state.result) {
+						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+							game.getFieldModel().setBombCoordinate(null);
+							game.getFieldModel().setBombMoving(false);
+						} else {
+							game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+							game.getFieldModel().setBallMoving(false);
+						}
+						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+
 					} else {
 						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 							game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
