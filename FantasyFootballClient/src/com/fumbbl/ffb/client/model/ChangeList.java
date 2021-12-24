@@ -25,7 +25,7 @@ public class ChangeList {
             .addBugfix("Do not use Claws or Mighty Blow when attacker is knocked down as well")
             .addBugfix("Roll for Foul Appearance on Frenzy blocks during blitz actions as well")
 			.addBugfix("BB2016: Do not roll for Foul Appearance on Frenzy blocks")
-
+			.addBugfix("Tentacles can be used to hold players following up a block")
 
         );
 
