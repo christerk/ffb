@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2016;
+package com.fumbbl.ffb.server.step.bb2020.special;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.report.ReportBombExplodesAfterCatch;
 import com.fumbbl.ffb.report.ReportBombOutOfBounds;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -51,7 +52,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepInitBomb extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -102,12 +103,9 @@ public final class StepInitBomb extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case BOMB_OUT_OF_BOUNDS:
+			if (pParameter.getKey() == StepParameterKey.BOMB_OUT_OF_BOUNDS) {
 				fBombOutOfBounds = pParameter.getValue() != null ? (Boolean) pParameter.getValue() : false;
 				return true;
-			default:
-				break;
 			}
 		}
 		return false;
@@ -130,6 +128,8 @@ public final class StepInitBomb extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		game.getTurnData().setBombUsed(true);
+
 		game.getFieldModel().setRangeRuler(null);
 		if (fPassFumble) {
 			fCatcherId = null;
@@ -137,6 +137,16 @@ public final class StepInitBomb extends AbstractStep {
 		if (fBombOutOfBounds) {
 			fCatcherId = null;
 		}
+
+		if (fCatcherId != null) {
+			int roll = getGameState().getDiceRoller().rollDice(6);
+			boolean explodes = roll >= 4;
+			getResult().addReport(new ReportBombExplodesAfterCatch(fCatcherId, explodes, roll));
+			if (explodes) {
+				fCatcherId = null;
+			}
+		}
+
 		if (fCatcherId == null) {
 			fBombCoordinate = game.getFieldModel().getBombCoordinate();
 			if (fBombCoordinate == null) {

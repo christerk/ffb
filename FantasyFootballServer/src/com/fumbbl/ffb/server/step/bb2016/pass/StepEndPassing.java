@@ -132,9 +132,9 @@ public final class StepEndPassing extends AbstractStep {
 		// throw bomb mode -> start bomb sequence
 		if (game.getTurnMode().isBombTurn()) {
 			if (StringTool.isProvided(fInterceptorId)) {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble));
+				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, false));
 			} else {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble));
+				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, false));
 			}
 			if (fBombOutOfBounds) {
 				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
@@ -160,7 +160,7 @@ public final class StepEndPassing extends AbstractStep {
 			}
 			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			FieldCoordinate endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-			int deltaX = 0;
+			int deltaX;
 			if (game.isHomePlaying()) {
 				deltaX = endCoordinate.getX() - startCoordinate.getX();
 			} else {

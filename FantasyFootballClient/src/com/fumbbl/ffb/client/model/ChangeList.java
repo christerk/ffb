@@ -28,6 +28,7 @@ public class ChangeList {
 			.addBugfix("Tentacles can be used to hold players following up a block")
             .addBugfix("Safe Pass prevents bombs from exploding")
             .addBugfix("Safe Pass working correctly with Hail Mary Pass")
+            .addBugfix("Bombardier with Running Pass can move after throwing bomb")
         );
 
     }

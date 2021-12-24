@@ -9,6 +9,7 @@ public enum StepParameterKey {
 
 	ACTING_TEAM, // Boolean
 	ADMIN_MODE, // Boolean
+	ALLOW_MOVE_AFTER_PASS, // Boolean
 	ALTERNATE_GOTO_LABEL, // String
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean

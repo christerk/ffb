@@ -29,19 +29,20 @@ public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 			from(StepParameterKey.CATCHER_ID, params.catcherId), from(StepParameterKey.PASS_FUMBLE, params.passFumble));
 		// may insert multiple specialEffect sequences add this point
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB);
+		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB, from(StepParameterKey.ALLOW_MOVE_AFTER_PASS, params.allowMoveAfterPass));
 		// may insert endPlayerAction or pass sequence add this point
 		gameState.getStepStack().push(sequence.getSequence());
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String catcherId;
-		private final boolean passFumble;
+		private final boolean passFumble, allowMoveAfterPass;
 
-		public SequenceParams(GameState gameState, String catcherId, boolean passFumble) {
+		public SequenceParams(GameState gameState, String catcherId, boolean passFumble, boolean allowMoveAfterPass) {
 			super(gameState);
 			this.catcherId = catcherId;
 			this.passFumble = passFumble;
+			this.allowMoveAfterPass = allowMoveAfterPass;
 		}
 	}
 }
