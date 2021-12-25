@@ -73,12 +73,6 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (playerState.isConfused()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-				}
-				if (playerState.isHypnotized()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-				}
 				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
@@ -101,7 +95,14 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
-						if (!successful) {
+						if (successful) {
+							if (playerState.isConfused()) {
+								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
+							}
+							if (playerState.isHypnotized()) {
+								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
+							}
+						} else {
 							status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))
 									&& UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
@@ -143,9 +144,6 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 							if (blitzState != null) {
 								blitzState.failed();
 							}
-
-							playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
 
 							step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
@@ -223,7 +221,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					playerState.changeBase(PlayerState.PRONE).changeActive(false));
 		} else {
 			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-					playerState.changeBase(PlayerState.STANDING).changeActive(false));
+					playerState.changeBase(PlayerState.STANDING).changeActive(false).changeConfused(true));
 		}
 		game.setPassCoordinate(null);
 		step.getResult().setSound(SoundId.ROAR);

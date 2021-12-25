@@ -27,7 +27,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class ReallyStupid extends Skill {
 
 	public ReallyStupid() {
-		super("Really Stupid", SkillCategory.TRAIT);
+		super("Really Stupid", SkillCategory.TRAIT, true);
 	}
 
 	@Override

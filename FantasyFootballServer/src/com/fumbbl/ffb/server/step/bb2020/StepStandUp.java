@@ -52,13 +52,9 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-					// mandatory
-					case GOTO_LABEL_ON_FAILURE:
-						fGotoLabelOnFailure = (String) parameter.getValue();
-						break;
-					default:
-						break;
+				// mandatory
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
+					fGotoLabelOnFailure = (String) parameter.getValue();
 				}
 			}
 		}
@@ -89,7 +85,6 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved())
 			|| (ReRolledActions.STAND_UP == getReRolledAction())) {
-			actingPlayer.setHasMoved(true);
 			game.setConcessionPossible(false);
 			boolean rollStandUp = (actingPlayer.getPlayer().getMovementWithModifiers() < Constant.MINIMUM_MOVE_TO_STAND_UP);
 			if (rollStandUp) {
@@ -113,6 +108,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 					getResult()
 						.addReport(new ReportStandUpRoll(actingPlayer.getPlayerId(), successful, roll, modifier, reRolled));
 					if (successful) {
+						actingPlayer.setHasMoved(true);
 						actingPlayer.setStandingUp(false);
 						if (playerState.isRooted()) {
 							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);

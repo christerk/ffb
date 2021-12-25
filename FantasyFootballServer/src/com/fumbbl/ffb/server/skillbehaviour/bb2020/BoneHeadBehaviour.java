@@ -47,13 +47,6 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 					return false;
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (playerState.isConfused()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-				}
-				if (playerState.isHypnotized()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-				}
 				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
@@ -72,7 +65,15 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
-						if (!successful) {
+						if (successful) {
+							PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+							if (playerState.isConfused()) {
+								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
+							}
+							if (playerState.isHypnotized()) {
+								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
+							}
+						} else {
 							status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))
 									&& UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),

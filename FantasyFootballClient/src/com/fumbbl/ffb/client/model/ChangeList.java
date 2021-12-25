@@ -28,7 +28,8 @@ public class ChangeList {
 			.addBugfix("Tentacles can be used to hold players following up a block")
             .addBugfix("Safe Pass prevents bombs from exploding")
             .addBugfix("Safe Pass working correctly with Hail Mary Pass")
-            .addBugfix("Bombardier with Running Pass can move after throwing bomb")
+            .addBugfix("Bombardier with Running Pass can move after throwing bomb (quick or short pass)")
+            .addBugfix("Pro only works when having a tackle zone (not while prone/stunned/confused/hypnotized)")
         );
 
     }
