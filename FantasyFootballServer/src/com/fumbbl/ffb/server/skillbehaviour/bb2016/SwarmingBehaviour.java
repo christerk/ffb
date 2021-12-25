@@ -122,7 +122,7 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 						step.getGameState().pushCurrentStepOnStack();
 
 						state.allowedAmount = step.getGameState().getDiceRoller().rollSwarmingPlayers();
-						step.getResult().addReport(new ReportSwarmingRoll(state.teamId, state.allowedAmount));
+						step.getResult().addReport(new ReportSwarmingRoll(state.teamId, state.allowedAmount, -1, -1));
 						UtilServerDialog.showDialog(step.getGameState(), new DialogSwarmingPlayersParameter(state.allowedAmount),
 								false);
 					} else {

@@ -454,6 +454,8 @@ public interface IJsonOption {
 	JsonIntOption SWARMING_PLAYER_ACTUAL = new JsonIntOption("swarmingPlayerActual");
 	JsonIntOption SWARMING_PLAYER_ALLOWED = new JsonIntOption("swarmingPlayerAllowed");
 	JsonIntOption SWARMING_PLAYER_AMOUNT = new JsonIntOption("swarmingPlayerAmount");
+	JsonIntOption SWARMING_PLAYER_LIMIT = new JsonIntOption("swarmingPlayerLimit");
+	JsonIntOption SWARMING_PLAYER_ROLL = new JsonIntOption("swarmingPlayerRoll");
 	JsonStringOption TALK = new JsonStringOption("talk");
 	JsonStringArrayOption TALKS = new JsonStringArrayOption("talks");
 	JsonFieldCoordinateOption TARGET_COORDINATE = new JsonFieldCoordinateOption("targetCoordinate");

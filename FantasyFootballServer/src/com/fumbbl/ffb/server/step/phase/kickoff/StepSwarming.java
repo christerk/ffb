@@ -10,26 +10,21 @@ import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.util.UtilServerSetup;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepSwarming extends AbstractStep {
 
-	public class StepState {
+	public static class StepState {
 		public ActionStatus status;
 		public boolean endTurn;
 		public boolean handleReceivingTeam;
-		public int allowedAmount;
+		public int allowedAmount, rolledAmount = -1, limitingAmount  = -1;
 		public String teamId;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepSwarming(GameState pGameState) {
 		super(pGameState);
@@ -88,7 +83,9 @@ public class StepSwarming extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
 		IServerJsonOption.HANDLE_RECEIVING_TEAM.addTo(jsonObject, state.handleReceivingTeam);
-		IServerJsonOption.SWARMING_PLAYER_AMOUT.addTo(jsonObject, state.allowedAmount);
+		IServerJsonOption.SWARMING_PLAYER_AMOUNT.addTo(jsonObject, state.allowedAmount);
+		IServerJsonOption.SWARMING_PLAYER_LIMIT.addTo(jsonObject, state.limitingAmount);
+		IServerJsonOption.SWARMING_PLAYER_ROLL.addTo(jsonObject, state.rolledAmount);
 		IServerJsonOption.TEAM_ID.addTo(jsonObject, state.teamId);
 		return jsonObject;
 	}
@@ -99,7 +96,13 @@ public class StepSwarming extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.endTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
 		state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(game, jsonObject);
-		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(game, jsonObject);
+		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUNT.getFrom(game, jsonObject);
+		if (IServerJsonOption.SWARMING_PLAYER_ROLL.isDefinedIn(jsonObject)) {
+			state.rolledAmount = IServerJsonOption.SWARMING_PLAYER_ROLL.getFrom(game, jsonObject);
+		}
+		if (IServerJsonOption.SWARMING_PLAYER_LIMIT.isDefinedIn(jsonObject)) {
+			state.limitingAmount = IServerJsonOption.SWARMING_PLAYER_LIMIT.getFrom(game, jsonObject);
+		}
 		state.teamId = IServerJsonOption.TEAM_ID.getFrom(game, jsonObject);
 		return this;
 	}
