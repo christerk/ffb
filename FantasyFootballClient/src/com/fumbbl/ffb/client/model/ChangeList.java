@@ -32,6 +32,7 @@ public class ChangeList {
             .addBugfix("Pro only works when having a tackle zone (not while prone/stunned/confused/hypnotized)")
             .addBugfix("Amount of swarming players allowed to be placed is limited by swarming players already on the pitch")
             .addBugfix("Animal Savagery players can not use Claws or Mighty Blow when prone")
+            .addBugfix("No team re-rolls during wizard phase")
         );
 
     }

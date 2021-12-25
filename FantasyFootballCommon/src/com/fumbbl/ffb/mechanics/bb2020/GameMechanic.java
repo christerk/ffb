@@ -37,6 +37,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		add(TurnMode.DUMP_OFF);
 		add(TurnMode.BLITZ);
 		add(TurnMode.QUICK_SNAP);
+		add(TurnMode.BETWEEN_TURNS);
 	}};
 
 	@Override
