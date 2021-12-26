@@ -31,12 +31,14 @@ import org.xml.sax.helpers.AttributesImpl;
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * @author Kalimar
@@ -756,6 +758,15 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	protected Map<String, Set<SkillWithValue>> getTemporarySkills() {
 		return temporarySkills;
+	}
+
+	@Override
+	public Set<String> getEnhancementSources() {
+		return new HashSet<String>() {{
+			addAll(temporaryModifiers.keySet());
+			addAll(temporarySkills.keySet());
+			addAll(temporaryProperties.keySet());
+		}};
 	}
 
 	@Override

@@ -34,6 +34,7 @@ public class ChangeList {
             .addBugfix("Animal Savagery players can not use Claws or Mighty Blow when prone")
             .addBugfix("No team re-rolls during wizard phase")
             .addBugfix("Chainsaw must not be applied when hit by a bomb")
+            .addImprovement("Display prayer names in skill list of affected players")
         );
 
     }

@@ -303,6 +303,11 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
+	public Set<String> getEnhancementSources() {
+		return originalPlayer.getEnhancementSources();
+	}
+
+	@Override
 	public void addTemporarySkills(String source, Set<SkillWithValue> skills) {
 		originalPlayer.addTemporarySkills(source, skills);
 	}

@@ -265,6 +265,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	protected abstract Map<String, Set<SkillWithValue>> getTemporarySkills();
 
+	public abstract Set<String> getEnhancementSources();
+
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
 
 	public abstract void removeTemporarySkills(String source);
