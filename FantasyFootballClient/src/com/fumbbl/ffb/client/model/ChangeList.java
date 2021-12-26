@@ -35,6 +35,7 @@ public class ChangeList {
             .addBugfix("No team re-rolls during wizard phase")
             .addBugfix("Chainsaw must not be applied when hit by a bomb")
             .addImprovement("Display prayer names in skill list of affected players")
+            .addBugfix("Rush/Jump interaction works correctly again")
         );
 
     }
