@@ -10,8 +10,6 @@ import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.Bomb;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.SpecialEffectArmourModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
@@ -19,7 +17,6 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 
@@ -32,19 +29,18 @@ public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode) {
 
+		// in BB2020 bombs place players prone, chainsaw only takes effect on falling down or being knocked down
+		// hence chainsaw is ignored here
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+		injuryContext.setArmorRoll(diceRoller.rollArmour());
+		injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 		if (!injuryContext.isArmorBroken()) {
-			Optional<Skill> chainsaw = Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
-			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			chainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
-			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			if (!injuryContext.isArmorBroken()) {
 				((ArmorModifierFactory) game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER)).specialEffectArmourModifiers(SpecialEffect.BOMB)
 					.forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			}
 		}
+
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			((InjuryModifierFactory) game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).findInjuryModifiers(game, injuryContext, pAttacker,
