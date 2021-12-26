@@ -131,6 +131,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 				}
 			} else {
+				actingPlayer.setHasMoved(true);
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
