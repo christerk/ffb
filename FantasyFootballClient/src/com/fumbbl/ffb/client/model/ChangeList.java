@@ -36,6 +36,7 @@ public class ChangeList {
             .addBugfix("Chainsaw must not be applied when hit by a bomb")
             .addImprovement("Display prayer names in skill list of affected players")
             .addBugfix("Rush/Jump interaction works correctly again")
+            .addBugfix("Apply stunty on attacker down block results")
         );
 
     }
