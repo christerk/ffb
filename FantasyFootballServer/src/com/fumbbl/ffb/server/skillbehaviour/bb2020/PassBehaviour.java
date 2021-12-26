@@ -35,6 +35,8 @@ import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
 
+import static com.fumbbl.ffb.server.step.StepParameter.from;
+
 @RulesCollection(Rules.BB2020)
 public class PassBehaviour extends SkillBehaviour<Pass> {
 	public PassBehaviour() {
@@ -151,6 +153,9 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 							game.getFieldModel().setBombCoordinate(null);
 							game.getFieldModel().setBombMoving(false);
+							step.publishParameter(from(StepParameterKey.CATCHER_ID, null));
+							step.publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+							step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
 						} else {
 							game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
 							game.getFieldModel().setBallMoving(false);

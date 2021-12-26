@@ -44,6 +44,8 @@ import com.fumbbl.ffb.util.UtilCards;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.fumbbl.ffb.server.step.StepParameter.from;
+
 /**
  * Step in the pass sequence to handle passing the ball.
  * <p>
@@ -158,7 +160,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
 			false);
-		publishParameter(StepParameter.from(StepParameterKey.PASSING_DISTANCE, passingDistance));
+		publishParameter(from(StepParameterKey.PASSING_DISTANCE, passingDistance));
 		Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(game, game.getThrower(),
 			passingDistance, false));
 		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
@@ -210,6 +212,8 @@ public class StepPass extends AbstractStepWithReRoll {
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				game.getFieldModel().setBombCoordinate(null);
 				game.getFieldModel().setBombMoving(false);
+				publishParameter(from(StepParameterKey.CATCHER_ID, null));
+				publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 			} else {
 				game.getFieldModel().setBallCoordinate(throwerCoordinate);
 				game.getFieldModel().setBallMoving(false);
