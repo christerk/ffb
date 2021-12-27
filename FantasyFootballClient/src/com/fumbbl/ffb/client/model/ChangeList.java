@@ -39,6 +39,7 @@ public class ChangeList {
             .addBugfix("Apply stunty on attacker down block results")
             .addBugfix("Not activated team mate placed prone after fumbling caught bomb can still act")
             .addBugfix("Bombardier can now use Pro to re-roll failed bomb throw")
+            .addBugfix("Team mate stunned by bomb returned by opposing team was still able to act (foul only)")
         );
 
     }
