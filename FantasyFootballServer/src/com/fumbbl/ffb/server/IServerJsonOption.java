@@ -124,6 +124,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonPlayerStateOption OLD_DEFENDER_STATE = new JsonPlayerStateOption("oldDefenderState");
     JsonIntArrayOption OLD_PLAYER_STATES = new JsonIntArrayOption("oldPlayerStates");
     JsonEnumWithNameOption OLD_TURN_MODE = new JsonEnumWithNameOption("oldTurnMode", Factory.TURN_MODE);
+    JsonStringOption ORIGINAL_BOMBER = new JsonStringOption("originalBomber");
     JsonBooleanOption OUT_OF_BOUNDS = new JsonBooleanOption("outOfBounds");
     JsonBooleanOption PASS_ACCURATE = new JsonBooleanOption("passAccurate");
     JsonBooleanOption PASS_FUMBLE = new JsonBooleanOption("passFumble");

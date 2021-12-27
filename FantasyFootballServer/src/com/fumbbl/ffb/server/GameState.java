@@ -75,6 +75,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		fStepStack = new StepStack(this);
 		fChangeList = new ModelChangeList();
 		setGame(new Game(fServer.getFactorySource(), fServer.getFactoryManager()));
+		setPassState(new PassState());
 	}
 
 	public void initRulesDependentMembers() {
@@ -105,7 +106,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	}
 
 	public void setPassState(PassState passState) {
-		this.passState = passState;
+		this.passState = passState.populate(this.passState);
 	}
 
 	public BlitzTurnState getBlitzTurnState() {

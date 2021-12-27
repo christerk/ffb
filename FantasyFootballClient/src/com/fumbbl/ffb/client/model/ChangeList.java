@@ -37,6 +37,7 @@ public class ChangeList {
             .addImprovement("Display prayer names in skill list of affected players")
             .addBugfix("Rush/Jump interaction works correctly again")
             .addBugfix("Apply stunty on attacker down block results")
+            .addBugfix("Not activated team mate placed prone after fumbling caught bomb can still act")
         );
 
     }

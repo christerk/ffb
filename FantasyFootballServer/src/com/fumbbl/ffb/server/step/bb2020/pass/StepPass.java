@@ -144,6 +144,9 @@ public class StepPass extends AbstractStepWithReRoll {
 		}
 		if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 			game.getFieldModel().setBombMoving(true);
+			if (!StringTool.isProvided(state.getOriginalBombardier())) {
+				state.setOriginalBombardier(game.getThrowerId());
+			}
 		} else {
 			game.getFieldModel().setBallMoving(true);
 		}

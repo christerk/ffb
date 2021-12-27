@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.Pass;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
@@ -89,6 +90,9 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 					game.getFieldModel().setBombMoving(true);
 					bombAction = true;
+					if (!StringTool.isProvided(passState.getOriginalBombardier())) {
+						passState.setOriginalBombardier(game.getThrowerId());
+					}
 				} else {
 					game.getFieldModel().setBallMoving(true);
 					bombAction = false;

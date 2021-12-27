@@ -113,6 +113,7 @@ public final class StepSpecialEffect extends AbstractStep {
 
 			PlayerState state = game.getFieldModel().getPlayerState(player);
 			boolean isStanding = !state.isProne() && !state.isStunned();
+			boolean isActive = state.isActive();
 
 			boolean successful = true;
 
@@ -127,11 +128,6 @@ public final class StepSpecialEffect extends AbstractStep {
 			if (successful) {
 
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-				if (fSpecialEffect == SpecialEffect.LIGHTNING) {
-					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
-							new InjuryTypeLightning(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
-					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true));
-				}
 				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
 					ZappedPlayer zappedPlayer = new ZappedPlayer();
 					zappedPlayer.init((RosterPlayer) player, game.getRules());
@@ -160,6 +156,10 @@ public final class StepSpecialEffect extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
 						new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
 					StepParameterSet parameterSet = UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true);
+					PlayerState newState = game.getFieldModel().getPlayerState(player);
+					if (!player.getId().equalsIgnoreCase(getGameState().getPassState().getOriginalBombardier()) && newState.isProne()) {
+						game.getFieldModel().setPlayerState(player, newState.changeActive(isActive));
+					}
 					if (suppressEndTurn) {
 						parameterSet.remove(StepParameterKey.END_TURN);
 					}
