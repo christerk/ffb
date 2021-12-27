@@ -40,6 +40,13 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		add(TurnMode.BETWEEN_TURNS);
 	}};
 
+	private static final Set<TurnMode> modesAllowingPro = new HashSet<TurnMode>() {{
+		add(TurnMode.REGULAR);
+		add(TurnMode.BLITZ);
+		add(TurnMode.BOMB_HOME);
+		add(TurnMode.BOMB_AWAY);
+	}};
+
 	@Override
 	public boolean updateTurnDataAfterReRollUsage(TurnData turnData) {
 		turnData.setReRolls(turnData.getReRolls() - 1);
@@ -61,9 +68,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean eligibleForPro(Game game, Player<?> player) {
+	public boolean 	eligibleForPro(Game game, Player<?> player) {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getActingPlayer().isStandingUp() || game.getActingPlayer().hasActedIgnoringNegativeTraits()) && playerState.hasTacklezones() && game.getActingPlayer().getPlayer() == player && (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ);
+		return (!game.getActingPlayer().isStandingUp() || game.getActingPlayer().hasActedIgnoringNegativeTraits()) && playerState.hasTacklezones() && game.getActingPlayer().getPlayer() == player && modesAllowingPro.contains(game.getTurnMode());
 	}
 
 	@Override
