@@ -276,7 +276,7 @@ public class ClientStateMove extends ClientState {
 				menuItemList.add(jumpAction);
 			}
 		}
-		if (isHypnoticGazeActionAvailable()) {
+		if (isHypnoticGazeActionAvailable(false)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
@@ -397,15 +397,6 @@ public class ClientStateMove extends ClientState {
 		return (!actingPlayer.hasActed()
 			|| !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFullMovement)
 			|| (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovementWithModifiers()));
-	}
-
-	private boolean isHypnoticGazeActionAvailable() {
-		Game game = getClient().getGame();
-		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
-			&& mechanic.isGazeActionAllowed(game.getTurnMode())
-			&& UtilPlayer.canGaze(game, actingPlayer.getPlayer()));
 	}
 
 	private boolean isFumblerooskieAvailable() {
