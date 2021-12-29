@@ -90,16 +90,21 @@ public final class StepEndInducement extends AbstractStep {
         SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
         EndTurn endTurnGenerator = ((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()));
         SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
+        switch (fInducementPhase) {
+            case END_OF_OWN_TURN:
+            case END_OF_OPPONENT_TURN:
+                getGameState().getGame().setTurnMode(TurnMode.REGULAR);
+                break;
+            default:
+                break;
+        }
+
         if (fEndTurn) {
             endTurnGenerator.pushSequence(endTurnParams);
         } else if (fEndInducementPhase) {
             switch (fInducementPhase) {
-                case END_OF_OWN_TURN:
-                    getGameState().getGame().setTurnMode(TurnMode.REGULAR);
-                    break;
                 case END_OF_OPPONENT_TURN:
                     endTurnGenerator.pushSequence(endTurnParams);
-                    getGameState().getGame().setTurnMode(TurnMode.REGULAR);
                     break;
                 case START_OF_OWN_TURN:
                     ((Select) factory.forName(SequenceGenerator.Type.Select.name())).pushSequence(new Select.SequenceParams(getGameState(), true));
