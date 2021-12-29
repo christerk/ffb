@@ -137,6 +137,10 @@ public class PlayerState {
 		return changeBit(_BIT_HYPNOTIZED, pHypnotized);
 	}
 
+	public PlayerState recoverTacklezones() {
+		return changeHypnotized(false).changeConfused(false);
+	}
+
 	public boolean isSelectedStabTarget() {
 		return hasBit(_BIT_SELECTED_STAB_TARGET);
 	}

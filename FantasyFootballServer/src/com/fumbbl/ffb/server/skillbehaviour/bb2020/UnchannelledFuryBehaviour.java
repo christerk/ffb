@@ -75,12 +75,7 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 						actingPlayer.markSkillUsed(skill);
 						if (successful) {
 							PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-							if (playerState.isConfused()) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-							}
-							if (playerState.isHypnotized()) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-							}
+							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.recoverTacklezones());
 						} else {
 							status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))

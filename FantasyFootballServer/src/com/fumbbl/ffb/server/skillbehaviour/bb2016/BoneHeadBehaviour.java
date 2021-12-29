@@ -46,13 +46,8 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 					return false;
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (playerState.isConfused()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-				}
-				if (playerState.isHypnotized()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-				}
+				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).recoverTacklezones();
+				game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
 				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);

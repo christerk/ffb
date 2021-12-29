@@ -60,12 +60,9 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
 						if (successful) {
-							if (playerState.isConfused()) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-							}
-							if (playerState.isHypnotized()) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-							}
+							playerState = playerState.recoverTacklezones();
+							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
+
 						} else {
 							state.status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))

@@ -96,12 +96,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
 						if (successful) {
-							if (playerState.isConfused()) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-							}
-							if (playerState.isHypnotized()) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-							}
+							playerState = playerState.recoverTacklezones();
+							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
+
 						} else {
 							status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))
