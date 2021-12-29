@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
@@ -130,8 +131,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isGazeActionAllowed(TurnMode turnMode) {
-		return true;
+	public boolean isGazeActionAllowed(TurnMode turnMode, PlayerAction playerAction) {
+		return playerAction == PlayerAction.MOVE;
 	}
 
 	@Override
