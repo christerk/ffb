@@ -292,13 +292,13 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	public void endTurn() {
 	}
 
-	protected boolean isHypnoticGazeActionAvailable(boolean declareAtStart) {
+	protected boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player) {
 		Game game = getClient().getGame();
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return ((mechanic.declareGazeActionAtStart() == declareAtStart)
 			&& mechanic.isGazeActionAllowed(game.getTurnMode(), actingPlayer.getPlayerAction())
-			&& UtilPlayer.canGaze(game, actingPlayer.getPlayer()));
+			&& UtilPlayer.canGaze(game, player));
 	}
 
 }

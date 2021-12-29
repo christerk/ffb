@@ -276,7 +276,7 @@ public class ClientStateMove extends ClientState {
 				menuItemList.add(jumpAction);
 			}
 		}
-		if (isHypnoticGazeActionAvailable(false)) {
+		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer())) {
 			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
@@ -284,11 +284,11 @@ public class ClientStateMove extends ClientState {
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isFumblerooskieAvailable()) {
-			JMenuItem hypnoticGazeAction = new JMenuItem("Fumblerooskie",
+			JMenuItem fumblerooskieAction = new JMenuItem("Fumblerooskie",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
-			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
-			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
-			menuItemList.add(hypnoticGazeAction);
+			fumblerooskieAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
+			fumblerooskieAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
+			menuItemList.add(fumblerooskieAction);
 		}
 		if (isEndPlayerActionAvailable()) {
 			String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
