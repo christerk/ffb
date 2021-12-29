@@ -156,6 +156,11 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
+	public boolean declareGazeActionAtStart() {
+		return true;
+	}
+
+	@Override
 	public boolean isKickTeamMateActionAllowed(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
 	}
