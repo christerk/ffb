@@ -36,11 +36,11 @@ public class ChangeList {
             .addBugfix("Chainsaw must not be applied when hit by a bomb")
             .addImprovement("Display prayer names in skill list of affected players")
             .addBugfix("Rush/Jump interaction works correctly again")
-            .addBugfix("Apply stunty on attacker down block results")
+            .addBugfix("Apply Stunty on attacker down block results")
             .addBugfix("Not activated team mate placed prone after fumbling caught bomb can still act")
             .addBugfix("Bombardier can now use Pro to re-roll failed bomb throw")
             .addBugfix("Team mate stunned by bomb returned by opposing team was still able to act (foul only)")
-            .addBugfix("Confusion and gaze can now be recovered correctly in all cases")
+            .addBugfix("Confusion and Gaze can now be recovered correctly in all cases")
             .addBugfix("Ball & Chain can't use Mighty Blow against prone/stunned players")
         );
 
