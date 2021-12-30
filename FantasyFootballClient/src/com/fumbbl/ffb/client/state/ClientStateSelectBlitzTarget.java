@@ -36,7 +36,7 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && UtilPlayer.isValidBlitzTarget(game, pPlayer))) {
-			getClient().getCommunication().sendBlitzTargetSelected(pPlayer.getId());
+			getClient().getCommunication().sendTargetSelected(pPlayer.getId());
 		}
 	}
 

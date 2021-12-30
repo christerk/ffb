@@ -15,7 +15,7 @@ import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.net.commands.ClientCommandBlitzTargetSelected;
+import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.report.ReportSelectBlitzTarget;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -72,8 +72,8 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		StepCommandStatus status = super.handleCommand(pReceivedCommand);
 		if (status == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-				case CLIENT_BLITZ_TARGET_SELECTED:
-					selectedPlayerId = ((ClientCommandBlitzTargetSelected) pReceivedCommand.getCommand()).getTargetPlayerId();
+				case CLIENT_TARGET_SELECTED:
+					selectedPlayerId = ((ClientCommandTargetSelected) pReceivedCommand.getCommand()).getTargetPlayerId();
 					status = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_END_TURN:
