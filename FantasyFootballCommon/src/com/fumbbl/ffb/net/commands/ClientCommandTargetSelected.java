@@ -7,20 +7,20 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
-public class ClientCommandBlitzTargetSelected extends ClientCommand {
+public class ClientCommandTargetSelected extends ClientCommand {
 
 	private String targetPlayerId;
 
-	public ClientCommandBlitzTargetSelected() {
+	public ClientCommandTargetSelected() {
 	}
 
-	public ClientCommandBlitzTargetSelected(String targetPlayerId) {
+	public ClientCommandTargetSelected(String targetPlayerId) {
 		this.targetPlayerId = targetPlayerId;
 	}
 
 	@Override
 	public NetCommandId getId() {
-		return NetCommandId.CLIENT_BLITZ_TARGET_SELECTED;
+		return NetCommandId.CLIENT_TARGET_SELECTED;
 	}
 
 	public String getTargetPlayerId() {
