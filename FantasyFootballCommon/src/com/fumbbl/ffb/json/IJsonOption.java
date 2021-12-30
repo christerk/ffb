@@ -459,6 +459,8 @@ public interface IJsonOption {
 	JsonStringOption TALK = new JsonStringOption("talk");
 	JsonStringArrayOption TALKS = new JsonStringArrayOption("talks");
 	JsonFieldCoordinateOption TARGET_COORDINATE = new JsonFieldCoordinateOption("targetCoordinate");
+	JsonObjectOption TARGET_SELECTION_STATE = new JsonObjectOption("targetSelectionState");
+	JsonStringOption TARGET_SELECTION_STATUS = new JsonStringOption("targetSelectionStatus");
 	JsonObjectOption TEAM_AWAY = new JsonObjectOption("teamAway");
 	JsonStringOption TEAM_AWAY_COACH = new JsonStringOption("teamAwayCoach");
 	JsonStringOption TEAM_AWAY_ID = new JsonStringOption("teamAwayId");

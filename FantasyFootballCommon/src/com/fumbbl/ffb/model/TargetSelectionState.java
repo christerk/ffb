@@ -6,17 +6,18 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.Objects;
 
-public class BlitzState implements IJsonSerializable {
+public class TargetSelectionState implements IJsonSerializable {
 	private Status status = Status.STARTED;
 	private String selectedPlayerId;
 
-	public BlitzState() {
+	public TargetSelectionState() {
 	}
 
-	public BlitzState(String selectedPlayerId) {
+	public TargetSelectionState(String selectedPlayerId) {
 		this.selectedPlayerId = selectedPlayerId;
 	}
 
@@ -28,22 +29,22 @@ public class BlitzState implements IJsonSerializable {
 		return status;
 	}
 
-	public BlitzState cancel() {
+	public TargetSelectionState cancel() {
 		status = Status.CANCELED;
 		return this;
 	}
 
-	public BlitzState select() {
+	public TargetSelectionState select() {
 		status = Status.SELECTED;
 		return this;
 	}
 
-	public BlitzState skip() {
+	public TargetSelectionState skip() {
 		status = Status.SKIPPED;
 		return this;
 	}
 
-	public BlitzState failed() {
+	public TargetSelectionState failed() {
 		status = Status.FAILED;
 		return this;
 	}
@@ -69,21 +70,25 @@ public class BlitzState implements IJsonSerializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof BlitzState)) {
+		if (!(obj instanceof TargetSelectionState)) {
 			return false;
 		}
-		BlitzState other = (BlitzState) obj;
+		TargetSelectionState other = (TargetSelectionState) obj;
 		return status == other.status
 			&& ((selectedPlayerId == null && other.selectedPlayerId == null) || (selectedPlayerId != null && selectedPlayerId.equals(other.selectedPlayerId))
 		);
 	}
 
 	@Override
-	public BlitzState initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public TargetSelectionState initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		selectedPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		String statusString = IJsonOption.BLITZ_STATUS.getFrom(game, jsonObject);
-		if (statusString != null) {
+		String statusString = IJsonOption.TARGET_SELECTION_STATUS.getFrom(game, jsonObject);
+		if (!StringTool.isProvided(statusString)) {
+			statusString = IJsonOption.BLITZ_STATUS.getFrom(game, jsonObject);
+		}
+		if (StringTool.isProvided(statusString)) {
+
 			status = Status.valueOf(statusString);
 		}
 		return this;
@@ -93,7 +98,7 @@ public class BlitzState implements IJsonSerializable {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
-		IJsonOption.BLITZ_STATUS.addTo(jsonObject, status.name());
+		IJsonOption.TARGET_SELECTION_STATUS.addTo(jsonObject, status.name());
 		return jsonObject;
 	}
 

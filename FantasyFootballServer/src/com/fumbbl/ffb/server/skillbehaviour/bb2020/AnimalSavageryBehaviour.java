@@ -12,7 +12,7 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -136,9 +136,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 							cancelPlayerAction(step);
 
-							BlitzState blitzState = game.getFieldModel().getBlitzState();
-							if (blitzState != null) {
-								blitzState.failed();
+							TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+							if (targetSelectionState != null) {
+								targetSelectionState.failed();
 							}
 
 							step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));

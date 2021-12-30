@@ -8,7 +8,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -57,29 +57,29 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		BlitzState blitzState = game.getFieldModel().getBlitzState();
+		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 		if (endTurn) {
 			EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, endTurn));
-		} else if (blitzState != null) {
-			if (blitzState.isCanceled()) {
+		} else if (targetSelectionState != null) {
+			if (targetSelectionState.isCanceled()) {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
-				game.getFieldModel().setBlitzState(null);
+				game.getFieldModel().setTargetSelectionState(null);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
-			} else if (blitzState.isSelected()) {
+			} else if (targetSelectionState.isSelected()) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
 				game.getTurnData().setBlitzUsed(true);
 				game.getActingPlayer().setHasMoved(true);
-			} else if (blitzState.isSkipped()) {
+			} else if (targetSelectionState.isSkipped()) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
 				getResult().setSound(SoundId.CLICK);
-			} else if (blitzState.isFailed()) {
+			} else if (targetSelectionState.isFailed()) {
 				Sequence sequence = new Sequence(getGameState());
 				sequence.add(StepId.END_MOVING, StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				getGameState().getStepStack().push(sequence.getSequence());

@@ -126,7 +126,7 @@ public enum StepId implements INamedObject {
 	RECEIVE_CHOICE("receiveChoice"), // game.start
 	RECOVER_FROM_GAZE("recoverFromGaze"),
 	REFEREE("referee"), // action.foul
-	REMOVE_BLITZ_STATE("removeBlitzState"), // action.blitz
+	REMOVE_TARGET_SELECTION_STATE("removeTargetSelectionState", "removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
 	RESET_FUMBLEROOSKIE("resetFumblerooskie"), // action.move/action.blitz
 	RESOLVE_PASS("resolvePass"),
@@ -166,9 +166,20 @@ public enum StepId implements INamedObject {
 	// maxId = 111
 
 	private final String fName;
+	private final String oldName;
+
+
+	StepId(String fName, String oldName) {
+		this.fName = fName;
+		this.oldName = oldName;
+	}
 
 	StepId(String pName) {
-		fName = pName;
+		this(pName, pName);
+	}
+
+	public String getOldName() {
+		return oldName;
 	}
 
 	public String getName() {

@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.step.bb2020.gaze;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
@@ -11,10 +10,9 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSelectBlitzTargetParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.fumbbl.ffb.report.ReportSelectBlitzTarget;
 import com.fumbbl.ffb.server.GameState;
@@ -32,8 +30,6 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-
-import java.util.Arrays;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepSelectGazeTarget extends AbstractStep {
@@ -125,13 +121,13 @@ public class StepSelectGazeTarget extends AbstractStep {
         } else {
             game.setTurnMode(game.getLastTurnMode());
             if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
-                game.getFieldModel().setBlitzState(new BlitzState().cancel());
+                game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
                 getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
             } else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
                 Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
                 PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
                 game.getFieldModel().setPlayerState(targetPlayer, newState);
-                game.getFieldModel().setBlitzState(new BlitzState(selectedPlayerId).select());
+                game.getFieldModel().setTargetSelectionState(new TargetSelectionState(selectedPlayerId).select());
                 getResult().setSound(SoundId.CLICK);
                 getResult().addReport(new ReportSelectBlitzTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
                 getResult().setNextAction(StepAction.NEXT_STEP);
