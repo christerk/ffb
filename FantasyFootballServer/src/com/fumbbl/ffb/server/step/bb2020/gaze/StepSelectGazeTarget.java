@@ -115,7 +115,7 @@ public class StepSelectGazeTarget extends AbstractStep {
             endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, endTurn));
             getResult().setNextAction(StepAction.NEXT_STEP);
         } else if (selectedPlayerId == null) {
-            game.setTurnMode(TurnMode.SELECT_BLITZ_TARGET); //TODO
+            game.setTurnMode(TurnMode.SELECT_GAZE_TARGET);
             UtilServerDialog.showDialog(getGameState(), new DialogSelectBlitzTargetParameter(), false);
             getResult().setSound(SoundId.CLICK);
         } else {
