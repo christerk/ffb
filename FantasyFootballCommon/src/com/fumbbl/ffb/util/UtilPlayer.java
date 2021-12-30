@@ -387,7 +387,7 @@ public class UtilPlayer {
 			PlayerState defenderState = fieldModel.getPlayerState(pPlayer);
 			FieldCoordinate defenderCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
 			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
-				&& (fieldModel.getBlitzState() == null || pPlayer.getId().equals(fieldModel.getBlitzState().getSelectedPlayerId())));
+				&& (fieldModel.getTargetSelectionState() == null || pPlayer.getId().equals(fieldModel.getTargetSelectionState().getSelectedPlayerId())));
 		}
 		return false;
 	}

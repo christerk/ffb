@@ -39,7 +39,7 @@ import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.option.IGameOption;
@@ -58,8 +58,8 @@ public enum ModelChangeDataType implements INamedObject {
 	PUSHBACK_SQUARE("pushbackSquare"), MOVE_SQUARE("moveSquare"), WEATHER("weather"), RANGE_RULER("rangeRuler"),
 	DICE_DECORATION("diceDecoration"), INDUCEMENT("inducement"), FIELD_MARKER("fieldMarker"),
 	PLAYER_MARKER("playerMarker"), GAME_OPTION("gameOption"), CARD("card"), LEADER_STATE("leaderState"),
-	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices"), BLITZ_STATE("blitzState"), PRAYER("prayer"),
-	TRAP_DOOR("trapDoor");
+	CARD_EFFECT("cardEffect"), CARD_CHOICES("cardChoices"), BLITZ_STATE("blitzState"),
+	TARGET_SELECTION_STATE("targetSelectionState"), PRAYER("prayer"), TRAP_DOOR("trapDoor");
 
 	private final String fName;
 
@@ -79,7 +79,8 @@ public enum ModelChangeDataType implements INamedObject {
 		}
 		switch (this) {
 			case BLITZ_STATE:
-				return ((BlitzState) pValue).toJsonValue();
+			case TARGET_SELECTION_STATE:
+				return ((TargetSelectionState) pValue).toJsonValue();
 			case BLOOD_SPOT:
 				return ((BloodSpot) pValue).toJsonValue();
 			case BOOLEAN:
@@ -159,7 +160,8 @@ public enum ModelChangeDataType implements INamedObject {
 		}
 		switch (this) {
 			case BLITZ_STATE:
-				return new BlitzState().initFrom(source, pJsonValue);
+			case TARGET_SELECTION_STATE:
+				return new TargetSelectionState().initFrom(source, pJsonValue);
 			case BLOOD_SPOT:
 				return new BloodSpot().initFrom(source, pJsonValue);
 			case BOOLEAN:

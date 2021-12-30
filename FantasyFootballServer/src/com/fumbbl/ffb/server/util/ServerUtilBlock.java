@@ -7,7 +7,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -51,10 +51,10 @@ public class ServerUtilBlock {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		if (pPlayers.length > 0) {
 			boolean usingMultiBlock = (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK);
-			BlitzState blitzState = pGame.getFieldModel().getBlitzState();
-			boolean performsBlitz = blitzState != null && blitzState.isSelected();
+			TargetSelectionState targetSelectionState = pGame.getFieldModel().getTargetSelectionState();
+			boolean performsBlitz = targetSelectionState != null && targetSelectionState.isSelected();
 			for (Player<?> pPlayer : pPlayers) {
-				boolean isBystanderDuringBlitz = performsBlitz && !pPlayer.getId().equals(blitzState.getSelectedPlayerId());
+				boolean isBystanderDuringBlitz = performsBlitz && !pPlayer.getId().equals(targetSelectionState.getSelectedPlayerId());
 				if (isBystanderDuringBlitz) {
 					continue;
 				}
