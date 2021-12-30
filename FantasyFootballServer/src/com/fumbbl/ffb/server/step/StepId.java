@@ -134,6 +134,8 @@ public enum StepId implements INamedObject {
 	SAFE_THROW("safeThrow"), // action.pass
 	SELECT_BLITZ_TARGET("selectBlitzTarget"),
 	SELECT_BLITZ_TARGET_END("selectBlitzTargetEnd"),
+	SELECT_GAZE_TARGET("selectGazeTarget"),
+	SELECT_GAZE_TARGET_END("selectGazeTargetEnd"),
 	SETUP("setup"), // phase.kickoff
 	SET_ACTING_TEAM("setActingTeam"),
 	SET_ACTING_PLAYER_AND_TEAM("setActingPlayerAndTeam"),

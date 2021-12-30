@@ -96,15 +96,15 @@ public class ClientStateSelect extends ClientState {
 					communication.sendActingPlayer(pPlayer, PlayerAction.REMOVE_CONFUSION, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK:
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
+					communication.sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_BOMB:
 					if (isThrowBombActionAvailable(pPlayer)) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
+						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_GAZE:
-					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, false);
+					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_SELECT, false);
 					break;
 				default:
 					break;
