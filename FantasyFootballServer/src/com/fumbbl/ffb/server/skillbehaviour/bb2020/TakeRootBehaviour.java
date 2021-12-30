@@ -60,7 +60,8 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
 						if (successful) {
-							playerState = playerState.recoverTacklezones();
+							// read player state again as it might have been altered for pro in UtilServerReRoll#useReRoll
+							playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).recoverTacklezones();
 							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
 
 						} else {

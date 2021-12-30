@@ -72,7 +72,6 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					return false;
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
@@ -96,7 +95,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
 						if (successful) {
-							playerState = playerState.recoverTacklezones();
+							PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).recoverTacklezones();
 							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
 
 						} else {
