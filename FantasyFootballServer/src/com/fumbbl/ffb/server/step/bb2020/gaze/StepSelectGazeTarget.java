@@ -125,7 +125,7 @@ public class StepSelectGazeTarget extends AbstractStep {
                 getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
             } else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
                 Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
-                PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
+                PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).changeSelectedGazeTarget(true);
                 game.getFieldModel().setPlayerState(targetPlayer, newState);
                 game.getFieldModel().setTargetSelectionState(new TargetSelectionState(selectedPlayerId).select());
                 getResult().setSound(SoundId.CLICK);

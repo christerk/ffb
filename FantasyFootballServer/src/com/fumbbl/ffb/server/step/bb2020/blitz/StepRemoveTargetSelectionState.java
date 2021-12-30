@@ -39,7 +39,7 @@ public class StepRemoveTargetSelectionState extends AbstractStep {
 				if (player != null) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					if (playerState != null) {
-						game.getFieldModel().setPlayerState(player, playerState.removeSelectedBlitzTarget());
+						game.getFieldModel().setPlayerState(player, playerState.removeAllTargetSelections());
 					}
 				}
 			}
