@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -407,4 +408,39 @@ public class ClientStateMove extends ClientState {
 			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
 			&& UtilPlayer.hasBall(getClient().getGame(), actingPlayer.getPlayer()));
 	}
+
+	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,
+								  ActingPlayer actingPlayer) {
+		String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
+		if (actingPlayer != null
+			&& actingPlayer.getPlayerAction() != null
+			&& actingPlayer.getPlayerAction().isMoving()
+			&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
+			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)
+		) {
+
+			FieldCoordinate[] shortestPath;
+
+			Player<?> playerInTarget = game.getFieldModel().getPlayer(pCoordinate);
+
+			if (actingPlayer.isStandingUp()
+				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
+				actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,
+					actingPlayer.getPlayer().getMovementWithModifiers()));
+				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
+				// go-for-it
+			}
+
+			if (playerInTarget != null && playerInTarget.getTeam() != actingPlayer.getPlayer().getTeam()) {
+				shortestPath = PathFinderWithPassBlockSupport.getShortestPathToPlayer(game, playerInTarget);
+			} else {
+				shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
+			}
+			if (ArrayTool.isProvided(shortestPath)) {
+				fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
+				fieldComponent.refresh();
+			}
+		}
+	}
+
 }

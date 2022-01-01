@@ -180,6 +180,7 @@ public interface IIconProperty {
 	String CURSOR_PASS = "cursor.pass";
 	String CURSOR_FOUL = "cursor.foul";
 	String CURSOR_GAZE = "cursor.gaze";
+	String CURSOR_INVALID_GAZE = "cursor.invalidgaze";
 	String CURSOR_BOMB = "cursor.bomb";
 
 	// Bloodspots

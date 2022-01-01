@@ -66,6 +66,7 @@ public class ClientStateFactory {
 		register(new ClientStateSynchronousMultiBlock(pClient));
 		register(new ClientStatePlaceBall(pClient));
 		register(new ClientStateSolidDefence(pClient));
+		register(new ClientStateSelectGazeTarget(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -113,6 +114,13 @@ public class ClientStateFactory {
 				case SELECT_BLITZ_TARGET:
 					if (game.isHomePlaying()) {
 						clientStateId = ClientStateId.SELECT_BLITZ_TARGET;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case SELECT_GAZE_TARGET:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.SELECT_GAZE_TARGET;
 					} else {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					}
