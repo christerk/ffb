@@ -124,6 +124,7 @@ public enum StepId implements INamedObject {
 	PUSHBACK("pushback"), // action.block
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start
+	RECOVER_FROM_GAZE("recoverFromGaze"),
 	REFEREE("referee"), // action.foul
 	REMOVE_BLITZ_STATE("removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
