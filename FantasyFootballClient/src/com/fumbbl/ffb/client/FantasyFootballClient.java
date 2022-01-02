@@ -203,6 +203,18 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fProperties.setProperty(pProperty, pValue);
 	}
 
+	public void saveUserSettings(boolean pUserinterfaceInit) {
+		String[] settingValues = new String[IClientProperty._SAVED_USER_SETTINGS.length];
+		for (int i = 0; i < IClientProperty._SAVED_USER_SETTINGS.length; i++) {
+			settingValues[i] = getProperty(IClientProperty._SAVED_USER_SETTINGS[i]);
+		}
+		getCommunication().sendUserSettings(IClientProperty._SAVED_USER_SETTINGS, settingValues);
+		getClientState().refreshSettings();
+		if (pUserinterfaceInit) {
+			getUserInterface().init(getGame().getOptions());
+		}
+	}
+
 	public ClientState updateClientState() {
 		ClientState newState = fStateFactory.getStateForGame();
 		if ((newState != null) && (newState != fState)) {

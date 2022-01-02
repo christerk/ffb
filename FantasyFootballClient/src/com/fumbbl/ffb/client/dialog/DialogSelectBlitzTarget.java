@@ -94,7 +94,7 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 			if(doNotShowAgainCheckbox.isSelected())
 			{
 				getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
-				getClient().getUserInterface().getGameMenuBar().saveUserSettings(false);
+				getClient().saveUserSettings(false);
 			}
 		}
 	}
