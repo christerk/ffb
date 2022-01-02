@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IClientProperty;
+import com.fumbbl.ffb.client.IClientPropertyValue;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -12,48 +14,30 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
-
-/**
- * 
- * @author Kalimar
- */
-public class DialogBlitz extends Dialog implements ActionListener {
+public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 
 	public static final int OK_DIALOG = 1;
-	public static final int CANCEL_DIALOG = 2;
 
-	private JButton fButton;
-	private int fOptionType;
-	
-	private JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
+	private final int fOptionType;
 
-	
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String pMessage, int pOptionType) {
-		this(pClient, pTitle, new String[] { pMessage }, pOptionType, false, null);
-	}
+	private final JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
 
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			boolean pCenteredText) {
-		this(pClient, pTitle, pMessages, pOptionType, pCenteredText, null);
-	}
-
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			String pIconProperty) {
+	public DialogSelectBlitzTarget(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
+	                               String pIconProperty) {
 		this(pClient, pTitle, pMessages, pOptionType, false, pIconProperty);
 	}
 
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			boolean pCenteredText, String pIconProperty) {
+	public DialogSelectBlitzTarget(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
+	                               boolean pCenteredText, String pIconProperty) {
 
 		super(pClient, pTitle, false);
 		fOptionType = pOptionType;
 
+		JButton fButton;
 		if (getOptionType() == OK_DIALOG) {
 			fButton = new JButton("Ok");
 		} else {
@@ -116,7 +100,7 @@ public class DialogBlitz extends Dialog implements ActionListener {
 	}
 
 	public DialogId getId() {
-		return DialogId.INFORMATION;
+		return DialogId.SELECT_BLITZ_TARGET;
 	}
 
 	public int getOptionType() {
