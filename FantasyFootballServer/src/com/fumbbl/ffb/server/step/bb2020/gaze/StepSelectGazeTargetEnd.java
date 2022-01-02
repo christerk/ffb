@@ -5,11 +5,10 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -69,17 +68,11 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
 			} else if (targetSelectionState.isSelected()) {
-				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
+				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.GAZE_MOVE, false);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
-				game.getTurnData().setBlitzUsed(true);
 				game.getActingPlayer().setHasMoved(true);
-			} else if (targetSelectionState.isSkipped()) {
-				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
-				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-					.pushSequence(new Select.SequenceParams(getGameState(), false));
-				getResult().setSound(SoundId.CLICK);
-			} else if (targetSelectionState.isFailed()) {
+			} else {
 				Sequence sequence = new Sequence(getGameState());
 				sequence.add(StepId.END_MOVING, StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				getGameState().getStepStack().push(sequence.getSequence());

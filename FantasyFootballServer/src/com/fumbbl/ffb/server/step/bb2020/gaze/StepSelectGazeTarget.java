@@ -7,14 +7,14 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.dialog.DialogSelectBlitzTargetParameter;
+import com.fumbbl.ffb.dialog.DialogSelectGazeTargetParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
-import com.fumbbl.ffb.report.ReportSelectBlitzTarget;
+import com.fumbbl.ffb.report.bb2020.ReportSelectGazeTarget;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -116,7 +116,7 @@ public class StepSelectGazeTarget extends AbstractStep {
             getResult().setNextAction(StepAction.NEXT_STEP);
         } else if (selectedPlayerId == null) {
             game.setTurnMode(TurnMode.SELECT_GAZE_TARGET);
-            UtilServerDialog.showDialog(getGameState(), new DialogSelectBlitzTargetParameter(), false);
+            UtilServerDialog.showDialog(getGameState(), new DialogSelectGazeTargetParameter(), false);
             getResult().setSound(SoundId.CLICK);
         } else {
             game.setTurnMode(game.getLastTurnMode());
@@ -129,7 +129,7 @@ public class StepSelectGazeTarget extends AbstractStep {
                 game.getFieldModel().setPlayerState(targetPlayer, newState);
                 game.getFieldModel().setTargetSelectionState(new TargetSelectionState(selectedPlayerId).select());
                 getResult().setSound(SoundId.CLICK);
-                getResult().addReport(new ReportSelectBlitzTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
+                getResult().addReport(new ReportSelectGazeTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
                 getResult().setNextAction(StepAction.NEXT_STEP);
             } else {
                 getResult().setNextAction(StepAction.NEXT_STEP);

@@ -19,21 +19,21 @@ public class SelectGazeTarget extends com.fumbbl.ffb.server.step.generator.Selec
 		Sequence sequence = new Sequence(gameState);
 		sequence.add(StepId.SELECT_GAZE_TARGET, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_SELECTING));
 		sequence.add(StepId.ANIMAL_SAVAGERY,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
-		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
+		sequence.add(StepId.BONE_HEAD, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.TAKE_ROOT);
-		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
+		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.RECOVER_FROM_GAZE);
-		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
-		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
-		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));
-		sequence.add(StepId.SELECT_GAZE_TARGET_END, IStepLabel.END_BLITZING);
+		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.SELECT_GAZE_TARGET_END, IStepLabel.END_SELECTING);
 		// might add END_MOVING here
 		gameState.getStepStack().push(sequence.getSequence());
 	}

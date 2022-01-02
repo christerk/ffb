@@ -104,7 +104,7 @@ public class ClientStateSelect extends ClientState {
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_GAZE:
-					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_SELECT, false);
+					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_MOVE, false);
 					break;
 				default:
 					break;

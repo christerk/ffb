@@ -6,7 +6,10 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -67,6 +70,7 @@ public class ClientStateFactory {
 		register(new ClientStatePlaceBall(pClient));
 		register(new ClientStateSolidDefence(pClient));
 		register(new ClientStateSelectGazeTarget(pClient));
+		register(new ClientStateGazeMove(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -181,6 +185,9 @@ public class ClientStateFactory {
 								case THROW_BOMB:
 								case HAIL_MARY_BOMB:
 									clientStateId = ClientStateId.BOMB;
+									break;
+								case GAZE_MOVE:
+									clientStateId = ClientStateId.GAZE_MOVE;
 									break;
 								default:
 									break;

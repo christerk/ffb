@@ -98,11 +98,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final JRadioButtonMenuItem fAutomoveOnMenuItem;
 	private final JRadioButtonMenuItem fAutomoveOffMenuItem;
-	
+
 	private final JRadioButtonMenuItem fBlitzPanelOnMenuItem;
 	private final JRadioButtonMenuItem fBlitzPanelOffMenuItem;
 
-
+	private final JRadioButtonMenuItem gazePanelOnMenuItem;
+	private final JRadioButtonMenuItem gazePanelOffMenuItem;
 
 	private final JRadioButtonMenuItem fCustomPitchMenuItem;
 	private final JRadioButtonMenuItem fDefaultPitchMenuItem;
@@ -308,7 +309,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fBlitzPanelOffMenuItem.addActionListener(this);
 		blitzTargetPanelGroup.add(fBlitzPanelOffMenuItem);
 		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
-		
+
+		ButtonGroup gazeTargetPanelGroup = new ButtonGroup();
+		JMenu gazeTargetPanelMenu = new JMenu("Gaze Target Panel");
+		gazeTargetPanelMenu.setMnemonic(KeyEvent.VK_G);
+		fUserSettingsMenu.add(gazeTargetPanelMenu);
+
+		gazePanelOnMenuItem = new JRadioButtonMenuItem("Enable");
+		gazePanelOnMenuItem.addActionListener(this);
+		gazeTargetPanelGroup.add(gazePanelOnMenuItem);
+		gazeTargetPanelMenu.add(gazePanelOnMenuItem);
+
+		gazePanelOffMenuItem = new JRadioButtonMenuItem("Disable");
+		gazePanelOffMenuItem.addActionListener(this);
+		gazeTargetPanelGroup.add(gazePanelOffMenuItem);
+		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
+
 		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		fUserSettingsMenu.add(fPitchMenu);
@@ -487,10 +503,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String automoveSetting = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
-		
+
 		String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
 		fBlitzPanelOnMenuItem.setSelected(true);
 		fBlitzPanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting));
+
+		String gazeTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL);
+		gazePanelOnMenuItem.setSelected(true);
+		gazePanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF.equals(gazeTargetPanelSetting));
 
 		String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
@@ -602,6 +622,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == fBlitzPanelOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == gazePanelOnMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_ON);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fCustomPitchMenuItem) {
