@@ -157,20 +157,23 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		if (StringTool.isProvided(game.getDefenderId())) {
 			step.publishParameter(StepParameter.from(StepParameterKey.GAZE_VICTIM_ID, game.getDefenderId()));
 		}
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).recoverTacklezones();
+		game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
 
 		game.setDefenderId(player.getId());
-		step.getResult().addReport(new ReportAnimalSavagery(game.getActingPlayer().getPlayerId(), player.getId()));
+		step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryTypeBlock.Mode mode = game.getActingPlayer().isStandingUp() ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
+		InjuryTypeBlock.Mode mode = actingPlayer.isStandingUp() ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false),
-			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
+			actingPlayer.getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 		step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.ANIMAL_SAVAGERY, true));
 
 		if (player.getId().equals(state.thrownPlayerId)) {
-			PlayerAction action = game.getActingPlayer().getPlayerAction();
+			PlayerAction action = actingPlayer.getPlayerAction();
 			if (state.endTurn || (action == PlayerAction.KICK_TEAM_MATE || action == PlayerAction.KICK_TEAM_MATE_MOVE) || ((action == PlayerAction.THROW_TEAM_MATE || action == PlayerAction.THROW_TEAM_MATE_MOVE) && (injuryResult.injuryContext().isKnockedOut() || injuryResult.injuryContext().isCasualty()))) {
-				game.getActingPlayer().setStandingUp(false);
+				actingPlayer.setStandingUp(false);
 				cancelPlayerAction(step);
 				step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 				step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
