@@ -73,7 +73,7 @@ public class FieldModel implements IJsonSerializable {
 	private final Set<FieldMarker> transientFieldMarkers;
 	private final Map<String, Set<Card>> fCardsByPlayerId;
 	private final Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
-	private BlitzState blitzState;
+	private TargetSelectionState targetSelectionState;
 	private final Set<String> multiBlockTargets = new HashSet<>();
 	private final Set<FieldCoordinate> multiBlockTargetCoordinates = new HashSet<>();
 	private final List<TrapDoor> trapDoors = new ArrayList<>();
@@ -219,20 +219,20 @@ public class FieldModel implements IJsonSerializable {
 		}
 	}
 
-	public BlitzState getBlitzState() {
-		return blitzState;
+	public TargetSelectionState getTargetSelectionState() {
+		return targetSelectionState;
 	}
 
-	public void setBlitzState(BlitzState blitzState) {
-		if (this.blitzState == null && blitzState == null) {
+	public void setTargetSelectionState(TargetSelectionState targetSelectionState) {
+		if (this.targetSelectionState == null && targetSelectionState == null) {
 			return;
 		}
-		if (this.blitzState != null && this.blitzState.equals(blitzState)) {
+		if (this.targetSelectionState != null && this.targetSelectionState.equals(targetSelectionState)) {
 			return;
 		}
 
-		this.blitzState = blitzState;
-		notifyObservers(ModelChangeId.FIELD_MODEL_SET_BLITZ_STATE, null, blitzState);
+		this.targetSelectionState = targetSelectionState;
+		notifyObservers(ModelChangeId.FIELD_MODEL_SET_TARGET_SELECTION_STATE, null, targetSelectionState);
 	}
 
 	public FieldCoordinate getPlayerCoordinate(Player<?> pPlayer) {
@@ -978,8 +978,8 @@ public class FieldModel implements IJsonSerializable {
 		}
 		IJsonOption.PLAYER_DATA_ARRAY.addTo(jsonObject, playerDataArray);
 
-		if (blitzState != null) {
-			IJsonOption.BLITZ_STATE.addTo(jsonObject, blitzState.toJsonValue());
+		if (targetSelectionState != null) {
+			IJsonOption.TARGET_SELECTION_STATE.addTo(jsonObject, targetSelectionState.toJsonValue());
 		}
 
 		JsonArray trapDoorArray = new JsonArray();
@@ -1078,9 +1078,12 @@ public class FieldModel implements IJsonSerializable {
 
 		}
 
-		JsonObject blitzStateObject = IJsonOption.BLITZ_STATE.getFrom(source, jsonObject);
-		if (blitzStateObject != null) {
-			blitzState = new BlitzState().initFrom(source, blitzStateObject);
+		JsonObject targetSelectionStateObject = IJsonOption.TARGET_SELECTION_STATE.getFrom(source, jsonObject);
+		if (targetSelectionStateObject == null) {
+			targetSelectionStateObject = IJsonOption.BLITZ_STATE.getFrom(source, jsonObject);
+		}
+		if (targetSelectionStateObject != null) {
+			targetSelectionState = new TargetSelectionState().initFrom(source, targetSelectionStateObject);
 		}
 
 		JsonArray trapDoorArray = IJsonOption.TRAP_DOORS.getFrom(source, jsonObject);

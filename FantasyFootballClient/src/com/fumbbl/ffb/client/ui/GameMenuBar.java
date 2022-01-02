@@ -98,11 +98,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final JRadioButtonMenuItem fAutomoveOnMenuItem;
 	private final JRadioButtonMenuItem fAutomoveOffMenuItem;
-	
+
 	private final JRadioButtonMenuItem fBlitzPanelOnMenuItem;
 	private final JRadioButtonMenuItem fBlitzPanelOffMenuItem;
 
-
+	private final JRadioButtonMenuItem gazePanelOnMenuItem;
+	private final JRadioButtonMenuItem gazePanelOffMenuItem;
 
 	private final JRadioButtonMenuItem fCustomPitchMenuItem;
 	private final JRadioButtonMenuItem fDefaultPitchMenuItem;
@@ -308,7 +309,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fBlitzPanelOffMenuItem.addActionListener(this);
 		blitzTargetPanelGroup.add(fBlitzPanelOffMenuItem);
 		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
-		
+
+		ButtonGroup gazeTargetPanelGroup = new ButtonGroup();
+		JMenu gazeTargetPanelMenu = new JMenu("Gaze Target Panel");
+		gazeTargetPanelMenu.setMnemonic(KeyEvent.VK_G);
+		fUserSettingsMenu.add(gazeTargetPanelMenu);
+
+		gazePanelOnMenuItem = new JRadioButtonMenuItem("Enable");
+		gazePanelOnMenuItem.addActionListener(this);
+		gazeTargetPanelGroup.add(gazePanelOnMenuItem);
+		gazeTargetPanelMenu.add(gazePanelOnMenuItem);
+
+		gazePanelOffMenuItem = new JRadioButtonMenuItem("Disable");
+		gazePanelOffMenuItem.addActionListener(this);
+		gazeTargetPanelGroup.add(gazePanelOffMenuItem);
+		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
+
 		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		fUserSettingsMenu.add(fPitchMenu);
@@ -487,10 +503,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String automoveSetting = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
-		
+
 		String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
 		fBlitzPanelOnMenuItem.setSelected(true);
 		fBlitzPanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting));
+
+		String gazeTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL);
+		gazePanelOnMenuItem.setSelected(true);
+		gazePanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF.equals(gazeTargetPanelSetting));
 
 		String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
@@ -547,31 +567,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == fSoundOffMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_OFF);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fSoundMuteSpectatorsMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fSoundOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_ON);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fIconsTeam) {
 			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_TEAM);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fIconsRosterOpponent) {
 			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fIconsRosterBoth) {
 			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fIconsAbstract) {
 			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ABSTRACT);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fAboutMenuItem) {
 			showDialog(new DialogAbout(getClient()));
@@ -590,67 +610,71 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == fAutomoveOffMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_OFF);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fAutomoveOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_ON);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fBlitzPanelOffMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fBlitzPanelOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
+		}
+		if (source == gazePanelOnMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_ON);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fCustomPitchMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fDefaultPitchMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_DEFAULT);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fBasicPitchMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_BASIC);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchMarkingsOffMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_OFF);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchMarkingsOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_ON);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fTeamLogoBothMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fTeamLogoOwnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_OWN);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fTeamLogoNoneMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_NONE);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fCustomPitchMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchWeatherOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_ON);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchWeatherOffMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_OFF);
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fRangeGridAlwaysOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);
-			saveUserSettings(false);
+			getClient().saveUserSettings(false);
 		}
 		if (source == fRestoreDefaultsMenuItem) {
 			try {
@@ -659,7 +683,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				throw new FantasyFootballException(pIoE);
 			}
 			refresh();
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		if (source == fGameReplayMenuItem) {
 			fGameReplayMenuItem.setText(replayer.isReplaying() ? _REPLAY_MODE_ON : _REPLAY_MODE_OFF);
@@ -687,24 +711,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 	}
 
-	public void saveUserSettings(boolean pUserinterfaceInit) {
-		String[] settingValues = new String[IClientProperty._SAVED_USER_SETTINGS.length];
-		for (int i = 0; i < IClientProperty._SAVED_USER_SETTINGS.length; i++) {
-			settingValues[i] = getClient().getProperty(IClientProperty._SAVED_USER_SETTINGS[i]);
-		}
-		getClient().getCommunication().sendUserSettings(IClientProperty._SAVED_USER_SETTINGS, settingValues);
-		getClient().getClientState().refreshSettings();
-		if (pUserinterfaceInit) {
-			getClient().getUserInterface().init(getClient().getGame().getOptions());
-		}
-	}
-
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
 		if (pDialog.getId() == DialogId.SOUND_VOLUME) {
 			DialogSoundVolume volumeDialog = (DialogSoundVolume) pDialog;
 			getClient().setProperty(IClientProperty.SETTING_SOUND_VOLUME, Integer.toString(volumeDialog.getVolume()));
-			saveUserSettings(true);
+			getClient().saveUserSettings(true);
 		}
 		fDialogShown = null;
 	}

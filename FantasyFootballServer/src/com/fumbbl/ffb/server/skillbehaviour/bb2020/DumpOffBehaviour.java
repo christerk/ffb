@@ -8,7 +8,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogDefenderActionParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -52,13 +52,13 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 
 				} else if (state.usingDumpOff == null) {
 					Player<?> defender;
-					BlitzState blitzState = game.getFieldModel().getBlitzState();
+					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 					FieldCoordinate defenderPosition;
-					if (blitzState == null) {
+					if (targetSelectionState == null) {
 						defender = game.getDefender();
 						defenderPosition = state.defenderPosition;
 					} else {
-						defender = game.getPlayerById(blitzState.getSelectedPlayerId());
+						defender = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
 						defenderPosition = game.getFieldModel().getPlayerCoordinate(defender);
 					}
 					if (UtilCards.hasSkill(defender, skill) && (defenderPosition != null)
@@ -75,8 +75,8 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					}
 
 				} else if (state.usingDumpOff) {
-					BlitzState blitzState = game.getFieldModel().getBlitzState();
-					String defenderId = blitzState == null ? game.getDefenderId() : blitzState.getSelectedPlayerId();
+					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+					String defenderId = targetSelectionState == null ? game.getDefenderId() : targetSelectionState.getSelectedPlayerId();
 					state.oldTurnMode = game.getTurnMode();
 					game.setTurnMode(TurnMode.DUMP_OFF);
 					game.setThrowerId(defenderId);
@@ -90,8 +90,8 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 				} else {
-					BlitzState blitzState = game.getFieldModel().getBlitzState();
-					String defenderId = blitzState == null ? game.getDefenderId() : blitzState.getSelectedPlayerId();
+					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+					String defenderId = targetSelectionState == null ? game.getDefenderId() : targetSelectionState.getSelectedPlayerId();
 					step.getResult().addReport(new ReportSkillUse(defenderId, skill, false, null));
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}

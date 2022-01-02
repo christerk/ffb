@@ -8,9 +8,9 @@ import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 
-public class DialogSelectBlitzTargetHandler extends DialogHandler {
+public class DialogSelectGazeTargetHandler extends DialogHandler {
 
-	public DialogSelectBlitzTargetHandler(FantasyFootballClient pClient) {
+	public DialogSelectGazeTargetHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
@@ -19,10 +19,9 @@ public class DialogSelectBlitzTargetHandler extends DialogHandler {
 		Game game = getClient().getGame();
 
 		if ((ClientMode.PLAYER == getClient().getMode()) && game.isHomePlaying()) {
-			setDialog(new DialogSelectBlitzTarget(getClient(), "Select Blitz target",
-				new String[]{"Select the player you intend to blitz or active player again to cancel.", "Once you select an opposing player the action is used."},
-				IIconProperty.ACTION_BLITZ, DialogId.SELECT_BLITZ_TARGET, IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF));
-
+			setDialog(new DialogSelectBlitzTarget(getClient(), "Select Gaze target",
+				new String[]{"Select the player you intend to gaze or active player again to cancel.", "Once you select an opposing player the activation is used."},
+				IIconProperty.ACTION_GAZE, DialogId.SELECT_GAZE_TARGET, IClientProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF));
 			getDialog().showDialog(this);
 
 		}

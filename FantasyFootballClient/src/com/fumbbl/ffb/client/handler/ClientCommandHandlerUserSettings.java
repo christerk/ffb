@@ -49,11 +49,7 @@ public class ClientCommandHandlerUserSettings extends ClientCommandHandler imple
 			dialogChangeList = new DialogChangeList(getClient());
 			dialogChangeList.showDialog(this);
 			getClient().setProperty(IClientProperty.SETTING_LAST_CHANGE_LOG_FINGERPRINT, ChangeList.INSTANCE.fingerPrint());
-			String[] settingValues = new String[IClientProperty._SAVED_USER_SETTINGS.length];
-			for (int i = 0; i < IClientProperty._SAVED_USER_SETTINGS.length; i++) {
-				settingValues[i] = getClient().getProperty(IClientProperty._SAVED_USER_SETTINGS[i]);
-			}
-			getClient().getCommunication().sendUserSettings(IClientProperty._SAVED_USER_SETTINGS, settingValues);
+			getClient().saveUserSettings(false);
 		}
 
 		return true;

@@ -8,7 +8,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
@@ -145,9 +145,9 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 		}
 		game.setPassCoordinate(null);
 		step.getResult().setSound(SoundId.ROAR);
-		BlitzState blitzState = game.getFieldModel().getBlitzState();
-		if (blitzState != null) {
-			blitzState.failed();
+		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+		if (targetSelectionState != null) {
+			targetSelectionState.failed();
 		}
 	}
 

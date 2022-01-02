@@ -12,7 +12,8 @@ public enum PlayerAction implements INamedObject {
 	PASS_MOVE("passMove", 7, "starts a Pass Action"), FOUL("foul", 9, null),
 	FOUL_MOVE("foulMove", 9, "starts a Foul Action"), STAND_UP("standUp", 11, "stands up"),
 	THROW_TEAM_MATE("throwTeamMate", 12, null), THROW_TEAM_MATE_MOVE("throwTeamMateMove", 12, null),
-	REMOVE_CONFUSION("removeConfusion", 14, null), GAZE("gaze", 15, null),
+	REMOVE_CONFUSION("removeConfusion", 14, null),
+	GAZE("gaze", 15, null), GAZE_SELECT("gazeSelect", 15, "starts a Gaze action"), GAZE_MOVE("gazeMove", 15, null),
 	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
 	DUMP_OFF("dumpOff", 7, null), STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
 	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
@@ -42,7 +43,7 @@ public enum PlayerAction implements INamedObject {
 
 	public boolean isMoving() {
 		return ((this == MOVE) || (this == BLITZ_MOVE) || (this == HAND_OVER_MOVE) || (this == PASS_MOVE)
-				|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE));
+			|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE) || this == GAZE_MOVE);
 	}
 
 	public boolean isPassing() {

@@ -32,6 +32,7 @@ import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
+import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
@@ -236,12 +237,16 @@ public final class StepEndSelecting extends AbstractStep {
 		BlitzMove blitzMoveGenerator = (BlitzMove) factory.forName(SequenceGenerator.Type.BlitzMove.name());
 		BlitzBlock blitzBlockGenerator = (BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name());
 		SelectBlitzTarget selectBlitzTarget = (SelectBlitzTarget) factory.forName(SequenceGenerator.Type.SelectBlitzTarget.name());
+		SelectGazeTarget selectGazeTarget = (SelectGazeTarget) factory.forName(SequenceGenerator.Type.SelectGazeTarget.name());
 		MultiBlock multiBlock = (MultiBlock) factory.forName(SequenceGenerator.Type.MultiBlock.name());
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pPlayerAction) {
 			case BLITZ_SELECT:
 				selectBlitzTarget.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+				break;
+			case GAZE_SELECT:
+				selectGazeTarget.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 				break;
 			case PASS:
 			case HAIL_MARY_PASS:

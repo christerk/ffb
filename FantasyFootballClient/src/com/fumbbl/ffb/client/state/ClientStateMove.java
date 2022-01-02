@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -276,7 +277,7 @@ public class ClientStateMove extends ClientState {
 				menuItemList.add(jumpAction);
 			}
 		}
-		if (isHypnoticGazeActionAvailable()) {
+		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer())) {
 			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
@@ -284,11 +285,11 @@ public class ClientStateMove extends ClientState {
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isFumblerooskieAvailable()) {
-			JMenuItem hypnoticGazeAction = new JMenuItem("Fumblerooskie",
+			JMenuItem fumblerooskieAction = new JMenuItem("Fumblerooskie",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
-			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
-			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
-			menuItemList.add(hypnoticGazeAction);
+			fumblerooskieAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
+			fumblerooskieAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
+			menuItemList.add(fumblerooskieAction);
 		}
 		if (isEndPlayerActionAvailable()) {
 			String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
@@ -399,15 +400,6 @@ public class ClientStateMove extends ClientState {
 			|| (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovementWithModifiers()));
 	}
 
-	private boolean isHypnoticGazeActionAvailable() {
-		Game game = getClient().getGame();
-		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
-			&& mechanic.isGazeActionAllowed(game.getTurnMode())
-			&& UtilPlayer.canGaze(game, actingPlayer.getPlayer()));
-	}
-
 	private boolean isFumblerooskieAvailable() {
 		ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
 
@@ -416,4 +408,39 @@ public class ClientStateMove extends ClientState {
 			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
 			&& UtilPlayer.hasBall(getClient().getGame(), actingPlayer.getPlayer()));
 	}
+
+	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,
+								  ActingPlayer actingPlayer) {
+		String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
+		if (actingPlayer != null
+			&& actingPlayer.getPlayerAction() != null
+			&& actingPlayer.getPlayerAction().isMoving()
+			&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
+			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)
+		) {
+
+			FieldCoordinate[] shortestPath;
+
+			Player<?> playerInTarget = game.getFieldModel().getPlayer(pCoordinate);
+
+			if (actingPlayer.isStandingUp()
+				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
+				actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,
+					actingPlayer.getPlayer().getMovementWithModifiers()));
+				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
+				// go-for-it
+			}
+
+			if (playerInTarget != null && playerInTarget.getTeam() != actingPlayer.getPlayer().getTeam()) {
+				shortestPath = PathFinderWithPassBlockSupport.getShortestPathToPlayer(game, playerInTarget);
+			} else {
+				shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
+			}
+			if (ArrayTool.isProvided(shortestPath)) {
+				fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
+				fieldComponent.refresh();
+			}
+		}
+	}
+
 }

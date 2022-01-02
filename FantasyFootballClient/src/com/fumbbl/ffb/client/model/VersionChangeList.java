@@ -9,6 +9,8 @@ public class VersionChangeList {
 	private final List<String> bugfixes = new ArrayList<>();
 	private final List<String> features = new ArrayList<>();
 	private final List<String> improvements = new ArrayList<>();
+	private final List<String> behaviorChanges = new ArrayList<>();
+
 	private final String version;
 
 	public VersionChangeList(String version) {
@@ -32,6 +34,10 @@ public class VersionChangeList {
 		return add(features, feature);
 	}
 
+	public VersionChangeList addBehaviorChange(String behaviorChange) {
+		return add(behaviorChanges, behaviorChange);
+	}
+
 	public List<String> getBugfixes() {
 		return bugfixes;
 	}
@@ -42,6 +48,10 @@ public class VersionChangeList {
 
 	public List<String> getImprovements() {
 		return improvements;
+	}
+
+	public List<String> getBehaviorChanges() {
+		return behaviorChanges;
 	}
 
 	public String getVersion() {
@@ -60,8 +70,12 @@ public class VersionChangeList {
 		return !features.isEmpty();
 	}
 
+	public boolean hasBehaviorChanges() {
+		return !behaviorChanges.isEmpty();
+	}
+
 	public boolean hasEntries() {
-		return hasBugfixes() || hasFeatures() || hasImprovements();
+		return hasBugfixes() || hasFeatures() || hasImprovements() || hasBehaviorChanges();
 	}
 
 	@Override
@@ -69,11 +83,12 @@ public class VersionChangeList {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		VersionChangeList that = (VersionChangeList) o;
-		return bugfixes.equals(that.bugfixes) && features.equals(that.features) && improvements.equals(that.improvements) && version.equals(that.version);
+		return bugfixes.equals(that.bugfixes) && features.equals(that.features) && improvements.equals(that.improvements)
+			&& behaviorChanges.equals(that.behaviorChanges) && version.equals(that.version);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(bugfixes, features, improvements, version);
+		return Objects.hash(bugfixes, features, improvements, behaviorChanges, version);
 	}
 }

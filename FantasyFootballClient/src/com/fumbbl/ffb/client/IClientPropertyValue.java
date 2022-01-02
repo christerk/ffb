@@ -15,15 +15,14 @@ public interface IClientPropertyValue {
 	String SETTING_ICONS_ROSTER_BOTH = "iconsRoster";
 	String SETTING_ICONS_ABSTRACT = "iconsAbstract";
 
-	String SETTING_CHATLOG_EXTRA_CHAT = "extraChat";
-	String SETTING_CHATLOG_INTEGRATED_CHAT = "integratedChat";
-
 	String SETTING_AUTOMOVE_ON = "automoveOn";
 	String SETTING_AUTOMOVE_OFF = "automoveOff";
-	
+
 	String SETTING_BLITZ_TARGET_PANEL_ON = "showBlitzTargetPanelOn";
 	String SETTING_BLITZ_TARGET_PANEL_OFF = "showBlitzTargetPanelOff";
 
+	String SETTING_GAZE_TARGET_PANEL_ON = "showGazeTargetPanelOn";
+	String SETTING_GAZE_TARGET_PANEL_OFF = "showGazeTargetPanelOff";
 
 	String SETTING_PITCH_CUSTOM = "pitchCustom";
 	String SETTING_PITCH_DEFAULT = "pitchDefault";
@@ -40,6 +39,4 @@ public interface IClientPropertyValue {
 	String SETTING_PITCH_WEATHER_OFF = "pitchWeatherOff";
 
 	String SETTING_RANGEGRID_ALWAYS_ON = "rangegridAlwaysOn";
-	String SETTING_RANGEGRID_TOGGLE = "rangegridToggle";
-
 }

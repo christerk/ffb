@@ -119,8 +119,12 @@ public final class StepInitSelecting extends AbstractStep {
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
-						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE && game.getFieldModel().getBlitzState() == null) {
+						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE && game.getFieldModel().getTargetSelectionState() == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
+							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
+							forceGotoOnDispatch = true;
+						} else if (actingPlayerCommand.getPlayerAction() == PlayerAction.GAZE_MOVE) {
+							fDispatchPlayerAction = PlayerAction.GAZE_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
 						} else {
@@ -178,7 +182,7 @@ public final class StepInitSelecting extends AbstractStep {
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 						publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
 						publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
-						if (game.getFieldModel().getBlitzState() != null) {
+						if (game.getFieldModel().getTargetSelectionState() != null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ;
 						} else {
 							fDispatchPlayerAction = PlayerAction.BLOCK;

@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.mechanics;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
@@ -59,7 +60,9 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean isBombActionAllowed(TurnMode turnMode);
 
-	public abstract boolean isGazeActionAllowed(TurnMode turnMode);
+	public abstract boolean isGazeActionAllowed(TurnMode turnMode, PlayerAction playerAction);
+
+	public abstract boolean declareGazeActionAtStart();
 
 	public abstract boolean isKickTeamMateActionAllowed(TurnMode turnMode);
 

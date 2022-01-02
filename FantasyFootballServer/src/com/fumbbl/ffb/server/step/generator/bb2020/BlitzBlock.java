@@ -56,7 +56,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = POW or PUSHBACK
 		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
-		sequence.add(StepId.REMOVE_BLITZ_STATE);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
 		sequence.add(StepId.FOLLOWUP);
 		sequence.add(StepId.TENTACLES, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DROP_FALLING_PLAYERS));
@@ -68,7 +68,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.REMOVE_BLITZ_STATE);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.RESET_FUMBLEROOSKIE, from(StepParameterKey.RESET_FOR_FAILED_BLOCK, true));
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
 		sequence.add(StepId.APOTHECARY,

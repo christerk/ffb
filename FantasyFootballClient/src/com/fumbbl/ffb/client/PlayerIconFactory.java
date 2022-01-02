@@ -37,7 +37,7 @@ public class PlayerIconFactory {
 	public static final int MAX_ICON_HEIGHT = 40;
 
 	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean pHomePlayer, boolean pMoving,
-			boolean pWithBall, boolean pWithBomb) {
+	                                  boolean pWithBall, boolean pWithBomb) {
 
 		if ((pClient == null) || (pPlayer == null)) {
 			return null;
@@ -49,7 +49,7 @@ public class PlayerIconFactory {
 		String iconSetUrl = null;
 
 		if (!StringTool.isProvided(settingIcons) || IClientPropertyValue.SETTING_ICONS_TEAM.equals(settingIcons)
-				|| (pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
+			|| (pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
 			if (pPlayer instanceof ZappedPlayer) {
 				iconSetUrl = pClient.getProperty(IIconProperty.ZAPPEDPLAYER_ICONSET_PATH);
 			} else {
@@ -58,7 +58,7 @@ public class PlayerIconFactory {
 		}
 
 		if (!StringTool.isProvided(iconSetUrl) || IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(settingIcons)
-				|| (!pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
+			|| (!pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
 			if (pPlayer instanceof ZappedPlayer) {
 				iconSetUrl = pClient.getProperty(IIconProperty.ZAPPEDPLAYER_ICONSET_PATH);
 			} else {
@@ -168,14 +168,14 @@ public class PlayerIconFactory {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		boolean withBomb = (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)
-				&& playerCoordinate.equals(game.getFieldModel().getBombCoordinate()) && !game.getFieldModel().isBombMoving());
+			&& playerCoordinate.equals(game.getFieldModel().getBombCoordinate()) && !game.getFieldModel().isBombMoving());
 		boolean withBall = (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate) && !game.getFieldModel().isBallMoving()
-				&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
+			&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
 
 		if (playerState.getBase() != PlayerState.PICKED_UP) {
 			boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
 			icon = getBasicIcon(pClient, pPlayer, homePlayer, (playerState.getBase() == PlayerState.MOVING), withBall,
-					withBomb);
+				withBomb);
 		}
 
 		boolean fadeIcon = false;
@@ -184,28 +184,30 @@ public class PlayerIconFactory {
 
 		if (icon != null) {
 			switch (playerState.getBase()) {
-			case PlayerState.BEING_DRAGGED:
-				fadeIcon = true;
-				break;
-			case PlayerState.STANDING:
-				fadeIcon = !playerState.isActive();
-				break;
-			case PlayerState.PRONE:
-				fadeIcon = !playerState.isActive();
-				decorationProperty2 = IIconProperty.DECORATION_PRONE;
-				break;
-			case PlayerState.EXHAUSTED:
-			case PlayerState.STUNNED:
-				decorationProperty2 = IIconProperty.DECORATION_STUNNED;
-				break;
-			case PlayerState.BLOCKED:
-			case PlayerState.FALLING:
-				if (game.isHomePlaying()) {
-					decorationProperty2 = IIconProperty.DECORATION_BLOCK_HOME;
-				} else {
-					decorationProperty2 = IIconProperty.DECORATION_BLOCK_AWAY;
-				}
-				break;
+				case PlayerState.BEING_DRAGGED:
+					fadeIcon = true;
+					break;
+				case PlayerState.STANDING:
+					fadeIcon = !playerState.isActive();
+					break;
+				case PlayerState.PRONE:
+					fadeIcon = !playerState.isActive();
+					decorationProperty2 = IIconProperty.DECORATION_PRONE;
+					break;
+				case PlayerState.EXHAUSTED:
+				case PlayerState.STUNNED:
+					decorationProperty2 = IIconProperty.DECORATION_STUNNED;
+					break;
+				case PlayerState.BLOCKED:
+				case PlayerState.FALLING:
+					if (game.isHomePlaying()) {
+						decorationProperty2 = IIconProperty.DECORATION_BLOCK_HOME;
+					} else {
+						decorationProperty2 = IIconProperty.DECORATION_BLOCK_AWAY;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -220,6 +222,9 @@ public class PlayerIconFactory {
 		}
 		if (playerState.isSelectedBlitzTarget()) {
 			decorationProperty2 = IIconProperty.DECORATION_BLITZ_TARGET_SELECTED;
+		}
+		if (playerState.isSelectedGazeTarget()) {
+			decorationProperty2 = IIconProperty.DECORATION_GAZE_TARGET_SELECTED;
 		}
 		if (playerState.isSelectedBlockTarget()) {
 			decorationProperty2 = IIconProperty.DECORATION_BLOCK_TARGET;
