@@ -43,9 +43,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -275,32 +277,28 @@ public class PlayerDetailComponent extends JPanel {
 		return decreases;
 	}
 
-	private int findStatDecreases(InjuryAttribute pInjuryAttribute) {
+	private int findNigglings() {
 		int decreases = 0;
-		if ((getPlayer() != null) && (pInjuryAttribute != null)) {
+		if (getPlayer() != null) {
 			for (SeriousInjury injury : getPlayer().getLastingInjuries()) {
-				if (pInjuryAttribute == injury.getInjuryAttribute()) {
+				if (InjuryAttribute.NI == injury.getInjuryAttribute()) {
 					decreases++;
 				}
 			}
 			Game game = getSideBar().getClient().getGame();
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			if ((playerResult != null) && ((playerResult.getSeriousInjury() != null)
-				&& (pInjuryAttribute == playerResult.getSeriousInjury().getInjuryAttribute())
+				&& (InjuryAttribute.NI == playerResult.getSeriousInjury().getInjuryAttribute())
 				|| ((playerResult.getSeriousInjuryDecay() != null)
-				&& (pInjuryAttribute == playerResult.getSeriousInjuryDecay().getInjuryAttribute())))) {
+				&& (InjuryAttribute.NI == playerResult.getSeriousInjuryDecay().getInjuryAttribute())))) {
 				decreases++;
 			}
 		}
-		if (pInjuryAttribute != InjuryAttribute.NI) {
-			return Math.min(2, decreases);
-		} else {
-			return decreases;
-		}
+		return decreases;
 	}
 
 	private void drawNigglingInjuries() {
-		int nigglingInjuries = findStatDecreases(InjuryAttribute.NI);
+		int nigglingInjuries = findNigglings();
 		if (nigglingInjuries > 0) {
 			Graphics2D g2d = fImage.createGraphics();
 			int x = 9;
@@ -363,10 +361,9 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			PlayerState playerState = game.getFieldModel().getPlayerState(getPlayer());
-			List<String> cardSkills = new ArrayList<>();
+			List<String> modifications = new ArrayList<>();
 			List<String> acquiredSkills = new ArrayList<>();
 			List<String> rosterSkills = new ArrayList<>();
-			List<String> cardEffects = new ArrayList<>();
 			Set<String> usedSkills = new HashSet<>();
 			for (SkillDisplayInfo skillInfo : getPlayer().skillInfos()) {
 				if ((SkillCategory.STAT_INCREASE != skillInfo.getSkill().getCategory())
@@ -379,7 +376,7 @@ public class PlayerDetailComponent extends JPanel {
 							rosterSkills.add(skillInfo.getInfo());
 							break;
 						case TEMPORARY:
-							cardSkills.add(skillInfo.getInfo());
+							modifications.add(skillInfo.getInfo());
 							break;
 					}
 				}
@@ -390,20 +387,19 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 			for (Card card : game.getFieldModel().getCards(getPlayer())) {
-				cardSkills.add(card.getShortName());
+				modifications.add(card.getShortName());
 			}
 			for (CardEffect cardEffect : game.getFieldModel().getCardEffects(getPlayer())) {
-				cardEffects.add(cardEffect.getName());
+				modifications.add(cardEffect.getName());
 			}
+			modifications.addAll(getPlayer().getEnhancementSources().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
+
 			int height = 0;
-			if (cardEffects.size() > 0) {
+			if (modifications.size() > 0) {
 				g2d.setColor(new Color(220, 0, 0));
-				height += drawPlayerSkills(g2d, x, y + height, cardEffects, usedSkills) + 2;
+				height += drawPlayerSkills(g2d, x, y + height, modifications, usedSkills) + 2;
 			}
-			if (cardSkills.size() > 0) {
-				g2d.setColor(new Color(220, 0, 0));
-				height += drawPlayerSkills(g2d, x, y + height, cardSkills, usedSkills) + 2;
-			}
+
 			if (acquiredSkills.size() > 0) {
 				g2d.setColor(new Color(0, 96, 0));
 				height += drawPlayerSkills(g2d, x, y + height, acquiredSkills, usedSkills) + 2;

@@ -318,13 +318,14 @@ public class UtilPlayer {
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
+		GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
 		if (!pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)) {
 			return false;
 		} else if (!playerState.isActive()) {
 			return false;
 		} else {
-			return (UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length > 0);
+			return mechanic.declareGazeActionAtStart() || (UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length > 0);
 		}
 	}
 
@@ -390,7 +391,7 @@ public class UtilPlayer {
 			PlayerState defenderState = fieldModel.getPlayerState(pPlayer);
 			FieldCoordinate defenderCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
 			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
-				&& (fieldModel.getBlitzState() == null || pPlayer.getId().equals(fieldModel.getBlitzState().getSelectedPlayerId())));
+				&& (fieldModel.getTargetSelectionState() == null || pPlayer.getId().equals(fieldModel.getTargetSelectionState().getSelectedPlayerId())));
 		}
 		return false;
 	}

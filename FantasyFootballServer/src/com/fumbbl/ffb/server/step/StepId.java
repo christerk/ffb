@@ -125,8 +125,9 @@ public enum StepId implements INamedObject {
 	PUSHBACK("pushback"), // action.block
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start
+	RECOVER_FROM_GAZE("recoverFromGaze"),
 	REFEREE("referee"), // action.foul
-	REMOVE_BLITZ_STATE("removeBlitzState"), // action.blitz
+	REMOVE_TARGET_SELECTION_STATE("removeTargetSelectionState", "removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
 	RESET_FUMBLEROOSKIE("resetFumblerooskie"), // action.move/action.blitz
 	RESOLVE_PASS("resolvePass"),
@@ -135,6 +136,8 @@ public enum StepId implements INamedObject {
 	SAFE_THROW("safeThrow"), // action.pass
 	SELECT_BLITZ_TARGET("selectBlitzTarget"),
 	SELECT_BLITZ_TARGET_END("selectBlitzTargetEnd"),
+	SELECT_GAZE_TARGET("selectGazeTarget"),
+	SELECT_GAZE_TARGET_END("selectGazeTargetEnd"),
 	SETUP("setup"), // phase.kickoff
 	SET_ACTING_TEAM("setActingTeam"),
 	SET_ACTING_PLAYER_AND_TEAM("setActingPlayerAndTeam"),
@@ -164,9 +167,20 @@ public enum StepId implements INamedObject {
 	// maxId = 111
 
 	private final String fName;
+	private final String oldName;
+
+
+	StepId(String fName, String oldName) {
+		this.fName = fName;
+		this.oldName = oldName;
+	}
 
 	StepId(String pName) {
-		fName = pName;
+		this(pName, pName);
+	}
+
+	public String getOldName() {
+		return oldName;
 	}
 
 	public String getName() {

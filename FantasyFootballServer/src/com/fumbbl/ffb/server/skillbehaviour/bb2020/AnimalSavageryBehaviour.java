@@ -12,9 +12,9 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.report.bb2020.ReportAnimalSavagery;
@@ -34,12 +34,12 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(Rules.BB2020)
@@ -63,7 +63,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				Game game = step.getGameState().getGame();
 
 				if (StringTool.isProvided(state.playerId)) {
-					lashOut(game, step, game.getPlayerById(state.playerId));
+					lashOut(game, step, game.getPlayerById(state.playerId), state);
 					return false;
 				}
 
@@ -72,13 +72,6 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					return false;
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (playerState.isConfused()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-				}
-				if (playerState.isHypnotized()) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-				}
 				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
@@ -101,7 +94,11 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
-						if (!successful) {
+						if (successful) {
+							PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).recoverTacklezones();
+							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
+
+						} else {
 							status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))
 									&& UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
@@ -119,31 +116,30 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (status == ActionStatus.FAILURE) {
+						Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()))).collect(Collectors.toSet());
 
+						if (StringTool.isProvided(state.thrownPlayerId)) {
+							players.add(game.getPlayerById(state.thrownPlayerId));
+						}
 
-						Player<?>[] players = UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
-
-						if (ArrayTool.isProvided(players)) {
-							if (players.length == 1) {
-								lashOut(game, step, players[0]);
+						if (!players.isEmpty()) {
+							if (players.size() == 1) {
+								lashOut(game, step, players.stream().findFirst().get(), state);
 							} else {
-								state.playerIds = Arrays.stream(players).map(Player::getId).collect(Collectors.toSet());
+								state.playerIds = players.stream().map(Player::getId).collect(Collectors.toSet());
 								UtilServerDialog.showDialog(step.getGameState(),
 									new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.ANIMAL_SAVAGERY, state.playerIds.toArray(new String[0]),
-										null, 1, 1 ),
+										null, 1, 1),
 									false);
 							}
 						} else {
 
 							cancelPlayerAction(step);
 
-							BlitzState blitzState = game.getFieldModel().getBlitzState();
-							if (blitzState != null) {
-								blitzState.failed();
+							TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+							if (targetSelectionState != null) {
+								targetSelectionState.failed();
 							}
-
-							playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
 
 							step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
@@ -157,17 +153,35 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		});
 	}
 
-	private void lashOut(Game game, StepAnimalSavagery step, Player<?> player) {
+	private void lashOut(Game game, StepAnimalSavagery step, Player<?> player, StepState state) {
 		if (StringTool.isProvided(game.getDefenderId())) {
 			step.publishParameter(StepParameter.from(StepParameterKey.GAZE_VICTIM_ID, game.getDefenderId()));
 		}
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).recoverTacklezones();
+		game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
+
 		game.setDefenderId(player.getId());
-		step.getResult().addReport(new ReportAnimalSavagery(game.getActingPlayer().getPlayerId(), player.getId()));
+		step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES),
-			game.getActingPlayer().getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
+		InjuryTypeBlock.Mode mode = actingPlayer.isStandingUp() ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
+		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false),
+			actingPlayer.getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 		step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.ANIMAL_SAVAGERY, true));
+
+		if (player.getId().equals(state.thrownPlayerId)) {
+			PlayerAction action = actingPlayer.getPlayerAction();
+			if (state.endTurn || (action == PlayerAction.KICK_TEAM_MATE || action == PlayerAction.KICK_TEAM_MATE_MOVE) || ((action == PlayerAction.THROW_TEAM_MATE || action == PlayerAction.THROW_TEAM_MATE_MOVE) && (injuryResult.injuryContext().isKnockedOut() || injuryResult.injuryContext().isCasualty()))) {
+				actingPlayer.setStandingUp(false);
+				cancelPlayerAction(step);
+				step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+				step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
+				step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
+				step.getResult().setNextAction(StepAction.NEXT_STEP);
+				return;
+			}
+		}
 
 		step.getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -207,7 +221,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					playerState.changeBase(PlayerState.PRONE).changeActive(false));
 		} else {
 			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-					playerState.changeBase(PlayerState.STANDING).changeActive(false));
+					playerState.changeBase(PlayerState.STANDING).changeActive(false).changeConfused(true));
 		}
 		game.setPassCoordinate(null);
 		step.getResult().setSound(SoundId.ROAR);

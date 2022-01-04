@@ -17,11 +17,14 @@ public interface IClientProperty {
 	String SETTING_CHATLOG = "setting.chatlog";
 	String SETTING_AUTOMOVE = "setting.automove";
 	String SETTING_BLITZ_TARGET_PANEL = "setting.blitzTargetPanel";
+	String SETTING_GAZE_TARGET_PANEL = "setting.gazeTargetPanel";
 	String SETTING_PITCH_CUSTOMIZATION = "setting.pitch.customization";
 	String SETTING_PITCH_MARKINGS = "setting.pitch.markings";
 	String SETTING_TEAM_LOGOS = "setting.pitch.teamLogos";
 	String SETTING_PITCH_WEATHER = "setting.pitch.weather";
 	String SETTING_RANGEGRID = "setting.rangegrid";
+
+	String SETTING_LAST_CHANGE_LOG_FINGERPRINT = "setting.lastChangeLogFingerPrint";
 
 	String CLIENT_PING_INTERVAL = "client.ping.interval";
 	String CLIENT_PING_MAX_DELAY = "client.ping.maxDelay";
@@ -65,4 +68,10 @@ public interface IClientProperty {
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";
 	String KEY_MENU_SETUP_SAVE = "key.menu.setup.save";
 
+
+	String[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE,
+		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_CHATLOG,
+		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
+		SETTING_PITCH_MARKINGS, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,
+		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT};
 }

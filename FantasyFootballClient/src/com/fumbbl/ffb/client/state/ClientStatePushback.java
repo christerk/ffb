@@ -90,7 +90,7 @@ public class ClientStatePushback extends ClientState {
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		boolean actionHandled = false;
 		Game game = getClient().getGame();
-		Direction moveDirection = UtilClientActionKeys.findMoveDirection(getClient(), pActionKey);
+		Direction moveDirection = UtilClientActionKeys.findMoveDirection(pActionKey);
 		if (moveDirection != null) {
 			PushbackSquare pushbackSquare = null;
 			PushbackSquare[] pushbackSquares = game.getFieldModel().getPushbackSquares();

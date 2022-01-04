@@ -29,9 +29,12 @@ import com.fumbbl.ffb.server.step.bb2020.pass.StepPass;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 public abstract class AbstractPassBehaviour<T extends Skill> extends SkillBehaviour<T> {
 	public AbstractPassBehaviour() {
@@ -84,6 +87,9 @@ public abstract class AbstractPassBehaviour<T extends Skill> extends SkillBehavi
 				if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 					game.getFieldModel().setBombMoving(true);
 					bombAction = true;
+					if (!StringTool.isProvided(passState.getOriginalBombardier())) {
+						passState.setOriginalBombardier(game.getThrowerId());
+					}
 				} else {
 					game.getFieldModel().setBallMoving(true);
 					bombAction = false;
@@ -124,7 +130,19 @@ public abstract class AbstractPassBehaviour<T extends Skill> extends SkillBehavi
 								UtilServerDialog.showDialog(step.getGameState(),
 									new DialogSkillUseParameter(game.getThrowerId(), skill, minimumRoll),
 									actingTeam.hasPlayer(game.getThrower()));
+							} else if (PassResult.SAVED_FUMBLE == state.result) {
+							if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+								game.getFieldModel().setBombCoordinate(null);
+								game.getFieldModel().setBombMoving(false);
+								step.publishParameter(from(StepParameterKey.CATCHER_ID, null));
+								step.publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+								step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
 							} else {
+								game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+								game.getFieldModel().setBallMoving(false);
+							}
+							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+						} else {
 								if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(),
 									ReRolledActions.PASS, minimumRoll, false)) {
 									doNextStep = false;

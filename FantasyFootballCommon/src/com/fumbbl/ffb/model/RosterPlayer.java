@@ -15,10 +15,10 @@ import com.fumbbl.ffb.factory.SeriousInjuryFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.change.ModelChange;
-import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
@@ -281,6 +281,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					}
 				}
 			}
+			applyPlayerModifiersFromBehaviours();
 			int oldMovement = getMovement();
 			int oldArmour = getArmour();
 			int oldAgility = getAgility();
@@ -690,7 +691,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void applyPlayerModifiers() {
+	public void applyPlayerModifiersFromBehaviours() {
 		fSkills.stream().map(Skill::getSkillBehaviour).filter(Objects::nonNull)
 			.flatMap(behaviour -> behaviour.getPlayerModifiers().stream()).forEach(playerModifier -> playerModifier.apply(this));
 	}
@@ -771,6 +772,15 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	protected Map<String, Set<SkillWithValue>> getTemporarySkills() {
 		return temporarySkills;
+	}
+
+	@Override
+	public Set<String> getEnhancementSources() {
+		return new HashSet<String>() {{
+			addAll(temporaryModifiers.keySet());
+			addAll(temporarySkills.keySet());
+			addAll(temporaryProperties.keySet());
+		}};
 	}
 
 	@Override

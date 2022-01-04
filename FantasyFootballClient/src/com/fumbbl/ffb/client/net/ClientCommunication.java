@@ -32,7 +32,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
-import com.fumbbl.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
@@ -75,6 +74,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandStartGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandTalk;
+import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
@@ -134,7 +134,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 		while (true) {
 
-			NetCommand netCommand = null;
+			NetCommand netCommand;
 			synchronized (fCommandQueue) {
 				try {
 					while (fCommandQueue.isEmpty() && !fStopped) {
@@ -235,8 +235,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandBlitzMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
 	}
 
-	public void sendBlitzTargetSelected(String selectedPlayerId) {
-		send(new ClientCommandBlitzTargetSelected(selectedPlayerId));
+	public void sendTargetSelected(String selectedPlayerId) {
+		send(new ClientCommandTargetSelected(selectedPlayerId));
 	}
 
 	public void sendStartGame() {

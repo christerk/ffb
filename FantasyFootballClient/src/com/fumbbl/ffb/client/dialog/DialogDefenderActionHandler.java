@@ -4,9 +4,9 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
 
 import java.util.HashMap;
@@ -37,11 +37,11 @@ public class DialogDefenderActionHandler extends DialogHandler {
 		Game game = getClient().getGame();
 
 		Player<?> defender;
-		BlitzState blitzState = game.getFieldModel().getBlitzState();
-		if (blitzState == null) {
+		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+		if (targetSelectionState == null) {
 			defender = game.getDefender();
 		} else {
-			defender = game.getPlayerById(blitzState.getSelectedPlayerId());
+			defender = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
 		}
 
 		Team team = game.getTeamHome().hasPlayer(defender) ? game.getTeamHome() : game.getTeamAway();

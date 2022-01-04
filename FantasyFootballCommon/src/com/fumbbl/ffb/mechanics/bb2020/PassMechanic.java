@@ -50,7 +50,7 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 
 	  int resultAfterModifiers = roll - calculateModifiers(modifiers) - distance.getModifier2020();
 	  if (thrower.getPassingWithModifiers() <= 0 || roll == 1) {
-		  if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles) && !bombAction) {
+		  if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles)) {
 			  return PassResult.SAVED_FUMBLE;
 		  } else {
 			  return PassResult.FUMBLE;

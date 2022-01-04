@@ -1,18 +1,20 @@
 package com.fumbbl.ffb.server.InjuryType;
 
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.BlockProne;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
+
+import java.util.HashSet;
 
 public class InjuryTypeBlockProne extends InjuryTypeServer<BlockProne> {
 	public InjuryTypeBlockProne() {
@@ -26,15 +28,14 @@ public class InjuryTypeBlockProne extends InjuryTypeServer<BlockProne> {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
-		if (!injuryContext.isArmorBroken()) {
-			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-		}
+		injuryContext.setArmorRoll(diceRoller.rollArmour());
+		injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-			factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+			Skill stunty = pDefender.getSkillWithProperty(NamedProperties.isHurtMoreEasily);
+			if (stunty != null) {
+				injuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
+			}
 			setInjury(pDefender, gameState, diceRoller);
 
 		} else {

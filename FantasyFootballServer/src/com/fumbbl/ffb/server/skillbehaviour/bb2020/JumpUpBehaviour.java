@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
@@ -30,12 +30,12 @@ import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 	public JumpUpBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepJumpUp, StepJumpUp.StepState>() {
+		registerModifier(new StepModifier<StepJumpUp, StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepJumpUp step, StepState state,
@@ -51,9 +51,7 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 				if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved()
 						&& UtilCards.hasUnusedSkill(actingPlayer, skill))
 						|| (ReRolledActions.JUMP_UP == step.getReRolledAction())) {
-					actingPlayer.setHasMoved(true);
 					game.setConcessionPossible(false);
-					actingPlayer.markSkillUsed(skill);
 					if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction())
 							|| (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
 						if (ReRolledActions.JUMP_UP == step.getReRolledAction()) {
@@ -77,9 +75,9 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						step.getResult().addReport(new ReportJumpUpRoll(actingPlayer.getPlayerId(),
 							successful, roll, minimumRoll, reRolled, modifiers.toArray(new JumpUpModifier[0])));
 						if (successful) {
+							actingPlayer.setHasMoved(true);
 							actingPlayer.setStandingUp(false);
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
-							return false;
 						} else {
 							if ((step.getReRolledAction() == ReRolledActions.JUMP_UP)
 									|| !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
@@ -91,8 +89,9 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 							} else {
 								step.getResult().setNextAction(StepAction.CONTINUE);
 							}
-							return false;
 						}
+						actingPlayer.markSkillUsed(skill);
+						return false;
 					}
 				}
 				step.getResult().setNextAction(StepAction.NEXT_STEP);

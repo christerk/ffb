@@ -11,12 +11,12 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSelectBlitzTargetParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.net.commands.ClientCommandBlitzTargetSelected;
-import com.fumbbl.ffb.report.ReportSelectBlitzTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
+import com.fumbbl.ffb.report.bb2020.ReportSelectBlitzTarget;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -72,8 +72,8 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		StepCommandStatus status = super.handleCommand(pReceivedCommand);
 		if (status == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-				case CLIENT_BLITZ_TARGET_SELECTED:
-					selectedPlayerId = ((ClientCommandBlitzTargetSelected) pReceivedCommand.getCommand()).getTargetPlayerId();
+				case CLIENT_TARGET_SELECTED:
+					selectedPlayerId = ((ClientCommandTargetSelected) pReceivedCommand.getCommand()).getTargetPlayerId();
 					status = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_END_TURN:
@@ -124,19 +124,19 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				UtilServerDialog.showDialog(getGameState(), new DialogSelectBlitzTargetParameter(), false);
 				getResult().setSound(SoundId.CLICK);
 			} else {
-				game.getFieldModel().setBlitzState(new BlitzState().skip());
+				game.getFieldModel().setTargetSelectionState(new TargetSelectionState().skip());
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
 			game.setTurnMode(game.getLastTurnMode());
 			if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
-				game.getFieldModel().setBlitzState(new BlitzState().cancel());
+				game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
 				getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
 			} else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
 				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
 				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
-				game.getFieldModel().setBlitzState(new BlitzState(selectedPlayerId).select());
+				game.getFieldModel().setTargetSelectionState(new TargetSelectionState(selectedPlayerId).select());
 				getResult().setSound(SoundId.CLICK);
 				getResult().addReport(new ReportSelectBlitzTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
 				getResult().setNextAction(StepAction.NEXT_STEP);

@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.ActionKey;
@@ -9,10 +10,14 @@ import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -284,6 +289,15 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public void endTurn() {
+	}
+
+	protected boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player) {
+		Game game = getClient().getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		return ((mechanic.declareGazeActionAtStart() == declareAtStart)
+			&& mechanic.isGazeActionAllowed(game.getTurnMode(), actingPlayer.getPlayerAction())
+			&& UtilPlayer.canGaze(game, player));
 	}
 
 }

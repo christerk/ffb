@@ -279,8 +279,8 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void applyPlayerModifiers() {
-		originalPlayer.applyPlayerModifiers();
+	public void applyPlayerModifiersFromBehaviours() {
+		originalPlayer.applyPlayerModifiersFromBehaviours();
 	}
 
 	@Override
@@ -301,6 +301,11 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	@Override
 	protected Map<String, Set<SkillWithValue>> getTemporarySkills() {
 		return originalPlayer.getTemporarySkills();
+	}
+
+	@Override
+	public Set<String> getEnhancementSources() {
+		return originalPlayer.getEnhancementSources();
 	}
 
 	@Override

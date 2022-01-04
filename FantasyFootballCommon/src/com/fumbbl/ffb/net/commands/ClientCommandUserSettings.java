@@ -1,9 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -12,13 +8,17 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Kalimar
  */
 public class ClientCommandUserSettings extends ClientCommand {
 
-	private Map<String, String> fSettings;
+	private final Map<String, String> fSettings;
 
 	public ClientCommandUserSettings() {
 		fSettings = new HashMap<>();
@@ -38,7 +38,7 @@ public class ClientCommandUserSettings extends ClientCommand {
 	}
 
 	public String[] getSettingNames() {
-		String[] names = fSettings.keySet().toArray(new String[fSettings.size()]);
+		String[] names = fSettings.keySet().toArray(new String[0]);
 		Arrays.sort(names);
 		return names;
 	}

@@ -103,7 +103,9 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 					} else {
 						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
 
-						InjuryTypeServer<?> injuryType = new InjuryTypeBlock();
+						InjuryTypeBlock.Mode mode = attackerState.getBase() == PlayerState.FALLING ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.REGULAR;
+
+						InjuryTypeServer<?> injuryType = new InjuryTypeBlock(mode, false);
 
 						if (state.oldDefenderState != null) {
 							if (state.oldDefenderState.isStunned()) {

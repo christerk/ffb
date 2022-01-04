@@ -96,12 +96,15 @@ public class ClientStateSelect extends ClientState {
 					communication.sendActingPlayer(pPlayer, PlayerAction.REMOVE_CONFUSION, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK:
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
+					communication.sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_BOMB:
 					if (isThrowBombActionAvailable(pPlayer)) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
+						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
 					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_GAZE:
+					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_MOVE, false);
 					break;
 				default:
 					break;
@@ -182,6 +185,13 @@ public class ClientStateSelect extends ClientState {
 			kickTeamMateAction.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE);
 			kickTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE, 0));
 			menuItemList.add(kickTeamMateAction);
+		}
+		if (isHypnoticGazeActionAvailable(true, pPlayer)) {
+			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
+			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
+			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem("Recover from Confusion & End Move",
@@ -273,6 +283,9 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_MULTIPLE_BLOCK:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
+				break;
+			case PLAYER_ACTION_GAZE:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
 				break;
 			default:
 				actionHandled = false;

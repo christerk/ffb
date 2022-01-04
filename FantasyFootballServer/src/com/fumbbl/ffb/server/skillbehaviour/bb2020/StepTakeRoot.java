@@ -37,14 +37,6 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-		if (playerState.isConfused()) {
-			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
-		}
-		if (playerState.isHypnotized()) {
-			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
-		}
 
 		getGameState().executeStepHooks(this, state);
 

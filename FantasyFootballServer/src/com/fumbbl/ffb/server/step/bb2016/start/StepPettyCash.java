@@ -54,26 +54,31 @@ public final class StepPettyCash extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_PETTY_CASH:
-				ClientCommandPettyCash pettyCashCommand = (ClientCommandPettyCash) pReceivedCommand.getCommand();
-				GameResult gameResult = getGameState().getGame().getGameResult();
-				if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-					gameResult.getTeamResultHome().setPettyCashTransferred(pettyCashCommand.getPettyCash());
-					fPettyCashSelectedHome = true;
-				} else {
-					gameResult.getTeamResultAway().setPettyCashTransferred(pettyCashCommand.getPettyCash());
-					fPettyCashSelectedAway = true;
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
+				case CLIENT_PETTY_CASH:
+					ClientCommandPettyCash pettyCashCommand = (ClientCommandPettyCash) pReceivedCommand.getCommand();
+					Game game = getGameState().getGame();
+					GameResult gameResult = game.getGameResult();
+					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+						gameResult.getTeamResultHome().setPettyCashTransferred(normalizePettyCash(pettyCashCommand.getPettyCash(), game.getTeamHome().getTreasury()));
+						fPettyCashSelectedHome = true;
+					} else {
+						gameResult.getTeamResultAway().setPettyCashTransferred(normalizePettyCash(pettyCashCommand.getPettyCash(), game.getTeamAway().getTreasury()));
+						fPettyCashSelectedAway = true;
+					}
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	private int normalizePettyCash(int enteredValue, int maxTreasury) {
+		return Math.max(0, Math.min(enteredValue, maxTreasury));
 	}
 
 	private void executeStep() {

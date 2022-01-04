@@ -55,6 +55,7 @@ public abstract class Skill implements INamedObject {
 	private final int defaultSkillValue;
 	private final List<ISkillProperty> conflictingProperties = new ArrayList<>();
 	private final SkillUsageType skillUsageType;
+	private final boolean negativeTrait;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
@@ -69,10 +70,19 @@ public abstract class Skill implements INamedObject {
 	}
 
 	public Skill(String name, SkillCategory category, int defaultSkillValue, SkillUsageType skillUsageType) {
+		this(name, category, defaultSkillValue, false, skillUsageType);
+	}
+
+	public Skill(String name, SkillCategory category, boolean negativeTrait) {
+		this(name, category, 0, negativeTrait, SkillUsageType.REGULAR);
+	}
+
+	public Skill(String name, SkillCategory category, int defaultSkillValue, boolean negativeTrait, SkillUsageType skillUsageType) {
 		this.name = name;
 		this.category = category;
 		this.defaultSkillValue = defaultSkillValue;
 		this.skillUsageType = skillUsageType;
+		this.negativeTrait = negativeTrait;
 	}
 
 	public void postConstruct() {
@@ -304,11 +314,11 @@ public abstract class Skill implements INamedObject {
 		return getName();
 	}
 
-	protected boolean meetsRequirements(Player<?> player) {
-		return true;
+	public boolean canBeAssignedTo(Player<?> player) {
+		return conflictingProperties.stream().noneMatch(player::hasSkillProperty);
 	}
 
-	public boolean canBeAssignedTo(Player<?> player) {
-		return meetsRequirements(player) && conflictingProperties.stream().noneMatch(player::hasSkillProperty);
+	public boolean isNegativeTrait() {
+		return negativeTrait;
 	}
 }

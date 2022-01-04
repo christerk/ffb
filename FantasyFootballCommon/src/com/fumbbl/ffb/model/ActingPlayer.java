@@ -321,6 +321,10 @@ public class ActingPlayer implements IJsonSerializable {
 		return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || (fUsedSkills.size() > 0));
 	}
 
+	public boolean hasActedIgnoringNegativeTraits() {
+		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait());
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, Object pValue) {

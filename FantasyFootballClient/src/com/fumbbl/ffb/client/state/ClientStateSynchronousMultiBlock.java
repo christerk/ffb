@@ -149,7 +149,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					break;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition,
+					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
 						pActionKey);
 					Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
 					if (defender != null) {

@@ -186,7 +186,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract JsonObject toJsonValue();
 
-	public abstract void applyPlayerModifiers();
+	public abstract void applyPlayerModifiersFromBehaviours();
 
 	public static Player<?> getFrom(IFactorySource source, JsonValue jsonValue) {
 		Player<?> player = createPlayer(source, jsonValue);
@@ -265,6 +265,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	protected abstract Map<String, Set<SkillWithValue>> getTemporarySkills();
+
+	public abstract Set<String> getEnhancementSources();
 
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
 

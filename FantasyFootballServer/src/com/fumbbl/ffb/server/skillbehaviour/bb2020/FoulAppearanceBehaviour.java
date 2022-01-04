@@ -8,9 +8,9 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlitzState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
@@ -47,8 +47,8 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				Player<?> defender;
-				if (game.getFieldModel().getBlitzState() != null) {
-					defender = game.getPlayerById(game.getFieldModel().getBlitzState().getSelectedPlayerId());
+				if (game.getFieldModel().getTargetSelectionState() != null) {
+					defender = game.getPlayerById(game.getFieldModel().getTargetSelectionState().getSelectedPlayerId());
 				} else {
 					defender = game.getDefender();
 				}
@@ -100,9 +100,9 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				actingPlayer.setHasBlocked(true);
 				game.getTurnData().setTurnStarted(true);
 				step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-				BlitzState blitzState = game.getFieldModel().getBlitzState();
-				if (blitzState != null) {
-					blitzState.failed();
+				TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+				if (targetSelectionState != null) {
+					targetSelectionState.failed();
 					game.getTurnData().setBlitzUsed(true);
 				}
 

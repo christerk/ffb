@@ -5,7 +5,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
-import com.fumbbl.ffb.net.commands.ClientCommandBlitzTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
@@ -48,6 +47,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandStartGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandTalk;
+import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
@@ -99,7 +99,7 @@ public enum NetCommandId implements INamedObject {
 	SERVER_JOIN("serverJoin"), SERVER_LEAVE("serverLeave"), SERVER_TALK("serverTalk"),
 	CLIENT_SETUP_PLAYER("clientSetupPlayer"), CLIENT_START_GAME("clientStartGame"),
 	CLIENT_ACTING_PLAYER("clientActingPlayer"), CLIENT_MOVE("clientMove"), CLIENT_BLITZ_MOVE("clientBlitzMove"),
-	CLIENT_BLITZ_TARGET_SELECTED("blitzTargetSelected"), CLIENT_USE_RE_ROLL("clientUseReRoll"), CLIENT_USE_RE_ROLL_FOR_TARGET("clientUseReRollForTarget"),
+	CLIENT_BLITZ_TARGET_SELECTED("blitzTargetSelected"), CLIENT_TARGET_SELECTED("targetSelected"), CLIENT_USE_RE_ROLL("clientUseReRoll"), CLIENT_USE_RE_ROLL_FOR_TARGET("clientUseReRollForTarget"),
 	SERVER_SOUND("serverSound"), CLIENT_COIN_CHOICE("clientCoinChoice"), CLIENT_RECEIVE_CHOICE("clientReceiveChoice"),
 	CLIENT_END_TURN("clientEndTurn"), CLIENT_KICKOFF("clientKickoff"), CLIENT_TOUCHBACK("clientTouchback"),
 	CLIENT_HAND_OVER("clientHandOver"), CLIENT_PASS("clientPass"), CLIENT_BLOCK("clientBlock"),
@@ -179,7 +179,8 @@ public enum NetCommandId implements INamedObject {
 			case CLIENT_BLITZ_MOVE:
 				return new ClientCommandBlitzMove();
 			case CLIENT_BLITZ_TARGET_SELECTED:
-				return new ClientCommandBlitzTargetSelected();
+			case CLIENT_TARGET_SELECTED:
+				return new ClientCommandTargetSelected();
 			case CLIENT_USE_RE_ROLL:
 				return new ClientCommandUseReRoll();
 			case SERVER_SOUND:

@@ -71,7 +71,11 @@ public class PassRollMessage extends ReportMessageBase<ReportPassRoll> {
   			}
   		} else {
   			if (PassResult.SAVED_FUMBLE == result) {
-  				println(getIndent() + 2, " holds on to the ball.");
+				  if (report.isBomb()) {
+					  println(getIndent() + 2, " holds on to the bomb and puts out the fuse.");
+				  } else {
+					  println(getIndent() + 2, " holds on to the ball.");
+				  }
   			} else if (PassResult.FUMBLE == result) {
   				if (report.isBomb()) {
   					println(getIndent() + 2, " fumbles the bomb.");

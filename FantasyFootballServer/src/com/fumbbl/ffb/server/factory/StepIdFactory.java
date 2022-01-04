@@ -12,7 +12,7 @@ import com.fumbbl.ffb.server.step.StepId;
  */
 @FactoryType(FactoryType.Factory.STEP_ID)
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class StepIdFactory implements INamedObjectFactory {
+public class StepIdFactory implements INamedObjectFactory<StepId> {
 
 	public StepId forName(String pName) {
 		for (StepId stepId : StepId.values()) {
@@ -20,6 +20,12 @@ public class StepIdFactory implements INamedObjectFactory {
 				return stepId;
 			}
 		}
+		for (StepId stepId : StepId.values()) {
+			if (stepId.getOldName().equalsIgnoreCase(pName)) {
+				return stepId;
+			}
+		}
+
 		return null;
 	}
 

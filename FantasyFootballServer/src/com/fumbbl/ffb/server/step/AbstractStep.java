@@ -63,7 +63,6 @@ public abstract class AbstractStep implements IStep {
 
 	public void setLabel(String pLabel) {
 		fLabel = pLabel;
-		// System.out.println("setLabel(" + pLabel + ")");
 	}
 
 	public String getLabel() {
@@ -280,5 +279,4 @@ public abstract class AbstractStep implements IStep {
 	protected boolean toPrimitive(Boolean bool) {
 		return bool != null && bool;
 	}
-
 }

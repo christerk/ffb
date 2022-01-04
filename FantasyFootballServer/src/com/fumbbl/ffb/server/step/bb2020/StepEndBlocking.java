@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -68,7 +69,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
-	private boolean fUsingStab;
+	private boolean fUsingStab, usingChainsaw;
 	private Boolean usePileDriver;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
@@ -117,6 +118,10 @@ public class StepEndBlocking extends AbstractStep {
 					return true;
 				case USING_STAB:
 					fUsingStab = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				case USING_CHAINSAW:
+					usingChainsaw = toPrimitive((Boolean) parameter.getValue());
 					consume(parameter);
 					return true;
 				case INJURY_RESULT:
@@ -192,7 +197,7 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(),  game.getDefenderId(), fUsingStab, null));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(),  game.getDefenderId(), fUsingStab, true, null));
 				} else {
 					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null));
 				}
@@ -214,7 +219,7 @@ public class StepEndBlocking extends AbstractStep {
 
 				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
 
-				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty() || game.getTurnData().isFoulUsed()) {
+				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty() || game.getTurnData().isFoulUsed() || game.getTurnMode() == TurnMode.BLITZ) {
 					usePileDriver = false;
 				}
 
@@ -232,7 +237,7 @@ public class StepEndBlocking extends AbstractStep {
 
 					// go-for-it
 				} else if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
-					&& !activePlayer.hasSkillProperty(NamedProperties.blocksLikeChainsaw)
+					&& !usingChainsaw
 					&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 					String actingPlayerId = activePlayer.getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
@@ -264,6 +269,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, knockedDownPlayers);
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, targetPlayerId);
+		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		return jsonObject;
 	}
 
@@ -277,6 +283,7 @@ public class StepEndBlocking extends AbstractStep {
 		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
 		knockedDownPlayers = Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject)).collect(Collectors.toList());
 		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject));
 		return this;
 	}
 

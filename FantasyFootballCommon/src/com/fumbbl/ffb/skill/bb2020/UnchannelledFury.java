@@ -18,7 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class UnchannelledFury extends Skill {
 
 	public UnchannelledFury() {
-		super("Unchannelled Fury", SkillCategory.TRAIT);
+		super("Unchannelled Fury", SkillCategory.TRAIT, true);
 	}
 
 	@Override

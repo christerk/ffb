@@ -25,6 +25,7 @@ public interface IIconProperty {
 	String DECORATION_BOMB = "decoration.bomb";
 	String DECORATION_BOMB_SELECTED = "decoration.bomb.selected";
 	String DECORATION_BLITZ_TARGET_SELECTED = "decoration.selected.blitz.target";
+	String DECORATION_GAZE_TARGET_SELECTED = "decoration.selected.gaze.target";
 	String DECORATION_BLOCK_TARGET = "decoration.block.target";
 	String DECORATION_STAB_TARGET = "decoration.stab.target";
 
@@ -180,6 +181,7 @@ public interface IIconProperty {
 	String CURSOR_PASS = "cursor.pass";
 	String CURSOR_FOUL = "cursor.foul";
 	String CURSOR_GAZE = "cursor.gaze";
+	String CURSOR_INVALID_GAZE = "cursor.invalidgaze";
 	String CURSOR_BOMB = "cursor.bomb";
 
 	// Bloodspots
