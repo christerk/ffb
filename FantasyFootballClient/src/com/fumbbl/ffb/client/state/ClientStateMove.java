@@ -20,7 +20,6 @@ import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -214,7 +213,9 @@ public class ClientStateMove extends ClientState {
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_GAZE:
-					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, actingPlayer.isJumping());
+					if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer())) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, actingPlayer.isJumping());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
 					communication.sendUseFumblerooskie();
