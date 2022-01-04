@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -218,7 +219,7 @@ public class StepEndBlocking extends AbstractStep {
 
 				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
 
-				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty() || game.getTurnData().isFoulUsed()) {
+				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty() || game.getTurnData().isFoulUsed() || game.getTurnMode() == TurnMode.BLITZ) {
 					usePileDriver = false;
 				}
 
