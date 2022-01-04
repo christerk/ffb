@@ -4,28 +4,26 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 /**
- *
  * @author Kalimar
  */
 public class UtilClientActionKeys {
 
-	public static FieldCoordinate findMoveCoordinate(FantasyFootballClient pClient, FieldCoordinate pStartCoordinate,
-			ActionKey pActionKey) {
+	public static FieldCoordinate findMoveCoordinate(FieldCoordinate pStartCoordinate,
+	                                                 ActionKey pActionKey) {
 		FieldCoordinate moveCoordinate = null;
-		Direction moveDirection = findMoveDirection(pClient, pActionKey);
+		Direction moveDirection = findMoveDirection(pActionKey);
 		if (moveDirection != null) {
 			switch (moveDirection) {
-			case NORTH:
-				moveCoordinate = pStartCoordinate.add(0, -1);
-				break;
-			case NORTHEAST:
-				moveCoordinate = pStartCoordinate.add(1, -1);
-				break;
+				case NORTH:
+					moveCoordinate = pStartCoordinate.add(0, -1);
+					break;
+				case NORTHEAST:
+					moveCoordinate = pStartCoordinate.add(1, -1);
+					break;
 			case EAST:
 				moveCoordinate = pStartCoordinate.add(1, 0);
 				break;
@@ -49,18 +47,18 @@ public class UtilClientActionKeys {
 		return moveCoordinate;
 	}
 
-	public static Direction findMoveDirection(FantasyFootballClient pClient, ActionKey pActionKey) {
+	public static Direction findMoveDirection(ActionKey pActionKey) {
 		Direction moveDirection = null;
 		switch (pActionKey) {
-		case PLAYER_MOVE_NORTH:
-			moveDirection = Direction.NORTH;
-			break;
-		case PLAYER_MOVE_NORTHEAST:
-			moveDirection = Direction.NORTHEAST;
-			break;
-		case PLAYER_MOVE_EAST:
-			moveDirection = Direction.EAST;
-			break;
+			case PLAYER_MOVE_NORTH:
+				moveDirection = Direction.NORTH;
+				break;
+			case PLAYER_MOVE_NORTHEAST:
+				moveDirection = Direction.NORTHEAST;
+				break;
+			case PLAYER_MOVE_EAST:
+				moveDirection = Direction.EAST;
+				break;
 		case PLAYER_MOVE_SOUTHEAST:
 			moveDirection = Direction.SOUTHEAST;
 			break;

@@ -309,7 +309,7 @@ public class ClientStateMove extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
+		FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition, pActionKey);
 		if (moveCoordinate != null) {
 			MoveSquare[] moveSquares = game.getFieldModel().getMoveSquares();
 			for (MoveSquare moveSquare : moveSquares) {
