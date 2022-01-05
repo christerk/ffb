@@ -43,6 +43,7 @@ public class ChangeList {
           .addBugfix("Ball & Chain can't use Mighty Blow against prone/stunned players")
           .addBehaviorChange("Hypnotic Gaze must now be declared as action when activating. NOTE: You can't use Hypnotic Gaze anymore if you select a Move action!!")
           .addBugfix("Pile Driver could be used on Blitz! kick-off event")
+          .addFeature("Added new game option to prevent concessions")
         );
 
     }

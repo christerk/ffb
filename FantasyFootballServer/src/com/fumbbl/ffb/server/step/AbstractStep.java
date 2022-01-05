@@ -17,6 +17,8 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandConcedeGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.report.ReportTimeoutEnforced;
 import com.fumbbl.ffb.server.DebugLog;
@@ -224,7 +226,8 @@ public abstract class AbstractStep implements IStep {
 		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
-		if (concedeGameCommand.getConcedeGameStatus() != null) {
+		boolean allowConcessions = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_CONCESSIONS)).isEnabled();
+		if (concedeGameCommand.getConcedeGameStatus() != null && allowConcessions) {
 			SessionManager sessionManager = getGameState().getServer().getSessionManager();
 			boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState().getId()) == pReceivedCommand
 				.getSession());

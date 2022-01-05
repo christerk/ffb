@@ -178,6 +178,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
 			overtime.setValue(true);
 			//		game.getOptions().addOption(overtime);
+			GameOptionBoolean allowConcessions = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_CONCESSIONS);
+			allowConcessions.setValue(false);
+			//game.getOptions().addOption(allowConcessions);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);
 			game.getOptions().addOption(claw);

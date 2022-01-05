@@ -37,6 +37,7 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -536,7 +537,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
-		fGameConcessionMenuItem.setEnabled(gameStarted && game.isHomePlaying()
+
+		boolean allowConcessions = game != null && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_CONCESSIONS)).isEnabled();
+		fGameConcessionMenuItem.setEnabled(allowConcessions && gameStarted && game.isHomePlaying()
 			&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
 
 		fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
