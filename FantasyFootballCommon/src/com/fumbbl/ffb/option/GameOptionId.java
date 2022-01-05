@@ -3,13 +3,17 @@ package com.fumbbl.ffb.option;
 import com.fumbbl.ffb.INamedObject;
 
 /**
- * 
  * @author Kalimar
  */
 public enum GameOptionId implements INamedObject {
 	RULESVERSION("rulesVersion"),
-	OVERTIME("overtime"), TURNTIME("turntime"), PETTY_CASH("pettyCash"), INDUCEMENTS("inducements"),
-	CHECK_OWNERSHIP("checkOwnership"), TEST_MODE("testMode"), MAX_NR_OF_CARDS("maxNrOfCards"),
+	CHECK_OWNERSHIP("checkOwnership"), TEST_MODE("testMode"),
+	OVERTIME("overtime"), TURNTIME("turntime"),
+	ALLOW_CONCESSIONS("allowConcessions"),
+
+	PETTY_CASH("pettyCash"),
+	INDUCEMENTS("inducements"),
+	MAX_NR_OF_CARDS("maxNrOfCards"),
 
 	MAX_PLAYERS_ON_FIELD("maxPlayersOnField"), MAX_PLAYERS_IN_WIDE_ZONE("maxPlayersInWideZone"),
 	MIN_PLAYERS_ON_LOS("minPlayersOnLos"),

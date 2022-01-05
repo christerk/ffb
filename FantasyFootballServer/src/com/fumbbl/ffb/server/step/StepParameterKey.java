@@ -48,7 +48,6 @@ public enum StepParameterKey {
 	FOLLOWUP_CHOICE, // Boolean
 	FOUL_DEFENDER_ID, // String
 	FOULER_HAS_BALL, // String
-	GAZE_ONLY, // Boolean
 	GAZE_VICTIM_ID, // String
 	GOTO_LABEL, // String
 	GOTO_LABEL_ON_BLITZ, // String

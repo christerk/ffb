@@ -109,7 +109,7 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		notifyObservers(ModelChangeId.GAME_OPTIONS_ADD_OPTION, pOption);
 	}
 
-	public IGameOption getOption(GameOptionId pOptionId) {
+	private IGameOption getOption(GameOptionId pOptionId) {
 		return fOptionById.get(pOptionId);
 	}
 

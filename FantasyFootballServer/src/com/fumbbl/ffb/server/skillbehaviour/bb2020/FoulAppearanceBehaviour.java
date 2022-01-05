@@ -55,7 +55,6 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 
 				if (UtilCards.hasSkill(defender, skill)
 					&& !UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.forceRollBeforeBeingBlocked)
-					&& (!state.gazeOnly || actingPlayer.getPlayerAction() == PlayerAction.GAZE)
 				) {
 					boolean doRoll = true;
 					if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
