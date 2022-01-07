@@ -10,6 +10,12 @@ public class ChangeList {
 
     public ChangeList() {
 
+        versions.add(new VersionChangeList("2.4.0")
+          .addFeature("Implemented Blind Rage")
+          .addFeature("Implemented The Ballista")
+          .addFeature("Implemented Indomitable")
+        );
+
         versions.add(new VersionChangeList("2.3.0")
           .addImprovement("Added \"What's new?\" dialog")
           .addBugfix("Prevent throwing throw/kick player that was injured too severe by Animal Savagery")
