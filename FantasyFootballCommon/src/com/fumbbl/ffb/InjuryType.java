@@ -9,16 +9,13 @@ public abstract class InjuryType implements INamedObject {
 
 	private final String name;
 	private final boolean worthSpps;
-	private SendToBoxReason sendToBoxReason = null;
+	private final SendToBoxReason sendToBoxReason;
 	private boolean failedArmourPlacesProne = true;
-
-	protected InjuryContext injuryContext;
 
 	protected InjuryType(String pName, boolean pWorthSpps, SendToBoxReason pSendToBoxReason) {
 		name = pName;
 		worthSpps = pWorthSpps;
 		sendToBoxReason = pSendToBoxReason;
-		injuryContext = new InjuryContext();
 	}
 
 	public InjuryType injuryType() {
@@ -71,10 +68,6 @@ public abstract class InjuryType implements INamedObject {
 
 	public boolean isVomit() {
 		return false;
-	}
-
-	public InjuryContext injuryContext() {
-		return this.injuryContext;
 	}
 
 	public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender) {

@@ -24,7 +24,7 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 
 	InjuryTypeServer(T injuryType) {
 		this.injuryType = injuryType;
-		this.injuryContext = injuryType.injuryContext();
+		this.injuryContext = new InjuryContext();
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
 		RollMechanic mechanic = ((RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 		injuryContext
-				.setInjury(interpretInjury(gameState));
+			.setInjury(interpretInjury(gameState));
 
 		if (injuryContext.getPlayerState() == null) {
 			injuryContext.setCasualtyRoll(mechanic.rollCasualty(diceRoller));

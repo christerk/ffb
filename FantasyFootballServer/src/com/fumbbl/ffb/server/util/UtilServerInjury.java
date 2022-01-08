@@ -156,6 +156,7 @@ public class UtilServerInjury {
 		return injuryResult;
 
 	}
+
 	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer) {
 		return handleRegeneration(pStep, pPlayer, null);
 	}
