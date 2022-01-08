@@ -12,10 +12,12 @@ import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ArmorModifierFactory;
+import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.factory.SeriousInjuryFactory;
+import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -32,6 +34,7 @@ import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportInjury;
 import com.fumbbl.ffb.server.step.IStep;
+import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
@@ -171,6 +174,19 @@ public class InjuryResult implements IJsonSerializable {
 		pStep.getResult().addReport(reportInjury.init(injuryContext));
 		pStep.getResult().setSound(injuryContext.getSound());
 		alreadyReported = true;
+	}
+
+
+	public void handleIgnoringArmourBreaks(IStep pStep, Player<?> pDefender, Game game) {
+		if (injuryContext.isArmorBroken()) {
+			if (pDefender.hasSkillProperty(NamedProperties.ignoreFirstArmourBreak) && (injuryContext.getArmorRoll() != null)) {
+				injuryContext.setArmorBroken(false);
+				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+				String source = pDefender.getSource(NamedProperties.ignoreFirstArmourBreak);
+				Card card = ((CardFactory) game.getFactory(FactoryType.Factory.CARD)).forName(source);
+				UtilServerCards.deactivateCard(pStep, card);
+			}
+		}
 	}
 
 	// JSON serialization

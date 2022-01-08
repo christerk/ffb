@@ -10,8 +10,6 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.factory.CardFactory;
-import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -84,20 +82,21 @@ public class UtilServerInjury {
 		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate,
 			fromCoordinate, oldInjuryContext, pApothecaryMode);
 
-		if (injuryContext.isArmorBroken()) {
-			if (pDefender.hasSkillProperty(NamedProperties.ignoreFirstArmourBreak) && (injuryContext.getArmorRoll() != null)) {
-				injuryContext.setArmorBroken(false);
-				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-				String source = pDefender.getSource(NamedProperties.ignoreFirstArmourBreak);
-				Card card = ((CardFactory) game.getFactory(FactoryType.Factory.CARD)).forName(source);
-				UtilServerCards.deactivateCard(pStep, card);
-			}
-		}
+		InjuryResult injuryResult = new InjuryResult();
+		injuryResult.setInjuryContext(pInjuryType.injuryContext());
+		injuryResult.handleIgnoringArmourBreaks(pStep, pDefender, game);
+		evaluateInjuryContext(pInjuryType, pDefender, injuryContext, game);
+
+		return injuryResult;
+
+	}
+
+	private static void evaluateInjuryContext(InjuryTypeServer<?> pInjuryType, Player<?> pDefender, InjuryContext injuryContext, Game game) {
 
 		if (injuryContext.isSeriousInjury()) {
 			RollMechanic rollMechanic = ((RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 			injuryContext
-					.setSeriousInjury(rollMechanic.interpretSeriousInjuryRoll(game, injuryContext));
+				.setSeriousInjury(rollMechanic.interpretSeriousInjuryRoll(game, injuryContext));
 			if (pDefender.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryContext.setSeriousInjuryDecay(
 					rollMechanic.interpretSeriousInjuryRoll(game, injuryContext, true));
@@ -105,7 +104,7 @@ public class UtilServerInjury {
 		}
 
 		if ((pDefender.hasSkillProperty(NamedProperties.convertStunToKO) || pInjuryType.stunIsTreatedAsKo())
-				&& (injuryContext.getInjury() != null) && (injuryContext.getInjury().getBase() == PlayerState.STUNNED)) {
+			&& (injuryContext.getInjury() != null) && (injuryContext.getInjury().getBase() == PlayerState.STUNNED)) {
 			injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}
 
@@ -133,28 +132,23 @@ public class UtilServerInjury {
 
 		if (injuryContext.getPlayerState() != null) {
 			switch (injuryContext.getPlayerState().getBase()) {
-			case PlayerState.RIP:
-				injuryContext.setSound(SoundId.RIP);
-				break;
-			case PlayerState.SERIOUS_INJURY:
-			case PlayerState.BADLY_HURT:
-				injuryContext.setSound(SoundId.INJURY);
-				break;
-			case PlayerState.KNOCKED_OUT:
-				injuryContext.setSound(SoundId.KO);
-				break;
-			default:
-				if (injuryContext.getInjuryType().shouldPlayFallSound()) {
-					injuryContext.setSound(SoundId.FALL);
-				}
-				break;
+				case PlayerState.RIP:
+					injuryContext.setSound(SoundId.RIP);
+					break;
+				case PlayerState.SERIOUS_INJURY:
+				case PlayerState.BADLY_HURT:
+					injuryContext.setSound(SoundId.INJURY);
+					break;
+				case PlayerState.KNOCKED_OUT:
+					injuryContext.setSound(SoundId.KO);
+					break;
+				default:
+					if (injuryContext.getInjuryType().shouldPlayFallSound()) {
+						injuryContext.setSound(SoundId.FALL);
+					}
+					break;
 			}
 		}
-
-		InjuryResult injuryResult = new InjuryResult();
-		injuryResult.setInjuryContext(pInjuryType.injuryContext());
-		return injuryResult;
-
 	}
 
 	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer) {
@@ -283,10 +277,6 @@ public class UtilServerInjury {
 
 	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
 		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands);
-	}
-
-	public static StepParameterSet stunPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
-		return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode, eligibleForSafePairOfHands);
 	}
 
 	// drops the given player
