@@ -24,8 +24,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ALREADY_REPORTED = new JsonBooleanOption("alreadyReported");
     JsonBooleanOption ALLOW_MOVE_AFTER_PASS = new JsonBooleanOption("allowMoveAfterPass");
     JsonStringOption ALTERNATE_GOTO_LABEL = new JsonStringOption("gotoLabelOnBlock");
-    JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
-    JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
@@ -42,7 +40,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonFieldCoordinateOption COORDINATE_TO = new JsonFieldCoordinateOption("coordinateTo");
     JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
     JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
-    JsonFieldCoordinateOption DEFENDER_POSITION = new JsonFieldCoordinateOption("defenderPosition");
     JsonBooleanOption DEFENDER_PUSHED = new JsonBooleanOption("defenderPushed");
     JsonEnumWithNameOption DISPATCH_PLAYER_ACTION = new JsonEnumWithNameOption("dispatchPlayerAction",
         Factory.PLAYER_ACTION);

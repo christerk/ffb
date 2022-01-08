@@ -13,11 +13,14 @@ public interface IJsonOption {
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
+	JsonObjectOption ALTERNATE_INJURY_CONTEXT = new JsonObjectOption("alternateInjuryContext");
 	JsonIntOption AMOUNT = new JsonIntOption("amount");
 	JsonObjectOption ANIMATION = new JsonObjectOption("animation");
 	JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", Factory.ANIMATION_TYPE);
 	JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
 	JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
+	JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
+	JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
 	JsonBooleanMapOption ARE_OWN_CHOICES = new JsonBooleanMapOption("areOwnChoices");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
@@ -127,6 +130,7 @@ public interface IJsonOption {
 	JsonBooleanArrayOption DEFECTING_ARRAY = new JsonBooleanArrayOption("defectingArray");
 	JsonEnumWithNameOption DEFENDER_ACTION = new JsonEnumWithNameOption("defenderAction", Factory.PLAYER_ACTION);
 	JsonStringOption DEFENDER_ID = new JsonStringOption("defenderId");
+	JsonFieldCoordinateOption DEFENDER_POSITION = new JsonFieldCoordinateOption("defenderPosition");
 	JsonStringArrayOption DESCRIPTIONS = new JsonStringArrayOption("descriptions");
 	JsonEnumWithNameOption DIALOG_ID = new JsonEnumWithNameOption("dialogId", Factory.DIALOG_ID);
 	JsonObjectOption DIALOG_PARAMETER = new JsonObjectOption("dialogParameter");
