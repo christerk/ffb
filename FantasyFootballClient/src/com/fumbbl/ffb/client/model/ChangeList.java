@@ -11,9 +11,9 @@ public class ChangeList {
     public ChangeList() {
 
         versions.add(new VersionChangeList("2.4.0")
-          .addFeature("Implemented Blind Rage")
-          .addFeature("Implemented The Ballista")
-          .addFeature("Implemented Indomitable")
+          .addFeature("Blind Rage")
+          .addFeature("Indomitable")
+          .addFeature("The Ballista")
         );
 
         versions.add(new VersionChangeList("2.3.0")
