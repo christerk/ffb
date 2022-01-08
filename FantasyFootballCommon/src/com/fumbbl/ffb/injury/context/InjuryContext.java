@@ -17,6 +17,7 @@ import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
@@ -52,6 +53,7 @@ public class InjuryContext {
 	public Set<CasualtyModifier> casualtyModifiers;
 
 	private InjuryContext alternateInjuryContext;
+	private Skill skillForAlternateContext;
 
 	public InjuryContext() {
 		fArmorModifiers = new HashSet<>();
@@ -65,6 +67,14 @@ public class InjuryContext {
 
 	public void setAlternateInjuryContext(InjuryContext alternateInjuryContext) {
 		this.alternateInjuryContext = alternateInjuryContext;
+	}
+
+	public Skill getSkillForAlternateContext() {
+		return skillForAlternateContext;
+	}
+
+	public void setSkillForAlternateContext(Skill skillForAlternateContext) {
+		this.skillForAlternateContext = skillForAlternateContext;
 	}
 
 	public void setInjuryType(InjuryType pInjuryType) {
@@ -374,6 +384,9 @@ public class InjuryContext {
 		getCasualtyModifiers().forEach(modifier -> casualtyModifiers.add(UtilJson.toJsonValue(modifier)));
 		IJsonOption.CASUALTY_MODIFIERS.addTo(jsonObject, casualtyModifiers);
 
+		if (skillForAlternateContext != null) {
+			IJsonOption.SKILL.addTo(jsonObject, skillForAlternateContext);
+		}
 
 		if (alternateInjuryContext != null) {
 			JsonObject alternateContext = new JsonObject();
@@ -434,6 +447,10 @@ public class InjuryContext {
 		if (alternateContext != null) {
 			alternateInjuryContext = new InjuryContext();
 			alternateInjuryContext.initFrom(source, alternateContext);
+		}
+
+		if (IJsonOption.SKILL.isDefinedIn(jsonObject)) {
+			skillForAlternateContext = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		}
 	}
 
