@@ -1,5 +1,7 @@
-package com.fumbbl.ffb;
+package com.fumbbl.ffb.injury;
 
+import com.fumbbl.ffb.INamedObject;
+import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.model.Player;
 
 /**

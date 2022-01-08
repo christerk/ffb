@@ -6,7 +6,6 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.InjuryAttribute;
-import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SoundId;
@@ -23,6 +22,7 @@ import com.fumbbl.ffb.factory.WeatherFactory;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
@@ -53,7 +53,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import org.eclipse.jetty.websocket.api.Session;
-import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +64,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar

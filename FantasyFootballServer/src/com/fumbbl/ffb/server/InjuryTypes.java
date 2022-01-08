@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server;
 
-import java.util.Map;
+import com.fumbbl.ffb.injury.InjuryType;
 
-import com.fumbbl.ffb.InjuryType;
+import java.util.Map;
 
 public class InjuryTypes {
 

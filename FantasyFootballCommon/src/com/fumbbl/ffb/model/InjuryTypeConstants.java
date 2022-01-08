@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.model;
 
-import com.fumbbl.ffb.InjuryType;
 import com.fumbbl.ffb.injury.BallAndChain;
 import com.fumbbl.ffb.injury.Bitten;
 import com.fumbbl.ffb.injury.Block;
@@ -17,6 +16,7 @@ import com.fumbbl.ffb.injury.EatPlayer;
 import com.fumbbl.ffb.injury.Fireball;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
+import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.KTMCrowd;
 import com.fumbbl.ffb.injury.KTMFumbleInjury;
 import com.fumbbl.ffb.injury.KTMInjury;

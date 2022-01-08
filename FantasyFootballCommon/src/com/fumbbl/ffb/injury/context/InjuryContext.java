@@ -1,5 +1,13 @@
-package com.fumbbl.ffb;
+package com.fumbbl.ffb.injury.context;
 
+import com.fumbbl.ffb.ApothecaryMode;
+import com.fumbbl.ffb.ApothecaryStatus;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.SendToBoxReason;
+import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;

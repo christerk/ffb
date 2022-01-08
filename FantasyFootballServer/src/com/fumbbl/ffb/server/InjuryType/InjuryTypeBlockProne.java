@@ -2,9 +2,9 @@ package com.fumbbl.ffb.server.InjuryType;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.injury.BlockProne;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;

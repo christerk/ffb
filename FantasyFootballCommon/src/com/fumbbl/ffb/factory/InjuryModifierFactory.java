@@ -2,10 +2,10 @@ package com.fumbbl.ffb.factory;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;
-import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SpecialEffect;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
