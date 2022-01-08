@@ -6,6 +6,7 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -27,15 +28,11 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_USE_RE_ROLL:
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_RE_ROLL) {
 				ClientCommandUseReRoll useReRollCommand = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
 				setReRolledAction(useReRollCommand.getReRolledAction());
 				setReRollSource(useReRollCommand.getReRollSource());
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
 			}
 		}
 		return commandStatus;
