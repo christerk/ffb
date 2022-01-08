@@ -5,9 +5,11 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.GazeModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -15,10 +17,13 @@ import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifierContext;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2020.ReportHypnoticGazeRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -32,6 +37,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -85,6 +91,13 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			setReRolledAction(ReRolledActions.HYPNOTIC_GAZE);
+			setReRollSource(((ClientCommandUseSkill) pReceivedCommand.getCommand()).getSkill().getRerollSource(getReRolledAction()));
+			commandStatus = StepCommandStatus.EXECUTE_STEP;
+		}
+
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -130,9 +143,19 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 					game.getFieldModel().setPlayerState(game.getDefender(), oldVictimState.changeHypnotized(true));
 				}
 			} else {
-				if ((getReRolledAction() != ReRolledActions.HYPNOTIC_GAZE) && UtilServerReRoll.askForReRollIfAvailable(
-					getGameState(), actingPlayer.getPlayer(), ReRolledActions.HYPNOTIC_GAZE, minimumRoll, false)) {
-					gotoEndLabel = false;
+				if ((getReRolledAction() != ReRolledActions.HYPNOTIC_GAZE)) {
+					ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.HYPNOTIC_GAZE);
+					if (reRollSource != null) {
+						Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+						UtilServerDialog.showDialog(getGameState(),
+							new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), minimumRoll),
+							actingTeam.hasPlayer(actingPlayer.getPlayer()));
+						gotoEndLabel = false;
+
+					} else if (UtilServerReRoll.askForReRollIfAvailable(
+						getGameState(), actingPlayer.getPlayer(), ReRolledActions.HYPNOTIC_GAZE, minimumRoll, false)) {
+						gotoEndLabel = false;
+					}
 				}
 			}
 		}

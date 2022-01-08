@@ -13,6 +13,7 @@ public class ChangeList {
         versions.add(new VersionChangeList("2.4.0")
           .addFeature("Blind Rage")
           .addFeature("Indomitable")
+          .addFeature("Mesmerizing Dance")
           .addFeature("The Ballista")
         );
 
