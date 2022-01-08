@@ -84,8 +84,14 @@ public class UtilServerInjury {
 
 		InjuryResult injuryResult = new InjuryResult();
 		injuryResult.setInjuryContext(pInjuryType.injuryContext());
-		injuryResult.handleIgnoringArmourBreaks(pStep, pDefender, game);
+		if (injuryResult.handleIgnoringArmourBreaks(pStep, pDefender, game)) {
+			pInjuryType.injuryContext().setAlternateInjuryContext(null);
+		}
 		evaluateInjuryContext(pInjuryType, pDefender, injuryContext, game);
+
+		if (injuryContext.getAlternateInjuryContext() != null) {
+			evaluateInjuryContext(pInjuryType, pDefender, injuryContext.getAlternateInjuryContext(), game);
+		}
 
 		return injuryResult;
 

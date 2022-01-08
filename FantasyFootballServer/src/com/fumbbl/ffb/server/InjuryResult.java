@@ -6,6 +6,7 @@ import com.fumbbl.ffb.ApothecaryStatus;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.ReportFactory;
@@ -165,7 +166,7 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 
-	public void handleIgnoringArmourBreaks(IStep pStep, Player<?> pDefender, Game game) {
+	public boolean handleIgnoringArmourBreaks(IStep pStep, Player<?> pDefender, Game game) {
 		if (injuryContext.isArmorBroken()) {
 			if (pDefender.hasSkillProperty(NamedProperties.ignoreFirstArmourBreak) && (injuryContext.getArmorRoll() != null)) {
 				injuryContext.setArmorBroken(false);
@@ -173,6 +174,24 @@ public class InjuryResult implements IJsonSerializable {
 				String source = pDefender.getSource(NamedProperties.ignoreFirstArmourBreak);
 				Card card = ((CardFactory) game.getFactory(FactoryType.Factory.CARD)).forName(source);
 				UtilServerCards.deactivateCard(pStep, card);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public void swapToAlternateContext(IStep pStep, Player<?> pDefender, Game game) {
+		if (injuryContext.getAlternateInjuryContext() != null) {
+			injuryContext = injuryContext.getAlternateInjuryContext();
+			if (handleIgnoringArmourBreaks(pStep, pDefender, game)) {
+				injuryContext.setSendToBoxReason(null);
+				injuryContext.setSendToBoxHalf(0);
+				injuryContext.setSendToBoxTurn(0);
+				injuryContext.setApothecaryStatus(null);
+				injuryContext.setSeriousInjury(null);
+				injuryContext.setSeriousInjuryDecay(null);
+				injuryContext.setSound(SoundId.FALL);
 			}
 		}
 	}
