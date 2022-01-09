@@ -3,18 +3,18 @@ package com.fumbbl.ffb.injury.context;
 import com.eclipsesource.json.JsonObject;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
-import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.InjuryContextModificationSkill;
 
 public class InjuryContextForModification extends InjuryContext {
 
-	private Skill skillForAlternateContext;
+	private InjuryContextModificationSkill skillForAlternateContext;
 
 
-	public Skill getSkillForAlternateContext() {
+	public InjuryContextModificationSkill getSkillForAlternateContext() {
 		return skillForAlternateContext;
 	}
 
-	public void setSkillForAlternateContext(Skill skillForAlternateContext) {
+	public void setSkillForAlternateContext(InjuryContextModificationSkill skillForAlternateContext) {
 		this.skillForAlternateContext = skillForAlternateContext;
 	}
 
@@ -41,7 +41,7 @@ public class InjuryContextForModification extends InjuryContext {
 		super.initFrom(source, jsonObject);
 
 		if (IJsonOption.SKILL.isDefinedIn(jsonObject)) {
-			skillForAlternateContext = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+			skillForAlternateContext = (InjuryContextModificationSkill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		}
 	}
 }
