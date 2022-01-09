@@ -10,7 +10,6 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
-import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecaryParameter;
@@ -25,7 +24,6 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.InjuryContextModificationSkill;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
@@ -146,11 +144,7 @@ public class StepApothecary extends AbstractStep {
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					Skill skill = clientCommandUseSkill.getSkill();
-					SkillUse skillUse = null;
-					if (skill instanceof InjuryContextModificationSkill) {
-						skillUse = ((InjuryContextModificationSkill) skill).getSkillUse();
-					}
-					getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), skillUse));
+					getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), fInjuryResult.injuryContext().getAlternateInjuryContext().getSkillUse()));
 					if (clientCommandUseSkill.isSkillUsed()) {
 						fInjuryResult.swapToAlternateContext(this, getGameState().getGame());
 						getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());

@@ -10,12 +10,12 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.InjuryContextModificationSkill;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
@@ -377,12 +377,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract void resetUsedSkills(SkillUsageType type, Game game);
 
-	public Optional<InjuryContextModificationSkill> getUnusedInjuryModification(InjuryType injuryType) {
+	public Optional<IInjuryContextModification> getUnusedInjuryModification(InjuryType injuryType) {
 		return getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> skill instanceof InjuryContextModificationSkill)
-			.map(skill -> (InjuryContextModificationSkill) skill)
-			.filter(skill -> !isUsed(skill) && skill.getModification().isValidType(injuryType))
-			.findFirst();
+			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null && skill.getSkillBehaviour().hasInjuryModifier(injuryType))
+			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst()
+			;
 	}
 
 }

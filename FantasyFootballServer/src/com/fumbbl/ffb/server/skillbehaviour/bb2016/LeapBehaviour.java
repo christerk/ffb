@@ -16,7 +16,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportJumpRoll;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeDropJump;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropJump;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
