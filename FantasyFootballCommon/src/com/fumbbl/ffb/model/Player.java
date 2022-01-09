@@ -14,6 +14,7 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.InjuryContextModificationSkill;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
@@ -370,7 +371,17 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract boolean isUsed(Skill skill);
 
 	public abstract void markUsed(Skill skill, Game game);
+
 	public abstract void markUnused(Skill skill, Game game);
+
 	public abstract void resetUsedSkills(SkillUsageType type, Game game);
+
+	public Optional<InjuryContextModificationSkill> getUnusedInjuryModification() {
+		return getSkillsIncludingTemporaryOnes().stream()
+			.filter(skill -> skill instanceof InjuryContextModificationSkill)
+			.map(skill -> (InjuryContextModificationSkill) skill)
+			.filter(skill -> !isUsed(skill))
+			.findFirst();
+	}
 
 }
