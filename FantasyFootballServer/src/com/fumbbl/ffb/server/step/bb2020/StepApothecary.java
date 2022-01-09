@@ -153,6 +153,7 @@ public class StepApothecary extends AbstractStep {
 					getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), skillUse));
 					if (clientCommandUseSkill.isSkillUsed()) {
 						fInjuryResult.swapToAlternateContext(this, getGameState().getGame());
+						getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
 					} else {
 						fInjuryResult.injuryContext().setAlternateInjuryContext(null);
 					}
