@@ -17,7 +17,7 @@ public abstract class InjuryContextModification {
 	public void modifyArmour(InjuryContext injuryContext) {
 		if (injuryContext.getAlternateInjuryContext() != null && !injuryContext.isArmorBroken()) {
 			if (modifyArmourInternal(injuryContext)) {
-				injuryContext.setSkillForAlternateContext(skill);
+				injuryContext.getAlternateInjuryContext().setSkillForAlternateContext(skill);
 			}
 		}
 	}
@@ -25,7 +25,7 @@ public abstract class InjuryContextModification {
 	public void modifyInjury(InjuryContext injuryContext) {
 		if (injuryContext.getAlternateInjuryContext() != null && !injuryContext.isCasualty()) {
 			if (modifyInjuryInternal(injuryContext)) {
-				injuryContext.setSkillForAlternateContext(skill);
+				injuryContext.getAlternateInjuryContext().setSkillForAlternateContext(skill);
 			}
 		}
 	}
