@@ -10,10 +10,13 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.InjuryContextModificationSkill;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
+
+import java.util.Optional;
 
 public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 	public InjuryTypeChainsaw() {
@@ -25,6 +28,7 @@ public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
 	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode) {
+		Optional<InjuryContextModificationSkill> modificationSkill = pAttacker.getUnusedInjuryModification();
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -38,11 +42,16 @@ public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 
+		modificationSkill.ifPresent(injuryContextModificationSkill -> injuryContextModificationSkill.getModification().modifyArmour(injuryContext));
+
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			factory.findInjuryModifiers(game, injuryContext, pAttacker,
 				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+
+			modificationSkill.ifPresent(injuryContextModificationSkill -> injuryContextModificationSkill.getModification().modifyInjury(injuryContext));
+
 			setInjury(pDefender, gameState, diceRoller);
 		} else {
 			injuryContext.setInjury(null);

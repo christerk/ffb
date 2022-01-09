@@ -11,6 +11,7 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.InjuryContextModificationSkill;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
@@ -36,6 +37,7 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
 	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode) {
+		Optional<InjuryContextModificationSkill> modificationSkill = pAttacker.getUnusedInjuryModification();
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -62,12 +64,14 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 
 			if (!injuryContext.isArmorBroken()) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
-						isFoul());
+					isFoul());
 				injuryContext.addArmorModifiers(armorModifiers);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			}
 
 		}
+
+		modificationSkill.ifPresent(injuryContextModificationSkill -> injuryContextModificationSkill.getModification().modifyArmour(injuryContext));
 
 		if (injuryContext.isArmorBroken()) {
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
@@ -76,6 +80,8 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 				pDefender, isStab(), isFoul(), isVomit());
 			injuryContext.addInjuryModifiers(injuryModifiers);
+
+			modificationSkill.ifPresent(injuryContextModificationSkill -> injuryContextModificationSkill.getModification().modifyInjury(injuryContext));
 
 			setInjury(pDefender, gameState, diceRoller);
 

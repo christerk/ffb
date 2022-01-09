@@ -3,12 +3,14 @@ package com.fumbbl.ffb.injury.context;
 public class ReRollSingleArmourDie extends InjuryContextModification {
 
 	@Override
-	public void modifyArmourInternal(InjuryContext injuryContext) {
+	boolean modifyArmourInternal(InjuryContext injuryContext) {
 
+		return false;
 	}
 
 	@Override
-	void modifyInjuryInternal(InjuryContext injuryContext) {
+	boolean modifyInjuryInternal(InjuryContext injuryContext) {
 
+		return false;
 	}
 }

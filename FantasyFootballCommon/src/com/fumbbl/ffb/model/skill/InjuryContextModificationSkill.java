@@ -10,6 +10,7 @@ public abstract class InjuryContextModificationSkill extends Skill {
 		super(name, category, skillUsageType);
 		assert modification != null;
 		this.modification = modification;
+		modification.setSkill(this);
 	}
 
 	public InjuryContextModification getModification() {

@@ -11,6 +11,7 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.InjuryContextModificationSkill;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
@@ -51,6 +52,8 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
 	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode) {
+
+		Optional<InjuryContextModificationSkill> skill = pAttacker.getUnusedInjuryModification();
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -100,6 +103,8 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 			}
 		}
 
+		skill.ifPresent(injuryContextModificationSkill -> injuryContextModificationSkill.getModification().modifyArmour(injuryContext));
+
 		if (injuryContext.isArmorBroken()) {
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
@@ -115,6 +120,8 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 					pDefender, isStab(), isFoul(), isVomit());
 				injuryContext.addInjuryModifiers(injuryModifiers);
 			}
+
+			skill.ifPresent(injuryContextModificationSkill -> injuryContextModificationSkill.getModification().modifyInjury(injuryContext));
 
 			setInjury(pDefender, gameState, diceRoller);
 		} else {
