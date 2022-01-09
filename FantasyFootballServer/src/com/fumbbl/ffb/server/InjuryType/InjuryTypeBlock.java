@@ -53,7 +53,7 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode) {
 
-		Optional<InjuryContextModificationSkill> skill = pAttacker.getUnusedInjuryModification();
+		Optional<InjuryContextModificationSkill> skill = pAttacker.getUnusedInjuryModification(injuryType);
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 

@@ -37,7 +37,7 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
 	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode) {
-		Optional<InjuryContextModificationSkill> modificationSkill = pAttacker.getUnusedInjuryModification();
+		Optional<InjuryContextModificationSkill> modificationSkill = pAttacker.getUnusedInjuryModification(injuryType);
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 

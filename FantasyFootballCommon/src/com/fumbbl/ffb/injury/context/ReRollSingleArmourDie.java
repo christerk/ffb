@@ -1,6 +1,14 @@
 package com.fumbbl.ffb.injury.context;
 
+import com.fumbbl.ffb.injury.InjuryType;
+
+import java.util.Set;
+
 public class ReRollSingleArmourDie extends InjuryContextModification {
+
+	public ReRollSingleArmourDie(Set<InjuryType> validInjuryTypes) {
+		super(validInjuryTypes);
+	}
 
 	@Override
 	boolean modifyArmourInternal(InjuryContext injuryContext) {

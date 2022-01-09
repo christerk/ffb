@@ -9,6 +9,7 @@ import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
+import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
@@ -376,11 +377,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract void resetUsedSkills(SkillUsageType type, Game game);
 
-	public Optional<InjuryContextModificationSkill> getUnusedInjuryModification() {
+	public Optional<InjuryContextModificationSkill> getUnusedInjuryModification(InjuryType injuryType) {
 		return getSkillsIncludingTemporaryOnes().stream()
 			.filter(skill -> skill instanceof InjuryContextModificationSkill)
 			.map(skill -> (InjuryContextModificationSkill) skill)
-			.filter(skill -> !isUsed(skill))
+			.filter(skill -> !isUsed(skill) && skill.getModification().isValidType(injuryType))
 			.findFirst();
 	}
 
