@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class ReRollSingleArmourDie extends InjuryContextModification {
 
-	public ReRollSingleArmourDie(Set<InjuryType> validInjuryTypes) {
+	public ReRollSingleArmourDie(Set<Class<? extends InjuryType>> validInjuryTypes) {
 		super(validInjuryTypes);
 	}
 

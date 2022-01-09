@@ -8,9 +8,9 @@ import java.util.Set;
 public abstract class InjuryContextModification {
 
 	private InjuryContextModificationSkill skill;
-	private final Set<InjuryType> validInjuryTypes;
+	private final Set<Class<? extends InjuryType>> validInjuryTypes;
 
-	public InjuryContextModification(Set<InjuryType> validInjuryTypes) {
+	public InjuryContextModification(Set<Class<? extends InjuryType>> validInjuryTypes) {
 		this.validInjuryTypes = validInjuryTypes;
 	}
 
@@ -35,7 +35,7 @@ public abstract class InjuryContextModification {
 	abstract boolean modifyInjuryInternal(InjuryContext injuryContext);
 
 	public boolean isValidType(InjuryType injuryType) {
-		return validInjuryTypes.contains(injuryType);
+		return validInjuryTypes.contains(injuryType.getClass());
 	}
 
 	public InjuryContextModificationSkill getSkill() {

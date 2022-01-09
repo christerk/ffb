@@ -23,6 +23,7 @@ public enum SkillUse implements INamedObject {
 	INCREASE_STRENGTH_BY_1("increaseStrengthBy1", "to increase %g strength by 1"),
 	CANCEL_DIVING_CATCH("cancelDivingCatch", "because players from both teams hinder each other"),
 	PLACE_BALL("placeBall", "to place ball in an empty adjacent square"),
+	RE_ROLL_LOWER_ARMOUR_DIE("reRollLowerArmourDie", "to re-roll the lower of the two armour dice"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;
