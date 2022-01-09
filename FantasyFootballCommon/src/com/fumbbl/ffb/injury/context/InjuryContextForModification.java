@@ -5,11 +5,17 @@ import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.ReportList;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class InjuryContextForModification extends InjuryContext {
 
 	private Skill skillForAlternateContext;
 	private SkillUse skillUse;
+	private final ReportList reports = new ReportList();
 
 	public SkillUse getSkillUse() {
 		return skillUse;
@@ -27,6 +33,14 @@ public class InjuryContextForModification extends InjuryContext {
 		this.skillForAlternateContext = skillForAlternateContext;
 	}
 
+	public void addReport(IReport report) {
+		reports.add(report);
+	}
+
+	public List<IReport> getReports() {
+		return Arrays.asList(reports.getReports());
+	}
+
 	@Override
 	public InjuryContextForModification getAlternateInjuryContext() {
 		return null;
@@ -42,6 +56,7 @@ public class InjuryContextForModification extends InjuryContext {
 		super.toJsonValue(jsonObject);
 		IJsonOption.SKILL.addTo(jsonObject, skillForAlternateContext);
 		IJsonOption.SKILL_USE.addTo(jsonObject, skillUse);
+		IJsonOption.REPORT_LIST.addTo(jsonObject, reports.toJsonValue());
 	}
 
 	@Override
@@ -49,6 +64,9 @@ public class InjuryContextForModification extends InjuryContext {
 		super.initFrom(source, jsonObject);
 		skillForAlternateContext = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		skillUse = (SkillUse) IJsonOption.SKILL_USE.getFrom(source, jsonObject);
-
+		JsonObject reportListObject = IJsonOption.REPORT_LIST.getFrom(source, jsonObject);
+		if (reportListObject != null) {
+			reports.initFrom(source, reportListObject);
+		}
 	}
 }

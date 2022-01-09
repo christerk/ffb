@@ -6,7 +6,7 @@ import com.fumbbl.ffb.injury.Chainsaw;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
 import com.fumbbl.ffb.injury.InjuryType;
-import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.injury.context.InjuryContextForModification;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 
@@ -24,7 +24,7 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 	}
 
 	@Override
-	protected boolean modifyArmourInternal(InjuryContext newContext, GameState gameState) {
+	protected boolean modifyArmourInternal(InjuryContextForModification newContext, GameState gameState) {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		int replaceIndex = newContext.fArmorRoll[0] < newContext.fArmorRoll[1] ? 0 : 1;
@@ -44,7 +44,7 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 	}
 
 	@Override
-	protected boolean modifyInjuryInternal(InjuryContext newContext, GameState gameState) {
+	protected boolean modifyInjuryInternal(InjuryContextForModification newContext, GameState gameState) {
 
 		return false;
 	}
