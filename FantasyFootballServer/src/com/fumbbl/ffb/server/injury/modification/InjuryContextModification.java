@@ -21,8 +21,10 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 
 	public boolean modifyArmour(InjuryContext injuryContext, GameState gameState) {
 		if (injuryContext.getAlternateInjuryContext() == null && !injuryContext.isArmorBroken()) {
-			if (modifyArmourInternal(injuryContext, gameState)) {
-				injuryContext.getAlternateInjuryContext().setSkillForAlternateContext(skill);
+			InjuryContextForModification newContext = newContext(injuryContext);
+			if (modifyArmourInternal(newContext, gameState)) {
+				newContext.setSkillForAlternateContext(skill);
+				injuryContext.setAlternateInjuryContext(newContext);
 				return true;
 			}
 		}
@@ -31,8 +33,10 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 
 	public boolean modifyInjury(InjuryContext injuryContext, GameState gameState) {
 		if (injuryContext.getAlternateInjuryContext() == null && !injuryContext.isCasualty()) {
-			if (modifyInjuryInternal(injuryContext, gameState)) {
-				injuryContext.getAlternateInjuryContext().setSkillForAlternateContext(skill);
+			InjuryContextForModification newContext = newContext(injuryContext);
+			if (modifyInjuryInternal(newContext, gameState)) {
+				newContext.setSkillForAlternateContext(skill);
+				injuryContext.setAlternateInjuryContext(newContext);
 				return true;
 			}
 		}
@@ -57,7 +61,7 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		this.skill = skill;
 	}
 
-	protected InjuryContextForModification newContext(InjuryContext injuryContext) {
+	private InjuryContextForModification newContext(InjuryContext injuryContext) {
 		InjuryContextForModification newContext = new InjuryContextForModification();
 		newContext.fInjuryType = injuryContext.fInjuryType;
 		newContext.fArmorModifiers = injuryContext.fArmorModifiers;

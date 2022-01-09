@@ -7,7 +7,6 @@ import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.injury.context.InjuryContextForModification;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 
@@ -25,10 +24,8 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 	}
 
 	@Override
-	protected boolean modifyArmourInternal(InjuryContext injuryContext, GameState gameState) {
+	protected boolean modifyArmourInternal(InjuryContext newContext, GameState gameState) {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-
-		InjuryContextForModification newContext = newContext(injuryContext);
 
 		int replaceIndex = newContext.fArmorRoll[0] < newContext.fArmorRoll[1] ? 0 : 1;
 		int oldValue = newContext.fArmorRoll[replaceIndex];
@@ -39,7 +36,6 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 			return false;
 		}
 
-		injuryContext.setAlternateInjuryContext(newContext);
 		int newValue = gameState.getDiceRoller().rollDice(6);
 		newContext.fArmorRoll[replaceIndex] = newValue;
 		newContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, newContext));
@@ -48,7 +44,7 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 	}
 
 	@Override
-	protected boolean modifyInjuryInternal(InjuryContext injuryContext, GameState gameState) {
+	protected boolean modifyInjuryInternal(InjuryContext newContext, GameState gameState) {
 
 		return false;
 	}
