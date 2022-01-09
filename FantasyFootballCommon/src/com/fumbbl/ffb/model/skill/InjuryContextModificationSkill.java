@@ -8,7 +8,7 @@ public abstract class InjuryContextModificationSkill extends Skill {
 
 	public InjuryContextModificationSkill(String name, SkillCategory category, SkillUsageType skillUsageType, InjuryContextModification modification) {
 		super(name, category, skillUsageType);
-
+		assert modification != null;
 		this.modification = modification;
 	}
 
