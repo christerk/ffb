@@ -15,6 +15,7 @@ public class ChangeList {
           .addFeature("Indomitable")
           .addFeature("Mesmerizing Dance")
           .addFeature("The Ballista")
+          .addFeature("Old Pro")
         );
 
         versions.add(new VersionChangeList("2.3.0")
