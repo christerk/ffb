@@ -39,6 +39,7 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 		int newValue = gameState.getDiceRoller().rollDice(6);
 		newContext.fArmorRoll[replaceIndex] = newValue;
 		newContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, newContext));
+		newContext.addReport(new ReportOldPro(newContext.fAttackerId, oldValue, newValue));
 
 		return true;
 	}

@@ -50,7 +50,7 @@ public enum ReportId implements INamedObject {
 	PRAYER_AMOUNT("prayerAmount"), PRAYER_ROLL("prayerRoll"), PRAYER_END("prayerEnd"),
 	PRAYER_WASTED("prayerWasted"), KICKOFF_CHEERING_FANS("cheeringFans"), BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"),
 	PLAYER_EVENT("playerEvent"), STALLER_DETECTED("stallerDetected"), THROW_AT_STALLING_PLAYER("throwAtStallingPlayer"),
-	INDOMITABLE("indomitable");
+	INDOMITABLE("indomitable"), OLD_PRO("oldPro");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)
