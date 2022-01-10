@@ -1,13 +1,9 @@
 package com.fumbbl.ffb.server.injury.injuryType;
 
-import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.FoulForSpp;
-import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -19,14 +15,12 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
-import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Optional;
 import java.util.Set;
 
-public class InjuryTypeFoulForSpp extends InjuryTypeServer<FoulForSpp> {
+public class InjuryTypeFoulForSpp extends ModificationAwareInjuryTypeServer<FoulForSpp> {
 	private final boolean useChainsaw;
 
 	public InjuryTypeFoulForSpp(boolean useChainsaw) {
@@ -35,13 +29,19 @@ public class InjuryTypeFoulForSpp extends InjuryTypeServer<FoulForSpp> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
-		Optional<IInjuryContextModification> modification = pAttacker.getUnusedInjuryModification(injuryType);
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext currentInjuryContext) {
+		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
+		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+		Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
+			pDefender, isStab(), isFoul(), isVomit());
+		injuryContext.addInjuryModifiers(armorModifiers);
 
+		setInjury(pDefender, gameState, diceRoller);
+	}
+
+	@Override
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext) {
 		// Blatant Foul breaks armor without roll
 		if (game.isActive(NamedProperties.foulBreaksArmourWithoutRoll)) {
 			injuryContext.setArmorBroken(true);
@@ -71,25 +71,5 @@ public class InjuryTypeFoulForSpp extends InjuryTypeServer<FoulForSpp> {
 			}
 
 		}
-
-		modification.ifPresent(injuryContextModification -> ((InjuryContextModification) injuryContextModification).modifyArmour(injuryContext, gameState));
-
-		if (injuryContext.isArmorBroken()) {
-			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-
-			Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomit());
-			injuryContext.addInjuryModifiers(armorModifiers);
-
-			modification.ifPresent(injuryContextModification -> ((InjuryContextModification) injuryContextModification).modifyInjury(injuryContext, gameState));
-
-			setInjury(pDefender, gameState, diceRoller);
-
-		} else {
-			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-		}
-
-		return injuryContext;
 	}
 }

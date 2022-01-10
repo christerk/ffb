@@ -1,13 +1,9 @@
 package com.fumbbl.ffb.server.injury.injuryType;
 
-import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.Block;
-import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -20,14 +16,12 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
-import com.fumbbl.ffb.server.step.IStep;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class InjuryTypeBlock extends InjuryTypeServer<Block> {
+public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 	private final Mode mode;
 	private final boolean allowAttackerChainsaw;
 
@@ -50,16 +44,27 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext currentInjuryContext) {
+		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
+		currentInjuryContext.setInjuryRoll(diceRoller.rollInjury());
+		factory.getNigglingInjuryModifier(pDefender).ifPresent(currentInjuryContext::addInjuryModifier);
 
-		Optional<IInjuryContextModification> modification = pAttacker.getUnusedInjuryModification(injuryType);
+		Skill stunty = pDefender.getSkillWithProperty(NamedProperties.isHurtMoreEasily);
+		if (stunty != null) {
+			currentInjuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
+		}
+		// do not use injuryModifiers on blocking own team-mate with b&c
+		if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
+			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, currentInjuryContext, pAttacker,
+				pDefender, isStab(), isFoul(), isVomit());
+			currentInjuryContext.addInjuryModifiers(injuryModifiers);
+		}
 
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+		setInjury(pDefender, gameState, diceRoller, currentInjuryContext);
+	}
 
-		InjuryContext currentInjuryContext = injuryContext;
-
+	@Override
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext) {
 		if (!currentInjuryContext.isArmorBroken()) {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
@@ -105,46 +110,6 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 				}
 			}
 		}
-
-		if (modification.isPresent()) {
-			boolean modified = ((InjuryContextModification) modification.get()).modifyArmour(currentInjuryContext, gameState);
-
-			if (modified) {
-				currentInjuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-				currentInjuryContext = currentInjuryContext.getAlternateInjuryContext();
-			}
-		}
-
-
-		if (currentInjuryContext.isArmorBroken()) {
-			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-			currentInjuryContext.setInjuryRoll(diceRoller.rollInjury());
-			factory.getNigglingInjuryModifier(pDefender).ifPresent(currentInjuryContext::addInjuryModifier);
-
-			Skill stunty = pDefender.getSkillWithProperty(NamedProperties.isHurtMoreEasily);
-			if (stunty != null) {
-				currentInjuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
-			}
-			// do not use injuryModifiers on blocking own team-mate with b&c
-			if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
-				Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, currentInjuryContext, pAttacker,
-					pDefender, isStab(), isFoul(), isVomit());
-				currentInjuryContext.addInjuryModifiers(injuryModifiers);
-			}
-
-			setInjury(pDefender, gameState, diceRoller, currentInjuryContext);
-
-			if (modification.isPresent()) {
-				boolean modified = ((InjuryContextModification) modification.get()).modifyInjury(currentInjuryContext, gameState);
-				if (modified) {
-					setInjury(pDefender, gameState, diceRoller, currentInjuryContext.getAlternateInjuryContext());
-				}
-			}
-
-		} else {
-			currentInjuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-		}
-		return currentInjuryContext;
 	}
 
 	public enum Mode {
