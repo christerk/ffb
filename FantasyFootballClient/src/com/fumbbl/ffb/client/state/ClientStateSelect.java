@@ -96,12 +96,15 @@ public class ClientStateSelect extends ClientState {
 					communication.sendActingPlayer(pPlayer, PlayerAction.REMOVE_CONFUSION, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK:
-					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
+					communication.sendActingPlayer(pPlayer, PlayerAction.MULTIPLE_BLOCK, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_BOMB:
 					if (isThrowBombActionAvailable(pPlayer)) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
+						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
 					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_GAZE:
+					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_MOVE, false);
 					break;
 				default:
 					break;
@@ -133,6 +136,13 @@ public class ClientStateSelect extends ClientState {
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOMB);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOMB, 0));
 			menuItemList.add(moveAction);
+		}
+		if (isHypnoticGazeActionAvailable(true, pPlayer)) {
+			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
+			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
+			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isMoveActionAvailable(pPlayer)) {
 			JMenuItem moveAction = new JMenuItem("Move Action",
@@ -273,6 +283,9 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_MULTIPLE_BLOCK:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
+				break;
+			case PLAYER_ACTION_GAZE:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
 				break;
 			default:
 				actionHandled = false;

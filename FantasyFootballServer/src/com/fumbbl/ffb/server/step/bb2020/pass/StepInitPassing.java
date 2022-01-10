@@ -12,7 +12,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
@@ -82,8 +82,8 @@ public final class StepInitPassing extends AbstractStep {
 							game.setPassCoordinate(targetCoordinate);
 							Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
 							fCatcherId = ((catcher != null) ? catcher.getId() : null);
-							BlitzState blitzState = game.getFieldModel().getBlitzState();
-							String defenderId = blitzState != null ? blitzState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
+							TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+							String defenderId = targetSelectionState != null ? targetSelectionState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
 							if ((defenderId != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
 								game.setThrowerId(defenderId);
 								game.setThrowerAction(game.getDefenderAction());
@@ -114,9 +114,7 @@ public final class StepInitPassing extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)
-			&& (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)
-			|| (game.getTurnMode() == TurnMode.DUMP_OFF))) {
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand) || game.getTurnMode() == TurnMode.DUMP_OFF)) {
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_PASS:
 					ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
@@ -129,8 +127,8 @@ public final class StepInitPassing extends AbstractStep {
 						}
 						Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
 						fCatcherId = ((catcher != null) ? catcher.getId() : null);
-						BlitzState blitzState = game.getFieldModel().getBlitzState();
-						String defenderId = blitzState != null ? blitzState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
+						TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+						String defenderId = targetSelectionState != null ? targetSelectionState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
 						if ((defenderId != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
 							game.setThrowerId(defenderId);
 							game.setThrowerAction(game.getDefenderAction());

@@ -54,15 +54,25 @@ public abstract class Skill implements INamedObject {
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
 	private final int defaultSkillValue;
 	private final List<ISkillProperty> conflictingProperties = new ArrayList<>();
+	private final boolean negativeTrait;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
 	}
 
 	public Skill(String name, SkillCategory category, int defaultSkillValue) {
+		this(name, category, defaultSkillValue, false);
+	}
+
+	public Skill(String name, SkillCategory category, boolean negativeTrait) {
+		this(name, category, 0, negativeTrait);
+	}
+
+	public Skill(String name, SkillCategory category, int defaultSkillValue, boolean negativeTrait) {
 		this.name = name;
 		this.category = category;
 		this.defaultSkillValue = defaultSkillValue;
+		this.negativeTrait = negativeTrait;
 	}
 
 	public void postConstruct() {}
@@ -289,11 +299,11 @@ public abstract class Skill implements INamedObject {
 		return getName();
 	}
 
-	protected boolean meetsRequirements(Player<?> player) {
-		return true;
+	public boolean canBeAssignedTo(Player<?> player) {
+		return conflictingProperties.stream().noneMatch(player::hasSkillProperty);
 	}
 
-	public boolean canBeAssignedTo(Player<?> player) {
-		return meetsRequirements(player) && conflictingProperties.stream().noneMatch(player::hasSkillProperty);
+	public boolean isNegativeTrait() {
+		return negativeTrait;
 	}
 }

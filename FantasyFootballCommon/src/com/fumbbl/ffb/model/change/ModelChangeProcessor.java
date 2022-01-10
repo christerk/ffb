@@ -23,7 +23,7 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
-import com.fumbbl.ffb.model.BlitzState;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.PlayerResult;
@@ -184,7 +184,8 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().setBallMoving((Boolean) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_BLITZ_STATE:
-				pGame.getFieldModel().setBlitzState((BlitzState) pModelChange.getValue());
+			case FIELD_MODEL_SET_TARGET_SELECTION_STATE:
+				pGame.getFieldModel().setTargetSelectionState((TargetSelectionState) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_BOMB_COORDINATE:
 				pGame.getFieldModel().setBombCoordinate((FieldCoordinate) pModelChange.getValue());

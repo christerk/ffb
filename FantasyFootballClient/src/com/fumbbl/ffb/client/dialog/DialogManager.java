@@ -148,13 +148,18 @@ public class DialogManager {
 						break;
 					case SELECT_BLITZ_TARGET:
 						String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
-						if(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting))
-						{
+						if (IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting)) {
 							setDialogHandler(null);
-						}
-						else
-						{						
+						} else {
 							setDialogHandler(new DialogSelectBlitzTargetHandler(getClient()));
+						}
+						break;
+					case SELECT_GAZE_TARGET:
+						String gazeTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL);
+						if (IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF.equals(gazeTargetPanelSetting)) {
+							setDialogHandler(null);
+						} else {
+							setDialogHandler(new DialogSelectGazeTargetHandler(getClient()));
 						}
 						break;
 					case RE_ROLL_FOR_TARGETS:

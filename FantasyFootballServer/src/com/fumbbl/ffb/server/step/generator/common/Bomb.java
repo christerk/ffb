@@ -26,22 +26,25 @@ public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_BOMB, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BOMB),
-			from(StepParameterKey.CATCHER_ID, params.catcherId), from(StepParameterKey.PASS_FUMBLE, params.passFumble));
+			from(StepParameterKey.CATCHER_ID, params.catcherId), from(StepParameterKey.PASS_FUMBLE, params.passFumble),
+			from(StepParameterKey.DONT_DROP_FUMBLE, params.dontDropFumble));
 		// may insert multiple specialEffect sequences add this point
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB);
+		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB, from(StepParameterKey.ALLOW_MOVE_AFTER_PASS, params.allowMoveAfterPass));
 		// may insert endPlayerAction or pass sequence add this point
 		gameState.getStepStack().push(sequence.getSequence());
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String catcherId;
-		private final boolean passFumble;
+		private final boolean passFumble, allowMoveAfterPass, dontDropFumble;
 
-		public SequenceParams(GameState gameState, String catcherId, boolean passFumble) {
+		public SequenceParams(GameState gameState, String catcherId, boolean passFumble, boolean allowMoveAfterPass, boolean dontDropFumble) {
 			super(gameState);
 			this.catcherId = catcherId;
 			this.passFumble = passFumble;
+			this.allowMoveAfterPass = allowMoveAfterPass;
+			this.dontDropFumble = dontDropFumble;
 		}
 	}
 }

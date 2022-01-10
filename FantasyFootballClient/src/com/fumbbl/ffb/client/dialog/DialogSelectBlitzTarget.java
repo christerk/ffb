@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -12,53 +12,28 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
+public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 
-/**
- * 
- * @author Kalimar
- */
-public class DialogBlitz extends Dialog implements ActionListener {
+	private final JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
 
-	public static final int OK_DIALOG = 1;
-	public static final int CANCEL_DIALOG = 2;
+	private final String panelProperty; // IClientProperty.SETTING_BLITZ_TARGET_PANEL;
+	private final String panelOffValue; // IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF;
+	private final DialogId dialogId; // DialogId.SELECT_BLITZ_TARGET;
 
-	private JButton fButton;
-	private int fOptionType;
-	
-	private JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
-
-	
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String pMessage, int pOptionType) {
-		this(pClient, pTitle, new String[] { pMessage }, pOptionType, false, null);
-	}
-
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			boolean pCenteredText) {
-		this(pClient, pTitle, pMessages, pOptionType, pCenteredText, null);
-	}
-
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			String pIconProperty) {
-		this(pClient, pTitle, pMessages, pOptionType, false, pIconProperty);
-	}
-
-	public DialogBlitz(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			boolean pCenteredText, String pIconProperty) {
+	public DialogSelectBlitzTarget(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
+	                               DialogId dialogId, String panelProperty, String panelOffValue) {
 
 		super(pClient, pTitle, false);
-		fOptionType = pOptionType;
 
-		if (getOptionType() == OK_DIALOG) {
-			fButton = new JButton("Ok");
-		} else {
-			fButton = new JButton("Cancel");
-		}
+		this.dialogId = dialogId;
+		this.panelProperty = panelProperty;
+		this.panelOffValue = panelOffValue;
+
+		JButton fButton = new JButton("Ok");
 		fButton.addActionListener(this);
 
 		JPanel[] messagePanels = new JPanel[pMessages.length];
@@ -66,9 +41,7 @@ public class DialogBlitz extends Dialog implements ActionListener {
 			messagePanels[i] = new JPanel();
 			messagePanels[i].setLayout(new BoxLayout(messagePanels[i], BoxLayout.X_AXIS));
 			messagePanels[i].add(new JLabel(pMessages[i]));
-			if (!pCenteredText) {
-				messagePanels[i].add(Box.createHorizontalGlue());
-			}
+			messagePanels[i].add(Box.createHorizontalGlue());
 		}
 
 		JPanel textPanel = new JPanel();
@@ -109,18 +82,13 @@ public class DialogBlitz extends Dialog implements ActionListener {
 			getCloseListener().dialogClosed(this);
 			if(doNotShowAgainCheckbox.isSelected())
 			{
-				getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
-				getClient().getUserInterface().getGameMenuBar().saveUserSettings(false);
+				getClient().setProperty(panelProperty, panelOffValue);
+				getClient().saveUserSettings(false);
 			}
 		}
 	}
 
 	public DialogId getId() {
-		return DialogId.INFORMATION;
+		return dialogId;
 	}
-
-	public int getOptionType() {
-		return fOptionType;
-	}
-
 }

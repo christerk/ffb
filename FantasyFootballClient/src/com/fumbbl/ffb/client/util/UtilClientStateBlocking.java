@@ -50,7 +50,7 @@ public class UtilClientStateBlocking {
 				break;
 			default:
 				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(pClientState.getClient(), playerPosition,
+				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
 					pActionKey);
 				Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
 				actionHandled = showPopupOrBlockPlayer(pClientState, defender, pDoBlitz);

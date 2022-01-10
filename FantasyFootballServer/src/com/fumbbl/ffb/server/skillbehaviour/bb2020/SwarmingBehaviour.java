@@ -1,12 +1,7 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSwarmingErrorParameter;
 import com.fumbbl.ffb.dialog.DialogSwarmingPlayersParameter;
 import com.fumbbl.ffb.model.Game;
@@ -64,23 +59,7 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 									new DialogSwarmingErrorParameter(state.allowedAmount, placedSwarmingPlayers), false);
 						} else {
 
-							for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
-								PlayerState playerState = game.getFieldModel().getPlayerState(player);
-								if (playerState.getBase() == PlayerState.PRONE) {
-									game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-								}
-							}
-
-							game.setTurnMode(TurnMode.KICKOFF);
-							UtilPlayer.refreshPlayersForTurnStart(game);
-							game.getFieldModel().clearTrackNumbers();
-							if (state.handleReceivingTeam) {
-								game.setHomePlaying(!game.isHomePlaying());
-							} else {
-								step.getGameState().setKickingSwarmers(placedSwarmingPlayers);
-							}
-							step.getGameState().getStepStack().pop();
-							step.getResult().setNextAction(StepAction.NEXT_STEP);
+							leave(step, state, game, placedSwarmingPlayers);
 						}
 					}
 				} else {
@@ -90,9 +69,13 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 					state.teamId = swarmingTeam(state, game).getId();
 					Set<Player<?>> playersOnPitch = new HashSet<>();
 					Set<Player<?>> playersReserveNoSwarming = new HashSet<>();
+					int swarmersOnPitch = 0;
 					for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
 						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 						if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
+							if (UtilCards.hasSkill(player, skill)) {
+								swarmersOnPitch++;
+							}
 							playersOnPitch.add(player);
 						} else if (game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE) {
 							if (UtilCards.hasSkill(player, skill)) {
@@ -102,6 +85,7 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 							}
 						}
 					}
+					state.limitingAmount = swarmersOnPitch;
 
 					if (hasSwarmingReserves) {
 						for (Player<?> player : playersOnPitch) {
@@ -121,15 +105,42 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 						game.setTurnMode(TurnMode.SWARMING);
 						step.getGameState().pushCurrentStepOnStack();
 
-						state.allowedAmount = step.getGameState().getDiceRoller().rollSwarmingPlayers();
-						step.getResult().addReport(new ReportSwarmingRoll(state.teamId, state.allowedAmount));
-						UtilServerDialog.showDialog(step.getGameState(), new DialogSwarmingPlayersParameter(state.allowedAmount),
+						state.rolledAmount = step.getGameState().getDiceRoller().rollSwarmingPlayers();
+						state.allowedAmount = Math.min(state.limitingAmount, state.rolledAmount);
+						step.getResult().addReport(new ReportSwarmingRoll(state.teamId, state.allowedAmount, state.rolledAmount, state.limitingAmount));
+						if (state.allowedAmount == 0) {
+							leave(step, state, game, 0);
+
+							step.getResult().setNextAction(StepAction.NEXT_STEP);
+						} else {
+							UtilServerDialog.showDialog(step.getGameState(), new DialogSwarmingPlayersParameter(state.allowedAmount),
 								false);
+						}
 					} else {
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 				}
 				return false;
+			}
+
+			private void leave(StepSwarming step, StepState state, Game game, int placedSwarmingPlayers) {
+				for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					if (playerState.getBase() == PlayerState.PRONE) {
+						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+					}
+				}
+
+				game.setTurnMode(TurnMode.KICKOFF);
+				UtilPlayer.refreshPlayersForTurnStart(game);
+				game.getFieldModel().clearTrackNumbers();
+				if (state.handleReceivingTeam) {
+					game.setHomePlaying(!game.isHomePlaying());
+				} else {
+					step.getGameState().setKickingSwarmers(placedSwarmingPlayers);
+				}
+				step.getGameState().getStepStack().pop();
+				step.getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		});
 	}

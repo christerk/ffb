@@ -45,9 +45,6 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
 					case GOTO_LABEL_ON_FAILURE:
 						state.goToLabelOnFailure = (String) parameter.getValue();
 						break;
-					case GAZE_ONLY:
-						state.gazeOnly = parameter.getValue() != null && (boolean) parameter.getValue();
-						break;
 					default:
 						break;
 				}
@@ -81,7 +78,6 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
-		IServerJsonOption.GAZE_ONLY.addTo(jsonObject, state.gazeOnly);
 		return jsonObject;
 	}
 
@@ -92,13 +88,11 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		state.gazeOnly = IServerJsonOption.GAZE_ONLY.getFrom(game, jsonObject);
 		return this;
 	}
 
-	public class StepState {
+	public static class StepState {
 		public String goToLabelOnFailure;
-		public boolean gazeOnly;
 	}
 
 }

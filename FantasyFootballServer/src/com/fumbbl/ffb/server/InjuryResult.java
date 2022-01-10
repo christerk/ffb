@@ -33,6 +33,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportInjury;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerGame;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 
 import java.util.ArrayList;
@@ -93,9 +94,19 @@ public class InjuryResult implements IJsonSerializable {
 				basePrecedenceList.indexOf(injuryContext.getPlayerState().getBase()) > basePrecedenceList.indexOf(oldPlayerState.getBase())) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(defender);
 				game.getFieldModel().setPlayerState(defender, playerState.changeBase(injuryContext.getPlayerState().getBase()));
+				boolean homeBomb = false, awayBomb = false;
+				String originalBombardier = pStep.getGameState().getPassState().getOriginalBombardier();
+				if (StringTool.isProvided(originalBombardier)) {
+					Player<?> player = game.getPlayerById(originalBombardier);
+					if (game.getTeamHome().hasPlayer(player)) {
+						homeBomb = true;
+					} else {
+						awayBomb = true;
+					}
+				}
 				if ((injuryContext.getPlayerState().getBase() == PlayerState.STUNNED)
-					&& (((defender.getTeam() == game.getTeamHome()) && game.isHomePlaying())
-					|| ((defender.getTeam() == game.getTeamAway()) && !game.isHomePlaying()))) {
+					&& ((defender.getTeam() == game.getTeamHome() && (game.isHomePlaying() || homeBomb))
+					|| (defender.getTeam() == game.getTeamAway() && (!game.isHomePlaying() || awayBomb)))) {
 					game.getFieldModel().setPlayerState(defender,
 						game.getFieldModel().getPlayerState(defender).changeActive(false));
 				}

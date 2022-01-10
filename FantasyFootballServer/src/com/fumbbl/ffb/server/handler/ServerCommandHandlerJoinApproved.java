@@ -24,7 +24,6 @@ import com.fumbbl.ffb.server.util.UtilServerStartGame;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.server.util.UtilSkillBehaviours;
 import com.fumbbl.ffb.util.StringTool;
-
 import org.eclipse.jetty.websocket.api.Session;
 
 /**
@@ -57,7 +56,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 			gameState = loadGameStateById(joinApprovedCommand, session);
 
 		} else if (StringTool.isProvided(joinApprovedCommand.getGameName())) {
-			gameState = gameCache.getGameStateByName(joinApprovedCommand.getGameName(), true);
+			gameState = gameCache.getGameStateByName(joinApprovedCommand.getGameName());
 			if ((gameState == null) && !getServer().isBlockingNewGames()) {
 				boolean testing = (joinApprovedCommand.getGameName().startsWith(_TEST_PREFIX)
 						|| getServer().getMode() == ServerMode.STANDALONE);

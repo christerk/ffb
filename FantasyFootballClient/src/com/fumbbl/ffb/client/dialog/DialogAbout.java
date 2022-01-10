@@ -1,5 +1,13 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.FantasyFootballConstants;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.event.InternalFrameEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,15 +15,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.event.InternalFrameEvent;
-
-import com.fumbbl.ffb.FantasyFootballConstants;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
 
 public class DialogAbout extends Dialog {
 
@@ -72,7 +71,7 @@ public class DialogAbout extends Dialog {
 		if (versionInfo == null) {
 			versionInfo = "Version " + FantasyFootballConstants.CLIENT_VERSION;
 		} else {
-			versionInfo = "Build " + versionInfo;
+			versionInfo = "Build " + FantasyFootballConstants.CLIENT_VERSION + "-" + versionInfo;
 		}
 		Rectangle2D versionBounds = g2d.getFontMetrics().getStringBounds(versionInfo, g2d);
 		g2d.drawString(versionInfo, _WIDTH - 25 - (int) versionBounds.getWidth(), 155);

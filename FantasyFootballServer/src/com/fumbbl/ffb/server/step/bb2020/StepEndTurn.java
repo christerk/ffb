@@ -218,6 +218,8 @@ public class StepEndTurn extends AbstractStep {
 		Game game = getGameState().getGame();
 		game.getFieldModel().clearMultiBlockTargets();
 		UtilServerDialog.hideDialog(getGameState());
+		getGameState().getPassState().setOriginalBombardier(null);
+
 		boolean isHomeTurnEnding = game.isHomePlaying();
 		if (turnNr == 0) {
 			// work around as UtilServer#startHalf is currently called before weapons are removed and we need these values for sendToBoxReason

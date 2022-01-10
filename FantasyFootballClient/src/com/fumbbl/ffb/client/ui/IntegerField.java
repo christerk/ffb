@@ -1,12 +1,11 @@
 package com.fumbbl.ffb.client.ui;
 
-import java.awt.Toolkit;
-
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+import java.awt.Toolkit;
 
 /**
  * This class is a <CODE>TextField</CODE> that only allows integer values to be
@@ -41,7 +40,11 @@ public class IntegerField extends JTextField {
 		if (text == null || text.length() == 0) {
 			return 0;
 		}
-		return Integer.parseInt(text);
+		try {
+			return Integer.parseUnsignedInt(text);
+		} catch (NumberFormatException ex) {
+			return 0;
+		}
 	}
 
 	/**

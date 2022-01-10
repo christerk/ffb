@@ -12,7 +12,7 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.server.IServerJsonOption;
 
 public class PassState implements IJsonSerializable {
-	private String catcherId, interceptorId;
+	private String catcherId, interceptorId, originalBombardier;
 	private boolean passSkillUsed, landingOutOfBounds, interceptorChosen, deflectionSuccessful, interceptionSuccessful;
 	private PassResult result;
 	private FieldCoordinate throwerCoordinate;
@@ -98,6 +98,21 @@ public class PassState implements IJsonSerializable {
 		this.result = result;
 	}
 
+	public String getOriginalBombardier() {
+		return originalBombardier;
+	}
+
+	public void setOriginalBombardier(String originalBombardier) {
+		this.originalBombardier = originalBombardier;
+	}
+
+	public PassState populate(PassState passState) {
+		if (passState != null) {
+			originalBombardier = passState.originalBombardier;
+		}
+		return this;
+	}
+
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
@@ -112,6 +127,7 @@ public class PassState implements IJsonSerializable {
 		IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, interceptorChosen);
 		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, oldTurnMode);
 		IServerJsonOption.INTERCEPTION_SUCCESSFUL.addTo(jsonObject, deflectionSuccessful);
+		IServerJsonOption.ORIGINAL_BOMBER.addTo(jsonObject, originalBombardier);
 		return jsonObject;
 	}
 
@@ -123,13 +139,14 @@ public class PassState implements IJsonSerializable {
 		passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
 		JsonObject throwerObject = IJsonOption.FIELD_COORDINATE_THROWER.getFrom(game, jsonObject);
 		if (throwerObject != null) {
-			throwerCoordinate = (FieldCoordinate) new FieldCoordinate(0).initFrom(game, throwerObject);
+			throwerCoordinate = new FieldCoordinate(0).initFrom(game, throwerObject);
 		}
 		landingOutOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(game, jsonObject);
 		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
 		interceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(game, jsonObject);
 		oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
 		deflectionSuccessful = IServerJsonOption.INTERCEPTION_SUCCESSFUL.getFrom(game, jsonObject);
+		originalBombardier = IServerJsonOption.ORIGINAL_BOMBER.getFrom(game, jsonObject);
 		return this;
 	}
 }

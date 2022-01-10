@@ -69,12 +69,11 @@ public class ClientStateFoul extends ClientStateMove {
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
 					break;
 				default:
-					actionHandled = false;
 					break;
 			}
 		} else {
 			FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-			FieldCoordinate defenderPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition,
+			FieldCoordinate defenderPosition = UtilClientActionKeys.findMoveCoordinate(playerPosition,
 				pActionKey);
 			Player<?> defender = game.getFieldModel().getPlayer(defenderPosition);
 			if (defender != null) {

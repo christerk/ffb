@@ -40,11 +40,11 @@ public class ClientStateGaze extends ClientStateMove {
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
-		boolean actionHandled = false;
+		boolean actionHandled;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		FieldCoordinate victimPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
+		FieldCoordinate victimPosition = UtilClientActionKeys.findMoveCoordinate(playerPosition, pActionKey);
 		Player<?> victim = game.getFieldModel().getPlayer(victimPosition);
 		if (victim != null) {
 			actionHandled = canBeGazed(victim);

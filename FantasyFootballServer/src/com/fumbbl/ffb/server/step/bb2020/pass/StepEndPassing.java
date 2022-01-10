@@ -142,12 +142,16 @@ public final class StepEndPassing extends AbstractStep {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
+		boolean allowMoverAfterPass = PassingDistance.QUICK_PASS == passingDistance
+			&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterQuickPass)
+			&& !fPassFumble;
+		boolean allowMoveAfterBomb = allowMoverAfterPass && !dontDropFumble;
 		// throw bomb mode -> start bomb sequence
 		if (game.getTurnMode().isBombTurn()) {
 			if (StringTool.isProvided(fInterceptorId)) {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble));
+				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
 			} else {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble));
+				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
 			}
 			if (fBombOutOfBounds) {
 				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
@@ -173,7 +177,7 @@ public final class StepEndPassing extends AbstractStep {
 			}
 			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			FieldCoordinate endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-			int deltaX = 0;
+			int deltaX;
 			if (game.isHomePlaying()) {
 				deltaX = endCoordinate.getX() - startCoordinate.getX();
 			} else {
@@ -210,9 +214,7 @@ public final class StepEndPassing extends AbstractStep {
 					|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
 					|| (fPassFumble && !dontDropFumble));
 
-				fEndPlayerAction |= !(PassingDistance.QUICK_PASS == passingDistance
-					&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterQuickPass)
-					&& !fPassFumble
+				fEndPlayerAction |= !(allowMoverAfterPass
 					&& UtilPlayer.isNextMovePossible(game, false));
 
 				if (fEndTurn || fEndPlayerAction) {

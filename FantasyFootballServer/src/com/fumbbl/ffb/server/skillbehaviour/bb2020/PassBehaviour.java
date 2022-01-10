@@ -31,9 +31,12 @@ import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.Pass;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(Rules.BB2020)
 public class PassBehaviour extends SkillBehaviour<Pass> {
@@ -87,6 +90,9 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 					game.getFieldModel().setBombMoving(true);
 					bombAction = true;
+					if (!StringTool.isProvided(passState.getOriginalBombardier())) {
+						passState.setOriginalBombardier(game.getThrowerId());
+					}
 				} else {
 					game.getFieldModel().setBallMoving(true);
 					bombAction = false;
@@ -116,7 +122,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
 						modifiers.toArray(new PassModifier[0]), passingDistance, bombAction, state.result, true));
 					doNextStep = true;
-					if (PassResult.FUMBLE == state.result || PassResult.WILDLY_INACCURATE == state.result) {
+					if (PassResult.FUMBLE == state.result || PassResult.WILDLY_INACCURATE == state.result || PassResult.SAVED_FUMBLE == state.result) {
 						if (step.getReRolledAction() != ReRolledActions.PASS) {
 							step.setReRolledAction(ReRolledActions.PASS);
 							if (UtilCards.hasSkill(game.getThrower(), skill) && !state.passSkillUsed) {
@@ -147,6 +153,19 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 								CatchScatterThrowInMode.SCATTER_BALL));
 						}
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+					} else if (PassResult.SAVED_FUMBLE == state.result) {
+						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+							game.getFieldModel().setBombCoordinate(null);
+							game.getFieldModel().setBombMoving(false);
+							step.publishParameter(from(StepParameterKey.CATCHER_ID, null));
+							step.publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+							step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
+						} else {
+							game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+							game.getFieldModel().setBallMoving(false);
+						}
+						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+
 					} else {
 						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 							game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));

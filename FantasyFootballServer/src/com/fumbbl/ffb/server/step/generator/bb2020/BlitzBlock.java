@@ -26,6 +26,9 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()), from(StepParameterKey.USING_STAB, params.isUsingStab()),
 			from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()), from(StepParameterKey.USING_VOMIT, params.isUsingVomit()));
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
+		if (params.isFrenzyBlock()) {
+			sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		}
 		sequence.add(StepId.HORNS);
 		sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
@@ -53,9 +56,10 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = POW or PUSHBACK
 		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
-		sequence.add(StepId.REMOVE_BLITZ_STATE);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
 		sequence.add(StepId.FOLLOWUP);
+		sequence.add(StepId.TENTACLES, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DROP_FALLING_PLAYERS));
 		sequence.add(StepId.SHADOWING);
 		sequence.add(StepId.PICK_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
 		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
@@ -64,7 +68,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.REMOVE_BLITZ_STATE);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.RESET_FUMBLEROOSKIE, from(StepParameterKey.RESET_FOR_FAILED_BLOCK, true));
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
 		sequence.add(StepId.APOTHECARY,

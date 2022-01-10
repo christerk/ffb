@@ -21,19 +21,30 @@ import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	private final Mode mode;
+	private final boolean allowAttackerChainsaw;
 
 	public InjuryTypeBlock() {
-		this(Mode.REGULAR);
+		this(Mode.REGULAR, true);
 	}
 
 	public InjuryTypeBlock(Mode mode) {
+		this(mode, true);
+	}
+
+	public InjuryTypeBlock(boolean allowAttackerChainsaw) {
+		this(Mode.REGULAR, allowAttackerChainsaw);
+	}
+
+	public InjuryTypeBlock(Mode mode, boolean allowAttackerChainsaw) {
 		super(new Block());
 		this.mode = mode;
+		this.allowAttackerChainsaw = allowAttackerChainsaw;
 	}
 
 	@Override
@@ -47,8 +58,10 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
-			Skill chainsaw = Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
-				.orElse(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
+			Skill chainsaw = allowAttackerChainsaw ? pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
+			if (chainsaw == null) {
+				chainsaw = pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw);
+			}
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
@@ -92,11 +105,15 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			factory.getNigglingInjuryModifier(pDefender).ifPresent(injuryContext::addInjuryModifier);
 
+			Skill stunty = pDefender.getSkillWithProperty(NamedProperties.isHurtMoreEasily);
+			if (stunty != null) {
+				injuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
+			}
 			// do not use injuryModifiers on blocking own team-mate with b&c
 			if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
-				Set<InjuryModifier> armorModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
+				Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
 					pDefender, isStab(), isFoul(), isVomit());
-				injuryContext.addInjuryModifiers(armorModifiers);
+				injuryContext.addInjuryModifiers(injuryModifiers);
 			}
 
 			setInjury(pDefender, gameState, diceRoller);

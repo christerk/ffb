@@ -22,7 +22,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class TakeRoot extends Skill {
 
 	public TakeRoot() {
-		super("Take Root", SkillCategory.TRAIT);
+		super("Take Root", SkillCategory.TRAIT, true);
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportJumpRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
@@ -112,17 +113,13 @@ public class StepJump extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_PLAYER_CHOICE:
-					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-					if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.DIVING_TACKLE) {
-						usingDivingTackle = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-						getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					}
-					break;
-				default:
-					break;
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
+				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+				if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.DIVING_TACKLE) {
+					usingDivingTackle = StringTool.isProvided(playerChoiceCommand.getPlayerId());
+					getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				}
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -144,7 +141,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		boolean doLeap = (actingPlayer.isJumping() && mechanic.isAvailableAsNextMove(game, actingPlayer, actingPlayer.isJumping()));
+		boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
 		if (doLeap) {
 			if (ReRolledActions.JUMP == getReRolledAction()) {
 				if ((getReRollSource() == null)

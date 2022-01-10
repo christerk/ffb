@@ -9,6 +9,7 @@ public enum StepParameterKey {
 
 	ACTING_TEAM, // Boolean
 	ADMIN_MODE, // Boolean
+	ALLOW_MOVE_AFTER_PASS, // Boolean
 	ALTERNATE_GOTO_LABEL, // String
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
@@ -45,7 +46,6 @@ public enum StepParameterKey {
 	FOLLOWUP_CHOICE, // Boolean
 	FOUL_DEFENDER_ID, // String
 	FOULER_HAS_BALL, // String
-	GAZE_ONLY, // Boolean
 	GAZE_VICTIM_ID, // String
 	GOTO_LABEL, // String
 	GOTO_LABEL_ON_BLITZ, // String

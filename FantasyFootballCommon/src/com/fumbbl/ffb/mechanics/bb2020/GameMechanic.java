@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 
@@ -36,6 +38,14 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		add(TurnMode.DUMP_OFF);
 		add(TurnMode.BLITZ);
 		add(TurnMode.QUICK_SNAP);
+		add(TurnMode.BETWEEN_TURNS);
+	}};
+
+	private static final Set<TurnMode> modesAllowingPro = new HashSet<TurnMode>() {{
+		add(TurnMode.REGULAR);
+		add(TurnMode.BLITZ);
+		add(TurnMode.BOMB_HOME);
+		add(TurnMode.BOMB_AWAY);
 	}};
 
 	@Override
@@ -59,8 +69,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean eligibleForPro(Game game, Player<?> player) {
-		return game.getActingPlayer().getPlayer() == player && (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ);
+	public boolean 	eligibleForPro(Game game, Player<?> player) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		return (!game.getActingPlayer().isStandingUp() || game.getActingPlayer().hasActedIgnoringNegativeTraits()) && playerState.hasTacklezones() && game.getActingPlayer().getPlayer() == player && modesAllowingPro.contains(game.getTurnMode());
 	}
 
 	@Override
@@ -141,8 +152,13 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isGazeActionAllowed(TurnMode turnMode) {
+	public boolean isGazeActionAllowed(TurnMode turnMode, PlayerAction playerAction) {
 		return TurnMode.BLITZ != turnMode;
+	}
+
+	@Override
+	public boolean declareGazeActionAtStart() {
+		return true;
 	}
 
 	@Override
@@ -279,7 +295,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean canUseApo(Game game, Player<?> defender) {
-		if (defender.getPlayerType() == PlayerType.STAR) {
+		if (defender instanceof ZappedPlayer || defender.getPlayerType() == PlayerType.STAR) {
 			return false;
 		}
 

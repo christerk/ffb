@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogUseInducementParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Card;
@@ -14,6 +15,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -102,16 +104,12 @@ public final class StepInitInducement extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_USE_INDUCEMENT:
-					ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-					fInducementType = useInducementCommand.getInducementType();
-					fCard = useInducementCommand.getCard();
-					fEndInducementPhase = ((fInducementType == null) && (fCard == null));
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-					break;
-				default:
-					break;
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_INDUCEMENT) {
+				ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+				fInducementType = useInducementCommand.getInducementType();
+				fCard = useInducementCommand.getCard();
+				fEndInducementPhase = ((fInducementType == null) && (fCard == null));
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -163,6 +161,7 @@ public final class StepInitInducement extends AbstractStep {
 			.filter(type -> type.getUsage() == Usage.SPELL && turnData.getInducementSet().hasUsesLeft(type))
 			.collect(Collectors.toSet());
 		if ((InducementPhase.END_OF_OWN_TURN == fInducementPhase || InducementPhase.END_OF_OPPONENT_TURN == fInducementPhase) && !fTouchdownOrEndOfHalf) {
+			game.setTurnMode(TurnMode.BETWEEN_TURNS);
 			useableInducements.addAll(availableTypes);
 		}
 		return useableInducements.toArray(new InducementType[0]);
@@ -183,7 +182,7 @@ public final class StepInitInducement extends AbstractStep {
 				}
 			}
 		}
-		return playableCards.toArray(new Card[playableCards.size()]);
+		return playableCards.toArray(new Card[0]);
 	}
 
 	// JSON serialization
