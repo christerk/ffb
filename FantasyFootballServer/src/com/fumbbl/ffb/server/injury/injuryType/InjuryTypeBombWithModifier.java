@@ -25,9 +25,9 @@ public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		// in BB2020 bombs place players prone, chainsaw only takes effect on falling down or being knocked down
 		// hence chainsaw is ignored here
@@ -36,8 +36,8 @@ public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 		injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 		if (!injuryContext.isArmorBroken()) {
-				((ArmorModifierFactory) game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER)).specialEffectArmourModifiers(SpecialEffect.BOMB)
-					.forEach(injuryContext::addArmorModifier);
+			((ArmorModifierFactory) game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER)).specialEffectArmourModifiers(SpecialEffect.BOMB)
+				.forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 
@@ -54,6 +54,5 @@ public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 			setInjury(pDefender, gameState, diceRoller);
 
 		}
-		return injuryContext;
 	}
 }

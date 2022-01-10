@@ -22,9 +22,9 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 	}
 
 	@Override
-	public final InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                        Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                        ApothecaryMode pApothecaryMode) {
+	public final void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                               Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                               ApothecaryMode pApothecaryMode) {
 
 		Optional<IInjuryContextModification> modification = pAttacker.getUnusedInjuryModification(injuryType);
 
@@ -57,7 +57,6 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		} else {
 			savedByArmour(currentInjuryContext);
 		}
-		return currentInjuryContext;
 	}
 
 	protected void savedByArmour(InjuryContext currentInjuryContext) {

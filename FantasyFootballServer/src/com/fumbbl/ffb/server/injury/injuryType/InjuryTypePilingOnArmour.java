@@ -29,9 +29,9 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -86,6 +86,5 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 		}
 
-		return injuryContext;
 	}
 }

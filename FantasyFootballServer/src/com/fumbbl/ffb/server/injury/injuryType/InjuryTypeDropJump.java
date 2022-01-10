@@ -38,9 +38,9 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -94,6 +94,5 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 		}
 
-		return injuryContext;
 	}
 }

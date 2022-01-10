@@ -19,9 +19,9 @@ public class InjuryTypeKTMInjury extends InjuryTypeServer<KTMInjury> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		injuryContext.setArmorBroken(true);
 
@@ -36,6 +36,5 @@ public class InjuryTypeKTMInjury extends InjuryTypeServer<KTMInjury> {
 			injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}
 
-		return injuryContext;
 	}
 }

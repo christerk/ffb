@@ -24,9 +24,9 @@ public class InjuryTypeProjectileVomit extends InjuryTypeServer<ProjectileVomit>
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -48,6 +48,5 @@ public class InjuryTypeProjectileVomit extends InjuryTypeServer<ProjectileVomit>
 			injuryContext.setInjury(null);
 		}
 
-		return injuryContext;
 	}
 }

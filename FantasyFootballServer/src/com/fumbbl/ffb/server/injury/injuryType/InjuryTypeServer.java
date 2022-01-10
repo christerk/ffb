@@ -72,10 +72,10 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		return false;
 	}
 
-	public abstract InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                           Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
-	                                           FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                           ApothecaryMode pApothecaryMode);
+	public abstract void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
+	                                  FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                                  ApothecaryMode pApothecaryMode);
 
 	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
 		setInjury(pDefender, gameState, diceRoller, injuryContext);

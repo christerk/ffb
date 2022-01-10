@@ -25,9 +25,9 @@ public class InjuryTypeFireball extends InjuryTypeServer<Fireball> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 		if (!injuryContext.isArmorBroken()) {
@@ -58,6 +58,5 @@ public class InjuryTypeFireball extends InjuryTypeServer<Fireball> {
 			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 		}
 
-		return injuryContext;
 	}
 }

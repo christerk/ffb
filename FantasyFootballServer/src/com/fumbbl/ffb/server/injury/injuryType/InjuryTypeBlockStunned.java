@@ -22,9 +22,9 @@ public class InjuryTypeBlockStunned extends InjuryTypeServer<BlockStunned> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -42,6 +42,5 @@ public class InjuryTypeBlockStunned extends InjuryTypeServer<BlockStunned> {
 			injuryContext.setInjury(new PlayerState(PlayerState.STUNNED));
 		}
 
-		return injuryContext;
 	}
 }

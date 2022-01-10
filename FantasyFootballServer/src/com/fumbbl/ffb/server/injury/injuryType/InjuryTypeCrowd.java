@@ -20,9 +20,9 @@ public abstract class InjuryTypeCrowd<T extends InjuryType> extends InjuryTypeSe
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorBroken(true);
@@ -39,6 +39,5 @@ public abstract class InjuryTypeCrowd<T extends InjuryType> extends InjuryTypeSe
 			injuryContext.setInjury(new PlayerState(PlayerState.RESERVE));
 		}
 
-		return injuryContext;
 	}
 }

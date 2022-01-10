@@ -19,9 +19,9 @@ public class InjuryTypeBallAndChain extends InjuryTypeServer<BallAndChain> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 		// ball and chain always breaks armour on being knocked down
 		injuryContext.setArmorBroken(true);
 
@@ -31,7 +31,6 @@ public class InjuryTypeBallAndChain extends InjuryTypeServer<BallAndChain> {
 			pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 		setInjury(pDefender, gameState, diceRoller);
 
-		return injuryContext;
 	}
 
 }

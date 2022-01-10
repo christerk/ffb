@@ -24,9 +24,9 @@ public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                                  ApothecaryMode pApothecaryMode) {
+	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+	                         ApothecaryMode pApothecaryMode) {
 
 		injuryContext.setArmorBroken(true);
 
@@ -39,7 +39,6 @@ public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 
 		setInjury(pDefender, gameState, diceRoller);
 
-		return injuryContext;
 	}
 
 	@Override

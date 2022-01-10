@@ -19,16 +19,20 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		this.validInjuryTypes = validInjuryTypes;
 	}
 
-	public boolean modifyArmour(InjuryContext injuryContext, GameState gameState) {
-		if (injuryContext.getAlternateInjuryContext() == null && !injuryContext.isArmorBroken()) {
+	public boolean modifyArmour(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
+		if (injuryContext.getAlternateInjuryContext() == null && tryArmourRollModification(injuryContext, injuryType)) {
 			InjuryContextForModification newContext = newContext(injuryContext);
-			if (modifyArmourInternal(newContext, gameState)) {
+			if (modifyArmourInternal(gameState, newContext, injuryType)) {
 				newContext.setSkillForAlternateContext(skill);
 				injuryContext.setAlternateInjuryContext(newContext);
 				return true;
 			}
 		}
 		return false;
+	}
+
+	protected boolean tryArmourRollModification(InjuryContext injuryContext, InjuryType injuryType) {
+		return !injuryContext.isArmorBroken();
 	}
 
 	public boolean modifyInjury(InjuryContext injuryContext, GameState gameState) {
@@ -43,7 +47,7 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		return false;
 	}
 
-	protected boolean modifyArmourInternal(InjuryContextForModification injuryContext, GameState gameState) {
+	protected boolean modifyArmourInternal(GameState gameState, InjuryContextForModification injuryContext, InjuryType injuryType) {
 		return false;
 	}
 
