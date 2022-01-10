@@ -6,6 +6,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.injury.context.InjuryContextForModification;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -30,20 +31,30 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
-		InjuryContext currentInjuryContext = injuryContext;
-
-		armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, currentInjuryContext);
+		armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, injuryContext);
 
 		if (modification.isPresent()) {
-			boolean modified = ((InjuryContextModification) modification.get()).modifyArmour(currentInjuryContext, gameState);
+			boolean armourWasBroken = injuryContext.isArmorBroken();
+			boolean modified = ((InjuryContextModification) modification.get()).modifyArmour(gameState, injuryContext, injuryType);
 
 			if (modified) {
-				savedByArmour(currentInjuryContext);
-				currentInjuryContext = currentInjuryContext.getAlternateInjuryContext();
+				InjuryContextForModification alternateInjuryContext = injuryContext.getAlternateInjuryContext();
+				if (armourWasBroken) {
+					alternateInjuryContext.clearArmorModifiers();
+					armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext);
+				}
+
+				injury(game, gameState, diceRoller, pAttacker, pDefender, modification, alternateInjuryContext);
+
 			}
 		}
 
+		injury(game, gameState, diceRoller, pAttacker, pDefender, modification, injuryContext);
 
+	}
+
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private void injury(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, Optional<IInjuryContextModification> modification, InjuryContext currentInjuryContext) {
 		if (currentInjuryContext.isArmorBroken()) {
 			injuryRoll(game, gameState, diceRoller, pAttacker, pDefender, currentInjuryContext);
 

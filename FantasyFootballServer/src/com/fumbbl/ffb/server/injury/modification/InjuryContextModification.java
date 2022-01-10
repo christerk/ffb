@@ -20,8 +20,8 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 	}
 
 	public boolean modifyArmour(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
-		if (injuryContext.getAlternateInjuryContext() == null && tryArmourRollModification(injuryContext, injuryType)) {
-			InjuryContextForModification newContext = newContext(injuryContext);
+		if (tryArmourRollModification(injuryContext, injuryType)) {
+			InjuryContextForModification newContext = context(injuryContext);
 			if (modifyArmourInternal(gameState, newContext, injuryType)) {
 				newContext.setSkillForAlternateContext(skill);
 				injuryContext.setAlternateInjuryContext(newContext);
@@ -36,8 +36,8 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 	}
 
 	public boolean modifyInjury(InjuryContext injuryContext, GameState gameState) {
-		if (injuryContext.getAlternateInjuryContext() == null && !injuryContext.isCasualty()) {
-			InjuryContextForModification newContext = newContext(injuryContext);
+		if (!injuryContext.isCasualty()) {
+			InjuryContextForModification newContext = context(injuryContext);
 			if (modifyInjuryInternal(newContext, gameState)) {
 				newContext.setSkillForAlternateContext(skill);
 				injuryContext.setAlternateInjuryContext(newContext);
@@ -69,16 +69,29 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		this.skill = skill;
 	}
 
+	private InjuryContextForModification context(InjuryContext context) {
+		if (context.getAlternateInjuryContext() != null) {
+			return context.getAlternateInjuryContext();
+		}
+		return newContext(context);
+	}
+
 	private InjuryContextForModification newContext(InjuryContext injuryContext) {
 		InjuryContextForModification newContext = new InjuryContextForModification();
 		newContext.fInjuryType = injuryContext.fInjuryType;
-		newContext.fArmorModifiers = injuryContext.fArmorModifiers;
+		newContext.fArmorModifiers.addAll(injuryContext.fArmorModifiers);
+		newContext.fInjuryModifiers.addAll(injuryContext.fInjuryModifiers);
+		newContext.casualtyModifiers.addAll(injuryContext.casualtyModifiers);
 		newContext.fAttackerId = injuryContext.fAttackerId;
 		newContext.fDefenderId = injuryContext.fDefenderId;
 		newContext.fDefenderPosition = injuryContext.fDefenderPosition;
 		newContext.fArmorBroken = injuryContext.fArmorBroken;
 		newContext.fArmorRoll = new int[2];
 		System.arraycopy(injuryContext.fArmorRoll, 0, newContext.fArmorRoll, 0, 2);
+		if (injuryContext.fInjuryRoll != null) {
+			newContext.fInjuryRoll = new int[2];
+			System.arraycopy(injuryContext.fInjuryRoll, 0, newContext.fInjuryRoll, 0, 2);
+		}
 		newContext.fApothecaryMode = injuryContext.fApothecaryMode;
 		newContext.fApothecaryStatus = injuryContext.fApothecaryStatus;
 		newContext.setSkillUse(skillUse());
