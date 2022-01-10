@@ -44,12 +44,6 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 	}
 
 	@Override
-	protected boolean modifyInjuryInternal(InjuryContextForModification newContext, GameState gameState) {
-
-		return false;
-	}
-
-	@Override
 	public SkillUse skillUse() {
 		return SkillUse.RE_ROLL_LOWER_ARMOUR_DIE;
 	}

@@ -43,9 +43,13 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		return false;
 	}
 
-	protected abstract boolean modifyArmourInternal(InjuryContextForModification injuryContext, GameState gameState);
+	protected boolean modifyArmourInternal(InjuryContextForModification injuryContext, GameState gameState) {
+		return false;
+	}
 
-	protected abstract boolean modifyInjuryInternal(InjuryContextForModification injuryContext, GameState gameState);
+	protected boolean modifyInjuryInternal(InjuryContextForModification injuryContext, GameState gameState) {
+		return false;
+	}
 
 	abstract SkillUse skillUse();
 
