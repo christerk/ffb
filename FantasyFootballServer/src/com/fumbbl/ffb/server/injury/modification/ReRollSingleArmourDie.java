@@ -46,6 +46,6 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 
 	@Override
 	public SkillUse skillUse() {
-		return SkillUse.RE_ROLL_LOWER_ARMOUR_DIE;
+		return SkillUse.RE_ROLL_SINGLE_ARMOUR_DIE;
 	}
 }
