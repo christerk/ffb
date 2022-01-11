@@ -29,7 +29,7 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext currentInjuryContext) {
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext injuryContext) {
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
@@ -41,7 +41,7 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext) {
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext) {
 		// Blatant Foul breaks armor without roll
 		if (game.isActive(NamedProperties.foulBreaksArmourWithoutRoll)) {
 			injuryContext.setArmorBroken(true);

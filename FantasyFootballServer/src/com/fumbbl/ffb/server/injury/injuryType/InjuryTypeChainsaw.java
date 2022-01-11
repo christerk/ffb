@@ -19,17 +19,17 @@ public class InjuryTypeChainsaw extends ModificationAwareInjuryTypeServer<Chains
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext currentInjuryContext) {
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext injuryContext) {
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		factory.findInjuryModifiers(game, injuryContext, pAttacker,
-			pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+			pDefender, isStab(), isFoul(), isVomit()).forEach(injuryContext::addInjuryModifier);
 
 		setInjury(pDefender, gameState, diceRoller);
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext) {
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext) {
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
