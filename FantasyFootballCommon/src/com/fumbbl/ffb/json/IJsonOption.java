@@ -13,7 +13,6 @@ public interface IJsonOption {
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
-	JsonObjectOption ALTERNATE_INJURY_CONTEXT = new JsonObjectOption("alternateInjuryContext");
 	JsonIntOption AMOUNT = new JsonIntOption("amount");
 	JsonObjectOption ANIMATION = new JsonObjectOption("animation");
 	JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", Factory.ANIMATION_TYPE);
@@ -262,6 +261,7 @@ public interface IJsonOption {
 	JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
 	JsonObjectOption MODEL_CHANGE_LIST = new JsonObjectOption("modelChangeList");
 	JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
+	JsonObjectOption MODIFIED_INJURY_CONTEXT = new JsonObjectOption("modifiedInjuryContext");
 	JsonIntOption MODIFIER = new JsonIntOption("modifier");
 	JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");
 	JsonIntOption MOVEMENT = new JsonIntOption("movement");

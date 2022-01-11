@@ -6,7 +6,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.injury.context.InjuryContextForModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -38,7 +38,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 			boolean modified = ((InjuryContextModification) modification.get()).modifyArmour(gameState, injuryContext, injuryType);
 
 			if (modified) {
-				InjuryContextForModification alternateInjuryContext = injuryContext.getAlternateInjuryContext();
+				ModifiedInjuryContext alternateInjuryContext = injuryContext.getModifiedInjuryContext();
 				if (armourWasBroken) {
 					alternateInjuryContext.clearArmorModifiers();
 					armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext);
@@ -61,7 +61,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 			if (modification.isPresent()) {
 				boolean modified = ((InjuryContextModification) modification.get()).modifyInjury(currentInjuryContext, gameState);
 				if (modified) {
-					setInjury(pDefender, gameState, diceRoller, currentInjuryContext.getAlternateInjuryContext());
+					setInjury(pDefender, gameState, diceRoller, currentInjuryContext.getModifiedInjuryContext());
 				}
 			}
 

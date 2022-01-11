@@ -51,7 +51,7 @@ public class InjuryContext {
 	public ApothecaryStatus fApothecaryStatus;
 	public Set<CasualtyModifier> casualtyModifiers;
 
-	private InjuryContextForModification alternateInjuryContext;
+	private ModifiedInjuryContext modifiedInjuryContext;
 
 	public InjuryContext() {
 		fArmorModifiers = new HashSet<>();
@@ -59,12 +59,12 @@ public class InjuryContext {
 		casualtyModifiers = new HashSet<>();
 	}
 
-	public InjuryContextForModification getAlternateInjuryContext() {
-		return alternateInjuryContext;
+	public ModifiedInjuryContext getModifiedInjuryContext() {
+		return modifiedInjuryContext;
 	}
 
-	public void setAlternateInjuryContext(InjuryContextForModification alternateInjuryContext) {
-		this.alternateInjuryContext = alternateInjuryContext;
+	public void setModifiedInjuryContext(ModifiedInjuryContext modifiedInjuryContext) {
+		this.modifiedInjuryContext = modifiedInjuryContext;
 	}
 
 	public void setInjuryType(InjuryType pInjuryType) {
@@ -374,10 +374,10 @@ public class InjuryContext {
 		getCasualtyModifiers().forEach(modifier -> casualtyModifiers.add(UtilJson.toJsonValue(modifier)));
 		IJsonOption.CASUALTY_MODIFIERS.addTo(jsonObject, casualtyModifiers);
 
-		if (alternateInjuryContext != null) {
+		if (modifiedInjuryContext != null) {
 			JsonObject alternateContext = new JsonObject();
-			alternateInjuryContext.toJsonValue(alternateContext);
-			IJsonOption.ALTERNATE_INJURY_CONTEXT.addTo(jsonObject, alternateContext);
+			modifiedInjuryContext.toJsonValue(alternateContext);
+			IJsonOption.MODIFIED_INJURY_CONTEXT.addTo(jsonObject, alternateContext);
 		}
 
 	}
@@ -428,11 +428,11 @@ public class InjuryContext {
 		casualtyModifiersArray.values().forEach(jsonValue -> casualtyModifiers
 			.add((CasualtyModifier) UtilJson.toEnumWithName(casualtyModifierFactory, jsonValue)));
 
-		JsonObject alternateContext = IJsonOption.ALTERNATE_INJURY_CONTEXT.getFrom(source, jsonObject);
+		JsonObject alternateContext = IJsonOption.MODIFIED_INJURY_CONTEXT.getFrom(source, jsonObject);
 
 		if (alternateContext != null) {
-			alternateInjuryContext = new InjuryContextForModification();
-			alternateInjuryContext.initFrom(source, alternateContext);
+			modifiedInjuryContext = new ModifiedInjuryContext();
+			modifiedInjuryContext.initFrom(source, alternateContext);
 		}
 
 	}

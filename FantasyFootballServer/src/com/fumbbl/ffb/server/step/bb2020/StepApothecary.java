@@ -16,7 +16,7 @@ import com.fumbbl.ffb.dialog.DialogUseApothecaryParameter;
 import com.fumbbl.ffb.dialog.DialogUseIgorParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.injury.context.InjuryContextForModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
@@ -144,13 +144,13 @@ public class StepApothecary extends AbstractStep {
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					Skill skill = clientCommandUseSkill.getSkill();
-					getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), fInjuryResult.injuryContext().getAlternateInjuryContext().getSkillUse()));
+					getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), fInjuryResult.injuryContext().getModifiedInjuryContext().getSkillUse()));
 					if (clientCommandUseSkill.isSkillUsed()) {
-						fInjuryResult.injuryContext().getAlternateInjuryContext().getReports().forEach(report -> getResult().addReport(report));
+						fInjuryResult.injuryContext().getModifiedInjuryContext().getReports().forEach(report -> getResult().addReport(report));
 						fInjuryResult.swapToAlternateContext(this, getGameState().getGame());
 						getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
 					} else {
-						fInjuryResult.injuryContext().setAlternateInjuryContext(null);
+						fInjuryResult.injuryContext().setModifiedInjuryContext(null);
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -202,13 +202,13 @@ public class StepApothecary extends AbstractStep {
 			UtilServerDialog.hideDialog(getGameState());
 			boolean doNextStep = true;
 			Game game = getGameState().getGame();
-			if (fInjuryResult.injuryContext().getAlternateInjuryContext() != null) {
+			if (fInjuryResult.injuryContext().getModifiedInjuryContext() != null) {
 				if (fShowReport) {
 					fInjuryResult.report(this);
 				}
 
-				InjuryContextForModification injuryContext = fInjuryResult.injuryContext().getAlternateInjuryContext();
-				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(injuryContext.fAttackerId, injuryContext.getSkillForAlternateContext(), 0), true);
+				ModifiedInjuryContext injuryContext = fInjuryResult.injuryContext().getModifiedInjuryContext();
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(injuryContext.fAttackerId, injuryContext.getUsedSkill(), 0), true);
 				doNextStep = false;
 			} else if (fInjuryResult.injuryContext().getApothecaryStatus() != null) {
 				switch (fInjuryResult.injuryContext().getApothecaryStatus()) {

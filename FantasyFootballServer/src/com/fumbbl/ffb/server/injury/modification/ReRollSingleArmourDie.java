@@ -7,7 +7,7 @@ import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.injury.context.InjuryContextForModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.report.bb2020.ReportOldPro;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -32,7 +32,7 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 	}
 
 	@Override
-	protected boolean modifyArmourInternal(GameState gameState, InjuryContextForModification newContext, InjuryType injuryType) {
+	protected boolean modifyArmourInternal(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		boolean spottedFoul = (newContext.fArmorRoll[0] == newContext.fArmorRoll[1] && injuryType.isFoul());

@@ -4,7 +4,7 @@ import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.injury.context.InjuryContextForModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 
@@ -21,10 +21,10 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 
 	public boolean modifyArmour(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
 		if (tryArmourRollModification(injuryContext, injuryType)) {
-			InjuryContextForModification newContext = context(injuryContext);
+			ModifiedInjuryContext newContext = context(injuryContext);
 			if (modifyArmourInternal(gameState, newContext, injuryType)) {
-				newContext.setSkillForAlternateContext(skill);
-				injuryContext.setAlternateInjuryContext(newContext);
+				newContext.setUsedSkill(skill);
+				injuryContext.setModifiedInjuryContext(newContext);
 				return true;
 			}
 		}
@@ -37,21 +37,21 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 
 	public boolean modifyInjury(InjuryContext injuryContext, GameState gameState) {
 		if (!injuryContext.isCasualty()) {
-			InjuryContextForModification newContext = context(injuryContext);
+			ModifiedInjuryContext newContext = context(injuryContext);
 			if (modifyInjuryInternal(newContext, gameState)) {
-				newContext.setSkillForAlternateContext(skill);
-				injuryContext.setAlternateInjuryContext(newContext);
+				newContext.setUsedSkill(skill);
+				injuryContext.setModifiedInjuryContext(newContext);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	protected boolean modifyArmourInternal(GameState gameState, InjuryContextForModification injuryContext, InjuryType injuryType) {
+	protected boolean modifyArmourInternal(GameState gameState, ModifiedInjuryContext injuryContext, InjuryType injuryType) {
 		return false;
 	}
 
-	protected boolean modifyInjuryInternal(InjuryContextForModification injuryContext, GameState gameState) {
+	protected boolean modifyInjuryInternal(ModifiedInjuryContext injuryContext, GameState gameState) {
 		return false;
 	}
 
@@ -69,15 +69,15 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		this.skill = skill;
 	}
 
-	private InjuryContextForModification context(InjuryContext context) {
-		if (context.getAlternateInjuryContext() != null) {
-			return context.getAlternateInjuryContext();
+	private ModifiedInjuryContext context(InjuryContext context) {
+		if (context.getModifiedInjuryContext() != null) {
+			return context.getModifiedInjuryContext();
 		}
 		return newContext(context);
 	}
 
-	private InjuryContextForModification newContext(InjuryContext injuryContext) {
-		InjuryContextForModification newContext = new InjuryContextForModification();
+	private ModifiedInjuryContext newContext(InjuryContext injuryContext) {
+		ModifiedInjuryContext newContext = new ModifiedInjuryContext();
 		newContext.fInjuryType = injuryContext.fInjuryType;
 		newContext.fArmorModifiers.addAll(injuryContext.fArmorModifiers);
 		newContext.fInjuryModifiers.addAll(injuryContext.fInjuryModifiers);

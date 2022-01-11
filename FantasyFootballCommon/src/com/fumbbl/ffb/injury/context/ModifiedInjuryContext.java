@@ -11,9 +11,9 @@ import com.fumbbl.ffb.report.ReportList;
 import java.util.Arrays;
 import java.util.List;
 
-public class InjuryContextForModification extends InjuryContext {
+public class ModifiedInjuryContext extends InjuryContext {
 
-	private Skill skillForAlternateContext;
+	private Skill usedSkill;
 	private SkillUse skillUse;
 	private final ReportList reports = new ReportList();
 
@@ -25,12 +25,12 @@ public class InjuryContextForModification extends InjuryContext {
 		this.skillUse = skillUse;
 	}
 
-	public Skill getSkillForAlternateContext() {
-		return skillForAlternateContext;
+	public Skill getUsedSkill() {
+		return usedSkill;
 	}
 
-	public void setSkillForAlternateContext(Skill skillForAlternateContext) {
-		this.skillForAlternateContext = skillForAlternateContext;
+	public void setUsedSkill(Skill usedSkill) {
+		this.usedSkill = usedSkill;
 	}
 
 	public void addReport(IReport report) {
@@ -42,19 +42,19 @@ public class InjuryContextForModification extends InjuryContext {
 	}
 
 	@Override
-	public InjuryContextForModification getAlternateInjuryContext() {
+	public ModifiedInjuryContext getModifiedInjuryContext() {
 		return null;
 	}
 
 	@Override
-	public void setAlternateInjuryContext(InjuryContextForModification alternateInjuryContext) {
-		super.setAlternateInjuryContext(null); // force this class to never have an alternate context
+	public void setModifiedInjuryContext(ModifiedInjuryContext modifiedInjuryContext) {
+		super.setModifiedInjuryContext(null); // force this class to never have an alternate context
 	}
 
 	@Override
 	public void toJsonValue(JsonObject jsonObject) {
 		super.toJsonValue(jsonObject);
-		IJsonOption.SKILL.addTo(jsonObject, skillForAlternateContext);
+		IJsonOption.SKILL.addTo(jsonObject, usedSkill);
 		IJsonOption.SKILL_USE.addTo(jsonObject, skillUse);
 		IJsonOption.REPORT_LIST.addTo(jsonObject, reports.toJsonValue());
 	}
@@ -62,7 +62,7 @@ public class InjuryContextForModification extends InjuryContext {
 	@Override
 	public void initFrom(IFactorySource source, JsonObject jsonObject) {
 		super.initFrom(source, jsonObject);
-		skillForAlternateContext = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		usedSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		skillUse = (SkillUse) IJsonOption.SKILL_USE.getFrom(source, jsonObject);
 		JsonObject reportListObject = IJsonOption.REPORT_LIST.getFrom(source, jsonObject);
 		if (reportListObject != null) {

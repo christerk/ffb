@@ -182,8 +182,8 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 	public void swapToAlternateContext(IStep pStep, Game game) {
-		if (injuryContext.getAlternateInjuryContext() != null) {
-			injuryContext = injuryContext.getAlternateInjuryContext();
+		if (injuryContext.getModifiedInjuryContext() != null) {
+			injuryContext = injuryContext.getModifiedInjuryContext();
 			alreadyReported = false;
 			if (handleIgnoringArmourBreaks(pStep, game.getPlayerById(injuryContext.fDefenderId), game)) {
 				injuryContext.setSendToBoxReason(null);
