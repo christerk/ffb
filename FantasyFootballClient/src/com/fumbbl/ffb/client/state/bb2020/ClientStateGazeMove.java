@@ -6,10 +6,9 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientStateMove;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 public class ClientStateGazeMove extends ClientStateMove {
 	public ClientStateGazeMove(FantasyFootballClient pClient) {
@@ -26,16 +25,9 @@ public class ClientStateGazeMove extends ClientStateMove {
 		boolean result = super.mouseOverPlayer(player);
 
 		Game game = getClient().getGame();
-		FieldModel fieldModel = game.getFieldModel();
-		TargetSelectionState targetSelectionState = getClient().getGame().getFieldModel().getTargetSelectionState();
-		if (targetSelectionState != null && targetSelectionState.isSelected()) {
-			boolean isTargetedPlayer = player.getId().equalsIgnoreCase(targetSelectionState.getSelectedPlayerId());
-			ActingPlayer actingPlayer = game.getActingPlayer();
-			boolean isAdjacent = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(fieldModel.getPlayerCoordinate(player));
 
-			if (isTargetedPlayer && isAdjacent) {
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GAZE);
-			}
+		if (UtilPlayer.isAdjacentGazeTarget(game, player)) {
+			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GAZE);
 		}
 
 		return result;
@@ -45,16 +37,10 @@ public class ClientStateGazeMove extends ClientStateMove {
 	protected void clickOnPlayer(Player<?> player) {
 
 		Game game = getClient().getGame();
-		FieldModel fieldModel = game.getFieldModel();
-		TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
-		if (targetSelectionState != null && targetSelectionState.isSelected()) {
-			boolean isTargetedPlayer = player.getId().equalsIgnoreCase(targetSelectionState.getSelectedPlayerId());
-			ActingPlayer actingPlayer = game.getActingPlayer();
-			boolean isAdjacent = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(fieldModel.getPlayerCoordinate(player));
-			if (isTargetedPlayer && isAdjacent) {
-				getClient().getCommunication().sendGaze(actingPlayer.getPlayerId(), player);
-				return;
-			}
+		ActingPlayer actingPlayer = game.getActingPlayer();
+
+		if (UtilPlayer.isAdjacentGazeTarget(game, player)) {
+			getClient().getCommunication().sendGaze(actingPlayer.getPlayerId(), player);
 		}
 
 		super.clickOnPlayer(player);

@@ -199,7 +199,7 @@ public class StepEndMoving extends AbstractStep {
 			|| ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
 			|| ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
 			|| ((PlayerAction.FOUL_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
-			|| ((PlayerAction.MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canGaze(game, actingPlayer.getPlayer()))
+			|| ((PlayerAction.GAZE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.isNextToGazeTarget(game, actingPlayer.getPlayer()))
 			|| ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
 			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());

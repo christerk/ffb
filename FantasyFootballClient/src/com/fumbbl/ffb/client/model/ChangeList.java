@@ -10,6 +10,10 @@ public class ChangeList {
 
     public ChangeList() {
 
+        versions.add(new VersionChangeList("2.3.1")
+          .addBugfix("Allow Gaze after 2 rushes")
+        );
+
         versions.add(new VersionChangeList("2.3.0")
           .addImprovement("Added \"What's new?\" dialog")
           .addBugfix("Prevent throwing throw/kick player that was injured too severe by Animal Savagery")
