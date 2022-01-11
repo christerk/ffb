@@ -40,7 +40,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 			if (modified) {
 				ModifiedInjuryContext alternateInjuryContext = injuryContext.getModifiedInjuryContext();
 				if (armourWasBroken) {
-					alternateInjuryContext.clearArmorModifiers();
+					alternateInjuryContext.setArmorBroken(false);
 					armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext);
 				}
 
