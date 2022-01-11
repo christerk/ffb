@@ -18,6 +18,12 @@ public class ChangeList {
           .addFeature("Old Pro")
         );
 
+        versions.add(new VersionChangeList("2.3.1")
+          .addBugfix("Allow Gaze after 2 rushes")
+          .addBugfix("Log Gaze action")
+          .addBugfix("Failing Foul Appearance for Gaze action used Blitz action")
+        );
+
         versions.add(new VersionChangeList("2.3.0")
           .addImprovement("Added \"What's new?\" dialog")
           .addBugfix("Prevent throwing throw/kick player that was injured too severe by Animal Savagery")

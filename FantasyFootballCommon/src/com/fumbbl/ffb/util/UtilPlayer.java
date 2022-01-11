@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.RosterPlayer;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -328,6 +329,28 @@ public class UtilPlayer {
 			return mechanic.declareGazeActionAtStart() || (UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length > 0);
 		}
 	}
+
+	public static boolean isNextToGazeTarget(Game game, Player<?> player) {
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+		Team otherTeam = UtilPlayer.findOtherTeam(game, player);
+		return Arrays.stream(
+				UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, playerCoordinate, false))
+			.anyMatch(adjacentPlayer -> isAdjacentGazeTarget(game, adjacentPlayer));
+	}
+
+	public static boolean isAdjacentGazeTarget(Game game, Player<?> player) {
+		FieldModel fieldModel = game.getFieldModel();
+		TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
+		if (targetSelectionState != null && targetSelectionState.isSelected()) {
+			boolean isTargetedPlayer = player.getId().equalsIgnoreCase(targetSelectionState.getSelectedPlayerId());
+			ActingPlayer actingPlayer = game.getActingPlayer();
+			boolean isAdjacent = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(fieldModel.getPlayerCoordinate(player));
+
+			return isTargetedPlayer && isAdjacent;
+		}
+		return false;
+	}
+
 
 	public static boolean canFoul(Game pGame, Player<?> pPlayer) {
 		FieldModel fieldModel = pGame.getFieldModel();
