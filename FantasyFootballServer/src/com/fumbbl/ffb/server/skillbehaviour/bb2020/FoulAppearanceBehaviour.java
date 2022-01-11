@@ -102,7 +102,9 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 				if (targetSelectionState != null) {
 					targetSelectionState.failed();
-					game.getTurnData().setBlitzUsed(true);
+					if (actingPlayer.getPlayerAction().isBlitzing()) {
+						game.getTurnData().setBlitzUsed(true);
+					}
 				}
 
 				if (actingPlayer.getPlayerAction() == PlayerAction.GAZE) {

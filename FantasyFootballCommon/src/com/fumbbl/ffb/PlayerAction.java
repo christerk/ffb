@@ -48,11 +48,14 @@ public enum PlayerAction implements INamedObject {
 
 	public boolean isPassing() {
 		return ((this == PASS) || (this == DUMP_OFF) || (this == HAND_OVER) || (this == HAIL_MARY_PASS)
-				|| (this == THROW_BOMB) || (this == HAIL_MARY_BOMB));
+			|| (this == THROW_BOMB) || (this == HAIL_MARY_BOMB));
 	}
 
 	public boolean allowsFumblerooskie() {
 		return this == MOVE || this == BLITZ_MOVE;
 	}
 
+	public boolean isBlitzing() {
+		return this == BLITZ || this == BLITZ_MOVE || this == BLITZ_SELECT;
+	}
 }
