@@ -12,6 +12,7 @@ public class ChangeList {
 
         versions.add(new VersionChangeList("2.3.1")
           .addBugfix("Allow Gaze after 2 rushes")
+          .addBugfix("Log Gaze action")
         );
 
         versions.add(new VersionChangeList("2.3.0")
