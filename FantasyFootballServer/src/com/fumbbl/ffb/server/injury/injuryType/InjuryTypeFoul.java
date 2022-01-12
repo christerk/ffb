@@ -37,11 +37,12 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 			pDefender, isStab(), isFoul(), isVomit());
 		injuryContext.addInjuryModifiers(injuryModifiers);
 
-		setInjury(pDefender, gameState, diceRoller);
+		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext) {
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
+	                          DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 		// Blatant Foul breaks armor without roll
 		if (game.isActive(NamedProperties.foulBreaksArmourWithoutRoll)) {
 			injuryContext.setArmorBroken(true);
@@ -49,7 +50,9 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 
 		if (!injuryContext.isArmorBroken()) {
 
-			injuryContext.setArmorRoll(diceRoller.rollArmour());
+			if (roll) {
+				injuryContext.setArmorRoll(diceRoller.rollArmour());
+			}
 
 			if (useChainsaw) {
 				Optional<Skill> attackerHasChainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));

@@ -64,7 +64,8 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext) {
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
+	                          DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext, boolean roll) {
 		if (!currentInjuryContext.isArmorBroken()) {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
@@ -74,7 +75,9 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 				chainsaw = pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw);
 			}
 
-			currentInjuryContext.setArmorRoll(diceRoller.rollArmour());
+			if (roll) {
+				currentInjuryContext.setArmorRoll(diceRoller.rollArmour());
+			}
 			currentInjuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, currentInjuryContext));
 			if (chainsaw != null) {
 				chainsaw.getArmorModifiers().forEach(currentInjuryContext::addArmorModifier);

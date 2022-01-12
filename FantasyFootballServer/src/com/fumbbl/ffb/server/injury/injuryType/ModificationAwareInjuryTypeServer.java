@@ -17,6 +17,11 @@ import com.fumbbl.ffb.server.step.IStep;
 
 import java.util.Optional;
 
+/**
+ * Abstraction for InjuryTypes that need to handle special abilities modifying armour or injury results
+ * <p>
+ * Classes extending this one MUST NOT use the injuryContext member in their methods but always the passed instance.
+ */
 public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> extends InjuryTypeServer<T> {
 	ModificationAwareInjuryTypeServer(T injuryType) {
 		super(injuryType);
@@ -31,7 +36,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
-		armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, injuryContext);
+		armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, injuryContext, true);
 
 		if (modification.isPresent()) {
 			boolean armourWasBroken = injuryContext.isArmorBroken();
@@ -41,7 +46,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 				ModifiedInjuryContext alternateInjuryContext = injuryContext.getModifiedInjuryContext();
 				if (armourWasBroken) {
 					alternateInjuryContext.setArmorBroken(false);
-					armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext);
+					armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext, false);
 				}
 
 				injury(game, gameState, diceRoller, pAttacker, pDefender, modification, alternateInjuryContext);
@@ -54,7 +59,8 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 	}
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private void injury(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, Optional<IInjuryContextModification> modification, InjuryContext currentInjuryContext) {
+	private void injury(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
+	                    Optional<IInjuryContextModification> modification, InjuryContext currentInjuryContext) {
 		if (currentInjuryContext.isArmorBroken()) {
 			injuryRoll(game, gameState, diceRoller, pAttacker, pDefender, currentInjuryContext);
 
@@ -76,5 +82,5 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 
 	protected abstract void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext currentInjuryContext);
 
-	protected abstract void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext);
+	protected abstract void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext, boolean roll);
 }
