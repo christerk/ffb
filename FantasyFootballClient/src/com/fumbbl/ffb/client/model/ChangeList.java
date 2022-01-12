@@ -10,6 +10,10 @@ public class ChangeList {
 
     public ChangeList() {
 
+        versions.add(new VersionChangeList("2.3.2")
+          .addBugfix("Internal fix potentially related to missing stat increases")
+        );
+
         versions.add(new VersionChangeList("2.3.1")
           .addBugfix("Allow Gaze after 2 rushes")
           .addBugfix("Log Gaze action")

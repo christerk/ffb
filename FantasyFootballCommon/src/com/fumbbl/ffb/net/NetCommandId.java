@@ -5,7 +5,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
-import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
@@ -48,6 +47,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandStartGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandTalk;
+import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
@@ -122,7 +122,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_GAZE("clientGaze"), CLIENT_CONFIRM("clientConfirm"), CLIENT_SET_MARKER("clientSetMarker"),
 	INTERNAL_SERVER_FUMBBL_GAME_CREATED("internalServerFumbblGameCreated"),
 	INTERNAL_SERVER_FUMBBL_TEAM_LOADED("internalServerFumbblTeamLoaded"),
-	INTERNAL_SERVER_FUMBBL_GAME_CHECKED("internalServerFumbblTeamLoaded"),
+	INTERNAL_SERVER_FUMBBL_GAME_CHECKED("internalServerFumbblGameChecked"),
 	INTERNAL_SERVER_JOIN_APPROVED("internalServerJoinApproved"),
 	INTERNAL_SERVER_REPLAY_LOADED("internalServerReplayGameLoaded"), CLIENT_PETTY_CASH("clientPettyCash"),
 	SERVER_REMOVE_PLAYER("serverRemovePlayer"), CLIENT_WIZARD_SPELL("clientWizardSpell"),
