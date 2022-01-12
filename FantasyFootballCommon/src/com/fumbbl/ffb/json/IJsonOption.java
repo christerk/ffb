@@ -221,6 +221,7 @@ public interface IJsonOption {
 	JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
 	JsonPlayerStateOption INJURY_DECAY = new JsonPlayerStateOption("injuryDecay");
 	JsonArrayOption INJURY_DESCRIPTIONS = new JsonArrayOption("injuryDescriptions");
+	JsonStringOption INJURY_MODIFICATION = new JsonStringOption("injuryModification");
 	JsonArrayOption INJURY_MODIFIERS = new JsonArrayOption("injuryModifiers");
 	JsonIntArrayOption INJURY_ROLL = new JsonIntArrayOption("injuryRoll");
 	JsonEnumWithNameOption INJURY_TYPE = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE);
@@ -432,6 +433,7 @@ public interface IJsonOption {
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
+	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);

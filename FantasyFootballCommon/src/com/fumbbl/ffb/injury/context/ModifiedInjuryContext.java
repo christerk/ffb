@@ -16,6 +16,7 @@ public class ModifiedInjuryContext extends InjuryContext {
 	private Skill usedSkill;
 	private SkillUse skillUse;
 	private final ReportList reports = new ReportList();
+	private InjuryModification modification = InjuryModification.NONE;
 
 	public SkillUse getSkillUse() {
 		return skillUse;
@@ -51,12 +52,21 @@ public class ModifiedInjuryContext extends InjuryContext {
 		super.setModifiedInjuryContext(null); // force this class to never have an alternate context
 	}
 
+	public InjuryModification getModification() {
+		return modification;
+	}
+
+	public void setModification(InjuryModification modification) {
+		this.modification = modification;
+	}
+
 	@Override
 	public void toJsonValue(JsonObject jsonObject) {
 		super.toJsonValue(jsonObject);
 		IJsonOption.SKILL.addTo(jsonObject, usedSkill);
 		IJsonOption.SKILL_USE.addTo(jsonObject, skillUse);
 		IJsonOption.REPORT_LIST.addTo(jsonObject, reports.toJsonValue());
+		IJsonOption.INJURY_MODIFICATION.addTo(jsonObject, modification.name());
 	}
 
 	@Override
@@ -68,5 +78,6 @@ public class ModifiedInjuryContext extends InjuryContext {
 		if (reportListObject != null) {
 			reports.initFrom(source, reportListObject);
 		}
+		modification = InjuryModification.valueOf(IJsonOption.INJURY_MODIFICATION.getFrom(source, jsonObject));
 	}
 }

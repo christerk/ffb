@@ -19,6 +19,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 	}
 
 	@Override
-	public ReportInjury init(InjuryContext injuryContext) {
+	public ReportInjury init(InjuryContext injuryContext, SkipInjuryParts ignored) {
 		init(injuryContext.getDefenderId(), injuryContext.getInjuryType(),
 			injuryContext.isArmorBroken(), injuryContext.getArmorModifiers(), injuryContext.getArmorRoll(),
 			injuryContext.getInjuryModifiers(), injuryContext.getInjuryRoll(), injuryContext.getCasualtyRoll(),

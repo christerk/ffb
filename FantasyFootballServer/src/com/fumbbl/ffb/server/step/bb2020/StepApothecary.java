@@ -149,8 +149,6 @@ public class StepApothecary extends AbstractStep {
 						fInjuryResult.injuryContext().getModifiedInjuryContext().getReports().forEach(report -> getResult().addReport(report));
 						fInjuryResult.swapToAlternateContext(this, getGameState().getGame());
 						getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
-					} else {
-						fInjuryResult.injuryContext().setModifiedInjuryContext(null);
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -202,7 +200,7 @@ public class StepApothecary extends AbstractStep {
 			UtilServerDialog.hideDialog(getGameState());
 			boolean doNextStep = true;
 			Game game = getGameState().getGame();
-			if (fInjuryResult.injuryContext().getModifiedInjuryContext() != null) {
+			if (fInjuryResult.injuryContext().getModifiedInjuryContext() != null && !fInjuryResult.isAlreadyReported()) {
 				if (fShowReport) {
 					fInjuryResult.report(this);
 				}

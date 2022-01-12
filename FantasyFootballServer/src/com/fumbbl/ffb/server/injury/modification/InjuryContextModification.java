@@ -4,6 +4,7 @@ import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.injury.context.InjuryModification;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
@@ -23,6 +24,7 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		if (tryArmourRollModification(injuryContext, injuryType)) {
 			ModifiedInjuryContext newContext = context(injuryContext);
 			if (modifyArmourInternal(gameState, newContext, injuryType)) {
+				newContext.setModification(InjuryModification.ARMOUR);
 				newContext.setUsedSkill(skill);
 				injuryContext.setModifiedInjuryContext(newContext);
 				return true;
@@ -39,6 +41,7 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		if (!injuryContext.isCasualty()) {
 			ModifiedInjuryContext newContext = context(injuryContext);
 			if (modifyInjuryInternal(newContext, gameState)) {
+				newContext.setModification(InjuryModification.INJURY);
 				newContext.setUsedSkill(skill);
 				injuryContext.setModifiedInjuryContext(newContext);
 				return true;

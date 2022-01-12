@@ -13,6 +13,8 @@ import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.factory.SeriousInjuryFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.injury.context.InjuryModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
@@ -22,6 +24,7 @@ import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportInjury;
+import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -155,12 +158,35 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 	public void report(IStep pStep) {
+
+		SkipInjuryParts skip = SkipInjuryParts.NONE;
+		if (injuryContext instanceof ModifiedInjuryContext) {
+			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
+			if (modification == InjuryModification.INJURY) {
+				skip = SkipInjuryParts.ARMOUR;
+			}
+		} else if (alreadyReported && injuryContext.getModifiedInjuryContext() != null) {
+			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
+			switch (modification) {
+				case ARMOUR:
+					skip = SkipInjuryParts.ARMOUR;
+					break;
+				case INJURY:
+					skip = SkipInjuryParts.ARMOUR_AND_INJURY;
+					break;
+				default:
+					break;
+			}
+			alreadyReported = false;
+		}
+
 		if (alreadyReported) {
 			return;
 		}
+
 		ReportFactory factory = pStep.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
 		ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
-		pStep.getResult().addReport(reportInjury.init(injuryContext));
+		pStep.getResult().addReport(reportInjury.init(injuryContext, skip));
 		pStep.getResult().setSound(injuryContext.getSound());
 		alreadyReported = true;
 	}
@@ -195,6 +221,10 @@ public class InjuryResult implements IJsonSerializable {
 				injuryContext.setSound(SoundId.FALL);
 			}
 		}
+	}
+
+	public boolean isAlreadyReported() {
+		return alreadyReported;
 	}
 
 	// JSON serialization
