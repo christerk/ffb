@@ -2,10 +2,14 @@ package com.fumbbl.ffb.server.injury.modification;
 
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.Block;
+import com.fumbbl.ffb.injury.BlockProne;
+import com.fumbbl.ffb.injury.BlockStunned;
 import com.fumbbl.ffb.injury.Chainsaw;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
 import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.ProjectileVomit;
+import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.report.bb2020.ReportOldPro;
@@ -22,6 +26,10 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 			add(Chainsaw.class);
 			add(Foul.class);
 			add(FoulForSpp.class);
+			add(BlockProne.class);
+			add(BlockStunned.class);
+			add(Stab.class);
+			add(ProjectileVomit.class);
 		}});
 	}
 

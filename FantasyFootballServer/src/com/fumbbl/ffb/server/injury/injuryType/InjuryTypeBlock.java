@@ -33,10 +33,6 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 		this(mode, true);
 	}
 
-	public InjuryTypeBlock(boolean allowAttackerChainsaw) {
-		this(Mode.REGULAR, allowAttackerChainsaw);
-	}
-
 	public InjuryTypeBlock(Mode mode, boolean allowAttackerChainsaw) {
 		super(new Block());
 		this.mode = mode;
@@ -44,29 +40,29 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext currentInjuryContext) {
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext injuryContext) {
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-		currentInjuryContext.setInjuryRoll(diceRoller.rollInjury());
-		factory.getNigglingInjuryModifier(pDefender).ifPresent(currentInjuryContext::addInjuryModifier);
+		injuryContext.setInjuryRoll(diceRoller.rollInjury());
+		factory.getNigglingInjuryModifier(pDefender).ifPresent(injuryContext::addInjuryModifier);
 
 		Skill stunty = pDefender.getSkillWithProperty(NamedProperties.isHurtMoreEasily);
 		if (stunty != null) {
-			currentInjuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
+			injuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
 		}
 		// do not use injuryModifiers on blocking own team-mate with b&c
 		if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
-			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, currentInjuryContext, pAttacker,
+			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
 				pDefender, isStab(), isFoul(), isVomit());
-			currentInjuryContext.addInjuryModifiers(injuryModifiers);
+			injuryContext.addInjuryModifiers(injuryModifiers);
 		}
 
-		setInjury(pDefender, gameState, diceRoller, currentInjuryContext);
+		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 
 	@Override
 	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-	                          DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext, boolean roll) {
-		if (!currentInjuryContext.isArmorBroken()) {
+	                          DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
+		if (!injuryContext.isArmorBroken()) {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
@@ -76,39 +72,39 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 			}
 
 			if (roll) {
-				currentInjuryContext.setArmorRoll(diceRoller.rollArmour());
+				injuryContext.setArmorRoll(diceRoller.rollArmour());
 			}
-			currentInjuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, currentInjuryContext));
+			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			if (chainsaw != null) {
-				chainsaw.getArmorModifiers().forEach(currentInjuryContext::addArmorModifier);
-				currentInjuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, currentInjuryContext));
-			} else if (!currentInjuryContext.isArmorBroken() && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
+				chainsaw.getArmorModifiers().forEach(injuryContext::addArmorModifier);
+				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+			} else if (!injuryContext.isArmorBroken() && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 					isFoul());
 				Optional<ArmorModifier> claw = armorModifiers.stream()
 					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue)).findFirst();
 				if (claw.isPresent()) {
-					currentInjuryContext.addArmorModifier(claw.get());
-					currentInjuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, currentInjuryContext));
-					if (!currentInjuryContext.isArmorBroken()) {
+					injuryContext.addArmorModifier(claw.get());
+					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+					if (!injuryContext.isArmorBroken()) {
 						if (UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)) {
 							armorModifiers.remove(claw.get());
-							currentInjuryContext.clearArmorModifiers();
-							currentInjuryContext.addArmorModifiers(armorModifiers);
-							currentInjuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, currentInjuryContext));
-							if (!currentInjuryContext.isArmorBroken()) {
+							injuryContext.clearArmorModifiers();
+							injuryContext.addArmorModifiers(armorModifiers);
+							injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+							if (!injuryContext.isArmorBroken()) {
 								// set claw as modifier as it should be displayed as used in the log when there is no stacking to avoid confusion
-								currentInjuryContext.clearArmorModifiers();
-								currentInjuryContext.addArmorModifier(claw.get());
+								injuryContext.clearArmorModifiers();
+								injuryContext.addArmorModifier(claw.get());
 							}
 						} else {
-							currentInjuryContext.addArmorModifiers(armorModifiers);
+							injuryContext.addArmorModifiers(armorModifiers);
 						}
-						currentInjuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, currentInjuryContext));
+						injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 					}
 				} else {
-					currentInjuryContext.addArmorModifiers(armorModifiers);
-					currentInjuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, currentInjuryContext));
+					injuryContext.addArmorModifiers(armorModifiers);
+					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 				}
 			}

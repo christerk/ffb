@@ -32,7 +32,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 	                               Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                               ApothecaryMode pApothecaryMode) {
 
-		Optional<IInjuryContextModification> modification = pAttacker.getUnusedInjuryModification(injuryType);
+		Optional<IInjuryContextModification> modification = pAttacker != null ? pAttacker.getUnusedInjuryModification(injuryType) : Optional.empty();
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -76,11 +76,11 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		}
 	}
 
-	protected void savedByArmour(InjuryContext currentInjuryContext) {
-		currentInjuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+	protected void savedByArmour(InjuryContext injuryContext) {
+		injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 	}
 
-	protected abstract void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext currentInjuryContext);
+	protected abstract void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext injuryContext);
 
-	protected abstract void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext currentInjuryContext, boolean roll);
+	protected abstract void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll);
 }
