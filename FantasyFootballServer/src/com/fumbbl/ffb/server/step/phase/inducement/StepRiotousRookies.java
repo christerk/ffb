@@ -74,7 +74,7 @@ public class StepRiotousRookies extends AbstractStep {
 		String name = rookieName(position.getNameGenerator(), gender, "RiotousRookie #" + index);
 		RosterPlayer riotousPlayer = new RosterPlayer();
 		riotousPlayer.setId(team.getId() + "Riotous" + index);
-		riotousPlayer.updatePosition(position, game.getRules());
+		riotousPlayer.updatePosition(position, game.getRules(), game.getId());
 		riotousPlayer.setName(name);
 		riotousPlayer.setNr(team.getMaxPlayerNr() + 1);
 		riotousPlayer.setGender(gender);

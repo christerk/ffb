@@ -71,6 +71,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 	private Team inflateTeam(TeamSkeleton skeleton, GameState gameState) {
 		Team team = new Team(gameState.getGame().getRules());
+		team.setCurrentGameId(skeleton.getCurrentGameId());
 		try {
 			try (BufferedReader xmlReader = new BufferedReader(new StringReader(skeleton.getXmlContent()))) {
 				InputSource xmlSource = new InputSource(xmlReader);

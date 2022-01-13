@@ -334,6 +334,16 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		System.err.println(gameId + ": " + message);
 	}
 
+	@Override
+	public void logDebug(long gameId, String message) {
+		System.out.println(gameId + ": " + message);
+	}
+
+	@Override
+	public void logWithOutGameId(Throwable throwable) {
+		throwable.printStackTrace(System.err);
+	}
+
 	public IFactorySource getFactorySource() {
 		return this;
 	}

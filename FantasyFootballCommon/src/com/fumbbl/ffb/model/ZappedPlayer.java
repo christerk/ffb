@@ -173,14 +173,14 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game) {
+	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game, long gameId) {
 		position = new ZappedPosition(pPosition, game);
-		originalPlayer.updatePosition(pPosition, updateStats, game);
+		originalPlayer.updatePosition(pPosition, updateStats, game, gameId);
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, IFactorySource game) {
-		updatePosition(pPosition, true, game);
+	public void updatePosition(RosterPosition pPosition, IFactorySource game, long gameId) {
+		updatePosition(pPosition, true, game, gameId);
 	}
 
 	@Override
@@ -278,8 +278,8 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void applyPlayerModifiersFromBehaviours() {
-		originalPlayer.applyPlayerModifiersFromBehaviours();
+	public void applyPlayerModifiersFromBehaviours(IFactorySource game, long gameId) {
+		originalPlayer.applyPlayerModifiersFromBehaviours(game, gameId);
 	}
 
 	@Override

@@ -15,4 +15,8 @@ public interface IFactorySource {
 	<T extends INamedObjectFactory> T getFactory(Factory factory);
 
 	void logError(long gameId, String message);
+
+	void logDebug(long gameId, String message);
+
+	void logWithOutGameId(Throwable throwable);
 }

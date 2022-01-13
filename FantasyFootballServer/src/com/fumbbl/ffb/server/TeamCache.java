@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server;
 
-import org.xml.sax.InputSource;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Game;
@@ -9,6 +7,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamSkeleton;
 import com.fumbbl.ffb.util.FileIterator;
 import com.fumbbl.ffb.xml.XmlHandler;
+import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class TeamCache {
 
-  private Map<TeamSkeleton, File> teamFiles = new HashMap<>();
+  private final Map<TeamSkeleton, File> teamFiles = new HashMap<>();
 
   public Team getTeamById(String teamId, Game game) {
     return teamFiles.entrySet().stream().filter(entry -> entry.getKey().getId().equals(teamId)).findFirst().map(entry -> {
@@ -69,6 +68,7 @@ public class TeamCache {
     try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
       InputSource xmlSource = new InputSource(xmlIn);
       Team team = new Team(game.getRules());
+      team.setCurrentGameId(game.getId());
       XmlHandler.parse(game, xmlSource, team);
       return team;
     }
