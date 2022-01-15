@@ -189,7 +189,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	public void addSkill(Skill pSkill) {
 		if ((pSkill != null) && ((pSkill.getCategory() == SkillCategory.STAT_INCREASE)
-				|| (pSkill.getCategory() == SkillCategory.STAT_DECREASE) || !fSkills.contains(pSkill))) {
+			|| (pSkill.getCategory() == SkillCategory.STAT_DECREASE) || !fSkills.contains(pSkill))) {
 			fSkills.add(pSkill);
 		}
 	}
@@ -250,12 +250,12 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, IFactorySource game) {
-		updatePosition(pPosition, true, game);
+	public void updatePosition(RosterPosition pPosition, IFactorySource game, long gameId) {
+		updatePosition(pPosition, true, game, gameId);
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game) {
+	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game, long gameId) {
 		fPosition = pPosition;
 		if (fPosition != null) {
 			setPositionId(fPosition.getId());
@@ -281,7 +281,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					}
 				}
 			}
-			applyPlayerModifiersFromBehaviours();
+			applyPlayerModifiersFromBehaviours(game, gameId);
 			int oldMovement = getMovement();
 			int oldArmour = getArmour();
 			int oldAgility = getAgility();
@@ -691,9 +691,18 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public void applyPlayerModifiersFromBehaviours() {
+	public void applyPlayerModifiersFromBehaviours(IFactorySource game, long gameId) {
 		fSkills.stream().map(Skill::getSkillBehaviour).filter(Objects::nonNull)
-			.flatMap(behaviour -> behaviour.getPlayerModifiers().stream()).forEach(playerModifier -> playerModifier.apply(this));
+			.flatMap(behaviour -> behaviour.getPlayerModifiers().stream()).forEach(playerModifier -> {
+				game.logDebug(gameId, "Player " + fId + ": Before applying " + playerModifier.getClass().getCanonicalName()
+					+ " - MA: " + getMovementWithModifiers() + " ST: " + getStrengthWithModifiers() + " AG: " + getAgilityWithModifiers()
+					+ " PA: " + getPassingWithModifiers() + " AV: " + getArmourWithModifiers());
+				playerModifier.apply(this);
+
+				game.logDebug(gameId, "Player " + fId + ": After  applying " + playerModifier.getClass().getCanonicalName()
+					+ " - MA: " + getMovementWithModifiers() + " ST: " + getStrengthWithModifiers() + " AG: " + getAgilityWithModifiers()
+					+ " PA: " + getPassingWithModifiers() + " AV: " + getArmourWithModifiers());
+			});
 	}
 
 	public RosterPlayer initFrom(IFactorySource source, JsonValue pJsonValue) {
@@ -710,7 +719,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fMovement = IJsonOption.MOVEMENT.getFrom(source, jsonObject);
 		fStrength = IJsonOption.STRENGTH.getFrom(source, jsonObject);
 		fAgility = IJsonOption.AGILITY.getFrom(source, jsonObject);
-		fPassing= IJsonOption.PASSING.getFrom(source, jsonObject);
+		fPassing = IJsonOption.PASSING.getFrom(source, jsonObject);
 		fArmour = IJsonOption.ARMOUR.getFrom(source, jsonObject);
 
 		SeriousInjuryFactory seriousInjuryFactory = source.getFactory(Factory.SERIOUS_INJURY);

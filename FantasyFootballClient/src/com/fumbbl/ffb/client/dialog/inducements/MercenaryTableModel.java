@@ -129,7 +129,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 				for (int i = 0; i < pos.getQuantity() - playerInPosition; i++) {
 					if (pos.getType() != PlayerType.BIG_GUY || fDialog.getRoster().getMaxBigGuys() > bigGuysOnTeam) {
 						RosterPlayer player = new RosterPlayer();
-						player.updatePosition(pos, fDialog.getClient().getGame().getRules());
+						player.updatePosition(pos, fDialog.getClient().getGame().getRules(), getGame().getId());
 						player.setName(pos.getName());
 						Object[] mercenary = new Object[6];
 						mercenary[0] = Boolean.FALSE;

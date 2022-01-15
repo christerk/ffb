@@ -43,6 +43,16 @@ public class GameRules implements IFactorySource {
 	}
 
 	@Override
+	public void logDebug(long gameId, String message) {
+		applicationSource.logDebug(gameId, message);
+	}
+
+	@Override
+	public void logWithOutGameId(Throwable throwable) {
+		applicationSource.logWithOutGameId(throwable);
+	}
+
+	@Override
 	public FactoryContext getContext() {
 		return FactoryContext.GAME;
 	}

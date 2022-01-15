@@ -122,7 +122,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_GAZE("clientGaze"), CLIENT_CONFIRM("clientConfirm"), CLIENT_SET_MARKER("clientSetMarker"),
 	INTERNAL_SERVER_FUMBBL_GAME_CREATED("internalServerFumbblGameCreated"),
 	INTERNAL_SERVER_FUMBBL_TEAM_LOADED("internalServerFumbblTeamLoaded"),
-	INTERNAL_SERVER_FUMBBL_GAME_CHECKED("internalServerFumbblTeamLoaded"),
+	INTERNAL_SERVER_FUMBBL_GAME_CHECKED("internalServerFumbblGameChecked"),
 	INTERNAL_SERVER_JOIN_APPROVED("internalServerJoinApproved"),
 	INTERNAL_SERVER_REPLAY_LOADED("internalServerReplayGameLoaded"), CLIENT_PETTY_CASH("clientPettyCash"),
 	SERVER_REMOVE_PLAYER("serverRemovePlayer"), CLIENT_WIZARD_SPELL("clientWizardSpell"),

@@ -102,6 +102,12 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		}
 		fId = pId;
 		notifyObservers(ModelChangeId.GAME_SET_ID, null, fId);
+		if (fTeamHome != null) {
+			fTeamHome.setCurrentGameId(fId);
+		}
+		if (fTeamAway != null) {
+			fTeamAway.setCurrentGameId(fId);
+		}
 	}
 
 	public long getId() {
@@ -312,11 +318,17 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	public void setTeamHome(Team pTeam) {
 		fTeamHome = pTeam;
 		fGameResult.getTeamResultHome().setTeam(pTeam);
+		if (pTeam != null) {
+			pTeam.setCurrentGameId(fId);
+		}
 	}
 
 	public void setTeamAway(Team pTeam) {
 		fTeamAway = pTeam;
 		fGameResult.getTeamResultAway().setTeam(pTeam);
+		if (pTeam != null) {
+			pTeam.setCurrentGameId(fId);
+		}
 	}
 
 	public Date getScheduled() {
