@@ -11,7 +11,7 @@ import com.fumbbl.ffb.server.GameState;
 
 import java.util.Set;
 
-public abstract class InjuryContextModification implements IInjuryContextModification {
+public abstract class InjuryContextModification<T extends ModificationParams> implements IInjuryContextModification {
 
 	private Skill skill;
 	private final Set<Class<? extends InjuryType>> validInjuryTypes;
@@ -20,10 +20,13 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		this.validInjuryTypes = validInjuryTypes;
 	}
 
+	protected abstract T getParams(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType);
+
 	public boolean modifyArmour(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
 		if (tryArmourRollModification(injuryContext, injuryType)) {
 			ModifiedInjuryContext newContext = context(injuryContext);
-			if (modifyArmourInternal(gameState, newContext, injuryType)) {
+			T params = getParams(gameState, newContext, injuryType);
+			if (modifyArmourInternal(params)) {
 				newContext.setModification(InjuryModification.ARMOUR);
 				newContext.setUsedSkill(skill);
 				injuryContext.setModifiedInjuryContext(newContext);
@@ -37,6 +40,28 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 		return !injuryContext.isArmorBroken();
 	}
 
+	protected boolean modifyArmourInternal(T params) {
+
+		prepareArmourParams(params);
+
+		if (armourModificationCantHelp(params)) {
+			return false;
+		}
+
+		ModifiedInjuryContext newContext = params.getNewContext();
+		newContext.clearArmorModifiers();
+		applyArmourModification(params);
+		newContext.setArmorBroken(params.getDiceInterpreter().isArmourBroken(params.getGameState(), newContext));
+
+		return true;
+	}
+
+	protected abstract void prepareArmourParams(T params);
+
+	protected abstract boolean armourModificationCantHelp(T params);
+
+	protected abstract void applyArmourModification(T params);
+
 	public boolean modifyInjury(InjuryContext injuryContext, GameState gameState) {
 		if (!injuryContext.isCasualty()) {
 			ModifiedInjuryContext newContext = context(injuryContext);
@@ -47,10 +72,6 @@ public abstract class InjuryContextModification implements IInjuryContextModific
 				return true;
 			}
 		}
-		return false;
-	}
-
-	protected boolean modifyArmourInternal(GameState gameState, ModifiedInjuryContext injuryContext, InjuryType injuryType) {
 		return false;
 	}
 

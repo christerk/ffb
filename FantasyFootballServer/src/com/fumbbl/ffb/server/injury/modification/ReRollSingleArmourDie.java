@@ -13,12 +13,11 @@ import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.report.bb2020.ReportOldPro;
-import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 
 import java.util.HashSet;
 
-public class ReRollSingleArmourDie extends InjuryContextModification {
+public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingleArmourDieParams> {
 
 	public ReRollSingleArmourDie() {
 		super(new HashSet<Class<? extends InjuryType>>() {{
@@ -34,31 +33,38 @@ public class ReRollSingleArmourDie extends InjuryContextModification {
 	}
 
 	@Override
+	protected ReRollSingleArmourDieParams getParams(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
+		return new ReRollSingleArmourDieParams(gameState, newContext, injuryType);
+	}
+
+	@Override
 	protected boolean tryArmourRollModification(InjuryContext injuryContext, InjuryType injuryType) {
 		return super.tryArmourRollModification(injuryContext, injuryType)
 			|| (injuryContext.fArmorRoll[0] == injuryContext.fArmorRoll[1] && injuryType.isFoul());
 	}
 
+
 	@Override
-	protected boolean modifyArmourInternal(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+	protected void prepareArmourParams(ReRollSingleArmourDieParams params) {
+		ModifiedInjuryContext newContext = params.getNewContext();
+		params.setSpottedFoul(newContext.fArmorRoll[0] == newContext.fArmorRoll[1] && params.getInjuryType().isFoul());
+		params.setReplaceIndex(newContext.fArmorRoll[0] < newContext.fArmorRoll[1] ? 0 : 1);
+		params.setOldValue(newContext.fArmorRoll[params.getReplaceIndex()]);
+		newContext.fArmorRoll[params.getReplaceIndex()] = 6;
+		newContext.setArmorBroken(params.getDiceInterpreter().isArmourBroken(params.getGameState(), newContext));
+	}
 
-		boolean spottedFoul = (newContext.fArmorRoll[0] == newContext.fArmorRoll[1] && injuryType.isFoul());
-		int replaceIndex = newContext.fArmorRoll[0] < newContext.fArmorRoll[1] ? 0 : 1;
-		int oldValue = newContext.fArmorRoll[replaceIndex];
-		newContext.fArmorRoll[replaceIndex] = 6;
-		newContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, newContext));
+	@Override
+	protected boolean armourModificationCantHelp(ReRollSingleArmourDieParams params) {
+		return !params.isSpottedFoul() && !params.getNewContext().isArmorBroken();
+	}
 
-		if (!newContext.isArmorBroken() && !spottedFoul) {
-			return false;
-		}
-
-		int newValue = gameState.getDiceRoller().rollDice(6);
-		newContext.fArmorRoll[replaceIndex] = newValue;
-		newContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, newContext));
-		newContext.addReport(new ReportOldPro(newContext.fAttackerId, oldValue, newValue));
-
-		return true;
+	@Override
+	protected void applyArmourModification(ReRollSingleArmourDieParams params) {
+		int newValue = params.getGameState().getDiceRoller().rollDice(6);
+		ModifiedInjuryContext newContext = params.getNewContext();
+		newContext.fArmorRoll[params.getReplaceIndex()] = newValue;
+		newContext.addReport(new ReportOldPro(newContext.fAttackerId, params.getOldValue(), newValue));
 	}
 
 	@Override
