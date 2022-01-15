@@ -43,4 +43,9 @@ public class InjuryTypeChainsaw extends ModificationAwareInjuryTypeServer<Chains
 		}
 
 	}
+
+	@Override
+	protected void savedByArmour(InjuryContext injuryContext) {
+		injuryContext.setInjury(null);
+	}
 }

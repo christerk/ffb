@@ -44,6 +44,6 @@ public class InjuryTypeProjectileVomit extends ModificationAwareInjuryTypeServer
 
 	@Override
 	protected void savedByArmour(InjuryContext injuryContext) {
-		super.savedByArmour(injuryContext);
+		injuryContext.setInjury(null);
 	}
 }
