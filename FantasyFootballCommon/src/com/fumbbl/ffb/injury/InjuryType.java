@@ -72,6 +72,10 @@ public abstract class InjuryType implements INamedObject {
 		return false;
 	}
 
+	public boolean isChainsaw() {
+		return false;
+	}
+
 	public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender) {
 
 	}

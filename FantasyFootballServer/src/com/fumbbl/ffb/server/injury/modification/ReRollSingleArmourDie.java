@@ -7,6 +7,8 @@ import com.fumbbl.ffb.injury.BlockStunned;
 import com.fumbbl.ffb.injury.Chainsaw;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
+import com.fumbbl.ffb.injury.FoulForSppWithChainsaw;
+import com.fumbbl.ffb.injury.FoulWithChainsaw;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.ProjectileVomit;
 import com.fumbbl.ffb.injury.Stab;
@@ -25,6 +27,8 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 			add(Chainsaw.class);
 			add(Foul.class);
 			add(FoulForSpp.class);
+			add(FoulForSppWithChainsaw.class);
+			add(FoulWithChainsaw.class);
 			add(BlockProne.class);
 			add(BlockStunned.class);
 			add(Stab.class);

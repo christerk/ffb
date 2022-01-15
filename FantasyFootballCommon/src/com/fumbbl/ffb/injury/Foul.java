@@ -5,8 +5,11 @@ import com.fumbbl.ffb.SendToBoxReason;
 public class Foul extends InjuryType {
 
 	public Foul() {
-		super("foul", false, SendToBoxReason.FOULED);
-		// TODO Auto-generated constructor stub
+		this("foul");
+	}
+
+	public Foul(String name) {
+		super(name, false, SendToBoxReason.FOULED);
 	}
 
 	@Override

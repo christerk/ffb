@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.FoulForSpp;
+import com.fumbbl.ffb.injury.FoulForSppWithChainsaw;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -24,7 +25,7 @@ public class InjuryTypeFoulForSpp extends ModificationAwareInjuryTypeServer<Foul
 	private final boolean useChainsaw;
 
 	public InjuryTypeFoulForSpp(boolean useChainsaw) {
-		super(new FoulForSpp());
+		super(useChainsaw ? new FoulForSppWithChainsaw() : new FoulForSpp());
 		this.useChainsaw = useChainsaw;
 	}
 

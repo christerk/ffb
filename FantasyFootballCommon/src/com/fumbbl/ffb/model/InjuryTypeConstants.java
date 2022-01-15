@@ -16,6 +16,8 @@ import com.fumbbl.ffb.injury.EatPlayer;
 import com.fumbbl.ffb.injury.Fireball;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
+import com.fumbbl.ffb.injury.FoulForSppWithChainsaw;
+import com.fumbbl.ffb.injury.FoulWithChainsaw;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.KTMCrowd;
 import com.fumbbl.ffb.injury.KTMFumbleInjury;
@@ -49,6 +51,8 @@ public class InjuryTypeConstants {
 	public static final InjuryType FIREBALL = new Fireball();
 	public static final InjuryType FOUL = new Foul();
 	public static final InjuryType FOUL_FOR_SPP = new FoulForSpp();
+	public static final InjuryType FOUL_FOR_SPP_WITH_CHAINSAW = new FoulForSppWithChainsaw();
+	public static final InjuryType FOUL_WITH_CHAINSAW = new FoulWithChainsaw();
 	public static final InjuryType KTM_CROWD = new KTMCrowd();
 	public static final InjuryType KTM_FUMBLE = new KTMFumbleInjury();
 	public static final InjuryType KTM_INJURY = new KTMInjury();
