@@ -6,12 +6,19 @@ import com.fumbbl.ffb.server.GameState;
 
 public class ReRollSingleArmourDieParams extends ModificationParams {
 
-	private boolean spottedFoul;
-	private int oldValue;
-	private int replaceIndex;
+	private boolean selfInflicted, spottedFoul;
+	private int oldValue, replaceIndex;
 
 	public ReRollSingleArmourDieParams(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
 		super(gameState, newContext, injuryType);
+	}
+
+	public boolean isSelfInflicted() {
+		return selfInflicted;
+	}
+
+	public void setSelfInflicted(boolean selfInflicted) {
+		this.selfInflicted = selfInflicted;
 	}
 
 	public boolean isSpottedFoul() {

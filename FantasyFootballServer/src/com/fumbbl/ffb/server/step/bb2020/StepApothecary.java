@@ -206,7 +206,7 @@ public class StepApothecary extends AbstractStep {
 				}
 
 				ModifiedInjuryContext injuryContext = fInjuryResult.injuryContext().getModifiedInjuryContext();
-				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(injuryContext.fAttackerId, injuryContext.getUsedSkill(), 0), true);
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getActingPlayer().getPlayerId(), injuryContext.getUsedSkill(), 0), true);
 				doNextStep = false;
 			} else if (fInjuryResult.injuryContext().getApothecaryStatus() != null) {
 				switch (fInjuryResult.injuryContext().getApothecaryStatus()) {

@@ -20,12 +20,12 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		this.validInjuryTypes = validInjuryTypes;
 	}
 
-	protected abstract T getParams(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType);
+	protected abstract T params(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType);
 
 	public boolean modifyArmour(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
-		if (tryArmourRollModification(injuryContext, injuryType)) {
-			ModifiedInjuryContext newContext = context(injuryContext);
-			T params = getParams(gameState, newContext, injuryType);
+		ModifiedInjuryContext newContext = context(injuryContext);
+		T params = params(gameState, newContext, injuryType);
+		if (tryArmourRollModification(params)) {
 			if (modifyArmourInternal(params)) {
 				newContext.setModification(InjuryModification.ARMOUR);
 				newContext.setUsedSkill(skill);
@@ -36,8 +36,8 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		return false;
 	}
 
-	protected boolean tryArmourRollModification(InjuryContext injuryContext, InjuryType injuryType) {
-		return !injuryContext.isArmorBroken();
+	protected boolean tryArmourRollModification(T params) {
+		return !params.getNewContext().isArmorBroken();
 	}
 
 	protected boolean modifyArmourInternal(T params) {

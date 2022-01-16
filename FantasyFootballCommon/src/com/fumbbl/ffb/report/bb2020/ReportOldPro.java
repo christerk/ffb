@@ -15,14 +15,16 @@ public class ReportOldPro implements IReport {
 
 	private String playerId;
 	private int oldValue, newValue;
+	private boolean selfInflicted;
 
 	public ReportOldPro() {
 	}
 
-	public ReportOldPro(String playerId, int oldValue, int newValue) {
+	public ReportOldPro(String playerId, int oldValue, int newValue, boolean selfInflicted) {
 		this.playerId = playerId;
 		this.oldValue = oldValue;
 		this.newValue = newValue;
+		this.selfInflicted = selfInflicted;
 	}
 
 	public String getPlayerId() {
@@ -37,12 +39,17 @@ public class ReportOldPro implements IReport {
 		return newValue;
 	}
 
+	public boolean isSelfInflicted() {
+		return selfInflicted;
+	}
+
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.OLD_ROLL.addTo(jsonObject, oldValue);
 		IJsonOption.ROLL.addTo(jsonObject, newValue);
+		IJsonOption.SELF_INFLICTED.addTo(jsonObject, selfInflicted);
 		return jsonObject;
 	}
 
@@ -52,6 +59,7 @@ public class ReportOldPro implements IReport {
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		oldValue = IJsonOption.OLD_ROLL.getFrom(game, jsonObject);
 		newValue = IJsonOption.ROLL.getFrom(game, jsonObject);
+		selfInflicted = IJsonOption.SELF_INFLICTED.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -62,6 +70,6 @@ public class ReportOldPro implements IReport {
 
 	@Override
 	public IReport transform(IFactorySource source) {
-		return new ReportOldPro(playerId, oldValue, newValue);
+		return new ReportOldPro(playerId, oldValue, newValue, selfInflicted);
 	}
 }

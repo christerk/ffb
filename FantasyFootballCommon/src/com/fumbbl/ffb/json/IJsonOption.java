@@ -403,6 +403,7 @@ public interface IJsonOption {
 	JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
 	JsonIntOption SELECTED_INDEX = new JsonIntOption("selectedIndex");
 	JsonArrayOption SELECTED_BLOCK_TARGETS = new JsonArrayOption("selectedBlockTargets");
+	JsonBooleanOption SELF_INFLICTED = new JsonBooleanOption("selfInflicted");
 	JsonStringOption SEND_TO_BOX_BY_PLAYER_ID = new JsonStringOption("sendToBoxByPlayerId");
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");
 	JsonEnumWithNameOption SEND_TO_BOX_REASON = new JsonEnumWithNameOption("sendToBoxReason", Factory.SEND_TO_BOX_REASON);
