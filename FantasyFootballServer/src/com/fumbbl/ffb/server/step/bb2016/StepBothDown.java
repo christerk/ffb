@@ -45,11 +45,11 @@ public class StepBothDown extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case OLD_DEFENDER_STATE:
-				fOldDefenderState = (PlayerState) pParameter.getValue();
+				fOldDefenderState = (PlayerState) parameter.getValue();
 				return true;
 			default:
 				break;

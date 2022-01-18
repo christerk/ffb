@@ -48,16 +48,16 @@ public class StepEndFeeding extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case END_PLAYER_ACTION:
-				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			default:
 				break;

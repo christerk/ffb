@@ -42,21 +42,21 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if (pParameter != null) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null) {
+			switch (parameter.getKey()) {
 				case THROWN_PLAYER_ID:
-					state.thrownPlayerId = (String) pParameter.getValue();
+					state.thrownPlayerId = (String) parameter.getValue();
 					break;
 				case END_TURN:
-					state.endTurn = (boolean) pParameter.getValue();
+					state.endTurn = (boolean) parameter.getValue();
 					break;
 				default:
 					break;
 			}
 		}
 
-		return super.setParameter(pParameter);
+		return super.setParameter(parameter);
 	}
 
 	private final StepState state;

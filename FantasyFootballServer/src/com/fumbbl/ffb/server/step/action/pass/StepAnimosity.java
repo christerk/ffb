@@ -69,11 +69,11 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case CATCHER_ID:
-				state.catcherId = (String) pParameter.getValue();
+				state.catcherId = (String) parameter.getValue();
 				return true;
 			default:
 				break;

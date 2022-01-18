@@ -46,20 +46,20 @@ public final class StepEndBomb extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case CATCHER_ID:
-				fCatcherId = (String) pParameter.getValue();
-				consume(pParameter);
+				fCatcherId = (String) parameter.getValue();
+				consume(parameter);
 				return true;
 			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			case BOMB_EXPLODED:
-				fBombExploded = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fBombExploded = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			default:
 				break;

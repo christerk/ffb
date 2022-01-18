@@ -155,16 +155,16 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case CATCH_SCATTER_THROW_IN_MODE:
-					fCatchScatterThrowInMode = (CatchScatterThrowInMode) pParameter.getValue();
-					consume(pParameter);
+					fCatchScatterThrowInMode = (CatchScatterThrowInMode) parameter.getValue();
+					consume(parameter);
 					return true;
 				case THROW_IN_COORDINATE:
-					fThrowInCoordinate = (FieldCoordinate) pParameter.getValue();
-					consume(pParameter);
+					fThrowInCoordinate = (FieldCoordinate) parameter.getValue();
+					consume(parameter);
 					return true;
 				default:
 					break;

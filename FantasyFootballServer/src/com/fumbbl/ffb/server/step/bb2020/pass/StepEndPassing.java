@@ -71,44 +71,44 @@ public final class StepEndPassing extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case CATCHER_ID:
-					fCatcherId = (String) pParameter.getValue();
-					consume(pParameter);
+					fCatcherId = (String) parameter.getValue();
+					consume(parameter);
 					return true;
 				case END_PLAYER_ACTION:
-					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case INTERCEPTOR_ID:
-					fInterceptorId = (String) pParameter.getValue();
-					consume(pParameter);
+					fInterceptorId = (String) parameter.getValue();
+					consume(parameter);
 					return true;
 				case PASS_ACCURATE:
-					fPassAccurate = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fPassAccurate = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case PASS_FUMBLE:
-					fPassFumble = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fPassFumble = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case DONT_DROP_FUMBLE:
-					dontDropFumble = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					dontDropFumble = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case BOMB_OUT_OF_BOUNDS:
-					fBombOutOfBounds = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fBombOutOfBounds = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case PASSING_DISTANCE:
-					passingDistance = (PassingDistance) pParameter.getValue();
-					consume(pParameter);
+					passingDistance = (PassingDistance) parameter.getValue();
+					consume(parameter);
 					return true;
 				default:
 					break;

@@ -119,11 +119,11 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case IS_KICKED_PLAYER:
-				fIsKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				fIsKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				return true;
 			default:
 				break;

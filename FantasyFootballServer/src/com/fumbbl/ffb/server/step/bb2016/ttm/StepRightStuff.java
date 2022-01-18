@@ -69,22 +69,22 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case KICKED_PLAYER_HAS_BALL:
 			case THROWN_PLAYER_HAS_BALL:
-				fThrownPlayerHasBall = (Boolean) pParameter.getValue();
+				fThrownPlayerHasBall = (Boolean) parameter.getValue();
 				return true;
 			case KICKED_PLAYER_ID:
 			case THROWN_PLAYER_ID:
-				fThrownPlayerId = (String) pParameter.getValue();
+				fThrownPlayerId = (String) parameter.getValue();
 				return true;
 			case DROP_THROWN_PLAYER:
-				fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				fDropThrownPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				return true;
 			case KTM_MODIFIER:
-				ktmRange = (pParameter.getValue() != null) ? (KickTeamMateRange) pParameter.getValue() : KickTeamMateRange.SHORT;
+				ktmRange = (parameter.getValue() != null) ? (KickTeamMateRange) parameter.getValue() : KickTeamMateRange.SHORT;
 				return true;
 			default:
 				break;

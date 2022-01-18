@@ -163,28 +163,28 @@ public class StepApothecary extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case INJURY_RESULT:
-					InjuryResult injuryResult = (InjuryResult) pParameter.getValue();
+					InjuryResult injuryResult = (InjuryResult) parameter.getValue();
 					if ((injuryResult != null) && (fApothecaryMode == injuryResult.injuryContext().getApothecaryMode())) {
 						fInjuryResult = injuryResult;
 						return true;
 					}
 					return false;
 				case USING_PILING_ON:
-					Boolean usingPilingOn = (Boolean) pParameter.getValue();
+					Boolean usingPilingOn = (Boolean) parameter.getValue();
 					if ((ApothecaryMode.DEFENDER == fApothecaryMode) && (usingPilingOn != null) && !usingPilingOn) {
 						fShowReport = false;
 						return true;
 					}
 					return false;
 				case DEFENDER_POISONED:
-					fDefenderPoisoned = (Boolean) pParameter.getValue();
+					fDefenderPoisoned = (Boolean) parameter.getValue();
 					return fApothecaryMode == ApothecaryMode.DEFENDER;
 				case ATTACKER_POISONED:
-					fAttackerPoisoned = (Boolean) pParameter.getValue();
+					fAttackerPoisoned = (Boolean) parameter.getValue();
 					return fApothecaryMode == ApothecaryMode.ATTACKER;
 				default:
 					break;

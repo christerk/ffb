@@ -108,14 +108,14 @@ public class StepPushback extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case OLD_DEFENDER_STATE:
-					state.oldDefenderState = (PlayerState) pParameter.getValue();
+					state.oldDefenderState = (PlayerState) parameter.getValue();
 					return true;
 				case STARTING_PUSHBACK_SQUARE:
-					state.startingPushbackSquare = (PushbackSquare) pParameter.getValue();
+					state.startingPushbackSquare = (PushbackSquare) parameter.getValue();
 					return true;
 				default:
 					break;

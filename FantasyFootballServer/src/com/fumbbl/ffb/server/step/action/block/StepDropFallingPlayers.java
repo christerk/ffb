@@ -39,7 +39,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 		public PlayerState oldDefenderState;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepDropFallingPlayers(GameState pGameState) {
 		super(pGameState);
@@ -52,10 +52,10 @@ public class StepDropFallingPlayers extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.OLD_DEFENDER_STATE) {
-				state.oldDefenderState = (PlayerState) pParameter.getValue();
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.OLD_DEFENDER_STATE) {
+				state.oldDefenderState = (PlayerState) parameter.getValue();
 				return true;
 			}
 		}

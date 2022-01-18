@@ -80,10 +80,10 @@ public class StepStab extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.USING_STAB) {
-				state.usingStab = (Boolean) pParameter.getValue();
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.USING_STAB) {
+				state.usingStab = (Boolean) parameter.getValue();
 				return true;
 			}
 		}

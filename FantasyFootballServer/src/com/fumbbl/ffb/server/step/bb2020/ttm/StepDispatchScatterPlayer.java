@@ -54,23 +54,23 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case THROWN_PLAYER_ID:
-					thrownPlayerId = (String) pParameter.getValue();
+					thrownPlayerId = (String) parameter.getValue();
 					return true;
 				case THROWN_PLAYER_STATE:
-					thrownPlayerState = (PlayerState) pParameter.getValue();
+					thrownPlayerState = (PlayerState) parameter.getValue();
 					return true;
 				case THROWN_PLAYER_HAS_BALL:
-					thrownPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					thrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				case PASS_RESULT:
-					passResult = (PassResult) pParameter.getValue();
+					passResult = (PassResult) parameter.getValue();
 					return true;
 				case IS_KICKED_PLAYER:
-					isKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					isKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				default:
 					break;

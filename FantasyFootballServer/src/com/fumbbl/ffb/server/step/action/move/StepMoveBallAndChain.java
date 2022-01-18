@@ -94,14 +94,14 @@ public class StepMoveBallAndChain extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case COORDINATE_FROM:
-				fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+				fCoordinateFrom = (FieldCoordinate) parameter.getValue();
 				return true;
 			case COORDINATE_TO:
-				fCoordinateTo = (FieldCoordinate) pParameter.getValue();
+				fCoordinateTo = (FieldCoordinate) parameter.getValue();
 				return true;
 			default:
 				break;

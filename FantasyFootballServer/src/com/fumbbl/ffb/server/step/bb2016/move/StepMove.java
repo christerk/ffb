@@ -49,17 +49,17 @@ public class StepMove extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case COORDINATE_FROM:
-				fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+				fCoordinateFrom = (FieldCoordinate) parameter.getValue();
 				return true;
 			case COORDINATE_TO:
-				fCoordinateTo = (FieldCoordinate) pParameter.getValue();
+				fCoordinateTo = (FieldCoordinate) parameter.getValue();
 				return true;
 			case MOVE_STACK:
-				FieldCoordinate[] moveStack = (FieldCoordinate[]) pParameter.getValue();
+				FieldCoordinate[] moveStack = (FieldCoordinate[]) parameter.getValue();
 				fMoveStackSize = ((moveStack != null) ? moveStack.length : 0);
 				return true;
 			default:

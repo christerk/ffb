@@ -86,20 +86,20 @@ public class StepPassBlock extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
+	public boolean setParameter(StepParameter parameter) {
 		Game game = getGameState().getGame();
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case END_PLAYER_ACTION:
-					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-						consume(pParameter);
+						consume(parameter);
 					}
 					return true;
 				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-						consume(pParameter);
+						consume(parameter);
 					}
 					return true;
 				default:

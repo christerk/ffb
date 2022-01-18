@@ -126,23 +126,23 @@ public class StepBlockChoice extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case DICE_INDEX:
-					fDiceIndex = (Integer) pParameter.getValue();
+					fDiceIndex = (Integer) parameter.getValue();
 					return true;
 				case BLOCK_RESULT:
-					fBlockResult = (BlockResult) pParameter.getValue();
+					fBlockResult = (BlockResult) parameter.getValue();
 					return true;
 				case BLOCK_ROLL:
-					fBlockRoll = (int[]) pParameter.getValue();
+					fBlockRoll = (int[]) parameter.getValue();
 					return true;
 				case NR_OF_DICE:
-					fNrOfDice = (Integer) pParameter.getValue();
+					fNrOfDice = (Integer) parameter.getValue();
 					return true;
 				case OLD_DEFENDER_STATE:
-					fOldDefenderState = (PlayerState) pParameter.getValue();
+					fOldDefenderState = (PlayerState) parameter.getValue();
 					return true;
 				default:
 					break;

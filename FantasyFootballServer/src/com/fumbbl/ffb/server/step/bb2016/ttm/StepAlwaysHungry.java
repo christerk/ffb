@@ -83,10 +83,10 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.THROWN_PLAYER_ID) {
-				fThrownPlayerId = (String) pParameter.getValue();
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.THROWN_PLAYER_ID) {
+				fThrownPlayerId = (String) parameter.getValue();
 				return true;
 			}
 		}

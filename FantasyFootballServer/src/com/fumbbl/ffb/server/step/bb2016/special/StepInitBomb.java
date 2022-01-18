@@ -100,10 +100,10 @@ public final class StepInitBomb extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.BOMB_OUT_OF_BOUNDS) {
-				fBombOutOfBounds = pParameter.getValue() != null ? (Boolean) pParameter.getValue() : false;
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.BOMB_OUT_OF_BOUNDS) {
+				fBombOutOfBounds = parameter.getValue() != null ? (Boolean) parameter.getValue() : false;
 				return true;
 			}
 		}

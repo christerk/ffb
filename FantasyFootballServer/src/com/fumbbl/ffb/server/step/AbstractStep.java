@@ -163,7 +163,7 @@ public abstract class AbstractStep implements IStep {
 		return commandStatus;
 	}
 
-	public boolean setParameter(StepParameter pParameter) {
+	public boolean setParameter(StepParameter parameter) {
 		// do nothing, override in subclass if needed
 		return false;
 	}

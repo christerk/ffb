@@ -89,11 +89,11 @@ public class StepSelectGazeTarget extends AbstractStep {
     }
 
     @Override
-    public boolean setParameter(StepParameter pParameter) {
-        if ((pParameter != null) && !super.setParameter(pParameter)) {
-            if (pParameter.getKey() == StepParameterKey.END_PLAYER_ACTION) {
-                endPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-                consume(pParameter);
+    public boolean setParameter(StepParameter parameter) {
+        if ((parameter != null) && !super.setParameter(parameter)) {
+            if (parameter.getKey() == StepParameterKey.END_PLAYER_ACTION) {
+                endPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+                consume(parameter);
                 return true;
             }
         }

@@ -78,10 +78,10 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.INTERCEPTOR_ID) {
-				fInterceptorId = (String) pParameter.getValue();
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.INTERCEPTOR_ID) {
+				fInterceptorId = (String) parameter.getValue();
 				return true;
 			}
 		}

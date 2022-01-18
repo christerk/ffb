@@ -93,14 +93,14 @@ public final class StepBuyInducements extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case INDUCEMENT_GOLD_AWAY:
-					fInducementGoldAway = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+					fInducementGoldAway = (parameter.getValue() != null) ? (Integer) parameter.getValue() : 0;
 					return true;
 				case INDUCEMENT_GOLD_HOME:
-					fInducementGoldHome = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+					fInducementGoldHome = (parameter.getValue() != null) ? (Integer) parameter.getValue() : 0;
 					return true;
 				default:
 					break;

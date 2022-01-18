@@ -93,20 +93,20 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case THROWN_PLAYER_HAS_BALL:
-					fThrownPlayerHasBall = (Boolean) pParameter.getValue();
+					fThrownPlayerHasBall = (Boolean) parameter.getValue();
 					return true;
 				case THROWN_PLAYER_ID:
-					fThrownPlayerId = (String) pParameter.getValue();
+					fThrownPlayerId = (String) parameter.getValue();
 					return true;
 				case DROP_THROWN_PLAYER:
-					fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					fDropThrownPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				case PASS_RESULT:
-					passResult = (PassResult) pParameter.getValue();
+					passResult = (PassResult) parameter.getValue();
 					return true;
 				default:
 					break;
