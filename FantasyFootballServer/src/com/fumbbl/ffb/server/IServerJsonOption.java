@@ -44,6 +44,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonEnumWithNameOption DISPATCH_PLAYER_ACTION = new JsonEnumWithNameOption("dispatchPlayerAction",
         Factory.PLAYER_ACTION);
     JsonBooleanOption DIVING_CATCH_CHOICE = new JsonBooleanOption("divingCatchChoice");
+    JsonObjectOption DROP_PLAYER_CONTEXT = new JsonObjectOption("dropPlayerContext");
     JsonBooleanOption DROP_THROWN_PLAYER = new JsonBooleanOption("dropThrownPlayer");
     JsonIntOption DODGE_ROLL = new JsonIntOption("dodgeRoll");
     JsonBooleanOption DONT_DROP_FUMBLE = new JsonBooleanOption("dontDropFumble");

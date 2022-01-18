@@ -21,7 +21,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 	private ReRolledAction fReRolledAction;
 	private ReRollSource fReRollSource;
 
-	protected AbstractStepWithReRoll(GameState pGameState) {
+	public AbstractStepWithReRoll(GameState pGameState) {
 		super(pGameState);
 	}
 

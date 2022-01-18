@@ -64,7 +64,7 @@ public class DropPlayerContext implements IJsonSerializable {
 	}
 
 	@Override
-	public JsonValue toJsonValue() {
+	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IServerJsonOption.INJURY_RESULT.addTo(jsonObject, injuryResult.toJsonValue());

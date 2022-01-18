@@ -76,6 +76,7 @@ public enum StepId implements INamedObject {
 	GOTO_LABEL("gotoLabel"), //
 	HAIL_MARY_PASS("hailMaryPass"), // action.pass
 	HAND_OVER("handOver"), // action.pass
+	HANDLE_DROP_PLAYER_CONTEXT("handleDropPlayerContext"), // action block
 	HORNS("horns"), // action.block
 	HYPNOTIC_GAZE("hypnoticGaze"), // action.move
 	INIT_BLOCKING("initBlocking"), // action.block
