@@ -39,6 +39,7 @@ public enum StepParameterKey {
 	DONT_DROP_FUMBLE, // Boolean
 	DOUBLE_TARGET_STRENGTH, // Boolean
 	DOUBLE_TARGET_STRENGTH_FOR_PLAYER, // String
+	DROP_PLAYER_CONTEXT, // DropPlayerContext
 	DROPPED_BALL_CARRIER, // String
 	DROP_THROWN_PLAYER, // Boolean
 	END_INDUCEMENT_PHASE, // Boolean
