@@ -399,20 +399,20 @@ public class RosterPlayer extends Player<RosterPosition> {
 		return getPosition().getRace();
 	}
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Player<?> other = (Player<?>) obj;
-		return getId().equals(other.getId());
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		RosterPlayer that = (RosterPlayer) o;
+
+		return fId.equals(that.fId);
 	}
 
+	@Override
+	public int hashCode() {
+		return fId.hashCode();
+	}
 	// XML serialization
 
 	public void addToXml(TransformerHandler pHandler) {

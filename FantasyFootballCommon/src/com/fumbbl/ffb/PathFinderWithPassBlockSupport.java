@@ -119,6 +119,24 @@ public class PathFinderWithPassBlockSupport {
 			return thisWeight - otherWeight;
 		}
 
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			PathFindNode that = (PathFindNode) o;
+
+			if (getWeight() != that.getWeight()) return false;
+			return getNonDiagonalWeight() == that.getNonDiagonalWeight();
+		}
+
+		@Override
+		public int hashCode() {
+			int result = getWeight();
+			result = 31 * result + getNonDiagonalWeight();
+			return result;
+		}
+
 		public void setSource(PathFindNode source, int length) {
 			setSource(source, length, state);
 		}
