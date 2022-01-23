@@ -95,10 +95,12 @@ public class PathFinderWithPassBlockSupport {
 
 		private int getNonDiagonalWeight() {
 			int bestWeight = 10000;
-			for (FieldCoordinate t : target) {
-				int weight = Math.abs(coord.getX() - t.getX()) + Math.abs(coord.getY() - t.getY());
-				if (weight < bestWeight)
-					bestWeight = weight;
+			if (target != null) {
+				for (FieldCoordinate t : target) {
+					int weight = Math.abs(coord.getX() - t.getX()) + Math.abs(coord.getY() - t.getY());
+					if (weight < bestWeight)
+						bestWeight = weight;
+				}
 			}
 
 			return distance + bestWeight;
@@ -117,6 +119,24 @@ public class PathFinderWithPassBlockSupport {
 			}
 
 			return thisWeight - otherWeight;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			PathFindNode that = (PathFindNode) o;
+
+			if (getWeight() != that.getWeight()) return false;
+			return getNonDiagonalWeight() == that.getNonDiagonalWeight();
+		}
+
+		@Override
+		public int hashCode() {
+			int result = getWeight();
+			result = 31 * result + getNonDiagonalWeight();
+			return result;
 		}
 
 		public void setSource(PathFindNode source, int length) {

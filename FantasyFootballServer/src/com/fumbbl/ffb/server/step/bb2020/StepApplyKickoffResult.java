@@ -548,6 +548,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 						return;
 					}
 
+					Player<?> otherPlayer = game.getFieldModel().getPlayer(normalizedToCoordinate);
+					if (otherPlayer != null) {
+						// there is already a player in the target position for some reason,
+						// so we try to place that player back where they came from
+						game.getFieldModel().sendPosition(game.getPlayerById(movedPlayer));
+						game.getFieldModel().sendPosition(otherPlayer);
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
+					}
+
 					nrOfMovedPlayers++;
 					UtilServerSetup.setupPlayer(getGameState(), movedPlayer,
 						toCoordinate);
@@ -578,8 +588,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					// In case of lag we might get more requests to move a player than are allowed, so we reset the coordinate also in the client
-					Player<?> player = game.getPlayerById(movedPlayer);
-					game.getFieldModel().setPlayerCoordinate(player, game.getFieldModel().getPlayerCoordinate(player));
+					game.getFieldModel().sendPosition(game.getPlayerById(movedPlayer));
 				}
 				movedPlayer = null;
 				toCoordinate = null;

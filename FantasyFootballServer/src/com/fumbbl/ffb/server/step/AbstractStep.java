@@ -129,7 +129,7 @@ public abstract class AbstractStep implements IStep {
 		ClientCommandSetupPlayer commandSetupPlayer = (ClientCommandSetupPlayer) command.getCommand();
 		Player<?> player = game.getPlayerById(commandSetupPlayer.getPlayerId());
 		if (player != null) {
-			game.getFieldModel().setPlayerCoordinate(player, game.getFieldModel().getPlayerCoordinate(player));
+			game.getFieldModel().sendPosition(player);
 		}
 
 		return StepCommandStatus.SKIP_STEP;

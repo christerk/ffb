@@ -15,6 +15,9 @@ public interface IServerProperty {
 	String SERVER_DEBUG_COMPRESSION = "server.debug.compression";
 	String SERVER_COMMAND_COMPRESSION = "server.command.compression";
 	String SERVER_TEST = "server.test";
+	String SERVER_REDEPLOY_EXIT_CODE = "server.redeploy.exitCode";
+	String SERVER_REDEPLOY_DEFAULT_BRANCH = "server.redeploy.defaultBranch";
+	String SERVER_REDEPLOY_FILE = "server.redeploy.file";
 
 	String FUMBBL_USER = "fumbbl.user";
 	String FUMBBL_PASSWORD = "fumbbl.password";

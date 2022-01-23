@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.util;
 
+import com.fumbbl.ffb.FantasyFootballException;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.fumbbl.ffb.FantasyFootballException;
 
 /**
  * 
@@ -18,11 +18,7 @@ public class DateTool {
 	public static boolean isEqual(Date pDate1, Date pDate2) {
 		if (pDate1 != null) {
 			return pDate1.equals(pDate2);
-		} else if (pDate2 != null) {
-			return pDate2.equals(pDate1);
-		} else {
-			return true;
-		}
+		} else return pDate2 == null;
 	}
 
 	public static String formatTimestamp(Date pTimestamp) {

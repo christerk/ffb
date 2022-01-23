@@ -13,6 +13,7 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.TeamSetup;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
@@ -244,6 +245,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendEndTurn() {
+		sendEndTurn(null);
+	}
+
+	public void sendEndTurn(TurnMode turnMode) {
 		send(new ClientCommandEndTurn());
 	}
 

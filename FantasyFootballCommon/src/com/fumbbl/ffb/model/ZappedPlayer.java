@@ -384,6 +384,21 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ZappedPlayer that = (ZappedPlayer) o;
+
+		return getId().equals(that.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return getId().hashCode();
+	}
+
+	@Override
 	public boolean isUsed(Skill skill) {
 		return originalPlayer.isUsed(skill);
 	}
@@ -397,7 +412,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	public void markUnused(Skill skill, Game game) {
 		originalPlayer.markUnused(skill, game);
 	}
-	
+
 	@Override
 	public void resetUsedSkills(SkillUsageType type, Game game) {
 		originalPlayer.resetUsedSkills(type, game);
