@@ -95,10 +95,12 @@ public class PathFinderWithPassBlockSupport {
 
 		private int getNonDiagonalWeight() {
 			int bestWeight = 10000;
-			for (FieldCoordinate t : target) {
-				int weight = Math.abs(coord.getX() - t.getX()) + Math.abs(coord.getY() - t.getY());
-				if (weight < bestWeight)
-					bestWeight = weight;
+			if (target != null) {
+				for (FieldCoordinate t : target) {
+					int weight = Math.abs(coord.getX() - t.getX()) + Math.abs(coord.getY() - t.getY());
+					if (weight < bestWeight)
+						bestWeight = weight;
+				}
 			}
 
 			return distance + bestWeight;
