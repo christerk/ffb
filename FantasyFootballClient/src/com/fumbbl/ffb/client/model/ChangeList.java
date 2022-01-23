@@ -12,6 +12,8 @@ public class ChangeList {
 
         versions.add(new VersionChangeList("2.3.2")
           .addBugfix("Internal fix potentially related to missing stat increases")
+          .addBugfix("Hopefully prevent skipped turns after quick snap")
+          .addBugfix("Hopefully prevent players to disappear or be unselectable after quick snap")
         );
 
         versions.add(new VersionChangeList("2.3.1")

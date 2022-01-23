@@ -27,14 +27,18 @@ public class ClientStateQuickSnap extends ClientStateSetup {
 		ClientData clientData = getClient().getClientData();
 		return ((pCoordinate != null) && (game.getFieldModel().getPlayer(pCoordinate) == null)
 				&& (pCoordinate.equals(clientData.getDragStartPosition())
-						|| pCoordinate.isAdjacent(clientData.getDragStartPosition())));
+			|| pCoordinate.isAdjacent(clientData.getDragStartPosition())));
 	}
 
 	@Override
 	public boolean isDropAllowed(FieldCoordinate pCoordinate) {
 		ClientData clientData = getClient().getClientData();
 		return ((pCoordinate != null) && (pCoordinate.equals(clientData.getDragStartPosition())
-				|| pCoordinate.isAdjacent(clientData.getDragStartPosition())));
+			|| pCoordinate.isAdjacent(clientData.getDragStartPosition())));
 	}
 
+	@Override
+	protected boolean useTurnMode() {
+		return true;
+	}
 }

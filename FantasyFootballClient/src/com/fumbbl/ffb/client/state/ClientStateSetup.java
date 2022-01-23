@@ -1,9 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import java.awt.event.MouseEvent;
-
-import javax.swing.SwingUtilities;
-
 import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -17,6 +13,9 @@ import com.fumbbl.ffb.dialog.DialogTeamSetupParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamSetupList;
+
+import javax.swing.SwingUtilities;
+import java.awt.event.MouseEvent;
 
 /**
  * 
@@ -96,18 +95,22 @@ public class ClientStateSetup extends ClientState {
 			sideBarHome.closeBox();
 		}
 		UtilClientPlayerDrag.resetDragging(getClient());
-		getClient().getCommunication().sendEndTurn();
+		getClient().getCommunication().sendEndTurn(useTurnMode() ? getClient().getGame().getTurnMode() : null);
+	}
+
+	protected boolean useTurnMode() {
+		return false;
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		switch (pNetCommand.getId()) {
-		case SERVER_TEAM_SETUP_LIST:
-			ServerCommandTeamSetupList setupListCommand = (ServerCommandTeamSetupList) pNetCommand;
-			game.setDialogParameter(new DialogTeamSetupParameter(fLoadDialog, setupListCommand.getSetupNames()));
-			userInterface.getDialogManager().updateDialog();
-			break;
+			case SERVER_TEAM_SETUP_LIST:
+				ServerCommandTeamSetupList setupListCommand = (ServerCommandTeamSetupList) pNetCommand;
+				game.setDialogParameter(new DialogTeamSetupParameter(fLoadDialog, setupListCommand.getSetupNames()));
+				userInterface.getDialogManager().updateDialog();
+				break;
 		default:
 			break;
 		}
