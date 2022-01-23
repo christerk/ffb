@@ -198,8 +198,8 @@ public class DialogChatCommands extends Dialog {
 				"&lt;playerNumber|skillName&gt; is needed for prayers that require player or skill selection (would show a dialog during the game).<br>" +
 				"For a playerNumber the player with the corresponding roster number gains the prayer effect, if they are eligible for selection.<br>" +
 				"For the skillName that skill will be assigned to a random player if it is a primary skill.<br>" +
-				"skillName has the same format when adding removing skills<br>" +
-				"Should the prayer, player or the skill not be available for any reason there will be no effect.").append(_FONT_CLOSE)
+					"skillName has the same format when adding removing skills<br>" +
+					"Should the prayer, player or the skill not be available for any reason there will be no effect.").append(_FONT_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
@@ -208,15 +208,24 @@ public class DialogChatCommands extends Dialog {
 			html.append("<td>").append(_FONT_OPEN).append("places players on your team prone.").append(_FONT_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
+
+			html.append("<tr>\n");
+			html.append("<td>").append(_FONT_BOLD_OPEN).append("/redeploy [brachname]").append(_FONT_BOLD_CLOSE)
+				.append("</td>\n");
+			html.append("<td>").append(_FONT_OPEN).append("shuts down the server and redeploys the current HEAD of the given branch. Defaults to master<br>" +
+					"Only available for DEV users and if the server is in test mode.").append(_FONT_CLOSE)
+				.append("</td>\n");
+			html.append("</tr>\n");
+
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/roll &lt;roll1&gt; &lt;roll2&gt; &lt;roll3&gt; &lt;...&gt;")
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
 			html.append("<td>").append(_FONT_OPEN).append("determines the next dicerolls (separated by space).<br>" +
-				"General roll values 1 2 3 4..... etc<br>" +
-				"Directional roll values n ne e se s sw w nw<br>" +
-				"Block roll values skull bothdown push stumble pow."
-					)
-					.append(_FONT_CLOSE).append("</td>\n");
+					"General roll values 1 2 3 4..... etc<br>" +
+					"Directional roll values n ne e se s sw w nw<br>" +
+					"Block roll values skull bothdown push stumble pow."
+				)
+				.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");
 			html.append("<tr>\n");
 			html.append("<td>").append(_FONT_BOLD_OPEN).append("/roll clear").append(_FONT_BOLD_CLOSE).append("</td>\n");
