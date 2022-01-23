@@ -13,8 +13,9 @@ public class ChangeList {
         versions.add(new VersionChangeList("2.3.2")
           .addBugfix("Internal fix potentially related to missing stat increases")
           .addBugfix("Hopefully prevent skipped turns after quick snap")
-          .addBugfix("Internal fixes potentially related to missing/stuck players after quicksnap")
+          .addBugfix("Internal fixes potentially related to missing/stuck players after quick snap")
           .addBugfix("Various stability fixes")
+          .addBugfix("Completions for TTM/KTM with Swoop player where awarded to the thrown player")
         );
 
         versions.add(new VersionChangeList("2.3.1")

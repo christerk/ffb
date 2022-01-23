@@ -165,7 +165,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				if (passResult == PassResult.ACCURATE) {
 					GameResult gameResult = getGameState().getGame().getGameResult();
 					TeamResult teamResult = game.getActingTeam() == game.getTeamHome() ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
-					getGameState().getPrayerState().addCompletion(teamResult.getPlayerResult(game.getActingPlayer().getPlayer()));
+					if (game.getThrower() != null) {
+						getGameState().getPrayerState().addCompletion(teamResult.getPlayerResult(game.getThrower()));
+					}
 				}
 				if (fThrownPlayerHasBall) {
 					if (UtilServerSteps.checkTouchdown(getGameState())) {
