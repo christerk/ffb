@@ -28,7 +28,6 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 			from(StepParameterKey.UPDATE_PERSISTENCE, params.isUpdatePersistence()));
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
-		sequence.add(StepId.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
