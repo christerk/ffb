@@ -11,20 +11,22 @@ import com.fumbbl.ffb.server.InjuryResult;
 
 public class DropPlayerContext implements IJsonSerializable {
 	private InjuryResult injuryResult;
-	private boolean endTurn, eligibleForSafePairOfHands;
+	private boolean endTurn, eligibleForSafePairOfHands, requiresArmourBreak;
 	private String label, playerId;
 	private ApothecaryMode apothecaryMode;
 
 	public DropPlayerContext() {
 	}
 
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label, String playerId, ApothecaryMode apothecaryMode) {
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
+	                         String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak) {
 		this.injuryResult = injuryResult;
 		this.endTurn = endTurn;
 		this.eligibleForSafePairOfHands = eligibleForSafePairOfHands;
 		this.label = label;
 		this.playerId = playerId;
 		this.apothecaryMode = apothecaryMode;
+		this.requiresArmourBreak = requiresArmourBreak;
 	}
 
 	public InjuryResult getInjuryResult() {
@@ -51,6 +53,10 @@ public class DropPlayerContext implements IJsonSerializable {
 		return apothecaryMode;
 	}
 
+	public boolean isRequiresArmourBreak() {
+		return requiresArmourBreak;
+	}
+
 	@Override
 	public DropPlayerContext initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
@@ -60,6 +66,7 @@ public class DropPlayerContext implements IJsonSerializable {
 		eligibleForSafePairOfHands = IServerJsonOption.ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS.getFrom(game, jsonObject);
 		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(game, jsonObject);
 		label = IServerJsonOption.LABEL.getFrom(game, jsonObject);
+		requiresArmourBreak = IServerJsonOption.REQUIRES_ARMOUR_BREAK.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -72,6 +79,7 @@ public class DropPlayerContext implements IJsonSerializable {
 		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, apothecaryMode);
 		IServerJsonOption.LABEL.addTo(jsonObject, label);
 		IServerJsonOption.ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS.addTo(jsonObject, eligibleForSafePairOfHands);
+		IServerJsonOption.REQUIRES_ARMOUR_BREAK.addTo(jsonObject, requiresArmourBreak);
 		return jsonObject;
 	}
 }

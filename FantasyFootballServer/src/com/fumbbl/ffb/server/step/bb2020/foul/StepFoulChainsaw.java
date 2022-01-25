@@ -18,6 +18,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeChainsaw;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -34,12 +35,12 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step in foul sequence to handle skill CHAINSAW.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ * <p>
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -103,7 +104,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {
 				if ((getReRollSource() == null)
-						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					dropChainsawPlayer = true;
 				}
 			}
@@ -116,13 +117,13 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 				int minimumRoll = DiceInterpreter.getInstance().minimumRollChainsaw();
 				boolean successful = (roll >= minimumRoll);
 				getResult().addReport(new ReportChainsawRoll(actingPlayer.getPlayerId(), successful, roll,
-						minimumRoll, reRolled, null));
+					minimumRoll, reRolled, null));
 				if (successful) {
 					publishParameter(StepParameter.from(StepParameterKey.USING_CHAINSAW, true));
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-							ReRolledActions.CHAINSAW, minimumRoll, false)) {
+						ReRolledActions.CHAINSAW, minimumRoll, false)) {
 						dropChainsawPlayer = true;
 					}
 				}
@@ -130,15 +131,12 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 			if (dropChainsawPlayer) {
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(), null,
-						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
-				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
-					publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-					if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-					}
-				}
-				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
-				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+
+				publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT,
+					new DropPlayerContext(injuryResultAttacker, UtilPlayer.hasBall(game, actingPlayer.getPlayer()), true, fGotoLabelOnFailure,
+						actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
+				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);

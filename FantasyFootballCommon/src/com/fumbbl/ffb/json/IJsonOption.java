@@ -364,6 +364,7 @@ public interface IJsonOption {
 	JsonBooleanOption REPORT_INJURIES_IGOR = new JsonBooleanOption("reportInjuriesIgor");
 	JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");
 	JsonArrayOption REPORTS = new JsonArrayOption("reports");
+	JsonBooleanOption REQUIRES_ARMOUR_BREAK = new JsonBooleanOption("requiresArmourBreak");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
 	JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", Factory.RE_ROLLED_ACTION);
 	JsonIntArrayOption RE_ROLLED_DICE_INDEXES = new JsonIntArrayOption("reRolledDice");

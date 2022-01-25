@@ -20,6 +20,7 @@ public class SelectGazeTarget extends com.fumbbl.ffb.server.step.generator.Selec
 		sequence.add(StepId.SELECT_GAZE_TARGET, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_SELECTING));
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));

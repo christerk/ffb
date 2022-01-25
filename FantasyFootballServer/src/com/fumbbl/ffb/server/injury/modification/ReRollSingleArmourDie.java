@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.injury.modification;
 
+import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.injury.BlockProne;
@@ -55,7 +56,7 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 	}
 
 	private boolean isSelfInflicted(InjuryContext injuryContext, InjuryType injuryType) {
-		return !StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomit() || injuryType.isChainsaw());
+		return (!StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomit() || injuryType.isChainsaw())) || injuryContext.getApothecaryMode() == ApothecaryMode.ANIMAL_SAVAGERY;
 	}
 
 	@Override
