@@ -18,7 +18,7 @@ public class RightStuffRollMessage extends ReportMessageBase<ReportSkillRoll> {
     protected void render(ReportSkillRoll report) {
   		StringBuilder status = new StringBuilder();
   		StringBuilder neededRoll = null;
-  		status.append("Right Stuff Roll [ ").append(report.getRoll()).append(" ]");
+  		status.append("Landing Roll [ ").append(report.getRoll()).append(" ]");
   		println(getIndent(), TextStyle.ROLL, status.toString());
   		Player<?> thrownPlayer = game.getPlayerById(report.getPlayerId());
   		print(getIndent() + 1, false, thrownPlayer);
