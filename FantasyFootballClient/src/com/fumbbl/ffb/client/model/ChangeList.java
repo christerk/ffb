@@ -11,7 +11,9 @@ public class ChangeList {
     public ChangeList() {
 
         versions.add(new VersionChangeList("2.3.3")
-          .addBugfix("Prevent multi button clicks which caused inconsistent states during quick snap"));
+          .addBugfix("Prevent multi button clicks which caused inconsistent states during quick snap")
+          .addBugfix("Properly update position of thrown players to avoid catch/bounce rolls for bouncing balls")
+        );
 
         versions.add(new VersionChangeList("2.3.2")
           .addBugfix("Internal fix potentially related to missing stat increases")
