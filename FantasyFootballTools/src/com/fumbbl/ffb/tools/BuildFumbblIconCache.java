@@ -31,14 +31,34 @@ import java.util.Properties;
  * Ergebnis eines XML Imports.
  */
 public class BuildFumbblIconCache {
-  
-	// division overview via https://fumbbl.com/xml:roster
+
+  // division overview via https://fumbbl.com/xml:roster
   private static final String _URL_DIVISION = "https://fumbbl.com/xml:roster?division=$1&server=test";
   private static final String _URL_ROSTER = "https://fumbbl.com/xml:roster?id=$1&server=test";
-  
+
   private static final String _PATH_PORTRAITS = "players/portraits/";
   private static final String _PATH_ICONSETS = "players/iconsets/";
-  
+
+  public static void main(String[] args) {
+    if ((args != null) && (args.length > 0)) {
+      BuildFumbblIconCache collectPlayerIcons = new BuildFumbblIconCache();
+      try {
+        Properties iconCache = new Properties();
+        collectPlayerIcons.collectRosterIcons(1, iconCache);  // Ranked
+        collectPlayerIcons.collectRosterIcons(2, iconCache);  // Competitive
+        collectPlayerIcons.collectRosterIcons(3, iconCache);  // Stunty Leeg
+        collectPlayerIcons.collectRosterIcons(5, iconCache); // League
+        collectPlayerIcons.collectRosterIcons(10, iconCache); // Blackbox
+        collectPlayerIcons.collectRosterIcons(200, iconCache); // Test
+        collectPlayerIcons.saveIconCache(new File(args[0]), iconCache);
+      } catch (Exception pAnyException) {
+        pAnyException.printStackTrace();
+      }
+    } else {
+      System.out.println("java com.fumbbl.ffb.tools.BuildFumbblIconCache <downloadDirectory>");
+    }
+  }
+
   private Map<String, Integer> collectRosterIds(int pDivision) throws IOException, SAXException, ParserConfigurationException {
 
     Map<String, Integer> rosterIdByName = new HashMap<String, Integer>();
@@ -50,65 +70,23 @@ public class BuildFumbblIconCache {
       XMLReader xmlReader = xmlParserFactory.newSAXParser().getXMLReader();
       DivisionContentHandler divisionHandler = new DivisionContentHandler(rosterIdByName);
       xmlReader.setContentHandler(divisionHandler);
-      
+
       try (StringReader stringReader = new StringReader(responseXml);
            BufferedReader xmlIn = new BufferedReader(stringReader)) {
         InputSource inputSource = new InputSource(xmlIn);
         xmlReader.parse(inputSource);
       }
     }
-    
+
     return rosterIdByName;
-    
+
   }
-  
+
   private String loadPage(String pUrl) throws IOException {
     System.out.println("load " + pUrl);
     return UtilHttpClient.fetchPage(pUrl);
-  }  
-  
-  private void collectRosterIconUrls(int pRosterId, Properties pIconCache) throws IOException {    
- 
-    String responseXml = loadPage(StringTool.bind(_URL_ROSTER, pRosterId));
-    if (!StringTool.isProvided(responseXml)) {
-      return;
-    }
-
-    Roster roster = new Roster();
-    try (StringReader stringReader = new StringReader(responseXml);
-         BufferedReader xmlIn = new BufferedReader(stringReader)) {
-      InputSource inputSource = new InputSource(xmlIn);
-      try {
-        XmlHandler.parse(new MockGame(), inputSource, roster);
-      } catch (FantasyFootballException pFfe) {
-        throw new FantasyFootballException("Error initializing roster id " + pRosterId, pFfe);
-      }
-    }
-    
-    for (RosterPosition position : roster.getPositions()) {
-      StringBuilder iconName = new StringBuilder();
-      if (PlayerType.STAR == position.getType()) {
-        iconName.append(transformName(position.getName(), false));
-      } else {
-        iconName.append(transformName(roster.getName(), true));
-        iconName.append("_");
-        iconName.append(transformName(position.getName(), true));
-      } 
-      iconName.append(".png");
-      if (StringTool.isProvided(position.getUrlPortrait())) {
-        StringBuilder iconUrl = new StringBuilder();
-        iconUrl.append(StringTool.print(roster.getBaseIconPath())).append(position.getUrlPortrait());
-        pIconCache.setProperty(iconUrl.toString(), _PATH_PORTRAITS + iconName.toString());
-      }
-      if (StringTool.isProvided(position.getUrlIconSet())) {
-        StringBuilder iconUrl = new StringBuilder();
-        iconUrl.append(StringTool.print(roster.getBaseIconPath())).append(position.getUrlIconSet());
-        pIconCache.setProperty(iconUrl.toString(), _PATH_ICONSETS + iconName.toString());
-      }
-    }
-    
   }
-  
+
   private String transformName(String pName, boolean pToLowerCase) {
     StringBuilder transformed = new StringBuilder();
     if (StringTool.isProvided(pName)) {
@@ -125,27 +103,69 @@ public class BuildFumbblIconCache {
             transformed.append(Character.toUpperCase(character));
           }
           toUpperCase = false;
-        } 
+        }
       }
     }
     return transformed.toString();
   }
-    
+
   public void collectRosterIcons(int pDivision, Properties pIconCache) throws IOException, SAXException, ParserConfigurationException {
     Map<String, Integer> rosterIdByName = collectRosterIds(pDivision);
     for (int rosterId : rosterIdByName.values()) {
       collectRosterIconUrls(rosterId, pIconCache);
     }
   }
+
+  private void collectRosterIconUrls(int pRosterId, Properties pIconCache) throws IOException {
+
+    String responseXml = loadPage(StringTool.bind(_URL_ROSTER, pRosterId));
+    if (!StringTool.isProvided(responseXml)) {
+      return;
+    }
+
+    Roster roster = new Roster();
+    try (StringReader stringReader = new StringReader(responseXml);
+         BufferedReader xmlIn = new BufferedReader(stringReader)) {
+      InputSource inputSource = new InputSource(xmlIn);
+      try {
+        XmlHandler.parse(new MockGame(), inputSource, roster);
+      } catch (FantasyFootballException pFfe) {
+        throw new FantasyFootballException("Error initializing roster id " + pRosterId, pFfe);
+      }
+    }
+
+    for (RosterPosition position : roster.getPositions()) {
+      StringBuilder iconName = new StringBuilder();
+      if (PlayerType.STAR == position.getType()) {
+        iconName.append(transformName(position.getName(), false));
+      } else {
+        iconName.append(transformName(roster.getName(), true));
+        iconName.append("_");
+        iconName.append(transformName(position.getName(), true));
+      }
+      iconName.append(".png");
+      if (StringTool.isProvided(position.getUrlPortrait())) {
+        StringBuilder iconUrl = new StringBuilder();
+        iconUrl.append(StringTool.print(roster.getBaseIconPath())).append(position.getUrlPortrait());
+        pIconCache.setProperty(iconUrl.toString(), _PATH_PORTRAITS + iconName);
+      }
+      if (StringTool.isProvided(position.getUrlIconSet())) {
+        StringBuilder iconUrl = new StringBuilder();
+        iconUrl.append(StringTool.print(roster.getBaseIconPath())).append(position.getUrlIconSet());
+        pIconCache.setProperty(iconUrl.toString(), _PATH_ICONSETS + iconName);
+      }
+    }
+
+  }
   
   public void saveIconCache(File pDownloadDir, Properties pIconCache) throws IOException {
-    
+
     if ((pDownloadDir == null) || (pIconCache == null)) {
       return;
     }
 
     pDownloadDir.mkdirs();
-    
+
     File iniFile = new File(pDownloadDir, "icons.ini");
     System.out.println("save " + iniFile.getAbsolutePath());
     try (BufferedWriter iniWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(iniFile), StandardCharsets.UTF_8))) {
@@ -153,7 +173,7 @@ public class BuildFumbblIconCache {
     }
 
     UtilFile.sortPropertyFile(iniFile);
-    
+
     for (Object key : pIconCache.keySet()) {
       String iconUrl = key.toString();
       String iconPath = pIconCache.getProperty(iconUrl);
@@ -167,7 +187,7 @@ public class BuildFumbblIconCache {
         iconFile.getParentFile().mkdirs();
         out = new BufferedOutputStream(new FileOutputStream(iconFile), 1024);
         int bytesRead = 0;
-        byte data[] = new byte[1024];
+        byte[] data = new byte[1024];
         while((bytesRead = in.read(data,0,1024)) >=0) {
          out.write(data, 0, bytesRead);
         }
@@ -182,26 +202,7 @@ public class BuildFumbblIconCache {
         }
       }
     }
-  
-  }
-  
-  public static void main(String[] args) {
-    if ((args != null) && (args.length > 0)) {
-      BuildFumbblIconCache collectPlayerIcons = new BuildFumbblIconCache();
-      try {
-      	Properties iconCache = new Properties();
-        collectPlayerIcons.collectRosterIcons(1, iconCache);  // Ranked
-        collectPlayerIcons.collectRosterIcons(3, iconCache);  // Stunty Leeg
-        collectPlayerIcons.collectRosterIcons(5, iconCache);
-        collectPlayerIcons.collectRosterIcons(10, iconCache);
-        collectPlayerIcons.collectRosterIcons(200, iconCache);
-        collectPlayerIcons.saveIconCache(new File(args[0]), iconCache);
-      } catch (Exception pAnyException) {
-        pAnyException.printStackTrace();
-      }
-    } else {
-      System.out.println("java com.fumbbl.ffb.tools.BuildFumbblIconCache <downloadDirectory>");
-    }
+
   }
 
 }

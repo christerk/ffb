@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("Prevent multi button clicks which caused inconsistent states during quick snap")
 			.addBugfix("Properly update position of thrown players to avoid catch/bounce rolls for bouncing balls")
 			.addBugfix("Tacklezone are recovered at the start of activation, allowing Pro to be used for Really Stupid etc.")
+			.addImprovement("Updated icon cache")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")

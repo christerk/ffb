@@ -5,10 +5,10 @@ import com.fumbbl.ffb.model.GameRules;
 
 public class MockGame extends Game {
 
-	private MockGameRules rules = new MockGameRules(null, null);
+	private final MockGameRules rules = new MockGameRules(null, null);
 
 	public MockGame() {
-		super(null, null);
+		super(new MockFactorySource(), null);
 	}
 
 	@Override
