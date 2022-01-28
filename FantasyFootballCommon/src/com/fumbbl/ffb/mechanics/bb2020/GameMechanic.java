@@ -69,9 +69,12 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean 	eligibleForPro(Game game, Player<?> player) {
+	public boolean eligibleForPro(Game game, Player<?> player) {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getActingPlayer().isStandingUp() || game.getActingPlayer().hasActedIgnoringNegativeTraits()) && playerState.hasTacklezones() && game.getActingPlayer().getPlayer() == player && modesAllowingPro.contains(game.getTurnMode());
+		return (!game.getActingPlayer().isStandingUp() || game.getActingPlayer().hasActedIgnoringNegativeTraits())
+			&& !playerState.isProne() && !playerState.isStunned()
+			&& game.getActingPlayer().getPlayer() == player
+			&& modesAllowingPro.contains(game.getTurnMode());
 	}
 
 	@Override

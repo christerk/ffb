@@ -23,6 +23,7 @@ public class Foul extends com.fumbbl.ffb.server.step.generator.Foul {
 
 		sequence.add(StepId.INIT_FOULING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING),
 			from(StepParameterKey.FOUL_DEFENDER_ID, params.getFouledDefenderId()), from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()));
+		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.DROP_FALLING_PLAYERS);
@@ -35,7 +36,6 @@ public class Foul extends com.fumbbl.ffb.server.step.generator.Foul {
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
 		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_FOULING));
-		sequence.add(StepId.RECOVER_FROM_GAZE);
 		sequence.add(StepId.FOUL_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER));
 		sequence.add(StepId.FOUL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));

@@ -59,16 +59,11 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
-						if (successful) {
-							// read player state again as it might have been altered for pro in UtilServerReRoll#useReRoll
-							playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).recoverTacklezones();
-							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
-
-						} else {
+						if (!successful) {
 							state.status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))
-									&& UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-											reRolledAction, minimumRoll, false)) {
+								&& UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+								reRolledAction, minimumRoll, false)) {
 								state.status = ActionStatus.WAITING_FOR_RE_ROLL;
 							} else {
 								step.cancelPlayerAction();
