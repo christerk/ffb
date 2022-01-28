@@ -10,6 +10,9 @@ public class ChangeList {
 
     public ChangeList() {
 
+        versions.add(new VersionChangeList("2.3.3")
+          .addBugfix("Prevent multi button clicks which caused inconsistent states during quick snap"));
+
         versions.add(new VersionChangeList("2.3.2")
           .addBugfix("Internal fix potentially related to missing stat increases")
           .addBugfix("Hopefully prevent skipped turns after quick snap")
