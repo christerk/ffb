@@ -26,7 +26,8 @@ public enum DialogId implements INamedObject {
 	BUY_CARDS_AND_INDUCEMENTS("buyCardsAndInducements"), ARGUE_THE_CALL("argueTheCall"), SELECT_BLITZ_TARGET("selectBlitzTarget"),
 	OPPONENT_BLOCK_SELECTION("opponentBlockSelection"), PILE_DRIVER("pileDriver"), USE_CHAINSAW("useChainsaw"),
 	BLOCK_ROLL_PARTIAL_RE_ROLL("blockRollPartialReRoll"), INVALID_SOLID_DEFENCE("invalidSolidDefence"), SELECT_SKILL("selectSkill"),
-	BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"), SELECT_GAZE_TARGET("selectGazeTarget"), CHANGE_LIST("changeList");
+	BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"), SELECT_GAZE_TARGET("selectGazeTarget"),
+	CONFIRM_END_BLITZ_ACTION("confirmEndBlitzAction"), CHANGE_LIST("changeList");
 
 	private final String fName;
 

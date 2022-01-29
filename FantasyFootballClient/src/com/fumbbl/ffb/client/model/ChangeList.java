@@ -10,7 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.3.3")
+		versions.add(new VersionChangeList("2.4.0")
 			.addBugfix("Prevent multi button clicks which caused inconsistent states during quick snap")
 			.addBugfix("Properly update position of thrown players to avoid catch/bounce rolls for bouncing balls")
 			.addBugfix("Tacklezone are recovered at the start of activation, allowing Pro to be used for Really Stupid etc.")
@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Play fall sound for players placed prone from bomb")
 			.addBugfix("Play sounds for all multi block actions")
 			.addBugfix("Hopefully fixed switching from spectator to replay mode")
+			.addFeature("Confirmation dialog to prevent wasting the blitz action")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")
