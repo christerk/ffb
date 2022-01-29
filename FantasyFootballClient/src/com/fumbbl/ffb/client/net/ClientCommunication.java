@@ -13,6 +13,7 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.TeamSetup;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
@@ -32,7 +33,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
-import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
@@ -75,6 +75,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandStartGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandTalk;
+import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
@@ -244,6 +245,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendEndTurn() {
+		sendEndTurn(null);
+	}
+
+	public void sendEndTurn(TurnMode turnMode) {
 		send(new ClientCommandEndTurn());
 	}
 

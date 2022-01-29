@@ -51,6 +51,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				actingPlayer.setHasPassed(true);
+				game.setThrowerId(actingPlayer.getPlayerId());
 				game.setConcessionPossible(false);
 				ReRolledAction rerolledAction;
 				if (state.kicked) {

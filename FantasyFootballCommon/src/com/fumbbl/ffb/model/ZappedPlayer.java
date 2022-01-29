@@ -173,14 +173,14 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game) {
+	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource game, long gameId) {
 		position = new ZappedPosition(pPosition, game);
-		originalPlayer.updatePosition(pPosition, updateStats, game);
+		originalPlayer.updatePosition(pPosition, updateStats, game, gameId);
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition, IFactorySource game) {
-		updatePosition(pPosition, true, game);
+	public void updatePosition(RosterPosition pPosition, IFactorySource game, long gameId) {
+		updatePosition(pPosition, true, game, gameId);
 	}
 
 	@Override
@@ -278,8 +278,8 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void applyPlayerModifiersFromBehaviours() {
-		originalPlayer.applyPlayerModifiersFromBehaviours();
+	public void applyPlayerModifiersFromBehaviours(IFactorySource game, long gameId) {
+		originalPlayer.applyPlayerModifiersFromBehaviours(game, gameId);
 	}
 
 	@Override
@@ -380,5 +380,20 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	@Override
 	public String toXml(boolean pIndent) {
 		return UtilXml.toXml(this, pIndent);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ZappedPlayer that = (ZappedPlayer) o;
+
+		return getId().equals(that.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return getId().hashCode();
 	}
 }

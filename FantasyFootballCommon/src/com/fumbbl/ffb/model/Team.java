@@ -77,6 +77,8 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	private final transient Map<String, Player<?>> fPlayerById;
 	private final transient Map<Integer, Player<?>> fPlayerByNr;
 
+	private transient long currentGameId;
+
 	private static class PlayerComparatorByNr implements Comparator<Player<?>> {
 		public int compare(Player<?> pPlayer1, Player<?> pPlayer2) {
 			return (pPlayer1.getNr() - pPlayer2.getNr());
@@ -88,6 +90,14 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		fPlayerByNr = new HashMap<>();
 		specialRules = new HashSet<>();
 		updateRoster(new Roster(), game);
+	}
+
+	public long getCurrentGameId() {
+		return currentGameId;
+	}
+
+	public void setCurrentGameId(long currentGameId) {
+		this.currentGameId = currentGameId;
 	}
 
 	public void setId(String pId) {
@@ -232,15 +242,17 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public void updateRoster(Roster pRoster, boolean updateStats, IFactorySource game) {
+		game.logDebug(currentGameId, "Entering updateRoster");
 		fRoster = pRoster;
 		if (fRoster != null) {
 			setRosterId(fRoster.getId());
 			setRace(fRoster.getName());
 			for (Player<?> player : getPlayers()) {
 				String positionId = player.getPositionId();
-				player.updatePosition(fRoster.getPositionById(positionId), updateStats, game);
+				player.updatePosition(fRoster.getPositionById(positionId), updateStats, game, currentGameId);
 			}
 		}
+		game.logDebug(currentGameId, "Leaving updateRoster");
 	}
 
 	public int getCheerleaders() {

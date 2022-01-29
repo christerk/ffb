@@ -388,6 +388,16 @@ public class FantasyFootballServer implements IFactorySource {
 		fDebugLog.log(IServerLogLevel.ERROR, gameId, message);
 	}
 
+	@Override
+	public void logDebug(long gameId, String message) {
+		fDebugLog.log(IServerLogLevel.DEBUG, gameId, message);
+	}
+
+	@Override
+	public void logWithOutGameId(Throwable throwable) {
+		fDebugLog.logWithOutGameId(throwable);
+	}
+
 	public IFactorySource getFactorySource() {
 		return this;
 	}

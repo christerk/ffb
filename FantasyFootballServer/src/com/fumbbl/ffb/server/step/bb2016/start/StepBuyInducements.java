@@ -44,8 +44,8 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.game.start.UtilInducementSequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.RiotousRookies;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
+import com.fumbbl.ffb.server.step.generator.common.RiotousRookies;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.skill.bb2016.Loner;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -286,9 +286,8 @@ public final class StepBuyInducements extends AbstractStep {
 			RosterPosition position = roster.getPositionById(pPositionIds[i]);
 			RosterPlayer mercenary = new RosterPlayer();
 			addedPlayerList.add(mercenary);
-			StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("M").append(addedPlayerList.size());
-			mercenary.setId(playerId.toString());
-			mercenary.updatePosition(position, game.getRules());
+			mercenary.setId(pTeam.getId() + "M" + addedPlayerList.size());
+			mercenary.updatePosition(position, game.getRules(), game.getId());
 			Integer mercNr = nrByPosition.get(position);
 			if (mercNr == null) {
 				mercNr = 1;
@@ -296,9 +295,7 @@ public final class StepBuyInducements extends AbstractStep {
 				mercNr = mercNr + 1;
 			}
 			nrByPosition.put(position, mercNr);
-			StringBuilder name = new StringBuilder();
-			name.append("Merc ").append(position.getName()).append(" ").append(mercNr);
-			mercenary.setName(name.toString());
+			mercenary.setName("Merc " + position.getName() + " " + mercNr);
 			mercenary.setNr(pTeam.getMaxPlayerNr() + 1);
 			mercenary.setType(PlayerType.MERCENARY);
 			mercenary.addSkill(factory.forClass(Loner.class));
@@ -360,7 +357,7 @@ public final class StepBuyInducements extends AbstractStep {
 					addedPlayerList.add(starPlayer);
 					StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("S").append(addedPlayerList.size());
 					starPlayer.setId(playerId.toString());
-					starPlayer.updatePosition(position, game.getRules());
+					starPlayer.updatePosition(position, game.getRules(), game.getId());
 					starPlayer.setName(position.getName());
 					starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
 					starPlayer.setGender(position.getGender());

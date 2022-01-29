@@ -10,7 +10,6 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -72,32 +71,26 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		return fThrowTeamMate;
 	}
 
-	/**
-	 * Generated equals() Method.
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final RangeRuler other = (RangeRuler) obj;
-		if (fTargetCoordinate == null) {
-			if (other.fTargetCoordinate != null)
-				return false;
-		} else if (!fTargetCoordinate.equals(other.fTargetCoordinate))
-			return false;
-		if (fMinimumRoll != other.fMinimumRoll)
-			return false;
-		if (fThrowTeamMate != other.fThrowTeamMate)
-			return false;
-		if (fThrowerId == null) {
-			return other.fThrowerId == null;
-		} else return fThrowerId.equals(other.fThrowerId);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		RangeRuler that = (RangeRuler) o;
+
+		if (fMinimumRoll != that.fMinimumRoll) return false;
+		if (fThrowTeamMate != that.fThrowTeamMate) return false;
+		if (fThrowerId != null ? !fThrowerId.equals(that.fThrowerId) : that.fThrowerId != null) return false;
+		return fTargetCoordinate != null ? fTargetCoordinate.equals(that.fTargetCoordinate) : that.fTargetCoordinate == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = fThrowerId != null ? fThrowerId.hashCode() : 0;
+		result = 31 * result + (fTargetCoordinate != null ? fTargetCoordinate.hashCode() : 0);
+		result = 31 * result + fMinimumRoll;
+		result = 31 * result + (fThrowTeamMate ? 1 : 0);
+		return result;
 	}
 
 	// transformation

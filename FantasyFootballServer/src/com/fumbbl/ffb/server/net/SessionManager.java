@@ -1,61 +1,26 @@
 package com.fumbbl.ffb.server.net;
 
+import com.fumbbl.ffb.ClientMode;
+import org.eclipse.jetty.websocket.api.Session;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.jetty.websocket.api.Session;
-
-import com.fumbbl.ffb.ClientMode;
-
 /**
- * 
  * @author Kalimar
  */
 public class SessionManager {
 
-	private Map<Long, Set<Session>> fSessionsByGameId;
+	private final Map<Long, Set<Session>> fSessionsByGameId;
 	private final Map<Session, JoinedClient> fClientBySession;
-	private Map<Session, Long> fLastPingBySession;
+	private final Map<Session, Long> fLastPingBySession;
 
-	private class JoinedClient {
-
-		private long fGameId;
-		private String fCoach;
-		private ClientMode fMode;
-		private boolean fHomeCoach;
-		private List<String> fAccountProperties;
-
-		JoinedClient(long pGameId, String pCoach, ClientMode pMode, boolean pHomeCoach, List<String> pAccountProperties) {
-			fGameId = pGameId;
-			fCoach = pCoach;
-			fMode = pMode;
-			fHomeCoach = pHomeCoach;
-			fAccountProperties = pAccountProperties;
-		}
-
-		public long getGameId() {
-			return fGameId;
-		}
-
-		public String getCoach() {
-			return fCoach;
-		}
-
-		public ClientMode getMode() {
-			return fMode;
-		}
-
-		boolean isHomeCoach() {
-			return fHomeCoach;
-		}
-
-		public boolean hasProperty(String property) {
-			return fAccountProperties.contains(property);
-		}
-		
+	public synchronized boolean isSessionDev(Session pSession) {
+		JoinedClient client = fClientBySession.get(pSession);
+		return client != null && client.hasProperty("DEV");
 	}
 
 	public SessionManager() {
@@ -86,7 +51,45 @@ public class SessionManager {
 		JoinedClient client = fClientBySession.get(pSession);
 		return client != null && client.hasProperty("ADMIN");
 	}
-	
+
+	private class JoinedClient {
+
+		private final long fGameId;
+		private final String fCoach;
+		private final ClientMode fMode;
+		private final boolean fHomeCoach;
+		private final List<String> fAccountProperties;
+
+		JoinedClient(long pGameId, String pCoach, ClientMode pMode, boolean pHomeCoach, List<String> pAccountProperties) {
+			fGameId = pGameId;
+			fCoach = pCoach;
+			fMode = pMode;
+			fHomeCoach = pHomeCoach;
+			fAccountProperties = pAccountProperties;
+		}
+
+		public long getGameId() {
+			return fGameId;
+		}
+
+		public String getCoach() {
+			return fCoach;
+		}
+
+		public ClientMode getMode() {
+			return fMode;
+		}
+
+		boolean isHomeCoach() {
+			return fHomeCoach;
+		}
+
+		public boolean hasProperty(String property) {
+			return fAccountProperties.contains(property);
+		}
+
+	}
+
 	public synchronized ClientMode getModeForSession(Session pSession) {
 		JoinedClient client = fClientBySession.get(pSession);
 		if (client != null) {

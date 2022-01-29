@@ -389,7 +389,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			sum += position.getCost() + extraCost;
 			addedPlayerList.add(mercenary);
 			mercenary.setId(pTeam.getId() + "M" + addedPlayerList.size());
-			mercenary.updatePosition(position, game.getRules());
+			mercenary.updatePosition(position, game.getRules(), game.getId());
 			Integer mercNr = nrByPosition.get(position);
 			if (mercNr == null) {
 				mercNr = 1;
@@ -462,7 +462,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 					RosterPlayer starPlayer = new RosterPlayer();
 					addedPlayerList.add(starPlayer);
 					starPlayer.setId(pTeam.getId() + "S" + addedPlayerList.size());
-					starPlayer.updatePosition(position, game.getRules());
+					starPlayer.updatePosition(position, game.getRules(), game.getId());
 					starPlayer.setName(position.getName());
 					starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
 					starPlayer.setGender(position.getGender());

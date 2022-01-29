@@ -61,7 +61,7 @@ public class LZString {
 								context_data_position++;
 							}
 						}
-						value = (int) context_w.charAt(0);
+						value = context_w.charAt(0);
 						for (int i = 0; i < 8; i++) {
 							context_data_val = (context_data_val << 1) | (value & 1);
 							if (context_data_position == 15) {
@@ -86,7 +86,7 @@ public class LZString {
 							}
 							value = 0;
 						}
-						value = (int) context_w.charAt(0);
+						value = context_w.charAt(0);
 						for (int i = 0; i < 16; i++) {
 							context_data_val = (context_data_val << 1) | (value & 1);
 							if (context_data_position == 15) {
@@ -127,7 +127,7 @@ public class LZString {
 				}
 				// Add wc to the dictionary.
 				context_dictionary.put(context_wc, context_dictSize++);
-				context_w = new String(context_c);
+				context_w = context_c;
 			}
 		}
 
@@ -145,7 +145,7 @@ public class LZString {
 							context_data_position++;
 						}
 					}
-					value = (int) context_w.charAt(0);
+					value = context_w.charAt(0);
 					for (int i = 0; i < 8; i++) {
 						context_data_val = (context_data_val << 1) | (value & 1);
 						if (context_data_position == 15) {
@@ -170,7 +170,7 @@ public class LZString {
 						}
 						value = 0;
 					}
-					value = (int) context_w.charAt(0);
+					value = context_w.charAt(0);
 					for (int i = 0; i < 16; i++) {
 						context_data_val = (context_data_val << 1) | (value & 1);
 						if (context_data_position == 15) {
@@ -265,8 +265,9 @@ public class LZString {
 
 		if (compressed == null)
 			return "";
-		if (compressed == "")
+		if ("".equalsIgnoreCase(compressed)) {
 			return null;
+		}
 		List<String> dictionary = new ArrayList<>(200);
 		double enlargeIn = 4;
 		int dictSize = 4;
@@ -282,7 +283,7 @@ public class LZString {
 		int d;
 		Data data = Data.getInstance();
 		data.string = compressed;
-		data.val = (int) compressed.charAt(0);
+		data.val = compressed.charAt(0);
 		data.position = 32768;
 		data.index = 1;
 
@@ -298,7 +299,7 @@ public class LZString {
 			data.position >>= 1;
 			if (data.position == 0) {
 				data.position = 32768;
-				data.val = (int) data.string.charAt(data.index++);
+				data.val = data.string.charAt(data.index++);
 			}
 			bits |= (resb > 0 ? 1 : 0) * power;
 			power <<= 1;
@@ -314,7 +315,7 @@ public class LZString {
 				data.position >>= 1;
 				if (data.position == 0) {
 					data.position = 32768;
-					data.val = (int) data.string.charAt(data.index++);
+					data.val = data.string.charAt(data.index++);
 				}
 				bits |= (resb > 0 ? 1 : 0) * power;
 				power <<= 1;
@@ -330,7 +331,7 @@ public class LZString {
 				data.position >>= 1;
 				if (data.position == 0) {
 					data.position = 32768;
-					data.val = (int) data.string.charAt(data.index++);
+					data.val = data.string.charAt(data.index++);
 				}
 				bits |= (resb > 0 ? 1 : 0) * power;
 				power <<= 1;
@@ -362,7 +363,7 @@ public class LZString {
 				data.position >>= 1;
 				if (data.position == 0) {
 					data.position = 32768;
-					data.val = (int) data.string.charAt(data.index++);
+					data.val = data.string.charAt(data.index++);
 				}
 				bits |= (resb > 0 ? 1 : 0) * power;
 				power <<= 1;
@@ -378,7 +379,7 @@ public class LZString {
 					data.position >>= 1;
 					if (data.position == 0) {
 						data.position = 32768;
-						data.val = (int) data.string.charAt(data.index++);
+						data.val = data.string.charAt(data.index++);
 					}
 					bits |= (resb > 0 ? 1 : 0) * power;
 					power <<= 1;
@@ -402,7 +403,7 @@ public class LZString {
 					data.position >>= 1;
 					if (data.position == 0) {
 						data.position = 32768;
-						data.val = (int) data.string.charAt(data.index++);
+						data.val = data.string.charAt(data.index++);
 					}
 					bits |= (resb > 0 ? 1 : 0) * power;
 					power <<= 1;
@@ -464,7 +465,7 @@ public class LZString {
 		input = LZString.compress(input);
 
 		for (int i = 0; i < input.length(); i++) {
-			c = (int) input.charAt(i);
+			c = input.charAt(i);
 			switch (status++) {
 			case 0:
 				output += (char) ((c >> 1) + 32);
@@ -711,7 +712,7 @@ public class LZString {
 		return encode64(compress(input));
 	}
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		// Normal Compression and Decompression
 		String test = "Lets see how much we can compress this string!";

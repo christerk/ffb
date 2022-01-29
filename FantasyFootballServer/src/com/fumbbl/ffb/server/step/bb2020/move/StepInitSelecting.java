@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -17,6 +18,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
+import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandFoul;
 import com.fumbbl.ffb.net.commands.ClientCommandGaze;
 import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
@@ -260,7 +262,10 @@ public final class StepInitSelecting extends AbstractStep {
 					}
 					break;
 				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+					TurnMode turnMode = ((ClientCommandEndTurn) pReceivedCommand.getCommand()).getTurnMode();
+					boolean ignoreCommand = turnMode != null && turnMode != game.getTurnMode();
+
+					if (!ignoreCommand && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						fEndTurn = true;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

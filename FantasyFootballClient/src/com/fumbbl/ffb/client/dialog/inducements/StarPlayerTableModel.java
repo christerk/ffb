@@ -142,7 +142,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
 			if (PlayerType.STAR == pos.getType()) {
 				RosterPlayer player = new RosterPlayer();
-				player.updatePosition(pos, fDialog.getClient().getGame().getRules());
+				player.updatePosition(pos, fDialog.getClient().getGame().getRules(), fDialog.getClient().getGame().getId());
 				player.setName(pos.getName());
 				Object[] star = new Object[5];
 				star[0] = Boolean.FALSE;
