@@ -8,8 +8,8 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -78,6 +78,8 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
+				game.getTurnData().setBlitzUsed(true);
+				game.getActingPlayer().setHasMoved(true);
 				getResult().setSound(SoundId.CLICK);
 			} else if (targetSelectionState.isFailed()) {
 				Sequence sequence = new Sequence(getGameState());
