@@ -14,11 +14,9 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamSetupList;
 
-import javax.swing.SwingUtilities;
 import java.awt.event.MouseEvent;
 
 /**
- * 
  * @author Kalimar
  */
 public class ClientStateSetup extends ClientState {
@@ -55,15 +53,28 @@ public class ClientStateSetup extends ClientState {
 	}
 
 	public void mousePressed(MouseEvent pMouseEvent) {
+		if (getClient().getCurrentMouseButton() != MouseEvent.NOBUTTON) {
+			return;
+		}
+		getClient().setCurrentMouseButton(pMouseEvent.getButton());
 		UtilClientPlayerDrag.mousePressed(getClient(), pMouseEvent, false);
+
 	}
 
 	public void mouseDragged(MouseEvent pMouseEvent) {
+		if (getClient().getCurrentMouseButton() == MouseEvent.NOBUTTON) {
+			return;
+		}
 		UtilClientPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		if (SwingUtilities.isRightMouseButton(pMouseEvent)) {
+		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
+			return;
+		}
+		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
+		// SwingUtilities#isRightMouseButton would return true even if both buttons are pressed
+		if (pMouseEvent.getButton() == MouseEvent.BUTTON3) {
 			super.mouseReleased(pMouseEvent);
 		} else {
 			UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
@@ -73,17 +84,17 @@ public class ClientStateSetup extends ClientState {
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		boolean actionHandled = true;
 		switch (pActionKey) {
-		case MENU_SETUP_LOAD:
-			fLoadDialog = true;
-			getClient().getCommunication().sendTeamSetupLoad(null);
-			break;
-		case MENU_SETUP_SAVE:
-			fLoadDialog = false;
-			getClient().getCommunication().sendTeamSetupLoad(null);
-			break;
-		default:
-			actionHandled = false;
-			break;
+			case MENU_SETUP_LOAD:
+				fLoadDialog = true;
+				getClient().getCommunication().sendTeamSetupLoad(null);
+				break;
+			case MENU_SETUP_SAVE:
+				fLoadDialog = false;
+				getClient().getCommunication().sendTeamSetupLoad(null);
+				break;
+			default:
+				actionHandled = false;
+				break;
 		}
 		return actionHandled;
 	}
@@ -111,8 +122,8 @@ public class ClientStateSetup extends ClientState {
 				game.setDialogParameter(new DialogTeamSetupParameter(fLoadDialog, setupListCommand.getSetupNames()));
 				userInterface.getDialogManager().updateDialog();
 				break;
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 
@@ -125,14 +136,14 @@ public class ClientStateSetup extends ClientState {
 	public boolean isDragAllowed(FieldCoordinate pCoordinate) {
 		Game game = getClient().getGame();
 		return ((pCoordinate != null)
-				&& ((FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate) || pCoordinate.isBoxCoordinate())
-						&& (game.getFieldModel().getPlayer(pCoordinate) == null)));
+			&& ((FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate) || pCoordinate.isBoxCoordinate())
+			&& (game.getFieldModel().getPlayer(pCoordinate) == null)));
 	}
 
 	@Override
 	public boolean isDropAllowed(FieldCoordinate pCoordinate) {
 		return ((pCoordinate != null) && (FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate)
-				|| (pCoordinate.getX() == FieldCoordinate.RSV_HOME_X)));
+			|| (pCoordinate.getX() == FieldCoordinate.RSV_HOME_X)));
 	}
 
 }

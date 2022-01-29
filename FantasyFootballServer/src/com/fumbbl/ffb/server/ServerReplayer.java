@@ -1,20 +1,19 @@
 package com.fumbbl.ffb.server;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * 
  * @author Kalimar
  */
 public class ServerReplayer implements Runnable {
 
 	private boolean fStopped;
-	private List<ServerReplay> fReplayQueue;
-	private FantasyFootballServer fServer;
+	private final List<ServerReplay> fReplayQueue;
+	private final FantasyFootballServer fServer;
 
 	public ServerReplayer(FantasyFootballServer pServer) {
 		fServer = pServer;
@@ -47,7 +46,7 @@ public class ServerReplayer implements Runnable {
 					if (fStopped) {
 						break;
 					}
-					if ((serverReplay == null) && !fReplayQueue.isEmpty()) {
+					if (serverReplay == null) {
 						serverReplay = fReplayQueue.remove(0);
 					}
 				}
@@ -58,12 +57,14 @@ public class ServerReplayer implements Runnable {
 
 					ServerCommandReplay replayCommand = new ServerCommandReplay();
 					replayCommand.setTotalNrOfCommands(serverReplay.size());
+					replayCommand.setLastCommand(true);
 
 					ServerCommand[] serverCommands = serverReplay.findRelevantCommandsInLog();
 					for (ServerCommand serverCommand : serverCommands) {
 						replayCommand.add(serverCommand);
 						if (replayCommand.getNrOfCommands() >= ServerCommandReplay.MAX_NR_OF_COMMANDS) {
 							serverReplay.setComplete(false);
+							replayCommand.setLastCommand(false);
 							break;
 						}
 					}

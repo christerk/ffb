@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -13,16 +10,19 @@ import com.fumbbl.ffb.net.NetCommandFactory;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 
  * @author Kalimar
  */
 public class ServerCommandReplay extends ServerCommand {
 
 	public static final int MAX_NR_OF_COMMANDS = 100;
 
-	private List<ServerCommand> fReplayCommands;
+	private final List<ServerCommand> fReplayCommands;
 	private int fTotalNrOfCommands;
+	private boolean lastCommand;
 
 	public NetCommandId getId() {
 		return NetCommandId.SERVER_REPLAY;
@@ -86,7 +86,14 @@ public class ServerCommandReplay extends ServerCommand {
 		return lowestCommandNr;
 	}
 
-	// JSON serialization
+	public boolean isLastCommand() {
+		return lastCommand;
+	}
+
+	public void setLastCommand(boolean lastCommand) {
+		this.lastCommand = lastCommand;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
@@ -98,6 +105,7 @@ public class ServerCommandReplay extends ServerCommand {
 			commandArray.add(replayCommand.toJsonValue());
 		}
 		IJsonOption.COMMAND_ARRAY.addTo(jsonObject, commandArray);
+		IJsonOption.LAST_COMMAND.addTo(jsonObject, lastCommand);
 		return jsonObject;
 	}
 
@@ -112,6 +120,7 @@ public class ServerCommandReplay extends ServerCommand {
 			ServerCommand replayCommand = (ServerCommand) netCommandFactory.forJsonValue(source, commandArray.get(i));
 			add(replayCommand);
 		}
+		lastCommand = IJsonOption.LAST_COMMAND.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.client.util;
 
-import java.awt.event.MouseEvent;
-
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -13,6 +11,8 @@ import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.awt.event.MouseEvent;
+
 /**
  *
  * @author Kalimar
@@ -21,14 +21,14 @@ public class UtilClientPlayerDrag {
 
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
-		FieldCoordinate coordinate = null;
+		FieldCoordinate coordinate;
 		if (pBoxMode) {
 			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
 			if ((coordinate == null) && (pMouseEvent.getX() >= BoxComponent.WIDTH)) {
-				coordinate = getFieldFieldCoordinate(pClient, pMouseEvent.getX() - BoxComponent.WIDTH, pMouseEvent.getY());
+				coordinate = getFieldFieldCoordinate(pMouseEvent.getX() - BoxComponent.WIDTH, pMouseEvent.getY());
 			}
 		} else {
-			coordinate = getFieldFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
+			coordinate = getFieldFieldCoordinate(pMouseEvent.getX(), pMouseEvent.getY());
 			if ((coordinate == null) && (pMouseEvent.getX() < 0)) {
 				coordinate = getBoxFieldCoordinate(pClient, BoxComponent.WIDTH + pMouseEvent.getX(), pMouseEvent.getY());
 			}
@@ -36,9 +36,9 @@ public class UtilClientPlayerDrag {
 		return coordinate;
 	}
 
-	private static FieldCoordinate getFieldFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY) {
+	private static FieldCoordinate getFieldFieldCoordinate(int pMouseX, int pMouseY) {
 		if ((pMouseX >= 0) && (pMouseX < FieldLayer.FIELD_IMAGE_WIDTH) && (pMouseY >= 0)
-				&& (pMouseY < FieldLayer.FIELD_IMAGE_HEIGHT)) {
+			&& (pMouseY < FieldLayer.FIELD_IMAGE_HEIGHT)) {
 			return new FieldCoordinate((pMouseX / FieldLayer.FIELD_SQUARE_SIZE), (pMouseY / FieldLayer.FIELD_SQUARE_SIZE));
 		} else {
 			return null;
@@ -80,17 +80,15 @@ public class UtilClientPlayerDrag {
 			}
 		}
 		if (initDragAllowed) {
-			if (player != null) {
-				clientData.setSelectedPlayer(player);
-				clientData.setDragStartPosition(pCoordinate);
-				clientData.setDragEndPosition(pCoordinate);
-				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.BEING_DRAGGED));
-				if (pBoxMode) {
-					userInterface.getSideBarHome().refresh();
-				} else {
-					pClient.getClientState().hideSelectSquare();
-					userInterface.getFieldComponent().refresh();
-				}
+			clientData.setSelectedPlayer(player);
+			clientData.setDragStartPosition(pCoordinate);
+			clientData.setDragEndPosition(pCoordinate);
+			game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.BEING_DRAGGED));
+			if (pBoxMode) {
+				userInterface.getSideBarHome().refresh();
+			} else {
+				pClient.getClientState().hideSelectSquare();
+				userInterface.getFieldComponent().refresh();
 			}
 		} else {
 			clientData.setDragStartPosition(null);

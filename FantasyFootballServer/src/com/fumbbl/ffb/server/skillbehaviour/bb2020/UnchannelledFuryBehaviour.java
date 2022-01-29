@@ -8,8 +8,8 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.server.ActionStatus;
@@ -73,14 +73,11 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
-						if (successful) {
-							PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.recoverTacklezones());
-						} else {
+						if (!successful) {
 							status = ActionStatus.FAILURE;
 							if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))
-									&& UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-											reRolledAction, minimumRoll, false)) {
+								&& UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+								reRolledAction, minimumRoll, false)) {
 								status = ActionStatus.WAITING_FOR_RE_ROLL;
 							} else {
 								cancelPlayerAction(step);

@@ -227,7 +227,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				publishParameter(new StepParameter(StepParameterKey.CRASH_LANDING, crashLanding));
 				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));
 			} else {
-				// put thrown player in target coordinate (ball we be handled in right stuff
+				// put thrown player in target coordinate (ball will be handled in right stuff
 				// step), end loop
 				game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 				game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
@@ -246,6 +246,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		if (playerLandedUpon != null) {
 			publishParameters(UtilServerInjury.dropPlayer(this, playerLandedUpon, ApothecaryMode.HIT_PLAYER, true));
 		}
+		game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
