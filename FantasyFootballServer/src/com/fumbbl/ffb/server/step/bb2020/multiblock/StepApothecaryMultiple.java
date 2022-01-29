@@ -47,6 +47,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 
@@ -329,11 +330,15 @@ public class StepApothecaryMultiple extends AbstractStep {
 				playerResult.setSeriousInjuryDecay(null);
 
 				injuryResults.stream().filter(regenerationFailedResults::contains)
-					.forEach(injuryResult -> injuryResult.applyTo(this, false));
+					.forEach(injuryResult -> {
+						injuryResult.applyTo(this, false);
+						UtilServerGame.syncGameModel(this);
+					});
 			}
 
 			for (InjuryResult injuryResult : injuryResults) {
 				if (UtilServerInjury.handleRaiseDead(this, injuryResult)) {
+					UtilServerGame.syncGameModel(this);
 					break;
 				}
 			}

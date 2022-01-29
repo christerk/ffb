@@ -22,7 +22,6 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryType.InjuryTypeBombWithModifier;
 import com.fumbbl.ffb.server.InjuryType.InjuryTypeFireball;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeLightning;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepException;

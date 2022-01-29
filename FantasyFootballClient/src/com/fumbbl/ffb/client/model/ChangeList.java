@@ -15,6 +15,8 @@ public class ChangeList {
 			.addBugfix("Properly update position of thrown players to avoid catch/bounce rolls for bouncing balls")
 			.addBugfix("Tacklezone are recovered at the start of activation, allowing Pro to be used for Really Stupid etc.")
 			.addImprovement("Updated icon cache")
+			.addBugfix("Play fall sound for players placed prone from bomb.")
+			.addBugfix("Play sounds for all multi block actions.")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")
