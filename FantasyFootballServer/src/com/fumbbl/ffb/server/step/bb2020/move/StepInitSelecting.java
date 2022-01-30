@@ -9,7 +9,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.dialog.DialogConfirmEndBlitzActionParameter;
+import com.fumbbl.ffb.dialog.DialogConfirmEndActionParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -159,7 +159,7 @@ public final class StepInitSelecting extends AbstractStep {
 							&& (unusedBlitz || unusedGaze)
 							&& (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {
 							if (targetSelectionState.isCommitted()) {
-								UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndBlitzActionParameter(game.getActingTeam().getId()), false);
+								UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), actingPlayer.getPlayerAction()), false);
 								commandStatus = StepCommandStatus.SKIP_STEP;
 							} else {
 								if (actingPlayer.getPlayerAction().isBlitzing()) {

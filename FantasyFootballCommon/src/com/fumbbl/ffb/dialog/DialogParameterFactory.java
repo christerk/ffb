@@ -113,8 +113,8 @@ public class DialogParameterFactory {
                 return new DialogSelectSkillParameter();
             case BRIBERY_AND_CORRUPTION_RE_ROLL:
                 return new DialogBriberyAndCorruptionParameter();
-            case CONFIRM_END_BLITZ_ACTION:
-                return new DialogConfirmEndBlitzActionParameter();
+            case CONFIRM_END_ACTION:
+                return new DialogConfirmEndActionParameter();
             default:
                 return null;
         }

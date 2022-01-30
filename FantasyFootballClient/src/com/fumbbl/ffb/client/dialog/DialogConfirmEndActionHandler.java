@@ -2,12 +2,12 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogConfirmEndBlitzActionParameter;
+import com.fumbbl.ffb.dialog.DialogConfirmEndActionParameter;
 import com.fumbbl.ffb.model.Game;
 
-public class DialogConfirmEndBlitzActionHandler extends DialogHandler {
+public class DialogConfirmEndActionHandler extends DialogHandler {
 
-	public DialogConfirmEndBlitzActionHandler(FantasyFootballClient pClient) {
+	public DialogConfirmEndActionHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
@@ -15,13 +15,13 @@ public class DialogConfirmEndBlitzActionHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 
-		DialogConfirmEndBlitzActionParameter dialogParameter = (DialogConfirmEndBlitzActionParameter) game.getDialogParameter();
+		DialogConfirmEndActionParameter dialogParameter = (DialogConfirmEndActionParameter) game.getDialogParameter();
 		if (dialogParameter != null) {
 
 			if ((ClientMode.PLAYER == getClient().getMode())
 				&& game.getTeamHome().getId().equals(dialogParameter.getTeamId())) {
 
-				setDialog(new DialogConfirmEndBlitzAction(getClient()));
+				setDialog(new DialogConfirmEndAction(getClient(), dialogParameter.getPlayerAction()));
 
 				getDialog().showDialog(this);
 			}
@@ -30,7 +30,7 @@ public class DialogConfirmEndBlitzActionHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
-		DialogConfirmEndBlitzAction dialog = (DialogConfirmEndBlitzAction) pDialog;
+		DialogConfirmEndAction dialog = (DialogConfirmEndAction) pDialog;
 		if (dialog.isChoiceYes()) {
 			getClient().getCommunication().sendConfirm();
 		}
