@@ -61,6 +61,7 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 						doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
 					}
 					if (doRoll) {
+						step.commitTargetSelection();
 						int roll = step.getGameState().getDiceRoller().rollSkill();
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);

@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Play sounds for all multi block actions")
 			.addBugfix("Hopefully fixed switching from spectator to replay mode")
 			.addFeature("Confirmation dialog to prevent wasting the blitz action")
+			.addFeature("Allow cancelling blitz or gaze actions when no roll was made")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")

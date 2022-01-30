@@ -64,6 +64,7 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 						doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
 					}
 					if (doRoll) {
+						step.commitTargetSelection();
 						int roll = step.getGameState().getDiceRoller().rollSkill();
 						boolean goodConditions = ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
 								|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ)

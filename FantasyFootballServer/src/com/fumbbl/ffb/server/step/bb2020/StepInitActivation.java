@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.bb2020;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -23,6 +24,10 @@ public class StepInitActivation extends AbstractStep {
 	public void start() {
 		Player<?> player = getGameState().getGame().getActingPlayer().getPlayer();
 		PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
+		TargetSelectionState targetSelectionState = getGameState().getGame().getFieldModel().getTargetSelectionState();
+		if (targetSelectionState != null) {
+			targetSelectionState.setOldPlayerState(playerState);
+		}
 		getGameState().getGame().getFieldModel().setPlayerState(player, playerState.recoverTacklezones());
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

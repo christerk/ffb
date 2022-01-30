@@ -65,6 +65,7 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
                         doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
                     }
                     if (doRoll) {
+                        step.commitTargetSelection();
                         int roll = step.getGameState().getDiceRoller().rollSkill();
                         boolean goodConditions = true;
                         if (actingPlayer.getPlayerAction() != PlayerAction.THROW_TEAM_MATE

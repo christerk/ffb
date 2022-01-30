@@ -462,6 +462,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption TARGET_COORDINATE = new JsonFieldCoordinateOption("targetCoordinate");
 	JsonObjectOption TARGET_SELECTION_STATE = new JsonObjectOption("targetSelectionState");
 	JsonStringOption TARGET_SELECTION_STATUS = new JsonStringOption("targetSelectionStatus");
+	JsonBooleanOption TARGET_SELECTION_STATUS_IS_COMMITTED = new JsonBooleanOption("targetSelectionStatusIsCommitted");
 	JsonObjectOption TEAM_AWAY = new JsonObjectOption("teamAway");
 	JsonStringOption TEAM_AWAY_COACH = new JsonStringOption("teamAwayCoach");
 	JsonStringOption TEAM_AWAY_ID = new JsonStringOption("teamAwayId");

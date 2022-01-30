@@ -2,17 +2,18 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.util.Objects;
-
 public class TargetSelectionState implements IJsonSerializable {
 	private Status status = Status.STARTED;
 	private String selectedPlayerId;
+	private boolean committed;
+	private PlayerState oldPlayerState;
 
 	public TargetSelectionState() {
 	}
@@ -61,22 +62,48 @@ public class TargetSelectionState implements IJsonSerializable {
 		return status == Status.SKIPPED;
 	}
 
-	public boolean isFailed() { return status == Status.FAILED; }
+	public boolean isFailed() {
+		return status == Status.FAILED;
+	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(selectedPlayerId, status);
+	public boolean isCommitted() {
+		return committed;
+	}
+
+	public void commit() {
+		committed = true;
+	}
+
+
+	public PlayerState getOldPlayerState() {
+		return oldPlayerState;
+	}
+
+	public void setOldPlayerState(PlayerState oldPlayerState) {
+		this.oldPlayerState = oldPlayerState;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TargetSelectionState)) {
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		TargetSelectionState that = (TargetSelectionState) o;
+
+		if (committed != that.committed) return false;
+		if (status != that.status) return false;
+		if (selectedPlayerId != null ? !selectedPlayerId.equals(that.selectedPlayerId) : that.selectedPlayerId != null)
 			return false;
-		}
-		TargetSelectionState other = (TargetSelectionState) obj;
-		return status == other.status
-			&& ((selectedPlayerId == null && other.selectedPlayerId == null) || (selectedPlayerId != null && selectedPlayerId.equals(other.selectedPlayerId))
-		);
+		return oldPlayerState != null ? oldPlayerState.equals(that.oldPlayerState) : that.oldPlayerState == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = status != null ? status.hashCode() : 0;
+		result = 31 * result + (selectedPlayerId != null ? selectedPlayerId.hashCode() : 0);
+		result = 31 * result + (committed ? 1 : 0);
+		result = 31 * result + (oldPlayerState != null ? oldPlayerState.hashCode() : 0);
+		return result;
 	}
 
 	@Override
@@ -91,6 +118,14 @@ public class TargetSelectionState implements IJsonSerializable {
 
 			status = Status.valueOf(statusString);
 		}
+
+		if (IJsonOption.TARGET_SELECTION_STATUS_IS_COMMITTED.isDefinedIn(jsonObject)) {
+			committed = IJsonOption.TARGET_SELECTION_STATUS_IS_COMMITTED.getFrom(game, jsonObject);
+		}
+
+		if (IJsonOption.PLAYER_STATE_OLD.isDefinedIn(jsonObject)) {
+			oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
+		}
 		return this;
 	}
 
@@ -99,6 +134,8 @@ public class TargetSelectionState implements IJsonSerializable {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
 		IJsonOption.TARGET_SELECTION_STATUS.addTo(jsonObject, status.name());
+		IJsonOption.TARGET_SELECTION_STATUS_IS_COMMITTED.addTo(jsonObject, committed);
+		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 

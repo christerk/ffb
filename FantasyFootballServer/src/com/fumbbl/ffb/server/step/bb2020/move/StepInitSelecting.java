@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
@@ -15,6 +16,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
@@ -48,6 +50,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
@@ -118,6 +121,7 @@ public final class StepInitSelecting extends AbstractStep {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			boolean homeCommand = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 			FieldModel fieldModel = game.getFieldModel();
+			TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_CONFIRM: // confirms ending blitz action
 					fEndPlayerAction = true;
@@ -128,7 +132,7 @@ public final class StepInitSelecting extends AbstractStep {
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
-						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE && fieldModel.getTargetSelectionState() == null) {
+						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
@@ -148,12 +152,32 @@ public final class StepInitSelecting extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
 					} else {
-						if (fieldModel.getTargetSelectionState() != null
-							&& actingPlayer.getPlayerAction().isBlitzing()
-							&& !actingPlayer.hasBlocked()
-							&& actingPlayer.getCurrentMove() == 0) {
-							UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndBlitzActionParameter(game.getActingTeam().getId()), false);
-							commandStatus = StepCommandStatus.SKIP_STEP;
+						boolean unusedBlitz = actingPlayer.getPlayerAction().isBlitzing() && !actingPlayer.hasBlocked();
+						boolean unusedGaze = actingPlayer.getPlayerAction().isGaze() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
+						boolean onlyMarkedAsStandingUp = actingPlayer.isStandingUp() && actingPlayer.getCurrentMove() == Constant.MINIMUM_MOVE_TO_STAND_UP;
+						if (targetSelectionState != null
+							&& (unusedBlitz || unusedGaze)
+							&& (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {
+							if (targetSelectionState.isCommitted()) {
+								UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndBlitzActionParameter(game.getActingTeam().getId()), false);
+								commandStatus = StepCommandStatus.SKIP_STEP;
+							} else {
+								if (actingPlayer.getPlayerAction().isBlitzing()) {
+									game.getTurnData().setBlitzUsed(false);
+								}
+								if (targetSelectionState.getOldPlayerState() != null) {
+									PlayerState oldState = targetSelectionState.getOldPlayerState();
+									if (onlyMarkedAsStandingUp) {
+										oldState = oldState.changeBase(PlayerState.PRONE);
+									}
+									fieldModel.setPlayerState(actingPlayer.getPlayer(), oldState);
+								}
+								actingPlayer.setHasMoved(false);
+								actingPlayer.setCurrentMove(0);
+								actingPlayer.setStandingUp(false);
+								fEndPlayerAction = true;
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
+							}
 						} else {
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -202,7 +226,7 @@ public final class StepInitSelecting extends AbstractStep {
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 						publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
 						publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
-						if (fieldModel.getTargetSelectionState() != null) {
+						if (targetSelectionState != null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ;
 						} else {
 							fDispatchPlayerAction = PlayerAction.BLOCK;
