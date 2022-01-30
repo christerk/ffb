@@ -96,6 +96,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 					}
 				}
 				if (rollStandUp) {
+					commitTargetSelection();
 					int roll = getGameState().getDiceRoller().rollSkill();
 
 					int modifier = 0;

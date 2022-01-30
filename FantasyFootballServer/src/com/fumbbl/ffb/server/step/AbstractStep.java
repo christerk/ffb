@@ -13,6 +13,7 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandConcedeGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
@@ -281,5 +282,12 @@ public abstract class AbstractStep implements IStep {
 
 	protected boolean toPrimitive(Boolean bool) {
 		return bool != null && bool;
+	}
+
+	public void commitTargetSelection() {
+		TargetSelectionState targetSelectionState = getGameState().getGame().getFieldModel().getTargetSelectionState();
+		if (targetSelectionState != null) {
+			targetSelectionState.commit();
+		}
 	}
 }

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.injury.injuryType;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
@@ -53,6 +54,8 @@ public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 			}
 			setInjury(pDefender, gameState, diceRoller);
 
+		} else {
+			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 		}
 	}
 }

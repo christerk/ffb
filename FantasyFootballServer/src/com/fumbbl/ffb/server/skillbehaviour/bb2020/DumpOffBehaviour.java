@@ -75,6 +75,7 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					}
 
 				} else if (state.usingDumpOff) {
+					step.commitTargetSelection();
 					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 					String defenderId = targetSelectionState == null ? game.getDefenderId() : targetSelectionState.getSelectedPlayerId();
 					state.oldTurnMode = game.getTurnMode();
@@ -90,6 +91,7 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 				} else {
+					step.commitTargetSelection();
 					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 					String defenderId = targetSelectionState == null ? game.getDefenderId() : targetSelectionState.getSelectedPlayerId();
 					step.getResult().addReport(new ReportSkillUse(defenderId, skill, false, null));

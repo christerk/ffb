@@ -26,6 +26,7 @@ public class ThrowTeamMate extends com.fumbbl.ffb.server.step.generator.ThrowTea
 			from(StepParameterKey.THROWN_PLAYER_ID, params.getThrownPlayerId()),
 			from(StepParameterKey.IS_KICKED_PLAYER, params.isKicked()),
 			from(StepParameterKey.TARGET_COORDINATE, params.getTargetCoordinate()));
+		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
@@ -39,7 +40,6 @@ public class ThrowTeamMate extends com.fumbbl.ffb.server.step.generator.ThrowTea
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
 		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
-		sequence.add(StepId.RECOVER_FROM_GAZE);
 		sequence.add(StepId.ALWAYS_HUNGRY,
 			from(StepParameterKey.IS_KICKED_PLAYER, params.isKicked()),
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.EAT_TEAM_MATE),

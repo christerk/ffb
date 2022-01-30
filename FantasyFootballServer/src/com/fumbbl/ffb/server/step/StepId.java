@@ -79,6 +79,7 @@ public enum StepId implements INamedObject {
 	HANDLE_DROP_PLAYER_CONTEXT("handleDropPlayerContext"), // action block
 	HORNS("horns"), // action.block
 	HYPNOTIC_GAZE("hypnoticGaze"), // action.move
+	INIT_ACTIVATION("initActivation", "recoverFromGaze"),
 	INIT_BLOCKING("initBlocking"), // action.block
 	INIT_BOMB("initBomb"), // phase.special
 	INIT_END_GAME("initEndGame"), // game.end
@@ -95,6 +96,7 @@ public enum StepId implements INamedObject {
 	INIT_KICK_TEAM_MATE("initKickTeamMate"), // action.kickTeamMate
 	INTERCEPT("intercept"), // action.pass
 	JUGGERNAUT("juggernaut"), // action.block
+	JUMP("leap"), // action.move
 	JUMP_UP("jumpUp"), // action.select
 	KICK_TEAM_MATE("kickTeamMate"), // action.kickTeamMate
 	KICK_TM_DOUBLE_ROLLED("kickTeamMateDoubleRolled"), // action.kickTeamMate
@@ -103,7 +105,6 @@ public enum StepId implements INamedObject {
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff
 	KICKOFF_RETURN("kickoffReturn"), // phase.kickoff
 	KICKOFF_SCATTER_ROLL("kickoffScatterRoll"), // phase.kickoff
-	JUMP("leap"), // action.move
 	MISSED_PASS("missedPass"), // action.pass
 	MOVE("move"), // action.move
 	MOVE_BALL_AND_CHAIN("moveBallAndChain"), // action.move
@@ -126,7 +127,6 @@ public enum StepId implements INamedObject {
 	PUSHBACK("pushback"), // action.block
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start
-	RECOVER_FROM_GAZE("recoverFromGaze"),
 	REFEREE("referee"), // action.foul
 	REMOVE_TARGET_SELECTION_STATE("removeTargetSelectionState", "removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020

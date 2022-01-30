@@ -78,6 +78,8 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.BLITZ_MOVE, false);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
+				game.getTurnData().setBlitzUsed(true);
+				game.getActingPlayer().setHasMoved(true);
 				getResult().setSound(SoundId.CLICK);
 			} else if (targetSelectionState.isFailed()) {
 				Sequence sequence = new Sequence(getGameState());

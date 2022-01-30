@@ -239,6 +239,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
+	JsonBooleanOption LAST_COMMAND = new JsonBooleanOption("lastCommand");
 	JsonBooleanOption LIMIT_REACHED = new JsonBooleanOption("limitReached");
 	JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
@@ -470,6 +471,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption TARGET_COORDINATE = new JsonFieldCoordinateOption("targetCoordinate");
 	JsonObjectOption TARGET_SELECTION_STATE = new JsonObjectOption("targetSelectionState");
 	JsonStringOption TARGET_SELECTION_STATUS = new JsonStringOption("targetSelectionStatus");
+	JsonBooleanOption TARGET_SELECTION_STATUS_IS_COMMITTED = new JsonBooleanOption("targetSelectionStatusIsCommitted");
 	JsonObjectOption TEAM_AWAY = new JsonObjectOption("teamAway");
 	JsonStringOption TEAM_AWAY_COACH = new JsonStringOption("teamAwayCoach");
 	JsonStringOption TEAM_AWAY_ID = new JsonStringOption("teamAwayId");

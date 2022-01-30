@@ -1,14 +1,12 @@
 package com.fumbbl.ffb.server;
 
+import com.fumbbl.ffb.net.commands.ServerCommand;
+import org.eclipse.jetty.websocket.api.Session;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jetty.websocket.api.Session;
-
-import com.fumbbl.ffb.net.commands.ServerCommand;
-
 /**
- *
  * @author Kalimar
  */
 public class ServerReplay {
@@ -16,8 +14,8 @@ public class ServerReplay {
 	private ServerCommand[] fServerCommands;
 	private long fGameId;
 	private int fFromCommandNr;
-	private int fToCommandNr;
-	private Session fSession;
+	private final int fToCommandNr;
+	private final Session fSession;
 	private boolean fComplete;
 
 	public ServerReplay(GameState gameState, int toCommandNr, Session session) {
@@ -57,7 +55,7 @@ public class ServerReplay {
 	}
 
 	public int size() {
-		return fServerCommands.length;
+		return fToCommandNr == 0 ? fServerCommands.length : fToCommandNr - 1;
 	}
 
 	public void setComplete(boolean pComplete) {

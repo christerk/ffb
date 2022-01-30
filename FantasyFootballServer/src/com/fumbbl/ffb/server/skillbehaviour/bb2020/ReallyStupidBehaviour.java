@@ -65,6 +65,7 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
                         doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
                     }
                     if (doRoll) {
+                        step.commitTargetSelection();
                         int roll = step.getGameState().getDiceRoller().rollSkill();
                         boolean goodConditions = true;
                         if (actingPlayer.getPlayerAction() != PlayerAction.THROW_TEAM_MATE
@@ -83,10 +84,7 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
                         int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
                         boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
                         actingPlayer.markSkillUsed(skill);
-                        if (successful) {
-                            PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-                            game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.recoverTacklezones());
-                        } else {
+                        if (!successful) {
                             status = ActionStatus.FAILURE;
                             if (((reRolledAction == null) || (reRolledAction != step.getReRolledAction()))
                                 && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
