@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Hopefully fixed switching from spectator to replay mode")
 			.addFeature("Confirmation dialog to prevent wasting the blitz action")
 			.addFeature("Allow cancelling blitz or gaze actions when no roll was made")
+			.addFeature("Option to enable right mouse button ending current player action by clicking anywhere on the pitch")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")

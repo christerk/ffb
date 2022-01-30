@@ -7,6 +7,8 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.client.IClientProperty;
+import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -184,7 +186,11 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			} else {
 				if (isClickable()) {
 					hideSelectSquare();
-					if (player != null) {
+					if (getClient().getGame().getActingPlayer().getPlayer() != null
+						&& IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION))
+						&& pMouseEvent.getButton() == MouseEvent.BUTTON3) {
+						getClient().getCommunication().sendActingPlayer(null, null, false);
+					} else if (player != null) {
 						clickOnPlayer(player);
 					} else {
 						clickOnField(coordinate);

@@ -106,6 +106,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem gazePanelOnMenuItem;
 	private final JRadioButtonMenuItem gazePanelOffMenuItem;
 
+	private final JRadioButtonMenuItem rightClickEndActionOnMenuItem;
+	private final JRadioButtonMenuItem rightClickEndActionOffMenuItem;
+
 	private final JRadioButtonMenuItem fCustomPitchMenuItem;
 	private final JRadioButtonMenuItem fDefaultPitchMenuItem;
 	private final JRadioButtonMenuItem fBasicPitchMenuItem;
@@ -326,6 +329,21 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		gazeTargetPanelGroup.add(gazePanelOffMenuItem);
 		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
 
+		ButtonGroup rightClickEndActionPanelGroup = new ButtonGroup();
+		JMenu rightClickEndActionPanelMenu = new JMenu("Right Click Ends Turn");
+		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
+		fUserSettingsMenu.add(rightClickEndActionPanelMenu);
+
+		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem("Enable");
+		rightClickEndActionOnMenuItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickEndActionOnMenuItem);
+		rightClickEndActionPanelMenu.add(rightClickEndActionOnMenuItem);
+
+		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem("Disable");
+		rightClickEndActionOffMenuItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
+		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
+
 		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		fUserSettingsMenu.add(fPitchMenu);
@@ -513,6 +531,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		gazePanelOnMenuItem.setSelected(true);
 		gazePanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF.equals(gazeTargetPanelSetting));
 
+		String rightClickEndActionSetting = getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION);
+		rightClickEndActionOffMenuItem.setSelected(true);
+		rightClickEndActionOnMenuItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickEndActionSetting));
+
 		String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
 		fDefaultPitchMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(pitchCustomizationSetting));
@@ -629,6 +651,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == gazePanelOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == gazePanelOffMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickEndActionOnMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickEndActionOffMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_OFF);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fCustomPitchMenuItem) {
