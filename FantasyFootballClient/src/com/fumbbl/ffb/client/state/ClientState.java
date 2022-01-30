@@ -187,9 +187,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 				if (isClickable()) {
 					hideSelectSquare();
 					if (getClient().getGame().getActingPlayer().getPlayer() != null
-						&& IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION))
 						&& pMouseEvent.getButton() == MouseEvent.BUTTON3) {
-						getClient().getCommunication().sendActingPlayer(null, null, false);
+						if (IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION))) {
+							getClient().getCommunication().sendActingPlayer(null, null, false);
+						}
 					} else if (player != null) {
 						clickOnPlayer(player);
 					} else {
