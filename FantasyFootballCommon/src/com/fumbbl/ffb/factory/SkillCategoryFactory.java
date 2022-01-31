@@ -18,7 +18,7 @@ public class SkillCategoryFactory implements INamedObjectFactory<SkillCategory> 
 	public SkillCategory forName(String pName) {
 		if (StringTool.isProvided(pName)) {
 			for (SkillCategory skillCategory : SkillCategory.values()) {
-				if (pName.equalsIgnoreCase(skillCategory.getName())) {
+				if (pName.equalsIgnoreCase(skillCategory.getName()) || pName.equalsIgnoreCase(skillCategory.getAltName())) {
 					return skillCategory;
 				}
 			}
