@@ -2,29 +2,32 @@ package com.fumbbl.ffb;
 
 /**
  * LRB5 Skill Categories
- * 
+ *
  * @author Kalimar
  */
 public enum SkillCategory implements INamedObject {
 
-	GENERAL("General", "G"), AGILITY("Agility", "A"), PASSING("Passing", "P"), STRENGTH("Strength", "S"),
-	MUTATION("Mutation", "M"), EXTRAORDINARY("Extraordinary", "E"), STAT_INCREASE("Stat Increase", "+"),
-	STAT_DECREASE("Stat Decrease", "-"), TRAIT("Trait", "T");
+	GENERAL("General"), AGILITY("Agility"), PASSING("Passing"), STRENGTH("Strength"),
+	MUTATION("Mutation", "Mutations"), MUTATIONS("Mutations"), EXTRAORDINARY("Extraordinary"), STAT_INCREASE("Stat Increase"),
+	STAT_DECREASE("Stat Decrease"), TRAIT("Trait");
 
 	private final String fName;
-	private final String fTypeString;
+	private final String altName;
 
-	SkillCategory(String pName, String pTypeString) {
+	SkillCategory(String pName) {
+		this(pName, pName);
+	}
+
+	SkillCategory(String pName, String altName) {
 		fName = pName;
-		fTypeString = pTypeString;
+		this.altName = altName;
 	}
 
 	public String getName() {
 		return fName;
 	}
 
-	public String getTypeString() {
-		return fTypeString;
+	public String getAltName() {
+		return altName;
 	}
-
 }
