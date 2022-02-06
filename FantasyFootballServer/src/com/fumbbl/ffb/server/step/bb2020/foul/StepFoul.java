@@ -90,7 +90,6 @@ public class StepFoul extends AbstractStep {
 			? new InjuryTypeFoulForSpp(usingChainsaw) : new InjuryTypeFoul(usingChainsaw);
 		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, injuryTypeServer,
 			actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
-		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
 		publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 			new DropPlayerContext(injuryResultDefender, game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
 		getResult().setNextAction(StepAction.NEXT_STEP);
