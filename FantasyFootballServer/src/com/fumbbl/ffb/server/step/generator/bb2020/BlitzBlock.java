@@ -68,6 +68,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.RESET_FUMBLEROOSKIE, from(StepParameterKey.RESET_FOR_FAILED_BLOCK, true));
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
@@ -79,6 +80,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
 		sequence.jump(IStepLabel.ATTACKER_DROPPED);
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.FALL_DOWN);
 
 		sequence.add(StepId.PLACE_BALL, IStepLabel.ATTACKER_DROPPED);

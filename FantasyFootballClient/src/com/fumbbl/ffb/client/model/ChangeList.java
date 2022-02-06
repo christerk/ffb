@@ -10,13 +10,13 @@ public class ChangeList {
 
 	public ChangeList() {
 
-        versions.add(new VersionChangeList("2.5.0")
-          .addFeature("Blind Rage")
-          .addFeature("Indomitable")
-          .addFeature("Mesmerizing Dance")
-          .addFeature("The Ballista")
-          .addFeature("Old Pro")
-        );
+		versions.add(new VersionChangeList("2.5.0")
+			.addFeature("Blind Rage")
+			.addFeature("Indomitable")
+			.addFeature("Mesmerizing Dance")
+			.addFeature("The Ballista")
+			.addFeature("Old Pro")
+		);
 
 		versions.add(new VersionChangeList("2.4.0")
 			.addBugfix("Prevent multi button clicks which caused inconsistent states during quick snap")
