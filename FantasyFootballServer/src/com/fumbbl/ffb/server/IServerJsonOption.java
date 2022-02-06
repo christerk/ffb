@@ -24,6 +24,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ALREADY_REPORTED = new JsonBooleanOption("alreadyReported");
     JsonBooleanOption ALLOW_MOVE_AFTER_PASS = new JsonBooleanOption("allowMoveAfterPass");
     JsonStringOption ALTERNATE_GOTO_LABEL = new JsonStringOption("gotoLabelOnBlock");
+    JsonBooleanOption ALREADY_DROPPED = new JsonBooleanOption("alreadyDropped");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");

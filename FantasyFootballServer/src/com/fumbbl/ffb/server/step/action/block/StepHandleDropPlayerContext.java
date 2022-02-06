@@ -95,7 +95,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 				getResult().setNextAction(StepAction.CONTINUE);
 			} else {
 
-				if (!dropPlayerContext.isRequiresArmourBreak() || injuryResult.injuryContext().isArmorBroken()) {
+				if (!dropPlayerContext.isAlreadyDropped() && (!dropPlayerContext.isRequiresArmourBreak() || injuryResult.injuryContext().isArmorBroken())) {
 					publishParameters(UtilServerInjury.dropPlayer(this, game.getPlayerById(dropPlayerContext.getPlayerId()),
 						dropPlayerContext.getApothecaryMode(), dropPlayerContext.isEligibleForSafePairOfHands()));
 					if (dropPlayerContext.isEndTurn()) {

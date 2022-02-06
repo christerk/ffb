@@ -11,15 +11,24 @@ import com.fumbbl.ffb.server.InjuryResult;
 
 public class DropPlayerContext implements IJsonSerializable {
 	private InjuryResult injuryResult;
-	private boolean endTurn, eligibleForSafePairOfHands, requiresArmourBreak;
+	private boolean endTurn, eligibleForSafePairOfHands, requiresArmourBreak, alreadyDropped;
 	private String label, playerId;
 	private ApothecaryMode apothecaryMode;
 
 	public DropPlayerContext() {
 	}
 
+	public DropPlayerContext(InjuryResult injuryResult, String playerId, ApothecaryMode apothecaryMode, boolean alreadyDropped) {
+		this(injuryResult, false, false, null, playerId, apothecaryMode, false, true);
+	}
+
 	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
-	                         String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak) {
+													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak) {
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, false);
+	}
+
+	private DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
+														String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, boolean alreadyDropped) {
 		this.injuryResult = injuryResult;
 		this.endTurn = endTurn;
 		this.eligibleForSafePairOfHands = eligibleForSafePairOfHands;
@@ -27,6 +36,7 @@ public class DropPlayerContext implements IJsonSerializable {
 		this.playerId = playerId;
 		this.apothecaryMode = apothecaryMode;
 		this.requiresArmourBreak = requiresArmourBreak;
+		this.alreadyDropped = alreadyDropped;
 	}
 
 	public InjuryResult getInjuryResult() {
@@ -57,6 +67,10 @@ public class DropPlayerContext implements IJsonSerializable {
 		return requiresArmourBreak;
 	}
 
+	public boolean isAlreadyDropped() {
+		return alreadyDropped;
+	}
+
 	@Override
 	public DropPlayerContext initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
@@ -67,6 +81,7 @@ public class DropPlayerContext implements IJsonSerializable {
 		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(game, jsonObject);
 		label = IServerJsonOption.LABEL.getFrom(game, jsonObject);
 		requiresArmourBreak = IServerJsonOption.REQUIRES_ARMOUR_BREAK.getFrom(game, jsonObject);
+		alreadyDropped = IServerJsonOption.ALREADY_DROPPED.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -80,6 +95,7 @@ public class DropPlayerContext implements IJsonSerializable {
 		IServerJsonOption.LABEL.addTo(jsonObject, label);
 		IServerJsonOption.ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS.addTo(jsonObject, eligibleForSafePairOfHands);
 		IServerJsonOption.REQUIRES_ARMOUR_BREAK.addTo(jsonObject, requiresArmourBreak);
+		IServerJsonOption.ALREADY_DROPPED.addTo(jsonObject, alreadyDropped);
 		return jsonObject;
 	}
 }
