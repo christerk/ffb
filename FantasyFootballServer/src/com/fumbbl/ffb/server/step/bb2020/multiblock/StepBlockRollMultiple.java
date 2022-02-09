@@ -369,6 +369,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
 
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.CONSUME_PARAMETER, from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
 
 		getGameState().getStepStack().push(sequence.getSequence());

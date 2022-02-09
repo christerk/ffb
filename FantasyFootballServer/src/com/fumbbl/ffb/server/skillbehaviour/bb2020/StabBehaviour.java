@@ -10,6 +10,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeStab;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -31,7 +32,7 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepStab step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+																								 ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -44,14 +45,13 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(true),
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
-					if (injuryResultDefender.injuryContext().isArmorBroken()) {
-						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
-					}
-					step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
-				} else {
-					step.getResult().setNextAction(StepAction.NEXT_STEP);
+
+					step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+						new DropPlayerContext(injuryResultDefender, false, true, state.goToLabelOnSuccess,
+							game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
 				}
+
+				step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 				return false;
 			}
