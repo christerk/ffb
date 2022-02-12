@@ -21,7 +21,7 @@ public class OldProMessage extends ReportMessageBase<ReportOldPro> {
 		int indent = getIndent() + 1;
 		print(indent, false, player);
 
-		String action = report.isSelfInflicted() ? "forced the opponent to re-roll a " : " re-rolled a ";
+		String action = report.isSelfInflicted() ? " forced the opponent to re-roll a " : " re-rolled a ";
 
 		println(indent, TextStyle.NONE, action + report.getOldValue() + " into a " + report.getNewValue() + ".");
 	}
