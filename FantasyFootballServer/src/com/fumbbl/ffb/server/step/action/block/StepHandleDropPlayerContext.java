@@ -62,9 +62,8 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 				InjuryResult injuryResult = dropPlayerContext.getInjuryResult();
 				getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), injuryResult.injuryContext().getModifiedInjuryContext().getSkillUse()));
 				if (clientCommandUseSkill.isSkillUsed()) {
-					injuryResult.injuryContext().getModifiedInjuryContext().getReports().forEach(report -> getResult().addReport(report));
-					injuryResult.swapToAlternateContext(this, getGameState().getGame());
-					getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
+
+					successfulSkillUse(clientCommandUseSkill, skill, injuryResult);
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
@@ -74,6 +73,12 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	private void successfulSkillUse(ClientCommandUseSkill clientCommandUseSkill, Skill skill, InjuryResult injuryResult) {
+		injuryResult.injuryContext().getModifiedInjuryContext().getReports().forEach(report -> getResult().addReport(report));
+		injuryResult.swapToAlternateContext(this, getGameState().getGame());
+		getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
 	}
 
 	@Override
