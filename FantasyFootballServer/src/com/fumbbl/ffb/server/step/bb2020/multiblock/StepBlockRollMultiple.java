@@ -184,9 +184,10 @@ public class StepBlockRollMultiple extends AbstractStep {
 				if (brawlerAvailable) {
 					roll.add(ReRollSources.BRAWLER);
 				}
+				getResult().setSound(SoundId.BLOCK);
+				UtilServerGame.syncGameModel(this);
 			});
-			getResult().setSound(SoundId.BLOCK);
-			UtilServerGame.syncGameModel(this);
+
 			decideNextStep(game);
 
 		} else {
