@@ -15,7 +15,7 @@ public class ChangeList {
 			.addFeature("Indomitable")
 			.addFeature("Mesmerizing Dance")
 			.addFeature("The Ballista")
-			.addFeature("Old Pro")
+			.addFeature("Old Pro (Interaction with Multiple Block: Skill choice will show up per block not for both together due to technical limitations)")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")
