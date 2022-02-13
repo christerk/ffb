@@ -70,7 +70,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
 
 		} else {
 
-			GameList gameList = null;
+			GameList gameList;
 			GameCache gameCache = getServer().getGameCache();
 			if (ClientMode.PLAYER == joinCommand.getClientMode()) {
 				gameList = gameCache.findOpenGamesForCoach(joinCommand.getCoach());
