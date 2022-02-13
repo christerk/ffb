@@ -380,8 +380,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public Optional<IInjuryContextModification> getUnusedInjuryModification(InjuryType injuryType) {
 		return getSkillsIncludingTemporaryOnes().stream()
 			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null && skill.getSkillBehaviour().hasInjuryModifier(injuryType))
-			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst()
-			;
+			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst();
 	}
 
 }

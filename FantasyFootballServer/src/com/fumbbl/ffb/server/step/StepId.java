@@ -123,6 +123,7 @@ public enum StepId implements INamedObject {
 	PLAYER_LOSS("playerLoss"), // game.end
 	PRAYER("prayer"), // phase.kickoff
 	PRAYERS("prayers"), // phase.kickoff
+	PRO("pro"), // action.common
 	PROJECTILE_VOMIT("projectileVomit"),
 	PUSHBACK("pushback"), // action.block
 	REALLY_STUPID("reallyStupid"), // action.common

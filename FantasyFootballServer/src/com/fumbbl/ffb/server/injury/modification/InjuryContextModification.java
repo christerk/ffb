@@ -79,6 +79,11 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		return false;
 	}
 
+	@Override
+	public boolean requiresConditionalReRollSkill() {
+		return false;
+	}
+
 	abstract SkillUse skillUse();
 
 	public boolean isValidType(InjuryType injuryType) {

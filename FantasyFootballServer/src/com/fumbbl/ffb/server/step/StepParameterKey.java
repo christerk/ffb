@@ -114,6 +114,7 @@ public enum StepParameterKey {
 	SUPPRESS_EXTRA_EFFECT_HANDLING, // Boolean
 	SHOW_NAME_IN_REPORT, // Boolean
 	SUCCESSFUL_DAUNTLESS, // Boolean
+	SUCCESSFUL_PRO, // Boolean
 	TARGET_COORDINATE, // FieldCoordinate
 	TEAM_ID, // String
 	THROW_IN_COORDINATE, // FieldCoordinate

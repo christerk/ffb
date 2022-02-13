@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.block;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -23,6 +23,7 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
@@ -57,15 +58,26 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			if (pReceivedCommand.getCommand().getId() == NetCommandId.CLIENT_USE_SKILL) {
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
 				ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 				Skill skill = clientCommandUseSkill.getSkill();
 				InjuryResult injuryResult = dropPlayerContext.getInjuryResult();
 				getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), injuryResult.injuryContext().getModifiedInjuryContext().getSkillUse()));
 				if (clientCommandUseSkill.isSkillUsed()) {
 
-					successfulSkillUse(clientCommandUseSkill, skill, injuryResult);
+					getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
+
+					if (skill.getSkillBehaviour().getInjuryContextModification().requiresConditionalReRollSkill()) {
+						getGameState().pushCurrentStepOnStack();
+						Sequence sequence = new Sequence(getGameState());
+						sequence.add(StepId.PRO, StepParameter.from(StepParameterKey.PLAYER_ID, clientCommandUseSkill.getPlayerId()));
+						getGameState().getStepStack().push(sequence.getSequence());
+						commandStatus = StepCommandStatus.SKIP_STEP;
+						getResult().setNextAction(StepAction.NEXT_STEP);
+					} else {
+						successfulSkillUse(clientCommandUseSkill, skill, injuryResult);
+					}
 				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
 		}
 
@@ -78,7 +90,6 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 	private void successfulSkillUse(ClientCommandUseSkill clientCommandUseSkill, Skill skill, InjuryResult injuryResult) {
 		injuryResult.injuryContext().getModifiedInjuryContext().getReports().forEach(report -> getResult().addReport(report));
 		injuryResult.swapToAlternateContext(this, getGameState().getGame());
-		getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
 	}
 
 	@Override

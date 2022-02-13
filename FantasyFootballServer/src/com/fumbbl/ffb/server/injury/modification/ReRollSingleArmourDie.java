@@ -15,11 +15,15 @@ import com.fumbbl.ffb.injury.ProjectileVomit;
 import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.bb2020.ReportOldPro;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingleArmourDieParams> {
 
@@ -47,8 +51,14 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 	protected boolean tryArmourRollModification(ReRollSingleArmourDieParams params) {
 		params.setSpottedFoul(isSpottedFoul(params.getNewContext(), params.getInjuryType()));
 		params.setSelfInflicted(isSelfInflicted(params.getNewContext(), params.getInjuryType()));
-		return super.tryArmourRollModification(params) != params.isSelfInflicted()
+		return hasPrerequisite(params.getGameState().getGame(), params.getNewContext()) &&
+			super.tryArmourRollModification(params) != params.isSelfInflicted()
 			|| params.isSpottedFoul();
+	}
+
+	private boolean hasPrerequisite(Game game, InjuryContext injuryContext) {
+		String playerId = StringTool.isProvided(injuryContext.fAttackerId) ? injuryContext.fAttackerId : injuryContext.fDefenderId;
+		return UtilServerReRoll.isProReRollAvailable(game.getPlayerById(playerId), game);
 	}
 
 	private boolean isSpottedFoul(InjuryContext injuryContext, InjuryType injuryType) {
@@ -86,5 +96,10 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 	@Override
 	public SkillUse skillUse() {
 		return SkillUse.RE_ROLL_SINGLE_ARMOUR_DIE;
+	}
+
+	@Override
+	public boolean requiresConditionalReRollSkill() {
+		return true;
 	}
 }
