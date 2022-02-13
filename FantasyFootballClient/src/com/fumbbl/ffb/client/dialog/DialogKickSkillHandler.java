@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
@@ -21,11 +22,13 @@ import com.fumbbl.ffb.model.skill.Skill;
  */
 public class DialogKickSkillHandler extends DialogHandler {
 
-	private static final Color _MARKED_FIELDS_COLOR = new Color(1.0f, 1.0f, 1.0f, 0.3f);
+	private static final Color _MARKED_FIELDS_COLOR = new Color(0.8f, 0.8f, 0.8f, 0.4f);
 
 	public DialogKickSkillHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
+
+	private FieldMarker kickMarker;
 
 	public void showDialog() {
 
@@ -43,8 +46,10 @@ public class DialogKickSkillHandler extends DialogHandler {
 					&& skillReduceKickDistance != null) {
 
 				userInterface.getFieldComponent().getLayerRangeRuler().markCoordinates(new FieldCoordinate[] {
-						dialogKickSkillParameter.getBallCoordinateWithKick(), dialogKickSkillParameter.getBallCoordinate() },
+					dialogKickSkillParameter.getBallCoordinateWithKick(), dialogKickSkillParameter.getBallCoordinate() },
 						_MARKED_FIELDS_COLOR);
+				kickMarker = new FieldMarker(dialogKickSkillParameter.getBallCoordinateWithKick(), "K", "");
+				userInterface.getFieldComponent().getLayerMarker().drawFieldMarker(kickMarker, true);
 				userInterface.getFieldComponent().refresh();
 
 				setDialog(
@@ -53,9 +58,7 @@ public class DialogKickSkillHandler extends DialogHandler {
 
 			} else if (skillReduceKickDistance != null) {
 
-				StringBuilder message = new StringBuilder();
-				message.append("Waiting for coach to use ").append(skillReduceKickDistance.getName()).append(".");
-				showStatus("Skill Use", message.toString(), StatusType.WAITING);
+				showStatus("Skill Use", "Waiting for coach to use " + skillReduceKickDistance.getName() + ".", StatusType.WAITING);
 
 			}
 
@@ -68,6 +71,9 @@ public class DialogKickSkillHandler extends DialogHandler {
 		if (testDialogHasId(pDialog, DialogId.SKILL_USE)) {
 			UserInterface userInterface = getClient().getUserInterface();
 			userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
+			if (kickMarker != null) {
+				userInterface.getFieldComponent().getLayerMarker().removeFieldMarker(kickMarker);
+			}
 			userInterface.getFieldComponent().refresh();
 			DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
 			String playerId = ((DialogKickSkillParameter) getClient().getGame().getDialogParameter()).getPlayerId();
