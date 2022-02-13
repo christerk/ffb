@@ -73,7 +73,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 	public ServerCommunication(FantasyFootballServer pServer) {
 		fServer = pServer;
-		fCommandQueue = new LinkedBlockingQueue<ReceivedCommand>();
+		fCommandQueue = new LinkedBlockingQueue<>();
 		String commandCompression = (fServer != null) ? fServer.getProperty(IServerProperty.SERVER_COMMAND_COMPRESSION)
 				: null;
 		if (StringTool.isProvided(commandCompression)) {
@@ -144,7 +144,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		}
 
 		if ((command.getId() != NetCommandId.CLIENT_PING) && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
-			long gameId = 0;
+			long gameId;
 			if (command.isInternalCommand()) {
 				gameId = ((InternalServerCommand) command.getCommand()).getGameId();
 			} else {
@@ -225,25 +225,25 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		if (pLog && ArrayTool.isProvided(pSessions) && (command != null)) {
 			getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, command, pSessions);
 		}
-		for (int i = 0; i < pSessions.length; i++) {
-			send(pSessions[i], command);
+		for (Session pSession : pSessions) {
+			send(pSession, command);
 		}
 	}
 
-	private Future<Void> send(Session session, NetCommand command) {
+	private void send(Session session, NetCommand command) {
 
 		if ((session == null) || (command == null)) {
-			return null;
+			return;
 		}
 
 		if (!session.isOpen()) {
 			close(session);
-			return null;
+			return;
 		}
 
 		JsonValue jsonValue = command.toJsonValue();
 		if (jsonValue == null) {
-			return null;
+			return;
 		}
 
 		String textMessage = jsonValue.toString();
@@ -252,21 +252,19 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		}
 
 		if (!StringTool.isProvided(textMessage)) {
-			return null;
+			return;
 		}
 
 		try {
 			// Future<Void> future = session.getRemote().sendStringByFuture(textMessage);
-			Future<Void> future = session.getRemote()
+			session.getRemote()
 				.sendBytesByFuture(ByteBuffer.wrap(textMessage.getBytes(StandardCharsets.UTF_8)));
-			return future;
 		} catch (WebSocketException webSocketException) {
 			// getServer().getDebugLog().log(IServerLogLevel.WARN,
 			// webSocketException.getMessage());
 			close(session);
 		}
 
-		return null;
 	}
 
 	protected void sendAllSessions(GameState gameState, NetCommand command, boolean addToLog) {
@@ -431,7 +429,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		// not logged in Game Log
 	}
 
-	public void sendTalk(Session pSession, GameState gameState, String pCoach, String[] pTalk) {
+	public void sendTalk(Session pSession, String pCoach, String[] pTalk) {
 		ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
 		send(pSession, talkCommand, true);
 		// not logged in Game Log

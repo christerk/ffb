@@ -105,7 +105,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 			if ((gameState != null) && (sessionManager.getSessionOfHomeCoach(gameId) == receivedCommand.getSession())
 				|| (sessionManager.getSessionOfAwayCoach(gameId) == receivedCommand.getSession())) {
 				if (isTestMode(gameState) && talk.startsWith("/animations")) {
-					handleAnimationsCommand(gameState, talkCommand, receivedCommand.getSession());
+					handleAnimationsCommand(talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/animation")) {
 					handleAnimationCommand(gameState, talkCommand);
 				} else if (isTestMode(gameState) && talk.startsWith("/box")) {
@@ -121,7 +121,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				} else if (isTestMode(gameState) && talk.startsWith("/option")) {
 					handleOptionCommand(gameState, talkCommand);
 				} else if (isTestMode(gameState) && talk.startsWith("/pitches")) {
-					handlePitchesCommand(gameState, talkCommand, receivedCommand.getSession());
+					handlePitchesCommand(talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/pitch")) {
 					handlePitchCommand(gameState, talkCommand);
 				} else if (isTestMode(gameState) && talk.startsWith("/prayer")) {
@@ -133,7 +133,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				} else if (isTestMode(gameState) && talk.startsWith("/skill")) {
 					handleSkillCommand(gameState, talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/sounds")) {
-					handleSoundsCommand(gameState, talkCommand, receivedCommand.getSession());
+					handleSoundsCommand(talkCommand, receivedCommand.getSession());
 				} else if (isTestMode(gameState) && talk.startsWith("/sound")) {
 					handleSoundCommand(gameState, talkCommand);
 				} else if (isTestMode(gameState) && talk.startsWith("/stat")) {
@@ -148,6 +148,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					handleSpectatorsCommand(gameState, receivedCommand.getSession(), false);
 				} else if (isServerInTestMode() && sessionManager.isSessionDev(receivedCommand.getSession()) && talk.startsWith("/redeploy")) {
 					handleReDeployCommand(talkCommand);
+				} else if (isServerInTestMode() && sessionManager.isSessionDev(receivedCommand.getSession()) && talk.startsWith("/games")) {
+					handleGamesCommand(receivedCommand.getSession());
 				} else {
 					communication.sendPlayerTalk(gameState, coach, talk);
 				}
@@ -192,6 +194,13 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
 		return true;
 
+	}
+
+	private void handleGamesCommand(Session session) {
+		String[] response = Arrays.stream(getServer().getGameCache().findActiveGames().getEntriesSorted())
+			.map(entry -> entry.getTeamHomeCoach() + " vs " + entry.getTeamAwayCoach()).toArray(String[]::new);
+
+		getServer().getCommunication().sendTalk(session, null, response);
 	}
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
@@ -298,7 +307,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		UtilServerGame.syncGameModel(pGameState, null, animation, null);
 	}
 
-	private void handleAnimationsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+	private void handleAnimationsCommand(ClientCommandTalk pTalkCommand, Session pSession) {
 		String talk = pTalkCommand.getTalk();
 		String[] commands = talk.split(" +");
 		if (commands.length > 0) {
@@ -315,7 +324,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					info[i] = "Available animations:";
 				}
 			}
-			getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+			getServer().getCommunication().sendTalk(pSession, null, info);
 		}
 	}
 
@@ -363,7 +372,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 	}
 
-	private void handlePitchesCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+	private void handlePitchesCommand(ClientCommandTalk pTalkCommand, Session pSession) {
 		String talk = pTalkCommand.getTalk();
 		String[] commands = talk.split(" +");
 		if (commands.length > 0) {
@@ -382,7 +391,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					info[i] = "Available pitches:";
 				}
 			}
-			getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+			getServer().getCommunication().sendTalk(pSession, null, info);
 		}
 	}
 
@@ -399,7 +408,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 	}
 
-	private void handleSoundsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+	private void handleSoundsCommand(ClientCommandTalk pTalkCommand, Session pSession) {
 		String talk = pTalkCommand.getTalk();
 		String[] commands = talk.split(" +");
 		if (commands.length > 0) {
@@ -416,7 +425,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					info[i] = "Available sounds:";
 				}
 			}
-			getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+			getServer().getCommunication().sendTalk(pSession, null, info);
 		}
 	}
 
@@ -900,7 +909,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 			info[0] = spectatorMessage.toString();
 			System.arraycopy(spectators, 0, info, 1, spectators.length);
 		}
-		getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+		getServer().getCommunication().sendTalk(pSession, null, info);
 	}
 
 	private static class SpecsComparator implements Comparator<String> {
