@@ -81,6 +81,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 	private static final String _ADD = "add";
 	private static final String _REMOVE = "remove";
 	private static final Pattern BRANCH_PATTERN = Pattern.compile("[-_a-zA-Z0-9]+");
+	private static final String MESSAGE_COMMAND = "/message";
 
 	protected ServerCommandHandlerTalk(FantasyFootballServer server) {
 		super(server);
@@ -150,6 +151,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					handleReDeployCommand(talkCommand);
 				} else if (isServerInTestMode() && sessionManager.isSessionDev(receivedCommand.getSession()) && talk.startsWith("/games")) {
 					handleGamesCommand(receivedCommand.getSession());
+				} else if (isServerInTestMode() && sessionManager.isSessionDev(receivedCommand.getSession()) && talk.startsWith(MESSAGE_COMMAND)) {
+					handleMessageCommand(receivedCommand);
 				} else {
 					communication.sendPlayerTalk(gameState, coach, talk);
 				}
@@ -194,6 +197,13 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
 		return true;
 
+	}
+
+	private void handleMessageCommand(ReceivedCommand receivedCommand) {
+		String message = ((ClientCommandTalk) receivedCommand.getCommand()).getTalk();
+		if (message != null && message.length() > MESSAGE_COMMAND.length()) {
+			getServer().getCommunication().sendAdminMessage(new String[]{message.substring(MESSAGE_COMMAND.length()).trim()});
+		}
 	}
 
 	private void handleGamesCommand(Session session) {
@@ -641,7 +651,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 	}
 
 	private void handleProneOrStunCommand(GameState gameState, ClientCommandTalk talkCommand, boolean stun,
-	                                      Session session) {
+																				Session session) {
 		Game game = gameState.getGame();
 		SessionManager sessionManager = getServer().getSessionManager();
 		String talk = talkCommand.getTalk();
@@ -695,7 +705,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 	}
 
 	private void putPlayerIntoBox(GameState pGameState, Player<?> pPlayer, PlayerState pPlayerState, String pBoxName,
-	                              SeriousInjury pSeriousInjury) {
+																SeriousInjury pSeriousInjury) {
 		Game game = pGameState.getGame();
 		PlayerResult playerResult = game.getGameResult().getPlayerResult(pPlayer);
 		playerResult.setSeriousInjury(pSeriousInjury);
