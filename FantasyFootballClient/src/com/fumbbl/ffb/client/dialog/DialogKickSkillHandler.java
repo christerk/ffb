@@ -22,7 +22,8 @@ import com.fumbbl.ffb.model.skill.Skill;
  */
 public class DialogKickSkillHandler extends DialogHandler {
 
-	private static final Color _MARKED_FIELDS_COLOR = new Color(0.8f, 0.8f, 0.8f, 0.4f);
+	private static final Color SQUARE_COLOR = new Color(0.6f, 0.6f, 0.6f, 0.3f);
+	private static final Color BORDER_COLOR = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 
 	public DialogKickSkillHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -47,7 +48,7 @@ public class DialogKickSkillHandler extends DialogHandler {
 
 				userInterface.getFieldComponent().getLayerRangeRuler().markCoordinates(new FieldCoordinate[] {
 					dialogKickSkillParameter.getBallCoordinateWithKick(), dialogKickSkillParameter.getBallCoordinate() },
-						_MARKED_FIELDS_COLOR);
+					SQUARE_COLOR, BORDER_COLOR);
 				kickMarker = new FieldMarker(dialogKickSkillParameter.getBallCoordinateWithKick(), "K", "");
 				userInterface.getFieldComponent().getLayerMarker().drawFieldMarker(kickMarker, true);
 				userInterface.getFieldComponent().refresh();
