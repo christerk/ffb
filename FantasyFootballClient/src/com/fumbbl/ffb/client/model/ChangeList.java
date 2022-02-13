@@ -23,6 +23,7 @@ public class ChangeList {
 			.addFeature("Option to enable right mouse button ending current player action by clicking anywhere on the pitch")
 			.addBehaviorChange("Right mouse button is ignored when clicking on the pitch by default")
 			.addBugfix("Allow mutations for mercenaries in case of primary access")
+			.addImprovement("Better visualization for niggling injuries")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")

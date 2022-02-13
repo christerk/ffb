@@ -49,7 +49,7 @@
 			<skill>+ST</skill>
 		</skillList>
 		<injuryList>
-			<injury>Smashed Ankle (-1 MA)</injury>
+			<injury>Serious Injury (NI)</injury>
 		</injuryList>
 		<playerStatistics currentSpps="31" />
 	</player>
@@ -69,8 +69,10 @@
 			<skill>+MA</skill>
 		</skillList>
 		<injuryList>
-			<injury>Damaged Back (NI)</injury>
-			<injury>Smashed Knee (NI)</injury>
+			<injury>Serious Injury (NI)</injury>
+			<injury>Serious Injury (NI)</injury>
+			<injury>Serious Injury (NI)</injury>
+			<injury>Serious Injury (NI)</injury>
 		</injuryList>
 		<playerStatistics currentSpps="76" />
 	</player>
