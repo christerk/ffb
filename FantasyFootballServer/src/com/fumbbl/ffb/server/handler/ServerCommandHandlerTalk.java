@@ -178,7 +178,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 					handleSpectatorsCommand(gameState, receivedCommand.getSession(), true);
 				} else {
 					// Spectator chat
-					boolean adminMode = talk.startsWith("!") && sessionManager.isSessionAdmin(receivedCommand.getSession());
+					boolean adminMode = talk.startsWith("!") &&
+						(sessionManager.isSessionAdmin(receivedCommand.getSession()) || sessionManager.isSessionDev(receivedCommand.getSession()));
 					if (adminMode) {
 						// Strip the initial exclamation point
 						talk = talk.substring(1);
@@ -716,13 +717,11 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
 		Map<String, List<DiceCategory>> testRolls = pGameState.getDiceRoller().getTestRolls();
 		if (testRolls.size() > 0) {
-			testRolls.entrySet().stream().forEach(e -> {
-					List<DiceCategory> rolls = e.getValue();
-					List<String> strings = rolls.stream().map(x -> x.text(pGameState.getGame())).collect(Collectors.toList());
-					String result = "Next " + e.getKey() + " rolls will be: " + String.join(", ", strings);
-					getServer().getCommunication().sendPlayerTalk(pGameState, null, result);
-				}
-			);
+			testRolls.forEach((key, rolls) -> {
+				List<String> strings = rolls.stream().map(x -> x.text(pGameState.getGame())).collect(Collectors.toList());
+				String result = "Next " + key + " rolls will be: " + String.join(", ", strings);
+				getServer().getCommunication().sendPlayerTalk(pGameState, null, result);
+			});
 		} else {
 			getServer().getCommunication().sendPlayerTalk(pGameState, null, "Next dice rolls will be random.");
 
