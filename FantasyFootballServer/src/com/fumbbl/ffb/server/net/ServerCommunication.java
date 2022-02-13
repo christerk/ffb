@@ -57,7 +57,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -281,17 +280,6 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		gameState.getGameLog().add((ServerCommand) command);
 	}
 
-	protected void sendHomeSession(GameState gameState, NetCommand command) {
-		if ((gameState == null) || (command == null)) {
-			return;
-		}
-		getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command,
-				DebugLog.COMMAND_SERVER_HOME);
-		SessionManager sessionManager = getServer().getSessionManager();
-		Session homeSession = sessionManager.getSessionOfHomeCoach(gameState.getId());
-		send(homeSession, command, false);
-	}
-
 	protected void sendHomeAndSpectatorSessions(GameState gameState, NetCommand command) {
 		if ((gameState == null) || (command == null)) {
 			return;
@@ -313,18 +301,6 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session awaySession = sessionManager.getSessionOfAwayCoach(gameState.getId());
 		send(awaySession, command, false);
-	}
-
-	protected void sendAwayAndSpectatorSessions(GameState gameState, NetCommand command) {
-		if ((gameState == null) || (command == null)) {
-			return;
-		}
-		getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command,
-				DebugLog.COMMAND_SERVER_AWAY_SPECTATORS);
-		SessionManager sessionManager = getServer().getSessionManager();
-		Session[] sessions = sessionManager.getSessionsWithoutHomeCoach(gameState.getId());
-		send(sessions, command, false);
-		gameState.getGameLog().add((ServerCommand) command);
 	}
 
 	protected void sendSpectatorSessions(GameState gameState, NetCommand command) {
