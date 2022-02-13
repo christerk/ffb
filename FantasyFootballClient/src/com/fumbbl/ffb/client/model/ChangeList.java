@@ -33,6 +33,7 @@ public class ChangeList {
 			.addBugfix("Allow mutations for mercenaries in case of primary access")
 			.addImprovement("Better visualization for niggling injuries")
 			.addImprovement("Add marker to kick scatter square")
+			.addImprovement("Add border to kick off scatter squares")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")
