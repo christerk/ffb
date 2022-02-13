@@ -306,8 +306,10 @@ public class PlayerDetailComponent extends JPanel {
 			for (int i = 0; i < nigglingInjuries; i++) {
 				g2d.setColor(Color.BLACK);
 				g2d.fillOval(x + (i * 12) + 1, y + 1, 10, 10);
-				g2d.setColor(Color.RED);
+				g2d.setColor(Color.WHITE);
 				g2d.fillOval(x + (i * 12), y, 10, 10);
+				g2d.setColor(Color.RED);
+				g2d.fillOval(x + (i * 12) + 1, y + 1, 8, 8);
 			}
 			g2d.dispose();
 		}
