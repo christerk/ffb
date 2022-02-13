@@ -44,12 +44,28 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
-		if (parameter != null && parameter.getKey() == StepParameterKey.DROP_PLAYER_CONTEXT) {
-			dropPlayerContext = (DropPlayerContext) parameter.getValue();
-			consume(parameter);
-			return true;
-		}
+		if (parameter != null) {
+			switch (parameter.getKey()) {
+				case DROP_PLAYER_CONTEXT: {
+					dropPlayerContext = (DropPlayerContext) parameter.getValue();
+					consume(parameter);
+					return true;
+				}
+				case SUCCESSFUL_PRO: {
+					boolean successful = toPrimitive((Boolean) parameter.getValue());
 
+					if (successful) {
+						successfulSkillUse(dropPlayerContext.getInjuryResult());
+					} else {
+						dropPlayerContext.getInjuryResult().injuryContext().setModifiedInjuryContext(null);
+					}
+					consume(parameter);
+					return true;
+				}
+				default:
+					break;
+			}
+		}
 		return super.setParameter(parameter);
 	}
 
@@ -75,7 +91,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						getResult().setNextAction(StepAction.NEXT_STEP);
 					} else {
-						successfulSkillUse(clientCommandUseSkill, skill, injuryResult);
+						successfulSkillUse(injuryResult);
 					}
 				}
 			}
@@ -87,7 +103,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 		return commandStatus;
 	}
 
-	private void successfulSkillUse(ClientCommandUseSkill clientCommandUseSkill, Skill skill, InjuryResult injuryResult) {
+	private void successfulSkillUse(InjuryResult injuryResult) {
 		injuryResult.injuryContext().getModifiedInjuryContext().getReports().forEach(report -> getResult().addReport(report));
 		injuryResult.swapToAlternateContext(this, getGameState().getGame());
 	}
