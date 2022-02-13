@@ -11,7 +11,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
- * 
  * @author Kalimar
  */
 public class ClientCommandHandlerTalk extends ClientCommandHandler {
@@ -37,17 +36,17 @@ public class ClientCommandHandlerTalk extends ClientCommandHandler {
 				TextStyle style = TextStyle.NONE;
 				if (StringTool.isProvided(coach)) {
 					status.append("<");
-					if (talkCommand.isAdminMode()) {
-						status.append("Staff ");
-					}
+					status.append(talkCommand.getMode().getPrefix());
 					status.append(coach);
 					status.append("> ");
 					if (coach.equals(game.getTeamHome().getCoach())) {
 						style = TextStyle.HOME;
 					} else if (coach.equals(game.getTeamAway().getCoach())) {
 						style = TextStyle.AWAY;
-					} else if (talkCommand.isAdminMode()) {
+					} else if (talkCommand.getMode() == ServerCommandTalk.Mode.STAFF) {
 						style = TextStyle.ADMIN;
+					} else if (talkCommand.getMode() == ServerCommandTalk.Mode.DEV) {
+						style = TextStyle.DEV;
 					} else {
 						style = TextStyle.SPECTATOR;
 					}

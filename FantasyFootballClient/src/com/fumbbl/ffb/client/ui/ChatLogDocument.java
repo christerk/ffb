@@ -80,7 +80,12 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setFontFamily(admin, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(admin, DEFAULT_FONT_SIZE);
 		StyleConstants.setForeground(admin, new Color(128, 128, 0));
-		
+
+		Style dev = addStyle(TextStyle.DEV.getName(), defaultStyle);
+		StyleConstants.setFontFamily(dev, DEFAULT_FONT_FAMILY);
+		StyleConstants.setFontSize(dev, DEFAULT_FONT_SIZE);
+		StyleConstants.setForeground(dev, new Color(128, 0, 128));
+
 		Style turn = addStyle(TextStyle.TURN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turn, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(turn, DEFAULT_FONT_SIZE + 2);
@@ -98,7 +103,7 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setBold(turnAway, true);
 		StyleConstants.setForeground(turnAway, Color.BLUE);
 
-		// initindent
+		// init indent
 
 		Style indent0 = addStyle(ParagraphStyle.INDENT_0.getName(), defaultStyle);
 		StyleConstants.setLeftIndent(indent0, 0);

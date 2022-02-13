@@ -35,6 +35,7 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandTalk;
+import com.fumbbl.ffb.net.commands.ServerCommandTalk;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -182,14 +183,16 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				} else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
 					handleSpectatorsCommand(gameState, receivedCommand.getSession(), true);
 				} else {
+
+					ServerCommandTalk.Mode mode = ServerCommandTalk.Mode.REGULAR;
 					// Spectator chat
-					boolean adminMode = talk.startsWith("!") &&
-						(sessionManager.isSessionAdmin(receivedCommand.getSession()) || sessionManager.isSessionDev(receivedCommand.getSession()));
-					if (adminMode) {
-						// Strip the initial exclamation point
-						talk = talk.substring(1);
+					if (sessionManager.isSessionAdmin(receivedCommand.getSession()) && ServerCommandTalk.Mode.STAFF.findIndicator(talk)) {
+						mode = ServerCommandTalk.Mode.STAFF; // takes precedence
+					} else if (sessionManager.isSessionDev(receivedCommand.getSession()) && ServerCommandTalk.Mode.DEV.findIndicator(talk)) {
+						mode = ServerCommandTalk.Mode.DEV;
 					}
-					getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk, adminMode);
+
+					getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk, mode);
 				}
 			}
 
