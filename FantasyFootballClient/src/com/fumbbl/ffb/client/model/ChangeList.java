@@ -11,11 +11,14 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.5.0")
+			.setDescription("This release adds a first batch of star abilities. Abilities modifying armour or injury rolls " +
+				"have some technical limitations: When interacting with Multiple Block the option to use the skill for each block " +
+				"separately and not for both together and the client only supports using one of those skills at a time.")
 			.addFeature("Blind Rage")
 			.addFeature("Indomitable")
 			.addFeature("Mesmerizing Dance")
 			.addFeature("The Ballista")
-			.addFeature("Old Pro (Interaction with Multiple Block: Skill choice will show up per block not for both together due to technical limitations)")
+			.addFeature("Old Pro")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

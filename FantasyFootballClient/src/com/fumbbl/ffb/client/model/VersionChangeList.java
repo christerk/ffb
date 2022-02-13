@@ -1,8 +1,9 @@
 package com.fumbbl.ffb.client.model;
 
+import com.fumbbl.ffb.util.StringTool;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class VersionChangeList {
 
@@ -10,6 +11,7 @@ public class VersionChangeList {
 	private final List<String> features = new ArrayList<>();
 	private final List<String> improvements = new ArrayList<>();
 	private final List<String> behaviorChanges = new ArrayList<>();
+	private String description;
 
 	private final String version;
 
@@ -20,6 +22,10 @@ public class VersionChangeList {
 	private VersionChangeList add(List<String> list, String entry) {
 		list.add(entry);
 		return this;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public VersionChangeList addBugfix(String bugfix) {
@@ -54,6 +60,11 @@ public class VersionChangeList {
 		return behaviorChanges;
 	}
 
+	public VersionChangeList setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
 	public String getVersion() {
 		return version;
 	}
@@ -74,21 +85,37 @@ public class VersionChangeList {
 		return !behaviorChanges.isEmpty();
 	}
 
+	public boolean hasDescription() {
+		return StringTool.isProvided(description);
+	}
+
 	public boolean hasEntries() {
-		return hasBugfixes() || hasFeatures() || hasImprovements() || hasBehaviorChanges();
+		return hasBugfixes() || hasFeatures() || hasImprovements() || hasBehaviorChanges() || hasDescription();
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
+
 		VersionChangeList that = (VersionChangeList) o;
-		return bugfixes.equals(that.bugfixes) && features.equals(that.features) && improvements.equals(that.improvements)
-			&& behaviorChanges.equals(that.behaviorChanges) && version.equals(that.version);
+
+		if (!bugfixes.equals(that.bugfixes)) return false;
+		if (!features.equals(that.features)) return false;
+		if (!improvements.equals(that.improvements)) return false;
+		if (!behaviorChanges.equals(that.behaviorChanges)) return false;
+		if (description != null ? !description.equals(that.description) : that.description != null) return false;
+		return version != null ? version.equals(that.version) : that.version == null;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(bugfixes, features, improvements, behaviorChanges, version);
+		int result = bugfixes.hashCode();
+		result = 31 * result + features.hashCode();
+		result = 31 * result + improvements.hashCode();
+		result = 31 * result + behaviorChanges.hashCode();
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (version != null ? version.hashCode() : 0);
+		return result;
 	}
 }
