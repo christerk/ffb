@@ -56,9 +56,13 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		return true;
 	}
 
-	protected abstract void prepareArmourParams(T params);
+	protected void prepareArmourParams(T params) {
+		applyArmourModification(params);
+	}
 
-	protected abstract boolean armourModificationCantHelp(T params);
+	protected boolean armourModificationCantHelp(T params) {
+		return !params.getNewContext().isArmorBroken();
+	}
 
 	protected abstract void applyArmourModification(T params);
 

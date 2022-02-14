@@ -24,6 +24,7 @@ public enum SkillUse implements INamedObject {
 	CANCEL_DIVING_CATCH("cancelDivingCatch", "because players from both teams hinder each other"),
 	PLACE_BALL("placeBall", "to place ball in an empty adjacent square"),
 	RE_ROLL_SINGLE_ARMOUR_DIE("reRollSingleArmourDie", "to re-roll a single armour die"),
+	ADD_ARMOUR_MODIFIER("addArmourModifier", "to add +1 to the armour roll"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;
