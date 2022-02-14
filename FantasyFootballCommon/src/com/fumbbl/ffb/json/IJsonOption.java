@@ -19,7 +19,6 @@ public interface IJsonOption {
 	JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
 	JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
-	JsonBooleanMapOption ARE_OWN_CHOICES = new JsonBooleanMapOption("areOwnChoices");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
 	JsonBooleanOption ARMOR_BROKEN = new JsonBooleanOption("armorBroken");
@@ -139,7 +138,6 @@ public interface IJsonOption {
 	JsonIntOption DISTANCE = new JsonIntOption("distance");
 	JsonIntArrayOption DISTANCE_ROLL = new JsonIntArrayOption("distanceRoll");
 	JsonStringOption DIVISION = new JsonStringOption("division");
-	JsonBooleanOption DODGING = new JsonBooleanOption("dodging");
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption ESCAPED = new JsonBooleanOption("escaped");
@@ -188,7 +186,6 @@ public interface IJsonOption {
 	JsonIntOption HALF = new JsonIntOption("half");
 	JsonBooleanOption HAND_OVER_USED = new JsonBooleanOption("handOverUsed");
 	JsonBooleanOption HAS_BLOCKED = new JsonBooleanOption("hasBlocked");
-	JsonBooleanOption HAS_ENTROPY = new JsonBooleanOption("hasEntropy");
 	JsonBooleanOption HAS_FED = new JsonBooleanOption("hasFed");
 	JsonBooleanOption HAS_FOULED = new JsonBooleanOption("hasFouled");
 	JsonBooleanOption HAS_MOVED = new JsonBooleanOption("hasMoved");
@@ -205,10 +202,6 @@ public interface IJsonOption {
 	JsonBooleanOption HOME_PLAYING = new JsonBooleanOption("homePlaying");
 	JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
 	JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
-	JsonStringArrayOption ICON_URLS_AWAY_MOVING = new JsonStringArrayOption("iconUrlsAwayMoving");
-	JsonStringArrayOption ICON_URLS_AWAY_STANDING = new JsonStringArrayOption("iconUrlsAwayStanding");
-	JsonStringArrayOption ICON_URLS_HOME_MOVING = new JsonStringArrayOption("iconUrlsHomeMoving");
-	JsonStringArrayOption ICON_URLS_HOME_STANDING = new JsonStringArrayOption("iconUrlsHomeStanding");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
@@ -355,8 +348,6 @@ public interface IJsonOption {
 	JsonEnumWithNameOption RECOVERING_INJURY = new JsonEnumWithNameOption("recoveringInjury", Factory.SERIOUS_INJURY);
 	JsonIntOption REPLAY_TO_COMMAND_NR = new JsonIntOption("replayToCommandNr");
 	JsonEnumWithNameOption REPORT_ID = new JsonEnumWithNameOption("reportId", Factory.REPORT_ID);
-	JsonBooleanOption REPORT_INJURIES_APO = new JsonBooleanOption("reportInjuriesApo");
-	JsonBooleanOption REPORT_INJURIES_IGOR = new JsonBooleanOption("reportInjuriesIgor");
 	JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");
 	JsonArrayOption REPORTS = new JsonArrayOption("reports");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
@@ -458,6 +449,7 @@ public interface IJsonOption {
 	JsonIntOption SWARMING_PLAYER_LIMIT = new JsonIntOption("swarmingPlayerLimit");
 	JsonIntOption SWARMING_PLAYER_ROLL = new JsonIntOption("swarmingPlayerRoll");
 	JsonStringOption TALK = new JsonStringOption("talk");
+	JsonStringOption TALK_MODE = new JsonStringOption("talkMode");
 	JsonStringArrayOption TALKS = new JsonStringArrayOption("talks");
 	JsonFieldCoordinateOption TARGET_COORDINATE = new JsonFieldCoordinateOption("targetCoordinate");
 	JsonObjectOption TARGET_SELECTION_STATE = new JsonObjectOption("targetSelectionState");
@@ -538,7 +530,6 @@ public interface IJsonOption {
 	JsonIntOption WINNINGS_ROLL_AWAY = new JsonIntOption("winningsRollAway");
 	JsonIntOption WINNINGS_ROLL_HOME = new JsonIntOption("winningsRollHome");
 	JsonBooleanOption WITH_BALL = new JsonBooleanOption("withBall");
-	JsonBooleanOption WIZARD_AVAILABLE = new JsonBooleanOption("wizardAvailable");
 	JsonEnumWithNameOption WIZARD_SPELL = new JsonEnumWithNameOption("wizardSpell", Factory.SPECIAL_EFFECT);
 	JsonStringOption XML_CONTENT = new JsonStringOption("xmlContent");
 }

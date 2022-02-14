@@ -38,29 +38,22 @@ public class GameList implements IXmlSerializable, IJsonSerializable {
 
 	public static final String XML_TAG = "gameList";
 
-	private List<GameListEntry> fEntries;
+	private final List<GameListEntry> fEntries;
 
 	public GameList() {
 		fEntries = new ArrayList<>();
 	}
 
-	public GameList(GameListEntry[] pGameListEntries) {
-		this();
-		add(pGameListEntries);
-	}
-
 	public GameListEntry[] getEntries() {
-		return fEntries.toArray(new GameListEntry[fEntries.size()]);
+		return fEntries.toArray(new GameListEntry[0]);
 	}
 
 	public GameListEntry[] getEntriesSorted() {
 		GameListEntry[] result = getEntries();
-		Arrays.sort(result, new Comparator<GameListEntry>() {
-			public int compare(GameListEntry pEntry1, GameListEntry pEntry2) {
-				Date date1 = (pEntry1.getStarted() != null) ? pEntry1.getStarted() : new Date(0);
-				Date date2 = (pEntry2.getStarted() != null) ? pEntry2.getStarted() : new Date(0);
-				return date2.compareTo(date1);
-			}
+		Arrays.sort(result, (pEntry1, pEntry2) -> {
+			Date date1 = (pEntry1.getStarted() != null) ? pEntry1.getStarted() : new Date(0);
+			Date date2 = (pEntry2.getStarted() != null) ? pEntry2.getStarted() : new Date(0);
+			return date2.compareTo(date1);
 		});
 		return result;
 	}
@@ -68,14 +61,6 @@ public class GameList implements IXmlSerializable, IJsonSerializable {
 	public void add(GameListEntry pGameListEntry) {
 		if (pGameListEntry != null) {
 			fEntries.add(pGameListEntry);
-		}
-	}
-
-	private void add(GameListEntry[] pGameListEntries) {
-		if (ArrayTool.isProvided(pGameListEntries)) {
-			for (GameListEntry gameListEntry : pGameListEntries) {
-				add(gameListEntry);
-			}
 		}
 	}
 
