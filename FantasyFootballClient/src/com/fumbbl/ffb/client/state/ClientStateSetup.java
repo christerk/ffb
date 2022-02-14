@@ -62,7 +62,7 @@ public class ClientStateSetup extends ClientState {
 	}
 
 	public void mouseDragged(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() == MouseEvent.NOBUTTON || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+		if (getClient().getCurrentMouseButton() != MouseEvent.BUTTON1 || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
 			return;
 		}
 		UtilClientPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
