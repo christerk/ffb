@@ -87,6 +87,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	// MouseListener
 	public void mousePressed(MouseEvent pMouseEvent) {
+		if (getClient().getCurrentMouseButton() != MouseEvent.NOBUTTON || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+			return;
+		}
+		getClient().setCurrentMouseButton(pMouseEvent.getButton());
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
@@ -170,6 +174,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
+		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+			return;
+		}
+		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
 		setSelectable(true);
 		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
