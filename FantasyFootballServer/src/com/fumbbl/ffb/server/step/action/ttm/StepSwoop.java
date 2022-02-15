@@ -187,12 +187,15 @@ public class StepSwoop extends AbstractStep {
 
 			// Render flying animation
 			getResult().setAnimation(
-					new Animation(state.thrownPlayerCoordinate, passCoordinate, state.thrownPlayerId, state.thrownPlayerHasBall));
+				new Animation(state.thrownPlayerCoordinate, passCoordinate, state.thrownPlayerId, state.thrownPlayerHasBall));
 			UtilServerGame.syncGameModel(this);
 
 			// Move player
 			game.getFieldModel().setPlayerCoordinate(thrownPlayer, passCoordinate);
 			UtilActingPlayer.changeActingPlayer(game, state.thrownPlayerId, PlayerAction.SWOOP, false);
+			if (gameState.getBlitzTurnState() != null) {
+				gameState.getBlitzTurnState().changeActingPlayer();
+			}
 			if (state.thrownPlayerHasBall) {
 				game.getFieldModel().setBallCoordinate(passCoordinate);
 			}

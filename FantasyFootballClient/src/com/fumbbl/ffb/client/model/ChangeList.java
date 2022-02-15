@@ -26,6 +26,8 @@ public class ChangeList {
 			.addImprovement("Better visualization for niggling injuries")
 			.addImprovement("Add marker to kick scatter square")
 			.addImprovement("Add border to kick off scatter squares")
+			.addBugfix("Game statistics dialog does not become larger than client window anymore")
+			.addBugfix("TTMing Swoop player is now counted as action during blitz turn")
 		);
 
 		versions.add(new VersionChangeList("2.3.2")
