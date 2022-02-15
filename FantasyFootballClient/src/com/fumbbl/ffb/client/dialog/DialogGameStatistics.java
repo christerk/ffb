@@ -17,7 +17,9 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.InternalFrameEvent;
+import java.awt.Component;
 import java.awt.Dimension;
 
 public class DialogGameStatistics extends Dialog {
@@ -33,8 +35,6 @@ public class DialogGameStatistics extends Dialog {
 	private static final String _BACKGROUND_COLOR_SPP = "#e0e0e0";
 	private static final String _BACKGROUND_COLOR_TOTAL_SPP = "#c0c0c0";
 
-	private final JTabbedPane fTabbedPane;
-
 	public DialogGameStatistics(FantasyFootballClient pClient) {
 
 		super(pClient, "Game Statistics", true);
@@ -43,11 +43,13 @@ public class DialogGameStatistics extends Dialog {
 
 		JScrollPane teamComparisonPane = new JScrollPane(createTeamComparisonEditorPane());
 		JScrollPane teamHomePane = new JScrollPane(createTeamEditorPane(game.getTeamHome()));
-		// teamHomePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		teamHomePane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		teamHomePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JScrollPane teamAwayPane = new JScrollPane(createTeamEditorPane(game.getTeamAway()));
-		// teamAwayPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		teamAwayPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		teamHomePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-		fTabbedPane = new JTabbedPane();
+		JTabbedPane fTabbedPane = new JTabbedPane();
 		fTabbedPane.addTab("Team Comparison", teamComparisonPane);
 		fTabbedPane.addTab("<html><font color=\"#ff0000\">Details Home Team</font></html>", teamHomePane);
 		fTabbedPane.addTab("<html><font color=\"#0000ff\">Details Away Team</font></html>", teamAwayPane);
@@ -59,9 +61,12 @@ public class DialogGameStatistics extends Dialog {
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(infoPanel);
 
+		setPreferredSize(teamAwayPane);
+		setPreferredSize(teamHomePane);
+		setPreferredSize(teamComparisonPane);
+		setPreferredSize(this);
 		pack();
 		setLocationToCenter();
-
 	}
 
 	public DialogId getId() {
@@ -383,13 +388,19 @@ public class DialogGameStatistics extends Dialog {
 		return formattedStat.toString();
 	}
 
+	private void setPreferredSize(Component component) {
+		Dimension frameSize = getClient().getUserInterface().getSize();
+		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
+		component.setPreferredSize(new Dimension(this.getPreferredSize().width, frameSize.height - menuBarSize.height - 60));
+	}
+
 	protected void setLocationToCenter() {
 		Dimension dialogSize = getSize();
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
-		// Dimension menuBarSize = getClient().getGameMenuBar().getSize();
 		setLocation((frameSize.width - dialogSize.width) / 2,
-				((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
+			menuBarSize.height + 5);
+
 	}
 
 }

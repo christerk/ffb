@@ -184,6 +184,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);
 			game.getOptions().addOption(claw);
+			GameOptionInt rookies = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX);
+			rookies.setValue(9);
+			//game.getOptions().addOption(rookies);
 		}
 	}
 
