@@ -11,6 +11,7 @@ public interface IJsonOption {
 	JsonStringArrayOption ACCOUNT_PROPERTIES = new JsonStringArrayOption("accountProperties");
 	JsonObjectOption ACTING_PLAYER = new JsonObjectOption("actingPlayer");
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
+	JsonBooleanOption ACTING_PLAYER_WAS_CHANGED = new JsonBooleanOption("actingPlayerWasChanged");
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
 	JsonIntOption AMOUNT = new JsonIntOption("amount");
