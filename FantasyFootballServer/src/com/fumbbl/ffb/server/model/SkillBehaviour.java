@@ -7,6 +7,7 @@ import com.fumbbl.ffb.model.ISkillBehaviour;
 import com.fumbbl.ffb.model.PlayerModifier;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
+import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepId;
 
@@ -31,7 +32,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	private final List<PlayerModifier> playerModifiers;
 	private final List<StepModifier<? extends IStep, ?>> stepModifiers;
 	private final Map<StepId, Class<? extends IStep>> steps;
-	private InjuryContextModification injuryContextModification;
+	private InjuryContextModification<? extends ModificationParams> injuryContextModification;
 
 
 	public SkillBehaviour() {

@@ -19,6 +19,7 @@ public class ChangeList {
 			.addFeature("Mesmerizing Dance")
 			.addFeature("The Ballista")
 			.addFeature("Old Pro")
+			.addFeature("Crushing Blow")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

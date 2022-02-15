@@ -58,13 +58,16 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 
 	protected void prepareArmourParams(T params) {
 		applyArmourModification(params);
+		params.getNewContext().setArmorBroken(params.getDiceInterpreter().isArmourBroken(params.getGameState(), params.getNewContext()));
 	}
 
 	protected boolean armourModificationCantHelp(T params) {
 		return !params.getNewContext().isArmorBroken();
 	}
 
-	protected abstract void applyArmourModification(T params);
+	protected void applyArmourModification(T params) {
+		params.getNewContext().addArmorModifiers(skill.getArmorModifiers());
+	}
 
 	public boolean modifyInjury(InjuryContext injuryContext, GameState gameState) {
 		if (!injuryContext.isCasualty()) {

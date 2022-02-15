@@ -22,6 +22,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -105,7 +106,7 @@ public class InjuryContext {
 		}
 	}
 
-	public void addArmorModifiers(Set<ArmorModifier> pArmorModifiers) {
+	public void addArmorModifiers(Collection<ArmorModifier> pArmorModifiers) {
 		fArmorModifiers.addAll(pArmorModifiers);
 	}
 

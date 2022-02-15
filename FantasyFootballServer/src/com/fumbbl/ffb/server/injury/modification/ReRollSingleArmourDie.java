@@ -16,14 +16,12 @@ import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.bb2020.ReportOldPro;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
-import java.util.Optional;
 
 public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingleArmourDieParams> {
 
@@ -76,7 +74,6 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 		params.setReplaceIndex(newContext.fArmorRoll[0] < newContext.fArmorRoll[1] != params.isSelfInflicted() ? 0 : 1);
 		params.setOldValue(newContext.fArmorRoll[params.getReplaceIndex()]);
 		newContext.fArmorRoll[params.getReplaceIndex()] = params.isSelfInflicted() ? 1 : 6;
-		newContext.setArmorBroken(params.getDiceInterpreter().isArmourBroken(params.getGameState(), newContext));
 	}
 
 	@Override
