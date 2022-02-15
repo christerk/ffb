@@ -43,6 +43,7 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 	protected boolean modifyArmourInternal(T params) {
 
 		prepareArmourParams(params);
+		params.getNewContext().setArmorBroken(params.getDiceInterpreter().isArmourBroken(params.getGameState(), params.getNewContext()));
 
 		if (armourModificationCantHelp(params)) {
 			return false;
@@ -58,7 +59,6 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 
 	protected void prepareArmourParams(T params) {
 		applyArmourModification(params);
-		params.getNewContext().setArmorBroken(params.getDiceInterpreter().isArmourBroken(params.getGameState(), params.getNewContext()));
 	}
 
 	protected boolean armourModificationCantHelp(T params) {
