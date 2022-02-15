@@ -4,12 +4,12 @@ import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.server.GameState;
 
-public class ReRollSingleArmourDieParams extends ModificationParams {
+public class OldProModificationParams extends ModificationParams {
 
 	private boolean selfInflicted, spottedFoul;
 	private int oldValue, replaceIndex;
 
-	public ReRollSingleArmourDieParams(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
+	public OldProModificationParams(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
 		super(gameState, newContext, injuryType);
 	}
 

@@ -8,15 +8,15 @@ import com.fumbbl.ffb.server.GameState;
 
 import java.util.Collections;
 
-public class AddBlockArmourModifier extends InjuryContextModification<AddBlockArmourModifierParams> {
+public class CrushingBlowModification extends InjuryContextModification<ModificationParams> {
 
-	public AddBlockArmourModifier() {
+	public CrushingBlowModification() {
 		super(Collections.singleton(Block.class));
 	}
 
 	@Override
-	protected AddBlockArmourModifierParams params(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
-		return new AddBlockArmourModifierParams(gameState, newContext, injuryType);
+	protected ModificationParams params(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
+		return new ModificationParams(gameState, newContext, injuryType);
 	}
 
 	@Override

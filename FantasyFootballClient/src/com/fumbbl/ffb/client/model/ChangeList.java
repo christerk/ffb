@@ -13,7 +13,8 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.5.0")
 			.setDescription("This release adds a first batch of star abilities. Abilities modifying armour or injury rolls " +
 				"have some technical limitations: When interacting with Multiple Block the option to use the skill for each block " +
-				"separately and not for both together and the client only supports using one of those skills at a time.")
+				"separately and not for both together and the client does not support one player having more than one of those skills " +
+				"(it might result in neither being used).")
 			.addFeature("Blind Rage")
 			.addFeature("Indomitable")
 			.addFeature("Mesmerizing Dance")

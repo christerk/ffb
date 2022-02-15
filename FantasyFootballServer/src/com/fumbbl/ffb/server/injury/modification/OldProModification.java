@@ -23,9 +23,9 @@ import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
 
-public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingleArmourDieParams> {
+public class OldProModification extends InjuryContextModification<OldProModificationParams> {
 
-	public ReRollSingleArmourDie() {
+	public OldProModification() {
 		super(new HashSet<Class<? extends InjuryType>>() {{
 			add(Block.class);
 			add(Chainsaw.class);
@@ -41,12 +41,12 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 	}
 
 	@Override
-	protected ReRollSingleArmourDieParams params(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
-		return new ReRollSingleArmourDieParams(gameState, newContext, injuryType);
+	protected OldProModificationParams params(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType) {
+		return new OldProModificationParams(gameState, newContext, injuryType);
 	}
 
 	@Override
-	protected boolean tryArmourRollModification(ReRollSingleArmourDieParams params) {
+	protected boolean tryArmourRollModification(OldProModificationParams params) {
 		params.setSpottedFoul(isSpottedFoul(params.getNewContext(), params.getInjuryType()));
 		params.setSelfInflicted(isSelfInflicted(params.getNewContext(), params.getInjuryType()));
 		return hasPrerequisite(params.getGameState().getGame(), params.getNewContext()) &&
@@ -68,7 +68,7 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 	}
 
 	@Override
-	protected void prepareArmourParams(ReRollSingleArmourDieParams params) {
+	protected void prepareArmourParams(OldProModificationParams params) {
 		ModifiedInjuryContext newContext = params.getNewContext();
 		params.setSpottedFoul(newContext.fArmorRoll[0] == newContext.fArmorRoll[1] && params.getInjuryType().isFoul());
 		params.setReplaceIndex(newContext.fArmorRoll[0] < newContext.fArmorRoll[1] != params.isSelfInflicted() ? 0 : 1);
@@ -77,12 +77,12 @@ public class ReRollSingleArmourDie extends InjuryContextModification<ReRollSingl
 	}
 
 	@Override
-	protected boolean armourModificationCantHelp(ReRollSingleArmourDieParams params) {
+	protected boolean armourModificationCantHelp(OldProModificationParams params) {
 		return !params.isSpottedFoul() && (params.getNewContext().isArmorBroken() == params.isSelfInflicted());
 	}
 
 	@Override
-	protected void applyArmourModification(ReRollSingleArmourDieParams params) {
+	protected void applyArmourModification(OldProModificationParams params) {
 		int newValue = params.getGameState().getDiceRoller().rollDice(6);
 		ModifiedInjuryContext newContext = params.getNewContext();
 		newContext.fArmorRoll[params.getReplaceIndex()] = newValue;

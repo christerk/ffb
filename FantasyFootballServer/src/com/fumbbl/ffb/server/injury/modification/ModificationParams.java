@@ -5,7 +5,7 @@ import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 
-public abstract class ModificationParams {
+public class ModificationParams {
 	private final GameState gameState;
 	private final DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 	private final ModifiedInjuryContext newContext;
