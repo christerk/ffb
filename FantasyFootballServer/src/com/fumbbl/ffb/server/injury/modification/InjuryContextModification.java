@@ -9,6 +9,8 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.InjuryModification;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
@@ -29,13 +31,13 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 	public boolean modifyArmour(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
 		ModifiedInjuryContext newContext = context(injuryContext);
 		T params = params(gameState, newContext, injuryType);
-		if (tryArmourRollModification(params)) {
-			if (modifyArmourInternal(params)) {
-				newContext.setModification(InjuryModification.ARMOUR);
-				newContext.setUsedSkill(skill);
-				injuryContext.setModifiedInjuryContext(newContext);
-				return true;
-			}
+		if (allowedForAttackerAndDefenderTeams(gameState.getGame(), newContext)
+			&& tryArmourRollModification(params)
+			&& modifyArmourInternal(params)) {
+			newContext.setModification(InjuryModification.ARMOUR);
+			newContext.setUsedSkill(skill);
+			injuryContext.setModifiedInjuryContext(newContext);
+			return true;
 		}
 		return false;
 	}
@@ -76,7 +78,8 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 	public boolean modifyInjury(GameState gameState, InjuryContext injuryContext) {
 		if (!injuryContext.isCasualty()) {
 			ModifiedInjuryContext newContext = context(injuryContext);
-			if (modifyInjuryInternal(newContext, gameState)) {
+			if (allowedForAttackerAndDefenderTeams(gameState.getGame(), injuryContext) &&
+				modifyInjuryInternal(newContext, gameState)) {
 				newContext.setModification(InjuryModification.INJURY);
 				newContext.setUsedSkill(skill);
 				injuryContext.setModifiedInjuryContext(newContext);
@@ -116,6 +119,13 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		return rollMechanic.interpretInjuryRoll(gameState.getGame(), injuryContext);
 	}
 
+	protected boolean allowedForAttackerAndDefenderTeams(Game game, InjuryContext injuryContext) {
+		Player<?> attacker = game.getPlayerById(injuryContext.fAttackerId);
+		Player<?> defender = game.getPlayerById(injuryContext.fDefenderId);
+
+		return attacker == null || attacker.getTeam() != defender.getTeam();
+	}
+
 	private ModifiedInjuryContext context(InjuryContext context) {
 		if (context.getModifiedInjuryContext() != null) {
 			return context.getModifiedInjuryContext();
@@ -133,8 +143,10 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		newContext.fDefenderId = injuryContext.fDefenderId;
 		newContext.fDefenderPosition = injuryContext.fDefenderPosition;
 		newContext.fArmorBroken = injuryContext.fArmorBroken;
-		newContext.fArmorRoll = new int[2];
-		System.arraycopy(injuryContext.fArmorRoll, 0, newContext.fArmorRoll, 0, 2);
+		if (injuryContext.fArmorRoll != null) {
+			newContext.fArmorRoll = new int[2];
+			System.arraycopy(injuryContext.fArmorRoll, 0, newContext.fArmorRoll, 0, 2);
+		}
 		if (injuryContext.fInjuryRoll != null) {
 			newContext.fInjuryRoll = new int[2];
 			System.arraycopy(injuryContext.fInjuryRoll, 0, newContext.fInjuryRoll, 0, 2);

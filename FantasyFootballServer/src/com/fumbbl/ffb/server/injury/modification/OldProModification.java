@@ -16,6 +16,7 @@ import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.bb2020.ReportOldPro;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -47,10 +48,11 @@ public class OldProModification extends InjuryContextModification<OldProModifica
 
 	@Override
 	protected boolean tryArmourRollModification(OldProModificationParams params) {
+		Game game = params.getGameState().getGame();
 		params.setSpottedFoul(isSpottedFoul(params.getNewContext(), params.getInjuryType()));
-		params.setSelfInflicted(isSelfInflicted(params.getNewContext(), params.getInjuryType()));
-		return hasPrerequisite(params.getGameState().getGame(), params.getNewContext()) &&
-			params.getNewContext().isArmorBroken() == params.isSelfInflicted()
+		params.setSelfInflicted(isSelfInflicted(game, params.getNewContext(), params.getInjuryType()));
+		return hasPrerequisite(game, params.getNewContext()) && params.getNewContext().fArmorRoll != null
+			&& params.getNewContext().isArmorBroken() == params.isSelfInflicted()
 			|| params.isSpottedFoul();
 	}
 
@@ -60,11 +62,22 @@ public class OldProModification extends InjuryContextModification<OldProModifica
 	}
 
 	private boolean isSpottedFoul(InjuryContext injuryContext, InjuryType injuryType) {
-		return injuryContext.fArmorRoll[0] == injuryContext.fArmorRoll[1] && injuryType.isFoul();
+		return injuryContext.fArmorRoll != null && injuryContext.fArmorRoll[0] == injuryContext.fArmorRoll[1] && injuryType.isFoul();
 	}
 
-	private boolean isSelfInflicted(InjuryContext injuryContext, InjuryType injuryType) {
-		return (!StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomit() || injuryType.isChainsaw())) || injuryContext.getApothecaryMode() == ApothecaryMode.ANIMAL_SAVAGERY;
+	@Override
+	protected boolean allowedForAttackerAndDefenderTeams(Game game, InjuryContext injuryContext) {
+		return true;
+	}
+
+	private boolean isSelfInflicted(Game game, InjuryContext injuryContext, InjuryType injuryType) {
+		Player<?> attacker = game.getPlayerById(injuryContext.fAttackerId);
+		Player<?> defender = game.getPlayerById(injuryContext.fDefenderId);
+
+		boolean hurtTeamMate = attacker != null && defender != null && attacker.getTeam() == defender.getTeam();
+
+		return (!StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomit() || injuryType.isChainsaw()))
+			|| (hurtTeamMate && injuryContext.getApothecaryMode() != ApothecaryMode.ANIMAL_SAVAGERY);
 	}
 
 	@Override
