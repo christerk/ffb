@@ -27,6 +27,7 @@ public enum SkillUse implements INamedObject {
 	ADD_ARMOUR_MODIFIER("addArmourModifier", "to add +1 to the armour roll"),
 	INCREASE_CHAINSAW_DAMAGE("increaseChainsawDamage", "to add +4 instead of +3 to armour roll"),
 	ADD_INJURY_MODIFIER("addInjuryModifier", "to add +1 to injury roll"),
+	RE_ROLL_INJURY("reRollInjury", "to re-roll the injury roll"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

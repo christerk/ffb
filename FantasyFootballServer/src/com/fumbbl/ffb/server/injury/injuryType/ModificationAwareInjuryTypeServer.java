@@ -68,7 +68,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 			injuryRoll(game, gameState, diceRoller, pAttacker, pDefender, currentInjuryContext);
 
 			if (modification.isPresent()) {
-				boolean modified = ((InjuryContextModification<? extends ModificationParams>) modification.get()).modifyInjury(gameState, currentInjuryContext);
+				boolean modified = ((InjuryContextModification<? extends ModificationParams>) modification.get()).modifyInjury(gameState, currentInjuryContext, injuryType);
 				if (modified) {
 					setInjury(pDefender, gameState, diceRoller, currentInjuryContext.getModifiedInjuryContext());
 				}

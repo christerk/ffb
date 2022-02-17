@@ -23,6 +23,7 @@ public class ChangeList {
 			.addFeature("Crushing Blow")
 			.addFeature("Ghostly Flames")
 			.addFeature("Brutal Block")
+			.addFeature("Savage Mauling")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

@@ -75,8 +75,8 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		params.getNewContext().addArmorModifiers(skill.getArmorModifiers());
 	}
 
-	public boolean modifyInjury(GameState gameState, InjuryContext injuryContext) {
-		if (!injuryContext.isCasualty()) {
+	public boolean modifyInjury(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
+		if (tryInjuryModification(gameState.getGame(), injuryContext, injuryType)) {
 			ModifiedInjuryContext newContext = context(injuryContext);
 			if (allowedForAttackerAndDefenderTeams(gameState.getGame(), injuryContext) &&
 				modifyInjuryInternal(newContext, gameState)) {
@@ -87,6 +87,10 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 			}
 		}
 		return false;
+	}
+
+	protected boolean tryInjuryModification(Game game, InjuryContext injuryContext, InjuryType injuryType) {
+		return !injuryContext.isCasualty();
 	}
 
 	protected boolean modifyInjuryInternal(ModifiedInjuryContext injuryContext, GameState gameState) {
@@ -120,6 +124,10 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 	}
 
 	protected boolean allowedForAttackerAndDefenderTeams(Game game, InjuryContext injuryContext) {
+		return differentTeams(game, injuryContext);
+	}
+
+	protected boolean differentTeams(Game game, InjuryContext injuryContext) {
 		Player<?> attacker = game.getPlayerById(injuryContext.fAttackerId);
 		Player<?> defender = game.getPlayerById(injuryContext.fDefenderId);
 
