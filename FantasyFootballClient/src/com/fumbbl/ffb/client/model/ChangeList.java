@@ -22,6 +22,7 @@ public class ChangeList {
 			.addFeature("Old Pro")
 			.addFeature("Crushing Blow")
 			.addFeature("Ghostly Flames")
+			.addFeature("Brutal Block")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

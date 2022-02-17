@@ -136,7 +136,7 @@ public class InjuryContext {
 		}
 	}
 
-	public void addInjuryModifiers(Set<InjuryModifier> pInjuryModifiers) {
+	public void addInjuryModifiers(Collection<InjuryModifier> pInjuryModifiers) {
 		fInjuryModifiers.addAll(pInjuryModifiers);
 	}
 

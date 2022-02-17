@@ -1,13 +1,17 @@
 package com.fumbbl.ffb.server.injury.modification;
 
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.InjuryModification;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.mechanic.RollMechanic;
 
 import java.util.Set;
 
@@ -69,7 +73,7 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		params.getNewContext().addArmorModifiers(skill.getArmorModifiers());
 	}
 
-	public boolean modifyInjury(InjuryContext injuryContext, GameState gameState) {
+	public boolean modifyInjury(GameState gameState, InjuryContext injuryContext) {
 		if (!injuryContext.isCasualty()) {
 			ModifiedInjuryContext newContext = context(injuryContext);
 			if (modifyInjuryInternal(newContext, gameState)) {
@@ -105,6 +109,13 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		this.skill = skill;
 	}
 
+	protected PlayerState interpretInjury(GameState gameState, InjuryContext injuryContext) {
+
+		RollMechanic rollMechanic = (RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
+
+		return rollMechanic.interpretInjuryRoll(gameState.getGame(), injuryContext);
+	}
+
 	private ModifiedInjuryContext context(InjuryContext context) {
 		if (context.getModifiedInjuryContext() != null) {
 			return context.getModifiedInjuryContext();
@@ -128,6 +139,7 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 			newContext.fInjuryRoll = new int[2];
 			System.arraycopy(injuryContext.fInjuryRoll, 0, newContext.fInjuryRoll, 0, 2);
 		}
+		newContext.fInjury = injuryContext.fInjury;
 		newContext.fApothecaryMode = injuryContext.fApothecaryMode;
 		newContext.fApothecaryStatus = injuryContext.fApothecaryStatus;
 		newContext.setSkillUse(skillUse());

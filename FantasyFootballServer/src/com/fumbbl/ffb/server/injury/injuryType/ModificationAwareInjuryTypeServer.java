@@ -52,7 +52,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 				alternateInjuryContext.setArmorBroken(false);
 				armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext, false);
 
-				injury(game, gameState, diceRoller, pAttacker, pDefender, modification, alternateInjuryContext);
+				injury(game, gameState, diceRoller, pAttacker, pDefender, Optional.empty(), alternateInjuryContext);
 
 			}
 		}
@@ -68,7 +68,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 			injuryRoll(game, gameState, diceRoller, pAttacker, pDefender, currentInjuryContext);
 
 			if (modification.isPresent()) {
-				boolean modified = ((InjuryContextModification<? extends ModificationParams>) modification.get()).modifyInjury(currentInjuryContext, gameState);
+				boolean modified = ((InjuryContextModification<? extends ModificationParams>) modification.get()).modifyInjury(gameState, currentInjuryContext);
 				if (modified) {
 					setInjury(pDefender, gameState, diceRoller, currentInjuryContext.getModifiedInjuryContext());
 				}

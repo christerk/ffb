@@ -5,6 +5,8 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
+import com.fumbbl.ffb.modifiers.InjuryModifierContext;
+import com.fumbbl.ffb.modifiers.StaticInjuryModifierAttacker;
 
 /**
  * Once per game, when Frank 'n' Stein makes an Injury roll against an opponent as a result of a Block action,
@@ -15,5 +17,15 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 public class BrutalBlock extends Skill {
 	public BrutalBlock() {
 		super("Brutal Block", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
+	}
+
+	@Override
+	public void postConstruct() {
+		registerModifier(new StaticInjuryModifierAttacker("Brutal Block", 1, false) {
+			@Override
+			public boolean appliesToContext(InjuryModifierContext context) {
+				return false;
+			}
+		});
 	}
 }
