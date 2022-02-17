@@ -37,7 +37,7 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 	}
 
 	protected boolean tryArmourRollModification(T params) {
-		return !params.getNewContext().isArmorBroken();
+		return false;
 	}
 
 	protected boolean modifyArmourInternal(T params) {

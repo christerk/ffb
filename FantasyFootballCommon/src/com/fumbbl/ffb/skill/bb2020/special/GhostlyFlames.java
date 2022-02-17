@@ -5,6 +5,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
+import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.StaticArmourModifier;
 
 /**
@@ -19,6 +20,11 @@ public class GhostlyFlames extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new StaticArmourModifier("Ghostly Flames", 4, false, true));
+		registerModifier(new StaticArmourModifier("Ghostly Flames", 4, false, true) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				return false;
+			}
+		});
 	}
 }

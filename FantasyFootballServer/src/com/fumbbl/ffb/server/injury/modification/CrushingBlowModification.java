@@ -20,6 +20,11 @@ public class CrushingBlowModification extends InjuryContextModification<Modifica
 	}
 
 	@Override
+	protected boolean tryArmourRollModification(ModificationParams params) {
+		return !params.getNewContext().isArmorBroken();
+	}
+
+	@Override
 	SkillUse skillUse() {
 		return SkillUse.ADD_ARMOUR_MODIFIER;
 	}

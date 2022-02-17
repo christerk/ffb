@@ -28,7 +28,7 @@ public class GhostlyFlamesModification extends InjuryContextModification<Modific
 	@Override
 	protected boolean tryArmourRollModification(ModificationParams params) {
 		ActingPlayer actingPlayer = params.getGameState().getGame().getActingPlayer();
-		return super.tryArmourRollModification(params) && actingPlayer != null && actingPlayer.getPlayerAction().isBlitzing()
+		return !params.getNewContext().isArmorBroken() && actingPlayer != null && actingPlayer.getPlayerAction().isBlitzing()
 			&& actingPlayer.getPlayerId().equals(params.getNewContext().fAttackerId);
 	}
 
