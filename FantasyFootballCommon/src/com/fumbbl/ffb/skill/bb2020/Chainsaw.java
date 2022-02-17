@@ -49,7 +49,7 @@ public class Chainsaw extends Skill {
 		registerProperty(NamedProperties.preventStuntyDodgeModifier);
 		registerProperty(new CancelSkillProperty(NamedProperties.ignoreTacklezonesWhenDodging));
 
-		registerModifier(new StaticArmourModifier("Chainsaw", 3, false) {
+		registerModifier(new StaticArmourModifier("Chainsaw", 3, false, true) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
 				return false;

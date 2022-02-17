@@ -21,6 +21,7 @@ public class ChangeList {
 			.addFeature("The Ballista")
 			.addFeature("Old Pro")
 			.addFeature("Crushing Blow")
+			.addFeature("Ghostly Flames")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

@@ -61,7 +61,7 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 
 	@Override
 	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-	                          DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
+														DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 		if (!injuryContext.isArmorBroken()) {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
