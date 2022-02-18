@@ -330,7 +330,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
 
 		ButtonGroup rightClickEndActionPanelGroup = new ButtonGroup();
-		JMenu rightClickEndActionPanelMenu = new JMenu("Right Click Ends Turn");
+		JMenu rightClickEndActionPanelMenu = new JMenu("Right Click Ends Action");
 		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
 		fUserSettingsMenu.add(rightClickEndActionPanelMenu);
 
