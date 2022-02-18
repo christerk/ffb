@@ -249,7 +249,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendEndTurn(TurnMode turnMode) {
-		send(new ClientCommandEndTurn());
+		send(new ClientCommandEndTurn(turnMode));
 	}
 
 	public void sendConfirm() {

@@ -16,7 +16,12 @@ public class ClientCommandEndTurn extends ClientCommand {
 	private TurnMode turnMode;
 
 	public ClientCommandEndTurn() {
+		this(null);
+	}
+
+	public ClientCommandEndTurn(TurnMode turnMode) {
 		super();
+		this.turnMode = turnMode;
 	}
 
 	public TurnMode getTurnMode() {

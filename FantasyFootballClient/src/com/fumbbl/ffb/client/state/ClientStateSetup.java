@@ -12,6 +12,7 @@ import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
 import com.fumbbl.ffb.dialog.DialogTeamSetupParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamSetupList;
 
 import java.awt.event.MouseEvent;
@@ -116,14 +117,10 @@ public class ClientStateSetup extends ClientState {
 	public void handleCommand(NetCommand pNetCommand) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
-		switch (pNetCommand.getId()) {
-			case SERVER_TEAM_SETUP_LIST:
-				ServerCommandTeamSetupList setupListCommand = (ServerCommandTeamSetupList) pNetCommand;
-				game.setDialogParameter(new DialogTeamSetupParameter(fLoadDialog, setupListCommand.getSetupNames()));
-				userInterface.getDialogManager().updateDialog();
-				break;
-			default:
-				break;
+		if (pNetCommand.getId() == NetCommandId.SERVER_TEAM_SETUP_LIST) {
+			ServerCommandTeamSetupList setupListCommand = (ServerCommandTeamSetupList) pNetCommand;
+			game.setDialogParameter(new DialogTeamSetupParameter(fLoadDialog, setupListCommand.getSetupNames()));
+			userInterface.getDialogManager().updateDialog();
 		}
 	}
 
