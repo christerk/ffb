@@ -24,6 +24,8 @@ public class ChangeList {
 			.addFeature("Ghostly Flames")
 			.addFeature("Brutal Block")
 			.addFeature("Savage Mauling")
+			.addFeature("Ram")
+			.addFeature("Slayer")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

@@ -3,15 +3,17 @@ package com.fumbbl.ffb.server.injury.modification;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 
+import java.util.Arrays;
 import java.util.Collections;
 
-public class CrushingBlowModification extends InjuryContextModification<ModificationParams> {
+public class RamModification extends InjuryContextModification<ModificationParams> {
 
-	public CrushingBlowModification() {
+	public RamModification() {
 		super(Collections.singleton(Block.class));
 	}
 
@@ -22,9 +24,24 @@ public class CrushingBlowModification extends InjuryContextModification<Modifica
 
 	@Override
 	protected boolean tryArmourRollModification(ModificationParams params) {
+
 		Game game = params.getGameState().getGame();
 		return !params.getNewContext().isArmorBroken()
 			&& game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).hasTacklezones();
+	}
+
+	@Override
+	protected boolean tryInjuryModification(Game game, InjuryContext injuryContext, InjuryType injuryType) {
+		return !injuryContext.isCasualty() && game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).hasTacklezones();
+	}
+
+	@Override
+	protected boolean modifyInjuryInternal(ModifiedInjuryContext injuryContext, GameState gameState) {
+		if (!Collections.disjoint(Arrays.asList(injuryContext.getArmorModifiers()), getSkill().getArmorModifiers())) {
+			return false;
+		}
+		injuryContext.setSkillUse(SkillUse.ADD_INJURY_MODIFIER);
+		return super.modifyInjuryInternal(injuryContext, gameState);
 	}
 
 	@Override

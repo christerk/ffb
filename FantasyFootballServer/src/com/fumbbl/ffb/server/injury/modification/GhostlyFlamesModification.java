@@ -5,6 +5,7 @@ import com.fumbbl.ffb.injury.Chainsaw;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.StaticArmourModifier;
 import com.fumbbl.ffb.server.GameState;
@@ -27,9 +28,11 @@ public class GhostlyFlamesModification extends InjuryContextModification<Modific
 
 	@Override
 	protected boolean tryArmourRollModification(ModificationParams params) {
-		ActingPlayer actingPlayer = params.getGameState().getGame().getActingPlayer();
+		Game game = params.getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
 		return !params.getNewContext().isArmorBroken() && actingPlayer != null && actingPlayer.getPlayerAction().isBlitzing()
-			&& actingPlayer.getPlayerId().equals(params.getNewContext().fAttackerId);
+			&& actingPlayer.getPlayerId().equals(params.getNewContext().fAttackerId)
+			&& game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).hasTacklezones();
 	}
 
 	@Override

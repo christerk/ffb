@@ -1,10 +1,11 @@
 package com.fumbbl.ffb.server.injury.modification;
 
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 
 import java.util.Collections;
@@ -21,16 +22,8 @@ public class BrutalBlockModification extends InjuryContextModification<Modificat
 	}
 
 	@Override
-	protected boolean modifyInjuryInternal(ModifiedInjuryContext injuryContext, GameState gameState) {
-		injuryContext.addInjuryModifiers(getSkill().getInjuryModifiers());
-		PlayerState newInjury = interpretInjury(gameState, injuryContext);
-
-		if (!newInjury.equals(injuryContext.fInjury)) {
-			injuryContext.setInjury(newInjury);
-			return true;
-		}
-
-		return false;
+	protected boolean tryInjuryModification(Game game, InjuryContext injuryContext, InjuryType injuryType) {
+		return !injuryContext.isCasualty() && game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).hasTacklezones();
 	}
 
 	@Override

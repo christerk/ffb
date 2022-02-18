@@ -90,10 +90,18 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 	}
 
 	protected boolean tryInjuryModification(Game game, InjuryContext injuryContext, InjuryType injuryType) {
-		return !injuryContext.isCasualty();
+		return false;
 	}
 
 	protected boolean modifyInjuryInternal(ModifiedInjuryContext injuryContext, GameState gameState) {
+		injuryContext.addInjuryModifiers(getSkill().getInjuryModifiers());
+		PlayerState newInjury = interpretInjury(gameState, injuryContext);
+
+		if (!newInjury.equals(injuryContext.fInjury)) {
+			injuryContext.setInjury(newInjury);
+			return true;
+		}
+
 		return false;
 	}
 

@@ -42,8 +42,9 @@ public class SavageMaulingModification extends InjuryContextModification<Modific
 
 	@Override
 	protected boolean tryInjuryModification(Game game, InjuryContext injuryContext, InjuryType injuryType) {
-		return super.tryInjuryModification(game, injuryContext, injuryType) || isSpottedFoul(injuryContext, injuryType)
-			|| (!differentTeams(game, injuryContext) && injuryContext.getApothecaryMode() != ApothecaryMode.ANIMAL_SAVAGERY && !injuryContext.fInjury.isStunned());
+		return (!injuryContext.isCasualty() || isSpottedFoul(injuryContext, injuryType)
+			|| (!differentTeams(game, injuryContext) && injuryContext.getApothecaryMode() != ApothecaryMode.ANIMAL_SAVAGERY && !injuryContext.fInjury.isStunned())
+			&& game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).hasTacklezones());
 	}
 
 	private boolean isSpottedFoul(InjuryContext injuryContext, InjuryType injuryType) {
