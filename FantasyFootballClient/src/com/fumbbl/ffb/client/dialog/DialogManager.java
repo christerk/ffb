@@ -192,6 +192,9 @@ public class DialogManager {
 					case BRIBERY_AND_CORRUPTION_RE_ROLL:
 						setDialogHandler(new DialogBriberyAndCorruptionHandler(getClient()));
 						break;
+					case CONFIRM_END_ACTION:
+						setDialogHandler(new DialogConfirmEndActionHandler(getClient()));
+						break;
 					default:
 						break;
 				}

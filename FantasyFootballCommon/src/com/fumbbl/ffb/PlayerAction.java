@@ -58,4 +58,8 @@ public enum PlayerAction implements INamedObject {
 	public boolean isBlitzing() {
 		return this == BLITZ || this == BLITZ_MOVE || this == BLITZ_SELECT;
 	}
+
+	public boolean isGaze() {
+		return this == GAZE || this == GAZE_MOVE || this == GAZE_SELECT;
+	}
 }

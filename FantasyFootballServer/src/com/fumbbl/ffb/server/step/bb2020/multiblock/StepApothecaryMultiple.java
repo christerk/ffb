@@ -47,6 +47,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 
@@ -172,19 +173,16 @@ public class StepApothecaryMultiple extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
-			switch (parameter.getKey()) {
-				case INJURY_RESULT:
-					InjuryResult injuryResult = (InjuryResult) parameter.getValue();
-					if (injuryResult != null) {
-						String defenderId = injuryResult.injuryContext().getDefenderId();
-						if (teamId.equals(getGameState().getGame().getPlayerById(defenderId).getTeam().getId())) {
-							injuryResults.add(injuryResult);
-							return true;
-						}
+			if (parameter.getKey() == StepParameterKey.INJURY_RESULT) {
+				InjuryResult injuryResult = (InjuryResult) parameter.getValue();
+				if (injuryResult != null) {
+					String defenderId = injuryResult.injuryContext().getDefenderId();
+					if (teamId.equals(getGameState().getGame().getPlayerById(defenderId).getTeam().getId())) {
+						injuryResults.add(injuryResult);
+						return true;
 					}
-					return false;
-				default:
-					break;
+				}
+				return false;
 			}
 		}
 		return false;
@@ -221,6 +219,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 				int remainingApos = remainingApos();
 				doRequest.forEach(injuryResult -> {
 					injuryResult.report(this);
+					UtilServerGame.syncGameModel(this);
 					InjuryContext injuryContext = injuryResult.injuryContext();
 					if (remainingApos > 0) {
 						injuryContext.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
@@ -329,11 +328,15 @@ public class StepApothecaryMultiple extends AbstractStep {
 				playerResult.setSeriousInjuryDecay(null);
 
 				injuryResults.stream().filter(regenerationFailedResults::contains)
-					.forEach(injuryResult -> injuryResult.applyTo(this, false));
+					.forEach(injuryResult -> {
+						injuryResult.applyTo(this, false);
+						UtilServerGame.syncGameModel(this);
+					});
 			}
 
 			for (InjuryResult injuryResult : injuryResults) {
 				if (UtilServerInjury.handleRaiseDead(this, injuryResult)) {
+					UtilServerGame.syncGameModel(this);
 					break;
 				}
 			}

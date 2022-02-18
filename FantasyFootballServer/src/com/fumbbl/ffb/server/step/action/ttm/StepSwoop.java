@@ -11,6 +11,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
@@ -53,20 +54,25 @@ import com.fumbbl.ffb.util.UtilActingPlayer;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepSwoop extends AbstractStep {
 
-	public class StepState {
-		public ActionStatus status;
+	private final StepState state;
 
-		public String thrownPlayerId;
-		public PlayerState thrownPlayerState;
-		public boolean thrownPlayerHasBall;
-		public FieldCoordinate thrownPlayerCoordinate;
-		public boolean throwScatter;
-		public FieldCoordinate coordinateFrom;
-		public FieldCoordinate coordinateTo;
-		public String goToLabelOnFallDown;
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_SWOOP) {
+				ClientCommandSwoop swoopCommand = (ClientCommandSwoop) pReceivedCommand.getCommand();
+				state.coordinateTo = swoopCommand.getTargetCoordinate();
+				if (!UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+					state.coordinateTo = state.coordinateTo.transform();
+				}
+				executeSwoop();
+			}
+		} else if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
 	}
-
-	private StepState state;
 
 	public StepSwoop(GameState pGameState) {
 		super(pGameState);
@@ -147,26 +153,17 @@ public class StepSwoop extends AbstractStep {
 		executeStep();
 	}
 
-	@Override
-	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_SWOOP:
-				ClientCommandSwoop swoopCommand = (ClientCommandSwoop) pReceivedCommand.getCommand();
-				state.coordinateTo = swoopCommand.getTargetCoordinate();
-				if (!UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-					state.coordinateTo = state.coordinateTo.transform();
-				}
-				executeSwoop();
-				break;
-			default:
-				break;
-			}
-		} else if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
+	public static class StepState {
+		public ActionStatus status;
+
+		public String thrownPlayerId;
+		public PlayerState thrownPlayerState;
+		public boolean thrownPlayerHasBall;
+		public FieldCoordinate thrownPlayerCoordinate;
+		public boolean throwScatter;
+		public FieldCoordinate coordinateFrom;
+		public FieldCoordinate coordinateTo;
+		public String goToLabelOnFallDown;
 	}
 
 	private void executeSwoop() {
@@ -190,12 +187,15 @@ public class StepSwoop extends AbstractStep {
 
 			// Render flying animation
 			getResult().setAnimation(
-					new Animation(state.thrownPlayerCoordinate, passCoordinate, state.thrownPlayerId, state.thrownPlayerHasBall));
+				new Animation(state.thrownPlayerCoordinate, passCoordinate, state.thrownPlayerId, state.thrownPlayerHasBall));
 			UtilServerGame.syncGameModel(this);
 
 			// Move player
 			game.getFieldModel().setPlayerCoordinate(thrownPlayer, passCoordinate);
 			UtilActingPlayer.changeActingPlayer(game, state.thrownPlayerId, PlayerAction.SWOOP, false);
+			if (gameState.getBlitzTurnState() != null) {
+				gameState.getBlitzTurnState().changeActingPlayer();
+			}
 			if (state.thrownPlayerHasBall) {
 				game.getFieldModel().setBallCoordinate(passCoordinate);
 			}
@@ -211,7 +211,6 @@ public class StepSwoop extends AbstractStep {
 		if (state.coordinateTo == null) {
 			UtilServerPlayerSwoop.updateSwoopSquares(gameState, thrownPlayer);
 		}
-		// getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	// JSON serialization

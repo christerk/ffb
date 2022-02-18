@@ -1,11 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,10 +11,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
 /**
  * 
@@ -25,8 +24,7 @@ import com.fumbbl.ffb.util.StringTool;
  */
 public abstract class DialogYesOrNoQuestion extends Dialog implements ActionListener, KeyListener {
 
-	private JButton fButtonYes;
-	private JButton fButtonNo;
+	private final JButton fButtonYes;
 	private boolean fChoiceYes;
 
 	public DialogYesOrNoQuestion(FantasyFootballClient pClient, String pTitle, String pMessageLine) {
@@ -34,7 +32,7 @@ public abstract class DialogYesOrNoQuestion extends Dialog implements ActionList
 	}
 
 	public DialogYesOrNoQuestion(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty) {
-		this(pClient, pTitle, pMessages, pIconProperty, "Yes", (int) 'Y', "No", (int) 'N');
+		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', "No", 'N');
 	}
 
 	public DialogYesOrNoQuestion(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
@@ -47,7 +45,7 @@ public abstract class DialogYesOrNoQuestion extends Dialog implements ActionList
 		fButtonYes.addKeyListener(this);
 		fButtonYes.setMnemonic(pYesButtonMnemonic);
 
-		fButtonNo = new JButton(pNoButtonText);
+		JButton fButtonNo = new JButton(pNoButtonText);
 		fButtonNo.addActionListener(this);
 		fButtonNo.addKeyListener(this);
 		fButtonNo.setMnemonic(pNoButtonMnemonic);

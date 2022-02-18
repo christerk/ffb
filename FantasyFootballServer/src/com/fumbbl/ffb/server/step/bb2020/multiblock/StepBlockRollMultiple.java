@@ -41,6 +41,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -183,6 +184,8 @@ public class StepBlockRollMultiple extends AbstractStep {
 				if (brawlerAvailable) {
 					roll.add(ReRollSources.BRAWLER);
 				}
+				getResult().setSound(SoundId.BLOCK);
+				UtilServerGame.syncGameModel(this);
 			});
 
 			decideNextStep(game);

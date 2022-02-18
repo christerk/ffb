@@ -65,6 +65,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 						}
 					}
 					if (doRoll) {
+						step.commitTargetSelection();
 						int foulAppearanceRoll = step.getGameState().getDiceRoller().rollSkill();
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
 						boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);

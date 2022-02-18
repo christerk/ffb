@@ -4,10 +4,11 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.client.IClientProperty;
+import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -86,6 +87,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	// MouseListener
 	public void mousePressed(MouseEvent pMouseEvent) {
+		if (getClient().getCurrentMouseButton() != MouseEvent.NOBUTTON || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+			return;
+		}
+		getClient().setCurrentMouseButton(pMouseEvent.getButton());
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
@@ -169,6 +174,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
+		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+			return;
+		}
+		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
 		setSelectable(true);
 		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
@@ -185,7 +194,12 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			} else {
 				if (isClickable()) {
 					hideSelectSquare();
-					if (player != null) {
+					if (getClient().getGame().getActingPlayer().getPlayer() != null
+						&& pMouseEvent.getButton() == MouseEvent.BUTTON3) {
+						if (IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION))) {
+							getClient().getCommunication().sendActingPlayer(null, null, false);
+						}
+					} else if (player != null) {
 						clickOnPlayer(player);
 					} else {
 						clickOnField(coordinate);

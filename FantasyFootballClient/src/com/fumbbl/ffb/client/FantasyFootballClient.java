@@ -64,6 +64,8 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	private final FactoryManager factoryManager;
 	private final Map<Factory, INamedObjectFactory> factories;
 
+	private transient int currentMouseButton;
+
 	public FantasyFootballClient(ClientParameters pParameters) throws IOException {
 		factoryManager = new FactoryManager();
 		factories = factoryManager.getFactoriesForContext(getContext());
@@ -354,5 +356,13 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 			return this;
 		}
 		throw new FantasyFootballException("Trying to get game context from application.");
+	}
+
+	public int getCurrentMouseButton() {
+		return currentMouseButton;
+	}
+
+	public void setCurrentMouseButton(int currentMouseButton) {
+		this.currentMouseButton = currentMouseButton;
 	}
 }

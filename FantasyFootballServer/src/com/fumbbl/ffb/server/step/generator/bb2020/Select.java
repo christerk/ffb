@@ -26,6 +26,7 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 
 		sequence.add(StepId.INIT_SELECTING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_SELECTING),
 			from(StepParameterKey.UPDATE_PERSISTENCE, params.isUpdatePersistence()));
+		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.DROP_FALLING_PLAYERS);
@@ -37,7 +38,6 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
-		sequence.add(StepId.RECOVER_FROM_GAZE);
 		sequence.add(StepId.GOTO_LABEL, from(StepParameterKey.GOTO_LABEL, IStepLabel.NEXT), from(StepParameterKey.ALTERNATE_GOTO_LABEL, IStepLabel.END_SELECTING));
 		sequence.add(StepId.JUMP_UP, IStepLabel.NEXT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));

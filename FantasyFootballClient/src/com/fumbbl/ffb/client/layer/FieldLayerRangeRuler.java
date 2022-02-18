@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class FieldLayerRangeRuler extends FieldLayer {
@@ -62,7 +61,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		removeRangeRuler();
 
 		if ((pRangeRuler != null) && FieldCoordinateBounds.FIELD.isInBounds(pRangeRuler.getTargetCoordinate())
-				&& StringTool.isProvided(pRangeRuler.getThrowerId())) {
+			&& StringTool.isProvided(pRangeRuler.getThrowerId())) {
 
 			Game game = getClient().getGame();
 			PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
@@ -71,14 +70,14 @@ public class FieldLayerRangeRuler extends FieldLayer {
 			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 
 			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
-					pRangeRuler.getTargetCoordinate(), false);
+				pRangeRuler.getTargetCoordinate(), false);
 			if (passingDistance != null) {
 
 				Point startCenter = new Point((throwerCoordinate.getX() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2),
-						(throwerCoordinate.getY() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2));
+					(throwerCoordinate.getY() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2));
 				Point endCenter = new Point(
-						(pRangeRuler.getTargetCoordinate().getX() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2),
-						(pRangeRuler.getTargetCoordinate().getY() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2));
+					(pRangeRuler.getTargetCoordinate().getX() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2),
+					(pRangeRuler.getTargetCoordinate().getY() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2));
 
 				int lengthY = startCenter.y - endCenter.y;
 				int lengthX = endCenter.x - startCenter.x;
@@ -87,7 +86,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 				double sinPhi = lengthY / length;
 				double cosPhi = lengthX / length;
 
-				fPolygonComplete = findPolygon(startCenter, 0, (int) length, sinPhi, cosPhi);
+				fPolygonComplete = findPolygon(startCenter, (int) length, sinPhi, cosPhi);
 
 				if (fPolygonComplete != null) {
 
@@ -107,7 +106,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 					g2d.setFont(new Font("Sans Serif", Font.BOLD, 32));
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f));
 
-					drawRulerModifier(g2d, (int) length, 0, pRangeRuler.getMinimumRoll());
+					drawRulerModifier(g2d, (int) length, pRangeRuler.getMinimumRoll());
 
 					g2d.dispose();
 
@@ -173,22 +172,22 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		return false;
 	}
 
-	private Polygon findPolygon(Point pStartCenter, int pMinLength, int pMaxLength, double pSinPhi, double pCosPhi) {
+	private Polygon findPolygon(Point pStartCenter, int pMaxLength, double pSinPhi, double pCosPhi) {
 
-		if (pMaxLength > pMinLength) {
+		if (pMaxLength > 0) {
 
 			int halfRulerWidth = (int) (FIELD_SQUARE_SIZE * UtilPassing.RULER_WIDTH / 2);
-			Point point1 = new Point(pStartCenter.x + pMinLength, pStartCenter.y - halfRulerWidth);
+			Point point1 = new Point(pStartCenter.x, pStartCenter.y - halfRulerWidth);
 			point1 = rotate(point1, pStartCenter, pSinPhi, pCosPhi);
-			Point point2 = new Point(pStartCenter.x + pMinLength, pStartCenter.y + halfRulerWidth);
+			Point point2 = new Point(pStartCenter.x, pStartCenter.y + halfRulerWidth);
 			point2 = rotate(point2, pStartCenter, pSinPhi, pCosPhi);
 			Point point3 = new Point(pStartCenter.x + pMaxLength, pStartCenter.y + halfRulerWidth);
 			point3 = rotate(point3, pStartCenter, pSinPhi, pCosPhi);
 			Point point4 = new Point(pStartCenter.x + pMaxLength, pStartCenter.y - halfRulerWidth);
 			point4 = rotate(point4, pStartCenter, pSinPhi, pCosPhi);
 
-			return new Polygon(new int[] { point1.x, point2.x, point3.x, point4.x },
-					new int[] { point1.y, point2.y, point3.y, point4.y }, 4);
+			return new Polygon(new int[]{point1.x, point2.x, point3.x, point4.x},
+				new int[]{point1.y, point2.y, point3.y, point4.y}, 4);
 
 		} else {
 			return null;
@@ -200,10 +199,14 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		int x = pPoint.x - pCenter.x;
 		int y = pPoint.y - pCenter.y;
 		return new Point((int) ((pCosPhi * x) + (pSinPhi * y) + pCenter.getX()),
-				(int) ((-pSinPhi * x) + (pCosPhi * y) + pCenter.getY()));
+			(int) ((-pSinPhi * x) + (pCosPhi * y) + pCenter.getY()));
 	}
 
 	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor) {
+		drawSelectSquare(pCoordinate, pColor, null);
+	}
+
+	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor, Color border) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
 			int x = pCoordinate.getX() * FIELD_SQUARE_SIZE;
 			int y = pCoordinate.getY() * FIELD_SQUARE_SIZE;
@@ -211,17 +214,21 @@ public class FieldLayerRangeRuler extends FieldLayer {
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			if (border != null) {
+				g2d.setPaint(border);
+				g2d.drawRect(bounds.x + 1, bounds.y + 1, bounds.width - 2, bounds.height - 2);
+			}
 			g2d.dispose();
 			addUpdatedArea(bounds);
 		}
 	}
 
-	public void markCoordinates(FieldCoordinate[] pMarkedCoordinates, Color pColor) {
+	public void markCoordinates(FieldCoordinate[] pMarkedCoordinates, Color pColor, Color border) {
 		fMarkedCoordinates = pMarkedCoordinates;
 		if (ArrayTool.isProvided(pMarkedCoordinates) && (pColor != null)) {
 			for (int i = 0; i < pMarkedCoordinates.length; i++) {
 				clear(fMarkedCoordinates[i], true);
-				drawSelectSquare(fMarkedCoordinates[i], pColor);
+				drawSelectSquare(fMarkedCoordinates[i], pColor, border);
 			}
 		}
 	}
@@ -240,18 +247,17 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 	public void clearMarkedCoordinates() {
 		if (ArrayTool.isProvided(fMarkedCoordinates)) {
-			for (int i = 0; i < fMarkedCoordinates.length; i++) {
-				clear(fMarkedCoordinates[i], true);
+			for (FieldCoordinate fMarkedCoordinate : fMarkedCoordinates) {
+				clear(fMarkedCoordinate, true);
 			}
 		}
 	}
 
-	private void drawRulerModifier(Graphics2D pG2d, int pTotalLength, int pPreviousSegmentLength, String pMinimumRoll) {
+	private void drawRulerModifier(Graphics2D pG2d, int pTotalLength, String pMinimumRoll) {
 		FontMetrics metrics = pG2d.getFontMetrics();
 		Rectangle2D numberBounds = metrics.getStringBounds(pMinimumRoll, pG2d);
-		int segmentLength = pTotalLength - pPreviousSegmentLength;
-		if (numberBounds.getWidth() < segmentLength) {
-			int baselineX = pPreviousSegmentLength + (segmentLength - (int) numberBounds.getWidth()) / 2;
+		if (numberBounds.getWidth() < pTotalLength) {
+			int baselineX = (pTotalLength - (int) numberBounds.getWidth()) / 2;
 			int baselineY = ((int) (numberBounds.getHeight() / 4)) + 2;
 			pG2d.drawString(pMinimumRoll, baselineX, baselineY);
 		}

@@ -95,10 +95,11 @@ public class ClientReplayer implements ActionListener {
 				if (pServerCommand.isReplayable()) {
 					synchronized (fReplayList) {
 						fReplayList.add(pServerCommand);
-					}
-					if ((pServerCommand.getCommandNr() > 0)
+
+						if ((pServerCommand.getCommandNr() > 0)
 							&& ((fFirstCommandNr == 0) || (pServerCommand.getCommandNr() < fFirstCommandNr))) {
-						fFirstCommandNr = pServerCommand.getCommandNr();
+							fFirstCommandNr = pServerCommand.getCommandNr();
+						}
 					}
 				}
 			}

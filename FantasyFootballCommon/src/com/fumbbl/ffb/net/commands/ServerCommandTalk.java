@@ -19,17 +19,17 @@ import com.fumbbl.ffb.util.StringTool;
 public class ServerCommandTalk extends ServerCommand {
 
 	private String fCoach;
-	private List<String> fTalks;
-	private boolean fAdminMode;
+	private final List<String> fTalks;
+	private Mode mode = Mode.REGULAR;
 
 	public ServerCommandTalk() {
 		fTalks = new ArrayList<>();
 	}
 
-	public ServerCommandTalk(String pCoach, String pTalk, boolean adminMode) {
+	public ServerCommandTalk(String pCoach, String pTalk, Mode mode) {
 		this();
 		fCoach = pCoach;
-		fAdminMode = adminMode;
+		this.mode = mode;
 		addTalk(pTalk);
 	}
 
@@ -46,9 +46,9 @@ public class ServerCommandTalk extends ServerCommand {
 	public String getCoach() {
 		return fCoach;
 	}
-	
-	public boolean isAdminMode() {
-		return fAdminMode;
+
+	public Mode getMode() {
+		return mode;
 	}
 
 	public void addTalk(String pTalk) {
@@ -66,7 +66,7 @@ public class ServerCommandTalk extends ServerCommand {
 	}
 
 	public String[] getTalks() {
-		return fTalks.toArray(new String[fTalks.size()]);
+		return fTalks.toArray(new String[0]);
 	}
 
 	public boolean isReplayable() {
@@ -80,7 +80,7 @@ public class ServerCommandTalk extends ServerCommand {
 		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.COACH.addTo(jsonObject, fCoach);
 		IJsonOption.TALKS.addTo(jsonObject, fTalks);
-		IJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
+		IJsonOption.TALK_MODE.addTo(jsonObject, mode.toString());
 		return jsonObject;
 	}
 
@@ -88,9 +88,56 @@ public class ServerCommandTalk extends ServerCommand {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fAdminMode = IJsonOption.ADMIN_MODE.getFrom(game, jsonObject);
+		// paranoid backwards compatibility in case a staff member was talking to coaches during the update.
+		// can be removed for the next update
+		if (IJsonOption.ADMIN_MODE.isDefinedIn(jsonObject)) {
+			mode = IJsonOption.ADMIN_MODE.getFrom(game, jsonObject) ? Mode.STAFF : Mode.REGULAR;
+		} else if (IJsonOption.TALK_MODE.isDefinedIn(jsonObject)) {
+			mode = Mode.valueOf(IJsonOption.TALK_MODE.getFrom(game, jsonObject));
+		}
 		addTalks(IJsonOption.TALKS.getFrom(game, jsonObject));
 		return this;
 	}
 
+	public enum Mode {
+		REGULAR, STAFF("Staff", "!", true), DEV("Dev", "!", true);
+
+		private final String prefix;
+		private final String indicator;
+		private final boolean sendToAll;
+
+		Mode(String prefix, String indicator, boolean sendToAll) {
+			this.prefix = prefix;
+			this.indicator = indicator;
+			this.sendToAll = sendToAll;
+		}
+
+		Mode() {
+			this("", "", false);
+		}
+
+		public boolean isSendToAll() {
+			return sendToAll;
+		}
+
+		public String getPrefix() {
+			if (StringTool.isProvided(prefix)) {
+				return prefix.trim() + " ";
+			}
+
+			return "";
+		}
+
+		public boolean findIndicator(String input) {
+			return StringTool.isProvided(input) && input.startsWith(indicator);
+		}
+
+		public String cleanIndicator(String input) {
+			if (StringTool.isProvided(input)) {
+				return input.substring(indicator.length());
+			}
+
+			return "";
+		}
+	}
 }

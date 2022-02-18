@@ -18,6 +18,7 @@
 	<treasury>500000</treasury>
 	<specialRules>
 		<rule>Bribery and Corruption</rule>
+		<rule>Low Cost Linemen</rule>
 	</specialRules>
 
 	<player nr="1" id="teamGoblinKalimar1">

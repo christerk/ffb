@@ -9,6 +9,7 @@ import com.fumbbl.ffb.json.UtilJson;
 
 public class BlitzTurnState implements IJsonSerializable {
 	private int amount, available, limit;
+	private boolean actingPlayerWasChanged;
 
 	public BlitzTurnState() {
 	}
@@ -43,12 +44,21 @@ public class BlitzTurnState implements IJsonSerializable {
 		return available > 0;
 	}
 
+	public boolean actingPlayerWasChanged() {
+		return actingPlayerWasChanged;
+	}
+
+	public void changeActingPlayer() {
+		actingPlayerWasChanged = true;
+	}
+
 	@Override
 	public BlitzTurnState initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		amount = IJsonOption.NR_OF_PLAYERS.getFrom(game, jsonObject);
 		limit = IJsonOption.NR_OF_PLAYERS_ALLOWED.getFrom(game, jsonObject);
 		available = IJsonOption.NUMBER.getFrom(game, jsonObject);
+		actingPlayerWasChanged = IJsonOption.ACTING_PLAYER_WAS_CHANGED.getFrom(game, jsonObject);
 		return this;
 	}
 
@@ -58,6 +68,7 @@ public class BlitzTurnState implements IJsonSerializable {
 		IJsonOption.NR_OF_PLAYERS.addTo(jsonObject, amount);
 		IJsonOption.NR_OF_PLAYERS_ALLOWED.addTo(jsonObject, limit);
 		IJsonOption.NUMBER.addTo(jsonObject, available);
+		IJsonOption.ACTING_PLAYER_WAS_CHANGED.addTo(jsonObject, actingPlayerWasChanged);
 		return jsonObject;
 	}
 }
