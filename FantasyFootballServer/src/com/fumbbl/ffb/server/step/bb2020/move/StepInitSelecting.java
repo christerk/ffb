@@ -151,7 +151,7 @@ public final class StepInitSelecting extends AbstractStep {
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
-					} else {
+					} else if (!StringTool.isProvided(actingPlayerCommand.getPlayerId()) && actingPlayer != null) {
 						boolean unusedBlitz = actingPlayer.getPlayerAction().isBlitzing() && !actingPlayer.hasBlocked();
 						boolean unusedGaze = actingPlayer.getPlayerAction().isGaze() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
 						boolean onlyMarkedAsStandingUp = actingPlayer.isStandingUp() && actingPlayer.getCurrentMove() == Constant.MINIMUM_MOVE_TO_STAND_UP;
@@ -183,6 +183,8 @@ public final class StepInitSelecting extends AbstractStep {
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
 
+					} else {
+						commandStatus = StepCommandStatus.SKIP_STEP;
 					}
 					break;
 				case CLIENT_MOVE:
