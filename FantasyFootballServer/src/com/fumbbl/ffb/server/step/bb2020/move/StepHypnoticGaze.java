@@ -94,7 +94,9 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 			setReRolledAction(ReRolledActions.HYPNOTIC_GAZE);
-			setReRollSource(((ClientCommandUseSkill) pReceivedCommand.getCommand()).getSkill().getRerollSource(getReRolledAction()));
+			if (((ClientCommandUseSkill) pReceivedCommand.getCommand()).isSkillUsed()) {
+				setReRollSource(((ClientCommandUseSkill) pReceivedCommand.getCommand()).getSkill().getRerollSource(getReRolledAction()));
+			}
 			commandStatus = StepCommandStatus.EXECUTE_STEP;
 		}
 
