@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -9,6 +10,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.IStep;
@@ -133,6 +135,20 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		int minimumRoll = minimumRoll(game, actingPlayer.getPlayer(), defender);
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(actualRoll, minimumRoll);
 		minimumRolls.put(currentTargetId, minimumRoll);
+
+		if (!successful) {
+			ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction());
+
+			if (reRollSource != null) {
+				step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), false, actualRoll, minimumRoll, reRolling, currentTargetId));
+
+				actualRoll = skillRoll(step);
+				successful = (actualRoll >= minimumRoll);
+				state.blockTargets.remove(currentTargetId);
+				step.getResult().addReport(new ReportReRoll(actingPlayer.getPlayerId(), reRollSource, successful, minimumRoll));
+			}
+		}
+
 		step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), successful, actualRoll, minimumRoll, reRolling, currentTargetId));
 		if (successful) {
 			state.blockTargets.remove(currentTargetId);
