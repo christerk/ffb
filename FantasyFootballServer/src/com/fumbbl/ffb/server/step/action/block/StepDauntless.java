@@ -15,22 +15,39 @@ import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
  * Step in block sequence to handle skill DAUNTLESS.
- * 
+ * <p>
  * Expects stepParameter USING_STAB to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepDauntless extends AbstractStepWithReRoll {
 
-	public static class StepState {
-		public ActionStatus status;
-		public Boolean usingStab;
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
+				case USING_STAB: {
+					state.usingStab = (Boolean) parameter.getValue();
+					return true;
+				}
+				case USING_VOMIT: {
+					state.usingVomit = (Boolean) parameter.getValue();
+					return true;
+				}
+				case USING_CHAINSAW: {
+					state.usingChainsaw = (Boolean) parameter.getValue();
+					return true;
+				}
+				default:
+					break;
+			}
+		}
+		return false;
 	}
 
 	private final StepState state;
@@ -65,14 +82,15 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter parameter) {
-		if ((parameter != null) && !super.setParameter(parameter)) {
-			if (parameter.getKey() == StepParameterKey.USING_STAB) {
-				state.usingStab = (Boolean) parameter.getValue();
-				return true;
-			}
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.USING_STAB.addTo(jsonObject, state.usingStab);
+		if (state.status != null) {
+			IServerJsonOption.STATUS.addTo(jsonObject, state.status.name());
 		}
-		return false;
+		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, state.usingChainsaw);
+		IServerJsonOption.USING_VOMIT.addTo(jsonObject, state.usingChainsaw);
+		return jsonObject;
 	}
 
 	private void executeStep() {
@@ -80,16 +98,6 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	}
 
 	// JSON serialization
-
-	@Override
-	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.USING_STAB.addTo(jsonObject, state.usingStab);
-		if (state.status != null) {
-			IServerJsonOption.STATUS.addTo(jsonObject, state.status.name());
-		}
-		return jsonObject;
-	}
 
 	@Override
 	public StepDauntless initFrom(IFactorySource game, JsonValue pJsonValue) {
@@ -100,7 +108,20 @@ public class StepDauntless extends AbstractStepWithReRoll {
 		if (StringTool.isProvided(statusString)) {
 			state.status = ActionStatus.valueOf(statusString);
 		}
+		state.usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject));
+		state.usingVomit = toPrimitive(IServerJsonOption.USING_VOMIT.getFrom(game, jsonObject));
 		return this;
+	}
+
+	public static class StepState {
+		public ActionStatus status;
+		public Boolean usingStab;
+		public Boolean usingChainsaw;
+		public Boolean usingVomit;
+
+		public boolean usesSpecialAction() {
+			return (usingChainsaw != null && usingChainsaw) || (usingVomit != null && usingVomit) || (usingStab != null && usingStab);
+		}
 	}
 
 }
