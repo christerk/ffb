@@ -8,6 +8,8 @@ import com.fumbbl.ffb.injury.BlockStunned;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.FoulForSpp;
 import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.ProjectileVomit;
+import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
@@ -24,6 +26,8 @@ public class SavageMaulingModification extends InjuryContextModification<Modific
 			add(BlockProne.class);
 			add(Foul.class);
 			add(FoulForSpp.class);
+			add(ProjectileVomit.class);
+			add(Stab.class);
 		}});
 	}
 
