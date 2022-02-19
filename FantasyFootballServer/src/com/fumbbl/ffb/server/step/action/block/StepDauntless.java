@@ -28,7 +28,7 @@ import com.fumbbl.ffb.util.StringTool;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepDauntless extends AbstractStepWithReRoll {
 
-	public class StepState {
+	public static class StepState {
 		public ActionStatus status;
 		public Boolean usingStab;
 	}
