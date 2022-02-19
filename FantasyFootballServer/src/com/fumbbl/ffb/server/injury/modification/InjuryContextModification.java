@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 
+import java.util.Objects;
 import java.util.Set;
 
 public abstract class InjuryContextModification<T extends ModificationParams> implements IInjuryContextModification {
@@ -97,7 +98,7 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		injuryContext.addInjuryModifiers(getSkill().getInjuryModifiers());
 		PlayerState newInjury = interpretInjury(gameState, injuryContext);
 
-		if (!newInjury.equals(injuryContext.fInjury)) {
+		if (!Objects.equals(newInjury, injuryContext.fInjury)) {
 			injuryContext.setInjury(newInjury);
 			return true;
 		}
