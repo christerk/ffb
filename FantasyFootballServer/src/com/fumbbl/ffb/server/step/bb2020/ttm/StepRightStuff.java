@@ -9,6 +9,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.RightStuffModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -19,9 +20,11 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.report.ReportRightStuffRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -159,8 +162,16 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
-			getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
-				minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
+
+			if (PassResult.FUMBLE == passResult && game.getThrower() != null && game.getThrower().hasSkillProperty(NamedProperties.fumbledPlayerLandsSafely)) {
+				successful = true;
+				getResult().addReport(new ReportSkillUse(game.getThrowerId(),
+					game.getThrower().getSkillWithProperty(NamedProperties.fumbledPlayerLandsSafely),
+					true, SkillUse.FUMBLED_PLAYER_LANDS_SAFELY));
+			} else {
+				getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
+					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
+			}
 			if (successful) {
 				if (passResult == PassResult.ACCURATE) {
 					GameResult gameResult = getGameState().getGame().getGameResult();

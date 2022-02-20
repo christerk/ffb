@@ -99,6 +99,7 @@ public class NamedProperties {
 	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
 	public static final ISkillProperty forceSecondBlock = new NamedProperty("Force Second Block");
 	public static final ISkillProperty foulBreaksArmourWithoutRoll = new NamedProperty("Foul Breaks Armour Without Roll");
+	public static final ISkillProperty fumbledPlayerLandsSafely = new NamedProperty("Fumbled Player Lands Safely");
 	public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
