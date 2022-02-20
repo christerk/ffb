@@ -27,6 +27,7 @@ public class ChangeList {
 			.addFeature("Ram")
 			.addFeature("Slayer")
 			.addBugfix("Chainsaw player performing regular block was not able to use Dauntless")
+			.addFeature("Sneakiest of the Lot")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

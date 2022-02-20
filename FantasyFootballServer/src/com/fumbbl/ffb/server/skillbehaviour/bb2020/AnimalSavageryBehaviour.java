@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.report.bb2020.ReportAnimalSavagery;
@@ -198,16 +199,18 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			case THROW_TEAM_MATE_MOVE:
 				game.getTurnData().setPassUsed(true);
 				break;
-		case HAND_OVER:
-		case HAND_OVER_MOVE:
-			game.getTurnData().setHandOverUsed(true);
-			break;
-		case FOUL:
-		case FOUL_MOVE:
-			game.getTurnData().setFoulUsed(true);
-			break;
-		default:
-			break;
+			case HAND_OVER:
+			case HAND_OVER_MOVE:
+				game.getTurnData().setHandOverUsed(true);
+				break;
+			case FOUL:
+			case FOUL_MOVE:
+				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+					game.getTurnData().setFoulUsed(true);
+				}
+				break;
+			default:
+				break;
 		}
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if (actingPlayer.isStandingUp()) {

@@ -10,6 +10,7 @@ import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.server.ActionStatus;
@@ -122,16 +123,18 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 			case THROW_TEAM_MATE_MOVE:
 				game.getTurnData().setPassUsed(true);
 				break;
-		case HAND_OVER:
-		case HAND_OVER_MOVE:
-			game.getTurnData().setHandOverUsed(true);
-			break;
-		case FOUL:
-		case FOUL_MOVE:
-			game.getTurnData().setFoulUsed(true);
-			break;
-		default:
-			break;
+			case HAND_OVER:
+			case HAND_OVER_MOVE:
+				game.getTurnData().setHandOverUsed(true);
+				break;
+			case FOUL:
+			case FOUL_MOVE:
+				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+					game.getTurnData().setFoulUsed(true);
+				}
+				break;
+			default:
+				break;
 		}
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if (actingPlayer.isStandingUp()) {

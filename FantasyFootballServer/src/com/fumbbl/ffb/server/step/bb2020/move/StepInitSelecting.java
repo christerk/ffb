@@ -212,7 +212,7 @@ public final class StepInitSelecting extends AbstractStep {
 				case CLIENT_FOUL:
 					ClientCommandFoul foulCommand = (ClientCommandFoul) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), foulCommand)
-						&& !game.getTurnData().isFoulUsed()) {
+						&& (!game.getTurnData().isFoulUsed() || actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul))) {
 						publishParameter(new StepParameter(StepParameterKey.FOUL_DEFENDER_ID, foulCommand.getDefenderId()));
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, foulCommand.isUsingChainsaw()));
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.FOUL, false);

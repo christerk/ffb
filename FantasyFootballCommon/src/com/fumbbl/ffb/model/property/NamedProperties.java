@@ -13,6 +13,7 @@ public class NamedProperties {
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnDodge = new NamedProperty("Affects Either Armour Or Injury On Dodge");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnFoul = new NamedProperty("Affects Either Armour Or Injury On Foul");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnJump = new NamedProperty("Affects Either Armour Or Injury On Jump");
+	public static final ISkillProperty allowsAdditionalFoul = new NamedProperty("Allows Additional Foul");
 	public static final ISkillProperty allowsRaisingLineman = new NamedProperty("Allows Raising Lineman");
 	public static final ISkillProperty allowStandUpAssists = new NamedProperty("Allow Stand Up Assists");
 	public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
