@@ -21,6 +21,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -67,6 +68,11 @@ public class ClientStateSelect extends ClientState {
 					break;
 				case IPlayerPopupMenuKeys.KEY_BLITZ:
 					communication.sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH:
+					communication.sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, false);
+					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGainFrenzyForBlitz);
+					communication.sendUseSkill(skill, true, pPlayer.getId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_FOUL:
 					communication.sendActingPlayer(pPlayer, PlayerAction.FOUL_MOVE, false);
@@ -157,6 +163,13 @@ public class ClientStateSelect extends ClientState {
 			blitzAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLITZ);
 			blitzAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLITZ, 0));
 			menuItemList.add(blitzAction);
+			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainFrenzyForBlitz)) {
+				JMenuItem blitzWithFrenzyAction = new JMenuItem("Frenzied Rush Blitz",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				blitzWithFrenzyAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
+				blitzWithFrenzyAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, 0));
+				menuItemList.add(blitzWithFrenzyAction);
+			}
 		}
 		if (isFoulActionAvailable(pPlayer)) {
 			JMenuItem foulAction = new JMenuItem("Foul Action",
@@ -268,6 +281,9 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_BLITZ:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
+				break;
+			case PLAYER_ACTION_FRENZIED_RUSH:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
 				break;
 			case PLAYER_ACTION_FOUL:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);

@@ -53,6 +53,7 @@ public class NamedProperties {
 		}
 	};
 	public static final ISkillProperty canFoulAfterBlock = new NamedProperty("Can Foul After Block");
+	public static final ISkillProperty canGainFrenzyForBlitz = new NamedProperty("Can Gain Frenzy For Blitz");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");

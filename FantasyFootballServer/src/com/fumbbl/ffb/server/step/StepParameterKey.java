@@ -108,6 +108,7 @@ public enum StepParameterKey {
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean
 	RESET_FOR_FAILED_BLOCK, // Boolean
+	RETAIN_MODEL_DATA, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare

@@ -29,6 +29,7 @@ public enum SkillUse implements INamedObject {
 	ADD_INJURY_MODIFIER("addInjuryModifier", "to add +1 to injury roll"),
 	RE_ROLL_INJURY("reRollInjury", "to re-roll the injury roll"),
 	FUMBLED_PLAYER_LANDS_SAFELY("fumbledPlayerLandsSafely", "to let the fumbled player land safely"),
+	GAIN_FRENZY_FOR_BLITZ("gainFrenzy", "to gain the Frenzy skill for this Blitz action"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

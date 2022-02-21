@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSelectBlitzTargetParameter;
@@ -15,7 +16,10 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportSelectBlitzTarget;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -41,6 +45,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 	private String gotoLabelOnEnd;
 	private String selectedPlayerId;
 	private boolean endPlayerAction, endTurn;
+	private Skill usedSkill;
 
 	public StepSelectBlitzTarget(GameState pGameState) {
 		super(pGameState);
@@ -80,6 +85,13 @@ public class StepSelectBlitzTarget extends AbstractStep {
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						endTurn = true;
 						status = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.isSkillUsed()) {
+						usedSkill = commandUseSkill.getSkill();
+						status = StepCommandStatus.SKIP_STEP;
 					}
 					break;
 				default:
@@ -136,9 +148,15 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
 				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).addSelectedBlitzTarget();
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
-				game.getFieldModel().setTargetSelectionState(new TargetSelectionState(selectedPlayerId).select());
+				TargetSelectionState targetSelectionState = new TargetSelectionState(selectedPlayerId);
+				game.getFieldModel().setTargetSelectionState(targetSelectionState.select());
 				getResult().setSound(SoundId.CLICK);
 				getResult().addReport(new ReportSelectBlitzTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
+				if (usedSkill != null && usedSkill.getEnhancements() != null) {
+					game.getFieldModel().addSkillEnhancements(game.getActingPlayer().getPlayer(), usedSkill);
+					getResult().addReport(new ReportSkillUse(game.getActingPlayer().getPlayerId(), usedSkill, true, SkillUse.GAIN_FRENZY_FOR_BLITZ));
+					targetSelectionState.addUsedSkill(usedSkill);
+				}
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
 				getResult().setNextAction(StepAction.NEXT_STEP);

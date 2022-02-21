@@ -22,6 +22,7 @@ import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
+import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public abstract class Skill implements INamedObject {
 	private final List<ISkillProperty> conflictingProperties = new ArrayList<>();
 	private final SkillUsageType skillUsageType;
 	private final boolean negativeTrait;
+	private TemporaryEnhancements enhancements;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
@@ -178,6 +180,10 @@ public abstract class Skill implements INamedObject {
 		conflictingProperties.add(property);
 	}
 
+	public TemporaryEnhancements getEnhancements() {
+		return enhancements;
+	}
+
 	public ISkillBehaviour<? extends Skill> getSkillBehaviour() {
 		return behaviour;
 	}
@@ -240,6 +246,10 @@ public abstract class Skill implements INamedObject {
 
 	public SkillUsageType getSkillUsageType() {
 		return skillUsageType;
+	}
+
+	protected void setEnhancements(TemporaryEnhancements enhancements) {
+		this.enhancements = enhancements;
 	}
 
 	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {

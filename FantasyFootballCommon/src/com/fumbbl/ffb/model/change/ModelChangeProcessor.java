@@ -3,6 +3,7 @@ package com.fumbbl.ffb.model.change;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.IDialogParameter;
@@ -19,6 +20,7 @@ import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -131,6 +133,10 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_ADD_PUSHBACK_SQUARE:
 				pGame.getFieldModel().add((PushbackSquare) pModelChange.getValue());
 				return true;
+			case FIELD_MODEL_ADD_SKILL_ENHANCEMENTS:
+				SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
+				pGame.getFieldModel().addSkillEnhancements(pGame.getPlayerById(pModelChange.getKey()), skillFactory.forName((String) pModelChange.getValue()));
+				return true;
 			case FIELD_MODEL_ADD_TRACK_NUMBER:
 				pGame.getFieldModel().add((TrackNumber) pModelChange.getValue());
 				return true;
@@ -167,6 +173,9 @@ public class ModelChangeProcessor {
 				return true;
 			case FIELD_MODEL_REMOVE_PUSHBACK_SQUARE:
 				pGame.getFieldModel().remove((PushbackSquare) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_REMOVE_SKILL_ENHANCEMENTS:
+				pGame.getFieldModel().removeSkillEnhancements(pGame.getPlayerById(pModelChange.getKey()), (String) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_REMOVE_TRACK_NUMBER:
 				pGame.getFieldModel().remove((TrackNumber) pModelChange.getValue());

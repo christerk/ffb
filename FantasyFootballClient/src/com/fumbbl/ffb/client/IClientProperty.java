@@ -61,6 +61,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_RANGE_GRID = "key.player.action.rangeGrid";
 	String KEY_PLAYER_ACTION_HAIL_MARY_PASS = "key.player.action.hailMaryPass";
 	String KEY_PLAYER_ACTION_MULTIPLE_BLOCK = "key.player.action.multipleBlock";
+	String KEY_PLAYER_ACTION_FRENZIED_RUSH = "key.player.action.frenziedRush";
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";

@@ -137,6 +137,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
     JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
+    JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
     JsonObjectOption SCATTER_BOUNDS = new JsonObjectOption("scatterBounds");
     JsonIntOption SCATTER_DISTANCE = new JsonIntOption("scatterDistance");

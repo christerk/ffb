@@ -57,7 +57,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 
 		// on blockChoice = POW or PUSHBACK
 		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
-		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE, from(StepParameterKey.RETAIN_MODEL_DATA, true));
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
 		sequence.add(StepId.FOLLOWUP);
 		sequence.add(StepId.TENTACLES, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DROP_FALLING_PLAYERS));

@@ -34,4 +34,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_LONG = KeyEvent.VK_L;
 	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;
 	int KEY_PROJECTILE_VOMIT = KeyEvent.VK_V;
+	int KEY_FRENZIED_RUSH = KeyEvent.VK_E;
 }

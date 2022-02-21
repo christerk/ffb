@@ -125,6 +125,15 @@ public final class UtilCards {
 		return false;
 	}
 
+	public static boolean hasUnusedSkillWithProperty(Player<?> player, ISkillProperty property) {
+		for (Skill playerSkill : player.getSkillsIncludingTemporaryOnes()) {
+			if (playerSkill.hasSkillProperty(property) && !player.isUsed(playerSkill)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static ReRollSource getRerollSource(Player<?> player, ReRolledAction action) {
 		return Arrays.stream(UtilCards.findAllSkills(player))
 			.map(skill -> skill.getRerollSource(action))
