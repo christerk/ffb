@@ -45,12 +45,14 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				Skill cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
+				boolean attackerHasConflictingSkill = cancellingSkill != null && cancellingSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
+
 				PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);
 				FieldModel fieldModel = game.getFieldModel();
 
 				if (state.sideStepping.getOrDefault(state.defender.getId(), true) && state.freeSquareAroundDefender
 					&& UtilCards.hasSkill(state.defender, skill)
-					&& !(cancellingSkill != null && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
+					&& !(cancellingSkill != null && !attackerHasConflictingSkill && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
 					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender)))
 					&& ((state.pushbackStack.isEmpty() && (state.oldDefenderState == null || state.oldDefenderState.hasTacklezones()))
 					|| !state.pushbackStack.isEmpty() && playerState.hasTacklezones())

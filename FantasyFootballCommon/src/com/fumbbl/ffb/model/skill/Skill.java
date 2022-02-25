@@ -325,7 +325,11 @@ public abstract class Skill implements INamedObject {
 	}
 
 	public boolean canBeAssignedTo(Player<?> player) {
-		return conflictingProperties.stream().noneMatch(player::hasSkillProperty);
+		return !conflictsWithAnySkill(player);
+	}
+
+	public boolean conflictsWithAnySkill(Player<?> player) {
+		return conflictingProperties.stream().anyMatch(player::hasSkillProperty);
 	}
 
 	public boolean isNegativeTrait() {

@@ -27,6 +27,7 @@ public class FrenziedRush extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canGainFrenzyForBlitz);
-		setEnhancements(new TemporaryEnhancements().withSkills(Collections.singleton(new SkillClassWithValue(Frenzy.class))));
+		setEnhancements(new TemporaryEnhancements()
+			.withSkills(Collections.singleton(new SkillClassWithValue(Frenzy.class))));
 	}
 }
