@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSelectGazeTargetParameter;
@@ -13,7 +14,10 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportSelectGazeTarget;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -34,129 +38,147 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepSelectGazeTarget extends AbstractStep {
 
-    private String gotoLabelOnEnd;
-    private String selectedPlayerId;
-    private boolean endPlayerAction, endTurn;
+	private String gotoLabelOnEnd;
+	private String selectedPlayerId;
+	private boolean endPlayerAction, endTurn;
+	private Skill usedSkill;
 
-    public StepSelectGazeTarget(GameState pGameState) {
-        super(pGameState);
-    }
+	public StepSelectGazeTarget(GameState pGameState) {
+		super(pGameState);
+	}
 
-    public StepSelectGazeTarget(GameState pGameState, StepAction defaultStepResult) {
-        super(pGameState, defaultStepResult);
-    }
+	public StepSelectGazeTarget(GameState pGameState, StepAction defaultStepResult) {
+		super(pGameState, defaultStepResult);
+	}
 
-    @Override
-    public StepId getId() {
-        return StepId.SELECT_GAZE_TARGET;
-    }
+	@Override
+	public StepId getId() {
+		return StepId.SELECT_GAZE_TARGET;
+	}
 
-    @Override
-    public void init(StepParameterSet pParameterSet) {
-        if (pParameterSet != null) {
-            super.init(pParameterSet);
-            for (StepParameter parameter : pParameterSet.values()) {
-                if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_END) {
-                    gotoLabelOnEnd = (String) parameter.getValue();
-                }
-            }
-        }
-    }
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			super.init(pParameterSet);
+			for (StepParameter parameter : pParameterSet.values()) {
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_END) {
+					gotoLabelOnEnd = (String) parameter.getValue();
+				}
+			}
+		}
+	}
 
-    @Override
-    public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-        StepCommandStatus status = super.handleCommand(pReceivedCommand);
-        if (status == StepCommandStatus.UNHANDLED_COMMAND) {
-            switch (pReceivedCommand.getId()) {
-                case CLIENT_TARGET_SELECTED:
-                    selectedPlayerId = ((ClientCommandTargetSelected) pReceivedCommand.getCommand()).getTargetPlayerId();
-                    status = StepCommandStatus.EXECUTE_STEP;
-                    break;
-                case CLIENT_END_TURN:
-                    if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
-                        endTurn = true;
-                        status = StepCommandStatus.EXECUTE_STEP;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (status == StepCommandStatus.EXECUTE_STEP) {
-            executeStep();
-        }
-        return status;
-    }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus status = super.handleCommand(pReceivedCommand);
+		if (status == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_TARGET_SELECTED:
+					selectedPlayerId = ((ClientCommandTargetSelected) pReceivedCommand.getCommand()).getTargetPlayerId();
+					status = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_END_TURN:
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						endTurn = true;
+						status = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.isSkillUsed()) {
+						usedSkill = commandUseSkill.getSkill();
+						status = StepCommandStatus.SKIP_STEP;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		if (status == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return status;
+	}
 
-    @Override
-    public boolean setParameter(StepParameter parameter) {
-        if ((parameter != null) && !super.setParameter(parameter)) {
-            if (parameter.getKey() == StepParameterKey.END_PLAYER_ACTION) {
-                endPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-                consume(parameter);
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.END_PLAYER_ACTION) {
+				endPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
+				return true;
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void start() {
-        super.start();
-        executeStep();
-    }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-    private void executeStep() {
-        Game game = getGameState().getGame();
-        if (endPlayerAction || endTurn) {
-            game.setTurnMode(game.getLastTurnMode());
-            SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-            EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
-            endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, endTurn));
-            getResult().setNextAction(StepAction.NEXT_STEP);
-        } else if (selectedPlayerId == null) {
-            game.setTurnMode(TurnMode.SELECT_GAZE_TARGET);
-            UtilServerDialog.showDialog(getGameState(), new DialogSelectGazeTargetParameter(), false);
-            getResult().setSound(SoundId.CLICK);
-        } else {
-            game.setTurnMode(game.getLastTurnMode());
-            if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
-                game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
-                getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
-            } else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
-                Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
-                PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).changeSelectedGazeTarget(true);
-                game.getFieldModel().setPlayerState(targetPlayer, newState);
-                game.getFieldModel().setTargetSelectionState(new TargetSelectionState(selectedPlayerId).select());
-                getResult().setSound(SoundId.CLICK);
-                getResult().addReport(new ReportSelectGazeTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
-                getResult().setNextAction(StepAction.NEXT_STEP);
-            } else {
-                getResult().setNextAction(StepAction.NEXT_STEP);
-            }
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		if (endPlayerAction || endTurn) {
+			game.setTurnMode(game.getLastTurnMode());
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, endTurn));
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		} else if (selectedPlayerId == null) {
+			game.setTurnMode(TurnMode.SELECT_GAZE_TARGET);
+			UtilServerDialog.showDialog(getGameState(), new DialogSelectGazeTargetParameter(), false);
+			getResult().setSound(SoundId.CLICK);
+		} else {
+			game.setTurnMode(game.getLastTurnMode());
+			if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
+				game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
+				getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
+			} else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
+				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
+				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).changeSelectedGazeTarget(true);
+				game.getFieldModel().setPlayerState(targetPlayer, newState);
+				TargetSelectionState targetSelectionState = new TargetSelectionState(selectedPlayerId);
+				game.getFieldModel().setTargetSelectionState(targetSelectionState.select());
+				getResult().setSound(SoundId.CLICK);
+				if (usedSkill != null) {
+					targetSelectionState.addUsedSkill(usedSkill);
+					if (usedSkill.getEnhancements() != null) {
+						game.getFieldModel().addSkillEnhancements(game.getActingPlayer().getPlayer(), usedSkill);
+						getResult().addReport(new ReportSkillUse(game.getActingPlayer().getPlayerId(), usedSkill, true, SkillUse.GAIN_FRENZY_FOR_BLITZ));
+					}
+				}
+				getResult().addReport(new ReportSelectGazeTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else {
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			}
 
-        }
-    }
+		}
+	}
 
-    @Override
-    public JsonObject toJsonValue() {
-        JsonObject jsonObject = super.toJsonValue();
-        IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, gotoLabelOnEnd);
-        IServerJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
-        IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
-        IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
-        return jsonObject;
-    }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, gotoLabelOnEnd);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
+		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
+		IServerJsonOption.SKILL.addTo(jsonObject, usedSkill);
+		return jsonObject;
+	}
 
-    @Override
-    public StepSelectGazeTarget initFrom(IFactorySource source, JsonValue pJsonValue) {
-        JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-        super.initFrom(source, jsonObject);
-        gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
-        selectedPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
-        endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
-        endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
-        return this;
-    }
+	@Override
+	public StepSelectGazeTarget initFrom(IFactorySource source, JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		super.initFrom(source, jsonObject);
+		gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		selectedPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		usedSkill = (Skill) IServerJsonOption.SKILL.getFrom(source, jsonObject);
+		return this;
+	}
 
 }

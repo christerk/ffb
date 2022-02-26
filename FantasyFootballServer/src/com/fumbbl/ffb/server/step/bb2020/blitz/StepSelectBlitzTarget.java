@@ -152,10 +152,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				game.getFieldModel().setTargetSelectionState(targetSelectionState.select());
 				getResult().setSound(SoundId.CLICK);
 				getResult().addReport(new ReportSelectBlitzTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
-				if (usedSkill != null && usedSkill.getEnhancements() != null) {
-					game.getFieldModel().addSkillEnhancements(game.getActingPlayer().getPlayer(), usedSkill);
-					getResult().addReport(new ReportSkillUse(game.getActingPlayer().getPlayerId(), usedSkill, true, SkillUse.GAIN_FRENZY_FOR_BLITZ));
+				if (usedSkill != null) {
 					targetSelectionState.addUsedSkill(usedSkill);
+					if (usedSkill.getEnhancements() != null) {
+						game.getFieldModel().addSkillEnhancements(game.getActingPlayer().getPlayer(), usedSkill);
+						getResult().addReport(new ReportSkillUse(game.getActingPlayer().getPlayerId(), usedSkill, true, SkillUse.GAIN_FRENZY_FOR_BLITZ));
+					}
 				}
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
@@ -179,6 +181,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
+		IServerJsonOption.SKILL.addTo(jsonObject, usedSkill);
 		return jsonObject;
 	}
 
@@ -190,6 +193,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		selectedPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		usedSkill = (Skill) IServerJsonOption.SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

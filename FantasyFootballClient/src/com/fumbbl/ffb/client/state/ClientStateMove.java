@@ -213,7 +213,7 @@ public class ClientStateMove extends ClientState {
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_GAZE:
-					if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer())) {
+					if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
 						communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, actingPlayer.isJumping());
 					}
 					break;
@@ -278,7 +278,7 @@ public class ClientStateMove extends ClientState {
 				menuItemList.add(jumpAction);
 			}
 		}
-		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer())) {
+		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);

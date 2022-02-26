@@ -445,7 +445,13 @@ public class PlayerDetailComponent extends JPanel {
 			return parts;
 		}
 
-		int index = skill.indexOf("(");
+		int index = skill.indexOf(",");
+		if (index < 0) {
+			index = skill.indexOf("(");
+		} else {
+			// the comma should be on the first line
+			index++;
+		}
 		if (index < 0) {
 			parts.add(skill);
 			return parts;

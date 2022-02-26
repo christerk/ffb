@@ -112,6 +112,11 @@ public class ClientStateSelect extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_GAZE:
 					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_MOVE, false);
 					break;
+				case IPlayerPopupMenuKeys.KEY_GAZE_ZOAT:
+					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_MOVE, false);
+					Skill gazeSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainGaze);
+					communication.sendUseSkill(gazeSkill, true, pPlayer.getId());
+					break;
 				default:
 					break;
 			}
@@ -143,11 +148,18 @@ public class ClientStateSelect extends ClientState {
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOMB, 0));
 			menuItemList.add(moveAction);
 		}
-		if (isHypnoticGazeActionAvailable(true, pPlayer)) {
+		if (isHypnoticGazeActionAvailable(true, pPlayer, NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
 			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
+			menuItemList.add(hypnoticGazeAction);
+		}
+		if (isHypnoticGazeActionAvailable(true, pPlayer, NamedProperties.canGainGaze)) {
+			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze (Zoat)",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
+			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT, 0));
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isMoveActionAvailable(pPlayer)) {
@@ -302,6 +314,9 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_GAZE:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
+				break;
+			case PLAYER_ACTION_GAZE_ZOAT:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
 				break;
 			default:
 				actionHandled = false;

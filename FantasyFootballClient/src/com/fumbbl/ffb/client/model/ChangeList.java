@@ -32,6 +32,7 @@ public class ChangeList {
 			.addFeature("Frenzied Rush")
 			.addImprovement("Reduce game statistics dialog height")
 			.addImprovement("Allow marking of players on the pitch during own setup phase (using shift + left/right mouse button)")
+			.addFeature("Excuse Me, Are You a Zoat?")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

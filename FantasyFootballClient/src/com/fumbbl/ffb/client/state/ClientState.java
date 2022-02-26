@@ -17,6 +17,7 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -306,13 +307,13 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	public void endTurn() {
 	}
 
-	protected boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player) {
+	protected boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player, ISkillProperty property) {
 		Game game = getClient().getGame();
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return ((mechanic.declareGazeActionAtStart() == declareAtStart)
 			&& mechanic.isGazeActionAllowed(game.getTurnMode(), actingPlayer.getPlayerAction())
-			&& UtilPlayer.canGaze(game, player));
+			&& UtilPlayer.canGaze(game, player, property));
 	}
 
 }

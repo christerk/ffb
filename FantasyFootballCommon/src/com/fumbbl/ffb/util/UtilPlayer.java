@@ -316,12 +316,20 @@ public class UtilPlayer {
 	}
 
 	public static boolean canGaze(Game pGame, Player<?> pPlayer) {
+		return canGaze(pGame, pPlayer, NamedProperties.inflictsConfusion);
+	}
+
+	public static boolean canGaze(Game pGame, Player<?> pPlayer, ISkillProperty property) {
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
 		GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-		if (!pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)) {
+		Skill skill = pPlayer.getSkillWithProperty(property);
+
+		boolean usedSkill = skill == null || pPlayer.isUsed(skill);
+
+		if (usedSkill) {
 			return false;
 		} else if (!playerState.isActive()) {
 			return false;

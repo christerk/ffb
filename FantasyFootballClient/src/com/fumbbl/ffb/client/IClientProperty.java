@@ -56,6 +56,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_STAB = "key.player.action.stab";
 	String KEY_PLAYER_ACTION_CHAINSAW = "key.player.action.chainsaw";
 	String KEY_PLAYER_ACTION_GAZE = "key.player.action.gaze";
+	String KEY_PLAYER_ACTION_GAZE_ZOAT = "key.player.action.gaze_zoat";
 	String KEY_PLAYER_ACTION_FUMBLEROOSKIE = "key.player.action.fumblerooskie";
 	String KEY_PLAYER_ACTION_PROJECTILE_VOMIT = "key.player.action.projectileVomit";
 	String KEY_PLAYER_ACTION_RANGE_GRID = "key.player.action.rangeGrid";
