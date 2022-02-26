@@ -70,14 +70,15 @@ public class ClientStateSetup extends ClientState {
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
-			return;
-		}
-		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
+
 		// SwingUtilities#isRightMouseButton would return true even if both buttons are pressed
-		if (pMouseEvent.getButton() == MouseEvent.BUTTON3) {
+		if (pMouseEvent.getButton() == MouseEvent.BUTTON3 || pMouseEvent.isShiftDown()) {
 			super.mouseReleased(pMouseEvent);
 		} else {
+			if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+				return;
+			}
+			getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
 			UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
 		}
 	}
