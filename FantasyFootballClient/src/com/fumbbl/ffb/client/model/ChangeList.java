@@ -30,6 +30,7 @@ public class ChangeList {
 			.addFeature("Sneakiest of the Lot")
 			.addFeature("Reliable")
 			.addFeature("Frenzied Rush")
+			.addImprovement("Reduce game statistics dialog height")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")
