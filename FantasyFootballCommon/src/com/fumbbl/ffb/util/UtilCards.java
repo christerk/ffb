@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,6 +137,7 @@ public final class UtilCards {
 
 	public static ReRollSource getRerollSource(Player<?> player, ReRolledAction action) {
 		return Arrays.stream(UtilCards.findAllSkills(player))
+			.filter(skill -> skill.getSkillUsageType() == SkillUsageType.REGULAR)
 			.map(skill -> skill.getRerollSource(action))
 			.filter(Objects::nonNull)
 			.min(Comparator.comparingInt(ReRollSource::getPriority))

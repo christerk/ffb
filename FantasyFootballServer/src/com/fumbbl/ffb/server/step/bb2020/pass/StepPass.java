@@ -186,7 +186,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			if (mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
 				setReRolledAction(ReRolledActions.PASS);
 
-				ReRollSource passingReroll = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.PASS);
+				ReRollSource passingReroll = UtilCards.getRerollSource(game.getThrower(), ReRolledActions.PASS);
 				if (passingReroll != null && !state.isPassSkillUsed()) {
 					doNextStep = false;
 					state.setPassSkillUsed(true);
@@ -195,7 +195,7 @@ public class StepPass extends AbstractStepWithReRoll {
 						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll),
 						actingTeam.hasPlayer(game.getThrower()));
 				} else {
-					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
+					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getActingPlayer(), ReRolledActions.PASS,
 						minimumRoll, PassResult.FUMBLE == state.getResult())) {
 						doNextStep = false;
 					}
