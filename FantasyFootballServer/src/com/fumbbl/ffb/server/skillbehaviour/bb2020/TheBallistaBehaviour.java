@@ -8,6 +8,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
+import com.fumbbl.ffb.server.step.action.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.skill.bb2020.special.TheBallista;
 
@@ -30,6 +31,23 @@ public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
 				return false;
 			}
 
+		});
+
+		registerModifier(new StepModifier<StepHailMaryPass, StepHailMaryPass.StepState>() {
+
+			@Override
+			public StepCommandStatus handleCommandHook(StepHailMaryPass step,
+																								 StepHailMaryPass.StepState state,
+																								 ClientCommandUseSkill useSkillCommand) {
+				step.setReRolledAction(ReRolledActions.PASS);
+				step.setReRollSource(useSkillCommand.isSkillUsed() ? getReRollSource() : null);
+				return StepCommandStatus.EXECUTE_STEP;
+			}
+
+			@Override
+			public boolean handleExecuteStepHook(StepHailMaryPass step, StepHailMaryPass.StepState state) {
+				return false;
+			}
 		});
 	}
 

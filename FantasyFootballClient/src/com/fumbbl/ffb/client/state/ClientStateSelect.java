@@ -117,6 +117,18 @@ public class ClientStateSelect extends ClientState {
 					Skill gazeSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainGaze);
 					communication.sendUseSkill(gazeSkill, true, pPlayer.getId());
 					break;
+				case IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING:
+					communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, false);
+					Skill stnSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainHailMary);
+					communication.sendUseSkill(stnSkill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB:
+					if (isThrowBombActionAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
+						Skill stnbSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainHailMary);
+						communication.sendUseSkill(stnbSkill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -147,6 +159,13 @@ public class ClientStateSelect extends ClientState {
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOMB);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOMB, 0));
 			menuItemList.add(moveAction);
+			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainHailMary)) {
+				JMenuItem stnAction = new JMenuItem("Shot To Nothing Bomb",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BOMB)));
+				stnAction.setMnemonic(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB);
+				stnAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, 0));
+				menuItemList.add(stnAction);
+			}
 		}
 		if (isHypnoticGazeActionAvailable(true, pPlayer, NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
@@ -196,6 +215,13 @@ public class ClientStateSelect extends ClientState {
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
+			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainHailMary)) {
+				JMenuItem stnAction = new JMenuItem("Shot To Nothing",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				stnAction.setMnemonic(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING);
+				stnAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, 0));
+				menuItemList.add(stnAction);
+			}
 		}
 		if (isHandOverActionAvailable(pPlayer)) {
 			JMenuItem handOverAction = new JMenuItem("Hand Over Action",
@@ -317,6 +343,12 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_GAZE_ZOAT:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
+				break;
+			case PLAYER_ACTION_SHOT_TO_NOTHING:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING);
+				break;
+			case PLAYER_ACTION_SHOT_TO_NOTHING_BOMB:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB);
 				break;
 			default:
 				actionHandled = false;

@@ -68,10 +68,7 @@ public class StepRemoveTargetSelectionState extends AbstractStep {
 			if (retainModelData) {
 				targetSelectionState.removePlayer();
 			} else {
-				if (game.getActingPlayer().hasActed()) {
-					targetSelectionState.getUsedSkills().forEach(skill -> game.getActingPlayer().markSkillUsed(skill));
-				}
-				targetSelectionState.getUsedSkills().forEach(skill -> game.getFieldModel().removeSkillEnhancements(game.getActingPlayer().getPlayer(), skill.getName()));
+				markSkillsTrackedOutsideOfActivation(game);
 				game.getFieldModel().setTargetSelectionState(null);
 			}
 		}

@@ -270,6 +270,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract Set<String> getEnhancementSources();
 
+	public boolean hasActiveEnhancement(Skill skill) {
+		return getEnhancementSources().contains(skill.getName());
+	}
+
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
 
 	public abstract void removeTemporarySkills(String source);

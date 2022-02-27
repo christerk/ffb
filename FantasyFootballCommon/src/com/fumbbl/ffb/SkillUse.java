@@ -30,7 +30,8 @@ public enum SkillUse implements INamedObject {
 	RE_ROLL_INJURY("reRollInjury", "to re-roll the injury roll"),
 	FUMBLED_PLAYER_LANDS_SAFELY("fumbledPlayerLandsSafely", "to let the fumbled player land safely"),
 	GAIN_FRENZY_FOR_BLITZ("gainFrenzy", "to gain the Frenzy skill for this Blitz action"),
-	GAIN_GAZE_FOUR_PLUS("gainFrenzy", "to gain the Hypnotic Gaze Skill (4+)"),
+	GAIN_GAZE("gainFrenzy", "to gain the Hypnotic Gaze skill"),
+	GAIN_HAIL_MARY("gainHailMary", "to gain Hail Mary Pass skill"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

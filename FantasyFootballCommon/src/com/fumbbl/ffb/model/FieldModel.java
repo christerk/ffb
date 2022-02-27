@@ -389,6 +389,10 @@ public class FieldModel implements IJsonSerializable {
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_SKILL_ENHANCEMENTS, player.getId(), skill.getName());
 	}
 
+	public void removeSkillEnhancements(Player<?> player, Skill skill) {
+		removeSkillEnhancements(player, skill.getName());
+	}
+
 	public void removeSkillEnhancements(Player<?> player, String name) {
 		player.removeEnhancements(name);
 		notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_SKILL_ENHANCEMENTS, player.getId(), name);

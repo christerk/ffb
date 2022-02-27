@@ -56,13 +56,15 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_STAB = "key.player.action.stab";
 	String KEY_PLAYER_ACTION_CHAINSAW = "key.player.action.chainsaw";
 	String KEY_PLAYER_ACTION_GAZE = "key.player.action.gaze";
-	String KEY_PLAYER_ACTION_GAZE_ZOAT = "key.player.action.gaze_zoat";
+	String KEY_PLAYER_ACTION_GAZE_ZOAT = "key.player.action.gazeZoat";
 	String KEY_PLAYER_ACTION_FUMBLEROOSKIE = "key.player.action.fumblerooskie";
 	String KEY_PLAYER_ACTION_PROJECTILE_VOMIT = "key.player.action.projectileVomit";
 	String KEY_PLAYER_ACTION_RANGE_GRID = "key.player.action.rangeGrid";
 	String KEY_PLAYER_ACTION_HAIL_MARY_PASS = "key.player.action.hailMaryPass";
 	String KEY_PLAYER_ACTION_MULTIPLE_BLOCK = "key.player.action.multipleBlock";
 	String KEY_PLAYER_ACTION_FRENZIED_RUSH = "key.player.action.frenziedRush";
+	String KEY_PLAYER_ACTION_SHOT_TO_NOTHING = "key.player.action.shotToNothing";
+	String KEY_PLAYER_ACTION_SHOT_TO_NOTHING_BOMB = "key.player.action.shotToNothingBomb";
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";
