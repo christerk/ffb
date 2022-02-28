@@ -35,6 +35,7 @@ public class ChangeList {
 			.addFeature("Excuse Me, Are You a Zoat?")
 			.addFeature("Shot to Nothing")
 			.addBugfix("BB2016: Witch Brew Snake Oil caused client errors (games and replays)")
+			.addFeature("Treacherous")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

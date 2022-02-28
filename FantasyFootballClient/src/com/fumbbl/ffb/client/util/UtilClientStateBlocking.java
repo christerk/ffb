@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -48,6 +49,10 @@ public class UtilClientStateBlocking {
 				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 				actionHandled = true;
 				break;
+			case PLAYER_ACTION_TREACHEROUS:
+				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+				actionHandled = true;
+				break;
 			default:
 				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -80,6 +85,10 @@ public class UtilClientStateBlocking {
 				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
 					handled = true;
 					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+					break;
+				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
+					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					pClientState.getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
 					break;
 				default:
 					break;

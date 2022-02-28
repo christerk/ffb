@@ -343,12 +343,17 @@ public final class StepInitSelecting extends AbstractStep {
 					}
 					break;
 				case CLIENT_USE_SKILL:
-					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGainHailMary)) {
-						game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
-						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.GAIN_HAIL_MARY));
-					}
 					commandStatus = StepCommandStatus.SKIP_STEP;
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.isSkillUsed()) {
+						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGainHailMary)) {
+							game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
+							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.GAIN_HAIL_MARY));
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStabTeamMateForBall)) {
+							fDispatchPlayerAction = PlayerAction.TREACHEROUS;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
+					}
 					break;
 				default:
 					break;

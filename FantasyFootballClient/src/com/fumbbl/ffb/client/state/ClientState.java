@@ -326,7 +326,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	protected boolean isTreacherousAvailable(ActingPlayer actingPlayer) {
 		Game game = getClient().getGame();
 		Player<?> player = actingPlayer.getPlayer();
-		return !actingPlayer.hasActed() && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canStabTeamMate)
+		return !actingPlayer.hasActed() && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canStabTeamMateForBall)
 			&& Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(player)))
 			.anyMatch(adjacentPlayer -> UtilPlayer.hasBall(game, adjacentPlayer));
 	}

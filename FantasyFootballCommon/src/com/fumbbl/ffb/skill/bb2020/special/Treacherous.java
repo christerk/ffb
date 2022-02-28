@@ -21,6 +21,6 @@ public class Treacherous extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canStabTeamMate);
+		registerProperty(NamedProperties.canStabTeamMateForBall);
 	}
 }

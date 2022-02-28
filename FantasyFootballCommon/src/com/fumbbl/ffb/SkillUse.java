@@ -32,6 +32,7 @@ public enum SkillUse implements INamedObject {
 	GAIN_FRENZY_FOR_BLITZ("gainFrenzy", "to gain the Frenzy skill for this Blitz action"),
 	GAIN_GAZE("gainFrenzy", "to gain the Hypnotic Gaze skill"),
 	GAIN_HAIL_MARY("gainHailMary", "to gain Hail Mary Pass skill"),
+	TREACHEROUS("treacherous", "to steal the ball from %g team mate"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;
