@@ -26,6 +26,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -221,6 +222,10 @@ public class ClientStateMove extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
 					communication.sendUseFumblerooskie();
 					break;
+				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
+					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					communication.sendUseSkill(skill, true, pPlayer.getId());
+					break;
 				default:
 					break;
 			}
@@ -344,6 +349,9 @@ public class ClientStateMove extends ClientState {
 					break;
 				case PLAYER_ACTION_FUMBLEROOSKIE:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
+					break;
+				case PLAYER_ACTION_TREACHEROUS:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 					break;
 				default:
 					actionHandled = false;

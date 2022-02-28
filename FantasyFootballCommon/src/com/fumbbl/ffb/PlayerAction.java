@@ -17,7 +17,8 @@ public enum PlayerAction implements INamedObject {
 	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
 	DUMP_OFF("dumpOff", 7, null), STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
 	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
-	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, null), KICK_TEAM_MATE("kickTeamMate", 31, null);
+	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, null), KICK_TEAM_MATE("kickTeamMate", 31, null),
+	TREACHEROUS("treacherous", 32, null);
 
 	private final String fName;
 	private final int fType;

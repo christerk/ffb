@@ -36,6 +36,7 @@ public class ChangeList {
 			.addFeature("Shot to Nothing")
 			.addBugfix("BB2016: Witch Brew Snake Oil caused client errors (games and replays)")
 			.addBugfix("Intercepting and rethrowing a bomb with a Running Pass player gave opponent control over that player")
+			.addFeature("Treacherous")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")

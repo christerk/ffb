@@ -1,12 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -21,6 +14,12 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -141,11 +140,15 @@ public class ClientStateBlock extends ClientState {
 		}
 		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
-		createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+
+		if (isTreacherousAvailable(actingPlayer)) {
+			menuItemList.add(createTreacherousItem(iconCache));
+		}
+		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
 

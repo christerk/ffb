@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
+import com.fumbbl.ffb.server.step.generator.bb2020.Treacherous;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -334,6 +335,13 @@ public final class StepEndSelecting extends AbstractStep {
 			case STAND_UP_BLITZ:
 				game.getTurnData().setBlitzUsed(true);
 				endGenerator.pushSequence(endParams);
+				break;
+			case TREACHEROUS:
+				Select.SequenceParams treacherousParams = new Select.SequenceParams(getGameState(), true);
+				Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
+				selectGenerator.pushSequence(treacherousParams);
+				Treacherous treacherousGenerator = (Treacherous) factory.forName(SequenceGenerator.Type.Treacherous.name());
+				treacherousGenerator.pushSequence(treacherousParams);
 				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
