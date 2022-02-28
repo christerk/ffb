@@ -34,6 +34,7 @@ public class ChangeList {
 			.addImprovement("Allow marking of players on the pitch during own setup phase (using shift + left/right mouse button)")
 			.addFeature("Excuse Me, Are You a Zoat?")
 			.addFeature("Shot to Nothing")
+			.addBugfix("BB2016: Witch Brew Snake Oil caused client errors (games and replays)")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")
