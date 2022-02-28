@@ -588,16 +588,19 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			public Optional<CardReport> cardReport(CardEffect effect, int roll) {
 
 				String rollReport = "Witch Brew Roll [ " + roll + " ]";
-				String effectReport;
-				switch (effect) {
-					case SEDATIVE:
-						effectReport = "Sedative! The player gains the Really Stupid skill until the drive ends.";
-						break;
-					case MAD_CAP_MUSHROOM_POTION:
-						effectReport = "Mad Cap Mushroom potion! The player gains the Jump Up and No Hands skills until the drive ends.";
-						break;
-					default:
-						effectReport = "Snake Oil! Bad taste, but no effect.";
+				String effectReport = "Snake Oil! Bad taste, but no effect.";
+
+				if (effect != null) {
+					switch (effect) {
+						case SEDATIVE:
+							effectReport = "Sedative! The player gains the Really Stupid skill until the drive ends.";
+							break;
+						case MAD_CAP_MUSHROOM_POTION:
+							effectReport = "Mad Cap Mushroom potion! The player gains the Jump Up and No Hands skills until the drive ends.";
+							break;
+						default:
+							break;
+					}
 				}
 				return Optional.of(new CardReport(rollReport, effectReport));
 			}
