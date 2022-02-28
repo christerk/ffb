@@ -4,11 +4,13 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.IClientPropertyValue;
+import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -18,12 +20,16 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.ISkillProperty;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -32,6 +38,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Arrays;
 
 /**
  * @author Kalimar
@@ -316,4 +323,19 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			&& UtilPlayer.canGaze(game, player, property));
 	}
 
+	protected boolean isTreacherousAvailable(ActingPlayer actingPlayer) {
+		Game game = getClient().getGame();
+		Player<?> player = actingPlayer.getPlayer();
+		return !actingPlayer.hasActed() && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canStabTeamMate)
+			&& Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(player)))
+			.anyMatch(adjacentPlayer -> UtilPlayer.hasBall(game, adjacentPlayer));
+	}
+
+	protected JMenuItem createTreacherousItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Treacherous",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
+		return menuItem;
+	}
 }
