@@ -352,6 +352,7 @@ public final class StepInitSelecting extends AbstractStep {
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStabTeamMateForBall)) {
 							fDispatchPlayerAction = PlayerAction.TREACHEROUS;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
 						}
 					}
 					break;
