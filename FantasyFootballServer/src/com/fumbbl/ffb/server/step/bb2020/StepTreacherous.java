@@ -118,7 +118,6 @@ public class StepTreacherous extends AbstractStep {
 						player.getId(), ApothecaryMode.DEFENDER, false)));
 			});
 		}
-
 	}
 
 	private void markActionUsed(Game game, ActingPlayer actingPlayer) {
