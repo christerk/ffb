@@ -1,17 +1,23 @@
 package com.fumbbl.ffb.server.step.bb2020;
 
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2020.ReportSkillWasted;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeStab;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
@@ -29,6 +35,9 @@ import java.util.Optional;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepTreacherous extends AbstractStep {
+
+	private boolean endPlayerAction, endTurn;
+
 	public StepTreacherous(GameState pGameState) {
 		super(pGameState);
 	}
@@ -38,6 +47,27 @@ public class StepTreacherous extends AbstractStep {
 		return StepId.TREACHEROUS;
 	}
 
+
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null) {
+			switch (parameter.getKey()) {
+				case END_TURN:
+					endTurn = toPrimitive((Boolean) parameter.getValue());
+					consume(parameter);
+					return true;
+				case END_PLAYER_ACTION:
+					endPlayerAction = toPrimitive((Boolean) parameter.getValue());
+					consume(parameter);
+					return true;
+				default:
+					break;
+			}
+		}
+
+		return super.setParameter(parameter);
+	}
+
 	@Override
 	public void start() {
 		super.start();
@@ -45,10 +75,19 @@ public class StepTreacherous extends AbstractStep {
 	}
 
 	private void executeStep() {
+
+		getResult().setNextAction(StepAction.NEXT_STEP);
+
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canStabTeamMateForBall);
 		if (skill != null) {
+
+			if (endTurn || endPlayerAction) {
+				getResult().addReport(new ReportSkillWasted(actingPlayer.getPlayerId(), skill));
+				return;
+			}
+
 			treacherousTarget(game, actingPlayer).ifPresent(player -> {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				game.getFieldModel().setBallCoordinate(playerCoordinate);
@@ -96,14 +135,30 @@ public class StepTreacherous extends AbstractStep {
 			}
 		}
 
-		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	private Optional<Player<?>> treacherousTarget(Game game, ActingPlayer actingPlayer) {
-		if (!actingPlayer.hasActed()) {
+		if (!actingPlayer.hasActedIgnoringNegativeTraits() || actingPlayer.justStoodUp()) {
 			return Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())))
 				.filter(adjacentPlayer -> UtilPlayer.hasBall(game, adjacentPlayer)).findFirst();
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
+		return jsonObject;
+	}
+
+	@Override
+	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		return this;
 	}
 }

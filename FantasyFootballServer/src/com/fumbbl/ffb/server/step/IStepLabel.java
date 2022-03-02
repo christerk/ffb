@@ -18,6 +18,7 @@ public interface IStepLabel {
 	String DODGE_BLOCK = "dodgeBlock";
 	String DROP_FALLING_PLAYERS = "dropFallingPlayers";
 	String EAT_TEAM_MATE = "eatTeamMate";
+	String END = "end";
 	String END_BLITZING = "endBlitzing";
 	String END_BLOCKING = "endBlocking";
 	String END_BOMB = "endBomb";
