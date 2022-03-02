@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -37,6 +38,7 @@ import java.util.Optional;
 public class StepTreacherous extends AbstractStep {
 
 	private boolean endPlayerAction, endTurn;
+	private String goToLabelOnFailure;
 
 	public StepTreacherous(GameState pGameState) {
 		super(pGameState);
@@ -47,6 +49,17 @@ public class StepTreacherous extends AbstractStep {
 		return StepId.TREACHEROUS;
 	}
 
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		super.init(pParameterSet);
+		if (pParameterSet != null) {
+			Arrays.stream(pParameterSet.values()).forEach(parameter -> {
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
+					goToLabelOnFailure = (String) parameter.getValue();
+				}
+			});
+		}
+	}
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
@@ -54,11 +67,9 @@ public class StepTreacherous extends AbstractStep {
 			switch (parameter.getKey()) {
 				case END_TURN:
 					endTurn = toPrimitive((Boolean) parameter.getValue());
-					consume(parameter);
 					return true;
 				case END_PLAYER_ACTION:
 					endPlayerAction = toPrimitive((Boolean) parameter.getValue());
-					consume(parameter);
 					return true;
 				default:
 					break;
@@ -82,9 +93,13 @@ public class StepTreacherous extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canStabTeamMateForBall);
 		if (skill != null) {
+			actingPlayer.markSkillUsed(skill);
+
+			markActionUsed(game, actingPlayer);
 
 			if (endTurn || endPlayerAction) {
 				getResult().addReport(new ReportSkillWasted(actingPlayer.getPlayerId(), skill));
+				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 				return;
 			}
 
@@ -102,39 +117,39 @@ public class StepTreacherous extends AbstractStep {
 					new DropPlayerContext(injuryResultDefender, false, false, null,
 						player.getId(), ApothecaryMode.DEFENDER, false)));
 			});
-
-			actingPlayer.markSkillUsed(skill);
-
-			switch (actingPlayer.getPlayerAction()) {
-				case BLITZ:
-				case BLITZ_MOVE:
-					game.getTurnData().setBlitzUsed(true);
-					break;
-				case KICK_TEAM_MATE:
-				case KICK_TEAM_MATE_MOVE:
-					game.getTurnData().setKtmUsed(true);
-					break;
-				case PASS:
-				case PASS_MOVE:
-				case THROW_TEAM_MATE:
-				case THROW_TEAM_MATE_MOVE:
-					game.getTurnData().setPassUsed(true);
-					break;
-				case HAND_OVER:
-				case HAND_OVER_MOVE:
-					game.getTurnData().setHandOverUsed(true);
-					break;
-				case FOUL:
-				case FOUL_MOVE:
-					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
-						game.getTurnData().setFoulUsed(true);
-					}
-					break;
-				default:
-					break;
-			}
 		}
 
+	}
+
+	private void markActionUsed(Game game, ActingPlayer actingPlayer) {
+		switch (actingPlayer.getPlayerAction()) {
+			case BLITZ:
+			case BLITZ_MOVE:
+				game.getTurnData().setBlitzUsed(true);
+				break;
+			case KICK_TEAM_MATE:
+			case KICK_TEAM_MATE_MOVE:
+				game.getTurnData().setKtmUsed(true);
+				break;
+			case PASS:
+			case PASS_MOVE:
+			case THROW_TEAM_MATE:
+			case THROW_TEAM_MATE_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
+			case HAND_OVER:
+			case HAND_OVER_MOVE:
+				game.getTurnData().setHandOverUsed(true);
+				break;
+			case FOUL:
+			case FOUL_MOVE:
+				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+					game.getTurnData().setFoulUsed(true);
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 	private Optional<Player<?>> treacherousTarget(Game game, ActingPlayer actingPlayer) {
@@ -150,6 +165,7 @@ public class StepTreacherous extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
 		return jsonObject;
 	}
 
@@ -159,6 +175,7 @@ public class StepTreacherous extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		return this;
 	}
 }

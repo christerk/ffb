@@ -43,6 +43,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean fStandingUp;
 	private boolean fSufferingBloodLust;
 	private boolean fSufferingAnimosity;
+	private boolean wasProne;
 
 	private final transient Game fGame;
 
@@ -75,6 +76,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fSufferingBloodLust = false;
 		fSufferingAnimosity = false;
 		hasJumped = false;
+		wasProne = false;
 		fumblerooskiePending = false;
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
@@ -128,6 +130,14 @@ public class ActingPlayer implements IJsonSerializable {
 		}
 		fPlayerAction = pPlayerAction;
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ACTION, fPlayerAction);
+	}
+
+	public boolean wasProne() {
+		return wasProne;
+	}
+
+	public void setWasProne(boolean wasProne) {
+		this.wasProne = wasProne;
 	}
 
 	public boolean isSkillUsed(Skill pSkill) {
@@ -252,6 +262,10 @@ public class ActingPlayer implements IJsonSerializable {
 		if (pStandingUp == fStandingUp) {
 			return;
 		}
+
+		if (pStandingUp) {
+			setWasProne(true);
+		}
 		fStandingUp = pStandingUp;
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_STANDING_UP, fStandingUp);
 	}
@@ -333,7 +347,7 @@ public class ActingPlayer implements IJsonSerializable {
 		boolean hasJumpUp = jumpUp != null;
 		boolean jumpUpUsedForBlock = hasJumpUp && isSkillUsed(jumpUp) && fPlayerAction == PlayerAction.BLOCK;
 
-		boolean justStoodUp = isStandingUp() && !hasJumpUp && fCurrentMove == Constant.MINIMUM_MOVE_TO_STAND_UP;
+		boolean justStoodUp = (isStandingUp() || wasProne()) && !hasJumpUp && fCurrentMove == Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP, getPlayer().getMovementWithModifiers());
 		boolean justStoodUpForFree = isStandingUp() && hasJumpUp && fCurrentMove == 0;
 
 		return jumpUpUsedForBlock || justStoodUp || justStoodUpForFree;

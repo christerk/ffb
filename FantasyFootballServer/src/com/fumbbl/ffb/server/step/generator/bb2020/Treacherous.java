@@ -39,7 +39,8 @@ public class Treacherous extends SequenceGenerator<SequenceGenerator.SequencePar
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
-		sequence.add(StepId.TREACHEROUS, IStepLabel.END);
+		// breaking cohesion here as we know there is always a select sequence following this sequence, so we can use this failure label
+		sequence.add(StepId.TREACHEROUS, IStepLabel.END, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
