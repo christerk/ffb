@@ -3,6 +3,7 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -11,6 +12,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -324,6 +326,17 @@ public class ActingPlayer implements IJsonSerializable {
 
 	public boolean hasActedIgnoringNegativeTraits() {
 		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait());
+	}
+
+	public boolean justStoodUp() {
+		Skill jumpUp = getPlayer().getSkillWithProperty(NamedProperties.canStandUpForFree);
+		boolean hasJumpUp = jumpUp != null;
+		boolean jumpUpUsedForBlock = hasJumpUp && isSkillUsed(jumpUp) && fPlayerAction == PlayerAction.BLOCK;
+
+		boolean justStoodUp = isStandingUp() && !hasJumpUp && fCurrentMove == Constant.MINIMUM_MOVE_TO_STAND_UP;
+		boolean justStoodUpForFree = isStandingUp() && hasJumpUp && fCurrentMove == 0;
+
+		return jumpUpUsedForBlock || justStoodUp || justStoodUpForFree;
 	}
 
 	// change tracking
