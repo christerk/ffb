@@ -36,6 +36,7 @@ public class ChangeList {
 			.addFeature("Shot to Nothing")
 			.addBugfix("BB2016: Witch Brew Snake Oil caused client errors (games and replays)")
 			.addBugfix("Intercepting and rethrowing a bomb with a Running Pass player gave opponent control over that player")
+			.addBugfix("BB2016: Gromskull's Exploding Runes must only apply to player affected by card")
 			.addFeature("Treacherous")
 		);
 
