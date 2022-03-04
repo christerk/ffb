@@ -16,6 +16,7 @@ import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.InterceptionContext;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.RollModifier;
@@ -462,8 +463,14 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			InducementDuration.UNTIL_END_OF_GAME, "Player gets Bombardier, No Hands, Secret Weapon & -1 to pass") {
 			@Override
 			public Set<RollModifier<?>> rollModifiers() {
+				String cardName = getName();
 				return Collections.singleton(new PassModifier("Gromskull's Exploding Runes", 1,
-					ModifierType.REGULAR));
+					ModifierType.REGULAR) {
+					@Override
+					public boolean appliesToContext(Skill skill, PassContext context) {
+						return context.getPlayer().getEnhancementSources().contains(cardName);
+					}
+				});
 			}
 
 			@Override
