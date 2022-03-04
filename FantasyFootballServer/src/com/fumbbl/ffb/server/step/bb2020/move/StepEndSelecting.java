@@ -19,6 +19,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
@@ -337,9 +338,10 @@ public final class StepEndSelecting extends AbstractStep {
 				endGenerator.pushSequence(endParams);
 				break;
 			case TREACHEROUS:
-				Select.SequenceParams treacherousParams = new Select.SequenceParams(getGameState(), true);
+				Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true);
 				Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
-				selectGenerator.pushSequence(treacherousParams);
+				selectGenerator.pushSequence(selectParams);
+				Treacherous.SequenceParams treacherousParams = new Treacherous.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
 				Treacherous treacherousGenerator = (Treacherous) factory.forName(SequenceGenerator.Type.Treacherous.name());
 				treacherousGenerator.pushSequence(treacherousParams);
 				break;

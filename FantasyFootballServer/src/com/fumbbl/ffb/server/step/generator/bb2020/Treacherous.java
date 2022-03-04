@@ -8,15 +8,11 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class Treacherous extends SequenceGenerator<SequenceGenerator.SequenceParams> {
-	public Treacherous() {
-		super(Type.Treacherous);
-	}
+public class Treacherous extends com.fumbbl.ffb.server.step.generator.Treacherous {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
@@ -39,8 +35,7 @@ public class Treacherous extends SequenceGenerator<SequenceGenerator.SequencePar
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
-		// breaking cohesion here as we know there is always a select sequence following this sequence, so we can use this failure label
-		sequence.add(StepId.TREACHEROUS, IStepLabel.END, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.TREACHEROUS, IStepLabel.END, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, params.getFailureLabel()));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));

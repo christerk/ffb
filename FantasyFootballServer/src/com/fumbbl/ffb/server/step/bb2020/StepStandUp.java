@@ -145,7 +145,9 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 			case BLITZ:
 			case BLITZ_MOVE:
 				game.getTurnData().setBlitzUsed(true);
-				game.getFieldModel().getTargetSelectionState().failed();
+				if (game.getFieldModel().getTargetSelectionState() != null) {
+					game.getFieldModel().getTargetSelectionState().failed();
+				}
 				break;
 			case KICK_TEAM_MATE:
 			case KICK_TEAM_MATE_MOVE:

@@ -93,13 +93,13 @@ public class StepTreacherous extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canStabTeamMateForBall);
 		if (skill != null) {
-			actingPlayer.markSkillUsed(skill);
 
 			markActionUsed(game, actingPlayer);
 
 			if (endTurn || endPlayerAction) {
 				getResult().addReport(new ReportSkillWasted(actingPlayer.getPlayerId(), skill));
 				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
+				actingPlayer.markSkillUsed(skill);
 				return;
 			}
 
@@ -117,6 +117,8 @@ public class StepTreacherous extends AbstractStep {
 					new DropPlayerContext(injuryResultDefender, false, false, null,
 						player.getId(), ApothecaryMode.DEFENDER, false)));
 			});
+
+			actingPlayer.markSkillUsed(skill);
 		}
 	}
 

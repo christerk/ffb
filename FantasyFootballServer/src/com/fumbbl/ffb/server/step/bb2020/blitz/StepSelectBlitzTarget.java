@@ -16,6 +16,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -26,6 +27,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -35,6 +37,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 import java.util.Arrays;
@@ -74,6 +77,8 @@ public class StepSelectBlitzTarget extends AbstractStep {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		getResult().setNextAction(StepAction.CONTINUE);
+
 		StepCommandStatus status = super.handleCommand(pReceivedCommand);
 		if (status == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
@@ -90,8 +95,16 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					if (commandUseSkill.isSkillUsed()) {
-						usedSkill = commandUseSkill.getSkill();
 						status = StepCommandStatus.SKIP_STEP;
+						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStabTeamMateForBall)) {
+							getGameState().pushCurrentStepOnStack();
+							Treacherous generator = (Treacherous) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.Treacherous.name());
+							generator.pushSequence(new Treacherous.SequenceParams(getGameState(), IStepLabel.END_BLITZING));
+							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else {
+							usedSkill = commandUseSkill.getSkill();
+						}
 					}
 					break;
 				default:
@@ -123,6 +136,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 	}
 
 	private void executeStep() {
+		getResult().setNextAction(StepAction.CONTINUE);
 		Game game = getGameState().getGame();
 		if (endPlayerAction || endTurn) {
 			game.setTurnMode(game.getLastTurnMode());
