@@ -52,8 +52,8 @@ public class OldProModification extends InjuryContextModification<OldProModifica
 		params.setSpottedFoul(isSpottedFoul(params.getNewContext(), params.getInjuryType()));
 		params.setSelfInflicted(isSelfInflicted(game, params.getNewContext(), params.getInjuryType()));
 		return hasPrerequisite(game, params.getNewContext()) && params.getNewContext().fArmorRoll != null
-			&& params.getNewContext().isArmorBroken() == params.isSelfInflicted()
-			|| params.isSpottedFoul();
+			&& (params.getNewContext().isArmorBroken() == params.isSelfInflicted()
+			|| params.isSpottedFoul());
 	}
 
 	private boolean hasPrerequisite(Game game, InjuryContext injuryContext) {
