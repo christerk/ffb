@@ -149,6 +149,10 @@ public class ClientStateHandOver extends ClientStateMove {
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
 
+		if (isTreacherousAvailable(actingPlayer)) {
+			menuItemList.add(createTreacherousItem(iconCache));
+		}
+
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 

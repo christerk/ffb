@@ -21,6 +21,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
@@ -31,13 +32,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStateBomb extends ClientState {
 
 	private boolean fShowRangeRuler;
-	private RangeGridHandler fRangeGridHandler;
+	private final RangeGridHandler fRangeGridHandler;
 
 	protected ClientStateBomb(FantasyFootballClient pClient) {
 		super(pClient);
@@ -148,9 +148,9 @@ public class ClientStateBomb extends ClientState {
 
 		if (isHailMaryPassActionAvailable()) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
-					: "Use Hail Mary Pass";
+				: "Use Hail Mary Pass";
 			JMenuItem hailMaryBombAction = new JMenuItem(text,
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB)));
 			hailMaryBombAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB);
 			hailMaryBombAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB, 0));
 			menuItemList.add(hailMaryBombAction);
@@ -158,7 +158,7 @@ public class ClientStateBomb extends ClientState {
 
 		if (isRangeGridAvailable()) {
 			JMenuItem toggleRangeGridAction = new JMenuItem("Range Grid on/off",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
 			menuItemList.add(toggleRangeGridAction);
@@ -167,13 +167,17 @@ public class ClientStateBomb extends ClientState {
 		if (isEndTurnActionAvailable()) {
 			String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
 			JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 			endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 			menuItemList.add(endMoveAction);
 		}
 
-		createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+		if (isTreacherousAvailable(actingPlayer)) {
+			menuItemList.add(createTreacherousItem(iconCache));
+		}
+
+		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
 	}
@@ -183,31 +187,37 @@ public class ClientStateBomb extends ClientState {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		ClientCommunication communication = getClient().getCommunication();
 		switch (pMenuKey) {
-		case IPlayerPopupMenuKeys.KEY_END_MOVE:
-			if (isEndTurnActionAvailable()) {
-				communication.sendActingPlayer(null, null, false);
-			}
-			break;
-		case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
-			if (isRangeGridAvailable()) {
-				fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
-				fRangeGridHandler.refreshRangeGrid();
-			}
-			break;
-		case IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB:
-			if (isHailMaryPassActionAvailable()) {
-				if (PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, actingPlayer.isJumping());
-					fShowRangeRuler = true;
-				} else {
-					communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_BOMB, actingPlayer.isJumping());
-					fShowRangeRuler = false;
+			case IPlayerPopupMenuKeys.KEY_END_MOVE:
+				if (isEndTurnActionAvailable()) {
+					communication.sendActingPlayer(null, null, false);
 				}
-				if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {
-					game.getFieldModel().setRangeRuler(null);
+				break;
+			case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
+				if (isRangeGridAvailable()) {
+					fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
+					fRangeGridHandler.refreshRangeGrid();
 				}
-			}
-			break;
+				break;
+			case IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB:
+				if (isHailMaryPassActionAvailable()) {
+					if (PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, actingPlayer.isJumping());
+						fShowRangeRuler = true;
+					} else {
+						communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_BOMB, actingPlayer.isJumping());
+						fShowRangeRuler = false;
+					}
+					if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {
+						game.getFieldModel().setRangeRuler(null);
+					}
+				}
+				break;
+			case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
+				Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+				communication.sendUseSkill(skill, true, pPlayer.getId());
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -215,18 +225,22 @@ public class ClientStateBomb extends ClientState {
 		if (pActionKey == null) {
 			return false;
 		}
+		Player<?> player = getClient().getGame().getActingPlayer().getPlayer();
 		switch (pActionKey) {
-		case PLAYER_ACTION_RANGE_GRID:
-			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_RANGE_GRID);
-			return true;
-		case PLAYER_ACTION_HAIL_MARY_PASS:
-			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB);
-			return true;
-		case PLAYER_ACTION_END_MOVE:
-			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_END_MOVE);
-			return true;
-		default:
-			return super.actionKeyPressed(pActionKey);
+			case PLAYER_ACTION_RANGE_GRID:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RANGE_GRID);
+				return true;
+			case PLAYER_ACTION_HAIL_MARY_PASS:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB);
+				return true;
+			case PLAYER_ACTION_END_MOVE:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
+				return true;
+			case PLAYER_ACTION_TREACHEROUS:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+				return true;
+			default:
+				return super.actionKeyPressed(pActionKey);
 		}
 	}
 
@@ -234,7 +248,7 @@ public class ClientStateBomb extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
-				&& !(game.getFieldModel().getWeather().equals(Weather.BLIZZARD)));
+			&& !(game.getFieldModel().getWeather().equals(Weather.BLIZZARD)));
 	}
 
 	private boolean isRangeGridAvailable() {

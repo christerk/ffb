@@ -88,9 +88,17 @@ public class ClientStateSelect extends ClientState {
 					break;
 				case IPlayerPopupMenuKeys.KEY_HAND_OVER:
 					communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER_MOVE, false);
+					if (isTreacherousAvailable(pPlayer)) {
+						Skill treacherous = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						communication.sendUseSkill(treacherous, true, pPlayer.getId());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_PASS:
 					communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, false);
+					if (isTreacherousAvailable(pPlayer)) {
+						Skill treacherous = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						communication.sendUseSkill(treacherous, true, pPlayer.getId());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE:
 					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, false);
@@ -121,6 +129,10 @@ public class ClientStateSelect extends ClientState {
 					communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, false);
 					Skill stnSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainHailMary);
 					communication.sendUseSkill(stnSkill, true, pPlayer.getId());
+					if (isTreacherousAvailable(pPlayer)) {
+						Skill treacherous = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						communication.sendUseSkill(treacherous, true, pPlayer.getId());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB:
 					if (isThrowBombActionAvailable(pPlayer)) {
@@ -209,8 +221,10 @@ public class ClientStateSelect extends ClientState {
 			foulAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FOUL, 0));
 			menuItemList.add(foulAction);
 		}
-		if (isPassActionAvailable(pPlayer)) {
-			JMenuItem passAction = new JMenuItem("Pass Action",
+		boolean treacherousAvailable = isTreacherousAvailable(pPlayer);
+		String suffix = treacherousAvailable ? " (Treacherous)" : "";
+		if (isPassActionAvailable(pPlayer, treacherousAvailable)) {
+			JMenuItem passAction = new JMenuItem("Pass Action" + suffix,
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
@@ -223,8 +237,8 @@ public class ClientStateSelect extends ClientState {
 				menuItemList.add(stnAction);
 			}
 		}
-		if (isHandOverActionAvailable(pPlayer)) {
-			JMenuItem handOverAction = new JMenuItem("Hand Over Action",
+		if (isHandOverActionAvailable(pPlayer, treacherousAvailable)) {
+			JMenuItem handOverAction = new JMenuItem("Hand Over Action" + suffix,
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HAND_OVER)));
 			handOverAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
 			handOverAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
@@ -446,23 +460,23 @@ public class ClientStateSelect extends ClientState {
 		return false;
 	}
 
-	private boolean isPassActionAvailable(Player<?> pPlayer) {
+	private boolean isPassActionAvailable(Player<?> pPlayer, boolean treacherousAvailable) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return (!game.getTurnData().isPassUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
-			&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
+			&& (UtilPlayer.isBallAvailable(game, pPlayer) || treacherousAvailable) && (playerState != null)
+			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, pPlayer) || treacherousAvailable))
 			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularPassAction));
 	}
 
-	private boolean isHandOverActionAvailable(Player<?> pPlayer) {
+	private boolean isHandOverActionAvailable(Player<?> pPlayer, boolean treacherousAvailable) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		return (!game.getTurnData().isHandOverUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
-			&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
+			&& (UtilPlayer.isBallAvailable(game, pPlayer) || treacherousAvailable) && (playerState != null)
+			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, pPlayer) || treacherousAvailable))
 			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularHandOverAction));
 	}
 

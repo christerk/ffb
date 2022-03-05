@@ -250,10 +250,7 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_PASS:
 					ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
-					boolean passAllowed = !game.getTurnData().isPassUsed()
-						|| ((actingPlayer.getPlayer() != null) && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)
-						|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB)));
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand) && passAllowed) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand)) {
 						if (passCommand.getTargetCoordinate() != null) {
 							if (game.isHomePlaying()) {
 								publishParameter(
@@ -276,8 +273,7 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_HAND_OVER:
 					ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)
-						&& !game.getTurnData().isHandOverUsed()) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
 						Player<?> catcher = game.getPlayerById(handOverCommand.getCatcherId());
 						FieldCoordinate catcherCoordinate = fieldModel.getPlayerCoordinate(catcher);
 						publishParameter(new StepParameter(StepParameterKey.TARGET_COORDINATE, catcherCoordinate));
