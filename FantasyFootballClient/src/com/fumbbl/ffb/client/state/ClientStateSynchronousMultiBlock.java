@@ -17,6 +17,7 @@ import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -141,6 +142,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 			return actionHandled;
 		} else {
 			switch (pActionKey) {
+				case PLAYER_ACTION_TREACHEROUS:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					break;
 				case PLAYER_ACTION_BLOCK:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BLOCK);
 					break;
@@ -182,6 +186,10 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					break;
 				case IPlayerPopupMenuKeys.KEY_STAB:
 					selectPlayer(player, BlockKind.STAB);
+					break;
+				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
+					Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					getClient().getCommunication().sendUseSkill(skill, true, player.getId());
 					break;
 				default:
 					break;

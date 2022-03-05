@@ -23,6 +23,8 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.BlitzMove;
@@ -42,6 +44,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,6 +103,19 @@ public final class StepEndSelecting extends AbstractStep {
 	public void start() {
 		super.start();
 		executeStep();
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		super.init(pParameterSet);
+		if (pParameterSet != null) {
+			Arrays.stream(pParameterSet.values()).forEach(parameter -> {
+				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {
+					//noinspection unchecked
+					blockTargets = (List<BlockTarget>) parameter.getValue();
+				}
+			});
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -338,7 +354,7 @@ public final class StepEndSelecting extends AbstractStep {
 				endGenerator.pushSequence(endParams);
 				break;
 			case TREACHEROUS:
-				Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true);
+				Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true, blockTargets);
 				Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
 				selectGenerator.pushSequence(selectParams);
 				Treacherous.SequenceParams treacherousParams = new Treacherous.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
