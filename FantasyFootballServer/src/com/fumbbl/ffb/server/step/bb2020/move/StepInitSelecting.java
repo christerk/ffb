@@ -126,7 +126,7 @@ public final class StepInitSelecting extends AbstractStep {
 			FieldModel fieldModel = game.getFieldModel();
 			TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
 			switch (pReceivedCommand.getId()) {
-				case CLIENT_CONFIRM: // confirms ending blitz action
+				case CLIENT_CONFIRM: // confirms ending target select action like blitz or gaze
 					fEndPlayerAction = true;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;

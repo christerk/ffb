@@ -17,7 +17,7 @@ public class SelectBlitzTarget extends com.fumbbl.ffb.server.step.generator.Sele
 		GameState gameState = params.getGameState();
 
 		Sequence sequence = new Sequence(gameState);
-		sequence.add(StepId.SELECT_BLITZ_TARGET, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLITZING));
+		sequence.add(StepId.SELECT_BLITZ_TARGET, IStepLabel.SELECT, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLITZING));
 		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLITZING));

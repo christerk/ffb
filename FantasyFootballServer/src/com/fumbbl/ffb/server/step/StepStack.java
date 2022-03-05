@@ -25,7 +25,7 @@ public class StepStack implements IJsonSerializable {
 
 	public StepStack(GameState pGameState) {
 		fGameState = pGameState;
-		fStack = new LinkedList<IStep>();
+		fStack = new LinkedList<>();
 	}
 
 	public GameState getGameState() {

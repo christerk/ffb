@@ -8,12 +8,14 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.dialog.DialogConfirmEndActionParameter;
 import com.fumbbl.ffb.dialog.DialogSelectGazeTargetParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -24,6 +26,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -33,6 +36,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -40,7 +44,7 @@ public class StepSelectGazeTarget extends AbstractStep {
 
 	private String gotoLabelOnEnd;
 	private String selectedPlayerId;
-	private boolean endPlayerAction, endTurn;
+	private boolean confirmed, endPlayerAction, endTurn;
 	private Skill usedSkill;
 
 	public StepSelectGazeTarget(GameState pGameState) {
@@ -70,6 +74,7 @@ public class StepSelectGazeTarget extends AbstractStep {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		getResult().setNextAction(StepAction.CONTINUE);
 		StepCommandStatus status = super.handleCommand(pReceivedCommand);
 		if (status == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
@@ -86,9 +91,21 @@ public class StepSelectGazeTarget extends AbstractStep {
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					if (commandUseSkill.isSkillUsed()) {
-						usedSkill = commandUseSkill.getSkill();
 						status = StepCommandStatus.SKIP_STEP;
+						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStabTeamMateForBall)) {
+							getGameState().pushCurrentStepOnStack();
+							Treacherous generator = (Treacherous) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.Treacherous.name());
+							generator.pushSequence(new Treacherous.SequenceParams(getGameState(), IStepLabel.SELECT));
+							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else {
+							usedSkill = commandUseSkill.getSkill();
+						}
 					}
+					break;
+				case CLIENT_CONFIRM: // confirms ending blitz action
+					confirmed = true;
+					status = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
 					break;
@@ -119,9 +136,11 @@ public class StepSelectGazeTarget extends AbstractStep {
 	}
 
 	private void executeStep() {
+		getResult().setNextAction(StepAction.CONTINUE);
 		Game game = getGameState().getGame();
 		if (endPlayerAction || endTurn) {
 			game.setTurnMode(game.getLastTurnMode());
+			getGameState().getStepStack().clear();
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, endTurn));
@@ -131,15 +150,23 @@ public class StepSelectGazeTarget extends AbstractStep {
 			UtilServerDialog.showDialog(getGameState(), new DialogSelectGazeTargetParameter(), false);
 			getResult().setSound(SoundId.CLICK);
 		} else {
-			game.setTurnMode(game.getLastTurnMode());
 			if (selectedPlayerId.equals(game.getActingPlayer().getPlayerId())) {
-				game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
-				getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
+				if (game.getActingPlayer().hasActed() && !confirmed) {
+					UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), game.getActingPlayer().getPlayerAction()), false);
+				} else {
+					game.setTurnMode(game.getLastTurnMode());
+					game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
+					getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
+				}
 			} else if (!game.getActingTeam().hasPlayer(game.getPlayerById(selectedPlayerId))) {
+				game.setTurnMode(game.getLastTurnMode());
 				Player<?> targetPlayer = game.getPlayerById(selectedPlayerId);
 				PlayerState newState = game.getFieldModel().getPlayerState(targetPlayer).changeSelectedGazeTarget(true);
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
 				TargetSelectionState targetSelectionState = new TargetSelectionState(selectedPlayerId);
+				if (game.getActingPlayer().hasActed()) {
+					targetSelectionState.commit();
+				}
 				game.getFieldModel().setTargetSelectionState(targetSelectionState.select());
 				getResult().setSound(SoundId.CLICK);
 				if (usedSkill != null) {
@@ -152,6 +179,7 @@ public class StepSelectGazeTarget extends AbstractStep {
 				getResult().addReport(new ReportSelectGazeTarget(game.getActingPlayer().getPlayerId(), selectedPlayerId));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
+				game.setTurnMode(game.getLastTurnMode());
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 
@@ -166,6 +194,7 @@ public class StepSelectGazeTarget extends AbstractStep {
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		IServerJsonOption.SKILL.addTo(jsonObject, usedSkill);
+		IServerJsonOption.CONFIRMED.addTo(jsonObject, confirmed);
 		return jsonObject;
 	}
 
@@ -178,6 +207,7 @@ public class StepSelectGazeTarget extends AbstractStep {
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		usedSkill = (Skill) IServerJsonOption.SKILL.getFrom(source, jsonObject);
+		confirmed = toPrimitive(IServerJsonOption.CONFIRMED.getFrom(source, jsonObject));
 		return this;
 	}
 

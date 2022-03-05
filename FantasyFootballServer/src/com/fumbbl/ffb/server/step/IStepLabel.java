@@ -50,6 +50,7 @@ public interface IStepLabel {
 	String RESOLVE_PASS = "resolvePass";
 	String RIGHT_STUFF = "rightStuff";
 	String SCATTER_BALL = "scatterBall";
+	String SELECT = "select";
 	String SHADOWING = "shadowing";
 	String SKIP_PILE_DRIVER = "skipPileDriver";
 
