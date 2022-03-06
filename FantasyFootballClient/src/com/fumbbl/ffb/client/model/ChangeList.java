@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.6.0")
+			.addFeature("Treacherous")
+		);
+
 		versions.add(new VersionChangeList("2.5.0")
 			.setDescription("This release adds a first batch of star abilities. Abilities modifying armour or injury rolls " +
 				"have some technical limitations: When interacting with Multiple Block the option to use the skill for each block " +
@@ -37,7 +41,6 @@ public class ChangeList {
 			.addBugfix("BB2016: Witch Brew Snake Oil caused client errors (games and replays)")
 			.addBugfix("Intercepting and rethrowing a bomb with a Running Pass player gave opponent control over that player")
 			.addBugfix("BB2016: Gromskull's Exploding Runes must only apply to player affected by card")
-			.addFeature("Treacherous")
 		);
 
 		versions.add(new VersionChangeList("2.4.0")
