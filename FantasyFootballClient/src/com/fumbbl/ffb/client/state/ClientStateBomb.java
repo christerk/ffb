@@ -104,7 +104,7 @@ public class ClientStateBomb extends ClientState {
 		return selectable;
 	}
 
-	private boolean drawRangeRuler(FieldCoordinate pCoordinate) {
+	private void drawRangeRuler(FieldCoordinate pCoordinate) {
 		RangeRuler rangeRuler = null;
 		Game game = getClient().getGame();
 		if (fShowRangeRuler && (game.getPassCoordinate() == null)) {
@@ -121,7 +121,6 @@ public class ClientStateBomb extends ClientState {
 			fieldComponent.getLayerUnderPlayers().clearMovePath();
 			fieldComponent.refresh();
 		}
-		return (rangeRuler != null);
 	}
 
 	@Override
