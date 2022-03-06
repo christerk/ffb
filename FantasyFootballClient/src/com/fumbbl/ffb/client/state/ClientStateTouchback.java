@@ -28,7 +28,6 @@ public class ClientStateTouchback extends ClientState {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		// check if there are players on the field to give the ball to
 		Game game = getClient().getGame();
 		fTouchbackToAnyField = true;

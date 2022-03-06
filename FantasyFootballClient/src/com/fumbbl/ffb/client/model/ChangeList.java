@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.5.1")
 			.addBugfix("Opening and closing the action menu required an additional click to open it again")
+			.addBugfix("Opening and closing the action menu required an additional click for side bar to update (player details) when hovering")
 		);
 
 		versions.add(new VersionChangeList("2.5.0")

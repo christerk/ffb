@@ -62,7 +62,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(false);
+		hideSelectSquare();
 		setClickable(false);
 		if (StringTool.isProvided(getClient().getParameters().getTeamId())) {
 			fTeamHomeId = getClient().getParameters().getTeamId();
@@ -74,6 +74,11 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 			fTeamAwayName = getClient().getParameters().getTeamAway();
 		}
 		getClient().getCommunication().sendRequestVersion();
+	}
+
+	@Override
+	public boolean isSelectable() {
+		return false;
 	}
 
 	public void dialogClosed(IDialog pDialog) {

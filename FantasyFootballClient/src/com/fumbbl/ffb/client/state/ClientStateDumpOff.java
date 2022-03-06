@@ -32,7 +32,6 @@ public class ClientStateDumpOff extends ClientStateMove {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		Game game = getClient().getGame();
 		game.setPassCoordinate(null);
 	}

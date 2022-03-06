@@ -46,15 +46,12 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	private boolean fClickable;
 
-	private boolean fSelectable;
-
 	private JPopupMenu fPopupMenu;
 
 	private Player<?> fPopupMenuPlayer;
 
 	protected ClientState(FantasyFootballClient pClient) {
 		fClient = pClient;
-		setSelectable(true);
 		setClickable(true);
 	}
 
@@ -177,7 +174,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			return;
 		}
 		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
-		setSelectable(true);
 		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
 			Player<?> player = getClient().getGame().getFieldModel().getPlayer(coordinate);
@@ -221,7 +217,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			fPopupMenuPlayer = pPlayer;
 			FieldCoordinate coordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(fPopupMenuPlayer);
 			if (coordinate != null) {
-				setSelectable(false);
+				hideSelectSquare();
 				int x = (coordinate.getX() + 1) * FIELD_SQUARE_SIZE;
 				int y = (coordinate.getY() + 1) * FIELD_SQUARE_SIZE;
 				fPopupMenu.show(fClient.getUserInterface().getFieldComponent(), x, y);
@@ -231,7 +227,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		JMenuItem menuItem = (JMenuItem) (pActionEvent.getSource());
-		setSelectable(true);
 		menuItemSelected(fPopupMenuPlayer, menuItem.getMnemonic());
 	}
 
@@ -268,15 +263,8 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() && (fPopupMenu == null || !fPopupMenu.isVisible()));
 	}
 
-	public void setSelectable(boolean pSelectable) {
-		fSelectable = pSelectable;
-		if (!isSelectable()) {
-			hideSelectSquare();
-		}
-	}
-
 	public boolean isSelectable() {
-		return fSelectable;
+		return fPopupMenu == null || !fPopupMenu.isVisible();
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
