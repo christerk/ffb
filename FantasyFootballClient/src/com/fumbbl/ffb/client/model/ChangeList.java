@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.5.1")
+			.addBugfix("Opening and closing the action menu required an additional click to open it again")
+		);
+
 		versions.add(new VersionChangeList("2.5.0")
 			.setDescription("This release adds a first batch of star abilities. Abilities modifying armour or injury rolls " +
 				"have some technical limitations: When interacting with Multiple Block the option to use the skill for each block " +

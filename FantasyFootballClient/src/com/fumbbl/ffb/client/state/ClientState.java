@@ -48,8 +48,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	private boolean fSelectable;
 
-	private boolean fPopupMenuShown;
-
 	private JPopupMenu fPopupMenu;
 
 	private Player<?> fPopupMenuPlayer;
@@ -205,8 +203,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 					} else {
 						clickOnField(coordinate);
 					}
-				} else {
-					fPopupMenuShown = false;
 				}
 			}
 		}
@@ -229,7 +225,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 				int x = (coordinate.getX() + 1) * FIELD_SQUARE_SIZE;
 				int y = (coordinate.getY() + 1) * FIELD_SQUARE_SIZE;
 				fPopupMenu.show(fClient.getUserInterface().getFieldComponent(), x, y);
-				fPopupMenuShown = true;
 			}
 		}
 	}
@@ -237,7 +232,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		JMenuItem menuItem = (JMenuItem) (pActionEvent.getSource());
 		setSelectable(true);
-		fPopupMenuShown = false;
 		menuItemSelected(fPopupMenuPlayer, menuItem.getMnemonic());
 	}
 
@@ -271,7 +265,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public boolean isClickable() {
-		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() && !fPopupMenuShown);
+		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() && (fPopupMenu == null || !fPopupMenu.isVisible()));
 	}
 
 	public void setSelectable(boolean pSelectable) {
