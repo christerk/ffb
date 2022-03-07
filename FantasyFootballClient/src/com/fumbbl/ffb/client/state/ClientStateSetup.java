@@ -63,7 +63,7 @@ public class ClientStateSetup extends ClientState {
 	}
 
 	public void mouseDragged(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() != MouseEvent.BUTTON1 || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+		if (getClient().getCurrentMouseButton() != MouseEvent.BUTTON1) {
 			return;
 		}
 		UtilClientPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
@@ -75,7 +75,7 @@ public class ClientStateSetup extends ClientState {
 		if (pMouseEvent.getButton() == MouseEvent.BUTTON3 || pMouseEvent.isShiftDown()) {
 			super.mouseReleased(pMouseEvent);
 		} else {
-			if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+			if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
 				return;
 			}
 			getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);

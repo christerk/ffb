@@ -170,7 +170,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
 			return;
 		}
 		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);

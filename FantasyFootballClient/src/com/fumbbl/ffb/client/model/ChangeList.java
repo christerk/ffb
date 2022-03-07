@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("Opening and closing the action menu required an additional click to open it again")
 			.addBugfix("Opening and closing the action menu required an additional click for side bar to update (player details) when hovering")
 			.addBugfix("Failed download for pitch images caused graphic issues (squares were filled with blue when hovering over them)")
+			.addBugfix("Potential fix for setup issues on Mac OS")
 		);
 
 		versions.add(new VersionChangeList("2.5.0")
