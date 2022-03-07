@@ -32,6 +32,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Kalimar
@@ -39,6 +41,11 @@ import java.awt.event.MouseMotionListener;
 public abstract class ClientState implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
 
 	public static final int FIELD_SQUARE_SIZE = 30;
+
+	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
+		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
+		add(IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
+	}};
 
 	private final FantasyFootballClient fClient;
 
@@ -189,14 +196,13 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			} else {
 				if (isClickable()) {
 					hideSelectSquare();
+					String rightClickProperty = getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION);
 					if (getClient().getGame().getActingPlayer().getPlayer() != null
-						&& pMouseEvent.getButton() == MouseEvent.BUTTON3) {
-						if (IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION))) {
-							getClient().getCommunication().sendActingPlayer(null, null, false);
-						}
-					} else if (player != null) {
+						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
+						getClient().getCommunication().sendActingPlayer(null, null, false);
+					} else if (player != null && (pMouseEvent.getButton() != MouseEvent.BUTTON3 || ALLOW_RIGHT_CLICK_ON_PLAYER.contains(rightClickProperty))) {
 						clickOnPlayer(player);
-					} else {
+					} else if (pMouseEvent.getButton() != MouseEvent.BUTTON3 || IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickProperty)) {
 						clickOnField(coordinate);
 					}
 				}
