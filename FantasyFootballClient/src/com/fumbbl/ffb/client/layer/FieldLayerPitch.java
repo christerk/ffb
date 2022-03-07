@@ -1,5 +1,11 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -8,12 +14,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
-import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
 
 /**
  * 
@@ -29,7 +29,9 @@ public class FieldLayerPitch extends FieldLayer {
 		if (pWeather != null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather);
-			draw(fieldImage, 0, 0, 1.0f);
+			if (fieldImage != null) {
+				draw(fieldImage, 0, 0, 1.0f);
+			}
 			drawTeamNames();
 		}
 	}

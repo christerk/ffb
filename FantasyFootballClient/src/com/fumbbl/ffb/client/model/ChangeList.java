@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.5.1")
 			.addBugfix("Opening and closing the action menu required an additional click to open it again")
 			.addBugfix("Opening and closing the action menu required an additional click for side bar to update (player details) when hovering")
+			.addBugfix("Failed download for pitch images caused graphic issues (squares were filled with blue when hovering over them)")
 		);
 
 		versions.add(new VersionChangeList("2.5.0")

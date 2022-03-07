@@ -155,10 +155,11 @@ public class IconCache {
 	}
 
 	public BufferedImage getPitch(Game pGame, Weather pWeather) {
-		if (pWeather == Weather.INTRO) {
+		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather));
+		if (pWeather == Weather.INTRO || weatherPitch == null) {
 			return getIconByProperty(IIconProperty.PITCH_INTRO);
 		} else {
-			return getIconByUrl(findPitchUrl(pGame, pWeather));
+			return weatherPitch;
 		}
 	}
 
