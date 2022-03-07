@@ -1,11 +1,5 @@
 package com.fumbbl.ffb.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.inducement.Card;
@@ -15,9 +9,17 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
- *
  * @author Kalimar
  */
 public final class UtilCards {
@@ -81,7 +83,6 @@ public final class UtilCards {
 	}
 
 
-
 	public static boolean hasCard(Game pGame, Player<?> pPlayer, Card pCard) {
 		if ((pGame == null) || (pPlayer == null) || (pCard == null)) {
 			return false;
@@ -125,23 +126,31 @@ public final class UtilCards {
 		return false;
 	}
 
-	public static ReRollSource getRerollSource(Player<?> player, ReRolledAction action) {
-		for (Skill playerSkill : UtilCards.findAllSkills(player)) {
-			ReRollSource source = playerSkill.getRerollSource(action);
-			if (source != null) {
-				return source;
+	public static boolean hasUnusedSkillWithProperty(Player<?> player, ISkillProperty property) {
+		for (Skill playerSkill : player.getSkillsIncludingTemporaryOnes()) {
+			if (playerSkill.hasSkillProperty(property) && !player.isUsed(playerSkill)) {
+				return true;
 			}
 		}
-		return null;
+		return false;
+	}
+
+	public static ReRollSource getRerollSource(Player<?> player, ReRolledAction action) {
+		return Arrays.stream(UtilCards.findAllSkills(player))
+			.filter(skill -> skill.getSkillUsageType() == SkillUsageType.REGULAR)
+			.map(skill -> skill.getRerollSource(action))
+			.filter(Objects::nonNull)
+			.min(Comparator.comparingInt(ReRollSource::getPriority))
+			.orElse(null);
 	}
 
 	public static ReRollSource getUnusedRerollSource(ActingPlayer actingPlayer, ReRolledAction action) {
-		for (Skill playerSkill : actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes()) {
-			ReRollSource source = playerSkill.getRerollSource(action);
-			if (source != null && !actingPlayer.isSkillUsed(playerSkill)) {
-				return source;
-			}
-		}
-		return null;
+
+		return Arrays.stream(UtilCards.findAllSkills(actingPlayer.getPlayer()))
+			.filter(skill -> !actingPlayer.isSkillUsed(skill))
+			.map(skill -> skill.getRerollSource(action))
+			.filter(Objects::nonNull)
+			.min(Comparator.comparingInt(ReRollSource::getPriority))
+			.orElse(null);
 	}
 }

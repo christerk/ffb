@@ -45,7 +45,7 @@ public class StepEjectPlayer extends AbstractStep {
 		public Boolean argueTheCallSuccessful;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepEjectPlayer(GameState pGameState) {
 		super(pGameState);
@@ -76,14 +76,14 @@ public class StepEjectPlayer extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case FOULER_HAS_BALL:
-				state.foulerHasBall = (Boolean) pParameter.getValue();
+				state.foulerHasBall = (Boolean) parameter.getValue();
 				return true;
 			case ARGUE_THE_CALL_SUCCESSFUL:
-				state.argueTheCallSuccessful = (Boolean) pParameter.getValue();
+				state.argueTheCallSuccessful = (Boolean) parameter.getValue();
 				return true;
 			default:
 				break;

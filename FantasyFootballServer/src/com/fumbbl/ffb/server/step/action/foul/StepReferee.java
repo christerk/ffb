@@ -36,7 +36,7 @@ public class StepReferee extends AbstractStep {
 		public InjuryResult injuryResultDefender;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepReferee(GameState pGameState) {
 		super(pGameState);
@@ -67,11 +67,11 @@ public class StepReferee extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case INJURY_RESULT:
-				InjuryResult injuryResult = (InjuryResult) pParameter.getValue();
+				InjuryResult injuryResult = (InjuryResult) parameter.getValue();
 				if ((injuryResult != null) && (injuryResult.injuryContext().getApothecaryMode() == ApothecaryMode.DEFENDER)) {
 					state.injuryResultDefender = injuryResult;
 					return true;

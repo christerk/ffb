@@ -31,11 +31,11 @@ public class StepWrestle extends AbstractStep {
 	private final StepState state;
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case OLD_DEFENDER_STATE:
-					state.oldDefenderState = (PlayerState) pParameter.getValue();
+					state.oldDefenderState = (PlayerState) parameter.getValue();
 					return true;
 				default:
 					break;

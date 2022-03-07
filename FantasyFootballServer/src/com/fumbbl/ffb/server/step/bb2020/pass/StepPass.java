@@ -107,10 +107,10 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.CATCHER_ID) {
-				getGameState().getPassState().setCatcherId((String) pParameter.getValue());
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.CATCHER_ID) {
+				getGameState().getPassState().setCatcherId((String) parameter.getValue());
 				return true;
 			}
 		}
@@ -195,7 +195,7 @@ public class StepPass extends AbstractStepWithReRoll {
 						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll),
 						actingTeam.hasPlayer(game.getThrower()));
 				} else {
-					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
+					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getActingPlayer(), ReRolledActions.PASS,
 						minimumRoll, PassResult.FUMBLE == state.getResult())) {
 						doNextStep = false;
 					}

@@ -60,14 +60,14 @@ public final class StepKickoffAnimation extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case KICKED_PLAYER_COORDINATE:
-				fKickingPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
+				fKickingPlayerCoordinate = (FieldCoordinate) parameter.getValue();
 				return true;
 			case TOUCHBACK:
-				fTouchback = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				fTouchback = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				return true;
 			default:
 				break;

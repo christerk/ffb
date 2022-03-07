@@ -383,6 +383,21 @@ public class FieldModel implements IJsonSerializable {
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
 	}
 
+	public void addSkillEnhancements(Player<?> player, Skill skill) {
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		player.addEnhancement(skill.getName(), skill.getEnhancements(), factory);
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_SKILL_ENHANCEMENTS, player.getId(), skill.getName());
+	}
+
+	public void removeSkillEnhancements(Player<?> player, Skill skill) {
+		removeSkillEnhancements(player, skill.getName());
+	}
+
+	public void removeSkillEnhancements(Player<?> player, String name) {
+		player.removeEnhancements(name);
+		notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_SKILL_ENHANCEMENTS, player.getId(), name);
+	}
+
 	public void addIntensiveTrainingSkill(String playerId, Skill skill) {
 		Player<?> player = getGame().getPlayerById(playerId);
 		player.addTemporarySkills(Prayer.INTENSIVE_TRAINING.getName(), Collections.singleton(new SkillWithValue(skill, String.valueOf(skill.getDefaultSkillValue()))));

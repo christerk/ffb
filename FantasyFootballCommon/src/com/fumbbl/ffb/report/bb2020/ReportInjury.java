@@ -4,23 +4,26 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.InjuryContext;
-import com.fumbbl.ffb.InjuryType;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
+import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.injury.context.InjuryModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
-import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
@@ -29,7 +32,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -51,6 +53,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 	private PlayerState fInjury;
 	private PlayerState fInjuryDecay;
 	private final Set<CasualtyModifier> casualtyModifiers;
+	private SkipInjuryParts skip = SkipInjuryParts.NONE;
 
 	public ReportInjury() {
 		fArmorModifiers = new ArrayList<>();
@@ -61,27 +64,53 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 	private ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
 	                     int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
 	                     SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
-	                     PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers, SeriousInjury originalInjury) {
+	                     PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers,
+	                     SeriousInjury originalInjury, SkipInjuryParts skip) {
 		this();
 		init(pDefenderId, pInjuryType, pArmorBroken, pArmorModifiers, pArmorRoll, pInjuryModifiers, pInjuryRoll, pCasualtyRoll,
-			pSeriousInjury, pCasualtyRollDecay, pSeriousInjuryDecay, pInjury, pInjuryDecay, pAttackerId, casualtyModifiers, originalInjury);
+			pSeriousInjury, pCasualtyRollDecay, pSeriousInjuryDecay, pInjury, pInjuryDecay, pAttackerId, casualtyModifiers, originalInjury, skip);
 	}
 
 	@Override
-	public ReportInjury init(InjuryContext injuryContext) {
+	public ReportInjury init(InjuryContext injuryContext, SkipInjuryParts skip) {
+
+		int[] injuryRoll = injuryContext.getInjuryRoll();
+		int[] casualtyRoll = injuryContext.getCasualtyRoll();
+		PlayerState injury = injuryContext.getInjury();
+
+		ModifiedInjuryContext modifiedInjuryContext = injuryContext.getModifiedInjuryContext();
+		if (modifiedInjuryContext != null) {
+			InjuryModification modification = modifiedInjuryContext.getModification();
+			switch (modification) {
+				case ARMOUR:
+					injuryRoll = null;
+					casualtyRoll = null;
+					injury = null;
+					break;
+				case INJURY:
+					casualtyRoll = null;
+					injury = null;
+					break;
+				default:
+					break;
+			}
+		}
+
+
 		init(injuryContext.getDefenderId(), injuryContext.getInjuryType(),
 			injuryContext.isArmorBroken(), injuryContext.getArmorModifiers(), injuryContext.getArmorRoll(),
-			injuryContext.getInjuryModifiers(), injuryContext.getInjuryRoll(), injuryContext.getCasualtyRoll(),
+			injuryContext.getInjuryModifiers(), injuryRoll, casualtyRoll,
 			injuryContext.getSeriousInjury(), injuryContext.getCasualtyRollDecay(), injuryContext.getSeriousInjuryDecay(),
-			injuryContext.getInjury(), injuryContext.getInjuryDecay(), injuryContext.getAttackerId(),
-			injuryContext.casualtyModifiers, injuryContext.originalSeriousInjury);
+			injury, injuryContext.getInjuryDecay(), injuryContext.getAttackerId(),
+			injuryContext.casualtyModifiers, injuryContext.originalSeriousInjury, skip);
 		return this;
 	}
 
 	private void init(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
 	                  int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
 	                  SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
-	                  PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers, SeriousInjury originalInjury) {
+	                  PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers, SeriousInjury originalInjury,
+	                  SkipInjuryParts skip) {
 		fDefenderId = pDefenderId;
 		fInjuryType = pInjuryType;
 		fArmorBroken = pArmorBroken;
@@ -98,6 +127,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		fAttackerId = pAttackerId;
 		this.originalInjury = originalInjury;
 		add(casualtyModifiers);
+		this.skip = skip;
 	}
 
 	public ReportId getId() {
@@ -122,6 +152,10 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 
 	public SeriousInjury getOriginalInjury() {
 		return originalInjury;
+	}
+
+	public SkipInjuryParts getSkip() {
+		return skip;
 	}
 
 	private void add(ArmorModifier pArmorModifier) {
@@ -206,8 +240,8 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 
 	public IReport transform(IFactorySource source) {
 		return new ReportInjury(getDefenderId(), getInjuryType(), isArmorBroken(), getArmorModifiers(), getArmorRoll(),
-				getInjuryModifiers(), getInjuryRoll(), getCasualtyRoll(), getSeriousInjury(), getCasualtyRollDecay(),
-				getSeriousInjuryDecay(), getInjury(), getInjuryDecay(), getAttackerId(), casualtyModifiers, originalInjury);
+			getInjuryModifiers(), getInjuryRoll(), getCasualtyRoll(), getSeriousInjury(), getCasualtyRollDecay(),
+			getSeriousInjuryDecay(), getInjury(), getInjuryDecay(), getAttackerId(), casualtyModifiers, originalInjury, skip);
 	}
 
 	// JSON serialization
@@ -246,6 +280,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		JsonArray casualtyModifiers = new JsonArray();
 		this.casualtyModifiers.forEach(modifier -> casualtyModifiers.add(UtilJson.toJsonValue(modifier)));
 		IJsonOption.CASUALTY_MODIFIERS.addTo(jsonObject, casualtyModifiers);
+		IJsonOption.SKIP_INJURY_PARTS.addTo(jsonObject, skip.name());
 		return jsonObject;
 
 	}
@@ -286,9 +321,13 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		casualtyModifiers.clear();
 		CasualtyModifierFactory casualtyModifierFactory = game.getFactory(FactoryType.Factory.CASUALTY_MODIFIER);
 		JsonArray casualtyModifiers = IJsonOption.CASUALTY_MODIFIERS.getFrom(game, jsonObject);
-		casualtyModifiers.values().forEach( value ->
+		casualtyModifiers.values().forEach(value ->
 			this.casualtyModifiers.add((CasualtyModifier) UtilJson.toEnumWithName(casualtyModifierFactory, value))
 		);
+
+		if (IJsonOption.SKIP_INJURY_PARTS.isDefinedIn(jsonObject)) {
+			skip = SkipInjuryParts.valueOf(IJsonOption.SKIP_INJURY_PARTS.getFrom(game, jsonObject));
+		}
 		return this;
 
 	}

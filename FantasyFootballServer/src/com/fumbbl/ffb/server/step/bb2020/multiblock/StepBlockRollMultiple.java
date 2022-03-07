@@ -111,6 +111,10 @@ public class StepBlockRollMultiple extends AbstractStep {
 						.ifPresent(roll -> roll.setSuccessFulDauntless(true));
 					consume(parameter);
 					return true;
+				case DOUBLE_TARGET_STRENGTH_FOR_PLAYER:
+					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(parameter.getValue())).findFirst()
+						.ifPresent(roll -> roll.setDoubleTargetStrength(true));
+					break;
 				default:
 					break;
 			}
@@ -171,7 +175,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 
 			state.blockRolls.forEach(roll -> {
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
-				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless());
+				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength());
 				roll.setNrOfDice(Math.abs(nrOfDice));
 				roll.setOwnChoice(nrOfDice > 0);
 				roll(roll, false, actingPlayer);
@@ -366,6 +370,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
 
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.CONSUME_PARAMETER, from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
 
 		getGameState().getStepStack().push(sequence.getSequence());

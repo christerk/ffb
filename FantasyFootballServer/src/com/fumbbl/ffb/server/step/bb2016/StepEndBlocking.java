@@ -21,7 +21,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.*;
+import com.fumbbl.ffb.server.step.generator.BlitzBlock;
+import com.fumbbl.ffb.server.step.generator.Block;
+import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Move;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -60,28 +64,28 @@ public class StepEndBlocking extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case DEFENDER_PUSHED:
-					fDefenderPushed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fDefenderPushed = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case END_PLAYER_ACTION:
-					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case OLD_DEFENDER_STATE:
-					fOldDefenderState = (PlayerState) pParameter.getValue();
-					consume(pParameter);
+					fOldDefenderState = (PlayerState) parameter.getValue();
+					consume(parameter);
 					return true;
 				case USING_STAB:
-					fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fUsingStab = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				default:
 					break;

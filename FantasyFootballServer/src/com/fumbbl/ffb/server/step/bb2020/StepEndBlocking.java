@@ -197,7 +197,7 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(),  game.getDefenderId(), fUsingStab, true, null));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, true, null));
 				} else {
 					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null));
 				}
@@ -219,7 +219,9 @@ public class StepEndBlocking extends AbstractStep {
 
 				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
 
-				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty() || game.getTurnData().isFoulUsed() || game.getTurnMode() == TurnMode.BLITZ) {
+				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty()
+					|| (game.getTurnData().isFoulUsed() && !activePlayer.hasSkillProperty(NamedProperties.allowsAdditionalFoul))
+					|| game.getTurnMode() == TurnMode.BLITZ) {
 					usePileDriver = false;
 				}
 
@@ -233,7 +235,9 @@ public class StepEndBlocking extends AbstractStep {
 					pileDriver.pushSequence(new PileDriver.SequenceParams(getGameState(), targetPlayerId));
 					PlayerResult playerResult = game.getGameResult().getPlayerResult(activePlayer);
 					playerResult.setFouls(playerResult.getFouls() + 1);
-					game.getTurnData().setFoulUsed(true);
+					if (!activePlayer.hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+						game.getTurnData().setFoulUsed(true);
+					}
 
 					// go-for-it
 				} else if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab

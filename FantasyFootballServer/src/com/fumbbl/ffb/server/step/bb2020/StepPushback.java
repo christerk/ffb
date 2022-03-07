@@ -21,9 +21,9 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportPushback;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPush;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPushForSpp;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPushForSpp;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -108,14 +108,14 @@ public class StepPushback extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case OLD_DEFENDER_STATE:
-					state.oldDefenderState = (PlayerState) pParameter.getValue();
+					state.oldDefenderState = (PlayerState) parameter.getValue();
 					return true;
 				case STARTING_PUSHBACK_SQUARE:
-					state.startingPushbackSquare = (PushbackSquare) pParameter.getValue();
+					state.startingPushbackSquare = (PushbackSquare) parameter.getValue();
 					return true;
 				default:
 					break;

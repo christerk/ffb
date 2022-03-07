@@ -40,7 +40,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
 		public Boolean usingShadowing;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepShadowing(GameState pGameState) {
 		super(pGameState);
@@ -60,17 +60,17 @@ public class StepShadowing extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case COORDINATE_FROM:
-				state.coordinateFrom = (FieldCoordinate) pParameter.getValue();
+				state.coordinateFrom = (FieldCoordinate) parameter.getValue();
 				return true;
 			case DEFENDER_POSITION:
-				state.defenderPosition = (FieldCoordinate) pParameter.getValue();
+				state.defenderPosition = (FieldCoordinate) parameter.getValue();
 				return true;
 			case USING_DIVING_TACKLE:
-				state.usingDivingTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				state.usingDivingTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				return true;
 			default:
 				break;

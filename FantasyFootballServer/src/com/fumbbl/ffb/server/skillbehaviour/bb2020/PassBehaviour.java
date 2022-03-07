@@ -4,6 +4,7 @@ import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -19,14 +20,12 @@ import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportPassRoll;
-import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.pass.StepHailMaryPass;
-import com.fumbbl.ffb.server.step.bb2020.pass.StepPass;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -39,41 +38,28 @@ import java.util.Set;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(Rules.BB2020)
-public class PassBehaviour extends SkillBehaviour<Pass> {
+public class PassBehaviour extends AbstractPassBehaviour<Pass> {
+	@Override
+	protected ReRollSource getReRollSource() {
+		return ReRollSources.PASS;
+	}
+
 	public PassBehaviour() {
 		super();
-
-		registerModifier(new StepModifier<StepPass, PassState>() {
-
-			@Override
-			public StepCommandStatus handleCommandHook(StepPass step, PassState state,
-			                                           ClientCommandUseSkill useSkillCommand) {
-				step.setReRolledAction(ReRolledActions.PASS);
-				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
-				return StepCommandStatus.EXECUTE_STEP;
-			}
-
-			@Override
-			public boolean handleExecuteStepHook(StepPass step, PassState state) {
-				return false;
-			}
-
-		});
-
 		registerModifier(new StepModifier<StepHailMaryPass, StepHailMaryPass.StepState>() {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepHailMaryPass step,
-			                                           StepHailMaryPass.StepState state,
-			                                           ClientCommandUseSkill useSkillCommand) {
+																								 StepHailMaryPass.StepState state,
+																								 ClientCommandUseSkill useSkillCommand) {
 				step.setReRolledAction(ReRolledActions.PASS);
-				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
+				step.setReRollSource(useSkillCommand.isSkillUsed() ? getReRollSource() : null);
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
 			public boolean handleExecuteStepHook(StepHailMaryPass step,
-			                                     StepHailMaryPass.StepState state) {
+																					 StepHailMaryPass.StepState state) {
 				Game game = step.getGameState().getGame();
 				UtilServerDialog.hideDialog(step.getGameState());
 				if (game.getThrower() == null) {
@@ -122,7 +108,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
 						modifiers.toArray(new PassModifier[0]), passingDistance, bombAction, state.result, true));
 					doNextStep = true;
-					if (PassResult.FUMBLE == state.result || PassResult.WILDLY_INACCURATE == state.result || PassResult.SAVED_FUMBLE == state.result) {
+					if (PassResult.FUMBLE == state.result || PassResult.WILDLY_INACCURATE == state.result) {
 						if (step.getReRolledAction() != ReRolledActions.PASS) {
 							step.setReRolledAction(ReRolledActions.PASS);
 							if (UtilCards.hasSkill(game.getThrower(), skill) && !state.passSkillUsed) {
@@ -133,8 +119,20 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 								UtilServerDialog.showDialog(step.getGameState(),
 									new DialogSkillUseParameter(game.getThrowerId(), skill, minimumRoll),
 									actingTeam.hasPlayer(game.getThrower()));
+							} else if (PassResult.SAVED_FUMBLE == state.result) {
+								if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+									game.getFieldModel().setBombCoordinate(null);
+									game.getFieldModel().setBombMoving(false);
+									step.publishParameter(from(StepParameterKey.CATCHER_ID, null));
+									step.publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+									step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
+								} else {
+									game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+									game.getFieldModel().setBallMoving(false);
+								}
+								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 							} else {
-								if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(),
+								if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getActingPlayer(),
 									ReRolledActions.PASS, minimumRoll, false)) {
 									doNextStep = false;
 								}
@@ -153,19 +151,6 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 								CatchScatterThrowInMode.SCATTER_BALL));
 						}
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-					} else if (PassResult.SAVED_FUMBLE == state.result) {
-						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
-							game.getFieldModel().setBombCoordinate(null);
-							game.getFieldModel().setBombMoving(false);
-							step.publishParameter(from(StepParameterKey.CATCHER_ID, null));
-							step.publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-							step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
-						} else {
-							game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
-							game.getFieldModel().setBallMoving(false);
-						}
-						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-
 					} else {
 						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 							game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
@@ -180,5 +165,6 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 			}
 
 		});
+
 	}
 }

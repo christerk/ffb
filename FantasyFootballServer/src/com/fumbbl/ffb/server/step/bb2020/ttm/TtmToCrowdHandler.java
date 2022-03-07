@@ -7,7 +7,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;

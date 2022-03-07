@@ -12,7 +12,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeBallAndChain;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBallAndChain;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;

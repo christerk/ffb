@@ -66,11 +66,11 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case KICKOFF_START_COORDINATE:
-					fKickoffStartCoordinate = (FieldCoordinate) pParameter.getValue();
+					fKickoffStartCoordinate = (FieldCoordinate) parameter.getValue();
 					return true;
 				default:
 					break;

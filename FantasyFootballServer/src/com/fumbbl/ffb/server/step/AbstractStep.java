@@ -164,7 +164,7 @@ public abstract class AbstractStep implements IStep {
 		return commandStatus;
 	}
 
-	public boolean setParameter(StepParameter pParameter) {
+	public boolean setParameter(StepParameter parameter) {
 		// do nothing, override in subclass if needed
 		return false;
 	}
@@ -199,6 +199,20 @@ public abstract class AbstractStep implements IStep {
 	}
 
 	// JSON serialization
+
+	protected void markSkillsTrackedOutsideOfActivation(Game game) {
+		Player<?> player = game.getActingPlayer().getPlayer();
+		if (player != null) {
+			player.getSkillsIncludingTemporaryOnes().stream()
+				.filter(skill -> skill.getSkillUsageType().isTrackOutsideActivation() && player.hasActiveEnhancement(skill))
+				.forEach(skill -> {
+					if (game.getActingPlayer().hasActed()) {
+						player.markUsed(skill, game);
+					}
+					game.getFieldModel().removeSkillEnhancements(player, skill);
+				});
+		}
+	}
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();

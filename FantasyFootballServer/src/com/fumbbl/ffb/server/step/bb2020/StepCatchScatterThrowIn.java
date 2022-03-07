@@ -45,8 +45,8 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeStab;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeStab;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -155,16 +155,16 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case CATCH_SCATTER_THROW_IN_MODE:
-					fCatchScatterThrowInMode = (CatchScatterThrowInMode) pParameter.getValue();
-					consume(pParameter);
+					fCatchScatterThrowInMode = (CatchScatterThrowInMode) parameter.getValue();
+					consume(parameter);
 					return true;
 				case THROW_IN_COORDINATE:
-					fThrowInCoordinate = (FieldCoordinate) pParameter.getValue();
-					consume(pParameter);
+					fThrowInCoordinate = (FieldCoordinate) parameter.getValue();
+					consume(parameter);
 					return true;
 				default:
 					break;

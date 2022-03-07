@@ -15,9 +15,9 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeCrowdPush;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeKTMCrowd;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeTTMHitPlayer;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeKTMCrowd;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -119,11 +119,11 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case IS_KICKED_PLAYER:
-				fIsKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				fIsKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				return true;
 			default:
 				break;

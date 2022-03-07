@@ -13,16 +13,17 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
-import com.fumbbl.ffb.server.step.*;
+import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.util.ServerUtilPlayer;
-import com.fumbbl.ffb.util.UtilActingPlayer;
-import com.fumbbl.ffb.util.UtilPlayer;
-
-import java.util.Arrays;
 
 /**
  * Final step of the bomb sequence. Consumes all expected stepParameters.
@@ -49,20 +50,20 @@ public final class StepEndBomb extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case CATCHER_ID:
-				fCatcherId = (String) pParameter.getValue();
-				consume(pParameter);
+				fCatcherId = (String) parameter.getValue();
+				consume(parameter);
 				return true;
 			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			case BOMB_EXPLODED:
-				fBombExploded = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fBombExploded = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			default:
 				break;

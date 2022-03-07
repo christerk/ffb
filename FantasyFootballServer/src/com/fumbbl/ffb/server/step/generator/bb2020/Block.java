@@ -28,7 +28,7 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
@@ -49,6 +49,7 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
 		sequence.add(StepId.PROJECTILE_VOMIT, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		// GFI for ball & chain should go here.
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.NEXT),
 			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
@@ -58,6 +59,7 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 			from(StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT, IStepLabel.JUGGERNAUT),
 			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK));
 		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 
 		// on blockChoice = BOTH_DOWN
 		sequence.add(StepId.JUGGERNAUT, IStepLabel.JUGGERNAUT,
@@ -82,12 +84,14 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 
 		sequence.jump(IStepLabel.ATTACKER_DROPPED);
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.FALL_DOWN);
 
 		sequence.add(StepId.PLACE_BALL, IStepLabel.ATTACKER_DROPPED);

@@ -43,6 +43,7 @@ public enum StepId implements INamedObject {
 	DISPATCH_PASSING("dispatchPassing"), // action.pass
 	DISPATCH_SCATTER_PLAYER("dispatchScatterPlayer"), // action.ttm 2020
 	DIVING_TACKLE("divingTackle"), // action.move
+	DOUBLE_STRENGTH("doubleStrength"), // action.multiBlock 2020
 	DROP_ACTING_PLAYER("dropPileDriverPlayer"), // action.block
 	DROP_DIVING_TACKLER("dropDivingTackler"), // action.move
 	DROP_FALLING_PLAYERS("dropFallingPlayers"), // action.block
@@ -75,6 +76,7 @@ public enum StepId implements INamedObject {
 	GOTO_LABEL("gotoLabel"), //
 	HAIL_MARY_PASS("hailMaryPass"), // action.pass
 	HAND_OVER("handOver"), // action.pass
+	HANDLE_DROP_PLAYER_CONTEXT("handleDropPlayerContext"), // action block
 	HORNS("horns"), // action.block
 	HYPNOTIC_GAZE("hypnoticGaze"), // action.move
 	INIT_ACTIVATION("initActivation", "recoverFromGaze"),
@@ -121,6 +123,7 @@ public enum StepId implements INamedObject {
 	PLAYER_LOSS("playerLoss"), // game.end
 	PRAYER("prayer"), // phase.kickoff
 	PRAYERS("prayers"), // phase.kickoff
+	PRO("pro"), // action.common
 	PROJECTILE_VOMIT("projectileVomit"),
 	PUSHBACK("pushback"), // action.block
 	REALLY_STUPID("reallyStupid"), // action.common

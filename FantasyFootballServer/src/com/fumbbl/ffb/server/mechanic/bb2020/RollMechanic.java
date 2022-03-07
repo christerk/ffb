@@ -2,10 +2,10 @@ package com.fumbbl.ffb.server.mechanic.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;
-import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.bb2020.SeriousInjury;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.ZappedPlayer;

@@ -14,7 +14,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeEatPlayer;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeEatPlayer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -52,14 +52,14 @@ public final class StepEatTeamMate extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case THROWN_PLAYER_COORDINATE:
-				fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
+				fThrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
 				return true;
 			case THROWN_PLAYER_ID:
-				fThrownPlayerId = (String) pParameter.getValue();
+				fThrownPlayerId = (String) parameter.getValue();
 				return true;
 			default:
 				break;

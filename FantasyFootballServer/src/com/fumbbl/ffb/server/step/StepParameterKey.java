@@ -37,6 +37,9 @@ public enum StepParameterKey {
 	DISPATCH_PLAYER_ACTION, // PlayerAction
 	DODGE_ROLL, // Integer
 	DONT_DROP_FUMBLE, // Boolean
+	DOUBLE_TARGET_STRENGTH, // Boolean
+	DOUBLE_TARGET_STRENGTH_FOR_PLAYER, // String
+	DROP_PLAYER_CONTEXT, // DropPlayerContext
 	DROPPED_BALL_CARRIER, // String
 	DROP_THROWN_PLAYER, // Boolean
 	END_INDUCEMENT_PHASE, // Boolean
@@ -105,12 +108,14 @@ public enum StepParameterKey {
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean
 	RESET_FOR_FAILED_BLOCK, // Boolean
+	RETAIN_MODEL_DATA, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
 	SUPPRESS_EXTRA_EFFECT_HANDLING, // Boolean
 	SHOW_NAME_IN_REPORT, // Boolean
 	SUCCESSFUL_DAUNTLESS, // Boolean
+	SUCCESSFUL_PRO, // Boolean
 	TARGET_COORDINATE, // FieldCoordinate
 	TEAM_ID, // String
 	THROW_IN_COORDINATE, // FieldCoordinate

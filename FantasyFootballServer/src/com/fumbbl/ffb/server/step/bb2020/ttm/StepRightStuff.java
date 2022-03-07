@@ -9,6 +9,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.RightStuffModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -19,15 +20,17 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.report.ReportRightStuffRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeFumbledKtm;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeTTMLanding;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFumbledKtm;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMLanding;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -93,20 +96,20 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case THROWN_PLAYER_HAS_BALL:
-					fThrownPlayerHasBall = (Boolean) pParameter.getValue();
+					fThrownPlayerHasBall = (Boolean) parameter.getValue();
 					return true;
 				case THROWN_PLAYER_ID:
-					fThrownPlayerId = (String) pParameter.getValue();
+					fThrownPlayerId = (String) parameter.getValue();
 					return true;
 				case DROP_THROWN_PLAYER:
-					fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					fDropThrownPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				case PASS_RESULT:
-					passResult = (PassResult) pParameter.getValue();
+					passResult = (PassResult) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -159,8 +162,16 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
-			getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
-				minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
+
+			if (PassResult.FUMBLE == passResult && game.getThrower() != null && game.getThrower().hasSkillProperty(NamedProperties.fumbledPlayerLandsSafely)) {
+				successful = true;
+				getResult().addReport(new ReportSkillUse(game.getThrowerId(),
+					game.getThrower().getSkillWithProperty(NamedProperties.fumbledPlayerLandsSafely),
+					true, SkillUse.FUMBLED_PLAYER_LANDS_SAFELY));
+			} else {
+				getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
+					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
+			}
 			if (successful) {
 				if (passResult == PassResult.ACCURATE) {
 					GameResult gameResult = getGameState().getGame().getGameResult();

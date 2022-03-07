@@ -19,6 +19,8 @@ public interface IJsonOption {
 	JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", Factory.ANIMATION_TYPE);
 	JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
 	JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
+	JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
+	JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
@@ -127,6 +129,7 @@ public interface IJsonOption {
 	JsonBooleanArrayOption DEFECTING_ARRAY = new JsonBooleanArrayOption("defectingArray");
 	JsonEnumWithNameOption DEFENDER_ACTION = new JsonEnumWithNameOption("defenderAction", Factory.PLAYER_ACTION);
 	JsonStringOption DEFENDER_ID = new JsonStringOption("defenderId");
+	JsonFieldCoordinateOption DEFENDER_POSITION = new JsonFieldCoordinateOption("defenderPosition");
 	JsonStringArrayOption DESCRIPTIONS = new JsonStringArrayOption("descriptions");
 	JsonEnumWithNameOption DIALOG_ID = new JsonEnumWithNameOption("dialogId", Factory.DIALOG_ID);
 	JsonObjectOption DIALOG_PARAMETER = new JsonObjectOption("dialogParameter");
@@ -139,6 +142,8 @@ public interface IJsonOption {
 	JsonIntOption DISTANCE = new JsonIntOption("distance");
 	JsonIntArrayOption DISTANCE_ROLL = new JsonIntArrayOption("distanceRoll");
 	JsonStringOption DIVISION = new JsonStringOption("division");
+	JsonBooleanOption DODGING = new JsonBooleanOption("dodging");
+	JsonBooleanOption DOUBLE_TARGET_STRENGTH = new JsonBooleanOption("doubleTargetStrength");
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption ESCAPED = new JsonBooleanOption("escaped");
@@ -211,6 +216,7 @@ public interface IJsonOption {
 	JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
 	JsonPlayerStateOption INJURY_DECAY = new JsonPlayerStateOption("injuryDecay");
 	JsonArrayOption INJURY_DESCRIPTIONS = new JsonArrayOption("injuryDescriptions");
+	JsonStringOption INJURY_MODIFICATION = new JsonStringOption("injuryModification");
 	JsonArrayOption INJURY_MODIFIERS = new JsonArrayOption("injuryModifiers");
 	JsonIntArrayOption INJURY_ROLL = new JsonIntArrayOption("injuryRoll");
 	JsonEnumWithNameOption INJURY_TYPE = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE);
@@ -252,6 +258,7 @@ public interface IJsonOption {
 	JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
 	JsonObjectOption MODEL_CHANGE_LIST = new JsonObjectOption("modelChangeList");
 	JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
+	JsonObjectOption MODIFIED_INJURY_CONTEXT = new JsonObjectOption("modifiedInjuryContext");
 	JsonIntOption MODIFIER = new JsonIntOption("modifier");
 	JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");
 	JsonIntOption MOVEMENT = new JsonIntOption("movement");
@@ -351,6 +358,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption REPORT_ID = new JsonEnumWithNameOption("reportId", Factory.REPORT_ID);
 	JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");
 	JsonArrayOption REPORTS = new JsonArrayOption("reports");
+	JsonBooleanOption REQUIRES_ARMOUR_BREAK = new JsonBooleanOption("requiresArmourBreak");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
 	JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", Factory.RE_ROLLED_ACTION);
 	JsonIntArrayOption RE_ROLLED_DICE_INDEXES = new JsonIntArrayOption("reRolledDice");
@@ -390,6 +398,7 @@ public interface IJsonOption {
 	JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
 	JsonIntOption SELECTED_INDEX = new JsonIntOption("selectedIndex");
 	JsonArrayOption SELECTED_BLOCK_TARGETS = new JsonArrayOption("selectedBlockTargets");
+	JsonBooleanOption SELF_INFLICTED = new JsonBooleanOption("selfInflicted");
 	JsonStringOption SEND_TO_BOX_BY_PLAYER_ID = new JsonStringOption("sendToBoxByPlayerId");
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");
 	JsonEnumWithNameOption SEND_TO_BOX_REASON = new JsonEnumWithNameOption("sendToBoxReason", Factory.SEND_TO_BOX_REASON);
@@ -420,6 +429,7 @@ public interface IJsonOption {
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
+	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);

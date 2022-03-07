@@ -16,6 +16,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -96,8 +97,31 @@ public class UtilServerReRoll {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 				String playerId = player.getId();
 				UtilServerDialog.showDialog(gameState,
-						new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble),
-						!actingTeam.hasPlayer(player));
+					new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble, null),
+					!actingTeam.hasPlayer(player));
+			}
+		}
+		return reRollAvailable;
+	}
+
+	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
+																								int minimumRoll, boolean fumble) {
+		Player<?> player = actingPlayer.getPlayer();
+		boolean reRollAvailable = false;
+		Game game = gameState.getGame();
+		if (minimumRoll >= 0) {
+			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
+			boolean proOption = isProReRollAvailable(player, game);
+			ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction);
+			Skill reRollSkill = reRollSource != null ? reRollSource.getSkill(game) : null;
+
+			reRollAvailable = (teamReRollOption || proOption || reRollSkill != null);
+			if (reRollAvailable) {
+				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+				String playerId = player.getId();
+				UtilServerDialog.showDialog(gameState,
+					new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble, reRollSkill),
+					!actingTeam.hasPlayer(player));
 			}
 		}
 		return reRollAvailable;

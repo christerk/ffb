@@ -38,7 +38,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 	public ThrowTeamMateBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepThrowTeamMate, StepState>() {
+		registerModifier(new StepModifier<StepThrowTeamMate, StepState>(2) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepThrowTeamMate step, StepState state,
@@ -93,7 +93,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					} else {
 						if (step.getReRolledAction() != rerolledAction && playerCanPass) {
 							step.setReRolledAction(rerolledAction);
-							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer,
 								rerolledAction, minimumRoll, false)) {
 								handlePassResult(state.passResult, step);
 							}
@@ -112,8 +112,8 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 			}
 
 			private PassResult evaluatePass(boolean playerCanPass, int passValue, int roll, int modifierSum) {
-				if(!playerCanPass) {
-					return  PassResult.FUMBLE;
+				if (!playerCanPass) {
+					return PassResult.FUMBLE;
 				}
 				if (passValue <= 0) {
 					return PassResult.FUMBLE;

@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogConfirmEndActionParameter;
@@ -31,6 +32,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
@@ -212,7 +215,7 @@ public final class StepInitSelecting extends AbstractStep {
 				case CLIENT_FOUL:
 					ClientCommandFoul foulCommand = (ClientCommandFoul) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), foulCommand)
-						&& !game.getTurnData().isFoulUsed()) {
+						&& (!game.getTurnData().isFoulUsed() || actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul))) {
 						publishParameter(new StepParameter(StepParameterKey.FOUL_DEFENDER_ID, foulCommand.getDefenderId()));
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, foulCommand.isUsingChainsaw()));
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.FOUL, false);
@@ -338,6 +341,14 @@ public final class StepInitSelecting extends AbstractStep {
 						getResult().addReport(new ReportFumblerooskie(player.getId(), true));
 						actingPlayer.setFumblerooskiePending(true);
 					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGainHailMary)) {
+						game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
+						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.GAIN_HAIL_MARY));
+					}
+					commandStatus = StepCommandStatus.SKIP_STEP;
 					break;
 				default:
 					break;

@@ -21,6 +21,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -68,6 +69,11 @@ public class ClientStateSelect extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_BLITZ:
 					communication.sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, false);
 					break;
+				case IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH:
+					communication.sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, false);
+					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGainFrenzyForBlitz);
+					communication.sendUseSkill(skill, true, pPlayer.getId());
+					break;
 				case IPlayerPopupMenuKeys.KEY_FOUL:
 					communication.sendActingPlayer(pPlayer, PlayerAction.FOUL_MOVE, false);
 					break;
@@ -106,6 +112,23 @@ public class ClientStateSelect extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_GAZE:
 					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_MOVE, false);
 					break;
+				case IPlayerPopupMenuKeys.KEY_GAZE_ZOAT:
+					communication.sendActingPlayer(pPlayer, PlayerAction.GAZE_MOVE, false);
+					Skill gazeSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainGaze);
+					communication.sendUseSkill(gazeSkill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING:
+					communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, false);
+					Skill stnSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainHailMary);
+					communication.sendUseSkill(stnSkill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB:
+					if (isThrowBombActionAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
+						Skill stnbSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainHailMary);
+						communication.sendUseSkill(stnbSkill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -136,12 +159,26 @@ public class ClientStateSelect extends ClientState {
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOMB);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOMB, 0));
 			menuItemList.add(moveAction);
+			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainHailMary)) {
+				JMenuItem stnAction = new JMenuItem("Shot To Nothing Bomb",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BOMB)));
+				stnAction.setMnemonic(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB);
+				stnAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, 0));
+				menuItemList.add(stnAction);
+			}
 		}
-		if (isHypnoticGazeActionAvailable(true, pPlayer)) {
+		if (isHypnoticGazeActionAvailable(true, pPlayer, NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
 			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
+			menuItemList.add(hypnoticGazeAction);
+		}
+		if (isHypnoticGazeActionAvailable(true, pPlayer, NamedProperties.canGainGaze)) {
+			JMenuItem hypnoticGazeAction = new JMenuItem("Hypnotic Gaze (Zoat)",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
+			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT, 0));
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isMoveActionAvailable(pPlayer)) {
@@ -157,6 +194,13 @@ public class ClientStateSelect extends ClientState {
 			blitzAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLITZ);
 			blitzAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLITZ, 0));
 			menuItemList.add(blitzAction);
+			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainFrenzyForBlitz)) {
+				JMenuItem blitzWithFrenzyAction = new JMenuItem("Frenzied Rush Blitz",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				blitzWithFrenzyAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
+				blitzWithFrenzyAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, 0));
+				menuItemList.add(blitzWithFrenzyAction);
+			}
 		}
 		if (isFoulActionAvailable(pPlayer)) {
 			JMenuItem foulAction = new JMenuItem("Foul Action",
@@ -171,6 +215,13 @@ public class ClientStateSelect extends ClientState {
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
+			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainHailMary)) {
+				JMenuItem stnAction = new JMenuItem("Shot To Nothing",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				stnAction.setMnemonic(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING);
+				stnAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, 0));
+				menuItemList.add(stnAction);
+			}
 		}
 		if (isHandOverActionAvailable(pPlayer)) {
 			JMenuItem handOverAction = new JMenuItem("Hand Over Action",
@@ -269,6 +320,9 @@ public class ClientStateSelect extends ClientState {
 			case PLAYER_ACTION_BLITZ:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
 				break;
+			case PLAYER_ACTION_FRENZIED_RUSH:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
+				break;
 			case PLAYER_ACTION_FOUL:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
 				break;
@@ -286,6 +340,15 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_GAZE:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
+				break;
+			case PLAYER_ACTION_GAZE_ZOAT:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
+				break;
+			case PLAYER_ACTION_SHOT_TO_NOTHING:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING);
+				break;
+			case PLAYER_ACTION_SHOT_TO_NOTHING_BOMB:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB);
 				break;
 			default:
 				actionHandled = false;
@@ -371,7 +434,7 @@ public class ClientStateSelect extends ClientState {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& mechanic.isFoulActionAllowed(game.getTurnMode())
-			&& playerState.isActive() && !game.getTurnData().isFoulUsed()
+			&& playerState.isActive() && (!game.getTurnData().isFoulUsed() || pPlayer.hasSkillProperty(NamedProperties.allowsAdditionalFoul))
 			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
 				PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);

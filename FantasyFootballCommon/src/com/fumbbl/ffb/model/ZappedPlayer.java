@@ -9,6 +9,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.xml.IXmlSerializable;
@@ -395,5 +396,25 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	@Override
 	public int hashCode() {
 		return getId().hashCode();
+	}
+
+	@Override
+	public boolean isUsed(Skill skill) {
+		return originalPlayer.isUsed(skill);
+	}
+
+	@Override
+	public void markUsed(Skill skill, Game game) {
+		originalPlayer.markUsed(skill, game);
+	}
+
+	@Override
+	public void markUnused(Skill skill, Game game) {
+		originalPlayer.markUnused(skill, game);
+	}
+
+	@Override
+	public void resetUsedSkills(SkillUsageType type, Game game) {
+		originalPlayer.resetUsedSkills(type, game);
 	}
 }

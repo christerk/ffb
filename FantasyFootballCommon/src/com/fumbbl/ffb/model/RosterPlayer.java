@@ -17,8 +17,11 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
@@ -78,6 +81,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private Map<String, Set<TemporaryStatModifier>> temporaryModifiers = new HashMap<>();
 	private Map<String, Set<SkillWithValue>> temporarySkills = new HashMap<>();
 	private Map<String, Set<ISkillProperty>> temporaryProperties = new HashMap<>();
+	private final Set<Skill> usedSkills;
 	private Map<Skill, String> skillValues;
 	private Map<Skill, String> displayValues;
 
@@ -97,6 +101,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fPosition = new RosterPosition(null);
 		skillValues = new LinkedHashMap<>();
 		displayValues = new LinkedHashMap<>();
+        usedSkills  = new HashSet<>();
 	}
 
 	@Override
@@ -678,6 +683,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 		if (playerStatus != null) {
 			IJsonOption.PLAYER_STATUS.addTo(jsonObject, playerStatus.getName());
 		}
+		JsonArray usedSkillsArray = new JsonArray();
+		usedSkills.stream().map(UtilJson::toJsonValue).forEach(usedSkillsArray::add);
+		IJsonOption.USED_SKILLS.addTo(jsonObject, usedSkillsArray);
 		return jsonObject;
 
 	}
@@ -744,6 +752,13 @@ public class RosterPlayer extends Player<RosterPosition> {
 		displayValues = IJsonOption.SKILL_DISPLAY_VALUES_MAP.getFrom(source, jsonObject);
 
 		playerStatus = PlayerStatus.forName(IJsonOption.PLAYER_STATUS.getFrom(source, jsonObject));
+
+		JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(source, jsonObject);
+
+		if (usedSkillsArray != null) {
+			usedSkillsArray.values().stream().map(value -> (Skill) UtilJson.toEnumWithName(skillFactory, value)).forEach(usedSkills::add);
+		}
+
 		return this;
 
 	}
@@ -810,5 +825,38 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	public boolean isJourneyman() {
 		return playerStatus == PlayerStatus.JOURNEYMAN;
+	}
+
+	@Override
+	public boolean isUsed(Skill skill) {
+		return usedSkills.contains(skill);
+	}
+
+	@Override
+	public void markUsed(Skill skill, Game game) {
+		if ((skill == null) || isUsed(skill)) {
+			return;
+		}
+		usedSkills.add(skill);
+		game.notifyObservers(new ModelChange(ModelChangeId.PLAYER_MARK_SKILL_USED, fId, skill));
+	}
+
+	@Override
+	public  void markUnused(Skill skill, Game game) {
+		if ((skill == null) || !isUsed(skill)) {
+			return;
+		}
+		usedSkills.remove(skill);
+		game.notifyObservers(new ModelChange(ModelChangeId.PLAYER_MARK_SKILL_UNUSED, fId, skill));
+	}
+
+
+	@Override
+	public void resetUsedSkills(SkillUsageType type, Game game) {
+		for(Skill skill : usedSkills) {
+			if(skill.getSkillUsageType() == type) {
+				markUnused(skill, game);
+			}
+		}
 	}
 }

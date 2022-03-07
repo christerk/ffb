@@ -9,7 +9,8 @@ public enum PlayerChoiceMode implements INamedObject {
 	DIVING_CATCH("divingCatch"), DECLARE_DIVING_CATCH("declareDivingCatch"), CARD("card", false), BLOCK("block"),
 	MVP("mvp", false), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
-	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false);
+	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
+	INDOMITABLE("indomitable");
 
 	private final String name;
 	private final boolean usePlayerPosition;
@@ -79,6 +80,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case BRIBERY_AND_CORRUPTION:
 				header.append("Select a player to use Bribery and Corruption for");
 				break;
+			case INDOMITABLE:
+				header.append("Select a player to use Indomitable against");
+				break;
 			default:
 				break;
 		}
@@ -133,6 +137,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case BRIBERY_AND_CORRUPTION:
 				title.append("Bribery and Corruption");
 				break;
+			case INDOMITABLE:
+				title.append("Indomitable");
+				break;
 			default:
 				break;
 		}
@@ -186,6 +193,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case BRIBERY_AND_CORRUPTION:
 				message.append("Waiting for coach to use Bribery and Corruption");
+				break;
+			case INDOMITABLE:
+				message.append("Waiting for coach to use Indomitable");
 				break;
 			default:
 				break;

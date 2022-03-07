@@ -45,7 +45,7 @@ public class StepDivingTackle extends AbstractStep {
 		public boolean usingBreakTackle;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepDivingTackle(GameState pGameState) {
 		super(pGameState);
@@ -76,20 +76,20 @@ public class StepDivingTackle extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case COORDINATE_FROM:
-				state.coordinateFrom = (FieldCoordinate) pParameter.getValue();
+				state.coordinateFrom = (FieldCoordinate) parameter.getValue();
 				return true;
 			case COORDINATE_TO:
-				state.coordinateTo = (FieldCoordinate) pParameter.getValue();
+				state.coordinateTo = (FieldCoordinate) parameter.getValue();
 				return true;
 			case DODGE_ROLL:
-				state.dodgeRoll = (Integer) pParameter.getValue();
+				state.dodgeRoll = (Integer) parameter.getValue();
 				return true;
 			case USING_BREAK_TACKLE:
-				state.usingBreakTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				state.usingBreakTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				return true;
 			default:
 				break;

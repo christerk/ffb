@@ -163,7 +163,9 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 				break;
 			case FOUL:
 			case FOUL_MOVE:
-				game.getTurnData().setFoulUsed(true);
+				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+					game.getTurnData().setFoulUsed(true);
+				}
 				break;
 			default:
 				break;

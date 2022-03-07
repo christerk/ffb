@@ -1,13 +1,16 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.IStep;
@@ -16,9 +19,11 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V extends StepStateMultipleRolls> extends StepModifier<T, V> {
@@ -85,6 +90,10 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	protected abstract void cleanUp(T step, V state);
 
+	private Optional<Skill> reRollSkill(ActingPlayer actingPlayer, Game game) {
+		return Optional.ofNullable(UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction())).map(reRollSource -> reRollSource.getSkill(game));
+	}
+
 	private void nextStep(T step, V state) {
 		if (StringTool.isProvided(state.goToLabelOnFailure) && state.blockTargets.size() == state.initialCount) {
 			step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
@@ -108,12 +117,13 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		} else {
 			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), game.getActingPlayer().getPlayer());
 			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
-			if (state.reRollAvailableAgainst.isEmpty() || (!state.teamReRollAvailable && !state.proReRollAvailable)) {
+			Optional<Skill> reRollSkill = reRollSkill(game.getActingPlayer(), game);
+			if (state.reRollAvailableAgainst.isEmpty() || (!state.teamReRollAvailable && !state.proReRollAvailable && !reRollSkill.isPresent())) {
 				nextStep(step, state);
 			} else {
 				state.reRollTarget = null;
 				state.reRollSource = null;
-				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(game.getActingPlayer().getPlayer(), state), false);
+				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(game.getActingPlayer().getPlayer(), state, reRollSkill.orElse(null)), false);
 			}
 		}
 	}
@@ -125,6 +135,20 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		int minimumRoll = minimumRoll(game, actingPlayer.getPlayer(), defender);
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(actualRoll, minimumRoll);
 		minimumRolls.put(currentTargetId, minimumRoll);
+
+		if (!successful) {
+			ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction());
+
+			if (reRollSource != null) {
+				step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), false, actualRoll, minimumRoll, reRolling, currentTargetId));
+
+				actualRoll = skillRoll(step);
+				successful = (actualRoll >= minimumRoll);
+				state.blockTargets.remove(currentTargetId);
+				step.getResult().addReport(new ReportReRoll(actingPlayer.getPlayerId(), reRollSource, successful, minimumRoll));
+			}
+		}
+
 		step.getResult().addReport(report(step.getGameState().getGame(), actingPlayer.getPlayerId(), successful, actualRoll, minimumRoll, reRolling, currentTargetId));
 		if (successful) {
 			state.blockTargets.remove(currentTargetId);
@@ -138,8 +162,8 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	protected abstract void failedRollEffect(T step);
 
-	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, V state) {
+	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, V state, Skill skill) {
 		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets, reRolledAction(),
-			state.minimumRolls, state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable);
+			state.minimumRolls, state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable, skill);
 	}
 }

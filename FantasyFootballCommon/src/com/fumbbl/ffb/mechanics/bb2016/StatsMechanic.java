@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
-import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.mechanics.StatsDrawingModifier;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.modifiers.PlayerStatKey;

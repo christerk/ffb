@@ -54,33 +54,33 @@ public final class StepEndScatterPlayer extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case KICKED_PLAYER_ID:
 				case THROWN_PLAYER_ID:
-					fThrownPlayerId = (String) pParameter.getValue();
-					consume(pParameter);
+					fThrownPlayerId = (String) parameter.getValue();
+					consume(parameter);
 					return true;
 				case KICKED_PLAYER_HAS_BALL:
 				case THROWN_PLAYER_HAS_BALL:
-					fThrownPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fThrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case KICKED_PLAYER_STATE:
 				case THROWN_PLAYER_STATE:
-					fThrownPlayerState = (PlayerState) pParameter.getValue();
-					consume(pParameter);
+					fThrownPlayerState = (PlayerState) parameter.getValue();
+					consume(parameter);
 					return true;
 				case KICKED_PLAYER_COORDINATE:
 				case THROWN_PLAYER_COORDINATE:
-					fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
+					fThrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
 					return true;
 				case IS_KICKED_PLAYER:
-					fIsKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					fIsKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				case CRASH_LANDING:
-					crashLanding = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					crashLanding = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				default:
 					break;

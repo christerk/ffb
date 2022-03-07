@@ -64,6 +64,11 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, endTurn));
 		} else if (targetSelectionState != null) {
 			if (targetSelectionState.isCanceled()) {
+				if (game.getActingPlayer().hasActed()) {
+					targetSelectionState.getUsedSkills().forEach(skill -> game.getActingPlayer().markSkillUsed(skill));
+				}
+				targetSelectionState.getUsedSkills().forEach(skill -> game.getFieldModel().removeSkillEnhancements(game.getActingPlayer().getPlayer(), skill.getName()));
+
 				UtilServerSteps.changePlayerAction(this, null, null, false);
 				game.getFieldModel().setTargetSelectionState(null);
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))

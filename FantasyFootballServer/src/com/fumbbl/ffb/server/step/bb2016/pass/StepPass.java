@@ -112,10 +112,10 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.CATCHER_ID) {
-				state.CatcherId = (String) pParameter.getValue();
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.CATCHER_ID) {
+				state.CatcherId = (String) parameter.getValue();
 				return true;
 			}
 		}
@@ -309,4 +309,5 @@ public class StepPass extends AbstractStepWithReRoll {
 		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
 		return this;
 	}
+
 }

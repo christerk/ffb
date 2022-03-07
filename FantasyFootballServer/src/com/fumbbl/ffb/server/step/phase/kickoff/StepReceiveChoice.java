@@ -40,11 +40,11 @@ public final class StepReceiveChoice extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case CHOOSING_TEAM_ID:
-				fChoosingTeamId = (String) pParameter.getValue();
+				fChoosingTeamId = (String) parameter.getValue();
 				return true;
 			default:
 				break;

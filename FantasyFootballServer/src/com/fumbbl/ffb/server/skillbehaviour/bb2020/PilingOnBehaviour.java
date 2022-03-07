@@ -19,13 +19,14 @@ import com.fumbbl.ffb.report.ReportPilingOn;
 import com.fumbbl.ffb.report.ReportWeepingDaggerRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeBlock;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeBlockProne;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeBlockStunned;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypePilingOnArmour;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypePilingOnInjury;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypePilingOnKnockedOut;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockProne;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockStunned;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypePilingOnArmour;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypePilingOnInjury;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypePilingOnKnockedOut;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -101,7 +102,6 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 							}
 						}
 					} else {
-						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
 
 						InjuryTypeBlock.Mode mode = attackerState.getBase() == PlayerState.FALLING ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.REGULAR;
 
@@ -148,20 +148,23 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 					}
 				}
 				if (doNextStep) {
-					if (state.injuryResultDefender != null) {
-						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, state.injuryResultDefender));
-					}
 					if (state.usingPilingOn != null) {
 						step.publishParameter(new StepParameter(StepParameterKey.USING_PILING_ON, state.usingPilingOn));
 					}
 					// end turn if dropping a player of your own team
-					if ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING)
-							&& (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam())
-							&& (state.oldDefenderState != null) && !state.oldDefenderState.isProne()) {
+					boolean droppedOwnTeam = ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING)
+						&& (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam())
+						&& (state.oldDefenderState != null) && !state.oldDefenderState.isProne());
+
+					if (state.injuryResultDefender != null) {
+						step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+							new DropPlayerContext(state.injuryResultDefender, droppedOwnTeam, true, null, game.getDefenderId(), ApothecaryMode.DEFENDER, false)));
+					} else if (droppedOwnTeam) {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
+
 					if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING)
-							&& (attackerCoordinate != null)) {
+						&& (attackerCoordinate != null)) {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 						step.publishParameters(
 							UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));

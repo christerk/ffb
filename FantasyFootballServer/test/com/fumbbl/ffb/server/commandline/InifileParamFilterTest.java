@@ -12,7 +12,7 @@ class InifileParamFilterTest {
     private static final String INIFILE_VALUE = "inifile_value";
     private static final String DEFAULT_INIFUILE_VALUE = "server.ini";
 
-    private InifileParamFilter filter = new InifileParamFilter();
+    private final InifileParamFilter filter = new InifileParamFilter();
 
     @Test
     void filterForInifileFiltersExistingParam() {

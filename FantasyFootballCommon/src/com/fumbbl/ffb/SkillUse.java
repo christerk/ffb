@@ -23,6 +23,15 @@ public enum SkillUse implements INamedObject {
 	INCREASE_STRENGTH_BY_1("increaseStrengthBy1", "to increase %g strength by 1"),
 	CANCEL_DIVING_CATCH("cancelDivingCatch", "because players from both teams hinder each other"),
 	PLACE_BALL("placeBall", "to place ball in an empty adjacent square"),
+	RE_ROLL_SINGLE_ARMOUR_DIE("reRollSingleArmourDie", "to re-roll a single armour die"),
+	ADD_ARMOUR_MODIFIER("addArmourModifier", "to add +1 to the armour roll"),
+	INCREASE_CHAINSAW_DAMAGE("increaseChainsawDamage", "to add +4 instead of +3 to armour roll"),
+	ADD_INJURY_MODIFIER("addInjuryModifier", "to add +1 to injury roll"),
+	RE_ROLL_INJURY("reRollInjury", "to re-roll the injury roll"),
+	FUMBLED_PLAYER_LANDS_SAFELY("fumbledPlayerLandsSafely", "to let the fumbled player land safely"),
+	GAIN_FRENZY_FOR_BLITZ("gainFrenzy", "to gain the Frenzy skill for this Blitz action"),
+	GAIN_GAZE("gainFrenzy", "to gain the Hypnotic Gaze skill"),
+	GAIN_HAIL_MARY("gainHailMary", "to gain Hail Mary Pass skill"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

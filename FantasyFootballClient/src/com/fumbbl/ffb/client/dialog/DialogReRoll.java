@@ -1,14 +1,13 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollParameter;
-import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -27,17 +26,17 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 /**
- *
  * @author Kalimar
  */
 public class DialogReRoll extends Dialog implements ActionListener, KeyListener {
 
-	private JButton fButtonTeamReRoll;
-	private JButton fButtonProReRoll;
-	private JButton fButtonNoReRoll;
-
-	private DialogReRollParameter fDialogParameter;
+	private final JButton fButtonTeamReRoll;
+	private final JButton fButtonProReRoll;
+	private final JButton fButtonNoReRoll;
+	private final DialogReRollParameter fDialogParameter;
+	private JButton buttonSkillReRoll;
 	private ReRollSource fReRollSource;
+	private boolean useSkill;
 
 	public DialogReRoll(FantasyFootballClient pClient, DialogReRollParameter pDialogParameter) {
 
@@ -55,6 +54,13 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		fButtonProReRoll.addKeyListener(this);
 		fButtonProReRoll.setMnemonic((int) 'P');
 
+		if (pDialogParameter.getReRollSkill() != null) {
+			buttonSkillReRoll = new JButton(pDialogParameter.getReRollSkill().getName());
+			buttonSkillReRoll.addActionListener(this);
+			buttonSkillReRoll.addKeyListener(this);
+			buttonSkillReRoll.setMnemonic((int) 'S');
+		}
+
 		fButtonNoReRoll = new JButton("No Re-Roll");
 		fButtonNoReRoll.addActionListener(this);
 		fButtonNoReRoll.addKeyListener(this);
@@ -62,11 +68,11 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		StringBuilder message1 = new StringBuilder();
 
-		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().<SkillFactory>getFactory(Factory.SKILL));
+		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			message1.append("Do you want to re-roll the failed ").append(action)
-					.append("?");
+				.append("?");
 		} else {
 			message1.append("Do you want to re-roll the ").append(action).append("?");
 		}
@@ -77,26 +83,20 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		if (pDialogParameter.isFumble()) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			StringBuilder message2 = new StringBuilder();
-			message2.append("Current roll is a FUMBLE.");
-			messagePanel.add(new JLabel(message2.toString()));
+			messagePanel.add(new JLabel("Current roll is a FUMBLE."));
 		}
 
 		Game game = getClient().getGame();
 		Player<?> reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
 		if ((reRollingPlayer != null)
-				&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+			&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			StringBuilder message3 = new StringBuilder();
-			message3.append("Player is a LONER - the Re-Roll is not guaranteed to help.");
-			messagePanel.add(new JLabel(message3.toString()));
+			messagePanel.add(new JLabel("Player is a LONER - the Re-Roll is not guaranteed to help."));
 		}
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			StringBuilder message4 = new StringBuilder();
-			message4.append("You will need a roll of ").append(fDialogParameter.getMinimumRoll()).append("+ to succeed.");
-			messagePanel.add(new JLabel(message4.toString()));
+			messagePanel.add(new JLabel("You will need a roll of " + fDialogParameter.getMinimumRoll() + "+ to succeed."));
 		}
 
 		JPanel infoPanel = new JPanel();
@@ -116,6 +116,10 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		}
 		if (fDialogParameter.isProReRollOption()) {
 			buttonPanel.add(fButtonProReRoll);
+			buttonPanel.add(Box.createHorizontalStrut(5));
+		}
+		if (buttonSkillReRoll != null) {
+			buttonPanel.add(buttonSkillReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		buttonPanel.add(fButtonNoReRoll);
@@ -144,6 +148,9 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		if (pActionEvent.getSource() == fButtonNoReRoll) {
 			fReRollSource = null;
 		}
+		if (pActionEvent.getSource() == buttonSkillReRoll) {
+			useSkill = true;
+		}
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(this);
 		}
@@ -161,28 +168,34 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		return fDialogParameter;
 	}
 
+	public boolean isUseSkill() {
+		return useSkill;
+	}
+
 	public void keyPressed(KeyEvent pKeyEvent) {
 	}
 
 	public void keyReleased(KeyEvent pKeyEvent) {
 		boolean keyHandled = true;
 		switch (pKeyEvent.getKeyCode()) {
-		case KeyEvent.VK_T:
-			if (getDialogParameter().isTeamReRollOption()) {
-				fReRollSource = ReRollSources.TEAM_RE_ROLL;
-			}
-			break;
-		case KeyEvent.VK_P:
-			if (getDialogParameter().isProReRollOption()) {
-				fReRollSource = ReRollSources.PRO;
-			}
-			break;
-		case KeyEvent.VK_N:
-			keyHandled = true;
-			break;
-		default:
-			keyHandled = false;
-			break;
+			case KeyEvent.VK_T:
+				if (getDialogParameter().isTeamReRollOption()) {
+					fReRollSource = ReRollSources.TEAM_RE_ROLL;
+				}
+				break;
+			case KeyEvent.VK_P:
+				if (getDialogParameter().isProReRollOption()) {
+					fReRollSource = ReRollSources.PRO;
+				}
+				break;
+			case KeyEvent.VK_S:
+				useSkill = true;
+				break;
+			case KeyEvent.VK_N:
+				break;
+			default:
+				keyHandled = false;
+				break;
 		}
 		if (keyHandled) {
 			if (getCloseListener() != null) {

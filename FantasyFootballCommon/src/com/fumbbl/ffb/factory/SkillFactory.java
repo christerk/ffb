@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -13,15 +8,19 @@ import com.fumbbl.ffb.model.ISkillBehaviour;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.Scanner;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 /**
- *
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.SKILL)
 @RulesCollection(Rules.COMMON)
 public class SkillFactory implements INamedObjectFactory<Skill> {
-	private Map<String, Skill> skills;
-	private Map<Class<? extends Skill>, Skill> skillMap;
+	private final Map<String, Skill> skills;
+	private final Map<Class<? extends Skill>, Skill> skillMap;
 
 	public SkillFactory() {
 		skills = new HashMap<>();

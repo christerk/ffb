@@ -30,8 +30,8 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
@@ -87,20 +87,20 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case KICKED_PLAYER_ID:
-				fKickedPlayerId = (String) pParameter.getValue();
+				fKickedPlayerId = (String) parameter.getValue();
 				return true;
 			case KICKED_PLAYER_STATE:
-				fKickedPlayerState = (PlayerState) pParameter.getValue();
+				fKickedPlayerState = (PlayerState) parameter.getValue();
 				return true;
 			case KICKED_PLAYER_HAS_BALL:
-				fKickedPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				fKickedPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				return true;
 			case NR_OF_DICE:
-				fNumDice = (pParameter.getValue() != null) ? Math.max(0, Math.min((Integer) pParameter.getValue(), 2)) : 0;
+				fNumDice = (parameter.getValue() != null) ? Math.max(0, Math.min((Integer) parameter.getValue(), 2)) : 0;
 				break;
 			default:
 				break;

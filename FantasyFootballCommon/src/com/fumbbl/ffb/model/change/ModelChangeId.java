@@ -37,6 +37,7 @@ public enum ModelChangeId implements INamedObject {
 	FIELD_MODEL_ADD_MOVE_SQUARE("fieldModelAddMoveSquare", ModelChangeDataType.MOVE_SQUARE),
 	FIELD_MODEL_ADD_PLAYER_MARKER("fieldModelAddPlayerMarker", ModelChangeDataType.PLAYER_MARKER),
 	FIELD_MODEL_ADD_PRAYER("fieldModelAddPrayer", ModelChangeDataType.STRING),
+	FIELD_MODEL_ADD_SKILL_ENHANCEMENTS("fieldModelAddSkillEnhancements", ModelChangeDataType.STRING),
 	FIELD_MODEL_ADD_PUSHBACK_SQUARE("fieldModelAddPushbackSquare", ModelChangeDataType.PUSHBACK_SQUARE),
 	FIELD_MODEL_ADD_TRACK_NUMBER("fieldModelAddTrackNumber", ModelChangeDataType.TRACK_NUMBER),
 	FIELD_MODEL_ADD_TRAP_DOOR("fieldModelAddTrapDoor", ModelChangeDataType.TRAP_DOOR),
@@ -49,6 +50,7 @@ public enum ModelChangeId implements INamedObject {
 	FIELD_MODEL_REMOVE_PLAYER("fieldModelRemovePlayer", ModelChangeDataType.FIELD_COORDINATE),
 	FIELD_MODEL_REMOVE_PLAYER_MARKER("fieldModelRemovePlayerMarker", ModelChangeDataType.PLAYER_MARKER),
 	FIELD_MODEL_REMOVE_PRAYER("fieldModelRemovePrayer", ModelChangeDataType.STRING),
+	FIELD_MODEL_REMOVE_SKILL_ENHANCEMENTS("fieldModelRemoveSkillEnhancements", ModelChangeDataType.STRING),
 	FIELD_MODEL_REMOVE_PUSHBACK_SQUARE("fieldModelRemovePushbackSquare", ModelChangeDataType.PUSHBACK_SQUARE),
 	FIELD_MODEL_REMOVE_TRACK_NUMBER("fieldModelRemoveTrackNumber", ModelChangeDataType.TRACK_NUMBER),
 	FIELD_MODEL_REMOVE_TRAP_DOOR("fieldModelRemoveTrapDoor", ModelChangeDataType.TRAP_DOOR),
@@ -99,6 +101,10 @@ public enum ModelChangeId implements INamedObject {
 	INDUCEMENT_SET_REMOVE_AVAILABLE_CARD("inducementSetRemoveAvailableCard", ModelChangeDataType.CARD),
 	INDUCEMENT_SET_REMOVE_INDUCEMENT("inducementSetRemoveInducement", ModelChangeDataType.INDUCEMENT),
 	INDUCEMENT_SET_REMOVE_PRAYER("inducementSetRemovePrayer", ModelChangeDataType.PRAYER),
+
+	PLAYER_MARK_SKILL_USED("playerMarkSkillUsed", ModelChangeDataType.SKILL),
+	PLAYER_MARK_SKILL_UNUSED("playerMarkSkillUnused", ModelChangeDataType.SKILL),
+
 
 	PLAYER_RESULT_SET_BLOCKS("playerResultSetBlocks", ModelChangeDataType.INTEGER),
 	PLAYER_RESULT_SET_CASUALTIES("playerResultSetCasualties", ModelChangeDataType.INTEGER),

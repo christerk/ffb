@@ -105,7 +105,6 @@ public final class StepWizard extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_WIZARD_SPELL:
 					ClientCommandWizardSpell wizardSpellCommand = (ClientCommandWizardSpell) pReceivedCommand.getCommand();

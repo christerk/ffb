@@ -81,11 +81,11 @@ public final class StepTouchback extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case TOUCHBACK:
-				fTouchback = (Boolean) pParameter.getValue();
+				fTouchback = (Boolean) parameter.getValue();
 				return true;
 			default:
 				break;

@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.server.mechanic.bb2016;
 
-import com.fumbbl.ffb.InjuryContext;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.bb2016.SeriousInjury;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.ZappedPlayer;

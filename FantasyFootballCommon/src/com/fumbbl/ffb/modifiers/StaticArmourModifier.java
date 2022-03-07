@@ -7,11 +7,17 @@ public class StaticArmourModifier extends RegistrationAwareModifier implements A
 	private final String fName;
 	private final int fModifier;
 	private final boolean fFoulAssistModifier;
+	private final boolean chainsaw;
 
 	public StaticArmourModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
+		this(pName, pModifier, pFoulAssistModifier, false);
+	}
+
+	public StaticArmourModifier(String pName, int pModifier, boolean pFoulAssistModifier, boolean chainsaw) {
 		fName = pName;
 		fModifier = pModifier;
 		fFoulAssistModifier = pFoulAssistModifier;
+		this.chainsaw = chainsaw;
 	}
 
 	public int getModifier(Player<?> player) {
@@ -24,6 +30,10 @@ public class StaticArmourModifier extends RegistrationAwareModifier implements A
 
 	public boolean isFoulAssistModifier() {
 		return fFoulAssistModifier;
+	}
+
+	public boolean isChainsaw() {
+		return chainsaw;
 	}
 
 	public boolean appliesToContext(ArmorModifierContext context) {

@@ -19,6 +19,8 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifierContext;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2020.ReportHypnoticGazeRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -85,6 +87,15 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			setReRolledAction(ReRolledActions.HYPNOTIC_GAZE);
+			if (((ClientCommandUseSkill) pReceivedCommand.getCommand()).isSkillUsed()) {
+				setReRollSource(((ClientCommandUseSkill) pReceivedCommand.getCommand()).getSkill().getRerollSource(getReRolledAction()));
+			}
+			commandStatus = StepCommandStatus.EXECUTE_STEP;
+		}
+
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -129,11 +140,9 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 				if (!oldVictimState.isConfused() && !oldVictimState.isHypnotized()) {
 					game.getFieldModel().setPlayerState(game.getDefender(), oldVictimState.changeHypnotized(true));
 				}
-			} else {
-				if ((getReRolledAction() != ReRolledActions.HYPNOTIC_GAZE) && UtilServerReRoll.askForReRollIfAvailable(
-					getGameState(), actingPlayer.getPlayer(), ReRolledActions.HYPNOTIC_GAZE, minimumRoll, false)) {
-					gotoEndLabel = false;
-				}
+			} else if (getReRolledAction() != ReRolledActions.HYPNOTIC_GAZE && UtilServerReRoll.askForReRollIfAvailable(
+				getGameState(), actingPlayer, ReRolledActions.HYPNOTIC_GAZE, minimumRoll, false)) {
+				gotoEndLabel = false;
 			}
 		}
 		if (gotoEndLabel) {

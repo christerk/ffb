@@ -10,10 +10,39 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.5.0")
+			.setDescription("This release adds a first batch of star abilities. Abilities modifying armour or injury rolls " +
+				"have some technical limitations: When interacting with Multiple Block the option to use the skill for each block " +
+				"separately and not for both together and the client does not support one player having more than one of those skills " +
+				"(it might result in neither being used).")
+			.addFeature("Blind Rage")
+			.addFeature("Indomitable")
+			.addFeature("Mesmerizing Dance")
+			.addFeature("The Ballista")
+			.addFeature("Old Pro")
+			.addFeature("Crushing Blow")
+			.addFeature("Ghostly Flames")
+			.addFeature("Brutal Block")
+			.addFeature("Savage Mauling")
+			.addFeature("Ram")
+			.addFeature("Slayer")
+			.addBugfix("Chainsaw player performing regular block was not able to use Dauntless")
+			.addFeature("Sneakiest of the Lot")
+			.addFeature("Reliable")
+			.addFeature("Frenzied Rush")
+			.addImprovement("Reduce game statistics dialog height")
+			.addImprovement("Allow marking of players on the pitch during own setup phase (using shift + left/right mouse button)")
+			.addFeature("Excuse Me, Are You a Zoat?")
+			.addFeature("Shot to Nothing")
+			.addBugfix("BB2016: Witch Brew Snake Oil caused client errors (games and replays)")
+			.addBugfix("Intercepting and rethrowing a bomb with a Running Pass player gave opponent control over that player")
+			.addBugfix("BB2016: Gromskull's Exploding Runes must only apply to player affected by card")
+		);
+
 		versions.add(new VersionChangeList("2.4.0")
 			.addBugfix("Prevent multi button clicks which caused inconsistent states during quick snap")
 			.addBugfix("Properly update position of thrown players to avoid catch/bounce rolls for bouncing balls")
-			.addBugfix("Tacklezone are recovered at the start of activation, allowing Pro to be used for Really Stupid etc.")
+			.addBugfix("Tacklezones are recovered at the start of activation, allowing Pro to be used for Really Stupid etc.")
 			.addImprovement("Updated icon cache")
 			.addBugfix("Play fall sound for players placed prone from bomb")
 			.addBugfix("Play sounds for all multi block actions")

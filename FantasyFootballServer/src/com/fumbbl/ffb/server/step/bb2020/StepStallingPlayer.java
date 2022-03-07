@@ -15,7 +15,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.bb2020.ReportThrowAtStallingPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeThrowARockStalling;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeThrowARockStalling;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;

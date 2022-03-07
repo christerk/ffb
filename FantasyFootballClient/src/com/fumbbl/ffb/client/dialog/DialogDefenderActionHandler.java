@@ -4,9 +4,9 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
 
 import java.util.HashMap;

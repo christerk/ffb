@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.generator.common;
 
-import static com.fumbbl.ffb.server.step.StepParameter.from;
-
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -10,6 +8,8 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {

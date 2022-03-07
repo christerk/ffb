@@ -15,9 +15,10 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportFoul;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeFoul;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeFoulForSpp;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFoul;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFoulForSpp;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -89,7 +90,8 @@ public class StepFoul extends AbstractStep {
 			? new InjuryTypeFoulForSpp(usingChainsaw) : new InjuryTypeFoul(usingChainsaw);
 		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, injuryTypeServer,
 			actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
-		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
+		publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+			new DropPlayerContext(injuryResultDefender, game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

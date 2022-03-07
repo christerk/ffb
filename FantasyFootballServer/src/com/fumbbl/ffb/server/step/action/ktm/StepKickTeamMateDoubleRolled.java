@@ -14,7 +14,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeKTMCrowd;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeKTMCrowd;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -39,17 +39,17 @@ public class StepKickTeamMateDoubleRolled extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case KICKED_PLAYER_ID:
-				fKickedPlayerId = (String) pParameter.getValue();
+				fKickedPlayerId = (String) parameter.getValue();
 				return true;
 			case KICKED_PLAYER_STATE:
-				fKickedPlayerState = (PlayerState) pParameter.getValue();
+				fKickedPlayerState = (PlayerState) parameter.getValue();
 				return true;
 			case KICKED_PLAYER_COORDINATE:
-				fKickedPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
+				fKickedPlayerCoordinate = (FieldCoordinate) parameter.getValue();
 				return true;
 			default:
 				break;

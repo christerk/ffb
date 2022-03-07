@@ -68,32 +68,32 @@ public class StepEndMoving extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case BLOCK_DEFENDER_ID:
-					fBlockDefenderId = (String) pParameter.getValue();
-					consume(pParameter);
+					fBlockDefenderId = (String) parameter.getValue();
+					consume(parameter);
 					return true;
 				case DISPATCH_PLAYER_ACTION:
-					fDispatchPlayerAction = (PlayerAction) pParameter.getValue();
-					consume(pParameter);
+					fDispatchPlayerAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
 					return true;
 				case END_PLAYER_ACTION:
-					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case FEEDING_ALLOWED:
-					fFeedingAllowed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
+					fFeedingAllowed = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
 					return true;
 				case MOVE_STACK:
-					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
-					consume(pParameter);
+					fMoveStack = (FieldCoordinate[]) parameter.getValue();
+					consume(parameter);
 					return true;
 				default:
 					break;

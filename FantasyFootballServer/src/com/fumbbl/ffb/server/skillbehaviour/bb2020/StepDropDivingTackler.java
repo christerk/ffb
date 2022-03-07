@@ -46,14 +46,14 @@ public class StepDropDivingTackler extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case COORDINATE_FROM:
-					fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+					fCoordinateFrom = (FieldCoordinate) parameter.getValue();
 					return true;
 				case USING_DIVING_TACKLE:
-					fUsingDivingTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					fUsingDivingTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				default:
 					break;

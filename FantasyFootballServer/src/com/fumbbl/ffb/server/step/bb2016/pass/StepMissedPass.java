@@ -59,10 +59,10 @@ public class StepMissedPass extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.PASS_DEVIATES) {
-				passDeviates = (boolean) pParameter.getValue();
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.PASS_DEVIATES) {
+				passDeviates = (boolean) parameter.getValue();
 				return true;
 			}
 		}

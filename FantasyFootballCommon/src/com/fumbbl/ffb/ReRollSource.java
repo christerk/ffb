@@ -7,15 +7,19 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class ReRollSource implements INamedObject {
 
 	private final String name;
-	private Class<? extends Skill> skill;
+	private final int priority;
 
 	ReRollSource(String pName) {
-		name = pName;
+		this(pName, 1);
 	}
 
-	ReRollSource(Class<? extends Skill> skill) {
-		this(skill.getName());
-		this.skill = skill;
+	ReRollSource(String pName, int priority) {
+		name = pName;
+		this.priority = priority;
+	}
+
+	public int getPriority() {
+		return priority;
 	}
 
 	public String getName() {
@@ -24,11 +28,7 @@ public class ReRollSource implements INamedObject {
 
 	public Skill getSkill(Game game) {
 		SkillFactory skillFactory = game.getRules().getSkillFactory();
-		if (skill != null) {
-			return skillFactory.forClass(skill);
-		} else {
-			return skillFactory.forName(name);
-		}
+		return skillFactory.forName(name);
 	}
 
 	public String getName(Game game) {

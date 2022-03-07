@@ -22,8 +22,8 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
@@ -58,32 +58,32 @@ public final class StepEndKickTeamMate extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			case THROWN_PLAYER_COORDINATE:
 			case KICKED_PLAYER_COORDINATE:
-				fKickedPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
-				consume(pParameter);
+				fKickedPlayerCoordinate = (FieldCoordinate) parameter.getValue();
+				consume(parameter);
 				return true;
 			case THROWN_PLAYER_HAS_BALL:
 			case KICKED_PLAYER_HAS_BALL:
-				fKickedPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
+				fKickedPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				consume(parameter);
 				return true;
 			case THROWN_PLAYER_ID:
 			case KICKED_PLAYER_ID:
-				fKickedPlayerId = (String) pParameter.getValue();
-				consume(pParameter);
+				fKickedPlayerId = (String) parameter.getValue();
+				consume(parameter);
 				return true;
 			case THROWN_PLAYER_STATE:
 			case KICKED_PLAYER_STATE:
-				fKickedPlayerState = (PlayerState) pParameter.getValue();
-				consume(pParameter);
+				fKickedPlayerState = (PlayerState) parameter.getValue();
+				consume(parameter);
 				return true;
 			default:
 				break;

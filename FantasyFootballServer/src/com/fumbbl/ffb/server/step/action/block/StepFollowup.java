@@ -96,20 +96,20 @@ public class StepFollowup extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case COORDINATE_FROM:
-				coordinateFrom = (FieldCoordinate) pParameter.getValue();
+				coordinateFrom = (FieldCoordinate) parameter.getValue();
 				return true;
 			case DEFENDER_POSITION:
-				defenderPosition = (FieldCoordinate) pParameter.getValue();
+				defenderPosition = (FieldCoordinate) parameter.getValue();
 				return true;
 			case FOLLOWUP_CHOICE:
-				followupChoice = (Boolean) pParameter.getValue();
+				followupChoice = (Boolean) parameter.getValue();
 				return true;
 			case OLD_DEFENDER_STATE:
-				oldDefenderState = (PlayerState) pParameter.getValue();
+				oldDefenderState = (PlayerState) parameter.getValue();
 				return true;
 			default:
 				break;

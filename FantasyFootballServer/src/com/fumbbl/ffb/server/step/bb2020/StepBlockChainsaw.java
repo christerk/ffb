@@ -17,7 +17,8 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeChainsaw;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeChainsaw;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -132,12 +133,10 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 				if (successful) {
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(),
-							actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
-					if (injuryResultDefender.injuryContext().isArmorBroken()) {
-						publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER, true));
-					}
-					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
+						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
+					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess, game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
+					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 							ReRolledActions.CHAINSAW, minimumRoll, false)) {
@@ -148,15 +147,11 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 			if (dropChainsawPlayer) {
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(), null,
-						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
-				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
-					publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
-					if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-					}
-				}
-				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
-				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+					new DropPlayerContext(injuryResultAttacker, UtilPlayer.hasBall(game, actingPlayer.getPlayer()), true,
+						fGotoLabelOnFailure, actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true)));
+				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);

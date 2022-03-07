@@ -9,6 +9,8 @@ import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
+import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
@@ -16,6 +18,7 @@ import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.PlayerStatLimit;
@@ -267,6 +270,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract Set<String> getEnhancementSources();
 
+	public boolean hasActiveEnhancement(Skill skill) {
+		return getEnhancementSources().contains(skill.getName());
+	}
+
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
 
 	public abstract void removeTemporarySkills(String source);
@@ -359,4 +366,25 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract PlayerStatus getPlayerStatus();
 
 	public abstract boolean isJourneyman();
+
+	public boolean isUsed(ISkillProperty property) {
+		Optional<Skill> skill = getSkillsIncludingTemporaryOnes().stream().filter(s -> s.hasSkillProperty(property)).findFirst();
+
+		return skill.isPresent() && isUsed(skill.get());
+	}
+
+	public abstract boolean isUsed(Skill skill);
+
+	public abstract void markUsed(Skill skill, Game game);
+
+	public abstract void markUnused(Skill skill, Game game);
+
+	public abstract void resetUsedSkills(SkillUsageType type, Game game);
+
+	public Optional<IInjuryContextModification> getUnusedInjuryModification(InjuryType injuryType) {
+		return getSkillsIncludingTemporaryOnes().stream()
+			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null && skill.getSkillBehaviour().hasInjuryModifier(injuryType))
+			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst();
+	}
+
 }

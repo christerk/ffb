@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 
@@ -270,6 +271,7 @@ public class UtilPlayer {
 		FieldModel fieldModel = pGame.getFieldModel();
 		Player<?>[] players = pGame.getPlayers();
 		for (Player<?> player : players) {
+			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN, pGame);
 			PlayerState newPlayerState = null;
 			PlayerState oldPlayerState = fieldModel.getPlayerState(player);
 			switch (oldPlayerState.getBase()) {
@@ -287,6 +289,8 @@ public class UtilPlayer {
 						|| (!pGame.isHomePlaying() && pGame.getTeamAway().hasPlayer(player))) {
 						newPlayerState = oldPlayerState.changeBase(PlayerState.PRONE).changeActive(false);
 					}
+					break;
+				default:
 					break;
 			}
 			if ((newPlayerState != null) && newPlayerState.hasUsedPro()) {
@@ -312,12 +316,20 @@ public class UtilPlayer {
 	}
 
 	public static boolean canGaze(Game pGame, Player<?> pPlayer) {
+		return canGaze(pGame, pPlayer, NamedProperties.inflictsConfusion);
+	}
+
+	public static boolean canGaze(Game pGame, Player<?> pPlayer, ISkillProperty property) {
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
 		GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-		if (!pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)) {
+		Skill skill = pPlayer.getSkillWithProperty(property);
+
+		boolean usedSkill = skill == null || pPlayer.isUsed(skill);
+
+		if (usedSkill) {
 			return false;
 		} else if (!playerState.isActive()) {
 			return false;

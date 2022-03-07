@@ -1,18 +1,24 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportDauntlessRoll;
+import com.fumbbl.ffb.report.ReportReRoll;
+import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
@@ -25,6 +31,7 @@ import com.fumbbl.ffb.server.step.action.block.StepDauntless;
 import com.fumbbl.ffb.server.step.action.block.StepDauntless.StepState;
 import com.fumbbl.ffb.server.step.bb2020.multiblock.StepDauntlessMultiple;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.Dauntless;
 import com.fumbbl.ffb.util.UtilCards;
@@ -34,11 +41,11 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 	public DauntlessBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepDauntless, StepState>() {
+		registerModifier(new StepModifier<StepDauntless, StepState>(2) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepDauntless step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+																								 ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -49,14 +56,14 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				int defenderStrength = game.getDefender().getStrengthWithModifiers();
 				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < defenderStrength);
-				boolean usesSpecialBlockingRules = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.makesStrengthTestObsolete);
+				boolean stopProcessing = false;
 
-				if (UtilCards.hasSkill(actingPlayer, skill) && lessStrengthThanDefender
-						&& ((state.usingStab == null) || !state.usingStab) && !usesSpecialBlockingRules) {
+				if (state.status == null && UtilCards.hasSkill(actingPlayer, skill) && lessStrengthThanDefender
+					&& !state.usesSpecialAction()) {
 					boolean doDauntless = true;
 					if (ReRolledActions.DAUNTLESS == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null)
-								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+							|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doDauntless = false;
 						}
 					}
@@ -65,25 +72,49 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollDauntless(actingPlayer.getStrength(),
 							defenderStrength);
 						boolean successful = (dauntlessRoll >= minimumRoll);
-						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.DAUNTLESS)
-								&& (step.getReRollSource() != null));
-						step.getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll,
-								minimumRoll, reRolled, defenderStrength));
-						if (successful) {
-							actingPlayer.markSkillUsed(skill);
-							step.publishParameter(new StepParameter(StepParameterKey.SUCCESSFUL_DAUNTLESS, true));
-						} else {
-							if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
-									ReRolledActions.DAUNTLESS, minimumRoll, false)) {
-								doNextStep = false;
+
+						if (!successful) {
+							ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.DAUNTLESS);
+
+							if (reRollSource != null) {
+								step.getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll,
+									minimumRoll, false, defenderStrength));
+
+								dauntlessRoll = step.getGameState().getDiceRoller().rollDauntless();
+								successful = (dauntlessRoll >= minimumRoll);
+								step.setReRolledAction(ReRolledActions.DAUNTLESS);
+								step.setReRollSource(reRollSource);
+								step.getResult().addReport(new ReportReRoll(actingPlayer.getPlayerId(), reRollSource, successful, minimumRoll));
 							}
+						}
+
+						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.DAUNTLESS)
+							&& (step.getReRollSource() != null));
+						step.getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll,
+							minimumRoll, reRolled, defenderStrength));
+						if (successful) {
+							step.publishParameter(new StepParameter(StepParameterKey.SUCCESSFUL_DAUNTLESS, true));
+							Skill indomitable = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canDoubleStrengthAfterDauntless);
+							if (indomitable != null) {
+								doNextStep = false;
+								state.status = ActionStatus.WAITING_FOR_SKILL_USE;
+								Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+								UtilServerDialog.showDialog(step.getGameState(),
+									new DialogSkillUseParameter(actingPlayer.getPlayerId(), indomitable, 0),
+									actingTeam.hasPlayer(actingPlayer.getPlayer()));
+							}
+						} else if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+							ReRolledActions.DAUNTLESS, minimumRoll, false)) {
+							doNextStep = false;
+							stopProcessing = true;
 						}
 					}
 				}
+
 				if (doNextStep) {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}
-				return false;
+				return stopProcessing;
 			}
 		});
 
@@ -133,7 +164,8 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 			}
 
 			@Override
-			protected void failedRollEffect(StepDauntlessMultiple step) {}
+			protected void failedRollEffect(StepDauntlessMultiple step) {
+			}
 
 			@Override
 			protected ReRolledAction reRolledAction() {

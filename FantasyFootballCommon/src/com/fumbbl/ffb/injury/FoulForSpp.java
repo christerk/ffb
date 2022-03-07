@@ -1,13 +1,15 @@
 package com.fumbbl.ffb.injury;
 
-import com.fumbbl.ffb.InjuryType;
 import com.fumbbl.ffb.SendToBoxReason;
 
 public class FoulForSpp extends InjuryType {
 
 	public FoulForSpp() {
-		super("foul", true, SendToBoxReason.FOULED);
-		// TODO Auto-generated constructor stub
+		this("foulForSpp");
+	}
+
+	public FoulForSpp(String name) {
+		super(name, true, SendToBoxReason.FOULED);
 	}
 
 	@Override

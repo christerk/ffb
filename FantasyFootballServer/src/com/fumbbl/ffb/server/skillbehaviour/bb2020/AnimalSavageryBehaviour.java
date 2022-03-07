@@ -15,13 +15,15 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.report.bb2020.ReportAnimalSavagery;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeBlock;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -162,8 +164,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		InjuryTypeBlock.Mode mode = actingPlayer.isStandingUp() ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false),
 			actingPlayer.getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
-		step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
-		step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.ANIMAL_SAVAGERY, true));
+
+		step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT, new DropPlayerContext(injuryResult, false, true, null, actingPlayer.getPlayerId(), ApothecaryMode.ANIMAL_SAVAGERY, false)));
+		step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 		if (player.getId().equals(state.thrownPlayerId)) {
 			PlayerAction action = actingPlayer.getPlayerAction();
@@ -173,12 +176,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 				step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 				step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
-				step.getResult().setNextAction(StepAction.NEXT_STEP);
-				return;
 			}
 		}
 
-		step.getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	private void cancelPlayerAction(StepAnimalSavagery step) {
@@ -199,16 +199,18 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			case THROW_TEAM_MATE_MOVE:
 				game.getTurnData().setPassUsed(true);
 				break;
-		case HAND_OVER:
-		case HAND_OVER_MOVE:
-			game.getTurnData().setHandOverUsed(true);
-			break;
-		case FOUL:
-		case FOUL_MOVE:
-			game.getTurnData().setFoulUsed(true);
-			break;
-		default:
-			break;
+			case HAND_OVER:
+			case HAND_OVER_MOVE:
+				game.getTurnData().setHandOverUsed(true);
+				break;
+			case FOUL:
+			case FOUL_MOVE:
+				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+					game.getTurnData().setFoulUsed(true);
+				}
+				break;
+			default:
+				break;
 		}
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if (actingPlayer.isStandingUp()) {

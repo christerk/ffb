@@ -49,7 +49,8 @@ public enum ReportId implements INamedObject {
 	KICK_TEAM_MATE_FUMBLE("kickTeamMateFumble"), BLOCK_RE_ROLL("blockReRoll"), TRAP_DOOR("trapDoor"),
 	PRAYER_AMOUNT("prayerAmount"), PRAYER_ROLL("prayerRoll"), PRAYER_END("prayerEnd"),
 	PRAYER_WASTED("prayerWasted"), KICKOFF_CHEERING_FANS("cheeringFans"), BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"),
-	PLAYER_EVENT("playerEvent"), STALLER_DETECTED("stallerDetected"), THROW_AT_STALLING_PLAYER("throwAtStallingPlayer");
+	PLAYER_EVENT("playerEvent"), STALLER_DETECTED("stallerDetected"), THROW_AT_STALLING_PLAYER("throwAtStallingPlayer"),
+	INDOMITABLE("indomitable"), OLD_PRO("oldPro");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)

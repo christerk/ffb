@@ -22,6 +22,7 @@ import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
+import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 
 import java.util.ArrayList;
@@ -54,28 +55,40 @@ public abstract class Skill implements INamedObject {
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
 	private final int defaultSkillValue;
 	private final List<ISkillProperty> conflictingProperties = new ArrayList<>();
+	private final SkillUsageType skillUsageType;
 	private final boolean negativeTrait;
+	private TemporaryEnhancements enhancements;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
 	}
 
+	public Skill(String name, SkillCategory category, SkillUsageType skillUsageType) {
+		this(name, category, 0, skillUsageType);
+	}
+
 	public Skill(String name, SkillCategory category, int defaultSkillValue) {
-		this(name, category, defaultSkillValue, false);
+		this(name, category, defaultSkillValue, SkillUsageType.REGULAR);
+	}
+
+	public Skill(String name, SkillCategory category, int defaultSkillValue, SkillUsageType skillUsageType) {
+		this(name, category, defaultSkillValue, false, skillUsageType);
 	}
 
 	public Skill(String name, SkillCategory category, boolean negativeTrait) {
-		this(name, category, 0, negativeTrait);
+		this(name, category, 0, negativeTrait, SkillUsageType.REGULAR);
 	}
 
-	public Skill(String name, SkillCategory category, int defaultSkillValue, boolean negativeTrait) {
+	public Skill(String name, SkillCategory category, int defaultSkillValue, boolean negativeTrait, SkillUsageType skillUsageType) {
 		this.name = name;
 		this.category = category;
 		this.defaultSkillValue = defaultSkillValue;
+		this.skillUsageType = skillUsageType;
 		this.negativeTrait = negativeTrait;
 	}
 
-	public void postConstruct() {}
+	public void postConstruct() {
+	}
 
 	@Override
 	public String getName() {
@@ -167,6 +180,10 @@ public abstract class Skill implements INamedObject {
 		conflictingProperties.add(property);
 	}
 
+	public TemporaryEnhancements getEnhancements() {
+		return enhancements;
+	}
+
 	public ISkillBehaviour<? extends Skill> getSkillBehaviour() {
 		return behaviour;
 	}
@@ -225,6 +242,14 @@ public abstract class Skill implements INamedObject {
 
 	public List<CasualtyModifier> getCasualtyModifiers() {
 		return casualtyModifiers;
+	}
+
+	public SkillUsageType getSkillUsageType() {
+		return skillUsageType;
+	}
+
+	protected void setEnhancements(TemporaryEnhancements enhancements) {
+		this.enhancements = enhancements;
 	}
 
 	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {
@@ -300,7 +325,11 @@ public abstract class Skill implements INamedObject {
 	}
 
 	public boolean canBeAssignedTo(Player<?> player) {
-		return conflictingProperties.stream().noneMatch(player::hasSkillProperty);
+		return !conflictsWithAnySkill(player);
+	}
+
+	public boolean conflictsWithAnySkill(Player<?> player) {
+		return conflictingProperties.stream().anyMatch(player::hasSkillProperty);
 	}
 
 	public boolean isNegativeTrait() {

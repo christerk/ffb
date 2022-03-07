@@ -7,9 +7,9 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
@@ -95,6 +95,12 @@ public class ServerUtilBlock {
 
 	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
 	                                    boolean usingMultiBlock, boolean successfulDauntless) {
+
+		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false);
+	}
+
+	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
+	                                    boolean usingMultiBlock, boolean successfulDauntless, boolean doubleTargetStrength) {
 		int nrOfDice = 0;
 		if ((attacker != null) && (defender != null)) {
 			nrOfDice = 1;
@@ -107,7 +113,7 @@ public class ServerUtilBlock {
 			}
 
 			if (successfulDauntless) {
-				blockStrengthAttacker = Math.max(blockStrengthAttacker, defenderStrength);
+				blockStrengthAttacker = Math.max(blockStrengthAttacker, doubleTargetStrength ? 2 * defenderStrength : defenderStrength);
 			}
 
 			blockStrengthAttacker = ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);

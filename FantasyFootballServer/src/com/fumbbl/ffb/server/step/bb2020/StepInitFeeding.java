@@ -27,7 +27,7 @@ import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeBitten;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBitten;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;

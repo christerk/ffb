@@ -36,7 +36,7 @@ import com.fumbbl.ffb.report.bb2016.ReportKickoffThrowARock;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeThrowARock;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeThrowARock;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -120,17 +120,17 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case KICKOFF_BOUNDS:
-				fKickoffBounds = (FieldCoordinateBounds) pParameter.getValue();
+				fKickoffBounds = (FieldCoordinateBounds) parameter.getValue();
 				return true;
 			case KICKOFF_RESULT:
-				fKickoffResult = (KickoffResult) pParameter.getValue();
+				fKickoffResult = (KickoffResult) parameter.getValue();
 				return true;
 			case TOUCHBACK:
-				fTouchback = (Boolean) pParameter.getValue();
+				fTouchback = (Boolean) parameter.getValue();
 				return true;
 			default:
 				break;

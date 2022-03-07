@@ -16,7 +16,8 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.InjuryType.InjuryTypeProjectileVomit;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeProjectileVomit;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -118,12 +119,11 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 				if (successful) {
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeProjectileVomit(),
-							actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
-					if (injuryResultDefender.injuryContext().isArmorBroken()) {
-						publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER, true));
-					}
-					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
+						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
+					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess,
+							game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
+					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (getReRolledAction() == ReRolledActions.PROJECTILE_VOMIT || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 							ReRolledActions.PROJECTILE_VOMIT, minimumRoll, false)) {
@@ -134,12 +134,10 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 			if (dropSelf) {
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeProjectileVomit(), null,
-						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
-				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
-					publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
-				}
-				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
-				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+					new DropPlayerContext(injuryResultAttacker, false, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
+				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);

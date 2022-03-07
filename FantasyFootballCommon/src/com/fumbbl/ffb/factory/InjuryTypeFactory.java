@@ -1,17 +1,17 @@
 package com.fumbbl.ffb.factory;
 
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.InjuryTypeConstants;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.InjuryType;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.InjuryTypeConstants;
 
 /**
  *
@@ -22,7 +22,7 @@ import com.fumbbl.ffb.model.InjuryTypeConstants;
 public class InjuryTypeFactory implements INamedObjectFactory {
 
 	private final Map<String, InjuryType> injuryTypes;
-	private Map<Class<? extends InjuryType>, InjuryType> injuryTypeMap;
+	private final Map<Class<? extends InjuryType>, InjuryType> injuryTypeMap;
 
 	public InjuryTypeFactory() {
 		injuryTypes = new HashMap<>();

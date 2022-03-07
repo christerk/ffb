@@ -13,6 +13,7 @@ public class NamedProperties {
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnDodge = new NamedProperty("Affects Either Armour Or Injury On Dodge");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnFoul = new NamedProperty("Affects Either Armour Or Injury On Foul");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnJump = new NamedProperty("Affects Either Armour Or Injury On Jump");
+	public static final ISkillProperty allowsAdditionalFoul = new NamedProperty("Allows Additional Foul");
 	public static final ISkillProperty allowsRaisingLineman = new NamedProperty("Allows Raising Lineman");
 	public static final ISkillProperty allowStandUpAssists = new NamedProperty("Allow Stand Up Assists");
 	public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
@@ -38,6 +39,7 @@ public class NamedProperties {
 	public static final ISkillProperty canCancelInterceptions = new NamedProperty("Can Force Interception Reroll");
 	public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty(
 		"Can Choose Own Pushed Back Square");
+	public static final ISkillProperty canDoubleStrengthAfterDauntless = new NamedProperty("Can Double Strength After Dauntless");
 	public static final ISkillProperty canDropBall = new NamedProperty("Can Drop Ball");
 	public static final ISkillProperty canFollowPlayerLeavingTacklezones = new NamedProperty("Can Follow Player Leaving Tacklezones");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
@@ -51,6 +53,9 @@ public class NamedProperties {
 		}
 	};
 	public static final ISkillProperty canFoulAfterBlock = new NamedProperty("Can Foul After Block");
+	public static final ISkillProperty canGainFrenzyForBlitz = new NamedProperty("Can Gain Frenzy For Blitz");
+	public static final ISkillProperty canGainGaze = new NamedProperty("Can Gain Gaze");
+	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
@@ -97,6 +102,7 @@ public class NamedProperties {
 	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
 	public static final ISkillProperty forceSecondBlock = new NamedProperty("Force Second Block");
 	public static final ISkillProperty foulBreaksArmourWithoutRoll = new NamedProperty("Foul Breaks Armour Without Roll");
+	public static final ISkillProperty fumbledPlayerLandsSafely = new NamedProperty("Fumbled Player Lands Safely");
 	public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");

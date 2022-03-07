@@ -9,7 +9,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportFanFactor;
 
 @ReportMessageType(ReportId.FAN_FACTOR)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class FanFactorMessage extends ReportMessageBase<ReportFanFactor> {
 
     @Override

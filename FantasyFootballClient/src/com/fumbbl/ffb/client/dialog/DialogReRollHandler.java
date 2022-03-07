@@ -6,7 +6,6 @@ import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollParameter;
-import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -36,8 +35,8 @@ public class DialogReRollHandler extends DialogHandler {
 			} else {
 				StringBuilder message = new StringBuilder();
 				String reRolledActionName = (dialogReRollParameter.getReRolledAction() != null)
-						? dialogReRollParameter.getReRolledAction().getName(game.getRules().<SkillFactory>getFactory(FactoryType.Factory.SKILL))
-						: null;
+					? dialogReRollParameter.getReRolledAction().getName(game.getRules().getFactory(FactoryType.Factory.SKILL))
+					: null;
 				message.append("Waiting to re-roll ").append(reRolledActionName);
 				if (dialogReRollParameter.getMinimumRoll() > 0) {
 					message.append(" (").append(dialogReRollParameter.getMinimumRoll()).append("+ to succeed)");
@@ -54,7 +53,11 @@ public class DialogReRollHandler extends DialogHandler {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL)) {
 			DialogReRoll reRollDialog = (DialogReRoll) pDialog;
-			getClient().getCommunication().sendUseReRoll(reRollDialog.getReRolledAction(), reRollDialog.getReRollSource());
+			if (reRollDialog.isUseSkill()) {
+				getClient().getCommunication().sendUseSkill(reRollDialog.getDialogParameter().getReRollSkill(), true, reRollDialog.getDialogParameter().getPlayerId());
+			} else {
+				getClient().getCommunication().sendUseReRoll(reRollDialog.getReRolledAction(), reRollDialog.getReRollSource());
+			}
 		}
 	}
 

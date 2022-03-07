@@ -47,7 +47,7 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 		// report armour roll
 
 		int[] armorRoll = report.getArmorRoll();
-		if (ArrayTool.isProvided(armorRoll)) {
+		if (ArrayTool.isProvided(armorRoll) && !report.getSkip().isArmour()) {
 			status.append("Armour Roll [ ").append(armorRoll[0]).append(" ][ ").append(armorRoll[1]).append(" ]");
 			println(getIndent(), TextStyle.ROLL, status.toString());
 			status = new StringBuilder();
@@ -103,45 +103,47 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 
 		// report injury roll
 		if (report.isArmorBroken()) {
-			boolean thickSkullUsed = false;
-			boolean stuntyUsed = false;
-			status = new StringBuilder();
-			int[] injuryRoll = report.getInjuryRoll();
-			if (ArrayTool.isProvided(injuryRoll)) {
-				status.append("Injury Roll [ ").append(injuryRoll[0]).append(" ][ ").append(injuryRoll[1]).append(" ]");
-				println(getIndent(), TextStyle.ROLL, status.toString());
+			if (!report.getSkip().isInjury()) {
+				boolean thickSkullUsed = false;
+				boolean stuntyUsed = false;
 				status = new StringBuilder();
-				int rolledTotal = injuryRoll[0] + injuryRoll[1];
-				status.append("Rolled Total of ").append(rolledTotal);
-				int injuryModifierTotal = 0;
-				for (InjuryModifier injuryModifier : report.getInjuryModifiers()) {
-					int modifierValue = injuryModifier.getModifier(attacker, defender);
-					injuryModifierTotal += modifierValue;
-					if (modifierValue == 0) {
-						thickSkullUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
-						stuntyUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
-					} else if (modifierValue > 0) {
-						status.append(" + ").append(modifierValue).append(" ").append(injuryModifier.getName());
-					} else {
-						status.append(" ").append(modifierValue).append(" ").append(injuryModifier.getName());
+				int[] injuryRoll = report.getInjuryRoll();
+				if (ArrayTool.isProvided(injuryRoll)) {
+					status.append("Injury Roll [ ").append(injuryRoll[0]).append(" ][ ").append(injuryRoll[1]).append(" ]");
+					println(getIndent(), TextStyle.ROLL, status.toString());
+					status = new StringBuilder();
+					int rolledTotal = injuryRoll[0] + injuryRoll[1];
+					status.append("Rolled Total of ").append(rolledTotal);
+					int injuryModifierTotal = 0;
+					for (InjuryModifier injuryModifier : report.getInjuryModifiers()) {
+						int modifierValue = injuryModifier.getModifier(attacker, defender);
+						injuryModifierTotal += modifierValue;
+						if (modifierValue == 0) {
+							thickSkullUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
+							stuntyUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
+						} else if (modifierValue > 0) {
+							status.append(" + ").append(modifierValue).append(" ").append(injuryModifier.getName());
+						} else {
+							status.append(" ").append(modifierValue).append(" ").append(injuryModifier.getName());
+						}
 					}
-				}
-				if (injuryModifierTotal != 0) {
-					status.append(" = ").append(rolledTotal + injuryModifierTotal);
-				}
-				println(getIndent() + 1, status.toString());
-				if (stuntyUsed) {
-					print(getIndent() + 1, false, defender);
-					status = new StringBuilder();
-					status.append(" is Stunty and more easily hurt because of that.");
+					if (injuryModifierTotal != 0) {
+						status.append(" = ").append(rolledTotal + injuryModifierTotal);
+					}
 					println(getIndent() + 1, status.toString());
-				}
-				if (thickSkullUsed) {
-					print(getIndent() + 1, false, defender);
-					status = new StringBuilder();
-					status.append("'s Thick Skull helps ").append(defender.getPlayerGender().getDative())
-						.append(" to stay on the pitch.");
-					println(getIndent() + 1, status.toString());
+					if (stuntyUsed) {
+						print(getIndent() + 1, false, defender);
+						status = new StringBuilder();
+						status.append(" is Stunty and more easily hurt because of that.");
+						println(getIndent() + 1, status.toString());
+					}
+					if (thickSkullUsed) {
+						print(getIndent() + 1, false, defender);
+						status = new StringBuilder();
+						status.append("'s Thick Skull helps ").append(defender.getPlayerGender().getDative())
+							.append(" to stay on the pitch.");
+						println(getIndent() + 1, status.toString());
+					}
 				}
 				if (ArrayTool.isProvided(report.getCasualtyRoll())) {
 					print(getIndent() + 1, false, defender);
@@ -173,7 +175,7 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 						}
 						reportInjury(defender, report.getInjury(), report.getSeriousInjury(), casualtyRoll[1], report.getOriginalInjury());
 					}
-				} else {
+				} else if (report.getInjury() != null) {
 					reportInjury(defender, report.getInjury(), null, 0, null);
 				}
 			}

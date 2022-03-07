@@ -47,13 +47,13 @@ public final class StepBlitzTurn extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
+	public boolean setParameter(StepParameter parameter) {
 		Game game = getGameState().getGame();
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			if (pParameter.getKey() == StepParameterKey.END_TURN) {
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.END_TURN) {
+				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				if (game.getTurnMode() == TurnMode.BLITZ) {
-					consume(pParameter);
+					consume(parameter);
 				}
 				return true;
 			}

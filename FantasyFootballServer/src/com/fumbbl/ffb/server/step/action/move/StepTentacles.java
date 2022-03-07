@@ -40,7 +40,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
 		public Boolean usingTentacles;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepTentacles(GameState pGameState) {
 		super(pGameState);
@@ -72,11 +72,11 @@ public class StepTentacles extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 			case COORDINATE_FROM:
-				state.coordinateFrom = (FieldCoordinate) pParameter.getValue();
+				state.coordinateFrom = (FieldCoordinate) parameter.getValue();
 				return true;
 			default:
 				break;

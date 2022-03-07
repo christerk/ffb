@@ -24,8 +24,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ALREADY_REPORTED = new JsonBooleanOption("alreadyReported");
     JsonBooleanOption ALLOW_MOVE_AFTER_PASS = new JsonBooleanOption("allowMoveAfterPass");
     JsonStringOption ALTERNATE_GOTO_LABEL = new JsonStringOption("gotoLabelOnBlock");
-    JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
-    JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
+    JsonBooleanOption ALREADY_DROPPED = new JsonBooleanOption("alreadyDropped");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
@@ -42,14 +41,15 @@ public interface IServerJsonOption extends IJsonOption {
     JsonFieldCoordinateOption COORDINATE_TO = new JsonFieldCoordinateOption("coordinateTo");
     JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
     JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
-    JsonFieldCoordinateOption DEFENDER_POSITION = new JsonFieldCoordinateOption("defenderPosition");
     JsonBooleanOption DEFENDER_PUSHED = new JsonBooleanOption("defenderPushed");
     JsonEnumWithNameOption DISPATCH_PLAYER_ACTION = new JsonEnumWithNameOption("dispatchPlayerAction",
         Factory.PLAYER_ACTION);
     JsonBooleanOption DIVING_CATCH_CHOICE = new JsonBooleanOption("divingCatchChoice");
+    JsonObjectOption DROP_PLAYER_CONTEXT = new JsonObjectOption("dropPlayerContext");
     JsonBooleanOption DROP_THROWN_PLAYER = new JsonBooleanOption("dropThrownPlayer");
     JsonIntOption DODGE_ROLL = new JsonIntOption("dodgeRoll");
     JsonBooleanOption DONT_DROP_FUMBLE = new JsonBooleanOption("dontDropFumble");
+    JsonBooleanOption ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS = new JsonBooleanOption("eligibleForSafePairOfHands");
     JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
     JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");
     JsonBooleanOption END_INDUCEMENT = new JsonBooleanOption("endInducement");
@@ -137,6 +137,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
     JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
+    JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
     JsonObjectOption SCATTER_BOUNDS = new JsonObjectOption("scatterBounds");
     JsonIntOption SCATTER_DISTANCE = new JsonIntOption("scatterDistance");

@@ -16,6 +16,7 @@ import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.InterceptionContext;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.RollModifier;
@@ -462,8 +463,14 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			InducementDuration.UNTIL_END_OF_GAME, "Player gets Bombardier, No Hands, Secret Weapon & -1 to pass") {
 			@Override
 			public Set<RollModifier<?>> rollModifiers() {
+				String cardName = getName();
 				return Collections.singleton(new PassModifier("Gromskull's Exploding Runes", 1,
-					ModifierType.REGULAR));
+					ModifierType.REGULAR) {
+					@Override
+					public boolean appliesToContext(Skill skill, PassContext context) {
+						return context.getPlayer().getEnhancementSources().contains(cardName);
+					}
+				});
 			}
 
 			@Override
@@ -588,16 +595,19 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 			public Optional<CardReport> cardReport(CardEffect effect, int roll) {
 
 				String rollReport = "Witch Brew Roll [ " + roll + " ]";
-				String effectReport;
-				switch (effect) {
-					case SEDATIVE:
-						effectReport = "Sedative! The player gains the Really Stupid skill until the drive ends.";
-						break;
-					case MAD_CAP_MUSHROOM_POTION:
-						effectReport = "Mad Cap Mushroom potion! The player gains the Jump Up and No Hands skills until the drive ends.";
-						break;
-					default:
-						effectReport = "Snake Oil! Bad taste, but no effect.";
+				String effectReport = "Snake Oil! Bad taste, but no effect.";
+
+				if (effect != null) {
+					switch (effect) {
+						case SEDATIVE:
+							effectReport = "Sedative! The player gains the Really Stupid skill until the drive ends.";
+							break;
+						case MAD_CAP_MUSHROOM_POTION:
+							effectReport = "Mad Cap Mushroom potion! The player gains the Jump Up and No Hands skills until the drive ends.";
+							break;
+						default:
+							break;
+					}
 				}
 				return Optional.of(new CardReport(rollReport, effectReport));
 			}

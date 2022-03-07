@@ -12,6 +12,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.server.ActionStatus;
@@ -142,7 +143,9 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
                 break;
             case FOUL:
             case FOUL_MOVE:
-                game.getTurnData().setFoulUsed(true);
+                if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+                    game.getTurnData().setFoulUsed(true);
+                }
                 break;
             default:
                 break;

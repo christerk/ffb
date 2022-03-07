@@ -27,6 +27,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_DESELECT = KeyEvent.VK_ESCAPE;
 	int KEY_RECOVER = KeyEvent.VK_R;
 	int KEY_GAZE = KeyEvent.VK_G;
+	int KEY_GAZE_ZOAT = KeyEvent.VK_A;
 	int KEY_RANGE_GRID = KeyEvent.VK_R;
 	int KEY_HAIL_MARY_PASS = KeyEvent.VK_H;
 	int KEY_HAIL_MARY_BOMB = KeyEvent.VK_H;
@@ -34,4 +35,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_LONG = KeyEvent.VK_L;
 	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;
 	int KEY_PROJECTILE_VOMIT = KeyEvent.VK_V;
+	int KEY_FRENZIED_RUSH = KeyEvent.VK_E;
+	int KEY_SHOT_TO_NOTHING = KeyEvent.VK_N;
+	int KEY_SHOT_TO_NOTHING_BOMB = KeyEvent.VK_V;
 }

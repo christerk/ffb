@@ -4,21 +4,22 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.InjuryContext;
-import com.fumbbl.ffb.InjuryType;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
+import com.fumbbl.ffb.injury.InjuryType;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
-import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 	}
 
 	@Override
-	public ReportInjury init(InjuryContext injuryContext) {
+	public ReportInjury init(InjuryContext injuryContext, SkipInjuryParts ignored) {
 		init(injuryContext.getDefenderId(), injuryContext.getInjuryType(),
 			injuryContext.isArmorBroken(), injuryContext.getArmorModifiers(), injuryContext.getArmorRoll(),
 			injuryContext.getInjuryModifiers(), injuryContext.getInjuryRoll(), injuryContext.getCasualtyRoll(),

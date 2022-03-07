@@ -13,6 +13,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
@@ -105,11 +106,11 @@ public class StepInitMoving extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
 				case MOVE_STACK:
-					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
+					fMoveStack = (FieldCoordinate[]) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -284,7 +285,9 @@ public class StepInitMoving extends AbstractStep {
 							game.getTurnData().setBlitzUsed(true);
 							break;
 						case FOUL_MOVE:
-							game.getTurnData().setFoulUsed(true);
+							if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+								game.getTurnData().setFoulUsed(true);
+							}
 							break;
 						case HAND_OVER_MOVE:
 							game.getTurnData().setHandOverUsed(true);
