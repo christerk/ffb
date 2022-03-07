@@ -76,8 +76,12 @@ public class ClientStateSetup extends ClientState {
 			super.mouseReleased(pMouseEvent);
 		} else {
 			if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
+				System.out.println("ClientStateSetup: Release event ignored");
+				System.out.println("Event: " + pMouseEvent);
 				return;
 			}
+			System.out.println("ClientStateSetup: Release event handled");
+			System.out.println("Event: " + pMouseEvent);
 			getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
 			UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
 		}
