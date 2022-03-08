@@ -18,6 +18,10 @@ public class ChangeList {
 			.addFeature("More setting options for right click behavior")
 		);
 
+		versions.add(new VersionChangeList("2.5.1")
+			.addBugfix("Animal Savagery players always put prone when failing roll")
+		);
+
 		versions.add(new VersionChangeList("2.5.0")
 			.setDescription("This release adds a first batch of star abilities. Abilities modifying armour or injury rolls " +
 				"have some technical limitations: When interacting with Multiple Block the option to use the skill for each block " +

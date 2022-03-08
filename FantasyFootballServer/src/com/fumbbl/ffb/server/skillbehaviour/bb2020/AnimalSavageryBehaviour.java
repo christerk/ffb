@@ -165,7 +165,8 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false),
 			actingPlayer.getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 
-		step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT, new DropPlayerContext(injuryResult, false, true, null, actingPlayer.getPlayerId(), ApothecaryMode.ANIMAL_SAVAGERY, false)));
+		step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+			new DropPlayerContext(injuryResult, false, true, null, game.getDefenderId(), ApothecaryMode.ANIMAL_SAVAGERY, false)));
 		step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 		if (player.getId().equals(state.thrownPlayerId)) {
