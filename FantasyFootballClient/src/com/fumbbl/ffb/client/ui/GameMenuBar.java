@@ -107,6 +107,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem gazePanelOffMenuItem;
 
 	private final JRadioButtonMenuItem rightClickEndActionOnMenuItem;
+	private final JRadioButtonMenuItem rightClickOpensContextMenuItem;
+	private final JRadioButtonMenuItem rightClickLegacyModeItem;
 	private final JRadioButtonMenuItem rightClickEndActionOffMenuItem;
 
 	private final JRadioButtonMenuItem fCustomPitchMenuItem;
@@ -330,16 +332,26 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
 
 		ButtonGroup rightClickEndActionPanelGroup = new ButtonGroup();
-		JMenu rightClickEndActionPanelMenu = new JMenu("Right Click Ends Action");
+		JMenu rightClickEndActionPanelMenu = new JMenu("Right Click Behaviour");
 		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
 		fUserSettingsMenu.add(rightClickEndActionPanelMenu);
 
-		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem("Enable");
+		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem("Ends Action/Selection");
 		rightClickEndActionOnMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickEndActionOnMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOnMenuItem);
 
-		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem("Disable");
+		rightClickLegacyModeItem = new JRadioButtonMenuItem("Works like Left Click (Legacy)");
+		rightClickLegacyModeItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickLegacyModeItem);
+		rightClickEndActionPanelMenu.add(rightClickLegacyModeItem);
+
+		rightClickOpensContextMenuItem = new JRadioButtonMenuItem("Selects Player/Opens Context Menu");
+		rightClickOpensContextMenuItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickOpensContextMenuItem);
+		rightClickEndActionPanelMenu.add(rightClickOpensContextMenuItem);
+
+		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem("Disabled");
 		rightClickEndActionOffMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
@@ -534,6 +546,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String rightClickEndActionSetting = getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION);
 		rightClickEndActionOffMenuItem.setSelected(true);
 		rightClickEndActionOnMenuItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickEndActionSetting));
+		rightClickLegacyModeItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickEndActionSetting));
+		rightClickOpensContextMenuItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU.equals(rightClickEndActionSetting));
 
 		String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
@@ -659,6 +673,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == rightClickEndActionOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickLegacyModeItem) {
+			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickOpensContextMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
 			getClient().saveUserSettings(false);
 		}
 		if (source == rightClickEndActionOffMenuItem) {

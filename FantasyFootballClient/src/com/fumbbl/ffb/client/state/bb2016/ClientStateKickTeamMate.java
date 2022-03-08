@@ -44,7 +44,6 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		markKickablePlayers();
 	}
 

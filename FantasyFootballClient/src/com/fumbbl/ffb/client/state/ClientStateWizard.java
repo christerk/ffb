@@ -30,7 +30,6 @@ public class ClientStateWizard extends ClientState {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		setClickable(true);
 		fShowMarker = true;
 	}

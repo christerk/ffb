@@ -10,8 +10,21 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.6.0")
+		versions.add(new VersionChangeList("2.7.0")
 			.addFeature("Treacherous")
+		);
+
+		versions.add(new VersionChangeList("2.6.0")
+			.addBugfix("Opening and closing the action menu required an additional click to open it again")
+			.addBugfix("Opening and closing the action menu required an additional click for side bar to update (player details) when hovering")
+			.addBugfix("Failed download for pitch images caused graphic issues (squares were filled with blue when hovering over them)")
+			.addBugfix("Potential fix for setup issues on Mac OS")
+			.addFeature("More setting options for right click behavior")
+			.addBugfix("Animal Savagery lashing out against ball carrier still started the action (e.g. move one square) before turn ended")
+		);
+
+		versions.add(new VersionChangeList("2.5.1")
+			.addBugfix("Animal Savagery players always put prone when failing roll")
 		);
 
 		versions.add(new VersionChangeList("2.5.0")

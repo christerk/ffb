@@ -47,7 +47,6 @@ public class ClientStateKickTeamMateLikeThrow extends ClientStateMove {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		markThrowablePlayers();
 		fRangeGridHandler.refreshSettings();
 	}

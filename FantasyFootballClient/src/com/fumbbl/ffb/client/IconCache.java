@@ -1,20 +1,5 @@
 package com.fumbbl.ffb.client;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import javax.imageio.ImageIO;
-
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.IIconProperty;
@@ -28,21 +13,34 @@ import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 /**
- *
  * @author Kalimar
  */
 public class IconCache {
 
 	private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
 
-	private Map<String, BufferedImage> fIconByKey;
+	private final Map<String, BufferedImage> fIconByKey;
 
 	private Properties fIconUrlProperties;
 
-	private Map<String, Integer> fCurrentIndexPerKey;
+	private final Map<String, Integer> fCurrentIndexPerKey;
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
 	public IconCache(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -57,21 +55,12 @@ public class IconCache {
 		System.setProperty("com.sun.net.ssl.checkRevocation", "false");
 
 		fIconUrlProperties = new Properties();
-		InputStream propertyInputStream = null;
-		try {
-			propertyInputStream = getClass().getResourceAsStream("/icons.ini");
+		try (InputStream propertyInputStream = getClass().getResourceAsStream("/icons.ini")) {
 			fIconUrlProperties.load(propertyInputStream);
 		} catch (IOException pIoException) {
 			// empty properties
-		} finally {
-			if (propertyInputStream != null) {
-				try {
-					propertyInputStream.close();
-				} catch (IOException e) {
-					// NOOP
-				}
-			}
 		}
+		// NOOP
 	}
 
 	public boolean loadIconFromArchive(String pUrl) {
@@ -166,10 +155,11 @@ public class IconCache {
 	}
 
 	public BufferedImage getPitch(Game pGame, Weather pWeather) {
-		if (pWeather == Weather.INTRO) {
+		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather));
+		if (pWeather == Weather.INTRO || weatherPitch == null) {
 			return getIconByProperty(IIconProperty.PITCH_INTRO);
 		} else {
-			return getIconByUrl(findPitchUrl(pGame, pWeather));
+			return weatherPitch;
 		}
 	}
 
@@ -207,12 +197,12 @@ public class IconCache {
 
 	public String getNextProperty(String pIconProperty) {
 
-		String nextKey = null;
+		String nextKey;
 
 		int index = 1;
 		Integer currentIndex = fCurrentIndexPerKey.get(pIconProperty);
 		if (currentIndex != null) {
-			index = currentIndex.intValue() + 1;
+			index = currentIndex + 1;
 		}
 		fCurrentIndexPerKey.put(pIconProperty, index);
 
@@ -237,45 +227,45 @@ public class IconCache {
 	public BufferedImage getIcon(PushbackSquare pPushbackSquare) {
 		if (pPushbackSquare.isSelected()) {
 			switch (pPushbackSquare.getDirection()) {
-			case NORTH:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH_SELECTED);
-			case NORTHEAST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST_SELECTED);
-			case EAST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST_SELECTED);
-			case SOUTHEAST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST_SELECTED);
-			case SOUTH:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH_SELECTED);
-			case SOUTHWEST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST_SELECTED);
-			case WEST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST_SELECTED);
-			case NORTHWEST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST_SELECTED);
-			default:
-				return null;
+				case NORTH:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH_SELECTED);
+				case NORTHEAST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST_SELECTED);
+				case EAST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST_SELECTED);
+				case SOUTHEAST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST_SELECTED);
+				case SOUTH:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH_SELECTED);
+				case SOUTHWEST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST_SELECTED);
+				case WEST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST_SELECTED);
+				case NORTHWEST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST_SELECTED);
+				default:
+					return null;
 			}
 		} else {
 			switch (pPushbackSquare.getDirection()) {
-			case NORTH:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH);
-			case NORTHEAST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST);
-			case EAST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST);
-			case SOUTHEAST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST);
-			case SOUTH:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH);
-			case SOUTHWEST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST);
-			case WEST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST);
-			case NORTHWEST:
-				return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST);
-			default:
-				return null;
+				case NORTH:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH);
+				case NORTHEAST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST);
+				case EAST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST);
+				case SOUTHEAST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST);
+				case SOUTH:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH);
+				case SOUTHWEST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST);
+				case WEST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST);
+				case NORTHWEST:
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST);
+				default:
+					return null;
 			}
 		}
 	}
@@ -285,29 +275,29 @@ public class IconCache {
 		if (iconProperty == null) {
 			// System.out.println(pBloodspot.getInjury());
 			switch (pBloodspot.getInjury().getBase()) {
-			case PlayerState.KNOCKED_OUT:
-				iconProperty = getNextProperty(IIconProperty.BLOODSPOT_KO);
-				break;
-			case PlayerState.BADLY_HURT:
-				iconProperty = getNextProperty(IIconProperty.BLOODSPOT_BH);
-				break;
-			case PlayerState.SERIOUS_INJURY:
-				iconProperty = getNextProperty(IIconProperty.BLOODSPOT_SI);
-				break;
-			case PlayerState.RIP:
-				iconProperty = getNextProperty(IIconProperty.BLOODSPOT_RIP);
-				break;
-			case PlayerState.HIT_BY_BOMB:
-				iconProperty = getNextProperty(IIconProperty.BLOODSPOT_BOMB);
-				break;
-			case PlayerState.HIT_BY_FIREBALL:
-				iconProperty = IIconProperty.BLOODSPOT_FIREBALL;
-				break;
-			case PlayerState.HIT_BY_LIGHTNING:
-				iconProperty = IIconProperty.BLOODSPOT_LIGHTNING;
-				break;
-			default:
-				throw new IllegalArgumentException("Cannot get icon for Bloodspot with injury " + pBloodspot.getInjury() + ".");
+				case PlayerState.KNOCKED_OUT:
+					iconProperty = getNextProperty(IIconProperty.BLOODSPOT_KO);
+					break;
+				case PlayerState.BADLY_HURT:
+					iconProperty = getNextProperty(IIconProperty.BLOODSPOT_BH);
+					break;
+				case PlayerState.SERIOUS_INJURY:
+					iconProperty = getNextProperty(IIconProperty.BLOODSPOT_SI);
+					break;
+				case PlayerState.RIP:
+					iconProperty = getNextProperty(IIconProperty.BLOODSPOT_RIP);
+					break;
+				case PlayerState.HIT_BY_BOMB:
+					iconProperty = getNextProperty(IIconProperty.BLOODSPOT_BOMB);
+					break;
+				case PlayerState.HIT_BY_FIREBALL:
+					iconProperty = IIconProperty.BLOODSPOT_FIREBALL;
+					break;
+				case PlayerState.HIT_BY_LIGHTNING:
+					iconProperty = IIconProperty.BLOODSPOT_LIGHTNING;
+					break;
+				default:
+					throw new IllegalArgumentException("Cannot get icon for Bloodspot with injury " + pBloodspot.getInjury() + ".");
 			}
 			pBloodspot.setIconProperty(iconProperty);
 		}
@@ -320,16 +310,16 @@ public class IconCache {
 		}
 		Weather myWeather = pWeather;
 		if (IClientPropertyValue.SETTING_PITCH_WEATHER_OFF
-				.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER))) {
+			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER))) {
 			myWeather = Weather.NICE;
 		}
 		String pitchUrl = pGame.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
 		if (!StringTool.isProvided(pitchUrl) || IClientPropertyValue.SETTING_PITCH_DEFAULT
-				.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
 			pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT);
 		}
 		if (IClientPropertyValue.SETTING_PITCH_BASIC
-				.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
 			pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_BASIC);
 		}
 		return buildPitchUrl(pitchUrl, myWeather);
@@ -372,7 +362,7 @@ public class IconCache {
 			pitchUrl = new URL(pUrl);
 			Properties pitchProperties = new Properties();
 			Map<String, BufferedImage> iconByName = new HashMap<>();
-			ZipEntry entry = null;
+			ZipEntry entry;
 			while ((entry = pZipIn.getNextEntry()) != null) {
 				if ("pitch.ini".equals(entry.getName())) {
 					pitchProperties.load(pZipIn);
@@ -402,21 +392,23 @@ public class IconCache {
 	public BufferedImage getIcon(DiceDecoration pDiceDecoration) {
 		String iconProperty = null;
 		switch (pDiceDecoration.getNrOfDice()) {
-		case -3:
-			iconProperty = IIconProperty.DECORATION_DICE_3_AGAINST;
-			break;
-		case -2:
-			iconProperty = IIconProperty.DECORATION_DICE_2_AGAINST;
-			break;
-		case 1:
-			iconProperty = IIconProperty.DECORATION_DICE_1;
-			break;
-		case 2:
-			iconProperty = IIconProperty.DECORATION_DICE_2;
-			break;
-		case 3:
-			iconProperty = IIconProperty.DECORATION_DICE_3;
-			break;
+			case -3:
+				iconProperty = IIconProperty.DECORATION_DICE_3_AGAINST;
+				break;
+			case -2:
+				iconProperty = IIconProperty.DECORATION_DICE_2_AGAINST;
+				break;
+			case 1:
+				iconProperty = IIconProperty.DECORATION_DICE_1;
+				break;
+			case 2:
+				iconProperty = IIconProperty.DECORATION_DICE_2;
+				break;
+			case 3:
+				iconProperty = IIconProperty.DECORATION_DICE_3;
+				break;
+			default:
+				break;
 		}
 		if (iconProperty != null) {
 			return getIconByProperty(iconProperty);
@@ -427,18 +419,20 @@ public class IconCache {
 
 	public BufferedImage getDiceIcon(int pRoll) {
 		switch (pRoll) {
-		case 1:
-			return getIconByProperty(IIconProperty.DICE_BLOCK_1);
-		case 2:
-			return getIconByProperty(IIconProperty.DICE_BLOCK_2);
-		case 3:
-			return getIconByProperty(IIconProperty.DICE_BLOCK_3);
-		case 4:
-			return getIconByProperty(IIconProperty.DICE_BLOCK_4);
-		case 5:
-			return getIconByProperty(IIconProperty.DICE_BLOCK_5);
-		case 6:
-			return getIconByProperty(IIconProperty.DICE_BLOCK_6);
+			case 1:
+				return getIconByProperty(IIconProperty.DICE_BLOCK_1);
+			case 2:
+				return getIconByProperty(IIconProperty.DICE_BLOCK_2);
+			case 3:
+				return getIconByProperty(IIconProperty.DICE_BLOCK_3);
+			case 4:
+				return getIconByProperty(IIconProperty.DICE_BLOCK_4);
+			case 5:
+				return getIconByProperty(IIconProperty.DICE_BLOCK_5);
+			case 6:
+				return getIconByProperty(IIconProperty.DICE_BLOCK_6);
+			default:
+				break;
 		}
 		return null;
 	}

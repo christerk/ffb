@@ -25,7 +25,6 @@ public class ClientStateInterception extends ClientState {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		setClickable(true);
 	}
 

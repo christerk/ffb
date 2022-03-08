@@ -63,7 +63,7 @@ public class ClientStateSetup extends ClientState {
 	}
 
 	public void mouseDragged(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() != MouseEvent.BUTTON1 || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+		if (getClient().getCurrentMouseButton() != MouseEvent.BUTTON1) {
 			return;
 		}
 		UtilClientPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
@@ -75,9 +75,13 @@ public class ClientStateSetup extends ClientState {
 		if (pMouseEvent.getButton() == MouseEvent.BUTTON3 || pMouseEvent.isShiftDown()) {
 			super.mouseReleased(pMouseEvent);
 		} else {
-			if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+			if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
+				System.out.println("ClientStateSetup: Release event ignored");
+				System.out.println("Event: " + pMouseEvent);
 				return;
 			}
+			System.out.println("ClientStateSetup: Release event handled");
+			System.out.println("Event: " + pMouseEvent);
 			getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
 			UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
 		}

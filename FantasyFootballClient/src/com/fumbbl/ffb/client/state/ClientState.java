@@ -39,6 +39,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Kalimar
@@ -47,15 +49,16 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	public static final int FIELD_SQUARE_SIZE = 30;
 
+	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
+		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
+		add(IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
+	}};
+
 	private final FantasyFootballClient fClient;
 
 	private FieldCoordinate fSelectSquareCoordinate;
 
 	private boolean fClickable;
-
-	private boolean fSelectable;
-
-	private boolean fPopupMenuShown;
 
 	private JPopupMenu fPopupMenu;
 
@@ -63,7 +66,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected ClientState(FantasyFootballClient pClient) {
 		fClient = pClient;
-		setSelectable(true);
 		setClickable(true);
 	}
 
@@ -182,11 +184,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton() || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
 			return;
 		}
 		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
-		setSelectable(true);
 		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
 			Player<?> player = getClient().getGame().getFieldModel().getPlayer(coordinate);
@@ -202,18 +203,15 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			} else {
 				if (isClickable()) {
 					hideSelectSquare();
+					String rightClickProperty = getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION);
 					if (getClient().getGame().getActingPlayer().getPlayer() != null
-						&& pMouseEvent.getButton() == MouseEvent.BUTTON3) {
-						if (IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION))) {
-							getClient().getCommunication().sendActingPlayer(null, null, false);
-						}
-					} else if (player != null) {
+						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
+						getClient().getCommunication().sendActingPlayer(null, null, false);
+					} else if (player != null && (pMouseEvent.getButton() != MouseEvent.BUTTON3 || ALLOW_RIGHT_CLICK_ON_PLAYER.contains(rightClickProperty))) {
 						clickOnPlayer(player);
-					} else {
+					} else if (pMouseEvent.getButton() != MouseEvent.BUTTON3 || IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickProperty)) {
 						clickOnField(coordinate);
 					}
-				} else {
-					fPopupMenuShown = false;
 				}
 			}
 		}
@@ -232,19 +230,16 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			fPopupMenuPlayer = pPlayer;
 			FieldCoordinate coordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(fPopupMenuPlayer);
 			if (coordinate != null) {
-				setSelectable(false);
+				hideSelectSquare();
 				int x = (coordinate.getX() + 1) * FIELD_SQUARE_SIZE;
 				int y = (coordinate.getY() + 1) * FIELD_SQUARE_SIZE;
 				fPopupMenu.show(fClient.getUserInterface().getFieldComponent(), x, y);
-				fPopupMenuShown = true;
 			}
 		}
 	}
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		JMenuItem menuItem = (JMenuItem) (pActionEvent.getSource());
-		setSelectable(true);
-		fPopupMenuShown = false;
 		menuItemSelected(fPopupMenuPlayer, menuItem.getMnemonic());
 	}
 
@@ -278,18 +273,11 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public boolean isClickable() {
-		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() && !fPopupMenuShown);
-	}
-
-	public void setSelectable(boolean pSelectable) {
-		fSelectable = pSelectable;
-		if (!isSelectable()) {
-			hideSelectSquare();
-		}
+		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() && (fPopupMenu == null || !fPopupMenu.isVisible()));
 	}
 
 	public boolean isSelectable() {
-		return fSelectable;
+		return fPopupMenu == null || !fPopupMenu.isVisible();
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
