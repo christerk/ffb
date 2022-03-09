@@ -27,6 +27,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -224,10 +225,13 @@ public class PlayerDetailComponent extends JPanel {
 				moveLeft -= actingPlayer.getCurrentMove();
 				if (actingPlayer.isGoingForIt() && (moveLeft <= 0)) {
 					moveIsRed = true;
+					moveLeft = 2 + moveLeft;
 					if (getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi)) {
-						moveLeft = 3 + moveLeft;
-					} else {
-						moveLeft = 2 + moveLeft;
+						moveLeft++;
+					}
+
+					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeAnExtraGfiOnce)) {
+						moveLeft++;
 					}
 				}
 			}
@@ -603,6 +607,8 @@ public class PlayerDetailComponent extends JPanel {
 				break;
 			case _DISPLAY_SELECTED_PLAYER:
 				displayedPlayer = clientData.getSelectedPlayer();
+				break;
+			default:
 				break;
 		}
 		return displayedPlayer;

@@ -497,8 +497,13 @@ public class UtilPlayer {
 			} else {
 				int extraMove = 0;
 				if (actingPlayer.isGoingForIt()) {
-					boolean canMakeAnExtraGfi = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi);
-					extraMove = canMakeAnExtraGfi ? 3 : 2;
+					extraMove = 2;
+					if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi)) {
+						extraMove++;
+					}
+					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeAnExtraGfiOnce)) {
+						extraMove++;
+					}
 					if (jumping) {
 						extraMove--;
 					}

@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.7.0")
 			.addFeature("Treacherous")
+			.addFeature("Burst of Speed")
 		);
 
 		versions.add(new VersionChangeList("2.6.0")
