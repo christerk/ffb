@@ -46,6 +46,7 @@ import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -367,7 +368,7 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			PlayerState playerState = game.getFieldModel().getPlayerState(getPlayer());
-			List<String> modifications = new ArrayList<>();
+			Set<String> modifications = new LinkedHashSet<>();
 			List<String> acquiredSkills = new ArrayList<>();
 			List<String> rosterSkills = new ArrayList<>();
 			Set<String> usedSkills = new HashSet<>();
@@ -400,10 +401,13 @@ public class PlayerDetailComponent extends JPanel {
 			}
 			modifications.addAll(getPlayer().getEnhancementSources().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
 
+			acquiredSkills.removeAll(modifications);
+			rosterSkills.removeAll(modifications);
+
 			int height = 0;
 			if (modifications.size() > 0) {
 				g2d.setColor(new Color(220, 0, 0));
-				height += drawPlayerSkills(g2d, x, y + height, modifications, usedSkills) + 2;
+				height += drawPlayerSkills(g2d, x, y + height, new ArrayList<>(modifications), usedSkills) + 2;
 			}
 
 			if (acquiredSkills.size() > 0) {

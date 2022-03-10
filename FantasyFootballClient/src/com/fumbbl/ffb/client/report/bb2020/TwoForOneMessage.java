@@ -27,7 +27,7 @@ public class TwoForOneMessage extends ReportMessageBase<ReportTwoForOne> {
 			reason = "has recovered";
 		}
 		print(indent, false, player);
-		print(indent, TextStyle.NONE, " " + verb + " Loner (2+) because");
+		print(indent, TextStyle.NONE, " " + verb + " Loner (2+) because ");
 		print(indent, false, partner);
 		println(indent, TextStyle.NONE, " " + reason + ".");
 	}
