@@ -101,7 +101,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fPosition = new RosterPosition(null);
 		skillValues = new LinkedHashMap<>();
 		displayValues = new LinkedHashMap<>();
-        usedSkills  = new HashSet<>();
+		usedSkills = new HashSet<>();
 	}
 
 	@Override

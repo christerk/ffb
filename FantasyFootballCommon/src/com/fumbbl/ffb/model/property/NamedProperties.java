@@ -173,6 +173,7 @@ public class NamedProperties {
 	public static final ISkillProperty providesChainsawFoulingAlternative = new NamedProperty("Provides Chainsaw Fouling Alternative");
 	public static final ISkillProperty providesMultipleBlockAlternative = new NamedProperty("Provides Muiltiple Block Alternative");
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
+	public static final ISkillProperty reducesLonerRollIfPartnerIsHurt = new NamedProperty("Reduces Loner If Partner Is Hurt");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");
 	public static final ISkillProperty smallIcon = new NamedProperty("Display with a small icon");
 	public static final ISkillProperty setGfiRollToFive = new NamedProperty("Set Gfi Roll To Five");

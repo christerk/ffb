@@ -401,7 +401,7 @@ public class StepEndTurn extends AbstractStep {
 			}
 
 			game.startTurn();
-			UtilServerGame.updateLeaderReRolls(this);
+			UtilServerGame.updatePlayerStateDependentProperties(this);
 
 			if (fEndGame) {
 				endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
@@ -483,7 +483,7 @@ public class StepEndTurn extends AbstractStep {
 				playerResult.setHasUsedSecretWeapon(false);
 			}
 		}
-		UtilServerGame.updateLeaderReRolls(this);
+		UtilServerGame.updatePlayerStateDependentProperties(this);
 	}
 
 	private KnockoutRecovery recoverKnockout(Player<?> pPlayer) {

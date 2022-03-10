@@ -284,6 +284,7 @@ public interface IJsonOption {
 	JsonBooleanOption NURGLES_ROT = new JsonBooleanOption("nurglesRot");
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
+	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
 	JsonFieldCoordinateOption PASS_COORDINATE = new JsonFieldCoordinateOption("passCoordinate");
 	JsonBooleanOption PASS_DEVIATES = new JsonBooleanOption("passDeviates");

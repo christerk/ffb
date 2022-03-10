@@ -56,7 +56,7 @@ public final class StepInitKickoff extends AbstractStep {
 			UtilServerGame.startHalf(this, 1);
 			game.setTurnMode(TurnMode.SETUP);
 			game.startTurn();
-			UtilServerGame.updateLeaderReRolls(this);
+			UtilServerGame.updatePlayerStateDependentProperties(this);
 		}
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))

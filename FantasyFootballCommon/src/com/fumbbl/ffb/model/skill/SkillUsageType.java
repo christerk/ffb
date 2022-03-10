@@ -4,7 +4,8 @@ public enum SkillUsageType {
 	REGULAR(false),
 	ONCE_PER_TURN(true),
 	ONCE_PER_GAME(true),
-	ONCE_PER_HALF(true);
+	ONCE_PER_HALF(true),
+	SPECIAL(true);
 
 	private final boolean trackOutsideActivation;
 
