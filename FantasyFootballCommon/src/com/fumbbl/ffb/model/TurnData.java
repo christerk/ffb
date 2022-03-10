@@ -21,6 +21,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean fFirstTurnAfterKickoff;
 	private boolean fTurnStarted;
 	private int fReRolls;
+	private int singleUseReRolls;
 	private int reRollsBrilliantCoachingOneDrive;
 	private int fApothecaries;
 	private int wanderingApothecaries;
@@ -82,6 +83,19 @@ public class TurnData implements IJsonSerializable {
 		}
 		fFirstTurnAfterKickoff = pFirstTurnAfterKickoff;
 		notifyObservers(ModelChangeId.TURN_DATA_SET_FIRST_TURN_AFTER_KICKOFF, fFirstTurnAfterKickoff);
+	}
+
+
+	public int getSingleUseReRolls() {
+		return singleUseReRolls;
+	}
+
+	public void setSingleUseReRolls(int reRolls) {
+		if (reRolls == singleUseReRolls) {
+			return;
+		}
+		singleUseReRolls = reRolls;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_RE_ROLLS_SINGLE_USE, singleUseReRolls);
 	}
 
 	public int getReRolls() {

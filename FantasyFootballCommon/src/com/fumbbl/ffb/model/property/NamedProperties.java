@@ -110,6 +110,8 @@ public class NamedProperties {
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
 	public static final ISkillProperty grantsTeamRerollWhenOnPitch = new NamedProperty(
 		"Grants Team Reroll When On Pitch");
+	public static final ISkillProperty grantsSingleUseTeamRerollWhenOnPitch = new NamedProperty(
+		"Grants Single Use Team Reroll When On Pitch");
 	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");
 	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");

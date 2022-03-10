@@ -34,6 +34,7 @@ import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilActingPlayer;
+import com.fumbbl.ffb.util.UtilCards;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Arrays;
@@ -157,6 +158,8 @@ public class UtilServerGame {
 		updateLeaderReRollsForTeam(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel(), pStep);
 		checkForMissingPartners(game, game.getTeamHome(), game.getFieldModel(), pStep);
 		checkForMissingPartners(game, game.getTeamAway(), game.getFieldModel(), pStep);
+		updateSingleUseReRolls(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel());
+		updateSingleUseReRolls(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel());
 	}
 
 	private static void checkForMissingPartners(Game game, Team team, FieldModel fieldModel, IStep step) {
@@ -242,6 +245,14 @@ public class UtilServerGame {
 			}
 		}
 		return false;
+	}
+
+	public static void updateSingleUseReRolls(TurnData turnData, Team team, FieldModel fieldModel) {
+		int reRolls = (int) Arrays.stream(team.getPlayers())
+			.filter(player -> playerOnField(player, fieldModel)
+				&& UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.grantsSingleUseTeamRerollWhenOnPitch)).count();
+
+		turnData.setSingleUseReRolls(reRolls);
 	}
 
 	protected static boolean playerOnField(Player<?> pPlayer, FieldModel pFieldModel) {

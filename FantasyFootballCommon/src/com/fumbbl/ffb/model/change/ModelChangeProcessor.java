@@ -480,6 +480,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollsBrilliantCoachingOneDrive((Integer) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
+				getTurnData(pGame, isHomeData(pModelChange)).setSingleUseReRolls((Integer) pModelChange.getValue());
+				return true;
 			case TURN_DATA_SET_RE_ROLL_USED:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollUsed((Boolean) pModelChange.getValue());
 				return true;
@@ -617,6 +620,7 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_KTM_USED:
 			case TURN_DATA_SET_RE_ROLLS:
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
+			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
 			case TURN_DATA_SET_RE_ROLL_USED:
 			case TURN_DATA_SET_TURN_NR:
 			case TURN_DATA_SET_TURN_STARTED:

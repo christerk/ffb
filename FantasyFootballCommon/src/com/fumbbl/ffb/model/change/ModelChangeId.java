@@ -158,6 +158,7 @@ public enum ModelChangeId implements INamedObject {
 	TURN_DATA_SET_KTM_USED("turnDataSetKtmUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_RE_ROLLS("turnDataSetReRolls", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE("turnDataSetReRollsBrilliantCoachingOneDrive", ModelChangeDataType.INTEGER),
+	TURN_DATA_SET_RE_ROLLS_SINGLE_USE("turnDataSetReRollsSingleUse", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_RE_ROLL_USED("turnDataSetReRollUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_TURN_NR("turnDataSetTurnNr", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_TURN_STARTED("turnDataSetTurnStarted", ModelChangeDataType.BOOLEAN),
