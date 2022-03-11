@@ -9,13 +9,11 @@ import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -24,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,8 +45,6 @@ public class ResourceComponent extends JPanel {
 	private final ResourceSlot[] fSlots;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
-
-	private static final Font _NUMBER_FONT = new Font("Sans Serif", Font.BOLD, 16);
 
 	public ResourceComponent(SideBarComponent pSideBar) {
 		fSideBar = pSideBar;
@@ -133,8 +130,10 @@ public class ResourceComponent extends JPanel {
 					y + (resourceIcon.getHeight() - disabledIcon.getHeight()) / 2, null);
 			}
 
-			if (pSlot.getValue() > 1) {
-				Rectangle counterCrop = counterCrop(Math.min(pSlot.getValue() - 1, 15));
+			List<ResourceValue> values = pSlot.getValues();
+			ResourceValue resourceValue = values.get(0);
+			if (resourceValue.getValue() > 1) {
+				Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
 				BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
 					.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
 
@@ -157,19 +156,16 @@ public class ResourceComponent extends JPanel {
 		AtomicInteger slotIndex = new AtomicInteger(0);
 		Game game = getSideBar().getClient().getGame();
 		TurnData turnData = getSideBar().isHomeSide() ? game.getTurnDataHome() : game.getTurnDataAway();
-		Team team = getSideBar().isHomeSide() ? game.getTeamHome() : game.getTeamAway();
 
-		Arrays.stream(fSlots).forEach(ResourceSlot::clearDetails);
+		Arrays.stream(fSlots).forEach(ResourceSlot::clear);
 
 		fRefreshNecessary |= (turnData.getReRolls() != fCurrentReRolls);
 		fCurrentReRolls = turnData.getReRolls();
 		if (turnData.getReRolls() > 0) {
 			ResourceSlot reRollSlot = fSlots[slotIndex.getAndIncrement()];
-			reRollSlot.setSingular("Re-Roll");
-			reRollSlot.setPlural("Re-Rolls");
 			fRefreshNecessary |= (turnData.isReRollUsed() == reRollSlot.isEnabled());
 			reRollSlot.setEnabled(!turnData.isReRollUsed());
-			reRollSlot.setValue(fCurrentReRolls);
+			reRollSlot.add(new ResourceValue(fCurrentReRolls, "Re-Roll", "Re-Rolls"));
 			reRollSlot.setIconProperty(IIconProperty.RESOURCE_RE_ROLL);
 		}
 
@@ -177,9 +173,7 @@ public class ResourceComponent extends JPanel {
 		fCurrentApothecaries = turnData.getApothecaries();
 		if (turnData.getApothecaries() > 0) {
 			ResourceSlot apothecarySlot = fSlots[slotIndex.getAndIncrement()];
-			apothecarySlot.setSingular("Apothecary");
-			apothecarySlot.setPlural("Apothecaries");
-			apothecarySlot.setValue(fCurrentApothecaries);
+			apothecarySlot.add(new ResourceValue(fCurrentApothecaries, "Apothecary", "Apothecaries"));
 			apothecarySlot.setIconProperty(IIconProperty.RESOURCE_APOTHECARY);
 		}
 
@@ -196,9 +190,7 @@ public class ResourceComponent extends JPanel {
 				inducementValues.put(type, newValue);
 				if (newValue > 0) {
 					ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
-					slot.setPlural(type.getPlural());
-					slot.setSingular(type.getSingular());
-					slot.setValue(newValue);
+					slot.add(new ResourceValue(newValue, type.getSingular(), type.getPlural()));
 					slot.setIconProperty(type.getSlotIconProperty());
 				}
 			});
@@ -208,9 +200,7 @@ public class ResourceComponent extends JPanel {
 		fCurrentCards = availableCards.length;
 		if (fCurrentCards > 0) {
 			ResourceSlot cardsSlot = fSlots[slotIndex.getAndIncrement()];
-			cardsSlot.setPlural("Cards");
-			cardsSlot.setSingular("Card");
-			cardsSlot.setValue(fCurrentCards);
+			cardsSlot.add(new ResourceValue(fCurrentCards, "Card", "Cards"));
 			cardsSlot.setIconProperty(IIconProperty.RESOURCE_CARD);
 		}
 
@@ -219,9 +209,7 @@ public class ResourceComponent extends JPanel {
 		currentPrayers = prayers.size();
 		if (currentPrayers > 0) {
 			ResourceSlot prayerSlot = fSlots[slotIndex.getAndIncrement()];
-			prayerSlot.setPlural("Prayers");
-			prayerSlot.setSingular("Prayer");
-			prayerSlot.setValue(currentPrayers);
+			prayerSlot.add(new ResourceValue(currentPrayers, "Prayer", "Prayers"));
 			prayerSlot.setIconProperty(IIconProperty.RESOURCE_PRAYER);
 			PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
 			prayerFactory.sort(prayers).stream().map(Prayer::getName).forEach(prayerSlot::addDetail);
