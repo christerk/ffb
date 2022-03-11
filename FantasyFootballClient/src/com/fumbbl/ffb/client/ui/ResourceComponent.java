@@ -131,17 +131,28 @@ public class ResourceComponent extends JPanel {
 			}
 
 			List<ResourceValue> values = pSlot.getValues();
-			ResourceValue resourceValue = values.get(0);
-			if (resourceValue.getValue() > 1) {
-				Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
-				BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
-					.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
-
-				g2d.drawImage(counter, x + pSlot.getLocation().width - COUNTER_SIZE - 5,
-					y + pSlot.getLocation().height - COUNTER_SIZE, null);
+			for (int i = 0; i < Math.min(4, values.size()); i++) {
+				ResourceValue resourceValue = values.get(i);
+				drawCounter(pSlot, iconCache, g2d, x, y, resourceValue, offset(pSlot.getLocation(), i));
 			}
 			g2d.dispose();
 		}
+	}
+
+	private void drawCounter(ResourceSlot pSlot, IconCache iconCache, Graphics2D g2d, int x, int y, ResourceValue resourceValue, Dimension offset) {
+		if (resourceValue.getValue() > 1) {
+			Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
+			BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
+				.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
+
+			g2d.drawImage(counter, x + offset.width, y + offset.height, null);
+		}
+	}
+
+	private Dimension offset(Rectangle location, int index) {
+		int width = index % 2 == 0 ? location.width - COUNTER_SIZE - 5 : 0;
+		int height = index < 2 ? location.height - COUNTER_SIZE : 0;
+		return new Dimension(width, height);
 	}
 
 	private Rectangle counterCrop(int elementIndex) {
@@ -176,7 +187,6 @@ public class ResourceComponent extends JPanel {
 			apothecarySlot.add(new ResourceValue(fCurrentApothecaries, "Apothecary", "Apothecaries"));
 			apothecarySlot.setIconProperty(IIconProperty.RESOURCE_APOTHECARY);
 		}
-
 
 		turnData.getInducementSet().getInducementMapping().entrySet().stream()
 			.filter(entry -> entry.getValue() != null && entry.getKey().isUsingGenericSlot())
