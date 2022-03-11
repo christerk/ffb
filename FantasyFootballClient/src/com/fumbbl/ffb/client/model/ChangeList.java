@@ -24,6 +24,9 @@ public class ChangeList {
 			.addFeature("More setting options for right click behavior")
 			.addBugfix("Animal Savagery lashing out against ball carrier still started the action (e.g. move one square) before turn ended")
 			.addImprovement("Use actual name of raised positions for log message (affects only custom roster)")
+			.addBugfix("Kickback on foul did still perform foul")
+			.addBugfix("Chainsaw not used on fouls")
+
 		);
 
 		versions.add(new VersionChangeList("2.5.1")
