@@ -115,6 +115,7 @@ public class StepEjectPlayer extends AbstractStep {
 
 		UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
 		UtilBox.refreshBoxes(game);
+		UtilServerGame.checkForWastedSkills(actingPlayer.getPlayer(), this, game.getFieldModel());
 		UtilServerGame.updatePlayerStateDependentProperties(this);
 		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		if ((state.foulerHasBall != null) && state.foulerHasBall) {

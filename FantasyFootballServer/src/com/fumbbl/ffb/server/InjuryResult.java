@@ -107,6 +107,7 @@ public class InjuryResult implements IJsonSerializable {
 				}
 				if (injuryContext.isCasualty() || injuryContext.isKnockedOut() || injuryContext.isReserve()) {
 					UtilBox.putPlayerIntoBox(game, defender);
+					UtilServerGame.checkForWastedSkills(defender, pStep, game.getFieldModel());
 					UtilServerGame.updatePlayerStateDependentProperties(pStep);
 				}
 			}
