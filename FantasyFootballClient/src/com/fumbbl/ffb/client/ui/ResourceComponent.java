@@ -41,7 +41,7 @@ public class ResourceComponent extends JPanel {
 	private final SideBarComponent fSideBar;
 	private final BufferedImage fImage;
 	private boolean fRefreshNecessary;
-	private int fNrOfSlots, fCurrentReRolls, fCurrentApothecaries, fCurrentCards, currentPrayers;
+	private int fNrOfSlots, fCurrentReRolls, fCurrentApothecaries, fCurrentCards, currentPrayers, currentSingleUseReRolls;
 	private final ResourceSlot[] fSlots;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
@@ -133,13 +133,13 @@ public class ResourceComponent extends JPanel {
 			List<ResourceValue> values = pSlot.getValues();
 			for (int i = 0; i < Math.min(4, values.size()); i++) {
 				ResourceValue resourceValue = values.get(i);
-				drawCounter(pSlot, iconCache, g2d, x, y, resourceValue, offset(pSlot.getLocation(), i));
+				drawCounter(iconCache, g2d, x, y, resourceValue, offset(pSlot.getLocation(), i));
 			}
 			g2d.dispose();
 		}
 	}
 
-	private void drawCounter(ResourceSlot pSlot, IconCache iconCache, Graphics2D g2d, int x, int y, ResourceValue resourceValue, Dimension offset) {
+	private void drawCounter(IconCache iconCache, Graphics2D g2d, int x, int y, ResourceValue resourceValue, Dimension offset) {
 		if (resourceValue.getValue() > 1) {
 			Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
 			BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
@@ -171,12 +171,15 @@ public class ResourceComponent extends JPanel {
 		Arrays.stream(fSlots).forEach(ResourceSlot::clear);
 
 		fRefreshNecessary |= (turnData.getReRolls() != fCurrentReRolls);
+		fRefreshNecessary |= turnData.getSingleUseReRolls() != currentSingleUseReRolls;
 		fCurrentReRolls = turnData.getReRolls();
-		if (turnData.getReRolls() > 0) {
+		currentSingleUseReRolls = turnData.getSingleUseReRolls();
+		if (fCurrentReRolls + currentSingleUseReRolls > 0) {
 			ResourceSlot reRollSlot = fSlots[slotIndex.getAndIncrement()];
 			fRefreshNecessary |= (turnData.isReRollUsed() == reRollSlot.isEnabled());
 			reRollSlot.setEnabled(!turnData.isReRollUsed());
 			reRollSlot.add(new ResourceValue(fCurrentReRolls, "Re-Roll", "Re-Rolls"));
+			reRollSlot.add(new ResourceValue(currentSingleUseReRolls, "Lord of Chaos", "Lords of Chaos"));
 			reRollSlot.setIconProperty(IIconProperty.RESOURCE_RE_ROLL);
 		}
 
