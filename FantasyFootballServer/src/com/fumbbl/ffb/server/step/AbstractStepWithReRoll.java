@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * @author Kalimar
  */
-public abstract class AbstractStepWithReRoll extends AbstractStep {
+public abstract class AbstractStepWithReRoll extends AbstractStep implements HasIdForSingleUseReRoll {
 
 	private ReRolledAction fReRolledAction;
 	private ReRollSource fReRollSource;
@@ -77,7 +77,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 		fReRollSource = pReRollSource;
 	}
 
-	public String getPlayerIdForSingleUseReRoll() {
+	public String idForSingleUseReRoll() {
 		return playerIdForSingleUseReRoll;
 	}
 
@@ -115,7 +115,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
 		IServerJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, fReRollSource);
-		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerIdForSingleUseReRoll);
+		IServerJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.addTo(jsonObject, playerIdForSingleUseReRoll);
 		return jsonObject;
 	}
 
@@ -125,7 +125,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fReRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
 		fReRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
-		playerIdForSingleUseReRoll = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		playerIdForSingleUseReRoll = IServerJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

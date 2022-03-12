@@ -3,6 +3,7 @@ package com.fumbbl.ffb.dialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -24,13 +25,15 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 	private List<String> reRollAvailableAgainst = new ArrayList<>();
 	private boolean proReRollAvailable, teamReRollAvailable;
 	private Skill reRollSkill;
+	private ReRollSource singleUseReRollSource;
 
 	public DialogReRollForTargetsParameter() {
 		super();
 	}
 
 	public DialogReRollForTargetsParameter(String playerId, List<String> targetIds, ReRolledAction reRolledAction, Map<String, Integer> minimumRolls,
-	                                       List<String> reRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable, Skill reRollSkill) {
+																				 List<String> reRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable,
+																				 Skill reRollSkill, ReRollSource singleUseReRollSource) {
 		this.targetIds = targetIds;
 		this.reRolledAction = reRolledAction;
 		this.reRollAvailableAgainst = reRollAvailableAgainst;
@@ -39,6 +42,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		this.playerId = playerId;
 		this.teamReRollAvailable = teamReRollAvailable;
 		this.reRollSkill = reRollSkill;
+		this.singleUseReRollSource = singleUseReRollSource;
 	}
 
 	public DialogId getId() {
@@ -77,11 +81,14 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		return reRollSkill;
 	}
 
-	// transformation
+	public ReRollSource getSingleUseReRollSource() {
+		return singleUseReRollSource;
+	}
+// transformation
 
 	public IDialogParameter transform() {
 		return new DialogReRollForTargetsParameter(getPlayerId(), getTargetIds(), getReRolledAction(),
-			getMinimumRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable, reRollSkill);
+			getMinimumRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable, reRollSkill, singleUseReRollSource);
 	}
 
 	// JSON serialization
@@ -97,6 +104,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		IJsonOption.MINIMUM_ROLLS.addTo(jsonObject, minimumRolls);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
+		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
 		return jsonObject;
 	}
 
@@ -111,6 +119,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
 		return this;
 	}
 

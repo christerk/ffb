@@ -15,15 +15,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StepStateMultipleRolls implements IJsonSerializable {
-		public String goToLabelOnFailure;
-		public List<String> reRollAvailableAgainst = new ArrayList<>();
-		public List<String> blockTargets = new ArrayList<>();
-		public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
-		public ReRollSource reRollSource;
-		public String reRollTarget;
-		public Map<String, Integer> minimumRolls = new HashMap<>();
-		public int initialCount;
+public class StepStateMultipleRolls implements IJsonSerializable, SingleReRollUseState {
+	public String goToLabelOnFailure;
+	public List<String> reRollAvailableAgainst = new ArrayList<>();
+	public List<String> blockTargets = new ArrayList<>();
+	public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
+	public ReRollSource reRollSource;
+	public ReRollSource singleUseReRollSource;
+	public String reRollTarget;
+	public Map<String, Integer> minimumRolls = new HashMap<>();
+	public int initialCount;
+	public String playerIdForSingleUseReRoll;
 
 	@Override
 	public JsonObject toJsonValue() {
@@ -38,6 +40,8 @@ public class StepStateMultipleRolls implements IJsonSerializable {
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, reRollSource);
 		IJsonOption.MINIMUM_ROLLS.addTo(jsonObject, minimumRolls);
 		IJsonOption.NUMBER.addTo(jsonObject, initialCount);
+		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
+		IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.addTo(jsonObject, playerIdForSingleUseReRoll);
 		return jsonObject;
 	}
 
@@ -54,6 +58,23 @@ public class StepStateMultipleRolls implements IJsonSerializable {
 		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
 		initialCount = IJsonOption.NUMBER.getFrom(game, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
+		playerIdForSingleUseReRoll = IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(game, jsonObject);
 		return this;
+	}
+
+	@Override
+	public void setReRollSource(ReRollSource reRollSource) {
+		this.reRollSource = reRollSource;
+	}
+
+	@Override
+	public String getId() {
+		return playerIdForSingleUseReRoll;
+	}
+
+	@Override
+	public void setId(String playerId) {
+		playerIdForSingleUseReRoll = playerId;
 	}
 }

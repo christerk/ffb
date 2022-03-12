@@ -30,7 +30,7 @@ import com.fumbbl.ffb.report.ReportBlockRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBlockReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.skillbehaviour.bb2020.SingleReRollUseState;
 import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -58,7 +58,7 @@ import java.util.stream.IntStream;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class StepBlockRollMultiple extends AbstractStep {
+public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 	private State state = new State();
 	private final Set<StepParameterKey> parameterToConsume = new HashSet<>();
@@ -70,6 +70,12 @@ public class StepBlockRollMultiple extends AbstractStep {
 	public StepBlockRollMultiple(GameState pGameState, StepAction defaultStepResult) {
 		super(pGameState, defaultStepResult);
 	}
+
+	@Override
+	protected SingleReRollUseState state() {
+		return state;
+	}
+
 
 	@Override
 	public StepId getId() {
@@ -129,14 +135,17 @@ public class StepBlockRollMultiple extends AbstractStep {
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET:
 					ClientCommandBlockOrReRollChoiceForTarget command = (ClientCommandBlockOrReRollChoiceForTarget) pReceivedCommand.getCommand();
-					state.reRollSource = command.getReRollSource();
+					if (reRollSourceSuccessfully(command.getReRollSource())) {
+						stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+
 					state.selectedTarget = command.getTargetId();
 					state.blockRolls.stream().filter(roll -> roll.getTargetId().equals(command.getTargetId()))
 						.findFirst().ifPresent(roll -> {
-						roll.setSelectedIndex(command.getSelectedIndex());
-						roll.setProIndex(command.getProIndex());
-					});
-					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
+							roll.setSelectedIndex(command.getSelectedIndex());
+							roll.setProIndex(command.getProIndex());
+						});
+
 					break;
 
 				case CLIENT_USE_BRAWLER:
@@ -169,8 +178,9 @@ public class StepBlockRollMultiple extends AbstractStep {
 			state.firstRun = false;
 			game.getFieldModel().clearDiceDecorations();
 
-			final boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
-			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
+			final boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
+			final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
+			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
 			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
 
 			state.blockRolls.forEach(roll -> {
@@ -181,6 +191,9 @@ public class StepBlockRollMultiple extends AbstractStep {
 				roll(roll, false, actingPlayer);
 				if (teamReRollAvailable) {
 					roll.add(ReRollSources.TEAM_RE_ROLL);
+				}
+				if (singleUseReRollAvailable) {
+					roll.add(ReRollSources.LORD_OF_CHAOS);
 				}
 				if (proReRollAvailable) {
 					roll.add(ReRollSources.PRO);
@@ -256,13 +269,18 @@ public class StepBlockRollMultiple extends AbstractStep {
 			return;
 		}
 
-		boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), game.getActingPlayer().getPlayer());
-		boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		final boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
+		final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
+		final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 
 		state.blockRolls.forEach(roll -> {
 			if (!teamReRollAvailable) {
 				roll.remove(ReRollSources.TEAM_RE_ROLL);
+			}
+			if (!singleUseReRollAvailable) {
+				roll.remove(ReRollSources.LORD_OF_CHAOS);
 			}
 			if (!proReRollAvailable) {
 				roll.remove(ReRollSources.PRO);
@@ -286,7 +304,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 
 		if (state.attackerTeamSelects) {
 			if (unselected.stream().anyMatch(BlockRoll::isOwnChoice) || anyReRollLeft) {
-				UtilServerDialog.showDialog(getGameState(), createAttackerDialogParameter(game.getActingPlayer().getPlayer(), state.blockRolls), false);
+				UtilServerDialog.showDialog(getGameState(), createAttackerDialogParameter(actingPlayer.getPlayer(), state.blockRolls), false);
 			} else {
 				state.attackerTeamSelects = false;
 			}
@@ -403,11 +421,11 @@ public class StepBlockRollMultiple extends AbstractStep {
 		return this;
 	}
 
-	private static class State implements IJsonSerializable {
+	private static class State implements IJsonSerializable, SingleReRollUseState {
 		private List<BlockRoll> blockRolls = new ArrayList<>();
 		private boolean firstRun = true, attackerTeamSelects = true;
 		private ReRollSource reRollSource;
-		private String selectedTarget;
+		private String selectedTarget, playerIdForSingleUseReRoll;
 
 		@Override
 		public JsonObject toJsonValue() {
@@ -419,6 +437,7 @@ public class StepBlockRollMultiple extends AbstractStep {
 			IJsonOption.FIRST_RUN.addTo(jsonObject, firstRun);
 			IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, reRollSource);
 			IJsonOption.ATTACKER_SELECTS.addTo(jsonObject, attackerTeamSelects);
+			IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.addTo(jsonObject, playerIdForSingleUseReRoll);
 			return jsonObject;
 		}
 
@@ -431,7 +450,23 @@ public class StepBlockRollMultiple extends AbstractStep {
 			firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
 			reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 			attackerTeamSelects = IJsonOption.ATTACKER_SELECTS.getFrom(game, jsonObject);
+			playerIdForSingleUseReRoll = IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(game, jsonObject);
 			return this;
+		}
+
+		@Override
+		public void setReRollSource(ReRollSource reRollSource) {
+			this.reRollSource = reRollSource;
+		}
+
+		@Override
+		public String getId() {
+			return playerIdForSingleUseReRoll;
+		}
+
+		@Override
+		public void setId(String playerId) {
+			playerIdForSingleUseReRoll = playerId;
 		}
 	}
 }

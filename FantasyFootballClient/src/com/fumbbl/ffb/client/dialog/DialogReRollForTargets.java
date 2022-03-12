@@ -41,6 +41,7 @@ public class DialogReRollForTargets extends Dialog {
 		super(pClient, "Use a Re-roll", false);
 
 		dialogParameter = parameter;
+		ReRollSource singleUseReRollSource = parameter.getSingleUseReRollSource();
 
 		JButton fButtonNoReRoll = new JButton("No Re-Roll");
 		fButtonNoReRoll.addActionListener(e -> {
@@ -123,6 +124,10 @@ public class DialogReRollForTargets extends Dialog {
 
 				if (parameter.isTeamReRollAvailable()) {
 					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'e'));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
+				if (singleUseReRollSource != null) {
+					buttonPanel.add(createButton(target, singleUseReRollSource.getName(game), singleUseReRollSource, index == 0 ? 'L' : 'r'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (parameter.isProReRollAvailable()) {

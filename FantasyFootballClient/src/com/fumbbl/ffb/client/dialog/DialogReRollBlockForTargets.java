@@ -22,13 +22,13 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
 	private ReRollSource reRollSource;
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
-		add(new Mnemonics('T', 'N', 'B',
+		add(new Mnemonics('T', 'N', 'B', 'S',
 			new ArrayList<Character>() {{
 				add('P');
 				add('o');
 				add('x');
 			}}));
-		add(new Mnemonics('e', 'l', 'r',
+		add(new Mnemonics('e', 'l', 'r', 'i',
 			new ArrayList<Character>() {{
 				add('r');
 				add('y');
@@ -76,6 +76,10 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 				}
 				if (blockRoll.has(ReRollSources.BRAWLER)) {
 					buttonPanel.add(createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
+				if (blockRoll.has(ReRollSources.LORD_OF_CHAOS)) {
+					buttonPanel.add(createReRollButton(target, ReRollSources.LORD_OF_CHAOS.getName(pClient.getGame()), ReRollSources.LORD_OF_CHAOS, currentMnemonics.single));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (!ownChoice) {
@@ -200,14 +204,15 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 	}
 
 	private static class Mnemonics {
-		private final char team, brawler, none;
+		private final char team, brawler, none, single;
 		private final List<Character> pro;
 
-		public Mnemonics(char team, char none, char brawler, List<Character> pro) {
+		public Mnemonics(char team, char none, char brawler, char single, List<Character> pro) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;
 			this.pro = pro;
+			this.single = single;
 		}
 	}
 }

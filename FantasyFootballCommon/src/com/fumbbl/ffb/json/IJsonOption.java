@@ -311,6 +311,7 @@ public interface IJsonOption {
 	JsonArrayOption PLAYER_DATA_ARRAY = new JsonArrayOption("playerDataArray");
 	JsonEnumWithNameOption PLAYER_GENDER = new JsonEnumWithNameOption("playerGender", Factory.PLAYER_GENDER);
 	JsonStringOption PLAYER_ID = new JsonStringOption("playerId");
+	JsonStringOption PLAYER_ID_SINGLE_USE_RE_ROLL = new JsonStringOption("playerIdSingleUseReRoll");
 	JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
 	JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
 	JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
@@ -367,6 +368,7 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
+	JsonEnumWithNameOption RE_ROLL_SOURCE_SINGLE_USE = new JsonEnumWithNameOption("reRollSourceSingleUse", Factory.RE_ROLL_SOURCE);
 	JsonArrayOption RE_ROLL_SOURCES = new JsonArrayOption("reRollSources");
 	JsonBooleanOption RE_ROLL_USED = new JsonBooleanOption("reRollUsed");
 	JsonIntOption RE_ROLLS = new JsonIntOption("reRolls");

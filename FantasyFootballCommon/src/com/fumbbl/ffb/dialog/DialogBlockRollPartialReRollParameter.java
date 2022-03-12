@@ -87,7 +87,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
 		IJsonOption.BRAWLER_OPTION.addTo(jsonObject, brawlerOption);
-		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, singleUseReRollSource);
+		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
 		return jsonObject;
 	}
 
@@ -101,7 +101,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		brawlerOption = IJsonOption.BRAWLER_OPTION.getFrom(game, jsonObject);
-		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
 		return this;
 	}
 

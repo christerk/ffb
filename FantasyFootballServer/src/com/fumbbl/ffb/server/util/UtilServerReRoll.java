@@ -20,7 +20,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
+import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.util.UtilCards;
@@ -41,7 +41,7 @@ public class UtilServerReRoll {
 		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		if (pReRollSource != null) {
 			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == pReRollSource;
-			boolean lordOfChaos = ReRollSources.LORD_OF_CHAOS == pReRollSource && pStep instanceof AbstractStepWithReRoll;
+			boolean lordOfChaos = ReRollSources.LORD_OF_CHAOS == pReRollSource && pStep instanceof HasIdForSingleUseReRoll;
 			if (teamReRoll || lordOfChaos) {
 				TurnData turnData = game.getTurnData();
 				if (teamReRoll && gameMechanic.updateTurnDataAfterReRollUsage(turnData)) {
@@ -52,7 +52,7 @@ public class UtilServerReRoll {
 				} else {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
 					if (lordOfChaos) {
-						game.getPlayerById(((AbstractStepWithReRoll) pStep).getPlayerIdForSingleUseReRoll()).markUsed(pReRollSource.getSkill(game), game);
+						game.getPlayerById(((HasIdForSingleUseReRoll) pStep).idForSingleUseReRoll()).markUsed(pReRollSource.getSkill(game), game);
 						UtilServerGame.updateSingleUseReRolls(turnData, pPlayer.getTeam(), game.getFieldModel());
 					}
 				}

@@ -95,7 +95,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
-		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, singleUseReRollSource);
+		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
 		IJsonOption.FUMBLE.addTo(jsonObject, fFumble);
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
 		return jsonObject;
@@ -109,7 +109,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
 		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
 		fFumble = IJsonOption.FUMBLE.getFrom(game, jsonObject);
 		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
 		return this;

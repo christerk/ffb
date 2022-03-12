@@ -198,8 +198,6 @@ public abstract class AbstractStep implements IStep {
 		pParameter.consume();
 	}
 
-	// JSON serialization
-
 	protected void markSkillsTrackedOutsideOfActivation(Game game) {
 		Player<?> player = game.getActingPlayer().getPlayer();
 		if (player != null) {
@@ -213,6 +211,8 @@ public abstract class AbstractStep implements IStep {
 				});
 		}
 	}
+
+	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
