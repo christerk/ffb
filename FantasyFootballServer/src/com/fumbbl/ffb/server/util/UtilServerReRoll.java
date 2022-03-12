@@ -127,14 +127,24 @@ public class UtilServerReRoll {
 			&& !playerState.hasUsedPro());
 	}
 
+	public static boolean isSingleUseReRollAvailable(GameState pGameState, Player<?> pPlayer) {
+		Game game = pGameState.getGame();
+		return isTeamReRollAvailable(pGameState, pPlayer, game.getTurnData().getSingleUseReRolls());
+	}
+
 	public static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {
+		Game game = pGameState.getGame();
+		return isTeamReRollAvailable(pGameState, pPlayer, game.getTurnData().getReRolls());
+	}
+
+	private static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer, int amount) {
 		Game game = pGameState.getGame();
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 		TurnMode turnMode = game.getTurnMode();
 		boolean homeHasPlayer = game.getTeamHome().hasPlayer(pPlayer);
 		boolean awayHasPlayer = game.getTeamAway().hasPlayer(pPlayer);
-		return (actingTeam.hasPlayer(pPlayer) && !game.getTurnData().isReRollUsed() && (game.getTurnData().getReRolls() > 0)
+		return (actingTeam.hasPlayer(pPlayer) && !game.getTurnData().isReRollUsed() && (amount > 0)
 			&& mechanic.allowsTeamReRoll(turnMode)
 			&& ((turnMode != TurnMode.BOMB_HOME) || homeHasPlayer)
 			&& ((turnMode != TurnMode.BOMB_HOME_BLITZ) || homeHasPlayer)
