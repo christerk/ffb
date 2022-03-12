@@ -35,10 +35,12 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 	private JButton fButtonTeamReRoll;
 	private JButton fButtonProReRoll;
 	private JButton fButtonNoReRoll;
+	private final ReRollSource singleUseReRollSource;
 	private JButton brawlerButton, proButton1, proButton2, proButton3;
 
 	private int fDiceIndex, proIndex;
 	private ReRollSource fReRollSource;
+	private JButton buttonSingleUseReRoll;
 
 	private final DialogBlockRollPartialReRollParameter fDialogParameter;
 
@@ -48,6 +50,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 		fDiceIndex = -1;
 		fDialogParameter = pDialogParameter;
+		singleUseReRollSource = pDialogParameter.getSingleUseReRollSource();
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
@@ -93,7 +96,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			centerPanel.add(opponentChoicePanel());
 		}
 
-		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption() || pDialogParameter.hasBrawlerOption()) {
+		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption() || pDialogParameter.hasBrawlerOption() || singleUseReRollSource != null) {
 
 			JPanel reRollPanel = new JPanel();
 			reRollPanel.setOpaque(false);
@@ -116,6 +119,15 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			if (getDialogParameter().hasTeamReRollOption()) {
 				reRollPanel.add(fButtonTeamReRoll);
 			}
+
+			if (singleUseReRollSource != null) {
+				buttonSingleUseReRoll = new JButton(singleUseReRollSource.getName(getClient().getGame()));
+				buttonSingleUseReRoll.addActionListener(this);
+				buttonSingleUseReRoll.setMnemonic(KeyEvent.VK_L);
+				buttonSingleUseReRoll.addKeyListener(this);
+				reRollPanel.add(buttonSingleUseReRoll);
+			}
+
 			if (getDialogParameter().hasProReRollOption() && getDialogParameter().getNrOfDice() == 1) {
 				fButtonProReRoll = new JButton("Pro Re-Roll");
 				fButtonProReRoll.addActionListener(this);
@@ -219,6 +231,9 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		if (pActionEvent.getSource() == fButtonTeamReRoll) {
 			fReRollSource = ReRollSources.TEAM_RE_ROLL;
 		}
+		if (pActionEvent.getSource() == buttonSingleUseReRoll) {
+			fReRollSource = singleUseReRollSource;
+		}
 		if (pActionEvent.getSource() == fButtonProReRoll) {
 			fReRollSource = ReRollSources.PRO;
 			proIndex = 0;
@@ -303,6 +318,12 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 				if (getDialogParameter().hasTeamReRollOption()) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.TEAM_RE_ROLL;
+				}
+				break;
+			case KeyEvent.VK_L:
+				if (singleUseReRollSource != null) {
+					keyHandled = true;
+					fReRollSource = singleUseReRollSource;
 				}
 				break;
 			case KeyEvent.VK_P:

@@ -193,6 +193,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		boolean teamReRollOption = getReRollSource() == null && UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
+		boolean singleUseReRollOption = getReRollSource() == null && UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		boolean proReRollOption = (getReRollSource() == null || (getReRollSource() == ReRollSources.BRAWLER && fBlockRoll.length > reRolledDiceIndexes.length))
 			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn);
 		boolean brawlerOption = actingPlayer.getPlayerAction() != PlayerAction.BLITZ
@@ -211,15 +212,16 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
-		if ((fNrOfDice < 0) && (!pDoRoll || (!teamReRollOption && !proReRollOption && !brawlerOption))) {
+		if ((fNrOfDice < 0) && (!pDoRoll || (!teamReRollOption && !proReRollOption && !brawlerOption && !singleUseReRollOption))) {
 			teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 			teamReRollOption = false;
 			proReRollOption = false;
 			brawlerOption = false;
+			singleUseReRollOption = false;
 		}
 		getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
 		UtilServerDialog.showDialog(getGameState(),
-			new DialogBlockRollPartialReRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption, brawlerOption, reRolledDiceIndexes),
+			new DialogBlockRollPartialReRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption, brawlerOption, reRolledDiceIndexes, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null),
 			(fNrOfDice < 0));
 	}
 
