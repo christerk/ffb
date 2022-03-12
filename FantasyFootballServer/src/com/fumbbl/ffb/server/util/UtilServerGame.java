@@ -265,8 +265,10 @@ public class UtilServerGame {
 
 	public static void updateSingleUseReRolls(TurnData turnData, Team team, FieldModel fieldModel) {
 		int reRolls = (int) Arrays.stream(team.getPlayers())
-			.filter(player -> playerOnField(player, fieldModel)
-				&& UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.grantsSingleUseTeamRerollWhenOnPitch)).count();
+			.filter(player -> UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.grantsSingleUseTeamRerollWhenOnPitch))
+			.map(fieldModel::getPlayerState)
+			.filter(playerState -> !playerState.isCasualty() && playerState.getBase() != PlayerState.BANNED)
+			.count();
 
 		turnData.setSingleUseReRolls(reRolls);
 	}
