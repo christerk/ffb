@@ -25,7 +25,6 @@ import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.util.UtilCards;
 
 /**
- *
  * @author Kalimar
  */
 public class UtilServerReRoll {
@@ -65,7 +64,7 @@ public class UtilServerReRoll {
 				if (ReRollSources.PRO == pReRollSource) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
-							&& !playerState.hasUsedPro());
+						&& !playerState.hasUsedPro());
 					if (successful) {
 						game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));
 						int roll = gameState.getDiceRoller().rollSkill();
@@ -85,36 +84,25 @@ public class UtilServerReRoll {
 		return successful;
 	}
 
-	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-			int minimumRoll, boolean fumble) {
-		boolean reRollAvailable = false;
-		Game game = gameState.getGame();
-		if (minimumRoll >= 0) {
-			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
-			boolean proOption = isProReRollAvailable(player, game);
-			reRollAvailable = (teamReRollOption || proOption);
-			if (reRollAvailable) {
-				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-				String playerId = player.getId();
-				UtilServerDialog.showDialog(gameState,
-					new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble, null),
-					!actingTeam.hasPlayer(player));
-			}
-		}
-		return reRollAvailable;
-	}
-
 	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
 																								int minimumRoll, boolean fumble) {
+
+		Game game = gameState.getGame();
+		ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction);
+		Skill reRollSkill = reRollSource != null ? reRollSource.getSkill(game) : null;
 		Player<?> player = actingPlayer.getPlayer();
+
+		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, reRollSkill);
+
+	}
+
+	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
+																								int minimumRoll, boolean fumble, Skill reRollSkill) {
 		boolean reRollAvailable = false;
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {
 			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
 			boolean proOption = isProReRollAvailable(player, game);
-			ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction);
-			Skill reRollSkill = reRollSource != null ? reRollSource.getSkill(game) : null;
-
 			reRollAvailable = (teamReRollOption || proOption || reRollSkill != null);
 			if (reRollAvailable) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
@@ -125,6 +113,11 @@ public class UtilServerReRoll {
 			}
 		}
 		return reRollAvailable;
+	}
+
+	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
+																								int minimumRoll, boolean fumble) {
+		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, null);
 	}
 
 	public static boolean isProReRollAvailable(Player<?> player, Game game) {
@@ -142,11 +135,11 @@ public class UtilServerReRoll {
 		boolean homeHasPlayer = game.getTeamHome().hasPlayer(pPlayer);
 		boolean awayHasPlayer = game.getTeamAway().hasPlayer(pPlayer);
 		return (actingTeam.hasPlayer(pPlayer) && !game.getTurnData().isReRollUsed() && (game.getTurnData().getReRolls() > 0)
-				&& mechanic.allowsTeamReRoll(turnMode)
-				&& ((turnMode != TurnMode.BOMB_HOME) || homeHasPlayer)
-				&& ((turnMode != TurnMode.BOMB_HOME_BLITZ) || homeHasPlayer)
-				&& ((turnMode != TurnMode.BOMB_AWAY) || awayHasPlayer)
-				&& ((turnMode != TurnMode.BOMB_AWAY_BLITZ) || awayHasPlayer));
+			&& mechanic.allowsTeamReRoll(turnMode)
+			&& ((turnMode != TurnMode.BOMB_HOME) || homeHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_HOME_BLITZ) || homeHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_AWAY) || awayHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_AWAY_BLITZ) || awayHasPlayer));
 	}
 
 }
