@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.PlayerChoiceMode;
@@ -14,6 +11,9 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -21,7 +21,7 @@ import com.fumbbl.ffb.util.StringTool;
 public class ClientCommandPlayerChoice extends ClientCommand {
 
 	private PlayerChoiceMode fPlayerChoiceMode;
-	private List<String> fPlayerIds;
+	private final List<String> fPlayerIds;
 
 	public ClientCommandPlayerChoice() {
 		fPlayerIds = new ArrayList<>();
@@ -46,7 +46,7 @@ public class ClientCommandPlayerChoice extends ClientCommand {
 	}
 
 	public String[] getPlayerIds() {
-		return fPlayerIds.toArray(new String[fPlayerIds.size()]);
+		return fPlayerIds.toArray(new String[0]);
 	}
 
 	public void addPlayerId(String pPlayerId) {

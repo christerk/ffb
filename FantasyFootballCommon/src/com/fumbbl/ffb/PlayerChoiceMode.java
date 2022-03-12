@@ -10,7 +10,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	MVP("mvp", false), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
 	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
-	INDOMITABLE("indomitable");
+	INDOMITABLE("indomitable"), LORD_OF_CHAOS("lordOfChaos", false);
 
 	private final String name;
 	private final boolean usePlayerPosition;
@@ -83,6 +83,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case INDOMITABLE:
 				header.append("Select a player to use Indomitable against");
 				break;
+			case LORD_OF_CHAOS:
+				header.append("Select the player of which to use Lord of Chaos");
+				break;
 			default:
 				break;
 		}
@@ -140,6 +143,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case INDOMITABLE:
 				title.append("Indomitable");
 				break;
+			case LORD_OF_CHAOS:
+				title.append("Lord of Chaos");
+				break;
 			default:
 				break;
 		}
@@ -196,6 +202,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case INDOMITABLE:
 				message.append("Waiting for coach to use Indomitable");
+				break;
+			case LORD_OF_CHAOS:
+				message.append("Waiting for coach to use player for Lord of Chaos");
 				break;
 			default:
 				break;

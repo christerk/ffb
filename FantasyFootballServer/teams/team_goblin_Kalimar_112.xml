@@ -39,28 +39,36 @@
 		<name>Looney</name>
 		<gender>male</gender>
 		<positionId>goblin.looney</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Lord of Chaos</skill>
+		</skillList>
 	</player>
 
 	<player nr="4" id="teamGoblinKalimar4">
 		<name>Bombardier</name>
 		<gender>male</gender>
 		<positionId>goblin.bombardier</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Lord of Chaos</skill>
+		</skillList>
 	</player>
 
 	<player nr="5" id="teamGoblinKalimar5">
 		<name>Pogoer</name>
 		<gender>male</gender>
 		<positionId>goblin.pogoer</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Lord of Chaos</skill>
+		</skillList>
 	</player>
 
 	<player nr="6" id="teamGoblinKalimar6">
 		<name>Fanatic</name>
 		<gender>male</gender>
 		<positionId>goblin.fanatic</positionId>
-		<skillList></skillList>
+		<skillList>
+			<skill>Lord of Chaos</skill>
+		</skillList>
 	</player>
 
 	<player nr="7" id="teamGoblinKalimar7">
@@ -71,6 +79,7 @@
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
 			<skill>Stunty</skill>
+			<skill>Lord of Chaos</skill>
 			<skill>Thick Skull</skill>
 		</skillList>
 	</player>

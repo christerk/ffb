@@ -14,6 +14,7 @@ public class ChangeList {
 			.addFeature("Treacherous")
 			.addFeature("Burst of Speed")
 			.addFeature("Two for One")
+			.addFeature("Lord of Chaos")
 		);
 
 		versions.add(new VersionChangeList("2.6.0")

@@ -33,9 +33,11 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 	private final JButton fButtonTeamReRoll;
 	private final JButton fButtonProReRoll;
 	private final JButton fButtonNoReRoll;
+	private final ReRollSource singleUseReRollSource;
 	private final DialogReRollParameter fDialogParameter;
 	private JButton buttonSkillReRoll;
 	private ReRollSource fReRollSource;
+	private JButton buttonSingleUseReRoll;
 	private boolean useSkill;
 
 	public DialogReRoll(FantasyFootballClient pClient, DialogReRollParameter pDialogParameter) {
@@ -44,10 +46,19 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		fDialogParameter = pDialogParameter;
 
+		singleUseReRollSource = pDialogParameter.getSingleUseReRollSource();
+
 		fButtonTeamReRoll = new JButton("Team Re-Roll");
 		fButtonTeamReRoll.addActionListener(this);
 		fButtonTeamReRoll.addKeyListener(this);
 		fButtonTeamReRoll.setMnemonic((int) 'T');
+
+		if (singleUseReRollSource != null) {
+			buttonSingleUseReRoll = new JButton(singleUseReRollSource.getName(pClient.getGame()));
+			buttonSingleUseReRoll.addActionListener(this);
+			buttonSingleUseReRoll.addKeyListener(this);
+			buttonSingleUseReRoll.setMnemonic('L');
+		}
 
 		fButtonProReRoll = new JButton("Pro Re-Roll");
 		fButtonProReRoll.addActionListener(this);
@@ -114,6 +125,10 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 			buttonPanel.add(fButtonTeamReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
+		if (buttonSingleUseReRoll != null) {
+			buttonPanel.add(buttonSingleUseReRoll);
+			buttonPanel.add(Box.createHorizontalStrut(5));
+		}
 		if (fDialogParameter.isProReRollOption()) {
 			buttonPanel.add(fButtonProReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
@@ -147,6 +162,9 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		}
 		if (pActionEvent.getSource() == fButtonNoReRoll) {
 			fReRollSource = null;
+		}
+		if (pActionEvent.getSource() == buttonSingleUseReRoll) {
+			fReRollSource = singleUseReRollSource;
 		}
 		if (pActionEvent.getSource() == buttonSkillReRoll) {
 			useSkill = true;
@@ -186,6 +204,11 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 			case KeyEvent.VK_P:
 				if (getDialogParameter().isProReRollOption()) {
 					fReRollSource = ReRollSources.PRO;
+				}
+				break;
+			case KeyEvent.VK_L:
+				if (singleUseReRollSource != null) {
+					fReRollSource = singleUseReRollSource;
 				}
 				break;
 			case KeyEvent.VK_S:

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.dialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -21,6 +22,7 @@ public class DialogReRollParameter implements IDialogParameter {
 	private boolean fTeamReRollOption;
 	private boolean fProReRollOption;
 	private boolean fFumble;
+	private ReRollSource singleUseReRollSource;
 	private Skill reRollSkill;
 
 	public DialogReRollParameter() {
@@ -28,7 +30,8 @@ public class DialogReRollParameter implements IDialogParameter {
 	}
 
 	public DialogReRollParameter(String pPlayerId, ReRolledAction pReRolledAction, int pMinimumRoll,
-															 boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble, Skill reRollSkill) {
+															 boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble,
+															 Skill reRollSkill, ReRollSource singleUseReRollSource) {
 		fPlayerId = pPlayerId;
 		fReRolledAction = pReRolledAction;
 		fMinimumRoll = pMinimumRoll;
@@ -36,6 +39,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		fProReRollOption = pProReRollOption;
 		fFumble = pFumble;
 		this.reRollSkill = reRollSkill;
+		this.singleUseReRollSource = singleUseReRollSource;
 	}
 
 	public DialogId getId() {
@@ -70,11 +74,15 @@ public class DialogReRollParameter implements IDialogParameter {
 		return reRollSkill;
 	}
 
-	// transformation
+	public ReRollSource getSingleUseReRollSource() {
+		return singleUseReRollSource;
+	}
+
+// transformation
 
 	public IDialogParameter transform() {
 		return new DialogReRollParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(),
-			isProReRollOption(), isFumble(), reRollSkill);
+			isProReRollOption(), isFumble(), reRollSkill, singleUseReRollSource);
 	}
 
 	// JSON serialization
@@ -87,6 +95,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
+		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, singleUseReRollSource);
 		IJsonOption.FUMBLE.addTo(jsonObject, fFumble);
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
 		return jsonObject;
@@ -100,6 +109,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
 		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		fFumble = IJsonOption.FUMBLE.getFrom(game, jsonObject);
 		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
 		return this;

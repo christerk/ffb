@@ -20,6 +20,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.util.UtilCards;
@@ -39,15 +40,21 @@ public class UtilServerReRoll {
 		StepResult stepResult = pStep.getResult();
 		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		if (pReRollSource != null) {
-			if (ReRollSources.TEAM_RE_ROLL == pReRollSource) {
+			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == pReRollSource;
+			boolean lordOfChaos = ReRollSources.LORD_OF_CHAOS == pReRollSource && pStep instanceof AbstractStepWithReRoll;
+			if (teamReRoll || lordOfChaos) {
 				TurnData turnData = game.getTurnData();
-				if (gameMechanic.updateTurnDataAfterReRollUsage(turnData)) {
+				if (teamReRoll && gameMechanic.updateTurnDataAfterReRollUsage(turnData)) {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.BRILLIANT_COACHING_RE_ROLL, successful, 0));
-				} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+				} else if (teamReRoll && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
 					turnData.setLeaderState(LeaderState.USED);
 				} else {
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.TEAM_RE_ROLL, successful, 0));
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
+					if (lordOfChaos) {
+						game.getPlayerById(((AbstractStepWithReRoll) pStep).getPlayerIdForSingleUseReRoll()).markUsed(pReRollSource.getSkill(game), game);
+						UtilServerGame.updateSingleUseReRolls(turnData, pPlayer.getTeam(), game.getFieldModel());
+					}
 				}
 
 				if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
@@ -60,7 +67,7 @@ public class UtilServerReRoll {
 				}
 
 			}
-			if (pReRollSource.getSkill(game) != null) {
+			if (!teamReRoll && !lordOfChaos && pReRollSource.getSkill(game) != null) {
 				if (ReRollSources.PRO == pReRollSource) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
@@ -102,13 +109,14 @@ public class UtilServerReRoll {
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {
 			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
+			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
 			boolean proOption = isProReRollAvailable(player, game);
-			reRollAvailable = (teamReRollOption || proOption || reRollSkill != null);
+			reRollAvailable = (teamReRollOption || proOption || singleUseReRollOption || reRollSkill != null);
 			if (reRollAvailable) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 				String playerId = player.getId();
 				UtilServerDialog.showDialog(gameState,
-					new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble, reRollSkill),
+					new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble, reRollSkill, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null),
 					!actingTeam.hasPlayer(player));
 			}
 		}

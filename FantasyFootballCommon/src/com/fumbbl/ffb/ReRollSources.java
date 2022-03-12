@@ -23,6 +23,7 @@ public class ReRollSources {
 	public static final ReRollSource BLIND_RAGE = new ReRollSource("Blind Rage");
 	public static final ReRollSource THE_BALLISTA = new ReRollSource("The Ballista", 2);
 	public static final ReRollSource MESMERIZING_DANCE = new ReRollSource("Mesmerizing Dance");
+	public static final ReRollSource LORD_OF_CHAOS = new ReRollSource("Lord of Chaos");
 
 	private final Map<String, ReRollSource> values;
 
