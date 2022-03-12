@@ -133,20 +133,20 @@ public class ResourceComponent extends JPanel {
 			List<ResourceValue> values = pSlot.getValues();
 			for (int i = 0; i < Math.min(4, values.size()); i++) {
 				ResourceValue resourceValue = values.get(i);
-				drawCounter(iconCache, g2d, x, y, resourceValue, offset(pSlot.getLocation(), i));
+				if (resourceValue.getValue() > 1 || (values.size() > 1 && resourceValue.getValue() == 1)) {
+					drawCounter(iconCache, g2d, x, y, resourceValue, offset(pSlot.getLocation(), i));
+				}
 			}
 			g2d.dispose();
 		}
 	}
 
 	private void drawCounter(IconCache iconCache, Graphics2D g2d, int x, int y, ResourceValue resourceValue, Dimension offset) {
-		if (resourceValue.getValue() > 1) {
 			Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
 			BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
 				.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
 
 			g2d.drawImage(counter, x + offset.width, y + offset.height, null);
-		}
 	}
 
 	private Dimension offset(Rectangle location, int index) {
@@ -179,7 +179,9 @@ public class ResourceComponent extends JPanel {
 			fRefreshNecessary |= (turnData.isReRollUsed() == reRollSlot.isEnabled());
 			reRollSlot.setEnabled(!turnData.isReRollUsed());
 			reRollSlot.add(new ResourceValue(fCurrentReRolls, "Re-Roll", "Re-Rolls"));
-			reRollSlot.add(new ResourceValue(currentSingleUseReRolls, "Lord of Chaos", "Lords of Chaos"));
+			if (currentSingleUseReRolls > 0) {
+				reRollSlot.add(new ResourceValue(currentSingleUseReRolls, "Lord of Chaos", "Lords of Chaos"));
+			}
 			reRollSlot.setIconProperty(IIconProperty.RESOURCE_RE_ROLL);
 		}
 
