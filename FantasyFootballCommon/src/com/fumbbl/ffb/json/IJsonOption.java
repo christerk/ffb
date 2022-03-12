@@ -114,6 +114,7 @@ public interface IJsonOption {
 	JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");
 	JsonBooleanOption CONCESSION_POSSIBLE = new JsonBooleanOption("concessionPossible");
 	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", Factory.SKILL);
+	JsonBooleanOption CONSUMMATE_OPTION = new JsonBooleanOption("consummateOption");
 	JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
 	JsonFieldCoordinateOption COORDINATE_FROM = new JsonFieldCoordinateOption("coordinateFrom");
 	JsonFieldCoordinateArrayOption COORDINATES_TO = new JsonFieldCoordinateArrayOption("coordinatesTo");

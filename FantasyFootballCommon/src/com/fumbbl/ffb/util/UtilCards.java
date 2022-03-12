@@ -40,6 +40,16 @@ public final class UtilCards {
 		return Arrays.stream(findAllSkills(player)).filter(skill -> skill.hasSkillProperty(property)).findFirst();
 	}
 
+	public static Optional<Skill> getUnusedSkillWithProperty(Player<?> player, ISkillProperty property) {
+		Optional<Skill> skill = getSkillWithProperty(player, property);
+		if (skill.isPresent()) {
+			if (!player.isUsed(skill.get())) {
+				return skill;
+			}
+		}
+		return Optional.empty();
+	}
+
 	public static boolean hasUncanceledSkillWithProperty(Player<?> player, ISkillProperty property) {
 		Skill[] skills = findAllSkills(player);
 		return Arrays.stream(skills).anyMatch(skill -> skill.hasSkillProperty(property))

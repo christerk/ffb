@@ -24,6 +24,7 @@ public class ReRollSources {
 	public static final ReRollSource THE_BALLISTA = new ReRollSource("The Ballista", 2);
 	public static final ReRollSource MESMERIZING_DANCE = new ReRollSource("Mesmerizing Dance");
 	public static final ReRollSource LORD_OF_CHAOS = new ReRollSource("Lord of Chaos");
+	public static final ReRollSource CONSUMMATE_PROFESSIONAL = new ReRollSource("Consummate Professional");
 
 	private final Map<String, ReRollSource> values;
 

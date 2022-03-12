@@ -35,6 +35,10 @@ public abstract class AbstractDialogBlock extends Dialog {
 		return textPanel("Pro Re-Rolls");
 	}
 
+	protected JPanel consummateTextPanel() {
+		return textPanel("Consummate Professional");
+	}
+
 	private JPanel textPanel(String text) {
 		JPanel textPanel = new JPanel();
 		textPanel.setOpaque(false);

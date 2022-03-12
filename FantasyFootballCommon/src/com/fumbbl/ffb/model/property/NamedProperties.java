@@ -79,8 +79,9 @@ public class NamedProperties {
 	public static final ISkillProperty canRerollBothDowns = new NamedProperty("Can Reroll Both Downs");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
+	public static final ISkillProperty canRerollSingleDieOncePerGame = new NamedProperty("Can Reroll Single Die Once Per Game");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
-			"Can Roll To Match Opponents Strength");
+		"Can Roll To Match Opponents Strength");
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
 	public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty(
 		"Can Sneak Extra Players Onto Pitch");

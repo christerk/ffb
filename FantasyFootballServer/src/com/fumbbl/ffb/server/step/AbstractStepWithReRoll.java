@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -51,6 +52,13 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 					ClientCommandPlayerChoice commandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 					if (commandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.LORD_OF_CHAOS) {
 						playerIdForSingleUseReRoll = commandPlayerChoice.getPlayerId();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerGame)) {
+						setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;

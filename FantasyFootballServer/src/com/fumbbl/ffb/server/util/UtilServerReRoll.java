@@ -25,6 +25,8 @@ import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Optional;
+
 /**
  * @author Kalimar
  */
@@ -42,6 +44,7 @@ public class UtilServerReRoll {
 		if (pReRollSource != null) {
 			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == pReRollSource;
 			boolean lordOfChaos = ReRollSources.LORD_OF_CHAOS == pReRollSource && pStep instanceof HasIdForSingleUseReRoll;
+			Skill reRollSourceSkill = pReRollSource.getSkill(game);
 			if (teamReRoll || lordOfChaos) {
 				TurnData turnData = game.getTurnData();
 				if (teamReRoll && gameMechanic.updateTurnDataAfterReRollUsage(turnData)) {
@@ -52,7 +55,7 @@ public class UtilServerReRoll {
 				} else {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
 					if (lordOfChaos) {
-						game.getPlayerById(((HasIdForSingleUseReRoll) pStep).idForSingleUseReRoll()).markUsed(pReRollSource.getSkill(game), game);
+						game.getPlayerById(((HasIdForSingleUseReRoll) pStep).idForSingleUseReRoll()).markUsed(reRollSourceSkill, game);
 						UtilServerGame.updateSingleUseReRolls(turnData, pPlayer.getTeam(), game.getFieldModel());
 					}
 				}
@@ -67,7 +70,7 @@ public class UtilServerReRoll {
 				}
 
 			}
-			if (!teamReRoll && !lordOfChaos && pReRollSource.getSkill(game) != null) {
+			if (!teamReRoll && !lordOfChaos && reRollSourceSkill != null) {
 				if (ReRollSources.PRO == pReRollSource) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
@@ -79,12 +82,16 @@ public class UtilServerReRoll {
 						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, roll));
 					}
 				} else {
-					successful = UtilCards.hasSkill(pPlayer, pReRollSource.getSkill(game));
+					if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+						successful = !pPlayer.isUsed(reRollSourceSkill);
+					} else {
+						successful = UtilCards.hasSkill(pPlayer, reRollSourceSkill);
+					}
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				if (actingPlayer.getPlayer() == pPlayer) {
-					actingPlayer.markSkillUsed(pReRollSource.getSkill(game));
+					actingPlayer.markSkillUsed(reRollSourceSkill);
 				}
 			}
 		}
@@ -111,6 +118,13 @@ public class UtilServerReRoll {
 			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
 			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
 			boolean proOption = isProReRollAvailable(player, game);
+			if (reRollSkill == null) {
+				Optional<Skill> reRollOnce = UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerGame);
+				if (reRollOnce.isPresent()) {
+					reRollSkill = reRollOnce.get();
+				}
+			}
+
 			reRollAvailable = (teamReRollOption || proOption || singleUseReRollOption || reRollSkill != null);
 			if (reRollAvailable) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
