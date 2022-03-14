@@ -258,7 +258,7 @@ public class FantasyFootballServer implements IFactorySource {
 		return fFortuna;
 	}
 
-	public static void main(String[] origArgs) throws IOException, SQLException {
+	public static void main(String[] origArgs) throws IOException {
 
 		InifileParamFilterResult filterResult = new InifileParamFilter().filterForInifile(origArgs);
 

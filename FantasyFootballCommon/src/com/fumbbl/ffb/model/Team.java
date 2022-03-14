@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Kalimar
  */
 public class Team implements IXmlSerializable, IJsonSerializable {
@@ -242,6 +241,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public void updateRoster(Roster pRoster, boolean updateStats, IFactorySource game) {
+		game.logDebug(currentGameId, "Entering updateRoster");
 		fRoster = pRoster;
 		if (fRoster != null) {
 			setRosterId(fRoster.getId());
@@ -251,6 +251,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 				player.updatePosition(fRoster.getPositionById(positionId), updateStats, game, currentGameId);
 			}
 		}
+		game.logDebug(currentGameId, "Leaving updateRoster");
 	}
 
 	public int getCheerleaders() {
