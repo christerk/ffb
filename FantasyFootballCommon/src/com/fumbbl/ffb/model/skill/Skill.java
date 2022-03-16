@@ -335,4 +335,8 @@ public abstract class Skill implements INamedObject {
 	public boolean isNegativeTrait() {
 		return negativeTrait;
 	}
+
+	public String superString() {
+		return super.toString();
+	}
 }
