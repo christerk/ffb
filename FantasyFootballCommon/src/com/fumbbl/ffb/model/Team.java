@@ -88,7 +88,6 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		fPlayerById = new HashMap<>();
 		fPlayerByNr = new HashMap<>();
 		specialRules = new HashSet<>();
-		updateRoster(new Roster(), game);
 	}
 
 	public long getCurrentGameId() {
