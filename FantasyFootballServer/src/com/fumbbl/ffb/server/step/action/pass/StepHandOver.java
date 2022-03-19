@@ -100,10 +100,10 @@ public final class StepHandOver extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepHandOver initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+	public StepHandOver initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

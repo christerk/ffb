@@ -57,8 +57,8 @@ public class ReportKickoffRiot implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffRiot initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportKickoffRiot initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
 		fTurnModifier = IJsonOption.TURN_MODIFIER.getFrom(source, jsonObject);

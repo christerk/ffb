@@ -66,12 +66,12 @@ public class ServerCommandGameTime extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandGameTime initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		fGameTime = IJsonOption.GAME_TIME.getFrom(game, jsonObject);
-		fTurnTime = IJsonOption.TURN_TIME.getFrom(game, jsonObject);
+	public ServerCommandGameTime initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		fGameTime = IJsonOption.GAME_TIME.getFrom(source, jsonObject);
+		fTurnTime = IJsonOption.TURN_TIME.getFrom(source, jsonObject);
 		return this;
 	}
 

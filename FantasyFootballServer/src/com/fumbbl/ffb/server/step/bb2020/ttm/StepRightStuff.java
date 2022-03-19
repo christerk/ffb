@@ -235,15 +235,15 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepRightStuff initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
-		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
-		goToOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
-		kickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(game, jsonObject);
-		fDropThrownPlayer = IServerJsonOption.DROP_THROWN_PLAYER.getFrom(game, jsonObject);
+	public StepRightStuff initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
+		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
+		goToOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
+		kickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
+		fDropThrownPlayer = IServerJsonOption.DROP_THROWN_PLAYER.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -111,15 +111,15 @@ public class Animation implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public Animation initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		fWithBall = IJsonOption.WITH_BALL.getFrom(game, jsonObject);
-		fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(game, jsonObject);
-		fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(game, jsonObject);
-		fInterceptorCoordinate = IJsonOption.INTERCEPTOR_COORDINATE.getFrom(game, jsonObject);
-		fAnimationType = (AnimationType) IJsonOption.ANIMATION_TYPE.getFrom(game, jsonObject);
-		fCard = (Card) IJsonOption.CARD.getFrom(game, jsonObject);
+	public Animation initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		fWithBall = IJsonOption.WITH_BALL.getFrom(source, jsonObject);
+		fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(source, jsonObject);
+		fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(source, jsonObject);
+		fInterceptorCoordinate = IJsonOption.INTERCEPTOR_COORDINATE.getFrom(source, jsonObject);
+		fAnimationType = (AnimationType) IJsonOption.ANIMATION_TYPE.getFrom(source, jsonObject);
+		fCard = (Card) IJsonOption.CARD.getFrom(source, jsonObject);
 		return this;
 	}
 

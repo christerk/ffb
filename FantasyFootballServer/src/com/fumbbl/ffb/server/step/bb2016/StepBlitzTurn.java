@@ -121,9 +121,9 @@ public final class StepBlitzTurn extends AbstractStep {
 	}
 
 	@Override
-	public StepBlitzTurn initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBlitzTurn initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}

@@ -74,13 +74,13 @@ public class ReportSkillUse implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSkillUse initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
-		fUsed = IJsonOption.USED.getFrom(game, jsonObject);
-		fSkillUse = (SkillUse) IJsonOption.SKILL_USE.getFrom(game, jsonObject);
+	public ReportSkillUse initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		fUsed = IJsonOption.USED.getFrom(source, jsonObject);
+		fSkillUse = (SkillUse) IJsonOption.SKILL_USE.getFrom(source, jsonObject);
 		return this;
 	}
 

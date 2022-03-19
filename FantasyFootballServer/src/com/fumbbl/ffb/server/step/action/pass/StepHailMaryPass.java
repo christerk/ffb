@@ -98,17 +98,17 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepHailMaryPass initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
+	public StepHailMaryPass initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
 		if (state.result == null) {
-			Boolean fumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+			Boolean fumble = IServerJsonOption.PASS_FUMBLE.getFrom(source, jsonObject);
 			boolean passFumble = fumble != null && fumble;
 			state.result = passFumble ? PassResult.FUMBLE : PassResult.INACCURATE;
 		}
-		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
+		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(source, jsonObject);
 		return this;
 	}
 

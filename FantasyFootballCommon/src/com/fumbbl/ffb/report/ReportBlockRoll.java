@@ -64,12 +64,12 @@ public class ReportBlockRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportBlockRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		choosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);
-		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		defenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
+	public ReportBlockRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		choosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(source, jsonObject);
+		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

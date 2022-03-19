@@ -54,11 +54,11 @@ public class ReportFumbblResultUpload implements IReport {
 		return jsonObject;
 	}
 
-	public ReportFumbblResultUpload initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
-		fUploadStatus = IJsonOption.UPLOAD_STATUS.getFrom(game, jsonObject);
+	public ReportFumbblResultUpload initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);
+		fUploadStatus = IJsonOption.UPLOAD_STATUS.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -40,10 +40,10 @@ public class ClientCommandKickoff extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandKickoff initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandKickoff initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(game, jsonObject);
+		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

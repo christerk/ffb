@@ -21,7 +21,7 @@ public class DialogBuyCardsParameter implements IDialogParameter {
 	private String fTeamId;
 	private int fAvailableGold;
 	private int fAvailableCards;
-	private Map<CardType, Integer> fNrOfCardsPerType;
+	private final Map<CardType, Integer> fNrOfCardsPerType;
 
 	public DialogBuyCardsParameter() {
 		fNrOfCardsPerType = new HashMap<>();
@@ -88,18 +88,18 @@ public class DialogBuyCardsParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBuyCardsParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fAvailableCards = IJsonOption.AVAILABLE_CARDS.getFrom(game, jsonObject);
-		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(game, jsonObject);
+	public DialogBuyCardsParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fAvailableCards = IJsonOption.AVAILABLE_CARDS.getFrom(source, jsonObject);
+		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(source, jsonObject);
 		// get nrOfCards and cardType from array of inner jsonObjects
-		JsonArray nrOfCardsPerType = IJsonOption.NR_OF_CARDS_PER_TYPE.getFrom(game, jsonObject);
+		JsonArray nrOfCardsPerType = IJsonOption.NR_OF_CARDS_PER_TYPE.getFrom(source, jsonObject);
 		for (int i = 0; i < nrOfCardsPerType.size(); i++) {
 			JsonObject nrOfCardsForThisType = nrOfCardsPerType.get(i).asObject();
-			CardType cardType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, nrOfCardsForThisType);
-			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(game, nrOfCardsForThisType);
+			CardType cardType = (CardType) IJsonOption.CARD_TYPE.getFrom(source, nrOfCardsForThisType);
+			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(source, nrOfCardsForThisType);
 			put(cardType, nrOfCards);
 		}
 		return this;

@@ -88,15 +88,15 @@ public class ReportTentaclesShadowingRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportTentaclesShadowingRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		fRoll = IJsonOption.TENTACLE_ROLL.getFrom(game, jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
-		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);
+	public ReportTentaclesShadowingRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		fRoll = IJsonOption.TENTACLE_ROLL.getFrom(source, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
+		fReRolled = IJsonOption.RE_ROLLED.getFrom(source, jsonObject);
 		return this;
 	}
 

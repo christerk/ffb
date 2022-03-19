@@ -84,15 +84,15 @@ public class ReportDedicatedFans implements IReport {
 		return jsonObject;
 	}
 
-	public ReportDedicatedFans initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		rollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		modifierHome = IJsonOption.DEDICATED_FANS_MODIFIER_HOME.getFrom(game, jsonObject);
-		rollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
-		modifierAway = IJsonOption.DEDICATED_FANS_MODIFIER_AWAY.getFrom(game, jsonObject);
-		concededTeam = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		conceded = IJsonOption.CONCEDED.getFrom(game, jsonObject);
+	public ReportDedicatedFans initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		rollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		modifierHome = IJsonOption.DEDICATED_FANS_MODIFIER_HOME.getFrom(source, jsonObject);
+		rollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
+		modifierAway = IJsonOption.DEDICATED_FANS_MODIFIER_AWAY.getFrom(source, jsonObject);
+		concededTeam = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		conceded = IJsonOption.CONCEDED.getFrom(source, jsonObject);
 		return this;
 	}
 

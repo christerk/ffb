@@ -61,11 +61,11 @@ public class ReportSkillWasted implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSkillWasted initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+	public ReportSkillWasted initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

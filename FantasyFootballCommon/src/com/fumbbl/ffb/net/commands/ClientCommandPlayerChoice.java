@@ -76,11 +76,11 @@ public class ClientCommandPlayerChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPlayerChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(game, jsonObject);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+	public ClientCommandPlayerChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(source, jsonObject);
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
 		return this;
 	}
 

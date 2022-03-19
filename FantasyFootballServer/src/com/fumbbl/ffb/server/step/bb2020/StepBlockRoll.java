@@ -260,9 +260,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepBlockRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBlockRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
 		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
 		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);

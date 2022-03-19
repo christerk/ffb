@@ -71,8 +71,8 @@ public final class StepInitKickoff extends AbstractStep {
 	// JSON serialization
 
 	@Override
-	public StepInitKickoff initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
+	public StepInitKickoff initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

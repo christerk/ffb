@@ -54,12 +54,12 @@ public class ClientCommandUseSkill extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUseSkill initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandUseSkill initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
-		fSkillUsed = IJsonOption.SKILL_USED.getFrom(game, jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		fSkillUsed = IJsonOption.SKILL_USED.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 }

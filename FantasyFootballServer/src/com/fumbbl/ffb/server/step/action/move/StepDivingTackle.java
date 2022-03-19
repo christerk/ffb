@@ -146,15 +146,15 @@ public class StepDivingTackle extends AbstractStep {
 	}
 
 	@Override
-	public StepDivingTackle initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
-		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
-		state.coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(game, jsonObject);
-		state.dodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(game, jsonObject);
-		state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
-		state.usingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(game, jsonObject);
+	public StepDivingTackle initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
+		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		state.coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		state.dodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(source, jsonObject);
+		state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
+		state.usingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(source, jsonObject);
 		return this;
 	}
 

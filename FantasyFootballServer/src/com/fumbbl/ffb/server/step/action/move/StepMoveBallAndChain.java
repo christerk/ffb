@@ -174,13 +174,13 @@ public class StepMoveBallAndChain extends AbstractStep {
 	}
 
 	@Override
-	public StepMoveBallAndChain initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fGotoLabelOnFallDown = IServerJsonOption.GOTO_LABEL_ON_FALL_DOWN.getFrom(game, jsonObject);
-		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
-		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(game, jsonObject);
+	public StepMoveBallAndChain initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fGotoLabelOnFallDown = IServerJsonOption.GOTO_LABEL_ON_FALL_DOWN.getFrom(source, jsonObject);
+		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		return this;
 	}
 

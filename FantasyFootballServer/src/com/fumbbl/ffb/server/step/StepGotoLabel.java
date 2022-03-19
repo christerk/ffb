@@ -79,12 +79,12 @@ public class StepGotoLabel extends AbstractStep {
 	}
 
 	@Override
-	public StepGotoLabel initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabel = IServerJsonOption.GOTO_LABEL.getFrom(game, jsonObject);
-		alternateLabel = IServerJsonOption.ALTERNATE_GOTO_LABEL.getFrom(game, jsonObject);
-		Boolean alternateBoolean = IServerJsonOption.USE_ALTERNATE_LABEL.getFrom(game, jsonObject);
+	public StepGotoLabel initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabel = IServerJsonOption.GOTO_LABEL.getFrom(source, jsonObject);
+		alternateLabel = IServerJsonOption.ALTERNATE_GOTO_LABEL.getFrom(source, jsonObject);
+		Boolean alternateBoolean = IServerJsonOption.USE_ALTERNATE_LABEL.getFrom(source, jsonObject);
 		useAlternateLabel = alternateBoolean != null && alternateBoolean;
 		return this;
 	}

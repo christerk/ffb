@@ -167,14 +167,14 @@ public class StepInitFouling extends AbstractStep {
 	}
 
 	@Override
-	public StepInitFouling initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
+	public StepInitFouling initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		return this;
 	}
 

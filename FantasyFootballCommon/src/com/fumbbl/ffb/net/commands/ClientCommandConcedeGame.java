@@ -40,10 +40,10 @@ public class ClientCommandConcedeGame extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandConcedeGame initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandConcedeGame initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fConcedeGameStatus = (ConcedeGameStatus) IJsonOption.CONCEDE_GAME_STATUS.getFrom(game, jsonObject);
+		fConcedeGameStatus = (ConcedeGameStatus) IJsonOption.CONCEDE_GAME_STATUS.getFrom(source, jsonObject);
 		return this;
 	}
 

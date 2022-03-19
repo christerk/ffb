@@ -53,12 +53,12 @@ public class ServerCommandStatus extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandStatus initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		fServerStatus = (ServerStatus) IJsonOption.SERVER_STATUS.getFrom(game, jsonObject);
-		fMessage = IJsonOption.MESSAGE.getFrom(game, jsonObject);
+	public ServerCommandStatus initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		fServerStatus = (ServerStatus) IJsonOption.SERVER_STATUS.getFrom(source, jsonObject);
+		fMessage = IJsonOption.MESSAGE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -59,12 +59,12 @@ public class ReportThrowAtStallingPlayer implements IReport {
 		return jsonObject;
 	}
 
-	public ReportThrowAtStallingPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		roll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		successful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
+	public ReportThrowAtStallingPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		roll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		successful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);
 		return this;
 	}
 

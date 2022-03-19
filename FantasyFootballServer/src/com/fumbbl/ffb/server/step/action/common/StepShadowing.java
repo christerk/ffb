@@ -120,13 +120,13 @@ public class StepShadowing extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepShadowing initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(game, jsonObject);
-		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
-		state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
-		state.usingDivingTackle = IServerJsonOption.USING_SHADOWING.getFrom(game, jsonObject);
+	public StepShadowing initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(source, jsonObject);
+		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
+		state.usingDivingTackle = IServerJsonOption.USING_SHADOWING.getFrom(source, jsonObject);
 		return this;
 	}
 

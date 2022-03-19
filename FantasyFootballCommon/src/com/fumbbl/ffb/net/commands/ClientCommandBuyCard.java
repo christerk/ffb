@@ -40,10 +40,10 @@ public class ClientCommandBuyCard extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandBuyCard initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandBuyCard initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fCardType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, jsonObject);
+		fCardType = (CardType) IJsonOption.CARD_TYPE.getFrom(source, jsonObject);
 		return this;
 	}
 

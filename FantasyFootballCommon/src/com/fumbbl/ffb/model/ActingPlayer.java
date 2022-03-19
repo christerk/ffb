@@ -14,9 +14,12 @@ import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifierFactory;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -342,6 +345,18 @@ public class ActingPlayer implements IJsonSerializable {
 		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait());
 	}
 
+	public Optional<StatBasedRollModifier> statBasedModifier(ISkillProperty property) {
+		Skill skill = getPlayer().getSkillWithProperty(property);
+		if (skill != null && !isSkillUsed(skill)) {
+			StatBasedRollModifierFactory factory = skill.getStatBasedRollModifierFactory();
+			if (factory != null) {
+				return Optional.of(factory.create(getPlayer()));
+			}
+		}
+
+		return Optional.empty();
+	}
+
 	public boolean justStoodUp() {
 		Skill jumpUp = getPlayer().getSkillWithProperty(NamedProperties.canStandUpForFree);
 		boolean hasJumpUp = jumpUp != null;
@@ -387,8 +402,8 @@ public class ActingPlayer implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ActingPlayer initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ActingPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fCurrentMove = IJsonOption.CURRENT_MOVE.getFrom(source, jsonObject);
 		fGoingForIt = IJsonOption.GOING_FOR_IT.getFrom(source, jsonObject);

@@ -132,9 +132,9 @@ public class StepPrayer extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		firstRun = IServerJsonOption.FIRST_RUN.getFrom(source, jsonObject);
 		teamId = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);

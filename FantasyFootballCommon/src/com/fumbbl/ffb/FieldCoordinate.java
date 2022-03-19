@@ -251,10 +251,10 @@ public class FieldCoordinate implements IJsonSerializable {
 	}
 
 	@Override
-	public FieldCoordinate initFrom(IFactorySource game, JsonValue jsonValue) {
+	public FieldCoordinate initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fX = IJsonOption.FIELD_COORDINATE_X.getFrom(game, jsonObject);
-		fY = IJsonOption.FIELD_COORDINATE_Y.getFrom(game, jsonObject);
+		fX = IJsonOption.FIELD_COORDINATE_X.getFrom(source, jsonObject);
+		fY = IJsonOption.FIELD_COORDINATE_Y.getFrom(source, jsonObject);
 		return this;
 	}
 

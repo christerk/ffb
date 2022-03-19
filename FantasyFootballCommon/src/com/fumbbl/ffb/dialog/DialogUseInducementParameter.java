@@ -2,8 +2,8 @@ package com.fumbbl.ffb.dialog;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
@@ -76,19 +76,19 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogUseInducementParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPE_ARRAY.getFrom(game, jsonObject);
+	public DialogUseInducementParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPE_ARRAY.getFrom(source, jsonObject);
 		fInducementTypes = new InducementType[inducementTypeNames.length];
-		InducementTypeFactory inducementTypeFactory = game.getFactory(Factory.INDUCEMENT_TYPE);
+		InducementTypeFactory inducementTypeFactory = source.getFactory(Factory.INDUCEMENT_TYPE);
 		for (int i = 0; i < fInducementTypes.length; i++) {
 			fInducementTypes[i] = inducementTypeFactory.forName(inducementTypeNames[i]);
 		}
-		String[] cardNames = IJsonOption.CARDS.getFrom(game, jsonObject);
+		String[] cardNames = IJsonOption.CARDS.getFrom(source, jsonObject);
 		fCards = new Card[cardNames.length];
-		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.CARD);
+		CardFactory cardFactory = source.getFactory(Factory.CARD);
 		for (int i = 0; i < fCards.length; i++) {
 			fCards[i] = cardFactory.forName(cardNames[i]);
 		}

@@ -90,14 +90,14 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogArgueTheCallParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		setTeamId(IJsonOption.TEAM_ID.getFrom(game, jsonObject));
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
-		Boolean stayOnPitchValue = IJsonOption.STAYS_ON_PITCH.getFrom(game, jsonObject);
+	public DialogArgueTheCallParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		setTeamId(IJsonOption.TEAM_ID.getFrom(source, jsonObject));
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
+		Boolean stayOnPitchValue = IJsonOption.STAYS_ON_PITCH.getFrom(source, jsonObject);
 		stayOnPitch = stayOnPitchValue != null && stayOnPitchValue;
-		Boolean friendsWithTheRefValue = IJsonOption.FRIENDS_WITH_REF.getFrom(game, jsonObject);
+		Boolean friendsWithTheRefValue = IJsonOption.FRIENDS_WITH_REF.getFrom(source, jsonObject);
 		friendsWithTheRef = friendsWithTheRefValue != null && friendsWithTheRefValue;
 		return this;
 	}

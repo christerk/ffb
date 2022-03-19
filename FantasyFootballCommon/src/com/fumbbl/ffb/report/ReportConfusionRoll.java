@@ -52,10 +52,10 @@ public class ReportConfusionRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportConfusionRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fConfusionSkill = (Skill) IJsonOption.CONFUSION_SKILL.getFrom(game, jsonObject);
+	public ReportConfusionRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fConfusionSkill = (Skill) IJsonOption.CONFUSION_SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

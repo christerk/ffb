@@ -118,29 +118,29 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBuyCardsAndInducementsParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		cardSlots = IJsonOption.AVAILABLE_CARDS.getFrom(game, jsonObject);
-		availableGold = IJsonOption.AVAILABLE_GOLD.getFrom(game, jsonObject);
-		treasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
+	public DialogBuyCardsAndInducementsParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		cardSlots = IJsonOption.AVAILABLE_CARDS.getFrom(source, jsonObject);
+		availableGold = IJsonOption.AVAILABLE_GOLD.getFrom(source, jsonObject);
+		treasury = IJsonOption.TREASURY.getFrom(source, jsonObject);
 		// get nrOfCards and cardType from array of inner jsonObjects
-		JsonArray nrOfCardsPerType = IJsonOption.NR_OF_CARDS_PER_TYPE.getFrom(game, jsonObject);
+		JsonArray nrOfCardsPerType = IJsonOption.NR_OF_CARDS_PER_TYPE.getFrom(source, jsonObject);
 		for (int i = 0; i < nrOfCardsPerType.size(); i++) {
 			JsonObject nrOfCardsForThisType = nrOfCardsPerType.get(i).asObject();
-			CardType cardType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, nrOfCardsForThisType);
-			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(game, nrOfCardsForThisType);
+			CardType cardType = (CardType) IJsonOption.CARD_TYPE.getFrom(source, nrOfCardsForThisType);
+			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(source, nrOfCardsForThisType);
 			put(cardType, nrOfCards);
 		}
 
-		JsonObject choiceObject = IJsonOption.CARD_CHOICES.getFrom(game, jsonObject);
+		JsonObject choiceObject = IJsonOption.CARD_CHOICES.getFrom(source, jsonObject);
 		if (choiceObject != null) {
-			cardChoices = new CardChoices().initFrom(game, choiceObject);
+			cardChoices = new CardChoices().initFrom(source, choiceObject);
 		}
 
-		cardPrice = IJsonOption.CARDS_PRICE.getFrom(game, jsonObject);
-		canBuyCards = IJsonOption.CAN_BUY_CARDS.getFrom(game, jsonObject);
+		cardPrice = IJsonOption.CARDS_PRICE.getFrom(source, jsonObject);
+		canBuyCards = IJsonOption.CAN_BUY_CARDS.getFrom(source, jsonObject);
 		return this;
 	}
 

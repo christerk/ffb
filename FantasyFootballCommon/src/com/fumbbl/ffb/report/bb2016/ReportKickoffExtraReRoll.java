@@ -2,11 +2,11 @@ package com.fumbbl.ffb.report.bb2016;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
@@ -81,14 +81,14 @@ public class ReportKickoffExtraReRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffExtraReRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fKickoffResult = (KickoffResult) IJsonOption.KICKOFF_RESULT.getFrom(game, jsonObject);
-		fRollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		fHomeGainsReRoll = IJsonOption.HOME_GAINS_RE_ROLL.getFrom(game, jsonObject);
-		fRollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
-		fAwayGainsReRoll = IJsonOption.AWAY_GAINS_RE_ROLL.getFrom(game, jsonObject);
+	public ReportKickoffExtraReRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fKickoffResult = (KickoffResult) IJsonOption.KICKOFF_RESULT.getFrom(source, jsonObject);
+		fRollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		fHomeGainsReRoll = IJsonOption.HOME_GAINS_RE_ROLL.getFrom(source, jsonObject);
+		fRollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
+		fAwayGainsReRoll = IJsonOption.AWAY_GAINS_RE_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

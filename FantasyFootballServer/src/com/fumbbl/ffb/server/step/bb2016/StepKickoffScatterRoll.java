@@ -239,19 +239,19 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 	}
 
 	@Override
-	public StepKickoffScatterRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(game, jsonObject);
-		fUseKickChoice = IServerJsonOption.USE_KICK_CHOICE.getFrom(game, jsonObject);
-		fScatterDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(game, jsonObject);
-		fScatterDistance = IServerJsonOption.SCATTER_DISTANCE.getFrom(game, jsonObject);
-		fKickingPlayerCoordinate = IServerJsonOption.KICKING_PLAYER_COORDINATE.getFrom(game, jsonObject);
-		JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(game, jsonObject);
+	public StepKickoffScatterRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(source, jsonObject);
+		fUseKickChoice = IServerJsonOption.USE_KICK_CHOICE.getFrom(source, jsonObject);
+		fScatterDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
+		fScatterDistance = IServerJsonOption.SCATTER_DISTANCE.getFrom(source, jsonObject);
+		fKickingPlayerCoordinate = IServerJsonOption.KICKING_PLAYER_COORDINATE.getFrom(source, jsonObject);
+		JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(source, jsonObject);
 		if (kickoffBoundsObject != null) {
-			fKickoffBounds = new FieldCoordinateBounds().initFrom(game, kickoffBoundsObject);
+			fKickoffBounds = new FieldCoordinateBounds().initFrom(source, kickoffBoundsObject);
 		}
-		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(game, jsonObject);
+		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(source, jsonObject);
 		return this;
 	}
 

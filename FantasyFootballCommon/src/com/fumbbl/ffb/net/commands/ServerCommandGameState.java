@@ -59,8 +59,8 @@ public class ServerCommandGameState extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandGameState initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ServerCommandGameState initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		JsonObject gameObject = IJsonOption.GAME.getFrom(source, jsonObject);

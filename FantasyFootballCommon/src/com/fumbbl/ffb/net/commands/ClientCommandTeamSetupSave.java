@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -12,6 +9,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -19,8 +19,8 @@ import com.fumbbl.ffb.util.ArrayTool;
 public class ClientCommandTeamSetupSave extends ClientCommand {
 
 	private String fSetupName;
-	private List<Integer> fPlayerNumbers;
-	private List<FieldCoordinate> fPlayerCoordinates;
+	private final List<Integer> fPlayerNumbers;
+	private final List<FieldCoordinate> fPlayerCoordinates;
 
 	public ClientCommandTeamSetupSave() {
 		fPlayerNumbers = new ArrayList<>();
@@ -90,12 +90,12 @@ public class ClientCommandTeamSetupSave extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandTeamSetupSave initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandTeamSetupSave initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fSetupName = IJsonOption.SETUP_NAME.getFrom(game, jsonObject);
-		addPlayerNumbers(IJsonOption.PLAYER_NUMBERS.getFrom(game, jsonObject));
-		addPlayerCoordinates(IJsonOption.PLAYER_COORDINATES.getFrom(game, jsonObject));
+		fSetupName = IJsonOption.SETUP_NAME.getFrom(source, jsonObject);
+		addPlayerNumbers(IJsonOption.PLAYER_NUMBERS.getFrom(source, jsonObject));
+		addPlayerCoordinates(IJsonOption.PLAYER_COORDINATES.getFrom(source, jsonObject));
 		return this;
 	}
 

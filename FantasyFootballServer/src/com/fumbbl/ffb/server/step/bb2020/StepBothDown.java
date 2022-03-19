@@ -93,9 +93,9 @@ public class StepBothDown extends AbstractStep {
 	}
 
 	@Override
-	public StepBothDown initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBothDown initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}

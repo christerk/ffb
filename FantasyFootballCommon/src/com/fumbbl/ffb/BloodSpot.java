@@ -61,10 +61,10 @@ public class BloodSpot implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public BloodSpot initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInjury = IJsonOption.INJURY.getFrom(game, jsonObject);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
+	public BloodSpot initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fInjury = IJsonOption.INJURY.getFrom(source, jsonObject);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

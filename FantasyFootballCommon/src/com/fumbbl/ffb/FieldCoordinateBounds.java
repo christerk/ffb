@@ -1,13 +1,13 @@
 package com.fumbbl.ffb;
 
-import java.util.LinkedList;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+
+import java.util.LinkedList;
 
 public class FieldCoordinateBounds implements IJsonSerializable {
 
@@ -151,11 +151,8 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 		} else if (!fBottomRightCorner.equals(other.fBottomRightCorner))
 			return false;
 		if (fTopLeftCorner == null) {
-			if (other.fTopLeftCorner != null)
-				return false;
-		} else if (!fTopLeftCorner.equals(other.fTopLeftCorner))
-			return false;
-		return true;
+			return other.fTopLeftCorner == null;
+		} else return fTopLeftCorner.equals(other.fTopLeftCorner);
 	}
 
 	// JSON serialization
@@ -167,8 +164,8 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public FieldCoordinateBounds initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public FieldCoordinateBounds initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fTopLeftCorner = IJsonOption.TOP_LEFT.getFrom(source, jsonObject);
 		fBottomRightCorner = IJsonOption.BOTTOM_RIGHT.getFrom(source, jsonObject);
 		return this;

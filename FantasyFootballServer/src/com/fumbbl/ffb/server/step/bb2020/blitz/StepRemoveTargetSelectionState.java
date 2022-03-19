@@ -83,9 +83,9 @@ public class StepRemoveTargetSelectionState extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		retainModelData = toPrimitive(IServerJsonOption.RETAIN_MODEL_DATA.getFrom(source, UtilJson.toJsonObject(pJsonValue)));
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		retainModelData = toPrimitive(IServerJsonOption.RETAIN_MODEL_DATA.getFrom(source, UtilJson.toJsonObject(jsonValue)));
 		return this;
 	}
 }

@@ -68,8 +68,8 @@ public final class StepFanFactor extends AbstractStep {
 	}
 
 	@Override
-	public StepFanFactor initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepFanFactor initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

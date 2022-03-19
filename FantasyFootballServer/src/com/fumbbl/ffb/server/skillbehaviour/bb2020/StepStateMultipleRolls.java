@@ -47,21 +47,21 @@ public class StepStateMultipleRolls implements IJsonSerializable, SingleReRollUs
 	}
 
 	@Override
-	public StepStateMultipleRolls initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		blockTargets = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
-		reRollTarget = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
-		proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		reRollAvailableAgainst = Arrays.asList(IJsonOption.RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
-		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
-		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
-		initialCount = IJsonOption.NUMBER.getFrom(game, jsonObject);
-		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
-		playerIdForSingleUseReRoll = IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(game, jsonObject);
-		consummateAvailable = IJsonOption.CONSUMMATE_OPTION.getFrom(game, jsonObject);
+	public StepStateMultipleRolls initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		blockTargets = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
+		reRollTarget = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		firstRun = IJsonOption.FIRST_RUN.getFrom(source, jsonObject);
+		proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		reRollAvailableAgainst = Arrays.asList(IJsonOption.RE_ROLL_AVAILABLE_AGAINST.getFrom(source, jsonObject));
+		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
+		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(source, jsonObject);
+		initialCount = IJsonOption.NUMBER.getFrom(source, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
+		playerIdForSingleUseReRoll = IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(source, jsonObject);
+		consummateAvailable = IJsonOption.CONSUMMATE_OPTION.getFrom(source, jsonObject);
 		return this;
 	}
 

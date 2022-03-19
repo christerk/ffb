@@ -350,8 +350,8 @@ public class TurnData implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TurnData initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public TurnData initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fHomeData = IJsonOption.HOME_DATA.getFrom(source, jsonObject);
 		fTurnStarted = IJsonOption.TURN_STARTED.getFrom(source, jsonObject);
 		fTurnNr = IJsonOption.TURN_NR.getFrom(source, jsonObject);

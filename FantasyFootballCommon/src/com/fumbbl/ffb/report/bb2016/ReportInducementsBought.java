@@ -79,14 +79,14 @@ public class ReportInducementsBought implements IReport {
 		return jsonObject;
 	}
 
-	public ReportInducementsBought initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fNrOfInducements = IJsonOption.NR_OF_INDUCEMENTS.getFrom(game, jsonObject);
-		fNrOfStars = IJsonOption.NR_OF_STARS.getFrom(game, jsonObject);
-		fNrOfMercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(game, jsonObject);
-		fGold = IJsonOption.GOLD.getFrom(game, jsonObject);
+	public ReportInducementsBought initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fNrOfInducements = IJsonOption.NR_OF_INDUCEMENTS.getFrom(source, jsonObject);
+		fNrOfStars = IJsonOption.NR_OF_STARS.getFrom(source, jsonObject);
+		fNrOfMercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(source, jsonObject);
+		fGold = IJsonOption.GOLD.getFrom(source, jsonObject);
 		return this;
 	}
 

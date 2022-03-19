@@ -72,10 +72,10 @@ public class DiceDecoration implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public DiceDecoration initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
+	public DiceDecoration initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
+		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
@@ -12,6 +9,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Kalimar
@@ -20,7 +20,7 @@ public class ServerCommandVersion extends ServerCommand {
 
 	private String fServerVersion;
 	private String fClientVersion;
-	private Map<String, String> fClientProperties;
+	private final Map<String, String> fClientProperties;
 
 	public ServerCommandVersion() {
 		fClientProperties = new HashMap<>();
@@ -85,14 +85,14 @@ public class ServerCommandVersion extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandVersion initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		fServerVersion = IJsonOption.SERVER_VERSION.getFrom(game, jsonObject);
-		fClientVersion = IJsonOption.CLIENT_VERSION.getFrom(game, jsonObject);
-		String[] clientPropertyNames = IJsonOption.CLIENT_PROPERTY_NAMES.getFrom(game, jsonObject);
-		String[] clientPropertyValues = IJsonOption.CLIENT_PROPERTY_VALUES.getFrom(game, jsonObject);
+	public ServerCommandVersion initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		fServerVersion = IJsonOption.SERVER_VERSION.getFrom(source, jsonObject);
+		fClientVersion = IJsonOption.CLIENT_VERSION.getFrom(source, jsonObject);
+		String[] clientPropertyNames = IJsonOption.CLIENT_PROPERTY_NAMES.getFrom(source, jsonObject);
+		String[] clientPropertyValues = IJsonOption.CLIENT_PROPERTY_VALUES.getFrom(source, jsonObject);
 		fClientProperties.clear();
 		if (ArrayTool.isProvided(clientPropertyNames) && ArrayTool.isProvided(clientPropertyValues)) {
 			for (int i = 0; i < clientPropertyNames.length; i++) {

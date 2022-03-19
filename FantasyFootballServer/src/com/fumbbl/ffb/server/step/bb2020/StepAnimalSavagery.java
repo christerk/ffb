@@ -71,17 +71,17 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepAnimalSavagery initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		state.playerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		state.thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		String[] playerArray = IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
+	public StepAnimalSavagery initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		state.playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		state.thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		String[] playerArray = IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject);
 		if (playerArray != null) {
 			state.playerIds = Arrays.stream(playerArray).collect(Collectors.toSet());
 		}
-		state.endTurn = toPrimitive(IServerJsonOption.END_TURN.getFrom(game, jsonObject));
+		state.endTurn = toPrimitive(IServerJsonOption.END_TURN.getFrom(source, jsonObject));
 		return this;
 	}
 

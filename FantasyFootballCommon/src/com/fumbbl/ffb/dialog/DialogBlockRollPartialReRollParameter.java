@@ -98,20 +98,20 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBlockRollPartialReRollParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
-		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		reRolledDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(game, jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		brawlerOption = IJsonOption.BRAWLER_OPTION.getFrom(game, jsonObject);
+	public DialogBlockRollPartialReRollParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(source, jsonObject);
+		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		reRolledDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
+		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		brawlerOption = IJsonOption.BRAWLER_OPTION.getFrom(source, jsonObject);
 		if (IJsonOption.CONSUMMATE_OPTION.isDefinedIn(jsonObject)) {
-			consummateOption = IJsonOption.CONSUMMATE_OPTION.getFrom(game, jsonObject);
+			consummateOption = IJsonOption.CONSUMMATE_OPTION.getFrom(source, jsonObject);
 		}
-		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
 		return this;
 	}
 

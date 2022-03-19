@@ -17,9 +17,9 @@ import java.util.List;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportSecretWeaponBan implements IReport {
 
-	private List<String> fPlayerIds;
-	private List<Integer> fRolls;
-	private List<Boolean> fBans;
+	private final List<String> fPlayerIds;
+	private final List<Integer> fRolls;
+	private final List<Boolean> fBans;
 
 	public ReportSecretWeaponBan() {
 		fPlayerIds = new ArrayList<>();
@@ -105,15 +105,15 @@ public class ReportSecretWeaponBan implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSecretWeaponBan initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+	public ReportSecretWeaponBan initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fPlayerIds.clear();
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
 		fRolls.clear();
-		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));
+		addRolls(IJsonOption.ROLLS.getFrom(source, jsonObject));
 		fBans.clear();
-		addBans(IJsonOption.BAN_ARRAY.getFrom(game, jsonObject));
+		addBans(IJsonOption.BAN_ARRAY.getFrom(source, jsonObject));
 		return this;
 	}
 

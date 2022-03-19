@@ -54,8 +54,8 @@ public class ReportPassBlock implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPassBlock initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportPassBlock initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		fPassBlockAvailable = IJsonOption.PASS_BLOCK_AVAILABLE.getFrom(source, jsonObject);

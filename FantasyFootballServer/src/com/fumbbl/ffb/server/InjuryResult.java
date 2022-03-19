@@ -238,9 +238,9 @@ public class InjuryResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public InjuryResult initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public InjuryResult initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
 

@@ -287,17 +287,17 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepPass initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		state.goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(game, jsonObject);
-		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
-		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
+	public StepPass initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		state.goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(source, jsonObject);
+		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
 		if (state.result == null) {
-			boolean successful = toPrimitive(IServerJsonOption.SUCCESSFUL.getFrom(game, jsonObject));
-			boolean fumble = toPrimitive(IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject));
-			boolean holdingSafeThrow = toPrimitive(IServerJsonOption.HOLDING_SAFE_THROW.getFrom(game, jsonObject));
+			boolean successful = toPrimitive(IServerJsonOption.SUCCESSFUL.getFrom(source, jsonObject));
+			boolean fumble = toPrimitive(IServerJsonOption.PASS_FUMBLE.getFrom(source, jsonObject));
+			boolean holdingSafeThrow = toPrimitive(IServerJsonOption.HOLDING_SAFE_THROW.getFrom(source, jsonObject));
 			if (successful) {
 				state.result = PassResult.ACCURATE;
 			} else if (fumble) {
@@ -306,7 +306,7 @@ public class StepPass extends AbstractStepWithReRoll {
 				state.result = PassResult.INACCURATE;
 			}
 		}
-		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
+		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -197,17 +197,17 @@ public class StepInitBlocking extends AbstractStep {
 	}
 
 	@Override
-	public StepInitBlocking initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
-		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
-		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
-		fMultiBlockDefenderId = IServerJsonOption.MULTI_BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(game, jsonObject);
+	public StepInitBlocking initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
+		fUsingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
+		fMultiBlockDefenderId = IServerJsonOption.MULTI_BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(source, jsonObject);
 		return this;
 	}
 

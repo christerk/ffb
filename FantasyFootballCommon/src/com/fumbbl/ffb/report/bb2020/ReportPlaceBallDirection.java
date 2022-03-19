@@ -34,11 +34,11 @@ public class ReportPlaceBallDirection implements IReport {
 	}
 
 	@Override
-	public ReportPlaceBallDirection initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		direction = (Direction) IJsonOption.DIRECTION.getFrom(game, jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+	public ReportPlaceBallDirection initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		direction = (Direction) IJsonOption.DIRECTION.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

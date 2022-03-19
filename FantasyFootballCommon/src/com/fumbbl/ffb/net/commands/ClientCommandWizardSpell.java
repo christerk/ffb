@@ -52,11 +52,11 @@ public class ClientCommandWizardSpell extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandWizardSpell initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandWizardSpell initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(game, jsonObject);
-		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
+		fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(source, jsonObject);
+		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

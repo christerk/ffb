@@ -65,8 +65,8 @@ public final class StepWeather extends AbstractStep {
 	}
 
 	@Override
-	public StepWeather initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepWeather initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

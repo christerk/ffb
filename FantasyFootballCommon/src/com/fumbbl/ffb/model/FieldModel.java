@@ -1005,9 +1005,9 @@ public class FieldModel implements IJsonSerializable {
 
 	}
 
-	public FieldModel initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public FieldModel initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		fWeather = (Weather) IJsonOption.WEATHER.getFrom(source, jsonObject);
 		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(source, jsonObject);

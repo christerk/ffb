@@ -428,11 +428,11 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 	}
 
 	@Override
-	public StepBlockRollMultiple initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBlockRollMultiple initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state = new State().initFrom(source, IJsonOption.STEP_STATE.getFrom(source, jsonObject));
-		parameterToConsume.addAll(Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(pJsonValue)))
+		parameterToConsume.addAll(Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(jsonValue)))
 			.map(StepParameterKey::valueOf).collect(Collectors.toSet()));
 		return this;
 	}
@@ -458,15 +458,15 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 
 		@Override
-		public State initFrom(IFactorySource game, JsonValue pJsonValue) {
-			JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-			JsonArray jsonArray = IJsonOption.BLOCK_ROLLS.getFrom(game, jsonObject);
-			blockRolls = jsonArray.values().stream().map(value -> new BlockRoll().initFrom(game, value)).collect(Collectors.toList());
-			selectedTarget = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-			firstRun = IJsonOption.FIRST_RUN.getFrom(game, jsonObject);
-			reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
-			attackerTeamSelects = IJsonOption.ATTACKER_SELECTS.getFrom(game, jsonObject);
-			playerIdForSingleUseReRoll = IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(game, jsonObject);
+		public State initFrom(IFactorySource source, JsonValue jsonValue) {
+			JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+			JsonArray jsonArray = IJsonOption.BLOCK_ROLLS.getFrom(source, jsonObject);
+			blockRolls = jsonArray.values().stream().map(value -> new BlockRoll().initFrom(source, value)).collect(Collectors.toList());
+			selectedTarget = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+			firstRun = IJsonOption.FIRST_RUN.getFrom(source, jsonObject);
+			reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
+			attackerTeamSelects = IJsonOption.ATTACKER_SELECTS.getFrom(source, jsonObject);
+			playerIdForSingleUseReRoll = IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(source, jsonObject);
 			return this;
 		}
 

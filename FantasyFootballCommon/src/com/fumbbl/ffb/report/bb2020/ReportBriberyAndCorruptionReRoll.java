@@ -54,11 +54,11 @@ public class ReportBriberyAndCorruptionReRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportBriberyAndCorruptionReRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		action = BriberyAndCorruptionAction.valueOf(IJsonOption.BRIBERY_AND_CORRUPTION_ACTION.getFrom(game, jsonObject));
-		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+	public ReportBriberyAndCorruptionReRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		action = BriberyAndCorruptionAction.valueOf(IJsonOption.BRIBERY_AND_CORRUPTION_ACTION.getFrom(source, jsonObject));
+		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

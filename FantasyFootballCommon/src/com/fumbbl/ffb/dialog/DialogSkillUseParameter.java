@@ -61,12 +61,12 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogSkillUseParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
+	public DialogSkillUseParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

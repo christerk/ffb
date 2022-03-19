@@ -46,11 +46,11 @@ public class ClientCommandGaze extends ClientCommand implements ICommandWithActi
 		return jsonObject;
 	}
 
-	public ClientCommandGaze initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandGaze initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
-		fVictimId = IJsonOption.VICTIM_ID.getFrom(game, jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
+		fVictimId = IJsonOption.VICTIM_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

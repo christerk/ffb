@@ -57,11 +57,11 @@ public class ReportOfficiousRefRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportOfficiousRefRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		roll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+	public ReportOfficiousRefRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		roll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

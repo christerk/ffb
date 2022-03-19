@@ -65,14 +65,14 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		return jsonObject;
 	}
 
-	public ClientCommandBlock initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandBlock initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		fUsingStab = IJsonOption.USING_STAB.getFrom(game, jsonObject);
-		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
-		usingVomit = IJsonOption.USING_VOMIT.getFrom(game, jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		fUsingStab = IJsonOption.USING_STAB.getFrom(source, jsonObject);
+		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
+		usingVomit = IJsonOption.USING_VOMIT.getFrom(source, jsonObject);
 		return this;
 	}
 

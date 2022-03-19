@@ -53,12 +53,12 @@ public class BlitzTurnState implements IJsonSerializable {
 	}
 
 	@Override
-	public BlitzTurnState initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		amount = IJsonOption.NR_OF_PLAYERS.getFrom(game, jsonObject);
-		limit = IJsonOption.NR_OF_PLAYERS_ALLOWED.getFrom(game, jsonObject);
-		available = IJsonOption.NUMBER.getFrom(game, jsonObject);
-		actingPlayerWasChanged = IJsonOption.ACTING_PLAYER_WAS_CHANGED.getFrom(game, jsonObject);
+	public BlitzTurnState initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		amount = IJsonOption.NR_OF_PLAYERS.getFrom(source, jsonObject);
+		limit = IJsonOption.NR_OF_PLAYERS_ALLOWED.getFrom(source, jsonObject);
+		available = IJsonOption.NUMBER.getFrom(source, jsonObject);
+		actingPlayerWasChanged = IJsonOption.ACTING_PLAYER_WAS_CHANGED.getFrom(source, jsonObject);
 		return this;
 	}
 

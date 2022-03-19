@@ -27,17 +27,17 @@ public class CardChoices implements IJsonSerializable {
 	}
 
 	@Override
-	public CardChoices initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public CardChoices initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
-		JsonObject choiceObject = IJsonOption.CARD_CHOICE_INITIAL.getFrom(game, jsonObject);
+		JsonObject choiceObject = IJsonOption.CARD_CHOICE_INITIAL.getFrom(source, jsonObject);
 		if (choiceObject != null) {
-			initial = new CardChoice().initFrom(game, choiceObject);
+			initial = new CardChoice().initFrom(source, choiceObject);
 		}
 
-		choiceObject = IJsonOption.CARD_CHOICE_REROLLED.getFrom(game, jsonObject);
+		choiceObject = IJsonOption.CARD_CHOICE_REROLLED.getFrom(source, jsonObject);
 		if (choiceObject != null) {
-			rerolled = new CardChoice().initFrom(game, choiceObject);
+			rerolled = new CardChoice().initFrom(source, choiceObject);
 		}
 
 		return this;

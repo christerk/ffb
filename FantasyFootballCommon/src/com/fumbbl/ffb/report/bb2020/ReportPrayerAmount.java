@@ -65,13 +65,13 @@ public class ReportPrayerAmount implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPrayerAmount initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		tvHome = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
-		tvAway = IJsonOption.OPPONENT_TEAM_VALUE.getFrom(game, jsonObject);
-		homeTeamReceivesPrayers = IJsonOption.HOME_TEAM.getFrom(game, jsonObject);
-		prayerAmount = IJsonOption.NUMBER.getFrom(game, jsonObject);
+	public ReportPrayerAmount initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		tvHome = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
+		tvAway = IJsonOption.OPPONENT_TEAM_VALUE.getFrom(source, jsonObject);
+		homeTeamReceivesPrayers = IJsonOption.HOME_TEAM.getFrom(source, jsonObject);
+		prayerAmount = IJsonOption.NUMBER.getFrom(source, jsonObject);
 		return this;
 	}
 

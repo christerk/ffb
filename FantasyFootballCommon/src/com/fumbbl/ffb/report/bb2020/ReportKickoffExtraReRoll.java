@@ -64,12 +64,12 @@ public class ReportKickoffExtraReRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffExtraReRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		rollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		rollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
-		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+	public ReportKickoffExtraReRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		rollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		rollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
+		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

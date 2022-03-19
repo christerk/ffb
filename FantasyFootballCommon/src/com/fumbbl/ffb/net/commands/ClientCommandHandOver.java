@@ -46,11 +46,11 @@ public class ClientCommandHandOver extends ClientCommand implements ICommandWith
 		return jsonObject;
 	}
 
-	public ClientCommandHandOver initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandHandOver initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
-		fCatcherId = IJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
+		fCatcherId = IJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

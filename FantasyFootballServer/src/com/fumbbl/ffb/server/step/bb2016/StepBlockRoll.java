@@ -3,11 +3,11 @@ package com.fumbbl.ffb.server.step.bb2016;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.BlockResult;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.dialog.DialogBlockRollParameter;
 import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -159,9 +159,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepBlockRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBlockRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
 		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
 		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);

@@ -34,9 +34,9 @@ public class ClientCommandUseChainsaw extends ClientCommand {
 	}
 
 	@Override
-	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
-		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(game, UtilJson.toJsonObject(jsonValue));
+	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(source, UtilJson.toJsonObject(jsonValue));
 		return this;
 	}
 }

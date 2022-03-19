@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
@@ -12,6 +9,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
@@ -20,7 +20,7 @@ public class DialogBribesParameter implements IDialogParameter {
 
 	private String fTeamId;
 	private int fMaxNrOfBribes;
-	private List<String> fPlayerIds;
+	private final List<String> fPlayerIds;
 
 	public DialogBribesParameter() {
 		fPlayerIds = new ArrayList<>();
@@ -81,12 +81,12 @@ public class DialogBribesParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBribesParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fMaxNrOfBribes = IJsonOption.MAX_NR_OF_BRIBES.getFrom(game, jsonObject);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+	public DialogBribesParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fMaxNrOfBribes = IJsonOption.MAX_NR_OF_BRIBES.getFrom(source, jsonObject);
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
 		return this;
 	}
 

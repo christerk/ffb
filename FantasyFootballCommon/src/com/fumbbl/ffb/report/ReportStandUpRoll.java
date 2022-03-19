@@ -79,14 +79,14 @@ public class ReportStandUpRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportStandUpRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		fModifier = IJsonOption.MODIFIER.getFrom(game, jsonObject);
-		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);
+	public ReportStandUpRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		fModifier = IJsonOption.MODIFIER.getFrom(source, jsonObject);
+		fReRolled = IJsonOption.RE_ROLLED.getFrom(source, jsonObject);
 		return this;
 	}
 

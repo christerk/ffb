@@ -36,10 +36,10 @@ public class ClientCommandUseConsummateReRollForBlock extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUseConsummateReRollForBlock initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandUseConsummateReRollForBlock initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		proIndex = IJsonOption.PRO_INDEX.getFrom(game, jsonObject);
+		proIndex = IJsonOption.PRO_INDEX.getFrom(source, jsonObject);
 		return this;
 	}
 

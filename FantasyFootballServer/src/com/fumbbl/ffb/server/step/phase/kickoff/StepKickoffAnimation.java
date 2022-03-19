@@ -106,11 +106,11 @@ public final class StepKickoffAnimation extends AbstractStep {
 	}
 
 	@Override
-	public StepKickoffAnimation initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fKickingPlayerCoordinate = IServerJsonOption.KICKING_PLAYER_COORDINATE.getFrom(game, jsonObject);
-		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(game, jsonObject);
+	public StepKickoffAnimation initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fKickingPlayerCoordinate = IServerJsonOption.KICKING_PLAYER_COORDINATE.getFrom(source, jsonObject);
+		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(source, jsonObject);
 		return this;
 	}
 

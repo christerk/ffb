@@ -69,13 +69,13 @@ public class ReportSwoopPlayer implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSwoopPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		startCoordinate = IJsonOption.START_COORDINATE.getFrom(game, jsonObject);
-		endCoordinate = IJsonOption.END_COORDINATE.getFrom(game, jsonObject);
-		distance = IJsonOption.DISTANCE.getFrom(game, jsonObject);
-		direction = (Direction) IJsonOption.SCATTER_DIRECTION.getFrom(game, jsonObject);
+	public ReportSwoopPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		startCoordinate = IJsonOption.START_COORDINATE.getFrom(source, jsonObject);
+		endCoordinate = IJsonOption.END_COORDINATE.getFrom(source, jsonObject);
+		distance = IJsonOption.DISTANCE.getFrom(source, jsonObject);
+		direction = (Direction) IJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
 		return this;
 	}
 

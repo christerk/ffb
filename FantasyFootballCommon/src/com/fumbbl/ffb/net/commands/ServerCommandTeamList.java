@@ -49,13 +49,13 @@ public class ServerCommandTeamList extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandTeamList initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		JsonObject teamListObject = IJsonOption.TEAM_LIST.getFrom(game, jsonObject);
+	public ServerCommandTeamList initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		JsonObject teamListObject = IJsonOption.TEAM_LIST.getFrom(source, jsonObject);
 		if (teamListObject != null) {
-			fTeamList = new TeamList().initFrom(game, teamListObject);
+			fTeamList = new TeamList().initFrom(source, teamListObject);
 		} else {
 			fTeamList = null;
 		}

@@ -38,7 +38,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -720,9 +719,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 		}
 	}
 
-	public RosterPlayer initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public RosterPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		fId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fNr = IJsonOption.PLAYER_NR.getFrom(source, jsonObject);

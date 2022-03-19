@@ -105,10 +105,10 @@ public class StepFoulAppearanceMultiple extends AbstractStepMultiple {
 	}
 
 	@Override
-	public StepFoulAppearanceMultiple initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state = new StepStateMultipleRolls().initFrom(game, IJsonOption.STEP_STATE.getFrom(game, jsonObject));
+	public StepFoulAppearanceMultiple initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state = new StepStateMultipleRolls().initFrom(source, IJsonOption.STEP_STATE.getFrom(source, jsonObject));
 		return this;
 	}
 

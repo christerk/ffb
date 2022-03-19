@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.model.change;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -12,13 +9,16 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
  */
 public class ModelChangeList implements IJsonSerializable {
 
-	private List<ModelChange> fChanges;
+	private final List<ModelChange> fChanges;
 
 	public ModelChangeList() {
 		this(16);
@@ -97,12 +97,12 @@ public class ModelChangeList implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ModelChangeList initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public ModelChangeList initFrom(IFactorySource source, JsonValue jsonValue) {
 		clear();
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray modelChanges = IJsonOption.MODEL_CHANGE_ARRAY.getFrom(game, jsonObject);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		JsonArray modelChanges = IJsonOption.MODEL_CHANGE_ARRAY.getFrom(source, jsonObject);
 		for (int i = 0; i < modelChanges.size(); i++) {
-			add(new ModelChange().initFrom(game, modelChanges.get(i)));
+			add(new ModelChange().initFrom(source, modelChanges.get(i)));
 		}
 		return this;
 	}

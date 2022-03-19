@@ -57,11 +57,11 @@ public class DialogConfirmEndActionParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogConfirmEndActionParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		setTeamId(IJsonOption.TEAM_ID.getFrom(game, jsonObject));
-		playerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(game, jsonObject);
+	public DialogConfirmEndActionParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		setTeamId(IJsonOption.TEAM_ID.getFrom(source, jsonObject));
+		playerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -90,11 +90,11 @@ public final class MoveSquare implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public MoveSquare initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
-		fMinimumRollDodge = IJsonOption.MINIMUM_ROLL_DODGE.getFrom(game, jsonObject);
-		fMinimumRollGoForIt = IJsonOption.MINIMUM_ROLL_GFI.getFrom(game, jsonObject);
+	public MoveSquare initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
+		fMinimumRollDodge = IJsonOption.MINIMUM_ROLL_DODGE.getFrom(source, jsonObject);
+		fMinimumRollGoForIt = IJsonOption.MINIMUM_ROLL_GFI.getFrom(source, jsonObject);
 		return this;
 	}
 

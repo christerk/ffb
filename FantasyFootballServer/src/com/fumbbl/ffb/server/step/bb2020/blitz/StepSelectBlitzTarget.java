@@ -216,8 +216,8 @@ public class StepSelectBlitzTarget extends AbstractStep {
 	}
 
 	@Override
-	public StepSelectBlitzTarget initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepSelectBlitzTarget initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		super.initFrom(source, jsonObject);
 		gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		selectedPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);

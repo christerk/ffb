@@ -34,9 +34,9 @@ public class ClientCommandPileDriver extends ClientCommand {
 	}
 
 	@Override
-	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, UtilJson.toJsonObject(jsonValue));
+	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, UtilJson.toJsonObject(jsonValue));
 		return this;
 	}
 }

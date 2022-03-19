@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
@@ -12,6 +9,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -19,7 +19,7 @@ import com.fumbbl.ffb.util.StringTool;
 public class DialogSetupErrorParameter implements IDialogParameter {
 
 	private String fTeamId;
-	private List<String> fSetupErrors;
+	private final List<String> fSetupErrors;
 
 	public DialogSetupErrorParameter() {
 		fSetupErrors = new ArrayList<>();
@@ -73,11 +73,11 @@ public class DialogSetupErrorParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogSetupErrorParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		add(IJsonOption.SETUP_ERRORS.getFrom(game, jsonObject));
+	public DialogSetupErrorParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		add(IJsonOption.SETUP_ERRORS.getFrom(source, jsonObject));
 		return this;
 	}
 

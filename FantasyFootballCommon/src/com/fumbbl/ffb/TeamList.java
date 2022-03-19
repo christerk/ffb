@@ -1,13 +1,5 @@
 package com.fumbbl.ffb;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -21,6 +13,12 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -46,7 +44,7 @@ public class TeamList implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_ATTRIBUTE_COACH = "coach";
 
 	private String fCoach;
-	private List<TeamListEntry> fTeamListEntries;
+	private final List<TeamListEntry> fTeamListEntries;
 
 	public TeamList() {
 		fTeamListEntries = new ArrayList<>();
@@ -161,13 +159,13 @@ public class TeamList implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamList initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		JsonArray teamListEntries = IJsonOption.TEAM_LIST_ENTRIES.getFrom(game, jsonObject);
+	public TeamList initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		JsonArray teamListEntries = IJsonOption.TEAM_LIST_ENTRIES.getFrom(source, jsonObject);
 		for (int i = 0; i < teamListEntries.size(); i++) {
 			TeamListEntry teamListEntry = new TeamListEntry();
-			teamListEntry.initFrom(game, teamListEntries.get(i));
+			teamListEntry.initFrom(source, teamListEntries.get(i));
 			add(teamListEntry);
 		}
 		return this;

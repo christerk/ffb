@@ -54,12 +54,12 @@ public class ClientCommandActingPlayer extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandActingPlayer initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandActingPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(game, jsonObject);
-		jumping = IJsonOption.JUMPING.getFrom(game, jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
+		jumping = IJsonOption.JUMPING.getFrom(source, jsonObject);
 		return this;
 	}
 

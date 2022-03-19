@@ -21,10 +21,10 @@ import java.util.List;
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class ReportKickoffPitchInvasion implements IReport {
 
-	private List<Integer> fRollsHome;
-	private List<Boolean> fPlayersAffectedHome;
-	private List<Integer> fRollsAway;
-	private List<Boolean> fPlayersAffectedAway;
+	private final List<Integer> fRollsHome;
+	private final List<Boolean> fPlayersAffectedHome;
+	private final List<Integer> fRollsAway;
+	private final List<Boolean> fPlayersAffectedAway;
 
 	public ReportKickoffPitchInvasion() {
 		fRollsHome = new ArrayList<>();
@@ -145,17 +145,17 @@ public class ReportKickoffPitchInvasion implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffPitchInvasion initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+	public ReportKickoffPitchInvasion initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fRollsHome.clear();
-		addRollsHome(IJsonOption.ROLLS_HOME.getFrom(game, jsonObject));
+		addRollsHome(IJsonOption.ROLLS_HOME.getFrom(source, jsonObject));
 		fPlayersAffectedHome.clear();
-		addPlayersAffectedHome(IJsonOption.PLAYERS_AFFECTED_HOME.getFrom(game, jsonObject));
+		addPlayersAffectedHome(IJsonOption.PLAYERS_AFFECTED_HOME.getFrom(source, jsonObject));
 		fRollsAway.clear();
-		addRollsAway(IJsonOption.ROLLS_AWAY.getFrom(game, jsonObject));
+		addRollsAway(IJsonOption.ROLLS_AWAY.getFrom(source, jsonObject));
 		fPlayersAffectedAway.clear();
-		addPlayersAffectedAway(IJsonOption.PLAYERS_AFFECTED_AWAY.getFrom(game, jsonObject));
+		addPlayersAffectedAway(IJsonOption.PLAYERS_AFFECTED_AWAY.getFrom(source, jsonObject));
 		return this;
 	}
 

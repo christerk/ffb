@@ -215,16 +215,16 @@ public final class StepEndPassing extends AbstractStep {
 	}
 
 	@Override
-	public StepEndPassing initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
-		fPassAccurate = IServerJsonOption.PASS_ACCURATE.getFrom(game, jsonObject);
-		fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		dontDropFumble = IServerJsonOption.DONT_DROP_FUMBLE.getFrom(game, jsonObject);
+	public StepEndPassing initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(source, jsonObject);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		fPassAccurate = IServerJsonOption.PASS_ACCURATE.getFrom(source, jsonObject);
+		fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		dontDropFumble = IServerJsonOption.DONT_DROP_FUMBLE.getFrom(source, jsonObject);
 		return this;
 	}
 

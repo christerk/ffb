@@ -143,12 +143,12 @@ public class StepMultipleBlockFork extends AbstractStep {
 	}
 
 	@Override
-	public StepMultipleBlockFork initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
+	public StepMultipleBlockFork initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(source, jsonObject);
 		jsonArray.values().stream()
-			.map(value -> new BlockTarget().initFrom(game, value))
+			.map(value -> new BlockTarget().initFrom(source, value))
 			.forEach(targets::add);
 		return this;
 	}

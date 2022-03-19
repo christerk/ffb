@@ -87,15 +87,15 @@ public class ReportSpectators implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSpectators initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fSpectatorRollHome = IJsonOption.SPECTATOR_ROLL_HOME.getFrom(game, jsonObject);
-		fSpectatorsHome = IJsonOption.SPECTATORS_HOME.getFrom(game, jsonObject);
-		fFameHome = IJsonOption.FAME_HOME.getFrom(game, jsonObject);
-		fSpectatorRollAway = IJsonOption.SPECTATOR_ROLL_AWAY.getFrom(game, jsonObject);
-		fSpectatorsAway = IJsonOption.SPECTATORS_AWAY.getFrom(game, jsonObject);
-		fFameAway = IJsonOption.FAME_AWAY.getFrom(game, jsonObject);
+	public ReportSpectators initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fSpectatorRollHome = IJsonOption.SPECTATOR_ROLL_HOME.getFrom(source, jsonObject);
+		fSpectatorsHome = IJsonOption.SPECTATORS_HOME.getFrom(source, jsonObject);
+		fFameHome = IJsonOption.FAME_HOME.getFrom(source, jsonObject);
+		fSpectatorRollAway = IJsonOption.SPECTATOR_ROLL_AWAY.getFrom(source, jsonObject);
+		fSpectatorsAway = IJsonOption.SPECTATORS_AWAY.getFrom(source, jsonObject);
+		fFameAway = IJsonOption.FAME_AWAY.getFrom(source, jsonObject);
 		return this;
 	}
 

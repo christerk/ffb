@@ -26,8 +26,8 @@ public class ClientCommandRequestVersion extends ClientCommand {
 	
 	// JSON serialization
 
-	public ClientCommandRequestVersion initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandRequestVersion initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

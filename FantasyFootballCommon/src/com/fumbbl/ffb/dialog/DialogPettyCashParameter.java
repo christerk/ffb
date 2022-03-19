@@ -68,13 +68,13 @@ public class DialogPettyCashParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogPettyCashParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
-		fTreasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
-		fOpponentTeamValue = IJsonOption.OPPONENT_TEAM_VALUE.getFrom(game, jsonObject);
+	public DialogPettyCashParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
+		fTreasury = IJsonOption.TREASURY.getFrom(source, jsonObject);
+		fOpponentTeamValue = IJsonOption.OPPONENT_TEAM_VALUE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -708,22 +708,22 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepCatchScatterThrowIn initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+	public StepCatchScatterThrowIn initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		fScatterBounds = null;
-		JsonObject scatterBoundsObject = IServerJsonOption.SCATTER_BOUNDS.getFrom(game, jsonObject);
+		JsonObject scatterBoundsObject = IServerJsonOption.SCATTER_BOUNDS.getFrom(source, jsonObject);
 		if (scatterBoundsObject != null) {
-			fScatterBounds = new FieldCoordinateBounds().initFrom(game, scatterBoundsObject);
+			fScatterBounds = new FieldCoordinateBounds().initFrom(source, scatterBoundsObject);
 		}
 		fCatchScatterThrowInMode = (CatchScatterThrowInMode) IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE
-			.getFrom(game, jsonObject);
-		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(game, jsonObject);
-		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(game, jsonObject);
-		phase = DivingCatchPhase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(game, jsonObject));
-		divingCatchControlTeam = IServerJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		divingCatchers.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject)).collect(Collectors.toList()));
+			.getFrom(source, jsonObject);
+		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(source, jsonObject);
+		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(source, jsonObject);
+		phase = DivingCatchPhase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
+		divingCatchControlTeam = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		divingCatchers.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList()));
 		return this;
 	}
 

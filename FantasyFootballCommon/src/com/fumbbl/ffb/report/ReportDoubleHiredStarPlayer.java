@@ -47,10 +47,10 @@ public class ReportDoubleHiredStarPlayer implements IReport {
 		return jsonObject;
 	}
 
-	public ReportDoubleHiredStarPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fStarPlayerName = IJsonOption.STAR_PLAYER_NAME.getFrom(game, jsonObject);
+	public ReportDoubleHiredStarPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fStarPlayerName = IJsonOption.STAR_PLAYER_NAME.getFrom(source, jsonObject);
 		return this;
 	}
 

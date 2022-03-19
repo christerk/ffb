@@ -54,11 +54,11 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommandScheduleGame initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(game, jsonObject);
-		fTeamAwayId = IJsonOption.TEAM_AWAY_ID.getFrom(game, jsonObject);
+	public InternalServerCommandScheduleGame initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(source, jsonObject);
+		fTeamAwayId = IJsonOption.TEAM_AWAY_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -116,20 +116,20 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogReRollForTargetsParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		targetIds = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
-		reRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(game, jsonObject);
-		reRollAvailableAgainst = Arrays.asList(IJsonOption.RE_ROLL_AVAILABLE_AGAINST.getFrom(game, jsonObject));
-		proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(game, jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
-		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
+	public DialogReRollForTargetsParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		targetIds = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
+		reRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
+		reRollAvailableAgainst = Arrays.asList(IJsonOption.RE_ROLL_AVAILABLE_AGAINST.getFrom(source, jsonObject));
+		proReRollAvailable = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		teamReRollAvailable = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		minimumRolls = IJsonOption.MINIMUM_ROLLS.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
 		if (IJsonOption.CONSUMMATE_OPTION.isDefinedIn(jsonObject)) {
-			consummateAvailable = IJsonOption.CONSUMMATE_OPTION.getFrom(game, jsonObject);
+			consummateAvailable = IJsonOption.CONSUMMATE_OPTION.getFrom(source, jsonObject);
 		}
 		return this;
 	}

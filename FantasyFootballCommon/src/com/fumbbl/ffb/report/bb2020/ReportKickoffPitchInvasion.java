@@ -73,14 +73,14 @@ public class ReportKickoffPitchInvasion implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffPitchInvasion initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		rollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		rollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
-		amount = IJsonOption.AMOUNT.getFrom(game, jsonObject);
+	public ReportKickoffPitchInvasion initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		rollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		rollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
+		amount = IJsonOption.AMOUNT.getFrom(source, jsonObject);
 		affectedPlayers.clear();
-		String[] affected = IJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
+		String[] affected = IJsonOption.PLAYER_IDS.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(affected)) {
 			affectedPlayers.addAll(Arrays.stream(affected).collect(Collectors.toList()));
 		}

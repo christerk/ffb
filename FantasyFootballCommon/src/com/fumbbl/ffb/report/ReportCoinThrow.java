@@ -61,12 +61,12 @@ public class ReportCoinThrow implements IReport {
 		return jsonObject;
 	}
 
-	public ReportCoinThrow initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fCoinThrowHeads = IJsonOption.COIN_THROW_HEADS.getFrom(game, jsonObject);
-		fCoinChoiceHeads = IJsonOption.COIN_CHOICE_HEADS.getFrom(game, jsonObject);
+	public ReportCoinThrow initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		fCoinThrowHeads = IJsonOption.COIN_THROW_HEADS.getFrom(source, jsonObject);
+		fCoinChoiceHeads = IJsonOption.COIN_CHOICE_HEADS.getFrom(source, jsonObject);
 		return this;
 	}
 

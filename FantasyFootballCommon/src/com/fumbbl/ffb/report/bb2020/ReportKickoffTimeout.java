@@ -55,8 +55,8 @@ public class ReportKickoffTimeout implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffTimeout initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportKickoffTimeout initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		turnModifier = IJsonOption.TURN_MODIFIER.getFrom(source, jsonObject);
 		turnNumber = IJsonOption.TURN_NR.getFrom(source, jsonObject);

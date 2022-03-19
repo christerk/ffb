@@ -43,11 +43,11 @@ public class ClientCommandPushback extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPushback initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandPushback initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fPushback = new Pushback();
-		fPushback.initFrom(game, IJsonOption.PUSHBACK.getFrom(game, jsonObject));
+		fPushback.initFrom(source, IJsonOption.PUSHBACK.getFrom(source, jsonObject));
 		return this;
 	}
 

@@ -77,9 +77,9 @@ public class StepConsumeParameter extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		parameterToConsume.addAll(Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(pJsonValue)))
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		parameterToConsume.addAll(Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(jsonValue)))
 			.map(StepParameterKey::valueOf).collect(Collectors.toSet()));
 		return this;
 	}

@@ -54,11 +54,11 @@ public class ReportReceiveChoice implements IReport {
 		return jsonObject;
 	}
 
-	public ReportReceiveChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fReceiveChoice = IJsonOption.RECEIVE_CHOICE.getFrom(game, jsonObject);
+	public ReportReceiveChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fReceiveChoice = IJsonOption.RECEIVE_CHOICE.getFrom(source, jsonObject);
 		return this;
 	}
 

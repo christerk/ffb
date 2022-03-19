@@ -78,14 +78,14 @@ public class DialogApothecaryChoiceParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogApothecaryChoiceParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fPlayerStateOld = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
-		fSeriousInjuryOld = (SeriousInjury) IJsonOption.SERIOUS_INJURY_OLD.getFrom(game, jsonObject);
-		fPlayerStateNew = IJsonOption.PLAYER_STATE_NEW.getFrom(game, jsonObject);
-		fSeriousInjuryNew = (SeriousInjury) IJsonOption.SERIOUS_INJURY_NEW.getFrom(game, jsonObject);
+	public DialogApothecaryChoiceParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fPlayerStateOld = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
+		fSeriousInjuryOld = (SeriousInjury) IJsonOption.SERIOUS_INJURY_OLD.getFrom(source, jsonObject);
+		fPlayerStateNew = IJsonOption.PLAYER_STATE_NEW.getFrom(source, jsonObject);
+		fSeriousInjuryNew = (SeriousInjury) IJsonOption.SERIOUS_INJURY_NEW.getFrom(source, jsonObject);
 		return this;
 	}
 

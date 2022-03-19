@@ -40,11 +40,11 @@ public class ClientCommandPrayerSelection extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPrayerSelection initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		skill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+	public ClientCommandPrayerSelection initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		skill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

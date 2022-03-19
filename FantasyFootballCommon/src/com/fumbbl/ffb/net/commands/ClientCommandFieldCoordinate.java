@@ -39,11 +39,11 @@ public class ClientCommandFieldCoordinate extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandFieldCoordinate initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandFieldCoordinate initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fieldCoordinate = new FieldCoordinate(0);
-		fieldCoordinate.initFrom(game, IJsonOption.FIELD_COORDINATE.getFrom(game, jsonObject));
+		fieldCoordinate.initFrom(source, IJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));
 		return this;
 	}
 

@@ -253,12 +253,12 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepPass initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(game, jsonObject);
-		goToLabelOnSavedFumble = IServerJsonOption.GOTO_LABEL_ON_SAVED_FUMBLE.getFrom(game, jsonObject);
+	public StepPass initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(source, jsonObject);
+		goToLabelOnSavedFumble = IServerJsonOption.GOTO_LABEL_ON_SAVED_FUMBLE.getFrom(source, jsonObject);
 		return this;
 	}
 }

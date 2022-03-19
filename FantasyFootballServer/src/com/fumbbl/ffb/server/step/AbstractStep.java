@@ -222,8 +222,8 @@ public abstract class AbstractStep implements IStep {
 		return jsonObject;
 	}
 
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(source, jsonObject));
 		fLabel = IServerJsonOption.LABEL.getFrom(source, jsonObject);
 		fStepResult = null;

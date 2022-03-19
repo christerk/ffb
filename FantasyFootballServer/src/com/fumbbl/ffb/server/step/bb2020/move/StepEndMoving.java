@@ -288,17 +288,17 @@ public class StepEndMoving extends AbstractStep {
 	}
 
 	@Override
-	public StepEndMoving initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(game, jsonObject);
-		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
-		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
-		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
-		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
-		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
+	public StepEndMoving initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(source, jsonObject);
+		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(source, jsonObject);
+		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(source, jsonObject);
+		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
+		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

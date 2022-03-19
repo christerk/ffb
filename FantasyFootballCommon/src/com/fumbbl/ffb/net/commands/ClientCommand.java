@@ -42,11 +42,11 @@ public abstract class ClientCommand extends NetCommand {
 		return jsonObject;
 	}
 
-	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
+	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		if (IJsonOption.ENTROPY.isDefinedIn(jsonObject)) {
-			setEntropy((byte) IJsonOption.ENTROPY.getFrom(game, jsonObject));
+			setEntropy((byte) IJsonOption.ENTROPY.getFrom(source, jsonObject));
 		}
 		return this;
 	}

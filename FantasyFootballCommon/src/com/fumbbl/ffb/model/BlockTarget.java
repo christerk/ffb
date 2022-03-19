@@ -44,11 +44,11 @@ public class BlockTarget implements IJsonSerializable {
 	}
 
 	@Override
-	public BlockTarget initFrom(IFactorySource game, JsonValue jsonValue) {
+	public BlockTarget initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		kind = BlockKind.valueOf(IJsonOption.BLOCK_KIND.getFrom(game, jsonObject));
-		originalPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		kind = BlockKind.valueOf(IJsonOption.BLOCK_KIND.getFrom(source, jsonObject));
+		originalPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		return this;
 	}
 

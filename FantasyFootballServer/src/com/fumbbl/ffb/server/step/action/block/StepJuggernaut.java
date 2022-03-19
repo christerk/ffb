@@ -112,12 +112,12 @@ public class StepJuggernaut extends AbstractStep {
 	}
 
 	@Override
-	public StepJuggernaut initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.usingJuggernaut = IServerJsonOption.USING_JUGGERNAUT.getFrom(game, jsonObject);
-		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
-		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
+	public StepJuggernaut initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.usingJuggernaut = IServerJsonOption.USING_JUGGERNAUT.getFrom(source, jsonObject);
+		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
 		return this;
 	}
 

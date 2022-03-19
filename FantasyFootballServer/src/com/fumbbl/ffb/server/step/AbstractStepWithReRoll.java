@@ -128,9 +128,9 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 	}
 
 	@Override
-	public AbstractStepWithReRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public AbstractStepWithReRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fReRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
 		fReRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
 		playerIdForSingleUseReRoll = IServerJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(source, jsonObject);

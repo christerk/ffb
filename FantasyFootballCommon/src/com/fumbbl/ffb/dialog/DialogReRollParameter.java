@@ -101,17 +101,17 @@ public class DialogReRollParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogReRollParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(game, jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
-		fFumble = IJsonOption.FUMBLE.getFrom(game, jsonObject);
-		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+	public DialogReRollParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
+		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
+		fFumble = IJsonOption.FUMBLE.getFrom(source, jsonObject);
+		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

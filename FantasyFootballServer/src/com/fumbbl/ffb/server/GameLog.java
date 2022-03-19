@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -13,16 +10,19 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandFactory;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
  */
 public class GameLog implements IJsonSerializable {
 
-	private List<ServerCommand> fServerCommands;
+	private final List<ServerCommand> fServerCommands;
 
 	private transient int fLastCommitedCommandNr; // TODO: can be removed
-	private transient GameState fGameState;
+	private final transient GameState fGameState;
 
 	public GameLog(GameState pGameState) {
 		fGameState = pGameState;
@@ -109,13 +109,13 @@ public class GameLog implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameLog initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public GameLog initFrom(IFactorySource source, JsonValue jsonValue) {
 		NetCommandFactory netCommandFactory = new NetCommandFactory(fGameState.getServer().getFactorySource());
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(game, jsonObject);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(source, jsonObject);
 		fServerCommands.clear();
 		for (int i = 0; i < commandArray.size(); i++) {
-			ServerCommand serverCommand = (ServerCommand) netCommandFactory.forJsonValue(game, commandArray.get(i));
+			ServerCommand serverCommand = (ServerCommand) netCommandFactory.forJsonValue(source, commandArray.get(i));
 			add(serverCommand);
 		}
 		return this;

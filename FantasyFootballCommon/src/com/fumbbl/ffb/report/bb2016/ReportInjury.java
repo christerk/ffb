@@ -223,34 +223,34 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 
 	}
 
-	public ReportInjury initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public ReportInjury initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		fInjuryType = (InjuryType) IJsonOption.INJURY_TYPE.getFrom(game, jsonObject);
-		fArmorBroken = IJsonOption.ARMOR_BROKEN.getFrom(game, jsonObject);
-		fArmorRoll = IJsonOption.ARMOR_ROLL.getFrom(game, jsonObject);
-		fInjuryRoll = IJsonOption.INJURY_ROLL.getFrom(game, jsonObject);
-		fCasualtyRoll = IJsonOption.CASUALTY_ROLL.getFrom(game, jsonObject);
-		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
-		fCasualtyRollDecay = IJsonOption.CASUALTY_ROLL_DECAY.getFrom(game, jsonObject);
-		fSeriousInjuryDecay = (SeriousInjury) IJsonOption.SERIOUS_INJURY_DECAY.getFrom(game, jsonObject);
-		fInjury = IJsonOption.INJURY.getFrom(game, jsonObject);
-		fInjuryDecay = IJsonOption.INJURY_DECAY.getFrom(game, jsonObject);
-		fAttackerId = IJsonOption.ATTACKER_ID.getFrom(game, jsonObject);
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		fInjuryType = (InjuryType) IJsonOption.INJURY_TYPE.getFrom(source, jsonObject);
+		fArmorBroken = IJsonOption.ARMOR_BROKEN.getFrom(source, jsonObject);
+		fArmorRoll = IJsonOption.ARMOR_ROLL.getFrom(source, jsonObject);
+		fInjuryRoll = IJsonOption.INJURY_ROLL.getFrom(source, jsonObject);
+		fCasualtyRoll = IJsonOption.CASUALTY_ROLL.getFrom(source, jsonObject);
+		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
+		fCasualtyRollDecay = IJsonOption.CASUALTY_ROLL_DECAY.getFrom(source, jsonObject);
+		fSeriousInjuryDecay = (SeriousInjury) IJsonOption.SERIOUS_INJURY_DECAY.getFrom(source, jsonObject);
+		fInjury = IJsonOption.INJURY.getFrom(source, jsonObject);
+		fInjuryDecay = IJsonOption.INJURY_DECAY.getFrom(source, jsonObject);
+		fAttackerId = IJsonOption.ATTACKER_ID.getFrom(source, jsonObject);
 
 		fArmorModifiers.clear();
-		ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
-		JsonArray armorModifiers = IJsonOption.ARMOR_MODIFIERS.getFrom(game, jsonObject);
+		ArmorModifierFactory armorModifierFactory = source.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
+		JsonArray armorModifiers = IJsonOption.ARMOR_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < armorModifiers.size(); i++) {
 			fArmorModifiers.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));
 		}
 
 		fInjuryModifiers.clear();
-		InjuryModifierFactory injuryModifierFactory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-		JsonArray injuryModifiers = IJsonOption.INJURY_MODIFIERS.getFrom(game, jsonObject);
+		InjuryModifierFactory injuryModifierFactory = source.getFactory(FactoryType.Factory.INJURY_MODIFIER);
+		JsonArray injuryModifiers = IJsonOption.INJURY_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < injuryModifiers.size(); i++) {
 			fInjuryModifiers.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));
 		}

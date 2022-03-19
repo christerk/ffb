@@ -42,12 +42,12 @@ public class ClientCommandSynchronousMultiBlock extends ClientCommand {
 	}
 
 	@Override
-	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
+		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(source, jsonObject);
 		jsonArray.values().stream()
-			.map(value -> new BlockTarget().initFrom(game, value))
+			.map(value -> new BlockTarget().initFrom(source, value))
 			.limit(2)
 			.forEach(value -> selectedBlockTargets.add(value));
 		return this;

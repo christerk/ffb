@@ -63,15 +63,15 @@ public class DialogUseApothecariesParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogUseApothecariesParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		JsonArray jsonArray = IJsonOption.INJURY_DESCRIPTIONS.getFrom(game, jsonObject);
+	public DialogUseApothecariesParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		JsonArray jsonArray = IJsonOption.INJURY_DESCRIPTIONS.getFrom(source, jsonObject);
 		if (jsonArray != null) {
-			injuryDescriptions.addAll(jsonArray.values().stream().map(value -> new InjuryDescription().initFrom(game, value)).collect(Collectors.toList()));
+			injuryDescriptions.addAll(jsonArray.values().stream().map(value -> new InjuryDescription().initFrom(source, value)).collect(Collectors.toList()));
 		}
-		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		maxApos = IJsonOption.MAX_SELECTS.getFrom(game, jsonObject);
+		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		maxApos = IJsonOption.MAX_SELECTS.getFrom(source, jsonObject);
 		return this;
 	}
 

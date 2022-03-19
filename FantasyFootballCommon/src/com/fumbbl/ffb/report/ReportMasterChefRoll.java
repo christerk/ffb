@@ -61,12 +61,12 @@ public class ReportMasterChefRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportMasterChefRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fMasterChefRoll = IJsonOption.MASTER_CHEF_ROLL.getFrom(game, jsonObject);
-		fReRollsStolen = IJsonOption.RE_ROLLS_STOLEN.getFrom(game, jsonObject);
+	public ReportMasterChefRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fMasterChefRoll = IJsonOption.MASTER_CHEF_ROLL.getFrom(source, jsonObject);
+		fReRollsStolen = IJsonOption.RE_ROLLS_STOLEN.getFrom(source, jsonObject);
 		return this;
 	}
 

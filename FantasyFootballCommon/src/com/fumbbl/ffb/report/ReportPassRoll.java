@@ -91,14 +91,14 @@ public class ReportPassRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportPassRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(game, jsonObject);
-		result = (PassResult) IJsonOption.PASS_RESULT.getFrom(game, jsonObject);
+	public ReportPassRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(source, jsonObject);
+		result = (PassResult) IJsonOption.PASS_RESULT.getFrom(source, jsonObject);
 		if (result == null) {
-			boolean fumble = IJsonOption.FUMBLE.getFrom(game, jsonObject);
-			boolean safeThrowHold = IJsonOption.SAFE_THROW_HOLD.getFrom(game, jsonObject);
+			boolean fumble = IJsonOption.FUMBLE.getFrom(source, jsonObject);
+			boolean safeThrowHold = IJsonOption.SAFE_THROW_HOLD.getFrom(source, jsonObject);
 			if (safeThrowHold) {
 				result = PassResult.SAVED_FUMBLE;
 			} else if (fumble) {
@@ -109,8 +109,8 @@ public class ReportPassRoll extends ReportSkillRoll {
 				result = PassResult.INACCURATE;
 			}
 		}
-		fHailMaryPass = IJsonOption.HAIL_MARY_PASS.getFrom(game, jsonObject);
-		fBomb = IJsonOption.BOMB.getFrom(game, jsonObject);
+		fHailMaryPass = IJsonOption.HAIL_MARY_PASS.getFrom(source, jsonObject);
+		fBomb = IJsonOption.BOMB.getFrom(source, jsonObject);
 		return this;
 	}
 

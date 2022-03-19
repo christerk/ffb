@@ -344,8 +344,8 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public ZappedPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
-		originalPlayer = new RosterPlayer().initFrom(game, IJsonOption.PLAYER.getFrom(game, (JsonObject) pJsonValue));
+	public ZappedPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		originalPlayer = new RosterPlayer().initFrom(source, IJsonOption.PLAYER.getFrom(source, (JsonObject) jsonValue));
 		return this;
 	}
 

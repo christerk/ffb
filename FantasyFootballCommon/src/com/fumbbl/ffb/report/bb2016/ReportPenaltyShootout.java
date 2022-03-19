@@ -71,13 +71,13 @@ public class ReportPenaltyShootout implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPenaltyShootout initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fRollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		fReRollsLeftHome = IJsonOption.RE_ROLLS_LEFT_HOME.getFrom(game, jsonObject);
-		fRollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
-		fReRollsLeftAway = IJsonOption.RE_ROLLS_LEFT_AWAY.getFrom(game, jsonObject);
+	public ReportPenaltyShootout initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fRollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		fReRollsLeftHome = IJsonOption.RE_ROLLS_LEFT_HOME.getFrom(source, jsonObject);
+		fRollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
+		fReRollsLeftAway = IJsonOption.RE_ROLLS_LEFT_AWAY.getFrom(source, jsonObject);
 		return this;
 	}
 

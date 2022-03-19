@@ -46,8 +46,8 @@ public class ServerCommandSound extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandSound initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ServerCommandSound initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		fSound = (SoundId) IJsonOption.SOUND.getFrom(source, jsonObject);
