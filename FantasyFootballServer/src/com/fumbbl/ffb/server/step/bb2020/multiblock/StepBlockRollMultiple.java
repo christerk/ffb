@@ -228,6 +228,11 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 								handleBrawler(actingPlayer.getPlayer(), roll);
 							} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
 								roll(roll, true, actingPlayer);
+							} else if (state.reRollSource == ReRollSources.PRO) {
+								roll.setReRollDiceIndexes(add(roll.getReRollDiceIndexes(), roll.getProIndex()));
+							}
+							if (roll.getReRollDiceIndexes().length == roll.getNrOfDice()) {
+								roll.clearReRollSources();
 							} else {
 								roll.remove(state.reRollSource);
 								roll.remove(ReRollSources.TEAM_RE_ROLL);
@@ -261,12 +266,6 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 		if (brawlerIndex >= 0) {
 			blockRoll.setReRollDiceIndexes(IntStream.concat(IntStream.of(brawlerIndex), Arrays.stream(blockRoll.getReRollDiceIndexes())).toArray());
-			blockRoll.remove(ReRollSources.BRAWLER);
-			blockRoll.remove(ReRollSources.TEAM_RE_ROLL);
-			blockRoll.remove(ReRollSources.LORD_OF_CHAOS);
-			if (blockRoll.getReRollDiceIndexes().length == blockRoll.getNrOfDice()) {
-				blockRoll.clearReRollSources();
-			}
 		}
 	}
 
@@ -350,6 +349,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 	}
 
 	private void adjustRollForIndexedReRoll(BlockRoll roll, ActingPlayer actingPlayer, ISkillProperty propertyToMark) {
+		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 		actingPlayer.markSkillUsed(propertyToMark);
 		int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
 		getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), state.reRollSource));
@@ -357,12 +357,8 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		roll.setBlockRoll(Arrays.copyOf(oldRoll, oldRoll.length));
 		roll.getBlockRoll()[roll.getProIndex()] = reRolledWithPro[0];
 		roll.setReRollDiceIndexes(add(roll.getReRollDiceIndexes(), roll.getProIndex()));
-		roll.remove(state.reRollSource);
-		roll.remove(ReRollSources.TEAM_RE_ROLL);
-		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 		if (Arrays.stream(roll.getBlockRoll()).mapToObj(factory::forRoll).noneMatch(blockResult -> blockResult == BlockResult.BOTH_DOWN)) {
 			roll.remove(ReRollSources.BRAWLER);
-			roll.remove(state.reRollSource == ReRollSources.PRO ? ReRollSources.CONSUMMATE_PROFESSIONAL : ReRollSources.PRO);
 		}
 	}
 
