@@ -12,27 +12,39 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.ObjIntConsumer;
 
 public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
 	private ReRollSource reRollSource;
+	@SuppressWarnings("FieldCanBeLocal")
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
 		add(new Mnemonics('T', 'N', 'B', 'S',
 			new ArrayList<Character>() {{
 				add('P');
 				add('o');
 				add('x');
+			}},
+			new ArrayList<Character>() {{
+				add('C');
+				add('u');
+				add('m');
 			}}));
 		add(new Mnemonics('e', 'l', 'r', 'i',
 			new ArrayList<Character>() {{
 				add('r');
 				add('y');
 				add('z');
+			}},
+			new ArrayList<Character>() {{
+				add('a');
+				add('f');
+				add('v');
 			}}));
 	}};
 	private int proIndex;
@@ -70,9 +82,15 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 					buttonPanel.add(createReRollButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, currentMnemonics.team));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
-				if (blockRoll.has(ReRollSources.PRO) && blockRoll.getNrOfDice() == 1) {
-					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro.get(0)));
-					buttonPanel.add(Box.createHorizontalGlue());
+				if (blockRoll.getNrOfDice() == 1) {
+					if (blockRoll.has(ReRollSources.PRO)) {
+						buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro.get(0)));
+						buttonPanel.add(Box.createHorizontalGlue());
+					}
+					if (blockRoll.has(ReRollSources.CONSUMMATE_PROFESSIONAL)) {
+						buttonPanel.add(createReRollButton(target, ReRollSources.CONSUMMATE_PROFESSIONAL.getName(pClient.getGame()), ReRollSources.CONSUMMATE_PROFESSIONAL, currentMnemonics.consummate.get(0)));
+						buttonPanel.add(Box.createHorizontalGlue());
+					}
 				}
 				if (blockRoll.has(ReRollSources.BRAWLER)) {
 					buttonPanel.add(createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler));
@@ -89,8 +107,15 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 
-				if (blockRoll.has(ReRollSources.PRO) && Math.abs(blockRoll.getNrOfDice()) > 1) {
-					targetPanel.add(createProPanel(blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.pro));
+				if (Math.abs(blockRoll.getNrOfDice()) > 1) {
+					if (blockRoll.has(ReRollSources.PRO)) {
+						targetPanel.add(createSingleDieReRollPanel(proTextPanel(),
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.pro, this::proAction));
+					}
+					if (blockRoll.has(ReRollSources.CONSUMMATE_PROFESSIONAL)) {
+						targetPanel.add(createSingleDieReRollPanel(textPanel(ReRollSources.CONSUMMATE_PROFESSIONAL.getName(getClient().getGame())),
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.consummate, this::consummateAction));
+					}
 				}
 
 				targetPanel.add(Box.createVerticalStrut(3));
@@ -113,42 +138,49 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	}
 
-	private JPanel createProPanel(String target, int diceCount, int[] reRolledDiceIndexes, List<Character> mnemonics) {
-		JPanel proPanel = new JPanel();
-		proPanel.setOpaque(false);
-		proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
-		proPanel.setAlignmentX(CENTER_ALIGNMENT);
-		proPanel.add(proTextPanel());
+	private JPanel createSingleDieReRollPanel(JPanel titlePanel, String target, int diceCount, int[] reRolledDiceIndexes, List<Character> mnemonics, ObjIntConsumer<String> consumer) {
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(titlePanel);
 
-		JPanel proButtonPanel = new JPanel();
-		proButtonPanel.setLayout(new BoxLayout(proButtonPanel, BoxLayout.X_AXIS));
-		proButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
 
 		for (int die = 1; die <= diceCount; die++) {
 			int finalDie = die;
 			if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalDie - 1)) {
 				JButton proButton = new JButton();
 				proButton.setText("Die " + die);
-				proButton.addActionListener(e -> proAction(target, finalDie - 1));
+				proButton.addActionListener(e -> consumer.accept(target, finalDie - 1));
 				proButton.setMnemonic(mnemonics.get(0));
 				this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
 					@Override
 					protected void handleKey() {
-						proAction(target, finalDie - 1);
+						consumer.accept(target, finalDie - 1);
 					}
 				});
-				proButtonPanel.add(proButton);
+				buttonPanel.add(proButton);
 			}
 			mnemonics.remove(0);
 		}
 
-		proPanel.add(proButtonPanel);
-		return proPanel;
+		panel.add(buttonPanel);
+		return panel;
 	}
 
 	private void proAction(String target, int proIndex) {
 		reRollSource = ReRollSources.PRO;
 		this.proIndex = proIndex;
+		this.selectedTarget = target;
+		close();
+	}
+
+	private void consummateAction(String target, int index) {
+		reRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+		this.proIndex = index;
 		this.selectedTarget = target;
 		close();
 	}
@@ -205,14 +237,15 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private static class Mnemonics {
 		private final char team, brawler, none, single;
-		private final List<Character> pro;
+		private final List<Character> pro, consummate;
 
-		public Mnemonics(char team, char none, char brawler, char single, List<Character> pro) {
+		public Mnemonics(char team, char none, char brawler, char single, List<Character> pro, List<Character> consummate) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;
 			this.pro = pro;
 			this.single = single;
+			this.consummate = consummate;
 		}
 	}
 }

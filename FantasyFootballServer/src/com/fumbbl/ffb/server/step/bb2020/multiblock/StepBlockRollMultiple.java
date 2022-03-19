@@ -22,6 +22,7 @@ import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
@@ -44,6 +45,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -182,6 +184,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
 			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
+			final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
 
 			state.blockRolls.forEach(roll -> {
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
@@ -201,6 +204,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				if (brawlerAvailable) {
 					roll.add(ReRollSources.BRAWLER);
 				}
+				if (consummateAvailable) {
+					roll.add(ReRollSources.CONSUMMATE_PROFESSIONAL);
+				}
 				getResult().setSound(SoundId.BLOCK);
 				UtilServerGame.syncGameModel(this);
 			});
@@ -212,24 +218,26 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				state.blockRolls.stream()
 					.filter(filteredRoll -> filteredRoll.getTargetId().equals(state.selectedTarget))
 					.findFirst().ifPresent(roll -> {
-					if (state.reRollSource != null) {
+						if (state.reRollSource != null) {
 
-						Player<?> defender = game.getPlayerById(roll.getTargetId());
-						getResult().addReport(new ReportBlock(defender.getId()));
-						getResult().setSound(SoundId.BLOCK);
+							Player<?> defender = game.getPlayerById(roll.getTargetId());
+							getResult().addReport(new ReportBlock(defender.getId()));
+							getResult().setSound(SoundId.BLOCK);
 
-						if (state.reRollSource == ReRollSources.BRAWLER) {
-							handleBrawler(actingPlayer.getPlayer(), roll);
-						} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
-							roll(roll, true, actingPlayer);
+							if (state.reRollSource == ReRollSources.BRAWLER) {
+								handleBrawler(actingPlayer.getPlayer(), roll);
+							} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
+								roll(roll, true, actingPlayer);
+							} else {
+								roll.remove(state.reRollSource);
+								roll.remove(ReRollSources.TEAM_RE_ROLL);
+								roll.remove(ReRollSources.LORD_OF_CHAOS);
+							}
+							getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
 						} else {
 							roll.clearReRollSources();
 						}
-						getResult().addReport(new ReportBlockRoll(defender.getTeam().getId(), roll.getBlockRoll(), roll.getTargetId()));
-					} else {
-						roll.clearReRollSources();
-					}
-				});
+					});
 
 			}
 			decideNextStep(game);
@@ -255,8 +263,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			blockRoll.setReRollDiceIndexes(IntStream.concat(IntStream.of(brawlerIndex), Arrays.stream(blockRoll.getReRollDiceIndexes())).toArray());
 			blockRoll.remove(ReRollSources.BRAWLER);
 			blockRoll.remove(ReRollSources.TEAM_RE_ROLL);
+			blockRoll.remove(ReRollSources.LORD_OF_CHAOS);
 			if (blockRoll.getReRollDiceIndexes().length == blockRoll.getNrOfDice()) {
-				blockRoll.remove(ReRollSources.PRO);
+				blockRoll.clearReRollSources();
 			}
 		}
 	}
@@ -273,6 +282,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		final boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
+		final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 
 		state.blockRolls.forEach(roll -> {
@@ -284,6 +294,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			}
 			if (!proReRollAvailable) {
 				roll.remove(ReRollSources.PRO);
+			}
+			if (!consummateAvailable) {
+				roll.remove(ReRollSources.CONSUMMATE_PROFESSIONAL);
 			}
 
 			boolean bothDownPresent = false;
@@ -324,25 +337,32 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		Game game = getGameState().getGame();
 		if (reRolling) {
 			if (state.reRollSource == ReRollSources.PRO) {
-				actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
-				int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
-				getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), ReRollSources.PRO));
-				int[] oldRoll = roll.getBlockRoll();
-				roll.setBlockRoll(Arrays.copyOf(oldRoll, oldRoll.length));
-				roll.getBlockRoll()[roll.getProIndex()] = reRolledWithPro[0];
-				roll.setReRollDiceIndexes(add(roll.getReRollDiceIndexes(), roll.getProIndex()));
-				roll.remove(ReRollSources.PRO);
-				roll.remove(ReRollSources.TEAM_RE_ROLL);
-				BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
-				if (Arrays.stream(roll.getBlockRoll()).mapToObj(factory::forRoll).noneMatch(blockResult -> blockResult == BlockResult.BOTH_DOWN)) {
-					roll.remove(ReRollSources.BRAWLER);
-				}
+				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollOncePerTurn);
+			} else if (state.reRollSource == ReRollSources.CONSUMMATE_PROFESSIONAL) {
+				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
 			} else {
 				roll.clearReRollSources();
 				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 			}
 		} else {
 			roll.setBlockRoll(game, getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
+		}
+	}
+
+	private void adjustRollForIndexedReRoll(BlockRoll roll, ActingPlayer actingPlayer, ISkillProperty propertyToMark) {
+		actingPlayer.markSkillUsed(propertyToMark);
+		int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
+		getResult().addReport(new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), state.reRollSource));
+		int[] oldRoll = roll.getBlockRoll();
+		roll.setBlockRoll(Arrays.copyOf(oldRoll, oldRoll.length));
+		roll.getBlockRoll()[roll.getProIndex()] = reRolledWithPro[0];
+		roll.setReRollDiceIndexes(add(roll.getReRollDiceIndexes(), roll.getProIndex()));
+		roll.remove(state.reRollSource);
+		roll.remove(ReRollSources.TEAM_RE_ROLL);
+		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
+		if (Arrays.stream(roll.getBlockRoll()).mapToObj(factory::forRoll).noneMatch(blockResult -> blockResult == BlockResult.BOTH_DOWN)) {
+			roll.remove(ReRollSources.BRAWLER);
+			roll.remove(state.reRollSource == ReRollSources.PRO ? ReRollSources.CONSUMMATE_PROFESSIONAL : ReRollSources.PRO);
 		}
 	}
 

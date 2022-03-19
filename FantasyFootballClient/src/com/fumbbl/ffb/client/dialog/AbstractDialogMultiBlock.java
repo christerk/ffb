@@ -61,7 +61,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 		JPanel panel = blockRollPanel();
 
 		for (int i = 0; i < blockRoll.getBlockRoll().length; i++) {
-			boolean markAsReRolled = (blockRoll.has(ReRollSources.PRO) || blockRoll.has(ReRollSources.BRAWLER)) && blockRoll.indexWasReRolled(i);
+			boolean markAsReRolled = (blockRoll.has(ReRollSources.PRO) || blockRoll.has(ReRollSources.BRAWLER) || blockRoll.has(ReRollSources.CONSUMMATE_PROFESSIONAL)) && blockRoll.indexWasReRolled(i);
 			JButton dieButton = dieButton(blockRoll.getBlockRoll()[i], markAsReRolled);
 
 			if (activeButtons) {

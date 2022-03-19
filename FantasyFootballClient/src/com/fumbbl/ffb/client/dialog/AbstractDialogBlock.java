@@ -27,19 +27,11 @@ public abstract class AbstractDialogBlock extends Dialog {
 		return textPanel("Opponent's choice");
 	}
 
-	protected JPanel brawlerTextPanel() {
-		return textPanel("Brawler Re-Rolls");
-	}
-
 	protected JPanel proTextPanel() {
 		return textPanel("Pro Re-Rolls");
 	}
 
-	protected JPanel consummateTextPanel() {
-		return textPanel("Consummate Professional");
-	}
-
-	private JPanel textPanel(String text) {
+	protected JPanel textPanel(String text) {
 		JPanel textPanel = new JPanel();
 		textPanel.setOpaque(false);
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));

@@ -133,7 +133,7 @@ public class DialogReRollForTargets extends Dialog {
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (parameter.isConsummateAvailable()) {
-					buttonPanel.add(createButton(target, "Consummate Professional", ReRollSources.CONSUMMATE_PROFESSIONAL, index == 0 ? 'C' : 'm'));
+					buttonPanel.add(createButton(target, ReRollSources.CONSUMMATE_PROFESSIONAL.getName(game), ReRollSources.CONSUMMATE_PROFESSIONAL, index == 0 ? 'C' : 'm'));
 				}
 				if (parameter.getReRollSkill() != null) {
 					buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll", parameter.getReRollSkill().getRerollSource(ReRolledActions.DAUNTLESS), index == 0 ? 'S' : 'k'));

@@ -139,11 +139,11 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 				}
 
 				if (getDialogParameter().hasConsummateOption()) {
-					consummateButton = new JButton("Consummate Professional");
+					consummateButton = new JButton(ReRollSources.CONSUMMATE_PROFESSIONAL.getName(getClient().getGame()));
 					consummateButton.addActionListener(this);
 					consummateButton.setMnemonic(KeyEvent.VK_C);
 					consummateButton.addKeyListener(this);
-					reRollPanel.add(fButtonProReRoll);
+					reRollPanel.add(consummateButton);
 				}
 			}
 
@@ -238,7 +238,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		JPanel consummatePanel = new JPanel();
 		consummatePanel.setLayout(new BoxLayout(consummatePanel, BoxLayout.Y_AXIS));
 		consummatePanel.setAlignmentX(CENTER_ALIGNMENT);
-		consummatePanel.add(consummateTextPanel());
+		consummatePanel.add(textPanel(ReRollSources.CONSUMMATE_PROFESSIONAL.getName(getClient().getGame())));
 		consummatePanel.setOpaque(false);
 
 		JPanel consummateButtonPanel = new JPanel();
