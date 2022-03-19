@@ -8,6 +8,7 @@ import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
@@ -119,6 +120,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), actingPlayer.getPlayer());
 			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
+			state.consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
 			if (UtilServerReRoll.isSingleUseReRollAvailable(step.getGameState(), actingPlayer.getPlayer())) {
 				state.singleUseReRollSource = ReRollSources.LORD_OF_CHAOS;
 			}
@@ -171,6 +173,6 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, V state, Skill skill) {
 		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets, reRolledAction(),
 			state.minimumRolls, state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable,
-			skill, state.singleUseReRollSource);
+			skill, state.singleUseReRollSource, state.consummateAvailable);
 	}
 }

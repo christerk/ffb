@@ -19,7 +19,7 @@ public class StepStateMultipleRolls implements IJsonSerializable, SingleReRollUs
 	public String goToLabelOnFailure;
 	public List<String> reRollAvailableAgainst = new ArrayList<>();
 	public List<String> blockTargets = new ArrayList<>();
-	public boolean firstRun = true, teamReRollAvailable, proReRollAvailable;
+	public boolean firstRun = true, teamReRollAvailable, proReRollAvailable, consummateAvailable;
 	public ReRollSource reRollSource;
 	public ReRollSource singleUseReRollSource;
 	public String reRollTarget;
@@ -36,6 +36,7 @@ public class StepStateMultipleRolls implements IJsonSerializable, SingleReRollUs
 		IJsonOption.FIRST_RUN.addTo(jsonObject, firstRun);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, proReRollAvailable);
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, teamReRollAvailable);
+		IJsonOption.CONSUMMATE_OPTION.addTo(jsonObject, consummateAvailable);
 		IJsonOption.RE_ROLL_AVAILABLE_AGAINST.addTo(jsonObject, reRollAvailableAgainst);
 		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, reRollSource);
 		IJsonOption.MINIMUM_ROLLS.addTo(jsonObject, minimumRolls);
@@ -60,6 +61,7 @@ public class StepStateMultipleRolls implements IJsonSerializable, SingleReRollUs
 		initialCount = IJsonOption.NUMBER.getFrom(game, jsonObject);
 		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
 		playerIdForSingleUseReRoll = IJsonOption.PLAYER_ID_SINGLE_USE_RE_ROLL.getFrom(game, jsonObject);
+		consummateAvailable = IJsonOption.CONSUMMATE_OPTION.getFrom(game, jsonObject);
 		return this;
 	}
 

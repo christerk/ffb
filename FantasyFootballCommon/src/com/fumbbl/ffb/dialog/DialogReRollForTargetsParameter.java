@@ -23,7 +23,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 	private Map<String, Integer> minimumRolls = new HashMap<>();
 	private ReRolledAction reRolledAction;
 	private List<String> reRollAvailableAgainst = new ArrayList<>();
-	private boolean proReRollAvailable, teamReRollAvailable;
+	private boolean proReRollAvailable, teamReRollAvailable, consummateAvailable;
 	private Skill reRollSkill;
 	private ReRollSource singleUseReRollSource;
 
@@ -33,7 +33,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 
 	public DialogReRollForTargetsParameter(String playerId, List<String> targetIds, ReRolledAction reRolledAction, Map<String, Integer> minimumRolls,
 																				 List<String> reRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable,
-																				 Skill reRollSkill, ReRollSource singleUseReRollSource) {
+																				 Skill reRollSkill, ReRollSource singleUseReRollSource, boolean consummateAvailable) {
 		this.targetIds = targetIds;
 		this.reRolledAction = reRolledAction;
 		this.reRollAvailableAgainst = reRollAvailableAgainst;
@@ -43,6 +43,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		this.teamReRollAvailable = teamReRollAvailable;
 		this.reRollSkill = reRollSkill;
 		this.singleUseReRollSource = singleUseReRollSource;
+		this.consummateAvailable = consummateAvailable;
 	}
 
 	public DialogId getId() {
@@ -84,11 +85,17 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 	public ReRollSource getSingleUseReRollSource() {
 		return singleUseReRollSource;
 	}
-// transformation
+
+	public boolean isConsummateAvailable() {
+		return consummateAvailable;
+	}
+
+	// transformation
 
 	public IDialogParameter transform() {
 		return new DialogReRollForTargetsParameter(getPlayerId(), getTargetIds(), getReRolledAction(),
-			getMinimumRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable, reRollSkill, singleUseReRollSource);
+			getMinimumRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable, reRollSkill,
+			singleUseReRollSource, consummateAvailable);
 	}
 
 	// JSON serialization
@@ -105,6 +112,7 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
 		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
+		IJsonOption.CONSUMMATE_OPTION.addTo(jsonObject, consummateAvailable);
 		return jsonObject;
 	}
 
@@ -120,6 +128,9 @@ public class DialogReRollForTargetsParameter implements IDialogParameter {
 		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
 		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(game, jsonObject);
+		if (IJsonOption.CONSUMMATE_OPTION.isDefinedIn(jsonObject)) {
+			consummateAvailable = IJsonOption.CONSUMMATE_OPTION.getFrom(game, jsonObject);
+		}
 		return this;
 	}
 

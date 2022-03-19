@@ -44,9 +44,7 @@ public class DialogReRollForTargets extends Dialog {
 		ReRollSource singleUseReRollSource = parameter.getSingleUseReRollSource();
 
 		JButton fButtonNoReRoll = new JButton("No Re-Roll");
-		fButtonNoReRoll.addActionListener(e -> {
-			close();
-		});
+		fButtonNoReRoll.addActionListener(e -> close());
 		this.addKeyListener(new PressedKeyListener('N') {
 			@Override
 			protected void handleKey() {
@@ -134,6 +132,9 @@ public class DialogReRollForTargets extends Dialog {
 					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'o'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
+				if (parameter.isConsummateAvailable()) {
+					buttonPanel.add(createButton(target, "Consummate Professional", ReRollSources.CONSUMMATE_PROFESSIONAL, index == 0 ? 'C' : 'm'));
+				}
 				if (parameter.getReRollSkill() != null) {
 					buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll", parameter.getReRollSkill().getRerollSource(ReRolledActions.DAUNTLESS), index == 0 ? 'S' : 'k'));
 					buttonPanel.add(Box.createHorizontalGlue());
@@ -176,9 +177,7 @@ public class DialogReRollForTargets extends Dialog {
 
 	private JButton createButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
 		JButton button = new JButton(buttonName);
-		button.addActionListener(e -> {
-			handleUserInteraction(target, reRollSource);
-		});
+		button.addActionListener(e -> handleUserInteraction(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override
 			protected void handleKey() {
