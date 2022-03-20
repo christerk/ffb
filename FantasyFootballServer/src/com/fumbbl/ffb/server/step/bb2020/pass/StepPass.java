@@ -17,13 +17,17 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportPassRoll;
+import com.fumbbl.ffb.report.bb2020.ReportModifiedPassResult;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -185,6 +189,17 @@ public class StepPass extends AbstractStepWithReRoll {
 			boolean doNextStep = true;
 			if (mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
 				setReRolledAction(ReRolledActions.PASS);
+				boolean statBasedModifierWouldHelp;
+				Skill modificationSkill = null;
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				if (game.getThrowerId().equals(actingPlayer.getPlayerId())) {
+					PassResult modifiedResult = mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb, actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToPass));
+					statBasedModifierWouldHelp = state.getResult() != modifiedResult;
+					if (statBasedModifierWouldHelp) {
+						modificationSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAddStrengthToPass);
+						getResult().addReport(new ReportModifiedPassResult(modificationSkill, modifiedResult));
+					}
+				}
 
 				ReRollSource passingReroll = UtilCards.getRerollSource(game.getThrower(), ReRolledActions.PASS);
 				if (passingReroll != null && !state.isPassSkillUsed()) {
@@ -192,11 +207,11 @@ public class StepPass extends AbstractStepWithReRoll {
 					state.setPassSkillUsed(true);
 					Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 					UtilServerDialog.showDialog(getGameState(),
-						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll),
+						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll, modificationSkill),
 						actingTeam.hasPlayer(game.getThrower()));
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getActingPlayer(), ReRolledActions.PASS,
-						minimumRoll, PassResult.FUMBLE == state.getResult())) {
+						minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill)) {
 						doNextStep = false;
 					}
 				}

@@ -1,20 +1,19 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.event.ActionListener;
-
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 
+import java.awt.event.ActionListener;
+
 /**
- * 
  * @author Kalimar
  */
-public class DialogWinningsReRoll extends DialogYesOrNoQuestion implements ActionListener {
+public class DialogWinningsReRoll extends DialogThreeWayChoice implements ActionListener {
 
 	public DialogWinningsReRoll(FantasyFootballClient pClient, int pOldRoll) {
-		super(pClient, "Re-roll Winnings", createMessages(pOldRoll), IIconProperty.GAME_DICE_SMALL, "Keep", (int) 'K',
-				"Re-Roll", (int) 'R');
+		super(pClient, "Re-roll Winnings", createMessages(pOldRoll), IIconProperty.GAME_DICE_SMALL, "Keep", 'K',
+			"Re-Roll", 'R');
 	}
 
 	public DialogId getId() {

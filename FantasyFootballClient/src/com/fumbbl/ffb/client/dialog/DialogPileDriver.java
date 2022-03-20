@@ -4,7 +4,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 
-public class DialogPileDriver extends DialogYesOrNoQuestion {
+public class DialogPileDriver extends DialogThreeWayChoice {
 
 	private final String playerId;
 

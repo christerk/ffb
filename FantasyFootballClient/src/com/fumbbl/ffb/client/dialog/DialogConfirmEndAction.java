@@ -7,7 +7,7 @@ import com.fumbbl.ffb.dialog.DialogId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DialogConfirmEndAction extends DialogYesOrNoQuestion {
+public class DialogConfirmEndAction extends DialogThreeWayChoice {
 
 	public DialogConfirmEndAction(FantasyFootballClient pClient, PlayerAction playerAction) {
 		super(pClient, "End " + title(playerAction) + "?", createMessages(playerAction), null);

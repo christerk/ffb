@@ -7,10 +7,9 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 /**
- *
  * @author Kalimar
  */
-public class DialogPilingOn extends DialogYesOrNoQuestion {
+public class DialogPilingOn extends DialogThreeWayChoice {
 
 	public DialogPilingOn(FantasyFootballClient pClient, DialogPilingOnParameter pDialogParameter) {
 		super(pClient, "Use Piling On", createMessages(pClient, pDialogParameter), null);

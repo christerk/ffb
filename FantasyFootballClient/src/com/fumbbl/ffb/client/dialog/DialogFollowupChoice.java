@@ -4,10 +4,9 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogFollowupChoice extends DialogYesOrNoQuestion {
+public class DialogFollowupChoice extends DialogThreeWayChoice {
 
 	public DialogFollowupChoice(FantasyFootballClient pClient) {
 		super(pClient, "Followup Choice", "Follow up the block?");

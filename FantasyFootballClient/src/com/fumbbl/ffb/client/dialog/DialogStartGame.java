@@ -7,10 +7,9 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogStartGame extends DialogYesOrNoQuestion {
+public class DialogStartGame extends DialogThreeWayChoice {
 
 	public DialogStartGame(FantasyFootballClient pClient) {
 		super(pClient, "Start Game", createMessages(pClient), IIconProperty.GAME_REF);

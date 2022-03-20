@@ -9,13 +9,12 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogSkillUseParameter implements IDialogParameter {
 
 	private String fPlayerId;
-	private Skill fSkill;
+	private Skill fSkill, modifyingSkill;
 	private int fMinimumRoll;
 
 	public DialogSkillUseParameter() {
@@ -23,9 +22,14 @@ public class DialogSkillUseParameter implements IDialogParameter {
 	}
 
 	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll) {
+		this(pPlayerId, pSkill, pMinimumRoll, null);
+	}
+
+	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, Skill modifyingSkill) {
 		fPlayerId = pPlayerId;
 		fSkill = pSkill;
 		fMinimumRoll = pMinimumRoll;
+		this.modifyingSkill = modifyingSkill;
 	}
 
 	public DialogId getId() {
@@ -44,10 +48,13 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		return fMinimumRoll;
 	}
 
-	// transformation
+	public Skill getModifyingSkill() {
+		return modifyingSkill;
+	}
+// transformation
 
 	public IDialogParameter transform() {
-		return new DialogSkillUseParameter(getPlayerId(), getSkill(), getMinimumRoll());
+		return new DialogSkillUseParameter(getPlayerId(), getSkill(), getMinimumRoll(), modifyingSkill);
 	}
 
 	// JSON serialization
@@ -58,6 +65,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
 		IJsonOption.SKILL.addTo(jsonObject, fSkill);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
+		IJsonOption.MODIFYING_SKILL.addTo(jsonObject, modifyingSkill);
 		return jsonObject;
 	}
 
@@ -67,6 +75,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
+		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

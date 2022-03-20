@@ -19,7 +19,6 @@ import com.fumbbl.ffb.modifiers.StatBasedRollModifierFactory;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -345,16 +344,16 @@ public class ActingPlayer implements IJsonSerializable {
 		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait());
 	}
 
-	public Optional<StatBasedRollModifier> statBasedModifier(ISkillProperty property) {
+	public StatBasedRollModifier statBasedModifier(ISkillProperty property) {
 		Skill skill = getPlayer().getSkillWithProperty(property);
 		if (skill != null && !isSkillUsed(skill)) {
 			StatBasedRollModifierFactory factory = skill.getStatBasedRollModifierFactory();
 			if (factory != null) {
-				return Optional.of(factory.create(getPlayer()));
+				return factory.create(getPlayer());
 			}
 		}
 
-		return Optional.empty();
+		return null;
 	}
 
 	public boolean justStoodUp() {

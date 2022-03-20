@@ -11,6 +11,7 @@ import com.fumbbl.ffb.dialog.DialogReRollParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -39,6 +40,8 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 	private ReRollSource fReRollSource;
 	private JButton buttonSingleUseReRoll;
 	private boolean useSkill;
+	private JButton buttonModifyingSkill;
+	private Skill usedSkill;
 
 	public DialogReRoll(FantasyFootballClient pClient, DialogReRollParameter pDialogParameter) {
 
@@ -72,25 +75,36 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 			buttonSkillReRoll.setMnemonic((int) 'S');
 		}
 
+		if (pDialogParameter.getModifyingSkill() != null) {
+			buttonModifyingSkill = new JButton(pDialogParameter.getModifyingSkill().getName());
+			buttonModifyingSkill.addActionListener(this);
+			buttonModifyingSkill.addKeyListener(this);
+			buttonModifyingSkill.setMnemonic((int) 'M');
+		}
+
 		fButtonNoReRoll = new JButton("No Re-Roll");
 		fButtonNoReRoll.addActionListener(this);
 		fButtonNoReRoll.addKeyListener(this);
 		fButtonNoReRoll.setMnemonic((int) 'N');
 
-		StringBuilder message1 = new StringBuilder();
+		StringBuilder message = new StringBuilder();
 
 		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
-			message1.append("Do you want to re-roll the failed ").append(action)
+			message.append("Do you want to re-roll the failed ").append(action)
 				.append("?");
 		} else {
-			message1.append("Do you want to re-roll the ").append(action).append("?");
+			message.append("Do you want to re-roll the ").append(action);
+			if (pDialogParameter.getModifyingSkill() != null) {
+				message.append(" or use ").append(pDialogParameter.getModifyingSkill().getName());
+			}
+			message.append("?");
 		}
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
-		messagePanel.add(new JLabel(message1.toString()));
+		messagePanel.add(new JLabel(message.toString()));
 
 		if (pDialogParameter.isFumble()) {
 			messagePanel.add(Box.createVerticalStrut(5));
@@ -168,6 +182,11 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		}
 		if (pActionEvent.getSource() == buttonSkillReRoll) {
 			useSkill = true;
+			usedSkill = getDialogParameter().getReRollSkill();
+		}
+		if (pActionEvent.getSource() == buttonModifyingSkill) {
+			useSkill = true;
+			usedSkill = getDialogParameter().getModifyingSkill();
 		}
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(this);
@@ -184,6 +203,10 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 	public DialogReRollParameter getDialogParameter() {
 		return fDialogParameter;
+	}
+
+	public Skill getUsedSkill() {
+		return usedSkill;
 	}
 
 	public boolean isUseSkill() {
@@ -213,6 +236,11 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 				break;
 			case KeyEvent.VK_S:
 				useSkill = true;
+				usedSkill = getDialogParameter().getReRollSkill();
+				break;
+			case KeyEvent.VK_M:
+				useSkill = true;
+				usedSkill = getDialogParameter().getModifyingSkill();
 				break;
 			case KeyEvent.VK_N:
 				break;

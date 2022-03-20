@@ -23,7 +23,7 @@ public class DialogReRollParameter implements IDialogParameter {
 	private boolean fProReRollOption;
 	private boolean fFumble;
 	private ReRollSource singleUseReRollSource;
-	private Skill reRollSkill;
+	private Skill reRollSkill, modifyingSkill;
 
 	public DialogReRollParameter() {
 		super();
@@ -31,7 +31,7 @@ public class DialogReRollParameter implements IDialogParameter {
 
 	public DialogReRollParameter(String pPlayerId, ReRolledAction pReRolledAction, int pMinimumRoll,
 															 boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble,
-															 Skill reRollSkill, ReRollSource singleUseReRollSource) {
+															 Skill reRollSkill, ReRollSource singleUseReRollSource, Skill modifyingSkill) {
 		fPlayerId = pPlayerId;
 		fReRolledAction = pReRolledAction;
 		fMinimumRoll = pMinimumRoll;
@@ -40,6 +40,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		fFumble = pFumble;
 		this.reRollSkill = reRollSkill;
 		this.singleUseReRollSource = singleUseReRollSource;
+		this.modifyingSkill = modifyingSkill;
 	}
 
 	public DialogId getId() {
@@ -78,11 +79,14 @@ public class DialogReRollParameter implements IDialogParameter {
 		return singleUseReRollSource;
 	}
 
+	public Skill getModifyingSkill() {
+		return modifyingSkill;
+	}
 // transformation
 
 	public IDialogParameter transform() {
 		return new DialogReRollParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(),
-			isProReRollOption(), isFumble(), reRollSkill, singleUseReRollSource);
+			isProReRollOption(), isFumble(), reRollSkill, singleUseReRollSource, modifyingSkill);
 	}
 
 	// JSON serialization
@@ -98,6 +102,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
 		IJsonOption.FUMBLE.addTo(jsonObject, fFumble);
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
+		IJsonOption.MODIFYING_SKILL.addTo(jsonObject, modifyingSkill);
 		return jsonObject;
 	}
 
@@ -112,6 +117,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
 		fFumble = IJsonOption.FUMBLE.getFrom(source, jsonObject);
 		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

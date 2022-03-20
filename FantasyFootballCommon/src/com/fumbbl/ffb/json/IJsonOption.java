@@ -259,6 +259,7 @@ public interface IJsonOption {
 	JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
 	JsonObjectOption MODEL_CHANGE_LIST = new JsonObjectOption("modelChangeList");
 	JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
+	JsonEnumWithNameOption MODIFYING_SKILL = new JsonEnumWithNameOption("modifyingSkill", Factory.SKILL);
 	JsonObjectOption MODIFIED_INJURY_CONTEXT = new JsonObjectOption("modifiedInjuryContext");
 	JsonIntOption MODIFIER = new JsonIntOption("modifier");
 	JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");

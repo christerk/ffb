@@ -5,13 +5,12 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogReceiveChoice extends DialogYesOrNoQuestion {
+public class DialogReceiveChoice extends DialogThreeWayChoice {
 
 	public DialogReceiveChoice(FantasyFootballClient pClient) {
-		super(pClient, "Kick or receive", new String[] { "Do you want to receive the kickoff ?" }, IIconProperty.GAME_REF);
+		super(pClient, "Kick or receive", new String[]{"Do you want to receive the kickoff ?"}, IIconProperty.GAME_REF);
 	}
 
 	public DialogId getId() {

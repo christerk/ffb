@@ -6,10 +6,9 @@ import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.skill.Skill;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogSkillUse extends DialogYesOrNoQuestion {
+public class DialogSkillUse extends DialogThreeWayChoice {
 
 	private final DialogSkillUseParameter fDialogParameter;
 

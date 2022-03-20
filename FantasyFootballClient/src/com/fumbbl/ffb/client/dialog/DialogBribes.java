@@ -5,10 +5,9 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Player;
 
 /**
- *
  * @author Kalimar
  */
-public class DialogBribes extends DialogYesOrNoQuestion {
+public class DialogBribes extends DialogThreeWayChoice {
 
 	public DialogBribes(FantasyFootballClient pClient, Player<?> pPlayer) {
 		super(pClient, "Use a bribe", createMessages(pPlayer), null);

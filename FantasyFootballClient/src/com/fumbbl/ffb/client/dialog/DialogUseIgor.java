@@ -6,10 +6,9 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogUseIgorParameter;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogUseIgor extends DialogYesOrNoQuestion {
+public class DialogUseIgor extends DialogThreeWayChoice {
 
 	private final DialogUseIgorParameter fDialogParameter;
 

@@ -11,10 +11,9 @@ import com.fumbbl.ffb.model.Game;
 import java.awt.event.ActionListener;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogConcedeGame extends DialogYesOrNoQuestion implements ActionListener {
+public class DialogConcedeGame extends DialogThreeWayChoice implements ActionListener {
 
 	public DialogConcedeGame(FantasyFootballClient pClient, boolean pLegalConcession) {
 		super(pClient, "Concede Game", createMessages(pClient.getGame(), pLegalConcession), IIconProperty.GAME_REF);
