@@ -28,6 +28,7 @@ public class ChangeList {
 			.addImprovement("Use actual name of raised positions for log message (affects only custom roster)")
 			.addBugfix("Kickback on foul did still perform foul")
 			.addBugfix("Chainsaw not used on fouls")
+			.addBugfix("Juggernaut did not allow to change both down into a pushback vs a rooted opponent")
 
 		);
 
