@@ -1,7 +1,7 @@
 package com.fumbbl.ffb;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public enum PlayerAction implements INamedObject {
@@ -11,13 +11,13 @@ public enum PlayerAction implements INamedObject {
 	HAND_OVER_MOVE("handOverMove", 5, "starts a Hand Over Action"), PASS("pass", 7, null),
 	PASS_MOVE("passMove", 7, "starts a Pass Action"), FOUL("foul", 9, null),
 	FOUL_MOVE("foulMove", 9, "starts a Foul Action"), STAND_UP("standUp", 11, "stands up"),
-	THROW_TEAM_MATE("throwTeamMate", 12, null), THROW_TEAM_MATE_MOVE("throwTeamMateMove", 12, null),
+	THROW_TEAM_MATE("throwTeamMate", 12, null), THROW_TEAM_MATE_MOVE("throwTeamMateMove", 12, "starts a Throw Team-mate action"),
 	REMOVE_CONFUSION("removeConfusion", 14, null),
 	GAZE("gaze", 15, null), GAZE_SELECT("gazeSelect", 15, null), GAZE_MOVE("gazeMove", 15, "starts a Gaze action"),
 	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
 	DUMP_OFF("dumpOff", 7, null), STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
 	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
-	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, null), KICK_TEAM_MATE("kickTeamMate", 31, null);
+	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, "starts a Kick Team-mate action"), KICK_TEAM_MATE("kickTeamMate", 31, null);
 
 	private final String fName;
 	private final int fType;
