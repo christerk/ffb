@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.6.1")
+			.addBugfix("Hitting 'S' short cut on re-roll dialogs where no skill (e.g. Mesmerizing Dance) was available caused player to get stuck")
+		);
+
 		versions.add(new VersionChangeList("2.6.0")
 			.addBugfix("Opening and closing the action menu required an additional click to open it again")
 			.addBugfix("Opening and closing the action menu required an additional click for side bar to update (player details) when hovering")

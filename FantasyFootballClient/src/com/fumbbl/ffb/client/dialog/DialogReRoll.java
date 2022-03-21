@@ -189,7 +189,11 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 				}
 				break;
 			case KeyEvent.VK_S:
-				useSkill = true;
+				if (getDialogParameter().getReRollSkill() != null) {
+					useSkill = true;
+				} else {
+					keyHandled = false;
+				}
 				break;
 			case KeyEvent.VK_N:
 				break;
