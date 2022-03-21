@@ -27,6 +27,7 @@ public class TeamCache {
 
   private final Map<TeamSkeleton, File> teamFiles = new HashMap<>();
 
+  @SuppressWarnings("OptionalGetWithoutIsPresent")
   public Team getTeamById(String teamId, Game game) {
     return teamFiles.entrySet().stream().filter(entry -> entry.getKey().getId().equals(teamId)).findFirst().map(entry -> {
       try {
@@ -40,10 +41,6 @@ public class TeamCache {
   @SuppressWarnings("OptionalGetWithoutIsPresent")
   public TeamSkeleton getSkeleton(String teamId) {
     return teamFiles.keySet().stream().filter(key -> key.getId().equals(teamId)).findFirst().get();
-  }
-
-  public Team[] getTeams(Game game) {
-    return mapToTeams(teamFiles.values(), game).toArray(new Team[0]);
   }
 
   public Team[] getTeamsForCoach(String coach, Game game) {

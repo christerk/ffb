@@ -118,13 +118,21 @@ public class UtilClientPlayerDrag {
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		if ((clientData.getSelectedPlayer() != null) && (clientData.getDragStartPosition() != null)
-				&& (clientData.getDragEndPosition() != null)) {
+			&& (clientData.getDragEndPosition() != null)) {
 			if (pClient.getClientState().isDropAllowed(clientData.getDragEndPosition())) {
+				System.out.println("Util: Sending setup command: " + clientData.getSelectedPlayer().getId());
 				pClient.getCommunication().sendSetupPlayer(clientData.getSelectedPlayer(), clientData.getDragEndPosition());
 			} else {
+				System.out.println("Util: Resetting player: " + clientData.getSelectedPlayer().getId());
 				game.getFieldModel().setPlayerCoordinate(clientData.getSelectedPlayer(), clientData.getDragStartPosition());
 			}
+		} else {
+			System.out.println("Util: Ignoring released event");
+			System.out.println("Player is " + (clientData.getSelectedPlayer() != null ? clientData.getSelectedPlayer().getId() : "null"));
+			System.out.println("DragStart is " + (clientData.getDragStartPosition() != null ? clientData.getDragStartPosition() : "null"));
+			System.out.println("DragEnd is " + (clientData.getDragEndPosition() != null ? clientData.getDragEndPosition() : "null"));
 		}
+		System.out.println("Event: " + pMouseEvent);
 		resetDragging(pClient);
 		clientData.clear();
 	}

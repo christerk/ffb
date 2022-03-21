@@ -25,6 +25,8 @@ public interface IClientPropertyValue {
 	String SETTING_GAZE_TARGET_PANEL_OFF = "showGazeTargetPanelOff";
 
 	String SETTING_RIGHT_CLICK_END_ACTION_ON = "rightClickEndActionOn";
+	String SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU = "rightClickOpensContextMenu";
+	String SETTING_RIGHT_CLICK_LEGACY_MODE = "rightClickLegacyMode";
 	String SETTING_RIGHT_CLICK_END_ACTION_OFF = "rightClickEndActionOff";
 
 	String SETTING_PITCH_CUSTOM = "pitchCustom";

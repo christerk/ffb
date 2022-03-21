@@ -48,7 +48,6 @@ public class ClientStatePass extends ClientStateMove {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		fShowRangeRuler = true;
 		fRangeGridHandler.refreshSettings();
 	}

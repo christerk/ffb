@@ -21,7 +21,6 @@ public class ClientStateStartGame extends ClientState {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		setClickable(false);
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getSideBarAway().openBox(BoxType.RESERVES);

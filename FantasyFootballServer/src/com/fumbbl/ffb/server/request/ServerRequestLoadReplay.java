@@ -29,11 +29,11 @@ public class ServerRequestLoadReplay extends ServerRequest {
 	public static final int DELETE_GAME = 2;
 	public static final int UPLOAD_GAME = 3;
 
-	private long fGameId;
-	private int fReplayToCommandNr;
-	private Session fSession;
-	private int fMode;
-	private String teamId;
+	private final long fGameId;
+	private final int fReplayToCommandNr;
+	private final Session fSession;
+	private final int fMode;
+	private final String teamId;
 
 	public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, int pMode) {
 		this(pGameId, pReplayToCommandNr, pSession, pMode, null);
@@ -73,11 +73,8 @@ public class ServerRequestLoadReplay extends ServerRequest {
 					gameState.initFrom(gameState.getGame().getRules(), jsonValue);
 				}
 			}
-		} catch (ParseException parseException) {
+		} catch (ParseException | IOException parseException) {
 			server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", parseException));
-			return;
-		} catch (IOException ioException) {
-			server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", ioException));
 			return;
 		}
 		if (fMode == LOAD_GAME) {

@@ -7,7 +7,7 @@
 	<reRollCost>70000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-	<raisedPositionId>nurgle.rotter</raisedPositionId>
+	<raisedPositionId>nurgle.beast</raisedPositionId>
 	<apothecary>false</apothecary>
 	<necromancer>false</necromancer>
 	<undead>false</undead>
@@ -129,6 +129,7 @@
 		<quantity>1</quantity>
 		<name>Max Spleenripper</name>
 		<shorthand>MS</shorthand>
+		<gender>male</gender>
 		<type>Star</type>
 		<cost>130000</cost>
 		<movement>6</movement>
@@ -148,6 +149,8 @@
 		<quantity>1</quantity>
 		<name>Lewdgrip Whiparm</name>
 		<shorthand>LW</shorthand>
+		<gender>male</gender>
+		<gender>male</gender>
 		<type>Star</type>
 		<cost>150000</cost>
 		<movement>6</movement>

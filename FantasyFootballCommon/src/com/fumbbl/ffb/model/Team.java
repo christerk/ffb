@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Kalimar
  */
 public class Team implements IXmlSerializable, IJsonSerializable {
@@ -89,7 +88,6 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		fPlayerById = new HashMap<>();
 		fPlayerByNr = new HashMap<>();
 		specialRules = new HashSet<>();
-		updateRoster(new Roster(), game);
 	}
 
 	public long getCurrentGameId() {

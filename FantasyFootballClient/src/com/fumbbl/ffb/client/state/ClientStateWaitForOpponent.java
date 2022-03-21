@@ -20,7 +20,6 @@ public class ClientStateWaitForOpponent extends ClientState {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		setClickable(false);
 	}
 

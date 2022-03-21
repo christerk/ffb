@@ -86,7 +86,10 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 	private Team inflateIfNeeded(Team team, GameState gameState) {
 		if (team instanceof TeamSkeleton) {
+			getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getGame().getId(), "Inflating team '" + team.getId() + "'");
 			return inflateTeam((TeamSkeleton) team, gameState);
+		} else {
+			getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getGame().getId(), "Team '" + team.getId() + "' already inflated");
 		}
 		return team;
 	}

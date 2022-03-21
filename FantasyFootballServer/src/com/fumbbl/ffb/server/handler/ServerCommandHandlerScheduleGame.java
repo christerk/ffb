@@ -34,10 +34,10 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
 		GameState gameState = gameCache.createGameState(GameStartMode.SCHEDULE_GAME);
 		if (ServerMode.FUMBBL == getServer().getMode()) {
 			FumbblRequestLoadTeam requestHomeTeam = new FumbblRequestLoadTeam(gameState, null,
-					scheduleGameCommand.getTeamHomeId(), true, null, new ArrayList<String>());
+					scheduleGameCommand.getTeamHomeId(), true, null, new ArrayList<>());
 			getServer().getRequestProcessor().add(requestHomeTeam);
 			FumbblRequestLoadTeam requestAwayTeam = new FumbblRequestLoadTeam(gameState, null,
-					scheduleGameCommand.getTeamAwayId(), false, null, new ArrayList<String>());
+					scheduleGameCommand.getTeamAwayId(), false, null, new ArrayList<>());
 			getServer().getRequestProcessor().add(requestAwayTeam);
 		} else {
 			Team teamHome = gameCache.getTeamById(scheduleGameCommand.getTeamHomeId(), gameState.getGame());

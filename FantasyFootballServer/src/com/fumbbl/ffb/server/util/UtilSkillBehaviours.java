@@ -20,24 +20,24 @@ public class UtilSkillBehaviours {
 		Scanner<SkillBehaviour> scanner = new Scanner<>(SkillBehaviour.class);
 		Collection<SkillBehaviour> skillBehaviours = scanner.getSubclasses(game.getOptions());
 		Set<String> packageNames = new HashSet<>();
+		SkillFactory skillFactory = game.getRules().getSkillFactory();
 		for (SkillBehaviour<Skill> behaviour : skillBehaviours) {
 			packageNames.add(behaviour.getClass().getPackage().getName());
-			if (registerBehaviour(behaviour, game.getRules().getSkillFactory())) {
-				log.log(IServerLogLevel.DEBUG, game.getId(),
-					"Registered behaviour class '" + behaviour.getClass().getSimpleName() + "' for skill '" + behaviour.skillClass.getSimpleName() + "'");
-			} else {
-				log.log(IServerLogLevel.WARN, game.getId(), "No skill found for '" + behaviour.getClass().getSimpleName());
-			}
+			log.log(IServerLogLevel.DEBUG, game.getId(), "Using skillFactory: " + skillFactory);
+			registerBehaviour(behaviour, skillFactory, log, game.getId());
 		}
 		log.log(IServerLogLevel.INFO, game.getId(), "Loaded " + skillBehaviours.size() + " behaviours from these packages: " + String.join(", ", packageNames));
 	}
 
-	private static boolean registerBehaviour(SkillBehaviour<Skill> behaviour, SkillFactory factory) {
+	private static void registerBehaviour(SkillBehaviour<Skill> behaviour, SkillFactory factory, DebugLog log, long gameId) {
 		Skill skill = factory.forClass(behaviour.skillClass);
 		if (skill != null) {
+			log.log(IServerLogLevel.DEBUG, gameId,
+				"Registered behaviour class '" + behaviour.getClass().getSimpleName() + " " + behaviour + "' for skill '"
+					+ behaviour.skillClass.getSimpleName() + " " + skill.superString() +"'");
 			behaviour.setSkill(skill);
-			return true;
+			return;
 		}
-		return false;
+		log.log(IServerLogLevel.WARN, gameId, "No skill found for '" + behaviour.getClass().getSimpleName());
 	}
 }

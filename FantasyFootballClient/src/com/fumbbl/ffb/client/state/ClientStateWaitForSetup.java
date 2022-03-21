@@ -25,7 +25,6 @@ public class ClientStateWaitForSetup extends ClientState {
 
 	public void enterState() {
 		super.enterState();
-		setSelectable(true);
 		setClickable(false);
 		Game game = getClient().getGame();
 		SideBarComponent sideBarAway = getClient().getUserInterface().getSideBarAway();
