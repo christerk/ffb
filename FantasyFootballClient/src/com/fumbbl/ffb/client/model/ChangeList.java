@@ -18,6 +18,11 @@ public class ChangeList {
 			.addFeature("Consummate Professional")
 		);
 
+		versions.add(new VersionChangeList("2.6.1")
+			.addBugfix("Hitting 'S' short cut on re-roll dialogs where no skill (e.g. Mesmerizing Dance) was available caused player to get stuck")
+			.addBugfix("Throw/Kick team-mate actions where not logged properly")
+		);
+
 		versions.add(new VersionChangeList("2.6.0")
 			.addBugfix("Opening and closing the action menu required an additional click to open it again")
 			.addBugfix("Opening and closing the action menu required an additional click for side bar to update (player details) when hovering")
