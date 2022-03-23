@@ -52,7 +52,7 @@ public class StatBasedRollModifier extends RollModifier implements IJsonSerializ
 	}
 
 	@Override
-	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
+	public StatBasedRollModifier initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		name = IJsonOption.NAME.getFrom(source, jsonObject);

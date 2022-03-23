@@ -34,6 +34,7 @@ public enum SkillUse implements INamedObject {
 	GAIN_HAIL_MARY("gainHailMary", "to gain Hail Mary Pass skill"),
 	TREACHEROUS("treacherous", "to steal the ball from %g team mate"),
 	RUSH_ADDITIONAL_SQUARE_ONCE("rushAdditionalSquareOnce", "to rush an additional square"),
+	ADD_STRENGTH_TO_ROLL("addStrengthToRoll", "to add %g strength to the roll"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

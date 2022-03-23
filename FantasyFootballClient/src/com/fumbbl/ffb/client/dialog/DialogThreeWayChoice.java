@@ -103,6 +103,10 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(buttonChoiceOne);
 		buttonPanel.add(Box.createHorizontalStrut(5));
+		if (buttonChoiceTwo != null) {
+			buttonPanel.add(buttonChoiceTwo);
+			buttonPanel.add(Box.createHorizontalStrut(5));
+		}
 		buttonPanel.add(buttonChoiceThree);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
@@ -124,7 +128,15 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 	}
 
 	public boolean isChoiceYes() {
+		return isChoiceOne();
+	}
+
+	public boolean isChoiceOne() {
 		return choiceOne;
+	}
+
+	public boolean isChoiceTwo() {
+		return choiceTwo;
 	}
 
 	public DialogId getId() {

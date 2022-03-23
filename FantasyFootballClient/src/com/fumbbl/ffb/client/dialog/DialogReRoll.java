@@ -151,6 +151,10 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 			buttonPanel.add(buttonSkillReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
+		if (buttonModifyingSkill != null) {
+			buttonPanel.add(buttonModifyingSkill);
+			buttonPanel.add(Box.createHorizontalStrut(5));
+		}
 		buttonPanel.add(fButtonNoReRoll);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
