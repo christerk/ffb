@@ -151,7 +151,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		if (pKeyEvent.getKeyCode() == choiceOneMnemonic) {
 			choiceOne = true;
 			choiceTwo = false;
-		} else if (pKeyEvent.getKeyCode() == choiceTwoMnemonic) {
+		} else if (buttonChoiceTwo != null && pKeyEvent.getKeyCode() == choiceTwoMnemonic) {
 			choiceOne = false;
 			choiceTwo = true;
 		} else if (pKeyEvent.getKeyCode() == choiceThreeMnemonic) {
