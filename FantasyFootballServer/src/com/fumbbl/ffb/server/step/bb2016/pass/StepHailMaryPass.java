@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.pass;
+package com.fumbbl.ffb.server.step.bb2016.pass;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -29,7 +29,7 @@ import com.fumbbl.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepHailMaryPass extends AbstractStepWithReRoll {
 
 	public static class StepState {

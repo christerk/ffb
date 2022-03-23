@@ -92,15 +92,15 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
-			message.append("Do you want to re-roll the failed ").append(action)
-				.append("?");
+			message.append("Do you want to re-roll the failed ").append(action);
 		} else {
 			message.append("Do you want to re-roll the ").append(action);
-			if (pDialogParameter.getModifyingSkill() != null) {
-				message.append(" or use ").append(pDialogParameter.getModifyingSkill().getName());
-			}
-			message.append("?");
 		}
+
+		if (pDialogParameter.getModifyingSkill() != null) {
+			message.append(" or use ").append(pDialogParameter.getModifyingSkill().getName());
+		}
+		message.append("?");
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));

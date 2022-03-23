@@ -16,6 +16,7 @@ public class ChangeList {
 			.addFeature("Two for One")
 			.addFeature("Lord of Chaos")
 			.addFeature("Consummate Professional")
+			.addBugfix("Strong Passing Game")
 		);
 
 		versions.add(new VersionChangeList("2.6.1")

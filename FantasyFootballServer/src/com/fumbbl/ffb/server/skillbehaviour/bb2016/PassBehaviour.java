@@ -18,7 +18,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.action.pass.StepHailMaryPass;
+import com.fumbbl.ffb.server.step.bb2016.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.bb2016.pass.StepPass;
 import com.fumbbl.ffb.server.step.bb2016.pass.StepPass.StepState;
 import com.fumbbl.ffb.server.step.bb2016.ttm.StepThrowTeamMate;
@@ -67,8 +67,8 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepHailMaryPass step,
-			                                           com.fumbbl.ffb.server.step.action.pass.StepHailMaryPass.StepState state,
-			                                           ClientCommandUseSkill useSkillCommand) {
+																								 StepHailMaryPass.StepState state,
+																								 ClientCommandUseSkill useSkillCommand) {
 				step.setReRolledAction(ReRolledActions.PASS);
 				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
 				return StepCommandStatus.EXECUTE_STEP;
@@ -76,7 +76,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 
 			@Override
 			public boolean handleExecuteStepHook(StepHailMaryPass step,
-					com.fumbbl.ffb.server.step.action.pass.StepHailMaryPass.StepState state) {
+																					 StepHailMaryPass.StepState state) {
 				Game game = step.getGameState().getGame();
 				UtilServerDialog.hideDialog(step.getGameState());
 				if (game.getThrower() == null) {
