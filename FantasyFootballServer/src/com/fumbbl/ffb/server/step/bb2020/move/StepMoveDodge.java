@@ -77,6 +77,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	private Boolean fUsingDivingTackle;
 	private boolean fUsingBreakTackle;
 	private boolean fReRollUsed;
+	private Boolean usingModifyingSkill;
 
 	public StepMoveDodge(GameState pGameState) {
 		super(pGameState);
@@ -289,6 +290,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
 		IServerJsonOption.USING_BREAK_TACKLE.addTo(jsonObject, fUsingBreakTackle);
 		IServerJsonOption.RE_ROLL_USED.addTo(jsonObject, fReRollUsed);
+		IServerJsonOption.USING_MODIFYING_SKILL.addTo(jsonObject, usingModifyingSkill);
 		return jsonObject;
 	}
 
@@ -302,8 +304,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		fDodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(source, jsonObject);
 		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
 		fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(source, jsonObject);
-		Boolean reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);
-		fReRollUsed = (reRollUsed != null) ? reRollUsed : false;
+		fReRollUsed = toPrimitive(IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject));
+		usingModifyingSkill = IServerJsonOption.USING_MODIFYING_SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

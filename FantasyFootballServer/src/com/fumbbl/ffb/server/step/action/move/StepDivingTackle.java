@@ -36,7 +36,7 @@ import com.fumbbl.ffb.util.StringTool;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepDivingTackle extends AbstractStep {
 
-	public class StepState {
+	public static class StepState {
 		public String goToLabelOnSuccess;
 		public FieldCoordinate coordinateFrom;
 		public FieldCoordinate coordinateTo;
