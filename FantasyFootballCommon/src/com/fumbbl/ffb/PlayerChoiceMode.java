@@ -10,18 +10,23 @@ public enum PlayerChoiceMode implements INamedObject {
 	MVP("mvp", false), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
 	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
-	INDOMITABLE("indomitable");
+	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true);
 
 	private final String name;
-	private final boolean usePlayerPosition;
+	private final boolean usePlayerPosition, preselect;
 
 	PlayerChoiceMode(String pName) {
 		this(pName, true);
 	}
 
 	PlayerChoiceMode(String pName, boolean usePlayerPosition) {
+		this(pName, usePlayerPosition, false);
+	}
+
+	PlayerChoiceMode(String pName, boolean usePlayerPosition, boolean preselect) {
 		name = pName;
 		this.usePlayerPosition = usePlayerPosition;
+		this.preselect = preselect;
 	}
 
 	public String getName() {
@@ -30,6 +35,10 @@ public enum PlayerChoiceMode implements INamedObject {
 
 	public boolean isUsePlayerPosition() {
 		return usePlayerPosition;
+	}
+
+	public boolean isPreselect() {
+		return preselect;
 	}
 
 	public String getDialogHeader(int nrOfPlayers) {
@@ -82,6 +91,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case INDOMITABLE:
 				header.append("Select a player to use Indomitable against");
+				break;
+			case PICK_ME_UP:
+				header.append("Select players to be picked up");
 				break;
 			default:
 				break;
@@ -140,6 +152,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case INDOMITABLE:
 				title.append("Indomitable");
 				break;
+			case PICK_ME_UP:
+				title.append("Pick-me-up");
+				break;
 			default:
 				break;
 		}
@@ -196,6 +211,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case INDOMITABLE:
 				message.append("Waiting for coach to use Indomitable");
+				break;
+			case PICK_ME_UP:
+				message.append("Waiting for coach to choose players to be picked up");
 				break;
 			default:
 				break;

@@ -84,6 +84,7 @@ public class NamedProperties {
 	public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty(
 			"Can Sneak Extra Players Onto Pitch");
 	public static final ISkillProperty canStandUpForFree = new NamedProperty("Can Stand Up For Free");
+	public static final ISkillProperty canStandUpTeamMates = new NamedProperty("Can Stand Up Team-Mates");
 	public static final ISkillProperty canTakeDownPlayersWithHimOnBothDown = new NamedProperty("Can Take Down Players With Him On Both Down");
 	public static final ISkillProperty canThrowTeamMates = new NamedProperty("Can Throw Team Mates");
 	public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");

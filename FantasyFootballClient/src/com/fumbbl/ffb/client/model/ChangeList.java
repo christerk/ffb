@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("TBD")
+			.addFeature("Drunkard")
+			.addFeature("Pick-me-up")
+		);
+
 		versions.add(new VersionChangeList("2.6.1")
 			.addBugfix("Hitting 'S' short cut on re-roll dialogs where no skill (e.g. Mesmerizing Dance) was available caused player to get stuck")
 			.addBugfix("Throw/Kick team-mate actions where not logged properly")

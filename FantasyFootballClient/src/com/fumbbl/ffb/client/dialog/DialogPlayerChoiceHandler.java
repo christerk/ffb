@@ -49,7 +49,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 				}
 
 				setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogParameter.getDescriptions(),
-					fDialogParameter.getMinSelects(), fDialogParameter.getMaxSelects(), dialogCoordinate, false));
+					fDialogParameter.getMinSelects(), fDialogParameter.getMaxSelects(), dialogCoordinate, fDialogParameter.getPlayerChoiceMode().isPreselect()));
 				getDialog().showDialog(this);
 
 			} else {
