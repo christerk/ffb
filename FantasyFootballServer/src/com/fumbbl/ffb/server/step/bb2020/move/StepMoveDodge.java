@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2020.move;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.Factory;
@@ -9,8 +10,10 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -18,14 +21,18 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDodgeRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2020.ReportModifiedDodgeResultSuccessful;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -40,10 +47,12 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -78,6 +87,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	private boolean fUsingBreakTackle;
 	private boolean fReRollUsed;
 	private Boolean usingModifyingSkill;
+	private Set<DodgeModifier> dodgeModifiers = new HashSet<>();
 
 	public StepMoveDodge(GameState pGameState) {
 		super(pGameState);
@@ -140,6 +150,15 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAddStrengthToDodge)) {
+				usingModifyingSkill = commandUseSkill.isSkillUsed();
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			} else {
+				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
+			}
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -154,14 +173,21 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			return;
 		}
 		if (ReRolledActions.DODGE == getReRolledAction()) {
-			if ((getReRollSource() == null)
-				|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-				failDodge();
-				return;
+			if (usingModifyingSkill == null || !usingModifyingSkill) {
+				if (getReRollSource() == null) {
+					failDodge();
+					return;
+				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+					AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+					if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, dodgeModifiers)) {
+						failDodge();
+					}
+					return;
+				}
 			}
 		}
 		boolean reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
-		boolean doRoll = reRolledAction || (fUsingDivingTackle == null);
+		boolean doRoll = (reRolledAction || (fUsingDivingTackle == null)) && usingModifyingSkill == null;
 		switch (dodge(doRoll)) {
 			case SUCCESS:
 				reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
@@ -196,7 +222,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.DODGE_ROLL, getGameState().getDiceRoller().rollSkill()));
 		}
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
-		Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle));
+		dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle));
 		if ((fUsingDivingTackle != null) && fUsingDivingTackle) {
 			dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 		}
@@ -278,6 +304,33 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 	}
 
+	private boolean showUseModifyingSkillDialog(AgilityMechanic mechanic, Set<DodgeModifier> dodgeModifiers) {
+		if (usingModifyingSkill == null) {
+			Skill modifyingSkill = getModifyingSkill(mechanic, dodgeModifiers);
+			if (modifyingSkill != null) {
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(getGameState().getGame().getActingPlayer().getPlayerId(), modifyingSkill, 0), false);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Skill getModifyingSkill(AgilityMechanic mechanic, Set<DodgeModifier> dodgeModifiers) {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		Skill modificationSkill = null;
+
+		int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll);
+
+		if (successful) {
+			modificationSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAddStrengthToDodge);
+			getResult().addReport(new ReportModifiedDodgeResultSuccessful(modificationSkill));
+		}
+
+		return modificationSkill;
+	}
+
 	// JSON serialization
 
 	@Override
@@ -291,6 +344,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		IServerJsonOption.USING_BREAK_TACKLE.addTo(jsonObject, fUsingBreakTackle);
 		IServerJsonOption.RE_ROLL_USED.addTo(jsonObject, fReRollUsed);
 		IServerJsonOption.USING_MODIFYING_SKILL.addTo(jsonObject, usingModifyingSkill);
+		JsonArray modifierArray = new JsonArray();
+		dodgeModifiers.stream().map(UtilJson::toJsonValue).forEach(modifierArray::add);
+		IServerJsonOption.ROLL_MODIFIERS.addTo(jsonObject, modifierArray);
 		return jsonObject;
 	}
 
@@ -306,6 +362,15 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(source, jsonObject);
 		fReRollUsed = toPrimitive(IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject));
 		usingModifyingSkill = IServerJsonOption.USING_MODIFYING_SKILL.getFrom(source, jsonObject);
+		JsonArray modifierArray = IJsonOption.ROLL_MODIFIERS.getFrom(source, jsonObject);
+		if (modifierArray != null) {
+			DodgeModifierFactory modifierFactory = source.getFactory(Factory.DODGE_MODIFIER);
+			if (modifierFactory != null) {
+				for (int i = 0; i < modifierArray.size(); i++) {
+					dodgeModifiers.add((DodgeModifier) UtilJson.toEnumWithName(modifierFactory, modifierArray.get(i)));
+				}
+			}
+		}
 		return this;
 	}
 
