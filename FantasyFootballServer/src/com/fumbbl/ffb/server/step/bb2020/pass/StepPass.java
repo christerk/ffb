@@ -269,15 +269,15 @@ public class StepPass extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		Skill modificationSkill = null;
+		Skill modifying = null;
 		if (game.getThrowerId().equals(actingPlayer.getPlayerId())) {
 			PassResult modifiedResult = mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb, actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToPass));
 			if (state.getResult() != modifiedResult) {
-				modificationSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAddStrengthToPass);
-				getResult().addReport(new ReportModifiedPassResult(modificationSkill, modifiedResult));
+				modifying = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAddStrengthToPass);
+				getResult().addReport(new ReportModifiedPassResult(modifying, modifiedResult));
 			}
 		}
-		return modificationSkill;
+		return modifying;
 	}
 
 	private void handleFailedPass(FieldCoordinate throwerCoordinate) {
