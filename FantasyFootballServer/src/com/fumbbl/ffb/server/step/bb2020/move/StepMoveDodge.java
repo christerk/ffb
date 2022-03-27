@@ -155,6 +155,12 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAddStrengthToDodge)) {
 				usingModifyingSkill = commandUseSkill.isSkillUsed();
+				if (!usingModifyingSkill) {
+					ReRollSource skillRerollSource = findSkillReRollSource();
+					if (skillRerollSource != null) {
+						useSkillReRollSource(skillRerollSource);
+					}
+				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			} else {
 				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
@@ -187,8 +193,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				}
 			}
 		}
-		boolean reRolledAction = getReRolledAction() == ReRolledActions.DODGE && ((getReRollSource() != null) || (usingModifyingSkill != null && !usingModifyingSkill));
-		boolean doRoll = reRolledAction || (fUsingDivingTackle == null);
+		boolean reRolledAction = getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
+		boolean doRoll = (reRolledAction || (fUsingDivingTackle == null)) && (usingModifyingSkill == null || !usingModifyingSkill);
 		switch (dodge(doRoll)) {
 			case SUCCESS:
 				reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
@@ -234,7 +240,12 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		if (usingModifyingSkill != null && usingModifyingSkill) {
 			statBasedRollModifier = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
-			actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
+			UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddStrengthToDodge).ifPresent(
+				modifyingSkill -> {
+					actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
+					getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), modifyingSkill, true, SkillUse.ADD_STRENGTH_TO_ROLL));
+				}
+			);
 		}
 
 		int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers, statBasedRollModifier);
@@ -279,11 +290,10 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 		}
 
-		if (usingModifyingSkill == null || !usingModifyingSkill) {
-			boolean reRolled = ((getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null));
-			getResult().addReport(new ReportDodgeRoll(actingPlayer.getPlayerId(), successful,
-				(pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled, dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier));
-		}
+		boolean reRolled = ((getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null));
+		getResult().addReport(new ReportDodgeRoll(actingPlayer.getPlayerId(), successful,
+			(pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled, dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier));
+
 
 		if (successful) {
 			status = ActionStatus.SUCCESS;
@@ -292,10 +302,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			if (!fReRollUsed && (getReRolledAction() != ReRolledActions.DODGE
 				|| (usingModifyingSkill != null && !usingModifyingSkill))) {
 				setReRolledAction(ReRolledActions.DODGE);
-				ReRollSource skillRerollSource = null;
-				if (TurnMode.REGULAR == game.getTurnMode()) {
-					skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.DODGE);
-				}
+				ReRollSource skillRerollSource = findSkillReRollSource();
 				if (skillRerollSource != null) {
 					Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
 					Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
@@ -312,8 +319,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 						status = ActionStatus.WAITING_FOR_RE_ROLL;
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), modifyingSkill, 0), true);
 					} else {
-						setReRollSource(skillRerollSource);
-						UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+						useSkillReRollSource(skillRerollSource);
 						status = dodge(true);
 					}
 				} else {
@@ -340,6 +346,21 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		return status;
 
+	}
+
+	private void useSkillReRollSource(ReRollSource skillRerollSource) {
+		ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
+		setReRollSource(skillRerollSource);
+		UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+	}
+
+	private ReRollSource findSkillReRollSource() {
+		Game game = getGameState().getGame();
+		ReRollSource skillRerollSource = null;
+		if (TurnMode.REGULAR == game.getTurnMode()) {
+			skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.DODGE);
+		}
+		return skillRerollSource;
 	}
 
 	private boolean showUseModifyingSkillDialog(AgilityMechanic mechanic, Set<DodgeModifier> dodgeModifiers) {
