@@ -133,6 +133,7 @@ public enum StepParameterKey {
 	USING_BREAK_TACKLE, // Boolean
 	USING_CHAINSAW, // Boolean
 	USING_DIVING_TACKLE, // Boolean
+	USING_MODIFYING_SKILL, // Boolean
 	USING_PILING_ON, // Boolean,
 	USING_STAB, // Boolean
 	USING_VOMIT // Boolean
