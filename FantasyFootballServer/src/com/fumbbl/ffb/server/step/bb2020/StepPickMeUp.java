@@ -25,6 +25,7 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -80,6 +81,10 @@ public class StepPickMeUp extends AbstractStep {
 	}
 
 	private void executeStep() {
+		if (firstRun && UtilServerSteps.checkTouchdown(getGameState())) {
+			getResult().setNextAction(StepAction.NEXT_STEP);
+			return;
+		}
 		UtilServerDialog.hideDialog(getGameState());
 		Game game = getGameState().getGame();
 		Team team = game.getOtherTeam(game.getActingTeam());
@@ -88,8 +93,8 @@ public class StepPickMeUp extends AbstractStep {
 		if (firstRun) {
 			playerIds.addAll(pickMeUpPlayers.stream().filter(player -> fieldModel.getPlayerState(player).hasTacklezones())
 				.flatMap(player -> Arrays.stream(team.getPlayers()).filter(teamMate -> {
-						FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(teamMate);
-						PlayerState playerState = fieldModel.getPlayerState(teamMate);
+					FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(teamMate);
+					PlayerState playerState = fieldModel.getPlayerState(teamMate);
 						return coordinate != null && !coordinate.isBoxCoordinate()
 							&& playerState.isProne()
 							&& coordinate.distanceInSteps(fieldModel.getPlayerCoordinate(player)) <= 3;
