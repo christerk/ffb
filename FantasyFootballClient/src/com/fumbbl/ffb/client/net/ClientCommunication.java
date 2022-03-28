@@ -307,7 +307,11 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
-		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId));
+		sendUseSkill(pSkill, pSkillUsed, playerId, null);
+	}
+
+	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId, ReRolledAction reRolledAction) {
+		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId, reRolledAction));
 	}
 
 	public void sendKickoff(FieldCoordinate pBallCoordinate) {

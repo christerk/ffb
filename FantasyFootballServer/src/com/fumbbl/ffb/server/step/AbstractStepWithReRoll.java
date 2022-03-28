@@ -58,6 +58,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerGame)) {
+						setReRolledAction(commandUseSkill.getReRolledAction());
 						setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

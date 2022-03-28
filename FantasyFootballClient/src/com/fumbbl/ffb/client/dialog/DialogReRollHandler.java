@@ -54,7 +54,7 @@ public class DialogReRollHandler extends DialogHandler {
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL)) {
 			DialogReRoll reRollDialog = (DialogReRoll) pDialog;
 			if (reRollDialog.isUseSkill()) {
-				getClient().getCommunication().sendUseSkill(reRollDialog.getUsedSkill(), true, reRollDialog.getDialogParameter().getPlayerId());
+				getClient().getCommunication().sendUseSkill(reRollDialog.getUsedSkill(), true, reRollDialog.getDialogParameter().getPlayerId(), reRollDialog.getReRolledAction());
 			} else {
 				getClient().getCommunication().sendUseReRoll(reRollDialog.getReRolledAction(), reRollDialog.getReRollSource());
 			}
