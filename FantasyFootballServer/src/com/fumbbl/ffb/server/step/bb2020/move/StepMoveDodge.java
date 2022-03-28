@@ -265,7 +265,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			if (btModifier.isPresent()) {
 				dodgeModifiers.remove(btModifier.get());
 				int minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game,
-					actingPlayer.getPlayer(), dodgeModifiers);
+					actingPlayer.getPlayer(), dodgeModifiers, statBasedRollModifier);
 				if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
 					dodgeModifiers.add(btModifier.get());
 				} else {
@@ -273,8 +273,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				}
 			}
 		} else {
+			modifyingSkill = getModifyingSkillInCaseItHelps(mechanic, dodgeModifiers, false);
 			if (pDoRoll) {
-				modifyingSkill = getModifyingSkillInCaseItHelps(mechanic, dodgeModifiers, false);
 				if (btModifier.isPresent()) {
 					if (modifyingSkill != null) {
 						dodgeModifiers.remove(btModifier.get());
