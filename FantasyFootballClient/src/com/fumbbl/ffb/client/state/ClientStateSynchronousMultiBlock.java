@@ -145,6 +145,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case PLAYER_ACTION_TREACHEROUS:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 					break;
+				case PLAYER_ACTION_WISDOM:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+					break;
 				case PLAYER_ACTION_BLOCK:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BLOCK);
 					break;
@@ -191,6 +194,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
 					getClient().getCommunication().sendUseSkill(skill, true, player.getId());
 					break;
+				case IPlayerPopupMenuKeys.KEY_WISDOM:
+					getClient().getCommunication().sendUseWisdom(player);
+					break;
 				default:
 					break;
 			}
@@ -219,6 +225,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		menuItemList.add(endMoveAction);
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			menuItemList.add(createWisdomItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());

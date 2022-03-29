@@ -37,7 +37,7 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer.equals(actingPlayer.getPlayer()) && isTreacherousAvailable(actingPlayer)) {
+		if (pPlayer.equals(actingPlayer.getPlayer()) && (isTreacherousAvailable(actingPlayer) || isWisdomAvailable(actingPlayer))) {
 			createAndShowPopupMenuForActingPlayer();
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (isValidGazeTarget(game, pPlayer))) {
 			getClient().getCommunication().sendTargetSelected(pPlayer.getId());
@@ -98,7 +98,13 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
 
-		menuItemList.add(createTreacherousItem(iconCache));
+		if (isTreacherousAvailable(actingPlayer)) {
+			menuItemList.add(createTreacherousItem(iconCache));
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			menuItemList.add(createWisdomItem(iconCache));
+		}
+
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -118,6 +124,9 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 			case PLAYER_ACTION_TREACHEROUS:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 				break;
+			case PLAYER_ACTION_WISDOM:
+				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+				break;
 			default:
 				actionHandled = false;
 				break;
@@ -135,6 +144,9 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
 					communication.sendUseSkill(skill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_WISDOM:
+					communication.sendUseWisdom(pPlayer);
 					break;
 				default:
 					break;

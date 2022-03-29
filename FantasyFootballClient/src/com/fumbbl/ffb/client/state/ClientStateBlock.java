@@ -148,6 +148,10 @@ public class ClientStateBlock extends ClientState {
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
+		if (isWisdomAvailable(actingPlayer)) {
+			menuItemList.add(createWisdomItem(iconCache));
+		}
+
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

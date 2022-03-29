@@ -143,6 +143,7 @@ public class ClientStateMove extends ClientState {
 			if (actingPlayer.hasActed() || mechanic.canJump(game, pPlayer, position)
 				|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
 				|| isTreacherousAvailable(actingPlayer)
+				|| isWisdomAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -225,6 +226,9 @@ public class ClientStateMove extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
 					communication.sendUseSkill(skill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_WISDOM:
+					getClient().getCommunication().sendUseWisdom(pPlayer);
 					break;
 				default:
 					break;
@@ -309,6 +313,9 @@ public class ClientStateMove extends ClientState {
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
+		if (isWisdomAvailable(actingPlayer)) {
+			menuItemList.add(createWisdomItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -352,6 +359,9 @@ public class ClientStateMove extends ClientState {
 					break;
 				case PLAYER_ACTION_TREACHEROUS:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					break;
+				case PLAYER_ACTION_WISDOM:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
 					break;
 				default:
 					actionHandled = false;

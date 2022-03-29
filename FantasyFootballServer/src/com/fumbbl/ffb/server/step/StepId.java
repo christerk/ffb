@@ -163,6 +163,7 @@ public enum StepId implements INamedObject {
 	WEATHER("weather"), // game.start
 	WILD_ANIMAL("wildAnimal"), // action.common
 	WINNINGS("winnings"), // game.end
+	WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf"), // action.special
 	WIZARD("wizard"), // phase.inducement
 	WRESTLE("wrestle"); // action.block
 

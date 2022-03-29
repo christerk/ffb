@@ -21,11 +21,13 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import javax.rmi.CORBA.Util;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -126,7 +128,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		if (pCoordinate != null) {
 			fSelectSquareCoordinate = pCoordinate;
 			drawSelectSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f, 0.2f));
-			// drawSelectSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f));
 		}
 	}
 
@@ -327,6 +328,25 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
+		return menuItem;
+	}
+
+	protected boolean isWisdomAvailable(ActingPlayer actingPlayer) {
+		return !actingPlayer.hasActed() && isWisdomAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isWisdomAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		return Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
+			game.getFieldModel().getPlayerCoordinate(player), false))
+			.anyMatch(teamMate -> !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
+	}
+
+	protected JMenuItem createWisdomItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Wisdom of the White Dwarf",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
 		return menuItem;
 	}
 }

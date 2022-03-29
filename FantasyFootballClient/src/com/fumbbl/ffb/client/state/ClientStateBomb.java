@@ -105,7 +105,7 @@ public class ClientStateBomb extends ClientState {
 	}
 
 	private void drawRangeRuler(FieldCoordinate pCoordinate) {
-		RangeRuler rangeRuler = null;
+		RangeRuler rangeRuler;
 		Game game = getClient().getGame();
 		if (fShowRangeRuler && (game.getPassCoordinate() == null)) {
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -174,7 +174,9 @@ public class ClientStateBomb extends ClientState {
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
-
+		if (isWisdomAvailable(actingPlayer)) {
+			menuItemList.add(createWisdomItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
@@ -214,6 +216,9 @@ public class ClientStateBomb extends ClientState {
 				Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
 				communication.sendUseSkill(skill, true, pPlayer.getId());
 				break;
+			case IPlayerPopupMenuKeys.KEY_WISDOM:
+				getClient().getCommunication().sendUseWisdom(pPlayer);
+				break;
 			default:
 				break;
 		}
@@ -236,6 +241,9 @@ public class ClientStateBomb extends ClientState {
 				return true;
 			case PLAYER_ACTION_TREACHEROUS:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+				return true;
+			case PLAYER_ACTION_WISDOM:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_WISDOM);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey);

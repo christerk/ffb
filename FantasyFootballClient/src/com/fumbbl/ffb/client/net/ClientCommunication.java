@@ -94,6 +94,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
 import com.fumbbl.ffb.net.commands.ServerCommand;
@@ -312,6 +313,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId, ReRolledAction reRolledAction) {
 		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId, reRolledAction));
+	}
+
+	public void sendUseWisdom(Player<?> player) {
+		send(new ClientCommandUseTeamMatesWisdom(player.getId()));
 	}
 
 	public void sendKickoff(FieldCoordinate pBallCoordinate) {

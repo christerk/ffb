@@ -139,7 +139,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_SYNCHRONOUS_MULTI_BLOCK("clientSynchronousMultiBlock"), CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET("clientBlockOrReRollChoiceForTarget"),
 	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler"),
 	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie"),
-	CLIENT_PRAYER_SELECTION("clientPrayerSelection");
+	CLIENT_PRAYER_SELECTION("clientPrayerSelection"), CLIENT_USE_TEAM_MATES_WISDOM("clientUseTeamMatesWisdom");
 
 	private final String fName;
 

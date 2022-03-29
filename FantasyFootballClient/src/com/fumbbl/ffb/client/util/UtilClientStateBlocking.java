@@ -53,6 +53,10 @@ public class UtilClientStateBlocking {
 				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 				actionHandled = true;
 				break;
+			case PLAYER_ACTION_WISDOM:
+				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+				actionHandled = true;
+				break;
 			default:
 				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -89,6 +93,9 @@ public class UtilClientStateBlocking {
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
 					pClientState.getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_WISDOM:
+					pClientState.getClient().getCommunication().sendUseWisdom(pPlayer);
 					break;
 				default:
 					break;
