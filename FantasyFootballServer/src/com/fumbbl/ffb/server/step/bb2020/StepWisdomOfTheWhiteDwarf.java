@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.bb2020;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -14,5 +15,15 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 	@Override
 	public StepId getId() {
 		return StepId.WISDOM_OF_THE_WHITE_DWARF;
+	}
+
+	@Override
+	public void start() {
+		executeStep();
+	}
+
+	private void executeStep() {
+
+		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 }
