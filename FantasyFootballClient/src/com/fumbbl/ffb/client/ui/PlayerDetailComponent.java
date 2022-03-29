@@ -77,6 +77,7 @@ public class PlayerDetailComponent extends JPanel {
 	private static final int _DISPLAY_ACTING_PLAYER = 1;
 	private static final int _DISPLAY_DEFENDING_PLAYER = 2;
 	private static final int _DISPLAY_SELECTED_PLAYER = 3;
+	public static final int LINE_LENGTH = 19;
 
 	private final SideBarComponent fSideBar;
 	private Player<?> fPlayer;
@@ -447,27 +448,34 @@ public class PlayerDetailComponent extends JPanel {
 
 	private List<String> splitSkill(String skill) {
 		List<String> parts = new ArrayList<>();
-		boolean isLong = StringTool.isProvided(skill) && skill.length() > 20;
-		if (!isLong) {
+		boolean isShort = StringTool.isProvided(skill) && skill.length() <= LINE_LENGTH;
+		if (isShort) {
 			parts.add(skill);
 			return parts;
 		}
 
-		int index = skill.indexOf(",");
-		if (index < 0) {
-			index = skill.indexOf("(");
-		} else {
-			// the comma should be on the first line
-			index++;
-		}
-		if (index < 0) {
-			parts.add(skill);
-			return parts;
+		String[] words = skill.split(" ");
+
+		StringBuilder line = new StringBuilder(LINE_LENGTH);
+
+		for (String word: words) {
+			if (line.length() + word.length() > LINE_LENGTH && line.toString().trim().length() > 0) {
+				addPart(parts, line);
+				line = new StringBuilder(LINE_LENGTH);
+			}
+			line.append(word).append(" ");
+
 		}
 
-		parts.add(skill.substring(0, index));
-		parts.add("  " + skill.substring(index));
+		if (line.toString().trim().length() > 0) {
+			addPart(parts, line);
+		}
+
 		return parts;
+	}
+
+	private void addPart(List<String> parts, StringBuilder line) {
+		parts.add((parts.isEmpty() ? "" : "  ") + line.toString().trim());
 	}
 
 	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier) {
