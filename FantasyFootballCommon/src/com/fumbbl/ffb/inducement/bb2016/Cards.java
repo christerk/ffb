@@ -8,10 +8,12 @@ import com.fumbbl.ffb.inducement.CardReport;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
+import com.fumbbl.ffb.modifiers.GoForItContext;
 import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.InterceptionContext;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
@@ -43,6 +45,7 @@ import com.fumbbl.ffb.skill.bb2016.Shadowing;
 import com.fumbbl.ffb.skill.bb2016.SideStep;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -444,7 +447,13 @@ public class Cards implements com.fumbbl.ffb.inducement.Cards {
 
 			@Override
 			public Set<RollModifier<?>> rollModifiers() {
-				return Collections.singleton(new GoForItModifier("Greased Shoes", 3));
+				return Collections.singleton(new GoForItModifier("Greased Shoes", 3) {
+					@Override
+					public boolean appliesToContext(Skill skill, GoForItContext context) {
+						TurnData turnData = context.getGame().isHomePlaying() ? context.getGame().getTurnDataAway() : context.getGame().getTurnDataHome();
+						return super.appliesToContext(skill, context) && Arrays.stream(turnData.getInducementSet().getActiveCards()).anyMatch(card -> card.getName().equals(getName()));
+					}
+				});
 			}
 		});
 
