@@ -18,9 +18,9 @@ import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.action.foul.StepEjectPlayer;
-import com.fumbbl.ffb.server.step.action.foul.StepEjectPlayer.StepState;
 import com.fumbbl.ffb.server.step.action.foul.StepReferee;
+import com.fumbbl.ffb.server.step.bb2016.foul.StepEjectPlayer;
+import com.fumbbl.ffb.server.step.bb2016.foul.StepEjectPlayer.StepState;
 import com.fumbbl.ffb.skill.bb2016.SneakyGit;
 import com.fumbbl.ffb.util.UtilCards;
 

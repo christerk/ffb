@@ -18,9 +18,9 @@ import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.action.foul.StepEjectPlayer;
-import com.fumbbl.ffb.server.step.action.foul.StepEjectPlayer.StepState;
 import com.fumbbl.ffb.server.step.action.foul.StepReferee;
+import com.fumbbl.ffb.server.step.bb2020.foul.StepEjectPlayer;
+import com.fumbbl.ffb.server.step.bb2020.foul.StepEjectPlayer.StepState;
 import com.fumbbl.ffb.skill.bb2020.SneakyGit;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -45,16 +45,17 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
 
+				SendToBoxReason reason = state.officiousRef ? SendToBoxReason.OFFICIOUS_REF : SendToBoxReason.FOUL_BAN;
 				if (UtilCards.hasSkill(actingPlayer, skill)
 						&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-							playerState.changeBase(PlayerState.KNOCKED_OUT));
-					attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
+						playerState.changeBase(PlayerState.KNOCKED_OUT));
+					attackerResult.setSendToBoxReason(reason);
 					attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
 					attackerResult.setSendToBoxHalf(game.getHalf());
 				} else if (state.argueTheCallSuccessful == null || !state.argueTheCallSuccessful) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
-					attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
+					attackerResult.setSendToBoxReason(reason);
 					attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
 					attackerResult.setSendToBoxHalf(game.getHalf());
 				}

@@ -284,6 +284,7 @@ public interface IJsonOption {
 	JsonIntOption NR_OF_STARS = new JsonIntOption("nrOfStars");
 	JsonIntOption NUMBER = new JsonIntOption("number");
 	JsonBooleanOption NURGLES_ROT = new JsonBooleanOption("nurglesRot");
+	JsonBooleanOption OFFICIOUS_REF = new JsonBooleanOption("officiousRef");
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
 	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");

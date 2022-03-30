@@ -697,7 +697,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (roll == 1) {
 			getResult().setSound(SoundId.WHISTLE);
 			sequence.add(StepId.SET_ACTING_PLAYER_AND_TEAM, StepParameter.from(StepParameterKey.PLAYER_ID, playerId));
-			sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING));
+			sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING), from(StepParameterKey.OFFICIOUS_REF, true));
 			sequence.add(StepId.CONSUME_PARAMETER, IStepLabel.END_FOULING, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parametersToConsume));
 		} else {
 			publishParameters(UtilServerInjury.stunPlayer(this, game.getPlayerById(playerId), apothecaryMode));
