@@ -141,7 +141,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					if (getReRollSource() == ReRollSources.PRO) {
 						reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
 					}
-					showBlockRollDialog();
+					showBlockRollDialog(getReRollSource() == null);
 				}
 			}
 			if (doRoll) {
@@ -166,7 +166,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
 					}
 				}
-				showBlockRollDialog();
+				showBlockRollDialog(false);
 			}
 		} else {
 			publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNrOfDice));
@@ -201,7 +201,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 	}
 
-	private void showBlockRollDialog() {
+	private void showBlockRollDialog(boolean noReRollUsed) {
 		Game game = getGameState().getGame();
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -233,7 +233,12 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
-		if ((fNrOfDice < 0) && (!teamReRollOption && !proReRollOption && !brawlerOption && !singleUseReRollOption && !consummateOption)) {
+		if ((fNrOfDice < 0) && (noReRollUsed || (!teamReRollOption && !proReRollOption && !brawlerOption && !singleUseReRollOption && !consummateOption))) {
+			teamReRollOption = false;
+			proReRollOption = false;
+			brawlerOption = false;
+			singleUseReRollOption = false;
+			consummateOption = false;
 			teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 		}
 		getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
