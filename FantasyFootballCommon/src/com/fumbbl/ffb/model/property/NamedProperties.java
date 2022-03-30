@@ -111,6 +111,8 @@ public class NamedProperties {
 	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");
 	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
+	public static final ISkillProperty ignoreBlockAssists = new NamedProperty(
+		"Ignore Block Assists");
 	public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty(
 		"Ignore Defender Stumbles Result");
 	public static final ISkillProperty ignoreFirstArmourBreak = new NamedProperty("Ignore First Armour Break");

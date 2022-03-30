@@ -16,12 +16,20 @@ public class ServerUtilPlayer {
 
 	public static int findBlockStrength(Game game, Player<?> attacker, int attackerStrength, Player<?> defender, boolean isMultiBlock) {
 		Team defenderTeam = defender.getTeam();
+		boolean sameTeam = attacker.getTeam() == defender.getTeam();
+
+		boolean ignoresAssists = attacker.hasSkillProperty(NamedProperties.ignoreBlockAssists) || defender.hasSkillProperty(NamedProperties.ignoreBlockAssists);
+
+		if (ignoresAssists && sameTeam) {
+			return attackerStrength;
+		}
+
 		boolean flipOpponentIfSameTeam = attacker.hasSkillProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
 
-		// team-mates assist b&c if attacker is on the same team as defender to gain
+		// team-mates assist b&c (2016) if attacker is on the same team as defender to gain
 		// maximum block dice (more choice)
 		// opposing teams tries to hinder
-		if (flipOpponentIfSameTeam && (attacker.getTeam() == defender.getTeam())) {
+		if (flipOpponentIfSameTeam && sameTeam) {
 			defenderTeam = UtilPlayer.findOtherTeam(game, defender);
 		}
 		int blockStrength = attackerStrength;
