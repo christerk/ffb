@@ -113,7 +113,7 @@ public class StepEjectPlayer extends AbstractStep {
 
 		UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
 		UtilBox.refreshBoxes(game);
-		UtilServerGame.updateLeaderReRolls(this);
+		UtilServerGame.updatePlayerStateDependentProperties(this);
 		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		if ((state.foulerHasBall != null) && state.foulerHasBall) {
 			publishParameter(
