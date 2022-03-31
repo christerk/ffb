@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("BB2016: Fix broken replays due to Greased Shoes")
 			.addBugfix("BB2016: Fix interaction with Safe Throw and Bombardier (Ball was moved to Bombardier after holding on to the bomb)")
 			.addBugfix("Display proper tool tip for players ejected by Officious Ref")
+			.addBugfix("Pushing prone Team-mate on ball with B&C caused turn over")
 		);
 
 		versions.add(new VersionChangeList("2.6.0")

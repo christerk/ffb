@@ -310,21 +310,22 @@ public class UtilServerInjury {
 				game.getFieldModel().setPlayerState(pPlayer, playerState);
 			}
 
-			if (eligibleForSafePairOfHands && UtilPlayer.hasBall(game, pPlayer)) {
+			boolean hasBall = UtilPlayer.hasBall(game, pPlayer);
+			if (eligibleForSafePairOfHands && hasBall) {
 				stepParameters.add(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, pPlayer.getId()));
 			}
 
-			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && game.getTurnMode() != TurnMode.BLITZ) {
+			if (hasBall && game.getTurnMode() != TurnMode.BLITZ) {
 				game.getFieldModel().setBallMoving(true);
 				stepParameters
-						.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+					.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 				// check for turnover
 				boolean endTurn;
 				switch (game.getTurnMode()) {
-				case BOMB_HOME:
-				case BOMB_HOME_BLITZ:
-					endTurn = game.getTeamHome().hasPlayer(pPlayer);
-					break;
+					case BOMB_HOME:
+					case BOMB_HOME_BLITZ:
+						endTurn = game.getTeamHome().hasPlayer(pPlayer);
+						break;
 				case BOMB_AWAY:
 				case BOMB_AWAY_BLITZ:
 					endTurn = game.getTeamAway().hasPlayer(pPlayer);
