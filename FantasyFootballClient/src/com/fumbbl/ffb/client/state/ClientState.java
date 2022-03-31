@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -21,6 +22,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilCards;
@@ -41,6 +44,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -335,7 +339,14 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected boolean isWisdomAvailable(Player<?> player) {
 		Game game = getClient().getGame();
-		return Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
+
+		Set<Class<? extends Skill>> ownedSkillClasses = player.getSkillsIncludingTemporaryOnes().stream().map(Skill::getClass).collect(Collectors.toSet());
+
+		boolean canGainSkill = Constant.GRANT_ABLE_SKILLS.stream()
+			.map(SkillClassWithValue::getSkill)
+			.anyMatch(skillClass -> !ownedSkillClasses.contains(skillClass));
+
+		return canGainSkill && Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
 				game.getFieldModel().getPlayerCoordinate(player), false))
 			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates) && !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
 	}
