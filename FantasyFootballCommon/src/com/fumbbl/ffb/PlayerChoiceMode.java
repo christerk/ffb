@@ -10,7 +10,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	MVP("mvp", false), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
 	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
-	INDOMITABLE("indomitable"), LORD_OF_CHAOS("lordOfChaos", false);
+	INDOMITABLE("indomitable"), LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf");
 
 	private final String name;
 	private final boolean usePlayerPosition;
@@ -86,6 +86,8 @@ public enum PlayerChoiceMode implements INamedObject {
 			case LORD_OF_CHAOS:
 				header.append("Select the player of which to use Lord of Chaos");
 				break;
+			case WISDOM:
+				header.append("Select the player of which to use Wisdom of the White Dwarf");
 			default:
 				break;
 		}
@@ -146,6 +148,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case LORD_OF_CHAOS:
 				title.append("Lord of Chaos");
 				break;
+			case WISDOM:
+				title.append("Wisdom of the White Dwarf");
+				break;
 			default:
 				break;
 		}
@@ -204,7 +209,10 @@ public enum PlayerChoiceMode implements INamedObject {
 				message.append("Waiting for coach to use Indomitable");
 				break;
 			case LORD_OF_CHAOS:
-				message.append("Waiting for coach to use player for Lord of Chaos");
+				message.append("Waiting for coach to select player for Lord of Chaos");
+				break;
+			case WISDOM:
+				message.append("Waiting for coach to select player for Wisdom of the White Dwarf");
 				break;
 			default:
 				break;
