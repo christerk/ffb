@@ -21,13 +21,11 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.rmi.CORBA.Util;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -338,8 +336,8 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	protected boolean isWisdomAvailable(Player<?> player) {
 		Game game = getClient().getGame();
 		return Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
-			game.getFieldModel().getPlayerCoordinate(player), false))
-			.anyMatch(teamMate -> !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
+				game.getFieldModel().getPlayerCoordinate(player), false))
+			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates) && !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
 	}
 
 	protected JMenuItem createWisdomItem(IconCache iconCache) {
