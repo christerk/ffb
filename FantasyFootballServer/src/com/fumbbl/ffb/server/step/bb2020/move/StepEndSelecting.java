@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
@@ -257,6 +258,8 @@ public final class StepEndSelecting extends AbstractStep {
 		SelectBlitzTarget selectBlitzTarget = (SelectBlitzTarget) factory.forName(SequenceGenerator.Type.SelectBlitzTarget.name());
 		SelectGazeTarget selectGazeTarget = (SelectGazeTarget) factory.forName(SequenceGenerator.Type.SelectGazeTarget.name());
 		MultiBlock multiBlock = (MultiBlock) factory.forName(SequenceGenerator.Type.MultiBlock.name());
+		Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true, blockTargets);
+		Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pPlayerAction) {
@@ -354,12 +357,16 @@ public final class StepEndSelecting extends AbstractStep {
 				endGenerator.pushSequence(endParams);
 				break;
 			case TREACHEROUS:
-				Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true, blockTargets);
-				Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
 				selectGenerator.pushSequence(selectParams);
 				Treacherous.SequenceParams treacherousParams = new Treacherous.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
 				Treacherous treacherousGenerator = (Treacherous) factory.forName(SequenceGenerator.Type.Treacherous.name());
 				treacherousGenerator.pushSequence(treacherousParams);
+				break;
+			case WISDOM_OF_THE_WHITE_DWARF:
+				selectGenerator.pushSequence(selectParams);
+				Sequence sequence = new Sequence(getGameState());
+				sequence.add(StepId.WISDOM_OF_THE_WHITE_DWARF);
+				getGameState().getStepStack().push(sequence.getSequence());
 				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");

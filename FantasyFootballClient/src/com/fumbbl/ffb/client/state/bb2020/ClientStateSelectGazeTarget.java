@@ -146,7 +146,7 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 					communication.sendUseSkill(skill, true, pPlayer.getId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					communication.sendUseWisdom(pPlayer);
+					communication.sendUseWisdom();
 					break;
 				default:
 					break;

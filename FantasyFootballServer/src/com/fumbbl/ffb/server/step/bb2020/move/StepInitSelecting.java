@@ -352,6 +352,11 @@ public final class StepInitSelecting extends AbstractStep {
 						}
 					}
 					break;
+				case CLIENT_USE_TEAM_MATES_WISDOM:
+					fDispatchPlayerAction = PlayerAction.WISDOM_OF_THE_WHITE_DWARF;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					forceGotoOnDispatch = true;
+					break;
 				default:
 					break;
 			}

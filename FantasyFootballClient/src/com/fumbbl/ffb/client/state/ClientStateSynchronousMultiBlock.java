@@ -195,7 +195,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					getClient().getCommunication().sendUseSkill(skill, true, player.getId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					getClient().getCommunication().sendUseWisdom(player);
+					getClient().getCommunication().sendUseWisdom();
 					break;
 				default:
 					break;

@@ -95,7 +95,7 @@ public class UtilClientStateBlocking {
 					pClientState.getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					pClientState.getClient().getCommunication().sendUseWisdom(pPlayer);
+					pClientState.getClient().getCommunication().sendUseWisdom();
 					break;
 				default:
 					break;

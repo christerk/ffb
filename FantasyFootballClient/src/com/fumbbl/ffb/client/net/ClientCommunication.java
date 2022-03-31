@@ -315,8 +315,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId, reRolledAction));
 	}
 
-	public void sendUseWisdom(Player<?> player) {
-		send(new ClientCommandUseTeamMatesWisdom(player.getId()));
+	public void sendUseWisdom() {
+		send(new ClientCommandUseTeamMatesWisdom());
 	}
 
 	public void sendKickoff(FieldCoordinate pBallCoordinate) {

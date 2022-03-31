@@ -35,6 +35,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -102,6 +103,14 @@ public class StepSelectGazeTarget extends AbstractStep {
 							usedSkill = commandUseSkill.getSkill();
 						}
 					}
+					break;
+				case CLIENT_USE_TEAM_MATES_WISDOM:
+					status = StepCommandStatus.SKIP_STEP;
+					getGameState().pushCurrentStepOnStack();
+					Sequence sequence = new Sequence(getGameState());
+					sequence.add(StepId.WISDOM_OF_THE_WHITE_DWARF);
+					getGameState().getStepStack().push(sequence.getSequence());
+					getResult().setNextAction(StepAction.NEXT_STEP);
 					break;
 				case CLIENT_CONFIRM: // confirms ending blitz action
 					confirmed = true;

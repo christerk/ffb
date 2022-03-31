@@ -228,7 +228,7 @@ public class ClientStateMove extends ClientState {
 					communication.sendUseSkill(skill, true, pPlayer.getId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					getClient().getCommunication().sendUseWisdom(pPlayer);
+					getClient().getCommunication().sendUseWisdom();
 					break;
 				default:
 					break;
