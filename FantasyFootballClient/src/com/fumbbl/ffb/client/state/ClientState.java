@@ -24,6 +24,7 @@ import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
+import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilCards;
@@ -340,11 +341,11 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	protected boolean isWisdomAvailable(Player<?> player) {
 		Game game = getClient().getGame();
 
-		Set<Class<? extends Skill>> ownedSkillClasses = player.getSkillsIncludingTemporaryOnes().stream().map(Skill::getClass).collect(Collectors.toSet());
+		Set<Skill> ownedSkills = player.getSkillsIncludingTemporaryOnes();
 
-		boolean canGainSkill = Constant.GRANT_ABLE_SKILLS.stream()
-			.map(SkillClassWithValue::getSkill)
-			.anyMatch(skillClass -> !ownedSkillClasses.contains(skillClass));
+		boolean canGainSkill = Constant.getGrantAbleSkills(game.getFactory(FactoryType.Factory.SKILL)).stream()
+			.map(SkillWithValue::getSkill)
+			.anyMatch(skillClass -> !ownedSkills.contains(skillClass));
 
 		return canGainSkill && Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
 				game.getFieldModel().getPlayerCoordinate(player), false))

@@ -16,7 +16,7 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 @RulesCollection(Rules.BB2020)
 public class WisdomOfTheWhiteDwarf extends Skill {
 	public WisdomOfTheWhiteDwarf() {
-		super("Wisdom of the White Dwarf", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_TURN);
+		super("Wisdom of the White Dwarf", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_TURN_BY_TEAM_MATE);
 	}
 
 	@Override

@@ -18,7 +18,11 @@ import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifierFactory;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -46,6 +50,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean fSufferingBloodLust;
 	private boolean fSufferingAnimosity;
 	private boolean wasProne;
+	private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
 	private final transient Game fGame;
 
@@ -82,6 +87,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fumblerooskiePending = false;
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
+		skillsGrantedBy.clear();
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, fPlayerId);
 	}
 
@@ -367,6 +373,17 @@ public class ActingPlayer implements IJsonSerializable {
 		return jumpUpUsedForBlock || justStoodUp || justStoodUpForFree;
 	}
 
+	public void addGrantedSkill(Skill skill, Player<?> player) {
+		List<String> players = skillsGrantedBy.computeIfAbsent(skill.getName(), k -> new ArrayList<>());
+		if (player != null) {
+			players.add(player.getId());
+		}
+	}
+
+	public Map<String, List<String>> getSkillsGrantedBy() {
+		return skillsGrantedBy;
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
@@ -398,6 +415,7 @@ public class ActingPlayer implements IJsonSerializable {
 			usedSkillsArray.add(UtilJson.toJsonValue(skill));
 		}
 		IJsonOption.USED_SKILLS.addTo(jsonObject, usedSkillsArray);
+		IJsonOption.SKILLS_GRANTED_BY.addTo(jsonObject, skillsGrantedBy);
 		return jsonObject;
 	}
 
@@ -423,6 +441,10 @@ public class ActingPlayer implements IJsonSerializable {
 			for (int i = 0; i < usedSkillsArray.size(); i++) {
 				fUsedSkills.add((Skill) UtilJson.toEnumWithName(fGame.getRules().getSkillFactory(), usedSkillsArray.get(i)));
 			}
+		}
+		if (IJsonOption.SKILLS_GRANTED_BY.isDefinedIn(jsonObject)) {
+			skillsGrantedBy.clear();
+			skillsGrantedBy.putAll(IJsonOption.SKILLS_GRANTED_BY.getFrom(source, jsonObject));
 		}
 		return this;
 	}

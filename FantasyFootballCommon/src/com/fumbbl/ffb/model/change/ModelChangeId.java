@@ -41,6 +41,7 @@ public enum ModelChangeId implements INamedObject {
 	FIELD_MODEL_ADD_PUSHBACK_SQUARE("fieldModelAddPushbackSquare", ModelChangeDataType.PUSHBACK_SQUARE),
 	FIELD_MODEL_ADD_TRACK_NUMBER("fieldModelAddTrackNumber", ModelChangeDataType.TRACK_NUMBER),
 	FIELD_MODEL_ADD_TRAP_DOOR("fieldModelAddTrapDoor", ModelChangeDataType.TRAP_DOOR),
+	FIELD_MODEL_ADD_WISDOM("fieldModelAddWisdom", ModelChangeDataType.SKILL),
 	FIELD_MODEL_KEEP_DEACTIVATED_CARD("fieldModelKeepDeactivatedCard", ModelChangeDataType.CARD),
 	FIELD_MODEL_REMOVE_CARD("fieldModelRemoveCard", ModelChangeDataType.CARD),
 	FIELD_MODEL_REMOVE_CARD_EFFECT("fieldModelRemoveCardEffect", ModelChangeDataType.CARD_EFFECT),

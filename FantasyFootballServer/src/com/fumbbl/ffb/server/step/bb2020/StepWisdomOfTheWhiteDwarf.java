@@ -4,8 +4,11 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillChoiceMode;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSelectSkillParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -18,6 +21,9 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
+import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
+import com.fumbbl.ffb.report.bb2020.ReportSkillUseOtherPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -31,6 +37,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -60,6 +67,11 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 					playerId = commandPlayerChoice.getPlayerId();
 					status = StepCommandStatus.EXECUTE_STEP;
 					break;
+				case CLIENT_PRAYER_SELECTION:
+					ClientCommandSkillSelection skillSelection = (ClientCommandSkillSelection) pReceivedCommand.getCommand();
+					skill = skillSelection.getSkill();
+					status = StepCommandStatus.EXECUTE_STEP;
+					break;
 				default:
 					break;
 			}
@@ -82,6 +94,15 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
+		SkillFactory skillFactory = game.getFactory(FactoryType.Factory.SKILL);
+
+		Set<Skill> ownedSkills = actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes();
+
+		List<SkillWithValue> gainAbleSkills = Constant.getGrantAbleSkills(skillFactory).stream()
+			.filter(swv -> !ownedSkills.contains(swv.getSkill()))
+			.sorted(Comparator.comparing(o -> o.getSkill().getName()))
+			.collect(Collectors.toList());
+
 		if (!StringTool.isProvided(playerId)) {
 			Player<?> player = actingPlayer.getPlayer();
 			String[] wisePlayers = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
@@ -99,25 +120,34 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.WISDOM, wisePlayers, null, 1, 1), true);
 				return;
 			}
-		} else {
-			SkillFactory skillFactory = game.getFactory(FactoryType.Factory.SKILL);
+		}
 
-			Set<Class<? extends Skill>> ownedSkillClasses = actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().stream().map(Skill::getClass).collect(Collectors.toSet());
-
-			List<SkillWithValue> gainAbleSkills = Constant.GRANT_ABLE_SKILLS.stream()
-				.filter(scwv -> !ownedSkillClasses.contains(scwv.getSkill()))
-				.map(scwv -> new SkillWithValue(skillFactory.forClass(scwv.getSkill()), scwv.getValue().orElse(null)))
-				.collect(Collectors.toList());
+		if (skill == null) {
+			getResult().addReport(new ReportSkillUseOtherPlayer(actingPlayer.getPlayerId(),
+				actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGrantSkillsToTeamMates), SkillUse.GAIN_GRANTED_SKILL, playerId));
 
 			if (gainAbleSkills.size() == 1) {
 				skill = gainAbleSkills.get(0).getSkill();
 			} else {
-
-				UtilServerDialog.showDialog(getGameState(), new DialogSelectSkillParameter(), true);
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogSelectSkillParameter(actingPlayer.getPlayerId(),
+						gainAbleSkills.stream().map(SkillWithValue::getSkill).collect(Collectors.toList()),
+						SkillChoiceMode.WISDOM_OF_THE_WHITE_DWARF),
+					true);
 				return;
 			}
 		}
 
+		SkillWithValue gainedSkill = gainAbleSkills.stream().filter(svw -> svw.getSkill().equals(skill)).findFirst().
+			orElseThrow(() -> new FantasyFootballException("Skill " + skill.getName() + " not found in the list of gain-able skills."));
+
+		game.getFieldModel().addWisdomSkill(actingPlayer.getPlayerId(), gainedSkill);
+		getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "gains " + gainedSkill.getSkill().getName()));
+
+		Player<?> player = game.getPlayerById(playerId);
+		Skill grantingSkill = player.getSkillWithProperty(NamedProperties.canGrantSkillsToTeamMates);
+		player.markUsed(grantingSkill, game);
+		actingPlayer.addGrantedSkill(grantingSkill, player);
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

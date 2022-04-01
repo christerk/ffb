@@ -79,7 +79,7 @@ public class StepEndFeeding extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 		game.setDefenderId(null);
-		markSkillsTrackedOutsideOfActivation(game);
+		markSkillsTrackedOutsideOfActivationAndRemoveEffects(game);
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))

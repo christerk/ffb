@@ -34,7 +34,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandPing;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandPrayerSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
@@ -66,6 +66,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
 import com.fumbbl.ffb.net.commands.ServerCommandAddPlayer;
@@ -327,9 +328,11 @@ public enum NetCommandId implements INamedObject {
 			case CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK:
 				return new ClientCommandUseProReRollForBlock();
 			case CLIENT_PRAYER_SELECTION:
-				return new ClientCommandPrayerSelection();
+				return new ClientCommandSkillSelection();
 			case CLIENT_USE_CONSUMMATE_RE_ROLL_FOR_BLOCK:
 				return new ClientCommandUseConsummateReRollForBlock();
+			case CLIENT_USE_TEAM_MATES_WISDOM:
+				return new ClientCommandUseTeamMatesWisdom();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

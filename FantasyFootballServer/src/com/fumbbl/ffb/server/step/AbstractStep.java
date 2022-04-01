@@ -198,11 +198,11 @@ public abstract class AbstractStep implements IStep {
 		pParameter.consume();
 	}
 
-	protected void markSkillsTrackedOutsideOfActivation(Game game) {
+	protected void markSkillsTrackedOutsideOfActivationAndRemoveEffects(Game game) {
 		Player<?> player = game.getActingPlayer().getPlayer();
 		if (player != null) {
 			player.getSkillsIncludingTemporaryOnes().stream()
-				.filter(skill -> skill.getSkillUsageType().isTrackOutsideActivation() && skill.getSkillUsageType().removedEffectsAtEndOfTurn() && player.hasActiveEnhancement(skill))
+				.filter(skill -> skill.getSkillUsageType().isTrackOutsideActivation() && skill.getSkillUsageType().removeEffectsAtEndOfTurn() && player.hasActiveEnhancement(skill))
 				.forEach(skill -> {
 					if (game.getActingPlayer().hasActed()) {
 						player.markUsed(skill, game);

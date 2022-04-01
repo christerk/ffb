@@ -62,7 +62,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandPing;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandPrayerSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
@@ -519,8 +519,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseFumblerooskie());
 	}
 
-	public void sendPrayerSelection(String playerId, Skill skill) {
-		send(new ClientCommandPrayerSelection(playerId, skill));
+	public void sendSkillSelection(String playerId, Skill skill) {
+		send(new ClientCommandSkillSelection(playerId, skill));
 	}
 
 	public FantasyFootballClient getClient() {

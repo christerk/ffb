@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.util;
 
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -270,8 +271,11 @@ public class UtilPlayer {
 	public static void refreshPlayersForTurnStart(Game pGame) {
 		FieldModel fieldModel = pGame.getFieldModel();
 		Player<?>[] players = pGame.getPlayers();
+		Set<String> enhancementsToRemove = Constant.getEnhancementSkillsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
 		for (Player<?> player : players) {
+			enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(player, enhancement));
 			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN, pGame);
+			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN_BY_TEAM_MATE, pGame);
 			PlayerState newPlayerState = null;
 			PlayerState oldPlayerState = fieldModel.getPlayerState(player);
 			switch (oldPlayerState.getBase()) {

@@ -784,7 +784,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void addTemporaryModifiers(String source, Set<TemporaryStatModifier> modifiers) {
-		temporaryModifiers.put(source, modifiers);
+		if (!temporaryModifiers.containsKey(source)) {
+			temporaryModifiers.put(source, new HashSet<>());
+		}
+		temporaryModifiers.get(source).addAll(modifiers);
 	}
 
 	@Override
@@ -808,7 +811,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void addTemporarySkills(String source, Set<SkillWithValue> skills) {
-		temporarySkills.put(source, skills);
+		if (!temporarySkills.containsKey(source)) {
+			temporarySkills.put(source, new HashSet<>());
+		}
+		temporarySkills.get(source).addAll(skills);
 	}
 
 	@Override
@@ -823,7 +829,11 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void addTemporaryProperties(String source, Set<ISkillProperty> properties) {
-		temporaryProperties.put(source, properties);
+		if (!temporaryProperties.containsKey(source)) {
+			temporaryProperties.put(source, new HashSet<>());
+		}
+		temporaryProperties.get(source).addAll(properties);
+
 	}
 
 	@Override

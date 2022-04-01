@@ -51,7 +51,9 @@ public enum ReportId implements INamedObject {
 	PRAYER_WASTED("prayerWasted"), KICKOFF_CHEERING_FANS("cheeringFans"), BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"),
 	PLAYER_EVENT("playerEvent"), STALLER_DETECTED("stallerDetected"), THROW_AT_STALLING_PLAYER("throwAtStallingPlayer"),
 	INDOMITABLE("indomitable"), OLD_PRO("oldPro"), SKILL_WASTED("skillWasted"), TWO_FOR_ONE("twoForOne"),
-	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful");
+	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
+	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer")
+	;
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)

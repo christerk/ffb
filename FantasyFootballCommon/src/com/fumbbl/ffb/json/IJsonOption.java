@@ -314,6 +314,7 @@ public interface IJsonOption {
 	JsonArrayOption PLAYER_DATA_ARRAY = new JsonArrayOption("playerDataArray");
 	JsonEnumWithNameOption PLAYER_GENDER = new JsonEnumWithNameOption("playerGender", Factory.PLAYER_GENDER);
 	JsonStringOption PLAYER_ID = new JsonStringOption("playerId");
+	JsonStringOption PLAYER_ID_OTHER_PLAYER = new JsonStringOption("playerIdOtherPlayer");
 	JsonStringOption PLAYER_ID_SINGLE_USE_RE_ROLL = new JsonStringOption("playerIdSingleUseReRoll");
 	JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
 	JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
@@ -435,6 +436,7 @@ public interface IJsonOption {
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
+	JsonStringListMapOption SKILLS_GRANTED_BY = new JsonStringListMapOption("skillsGrantedBy");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);

@@ -5,6 +5,7 @@ public enum SkillUsageType {
 	ONCE_PER_TURN(true),
 	ONCE_PER_GAME(true),
 	ONCE_PER_HALF(true),
+	ONCE_PER_TURN_BY_TEAM_MATE(true, false),
 	SPECIAL(true, false);
 
 	private final boolean trackOutsideActivation;
@@ -19,7 +20,7 @@ public enum SkillUsageType {
 		this.effectsRemovedAtEndOfTurn = effectsRemovedAtEndOfTurn;
 	}
 
-	public boolean removedEffectsAtEndOfTurn() {
+	public boolean removeEffectsAtEndOfTurn() {
 		return effectsRemovedAtEndOfTurn;
 	}
 
