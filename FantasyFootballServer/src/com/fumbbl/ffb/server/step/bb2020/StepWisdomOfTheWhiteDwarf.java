@@ -117,7 +117,7 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 			if (wisePlayers.length == 1) {
 				playerId = wisePlayers[0];
 			} else {
-				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.WISDOM, wisePlayers, null, 1, 1), true);
+				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.WISDOM, wisePlayers, null, 1, 1), false);
 				return;
 			}
 		}
@@ -133,7 +133,7 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 					new DialogSelectSkillParameter(actingPlayer.getPlayerId(),
 						gainAbleSkills.stream().map(SkillWithValue::getSkill).collect(Collectors.toList()),
 						SkillChoiceMode.WISDOM_OF_THE_WHITE_DWARF),
-					true);
+					false);
 				return;
 			}
 		}
