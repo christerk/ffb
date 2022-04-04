@@ -124,6 +124,7 @@ public class NamedProperties {
 	public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty(
 		"Ignore Defender Stumbles Result");
 	public static final ISkillProperty ignoreFirstArmourBreak = new NamedProperty("Ignore First Armour Break");
+	public static final ISkillProperty ignoreFirstSecretWeaponSentOff = new NamedProperty("Ignore First Secret Weapon Sent Off");
 	public static final ISkillProperty ignoreTackleWhenBlocked = new NamedProperty("Ignore Tackle When Blocked");
 	public static final ISkillProperty ignoreTacklezonesWhenCatching = new NamedProperty(
 		"Ignore Tacklezones when Catching");

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
@@ -51,6 +52,7 @@ import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
@@ -86,6 +88,7 @@ import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
@@ -842,7 +845,14 @@ public class StepEndTurn extends AbstractStep {
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerResult.hasUsedSecretWeapon() && !PlayerState.REMOVED_FROM_PLAY.contains(playerState.getBase())) {
-				playerIds.add(player.getId());
+				Optional<Skill> ignoreSentOffSkill = UtilCards.getUnusedSkillWithProperty(player, NamedProperties.ignoreFirstSecretWeaponSentOff);
+				if (ignoreSentOffSkill.isPresent()) {
+					playerResult.setHasUsedSecretWeapon(false);
+					player.markUsed(ignoreSentOffSkill.get(), game);
+					getResult().addReport(new ReportSkillUse(player.getId(), ignoreSentOffSkill.get(), true, SkillUse.IGNORE_SENT_OFF));
+				} else {
+					playerIds.add(player.getId());
+				}
 			}
 		}
 		return playerIds;

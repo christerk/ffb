@@ -19,6 +19,7 @@ public class ChangeList {
 			.addFeature("Strong Passing Game")
 			.addFeature("Incorporeal")
 			.addFeature("Wisdom of the White Dwarf")
+			.addFeature("I'll be back!")
 		);
 
 		versions.add(new VersionChangeList("2.6.1")

@@ -35,7 +35,8 @@ public enum SkillUse implements INamedObject {
 	TREACHEROUS("treacherous", "to steal the ball from %g team mate"),
 	RUSH_ADDITIONAL_SQUARE_ONCE("rushAdditionalSquareOnce", "to rush an additional square"),
 	ADD_STRENGTH_TO_ROLL("addStrengthToRoll", "to add %g strength to the roll"),
-	GAIN_GRANTED_SKILL("gainGrantedSkill", " to gain a skill for this turn"),
+	GAIN_GRANTED_SKILL("gainGrantedSkill", "to gain a skill for this turn"),
+	IGNORE_SENT_OFF("ignoreSentOff", "to not be ejected"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;
