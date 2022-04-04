@@ -20,6 +20,7 @@ public class ChangeList {
 			.addFeature("Incorporeal")
 			.addFeature("Wisdom of the White Dwarf")
 			.addFeature("I'll be back!")
+			.addImprovement("Add missing action bindings and descriptions")
 		);
 
 		versions.add(new VersionChangeList("2.6.1")

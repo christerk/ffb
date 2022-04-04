@@ -33,8 +33,7 @@ public class ActionKeyBindings {
 
 		List<ActionKeyAction> playerMoves = new ArrayList<>();
 
-		playerMoves.add(
-				new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0), ActionKey.PLAYER_MOVE_NORTH));
+		addActionBinding(playerMoves);
 		playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD9, 0),
 				ActionKey.PLAYER_MOVE_NORTHEAST));
 		playerMoves.add(
@@ -50,163 +49,67 @@ public class ActionKeyBindings {
 		playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD7, 0),
 				ActionKey.PLAYER_MOVE_NORTHWEST));
 
-		String moveNorth = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_NORTH);
-		if (StringTool.isProvided(moveNorth)) {
-			playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveNorth), ActionKey.PLAYER_MOVE_NORTH));
-		}
-		String moveNortheast = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_NORTHEAST);
-		if (StringTool.isProvided(moveNortheast)) {
-			playerMoves.add(
-					new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveNortheast), ActionKey.PLAYER_MOVE_NORTHEAST));
-		}
-		String moveEast = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_EAST);
-		if (StringTool.isProvided(moveEast)) {
-			playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveEast), ActionKey.PLAYER_MOVE_EAST));
-		}
-		String moveSoutheast = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_SOUTHEAST);
-		if (StringTool.isProvided(moveSoutheast)) {
-			playerMoves.add(
-					new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveSoutheast), ActionKey.PLAYER_MOVE_SOUTHEAST));
-		}
-		String moveSouth = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_SOUTH);
-		if (StringTool.isProvided(moveSouth)) {
-			playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveSouth), ActionKey.PLAYER_MOVE_SOUTH));
-		}
-		String moveSouthwest = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_SOUTHWEST);
-		if (StringTool.isProvided(moveSouthwest)) {
-			playerMoves.add(
-					new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveSouthwest), ActionKey.PLAYER_MOVE_SOUTHWEST));
-		}
-		String moveWest = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_WEST);
-		if (StringTool.isProvided(moveWest)) {
-			playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveWest), ActionKey.PLAYER_MOVE_WEST));
-		}
-		String moveNorthwest = getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_NORTHWEST);
-		if (StringTool.isProvided(moveNorthwest)) {
-			playerMoves.add(
-					new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(moveNorthwest), ActionKey.PLAYER_MOVE_NORTHWEST));
-		}
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_NORTH, playerMoves, ActionKey.PLAYER_MOVE_NORTH);
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_NORTHEAST, playerMoves, ActionKey.PLAYER_MOVE_NORTHEAST);
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_EAST, playerMoves, ActionKey.PLAYER_MOVE_EAST);
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_SOUTHEAST, playerMoves, ActionKey.PLAYER_MOVE_SOUTHEAST);
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_SOUTH, playerMoves, ActionKey.PLAYER_MOVE_SOUTH);
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_SOUTHWEST, playerMoves, ActionKey.PLAYER_MOVE_SOUTHWEST);
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_WEST, playerMoves, ActionKey.PLAYER_MOVE_WEST);
+		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_NORTHWEST, playerMoves, ActionKey.PLAYER_MOVE_NORTHWEST);
 
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_MOVES, playerMoves);
 
 		List<ActionKeyAction> playerSelection = new ArrayList<>();
-		String selectPlayer = getClient().getProperty(IClientProperty.KEY_PLAYER_SELECT);
-		if (StringTool.isProvided(selectPlayer)) {
-			playerSelection
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(selectPlayer), ActionKey.PLAYER_SELECT));
-		}
-		String cycleRight = getClient().getProperty(IClientProperty.KEY_PLAYER_CYCLE_RIGHT);
-		if (StringTool.isProvided(cycleRight)) {
-			playerSelection
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(cycleRight), ActionKey.PLAYER_CYCLE_RIGHT));
-		}
-		String cycleLeft = getClient().getProperty(IClientProperty.KEY_PLAYER_CYCLE_LEFT);
-		if (StringTool.isProvided(cycleLeft)) {
-			playerSelection
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(cycleLeft), ActionKey.PLAYER_CYCLE_LEFT));
-		}
+		addActionBinding(IClientProperty.KEY_PLAYER_SELECT, playerSelection, ActionKey.PLAYER_SELECT);
+		addActionBinding(IClientProperty.KEY_PLAYER_CYCLE_RIGHT, playerSelection, ActionKey.PLAYER_CYCLE_RIGHT);
+		addActionBinding(IClientProperty.KEY_PLAYER_CYCLE_LEFT, playerSelection, ActionKey.PLAYER_CYCLE_LEFT);
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_SELECTION, playerSelection);
 
 		List<ActionKeyAction> playerActions = new ArrayList<>();
-		String actionBlock = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_BLOCK);
-		if (StringTool.isProvided(actionBlock)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionBlock), ActionKey.PLAYER_ACTION_BLOCK));
-		}
-		String actionBlitz = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_BLITZ);
-		if (StringTool.isProvided(actionBlitz)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionBlitz), ActionKey.PLAYER_ACTION_BLITZ));
-		}
-		String actionFoul = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_FOUL);
-		if (StringTool.isProvided(actionFoul)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionFoul), ActionKey.PLAYER_ACTION_FOUL));
-		}
-		String actionMove = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_MOVE);
-		if (StringTool.isProvided(actionMove)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionMove), ActionKey.PLAYER_ACTION_MOVE));
-		}
-		String actionStandUp = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_STAND_UP);
-		if (StringTool.isProvided(actionStandUp)) {
-			playerActions.add(
-					new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionStandUp), ActionKey.PLAYER_ACTION_STAND_UP));
-		}
-		String actionHandOver = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_HAND_OVER);
-		if (StringTool.isProvided(actionHandOver)) {
-			playerActions.add(
-					new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionHandOver), ActionKey.PLAYER_ACTION_HAND_OVER));
-		}
-		String actionPass = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_PASS);
-		if (StringTool.isProvided(actionPass)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionPass), ActionKey.PLAYER_ACTION_PASS));
-		}
-		String actionJump = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_JUMP);
-		if (StringTool.isProvided(actionJump)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionJump), ActionKey.PLAYER_ACTION_JUMP));
-		}
-		String actionEndMove = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_END_MOVE);
-		if (StringTool.isProvided(actionEndMove)) {
-			playerActions.add(
-					new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionEndMove), ActionKey.PLAYER_ACTION_END_MOVE));
-		}
-		String actionStab = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_STAB);
-		if (StringTool.isProvided(actionStab)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionStab), ActionKey.PLAYER_ACTION_STAB));
-		}
-		String actionChainsaw = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_CHAINSAW);
-		if (StringTool.isProvided(actionChainsaw)) {
-			playerActions
-				.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionChainsaw), ActionKey.PLAYER_ACTION_CHAINSAW));
-		}
-		String actionProjectileVomit = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_PROJECTILE_VOMIT);
-		if (StringTool.isProvided(actionProjectileVomit)) {
-			playerActions
-				.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionProjectileVomit), ActionKey.PLAYER_ACTION_PROJECTILE_VOMIT));
-		}
-		String actionGaze = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_GAZE);
-		if (StringTool.isProvided(actionGaze)) {
-			playerActions
-					.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionGaze), ActionKey.PLAYER_ACTION_GAZE));
-		}
-		String actionFumblerooskie = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_FUMBLEROOSKIE);
-		if (StringTool.isProvided(actionFumblerooskie)) {
-			playerActions
-				.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionFoul), ActionKey.PLAYER_ACTION_FUMBLEROOSKIE));
-		}
-		String actionRangeGrid = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_RANGE_GRID);
-		if (StringTool.isProvided(actionRangeGrid)) {
-			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionRangeGrid),
-					ActionKey.PLAYER_ACTION_RANGE_GRID));
-		}
-		String actionHailMaryPass = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_HAIL_MARY_PASS);
-		if (StringTool.isProvided(actionHailMaryPass)) {
-			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionHailMaryPass),
-					ActionKey.PLAYER_ACTION_HAIL_MARY_PASS));
-		}
-		String actionMultipleBlock = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_MULTIPLE_BLOCK);
-		if (StringTool.isProvided(actionMultipleBlock)) {
-			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(actionMultipleBlock),
-					ActionKey.PLAYER_ACTION_MULTIPLE_BLOCK));
-		}
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BLOCK, playerActions, ActionKey.PLAYER_ACTION_BLOCK);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BLITZ, playerActions, ActionKey.PLAYER_ACTION_BLITZ);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_FOUL, playerActions, ActionKey.PLAYER_ACTION_FOUL);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_MOVE, playerActions, ActionKey.PLAYER_ACTION_MOVE);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_STAND_UP, playerActions, ActionKey.PLAYER_ACTION_STAND_UP);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_HAND_OVER, playerActions, ActionKey.PLAYER_ACTION_HAND_OVER);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_PASS, playerActions, ActionKey.PLAYER_ACTION_PASS);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_JUMP, playerActions, ActionKey.PLAYER_ACTION_JUMP);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_END_MOVE, playerActions, ActionKey.PLAYER_ACTION_END_MOVE);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_STAB, playerActions, ActionKey.PLAYER_ACTION_STAB);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_CHAINSAW, playerActions, ActionKey.PLAYER_ACTION_CHAINSAW);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_PROJECTILE_VOMIT, playerActions, ActionKey.PLAYER_ACTION_PROJECTILE_VOMIT);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_GAZE, playerActions, ActionKey.PLAYER_ACTION_GAZE);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_FUMBLEROOSKIE, playerActions, ActionKey.PLAYER_ACTION_FUMBLEROOSKIE);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_RANGE_GRID, playerActions, ActionKey.PLAYER_ACTION_RANGE_GRID);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_HAIL_MARY_PASS, playerActions, ActionKey.PLAYER_ACTION_HAIL_MARY_PASS);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_MULTIPLE_BLOCK, playerActions, ActionKey.PLAYER_ACTION_MULTIPLE_BLOCK);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_FRENZIED_RUSH, playerActions, ActionKey.PLAYER_ACTION_FRENZIED_RUSH);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_SHOT_TO_NOTHING, playerActions, ActionKey.PLAYER_ACTION_SHOT_TO_NOTHING);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_SHOT_TO_NOTHING_BOMB, playerActions, ActionKey.PLAYER_ACTION_SHOT_TO_NOTHING_BOMB);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_TREACHEROUS, playerActions, ActionKey.PLAYER_ACTION_TREACHEROUS);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_WISDOM, playerActions, ActionKey.PLAYER_ACTION_WISDOM);
+
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_ACTIONS, playerActions);
 
 		List<ActionKeyAction> turnActions = new ArrayList<>();
-		String turnEnd = getClient().getProperty(IClientProperty.KEY_TOOLBAR_TURN_END);
-		if (StringTool.isProvided(turnEnd)) {
-			turnActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(turnEnd), ActionKey.TOOLBAR_TURN_END));
-		}
-		String illegalProcedure = getClient().getProperty(IClientProperty.KEY_TOOLBAR_ILLEGAL_PROCEDURE);
-		if (StringTool.isProvided(illegalProcedure)) {
-			turnActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(illegalProcedure),
-					ActionKey.TOOLBAR_ILLEGAL_PROCEDURE));
-		}
+		addActionBinding(IClientProperty.KEY_TOOLBAR_TURN_END, turnActions, ActionKey.TOOLBAR_TURN_END);
+		addActionBinding(IClientProperty.KEY_TOOLBAR_ILLEGAL_PROCEDURE, turnActions, ActionKey.TOOLBAR_ILLEGAL_PROCEDURE);
 		fActionsByGroup.put(ActionKeyGroup.TURN_ACTIONS, turnActions);
 
+	}
+
+	private void addActionBinding(List<ActionKeyAction> playerMoves) {
+		playerMoves.add(
+				new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0), ActionKey.PLAYER_MOVE_NORTH));
+	}
+
+	private void addActionBinding(String keyPlayerActionFrenziedRush, List<ActionKeyAction> playerActions, ActionKey playerActionFrenziedRush) {
+		String frenziedRush = getClient().getProperty(keyPlayerActionFrenziedRush);
+		if (StringTool.isProvided(frenziedRush)) {
+			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(frenziedRush),
+				playerActionFrenziedRush));
+		}
 	}
 
 	public void addKeyBindings(JComponent pComponent, ActionKeyGroup pActionKeyGroup) {
