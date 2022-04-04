@@ -22,9 +22,7 @@ import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,7 +135,7 @@ public class ClientStatePass extends ClientStateMove {
 	}
 
 	private void drawRangeRuler(FieldCoordinate pCoordinate) {
-		RangeRuler rangeRuler = null;
+		RangeRuler rangeRuler;
 		Game game = getClient().getGame();
 		if (fShowRangeRuler && (game.getPassCoordinate() == null)) {
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -211,19 +209,17 @@ public class ClientStatePass extends ClientStateMove {
 		}
 
 		if (isJumpAvailableAsNextMove(game, actingPlayer,false)) {
+			JMenuItem jumpAction;
 			if (actingPlayer.isJumping()) {
-				JMenuItem jumpAction = new JMenuItem("Don't Jump",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
-				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
-				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
-				menuItemList.add(jumpAction);
+				jumpAction = new JMenuItem("Don't Jump",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			} else {
-				JMenuItem jumpAction = new JMenuItem("Jump",
+				jumpAction = new JMenuItem("Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
-				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
-				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
-				menuItemList.add(jumpAction);
 			}
+			jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
+			jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
+			menuItemList.add(jumpAction);
 		}
 
 		if (!actingPlayer.hasPassed()) {
@@ -244,14 +240,9 @@ public class ClientStatePass extends ClientStateMove {
 			}
 		}
 
-		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
-		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
-		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
-		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
-		menuItemList.add(endMoveAction);
+		addEndActionLabel(iconCache, menuItemList, actingPlayer);
 
-		createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
 	}

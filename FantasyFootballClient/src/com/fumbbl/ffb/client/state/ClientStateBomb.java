@@ -163,12 +163,7 @@ public class ClientStateBomb extends ClientState {
 		}
 
 		if (isEndTurnActionAvailable()) {
-			String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
-			JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
-			endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
-			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
-			menuItemList.add(endMoveAction);
+			addEndActionLabel(iconCache, menuItemList, actingPlayer);
 		}
 
 		if (isTreacherousAvailable(actingPlayer)) {
