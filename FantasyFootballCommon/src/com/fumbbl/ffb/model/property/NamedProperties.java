@@ -61,6 +61,7 @@ public class NamedProperties {
 	public static final ISkillProperty canGrantSkillsToTeamMates = new NamedProperty("Can Grant Skills to Team-Mates");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
+	public static final ISkillProperty canThrowKeg = new NamedProperty("Can Throw Keg");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Can Make Extra GFI");
 	public static final ISkillProperty canMakeAnExtraGfiOnce = new NamedProperty("Can Make Extra GFI Once");

@@ -137,7 +137,7 @@ public class UtilServerGame {
 		}
 		resetLeaderState(game);
 		updatePlayerStateDependentProperties(pStep);
-		resetSpecialSkills(game);
+		resetSpecialSkillsAtHalfTime(game);
 
 	}
 
@@ -148,9 +148,16 @@ public class UtilServerGame {
 		}
 	}
 
-	private static void resetSpecialSkills(Game game) {
+	private static void resetSpecialSkillsAtHalfTime(Game game) {
 		for (Player<?> player : game.getPlayers()) {
 			player.resetUsedSkills(SkillUsageType.ONCE_PER_HALF, game);
+		}
+		resetSpecialSkillAtEndOfDrive(game);
+	}
+
+	public static void resetSpecialSkillAtEndOfDrive(Game game) {
+		for (Player<?> player : game.getPlayers()) {
+			player.resetUsedSkills(SkillUsageType.ONCE_PER_DRIVE, game);
 		}
 	}
 

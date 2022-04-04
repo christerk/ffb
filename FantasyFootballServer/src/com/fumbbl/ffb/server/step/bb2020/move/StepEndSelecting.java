@@ -368,6 +368,8 @@ public final class StepEndSelecting extends AbstractStep {
 				sequence.add(StepId.WISDOM_OF_THE_WHITE_DWARF);
 				getGameState().getStepStack().push(sequence.getSequence());
 				break;
+			case THROW_KEG:
+				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
 		}

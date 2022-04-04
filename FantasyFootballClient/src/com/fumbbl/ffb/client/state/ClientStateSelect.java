@@ -29,6 +29,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,6 +140,15 @@ public class ClientStateSelect extends ClientState {
 						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, false);
 						Skill stnbSkill = pPlayer.getSkillWithProperty(NamedProperties.canGainHailMary);
 						communication.sendUseSkill(stnbSkill, true, pPlayer.getId());
+						if (isTreacherousAvailable(pPlayer)) {
+							Skill treacherous = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+							communication.sendUseSkill(treacherous, true, pPlayer.getId());
+						}
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH:
+					if (isBeerBarrelBashAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_KEG, false);
 					}
 					break;
 				default:
@@ -258,6 +268,13 @@ public class ClientStateSelect extends ClientState {
 			kickTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE, 0));
 			menuItemList.add(kickTeamMateAction);
 		}
+		if (isBeerBarrelBashAvailable(pPlayer)) {
+			JMenuItem beerBashItem = new JMenuItem("Beer Barrel Bash",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH)));
+			beerBashItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH);
+			beerBashItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH, 0));
+			menuItemList.add(beerBashItem);
+		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem("Recover from Confusion & End Move",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
@@ -363,6 +380,9 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_SHOT_TO_NOTHING_BOMB:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB);
+				break;
+			case PLAYER_ACTION_BEER_BARREL_BASH:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH);
 				break;
 			default:
 				actionHandled = false;
@@ -569,4 +589,9 @@ public class ClientStateSelect extends ClientState {
 			&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromGazeAction));
 	}
 
+	private boolean isBeerBarrelBashAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		return playerState.getBase() == PlayerState.STANDING && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canThrowKeg);
+	}
 }

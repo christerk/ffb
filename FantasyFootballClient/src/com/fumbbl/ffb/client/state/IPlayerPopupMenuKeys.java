@@ -40,4 +40,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_SHOT_TO_NOTHING_BOMB = KeyEvent.VK_V;
 	int KEY_TREACHEROUS = KeyEvent.VK_A;
 	int KEY_WISDOM = KeyEvent.VK_W;
+	int KEY_BEER_BARREL_BASH = KeyEvent.VK_L;
 }

@@ -162,6 +162,7 @@ public interface IIconProperty {
 	String ACTION_CHAINSAW = "action.chainsaw";
 	String ACTION_VOMIT = "action.vomit";
 	String ACTION_WISDOM = "action.wisdom";
+	String ACTION_BEER_BARREL_BASH = "action.beerBarrelBash";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

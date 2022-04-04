@@ -44,6 +44,7 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
@@ -402,6 +403,8 @@ public class StepEndTurn extends AbstractStep {
 					getGameState().getServer().getCommunication().sendSound(getGameState(), SoundId.TOUCHDOWN);
 					getResult().setSound(SoundId.WHISTLE);
 					GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
+					UtilServerGame.resetSpecialSkillAtEndOfDrive(game);
 
 					if (mechanic.touchdownEndsGame(game)) {
 						endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
