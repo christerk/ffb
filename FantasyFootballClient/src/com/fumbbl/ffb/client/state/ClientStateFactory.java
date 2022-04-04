@@ -71,6 +71,7 @@ public class ClientStateFactory {
 		register(new ClientStateSolidDefence(pClient));
 		register(new ClientStateSelectGazeTarget(pClient));
 		register(new ClientStateGazeMove(pClient));
+		register(new ClientStateThrowKeg(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -188,6 +189,9 @@ public class ClientStateFactory {
 									break;
 								case GAZE_MOVE:
 									clientStateId = ClientStateId.GAZE_MOVE;
+									break;
+								case THROW_KEG:
+									clientStateId = ClientStateId.THROW_KEG;
 									break;
 								default:
 									break;

@@ -185,6 +185,8 @@ public interface IIconProperty {
 	String CURSOR_GAZE = "cursor.gaze";
 	String CURSOR_INVALID_GAZE = "cursor.invalidgaze";
 	String CURSOR_BOMB = "cursor.bomb";
+	String CURSOR_KEG = "cursor.keg";
+	String CURSOR_INVALID_KEG = "cursor.invalidkeg";
 
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
