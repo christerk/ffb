@@ -55,7 +55,7 @@ public class ClientStateThrowKeg extends ClientState {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
-		if (distance <= 3 && playerState.getBase() == PlayerState.STANDING) {
+		if (distance <= 3 && playerState.getBase() == PlayerState.STANDING && player.getTeam() != game.getActingTeam()) {
 			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_KEG);
 		} else {
 			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_INVALID_KEG);
