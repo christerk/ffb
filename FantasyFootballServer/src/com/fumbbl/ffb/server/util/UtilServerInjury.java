@@ -315,31 +315,33 @@ public class UtilServerInjury {
 				stepParameters.add(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, pPlayer.getId()));
 			}
 
-			if (hasBall && game.getTurnMode() != TurnMode.BLITZ) {
+			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && game.getTurnMode() != TurnMode.BLITZ) {
 				game.getFieldModel().setBallMoving(true);
 				stepParameters
 					.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-				// check for turnover
-				boolean endTurn;
-				switch (game.getTurnMode()) {
-					case BOMB_HOME:
-					case BOMB_HOME_BLITZ:
-						endTurn = game.getTeamHome().hasPlayer(pPlayer);
-						break;
-				case BOMB_AWAY:
-				case BOMB_AWAY_BLITZ:
-					endTurn = game.getTeamAway().hasPlayer(pPlayer);
-					break;
-				case PASS_BLOCK:
-					endTurn = false;
-					break;
-				default:
-					Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-					endTurn = actingTeam.hasPlayer(pPlayer);
-					break;
-				}
-				if (endTurn) {
-					stepParameters.add(new StepParameter(StepParameterKey.END_TURN, true));
+				if (hasBall) {
+					// check for turnover
+					boolean endTurn;
+					switch (game.getTurnMode()) {
+						case BOMB_HOME:
+						case BOMB_HOME_BLITZ:
+							endTurn = game.getTeamHome().hasPlayer(pPlayer);
+							break;
+						case BOMB_AWAY:
+						case BOMB_AWAY_BLITZ:
+							endTurn = game.getTeamAway().hasPlayer(pPlayer);
+							break;
+						case PASS_BLOCK:
+							endTurn = false;
+							break;
+						default:
+							Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+							endTurn = actingTeam.hasPlayer(pPlayer);
+							break;
+					}
+					if (endTurn) {
+						stepParameters.add(new StepParameter(StepParameterKey.END_TURN, true));
+					}
 				}
 			}
 		}
