@@ -2,7 +2,9 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -11,6 +13,7 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -18,6 +21,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.JMenuItem;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ClientStateThrowKeg extends ClientState {
@@ -28,6 +32,24 @@ public class ClientStateThrowKeg extends ClientState {
 
 	public ClientStateId getId() {
 		return ClientStateId.THROW_KEG;
+	}
+
+	@Override
+	public void enterState() {
+		super.enterState();
+		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		Player<?> player = getClient().getGame().getActingPlayer().getPlayer();
+		MoveSquare[] squares = Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(player), FieldCoordinateBounds.FIELD,
+			3, false)).map(fieldCoordinate -> new MoveSquare(fieldCoordinate, 0, 0)).toArray(MoveSquare[]::new);
+		fieldModel.add(squares);
+		getClient().getUserInterface().getFieldComponent().refresh();
+	}
+
+	@Override
+	public void leaveState() {
+		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		fieldModel.clearMoveSquares();
+		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
