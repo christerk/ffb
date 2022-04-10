@@ -327,8 +327,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 						status = dodge(true);
 					}
 				} else {
-					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.DODGE,
-						minimumRoll, false, modifyingSkill)) {
+					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
+						minimumRoll, false, modifyingSkill, null)) {
 						if (modifyingSkill != null) {
 							getResult().addReport(new ReportModifiedDodgeResultSuccessful(modifyingSkill));
 						}
