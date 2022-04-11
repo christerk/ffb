@@ -115,8 +115,8 @@ public class UtilServerReRoll {
 
 	}
 
-	private static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-																								 int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill) {
+	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
+																								int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill) {
 		boolean dialogShown = false;
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {

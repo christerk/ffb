@@ -124,7 +124,7 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 
 		if (skill == null) {
 			getResult().addReport(new ReportSkillUseOtherPlayer(actingPlayer.getPlayerId(),
-				actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGrantSkillsToTeamMates), SkillUse.GAIN_GRANTED_SKILL, playerId));
+				game.getPlayerById(playerId).getSkillWithProperty(NamedProperties.canGrantSkillsToTeamMates), SkillUse.GAIN_GRANTED_SKILL, playerId));
 
 			if (gainAbleSkills.size() == 1) {
 				skill = gainAbleSkills.get(0).getSkill();
