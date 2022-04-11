@@ -15,13 +15,12 @@ import com.fumbbl.ffb.model.skill.Skill;
 import java.util.Set;
 
 /**
- * 
  * @author Kalimar
  */
 public class UtilActingPlayer {
 
 	public static boolean changeActingPlayer(Game pGame, String pActingPlayerId, PlayerAction pPlayerAction,
-			boolean jumping) {
+																					 boolean jumping) {
 
 		boolean changed = false;
 
@@ -48,19 +47,20 @@ public class UtilActingPlayer {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.STANDING));
 				}
 
-				if (!actingPlayer.hasActed()) {
-					Set<String> enhancementsToRemove = Constant.getEnhancementSkillsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
-					enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), enhancement));
-
-					SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
-					actingPlayer.getSkillsGrantedBy().forEach((key, value) -> {
-						if (key != null && value != null) {
-							Skill skill = skillFactory.forName(key);
-							value.stream().map(pGame::getPlayerById).forEach(player -> player.markUnused(skill, pGame));
-						}
-					});
-				}
 			}
+			if (!actingPlayer.hasActed()) {
+				Set<String> enhancementsToRemove = Constant.getEnhancementSkillsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
+				enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), enhancement));
+
+				SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
+				actingPlayer.getSkillsGrantedBy().forEach((key, value) -> {
+					if (key != null && value != null) {
+						Skill skill = skillFactory.forName(key);
+						value.stream().map(pGame::getPlayerById).forEach(player -> player.markUnused(skill, pGame));
+					}
+				});
+			}
+
 			pGame.getActingPlayer().setPlayer(null);
 		}
 
