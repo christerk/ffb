@@ -39,10 +39,10 @@ public class ClientCommandFollowupChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandFollowupChoice initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandFollowupChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fChoiceFollowup = IJsonOption.CHOICE_FOLLOWUP.getFrom(game, jsonObject);
+		fChoiceFollowup = IJsonOption.CHOICE_FOLLOWUP.getFrom(source, jsonObject);
 		return this;
 	}
 

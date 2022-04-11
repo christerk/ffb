@@ -105,11 +105,11 @@ public class StepStab extends AbstractStep {
 	}
 
 	@Override
-	public StepStab initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
-		state.usingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
+	public StepStab initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
+		state.usingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
 		return this;
 	}
 

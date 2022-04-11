@@ -644,40 +644,40 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 	}
 
 	@Override
-	public StepBuyCardsAndInducements initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		availableInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(game, jsonObject);
-		availableInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(game, jsonObject);
-		fCardsSelectedAway = IServerJsonOption.CARDS_SELECTED_AWAY.getFrom(game, jsonObject);
-		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(game, jsonObject);
-		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(game, jsonObject);
-		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
+	public StepBuyCardsAndInducements initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		availableInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(source, jsonObject);
+		availableInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(source, jsonObject);
+		fCardsSelectedAway = IServerJsonOption.CARDS_SELECTED_AWAY.getFrom(source, jsonObject);
+		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(source, jsonObject);
+		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(source, jsonObject);
+		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(source, jsonObject);
 
-		JsonObject choiceObject = IServerJsonOption.CARD_CHOICES.getFrom(game, jsonObject);
+		JsonObject choiceObject = IServerJsonOption.CARD_CHOICES.getFrom(source, jsonObject);
 		if (choiceObject != null) {
-			cardChoices = new CardChoices().initFrom(game, jsonObject);
+			cardChoices = new CardChoices().initFrom(source, jsonObject);
 		}
 
-		CardFactory cardFactory = game.getFactory(FactoryType.Factory.CARD);
+		CardFactory cardFactory = source.getFactory(FactoryType.Factory.CARD);
 
-		String[] selectedCardNames = IJsonOption.CARDS_USED.getFrom(game, jsonObject);
+		String[] selectedCardNames = IJsonOption.CARDS_USED.getFrom(source, jsonObject);
 		if (selectedCardNames != null) {
 			usedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
 		}
 
-		String selectionName = IServerJsonOption.CARD_SELECTION.getFrom(game, jsonObject);
+		String selectionName = IServerJsonOption.CARD_SELECTION.getFrom(source, jsonObject);
 		if (selectionName != null) {
 			currentSelection = ClientCommandSelectCardToBuy.Selection.valueOf(selectionName);
 		}
 
-		JsonArray commandArray = IServerJsonOption.INDUCEMENT_COMMANDS.getFrom(game, jsonObject);
+		JsonArray commandArray = IServerJsonOption.INDUCEMENT_COMMANDS.getFrom(source, jsonObject);
 
 		if (commandArray != null) {
-			commandArray.values().stream().map(command -> new ClientCommandBuyInducements().initFrom(game, command)).forEach(buyInducementCommands::add);
+			commandArray.values().stream().map(command -> new ClientCommandBuyInducements().initFrom(source, command)).forEach(buyInducementCommands::add);
 		}
 
-		phase = Phase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(game, jsonObject));
+		phase = Phase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
 
 		return this;
 	}

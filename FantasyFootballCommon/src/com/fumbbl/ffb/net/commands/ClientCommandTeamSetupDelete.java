@@ -39,10 +39,10 @@ public class ClientCommandTeamSetupDelete extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandTeamSetupDelete initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandTeamSetupDelete initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fSetupName = IJsonOption.SETUP_NAME.getFrom(game, jsonObject);
+		fSetupName = IJsonOption.SETUP_NAME.getFrom(source, jsonObject);
 		return this;
 	}
 

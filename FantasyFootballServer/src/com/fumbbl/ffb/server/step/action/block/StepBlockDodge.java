@@ -90,9 +90,9 @@ public class StepBlockDodge extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockDodge initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBlockDodge initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.usingDodge = IServerJsonOption.USING_DODGE.getFrom(source, jsonObject);
 		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;

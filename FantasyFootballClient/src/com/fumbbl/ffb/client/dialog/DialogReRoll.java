@@ -11,6 +11,7 @@ import com.fumbbl.ffb.dialog.DialogReRollParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -33,10 +34,14 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 	private final JButton fButtonTeamReRoll;
 	private final JButton fButtonProReRoll;
 	private final JButton fButtonNoReRoll;
+	private final ReRollSource singleUseReRollSource;
 	private final DialogReRollParameter fDialogParameter;
 	private JButton buttonSkillReRoll;
 	private ReRollSource fReRollSource;
+	private JButton buttonSingleUseReRoll;
 	private boolean useSkill;
+	private JButton buttonModifyingSkill;
+	private Skill usedSkill;
 
 	public DialogReRoll(FantasyFootballClient pClient, DialogReRollParameter pDialogParameter) {
 
@@ -44,10 +49,19 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		fDialogParameter = pDialogParameter;
 
+		singleUseReRollSource = pDialogParameter.getSingleUseReRollSource();
+
 		fButtonTeamReRoll = new JButton("Team Re-Roll");
 		fButtonTeamReRoll.addActionListener(this);
 		fButtonTeamReRoll.addKeyListener(this);
 		fButtonTeamReRoll.setMnemonic((int) 'T');
+
+		if (singleUseReRollSource != null) {
+			buttonSingleUseReRoll = new JButton(singleUseReRollSource.getName(pClient.getGame()));
+			buttonSingleUseReRoll.addActionListener(this);
+			buttonSingleUseReRoll.addKeyListener(this);
+			buttonSingleUseReRoll.setMnemonic('L');
+		}
 
 		fButtonProReRoll = new JButton("Pro Re-Roll");
 		fButtonProReRoll.addActionListener(this);
@@ -61,25 +75,36 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 			buttonSkillReRoll.setMnemonic((int) 'S');
 		}
 
+		if (pDialogParameter.getModifyingSkill() != null) {
+			buttonModifyingSkill = new JButton(pDialogParameter.getModifyingSkill().getName());
+			buttonModifyingSkill.addActionListener(this);
+			buttonModifyingSkill.addKeyListener(this);
+			buttonModifyingSkill.setMnemonic((int) 'M');
+		}
+
 		fButtonNoReRoll = new JButton("No Re-Roll");
 		fButtonNoReRoll.addActionListener(this);
 		fButtonNoReRoll.addKeyListener(this);
 		fButtonNoReRoll.setMnemonic((int) 'N');
 
-		StringBuilder message1 = new StringBuilder();
+		StringBuilder message = new StringBuilder();
 
 		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
-			message1.append("Do you want to re-roll the failed ").append(action)
-				.append("?");
+			message.append("Do you want to re-roll the failed ").append(action);
 		} else {
-			message1.append("Do you want to re-roll the ").append(action).append("?");
+			message.append("Do you want to re-roll the ").append(action);
 		}
+
+		if (pDialogParameter.getModifyingSkill() != null) {
+			message.append(" or use ").append(pDialogParameter.getModifyingSkill().getName());
+		}
+		message.append("?");
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
-		messagePanel.add(new JLabel(message1.toString()));
+		messagePanel.add(new JLabel(message.toString()));
 
 		if (pDialogParameter.isFumble()) {
 			messagePanel.add(Box.createVerticalStrut(5));
@@ -114,12 +139,20 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 			buttonPanel.add(fButtonTeamReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
+		if (buttonSingleUseReRoll != null) {
+			buttonPanel.add(buttonSingleUseReRoll);
+			buttonPanel.add(Box.createHorizontalStrut(5));
+		}
 		if (fDialogParameter.isProReRollOption()) {
 			buttonPanel.add(fButtonProReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (buttonSkillReRoll != null) {
 			buttonPanel.add(buttonSkillReRoll);
+			buttonPanel.add(Box.createHorizontalStrut(5));
+		}
+		if (buttonModifyingSkill != null) {
+			buttonPanel.add(buttonModifyingSkill);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		buttonPanel.add(fButtonNoReRoll);
@@ -148,8 +181,16 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		if (pActionEvent.getSource() == fButtonNoReRoll) {
 			fReRollSource = null;
 		}
+		if (pActionEvent.getSource() == buttonSingleUseReRoll) {
+			fReRollSource = singleUseReRollSource;
+		}
 		if (pActionEvent.getSource() == buttonSkillReRoll) {
 			useSkill = true;
+			usedSkill = getDialogParameter().getReRollSkill();
+		}
+		if (pActionEvent.getSource() == buttonModifyingSkill) {
+			useSkill = true;
+			usedSkill = getDialogParameter().getModifyingSkill();
 		}
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(this);
@@ -166,6 +207,10 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 	public DialogReRollParameter getDialogParameter() {
 		return fDialogParameter;
+	}
+
+	public Skill getUsedSkill() {
+		return usedSkill;
 	}
 
 	public boolean isUseSkill() {
@@ -188,9 +233,23 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 					fReRollSource = ReRollSources.PRO;
 				}
 				break;
+			case KeyEvent.VK_L:
+				if (singleUseReRollSource != null) {
+					fReRollSource = singleUseReRollSource;
+				}
+				break;
 			case KeyEvent.VK_S:
 				if (getDialogParameter().getReRollSkill() != null) {
 					useSkill = true;
+					usedSkill = getDialogParameter().getReRollSkill();
+				} else {
+					keyHandled = false;
+				}
+				break;
+			case KeyEvent.VK_M:
+				if (getDialogParameter().getModifyingSkill() != null) {
+					useSkill = true;
+					usedSkill = getDialogParameter().getModifyingSkill();
 				} else {
 					keyHandled = false;
 				}

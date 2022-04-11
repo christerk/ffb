@@ -241,15 +241,15 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	@Override
-	public StepBuyCards initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(game, jsonObject);
-		fInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(game, jsonObject);
-		fCardsSelectedAway = IServerJsonOption.CARDS_SELECTED_AWAY.getFrom(game, jsonObject);
-		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(game, jsonObject);
-		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(game, jsonObject);
-		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
+	public StepBuyCards initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(source, jsonObject);
+		fInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(source, jsonObject);
+		fCardsSelectedAway = IServerJsonOption.CARDS_SELECTED_AWAY.getFrom(source, jsonObject);
+		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(source, jsonObject);
+		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(source, jsonObject);
+		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(source, jsonObject);
 		return this;
 	}
 

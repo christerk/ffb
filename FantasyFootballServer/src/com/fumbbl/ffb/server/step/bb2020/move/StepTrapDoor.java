@@ -164,9 +164,9 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepTrapDoor initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepTrapDoor initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		playerWasPushed = IServerJsonOption.PLAYER_WAS_PUSHED.getFrom(source, jsonObject);

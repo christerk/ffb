@@ -40,10 +40,10 @@ public class ClientCommandTouchback extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandTouchback initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandTouchback initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(game, jsonObject);
+		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

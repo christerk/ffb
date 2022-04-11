@@ -39,10 +39,10 @@ public class ClientCommandPasswordChallenge extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPasswordChallenge initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandPasswordChallenge initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;
 	}
 

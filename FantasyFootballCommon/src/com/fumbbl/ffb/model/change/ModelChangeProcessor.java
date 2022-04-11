@@ -2,6 +2,7 @@ package com.fumbbl.ffb.model.change;
 
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CardEffect;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -32,6 +33,7 @@ import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.option.IGameOption;
 
@@ -47,6 +49,7 @@ public class ModelChangeProcessor {
 		if ((pGame == null) || (pModelChange == null) || (pModelChange.getChangeId() == null)) {
 			return false;
 		}
+		SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
 
 		switch (pModelChange.getChangeId()) {
 
@@ -134,7 +137,6 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().add((PushbackSquare) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_SKILL_ENHANCEMENTS:
-				SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
 				pGame.getFieldModel().addSkillEnhancements(pGame.getPlayerById(pModelChange.getKey()), skillFactory.forName((String) pModelChange.getValue()));
 				return true;
 			case FIELD_MODEL_ADD_TRACK_NUMBER:
@@ -142,6 +144,12 @@ public class ModelChangeProcessor {
 				return true;
 			case FIELD_MODEL_ADD_TRAP_DOOR:
 				pGame.getFieldModel().add((TrapDoor) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_ADD_WISDOM:
+				Constant.getGrantAbleSkills(skillFactory).stream()
+					.filter(swv -> swv.getSkill().equals(pModelChange.getValue())).findFirst().ifPresent(swv ->
+						pGame.getFieldModel().addWisdomSkill(pModelChange.getKey(), swv)
+					);
 				return true;
 			case FIELD_MODEL_KEEP_DEACTIVATED_CARD:
 				pGame.getFieldModel().keepDeactivatedCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
@@ -480,6 +488,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollsBrilliantCoachingOneDrive((Integer) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
+				getTurnData(pGame, isHomeData(pModelChange)).setSingleUseReRolls((Integer) pModelChange.getValue());
+				return true;
 			case TURN_DATA_SET_RE_ROLL_USED:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollUsed((Boolean) pModelChange.getValue());
 				return true;
@@ -617,6 +628,7 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_KTM_USED:
 			case TURN_DATA_SET_RE_ROLLS:
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
+			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
 			case TURN_DATA_SET_RE_ROLL_USED:
 			case TURN_DATA_SET_TURN_NR:
 			case TURN_DATA_SET_TURN_STARTED:

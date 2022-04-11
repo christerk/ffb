@@ -635,9 +635,9 @@ public class RosterPosition implements Position {
 
 	}
 
-	public RosterPosition initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public RosterPosition initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		fId = IJsonOption.POSITION_ID.getFrom(source, jsonObject);
 		fName = IJsonOption.POSITION_NAME.getFrom(source, jsonObject);

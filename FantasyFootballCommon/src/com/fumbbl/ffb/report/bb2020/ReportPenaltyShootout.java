@@ -88,16 +88,16 @@ public class ReportPenaltyShootout implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPenaltyShootout initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		rollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		rollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
-		homeTeamWonPenalty = IJsonOption.HOME_TEAM.getFrom(game, jsonObject);
-		rollCount = IJsonOption.ROLL_COUNT.getFrom(game, jsonObject);
-		scoreHome = IJsonOption.PENALTY_SCORE_HOME.getFrom(game, jsonObject);
-		scoreAway = IJsonOption.PENALTY_SCORE_AWAY.getFrom(game, jsonObject);
-		winningTeam = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+	public ReportPenaltyShootout initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		rollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		rollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
+		homeTeamWonPenalty = IJsonOption.HOME_TEAM.getFrom(source, jsonObject);
+		rollCount = IJsonOption.ROLL_COUNT.getFrom(source, jsonObject);
+		scoreHome = IJsonOption.PENALTY_SCORE_HOME.getFrom(source, jsonObject);
+		scoreAway = IJsonOption.PENALTY_SCORE_AWAY.getFrom(source, jsonObject);
+		winningTeam = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

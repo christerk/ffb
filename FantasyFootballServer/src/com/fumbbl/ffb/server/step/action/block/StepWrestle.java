@@ -93,12 +93,12 @@ public class StepWrestle extends AbstractStep {
 	// JSON serialization
 
 	@Override
-	public StepWrestle initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.usingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(game, jsonObject);
-		state.usingWrestleDefender = IServerJsonOption.USING_WRESTLE_DEFENDER.getFrom(game, jsonObject);
-		state.oldDefenderState = IServerJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
+	public StepWrestle initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.usingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(source, jsonObject);
+		state.usingWrestleDefender = IServerJsonOption.USING_WRESTLE_DEFENDER.getFrom(source, jsonObject);
+		state.oldDefenderState = IServerJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		return this;
 	}
 

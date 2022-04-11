@@ -164,26 +164,26 @@ public class BlockRoll implements IJsonSerializable {
 	}
 
 	@Override
-	public BlockRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		targetId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		successFulDauntless = IJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(game, jsonObject);
-		nrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
-		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		selectedIndex = IJsonOption.SELECTED_INDEX.getFrom(game, jsonObject);
-		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(game, jsonObject);
-		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
-		id = IJsonOption.BLOCK_ROLL_ID.getFrom(game, jsonObject);
-		JsonArray sourcesArray = IJsonOption.RE_ROLL_SOURCES.getFrom(game, jsonObject);
+	public BlockRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		targetId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		successFulDauntless = IJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);
+		nrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		selectedIndex = IJsonOption.SELECTED_INDEX.getFrom(source, jsonObject);
+		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(source, jsonObject);
+		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
+		id = IJsonOption.BLOCK_ROLL_ID.getFrom(source, jsonObject);
+		JsonArray sourcesArray = IJsonOption.RE_ROLL_SOURCES.getFrom(source, jsonObject);
 		if (sourcesArray != null) {
-			ReRollSourceFactory factory = game.getFactory(FactoryType.Factory.RE_ROLL_SOURCE);
+			ReRollSourceFactory factory = source.getFactory(FactoryType.Factory.RE_ROLL_SOURCE);
 			sourcesArray.values().stream()
 				.map(value -> (ReRollSource) UtilJson.toEnumWithName(factory, value))
 				.forEach(reRollSources::add);
 		}
-		reRollDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(game, jsonObject);
-		proIndex = IJsonOption.PRO_INDEX.getFrom(game, jsonObject);
-		doubleTargetStrength = toPrimitive(IJsonOption.DOUBLE_TARGET_STRENGTH.getFrom(game, jsonObject));
+		reRollDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
+		proIndex = IJsonOption.PRO_INDEX.getFrom(source, jsonObject);
+		doubleTargetStrength = toPrimitive(IJsonOption.DOUBLE_TARGET_STRENGTH.getFrom(source, jsonObject));
 		return this;
 	}
 

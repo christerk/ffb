@@ -124,27 +124,27 @@ public class ReportTurnEnd implements IReport {
 		return jsonObject;
 	}
 
-	public ReportTurnEnd initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fPlayerIdTouchdown = IJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(game, jsonObject);
-		JsonArray knockoutRecoveryArray = IJsonOption.KNOCKOUT_RECOVERY_ARRAY.getFrom(game, jsonObject);
+	public ReportTurnEnd initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fPlayerIdTouchdown = IJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(source, jsonObject);
+		JsonArray knockoutRecoveryArray = IJsonOption.KNOCKOUT_RECOVERY_ARRAY.getFrom(source, jsonObject);
 		if (knockoutRecoveryArray != null) {
 			for (int i = 0; i < knockoutRecoveryArray.size(); i++) {
-				add(new KnockoutRecovery().initFrom(game, knockoutRecoveryArray.get(i)));
+				add(new KnockoutRecovery().initFrom(source, knockoutRecoveryArray.get(i)));
 			}
 		}
-		JsonArray heatExhaustionArray = IJsonOption.HEAT_EXHAUSTION_ARRAY.getFrom(game, jsonObject);
+		JsonArray heatExhaustionArray = IJsonOption.HEAT_EXHAUSTION_ARRAY.getFrom(source, jsonObject);
 		if (heatExhaustionArray != null) {
 			for (int i = 0; i < heatExhaustionArray.size(); i++) {
-				add(new HeatExhaustion().initFrom(game, heatExhaustionArray.get(i)));
+				add(new HeatExhaustion().initFrom(source, heatExhaustionArray.get(i)));
 			}
 		}
 
-		JsonArray unzappedArray = IJsonOption.UNZAP_ARRAY.getFrom(game, jsonObject);
+		JsonArray unzappedArray = IJsonOption.UNZAP_ARRAY.getFrom(source, jsonObject);
 		if (unzappedArray != null) {
 			for (int i = 0; i < unzappedArray.size(); i++) {
-				unzappedPlayers.add(Player.getFrom(game, unzappedArray.get(i)));
+				unzappedPlayers.add(Player.getFrom(source, unzappedArray.get(i)));
 			}
 		}
 

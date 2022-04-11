@@ -130,10 +130,10 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 		}
 
 		@Override
-		public AbstractStep initFrom(IFactorySource game, JsonValue pJsonValue) {
-			super.initFrom(game, pJsonValue);
-			JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-			fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+			super.initFrom(source, jsonValue);
+			JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+			fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 			return this;
 		}
 	}

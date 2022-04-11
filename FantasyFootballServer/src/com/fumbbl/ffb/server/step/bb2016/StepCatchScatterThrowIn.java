@@ -536,20 +536,20 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepCatchScatterThrowIn initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+	public StepCatchScatterThrowIn initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		fScatterBounds = null;
-		JsonObject scatterBoundsObject = IServerJsonOption.SCATTER_BOUNDS.getFrom(game, jsonObject);
+		JsonObject scatterBoundsObject = IServerJsonOption.SCATTER_BOUNDS.getFrom(source, jsonObject);
 		if (scatterBoundsObject != null) {
-			fScatterBounds = new FieldCoordinateBounds().initFrom(game, scatterBoundsObject);
+			fScatterBounds = new FieldCoordinateBounds().initFrom(source, scatterBoundsObject);
 		}
 		fCatchScatterThrowInMode = (CatchScatterThrowInMode) IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE
-				.getFrom(game, jsonObject);
-		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(game, jsonObject);
-		fDivingCatchChoice = IServerJsonOption.DIVING_CATCH_CHOICE.getFrom(game, jsonObject);
-		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(game, jsonObject);
+				.getFrom(source, jsonObject);
+		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(source, jsonObject);
+		fDivingCatchChoice = IServerJsonOption.DIVING_CATCH_CHOICE.getFrom(source, jsonObject);
+		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(source, jsonObject);
 		return this;
 	}
 

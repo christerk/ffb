@@ -11,9 +11,10 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportNervesOfSteel;
-import com.fumbbl.ffb.report.ReportPassRoll;
+import com.fumbbl.ffb.report.bb2020.ReportPassRoll;
 
 @ReportMessageType(ReportId.PASS_ROLL)
 @RulesCollection(Rules.BB2020)
@@ -92,8 +93,13 @@ public class PassRollMessage extends ReportMessageBase<ReportPassRoll> {
   			}
   		}
   		if (neededRoll != null) {
- 				neededRoll.append(mechanic.formatRollRequirement(report.getPassingDistance(), statusReport.formatRollModifiers(report.getRollModifiers()), thrower));
-  			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
-  		}
+				String formattedModifiers = statusReport.formatRollModifiers(report.getRollModifiers());
+				StatBasedRollModifier statBasedRollModifier = report.getStatBasedRollModifier();
+				if (statBasedRollModifier != null) {
+					formattedModifiers += " + " + statBasedRollModifier.getModifier() + " " + statBasedRollModifier.getReportString();
+				}
+				neededRoll.append(mechanic.formatRollRequirement(report.getPassingDistance(), formattedModifiers, thrower));
+				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
+			}
     }
 }

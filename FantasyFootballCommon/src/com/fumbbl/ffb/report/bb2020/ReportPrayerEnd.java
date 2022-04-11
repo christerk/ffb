@@ -49,10 +49,10 @@ public class ReportPrayerEnd implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPrayerEnd initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		prayer = game.<PrayerFactory>getFactory(FactoryType.Factory.PRAYER).forName(IJsonOption.PRAYER.getFrom(game, jsonObject));
+	public ReportPrayerEnd initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		prayer = source.<PrayerFactory>getFactory(FactoryType.Factory.PRAYER).forName(IJsonOption.PRAYER.getFrom(source, jsonObject));
 		return this;
 	}
 

@@ -61,11 +61,11 @@ public class CardChoice implements IJsonSerializable {
 	}
 
 	@Override
-	public CardChoice initFrom(IFactorySource game, JsonValue jsonValue) {
+	public CardChoice initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		type = (CardType) IJsonOption.CARD_CHOICE_TYPE.getFrom(game, jsonObject);
-		choiceOne = (Card) IJsonOption.CARD_CHOICE_ONE.getFrom(game, jsonObject);
-		choiceTwo = (Card) IJsonOption.CARD_CHOICE_TWO.getFrom(game, jsonObject);
+		type = (CardType) IJsonOption.CARD_CHOICE_TYPE.getFrom(source, jsonObject);
+		choiceOne = (Card) IJsonOption.CARD_CHOICE_ONE.getFrom(source, jsonObject);
+		choiceTwo = (Card) IJsonOption.CARD_CHOICE_TWO.getFrom(source, jsonObject);
 		return this;
 	}
 

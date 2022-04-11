@@ -98,10 +98,10 @@ public final class StepCoinChoice extends AbstractStep {
 	}
 
 	@Override
-	public StepCoinChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(game, jsonObject);
+	public StepCoinChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(source, jsonObject);
 		return this;
 	}
 

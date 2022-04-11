@@ -35,10 +35,10 @@ public class ClientCommandUseBrawler extends ClientCommand {
 	}
 
 	@Override
-	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		targetId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		targetId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 }

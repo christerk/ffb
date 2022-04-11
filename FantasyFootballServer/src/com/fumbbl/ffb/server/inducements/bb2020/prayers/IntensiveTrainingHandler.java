@@ -53,7 +53,7 @@ public class IntensiveTrainingHandler extends DialogPrayerHandler {
 	public void applySelection(Game game, PrayerDialogSelection selection) {
 		Skill skill = selection.getSkill();
 		game.getFieldModel().addIntensiveTrainingSkill(selection.getPlayerId(), skill);
-		reports.add(new ReportPlayerEvent(selection.getPlayerId(), " gains " + skill.getName()));
+		reports.add(new ReportPlayerEvent(selection.getPlayerId(), "gains " + skill.getName()));
 	}
 
 	@Override

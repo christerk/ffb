@@ -100,16 +100,16 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	// JSON serialization
 
 	@Override
-	public StepDauntless initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.usingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
-		String statusString = IServerJsonOption.STATUS.getFrom(game, jsonObject);
+	public StepDauntless initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.usingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
+		String statusString = IServerJsonOption.STATUS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(statusString)) {
 			state.status = ActionStatus.valueOf(statusString);
 		}
-		state.usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject));
-		state.usingVomit = toPrimitive(IServerJsonOption.USING_VOMIT.getFrom(game, jsonObject));
+		state.usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject));
+		state.usingVomit = toPrimitive(IServerJsonOption.USING_VOMIT.getFrom(source, jsonObject));
 		return this;
 	}
 

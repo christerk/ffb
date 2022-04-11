@@ -9,7 +9,6 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -73,9 +72,9 @@ public class RosterSkeleton implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public RosterSkeleton initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fId = IJsonOption.ROSTER_ID.getFrom(game, jsonObject);
+	public RosterSkeleton initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fId = IJsonOption.ROSTER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 }

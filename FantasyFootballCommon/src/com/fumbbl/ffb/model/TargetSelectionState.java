@@ -130,12 +130,12 @@ public class TargetSelectionState implements IJsonSerializable {
 	}
 
 	@Override
-	public TargetSelectionState initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		selectedPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		String statusString = IJsonOption.TARGET_SELECTION_STATUS.getFrom(game, jsonObject);
+	public TargetSelectionState initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		selectedPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		String statusString = IJsonOption.TARGET_SELECTION_STATUS.getFrom(source, jsonObject);
 		if (!StringTool.isProvided(statusString)) {
-			statusString = IJsonOption.BLITZ_STATUS.getFrom(game, jsonObject);
+			statusString = IJsonOption.BLITZ_STATUS.getFrom(source, jsonObject);
 		}
 		if (StringTool.isProvided(statusString)) {
 
@@ -143,17 +143,17 @@ public class TargetSelectionState implements IJsonSerializable {
 		}
 
 		if (IJsonOption.TARGET_SELECTION_STATUS_IS_COMMITTED.isDefinedIn(jsonObject)) {
-			committed = IJsonOption.TARGET_SELECTION_STATUS_IS_COMMITTED.getFrom(game, jsonObject);
+			committed = IJsonOption.TARGET_SELECTION_STATUS_IS_COMMITTED.getFrom(source, jsonObject);
 		}
 
 		if (IJsonOption.PLAYER_STATE_OLD.isDefinedIn(jsonObject)) {
-			oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
+			oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		}
 
 		if (IJsonOption.USED_SKILLS.isDefinedIn(jsonObject)) {
-			JsonArray skillArray = IJsonOption.USED_SKILLS.getFrom(game, jsonObject);
+			JsonArray skillArray = IJsonOption.USED_SKILLS.getFrom(source, jsonObject);
 			for (int i = 0; i < skillArray.size(); i++) {
-				SkillFactory skillFactory = game.getFactory(FactoryType.Factory.SKILL);
+				SkillFactory skillFactory = source.getFactory(FactoryType.Factory.SKILL);
 				usedSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
 			}
 		}

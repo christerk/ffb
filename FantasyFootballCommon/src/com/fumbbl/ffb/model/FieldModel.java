@@ -34,6 +34,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
+import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
@@ -402,6 +403,13 @@ public class FieldModel implements IJsonSerializable {
 		Player<?> player = getGame().getPlayerById(playerId);
 		player.addTemporarySkills(Prayer.INTENSIVE_TRAINING.getName(), Collections.singleton(new SkillWithValue(skill, String.valueOf(skill.getDefaultSkillValue()))));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_INTENSIVE_TRAINING, playerId, skill);
+	}
+
+	public void addWisdomSkill(String playerId, SkillWithValue skillWithValue) {
+		Player<?> player = getGame().getPlayerById(playerId);
+		Skill wisdomSkill = ((SkillFactory) getGame().getFactory(Factory.SKILL)).forClass(WisdomOfTheWhiteDwarf.class);
+		player.addTemporarySkills(wisdomSkill.getName(), Collections.singleton(skillWithValue));
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_WISDOM, playerId, skillWithValue.getSkill());
 	}
 
 	public void removePrayerEnhancements(Player<?> player, Prayer prayer) {
@@ -1005,9 +1013,9 @@ public class FieldModel implements IJsonSerializable {
 
 	}
 
-	public FieldModel initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public FieldModel initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		fWeather = (Weather) IJsonOption.WEATHER.getFrom(source, jsonObject);
 		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(source, jsonObject);

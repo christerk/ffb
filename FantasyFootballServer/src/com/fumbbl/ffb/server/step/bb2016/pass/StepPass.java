@@ -27,7 +27,7 @@ import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportPassRoll;
+import com.fumbbl.ffb.report.bb2016.ReportPassRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -47,6 +47,8 @@ import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Optional;
 import java.util.Set;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 /**
  * Step in the pass sequence to handle passing the ball.
@@ -248,8 +250,15 @@ public class StepPass extends AbstractStepWithReRoll {
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 		publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, PassResult.FUMBLE == state.result));
 		if (PassResult.SAVED_FUMBLE == state.result) {
-			game.getFieldModel().setBallCoordinate(throwerCoordinate);
-			game.getFieldModel().setBallMoving(false);
+			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+				game.getFieldModel().setBombCoordinate(null);
+				game.getFieldModel().setBombMoving(false);
+				publishParameter(from(StepParameterKey.CATCHER_ID, null));
+				publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+			} else {
+				game.getFieldModel().setBallCoordinate(throwerCoordinate);
+				game.getFieldModel().setBallMoving(false);
+			}
 			getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnEnd);
 		} else if (PassResult.FUMBLE == state.result) {
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
@@ -287,17 +296,17 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepPass initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		state.goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(game, jsonObject);
-		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
-		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
+	public StepPass initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		state.goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(source, jsonObject);
+		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
 		if (state.result == null) {
-			boolean successful = toPrimitive(IServerJsonOption.SUCCESSFUL.getFrom(game, jsonObject));
-			boolean fumble = toPrimitive(IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject));
-			boolean holdingSafeThrow = toPrimitive(IServerJsonOption.HOLDING_SAFE_THROW.getFrom(game, jsonObject));
+			boolean successful = toPrimitive(IServerJsonOption.SUCCESSFUL.getFrom(source, jsonObject));
+			boolean fumble = toPrimitive(IServerJsonOption.PASS_FUMBLE.getFrom(source, jsonObject));
+			boolean holdingSafeThrow = toPrimitive(IServerJsonOption.HOLDING_SAFE_THROW.getFrom(source, jsonObject));
 			if (successful) {
 				state.result = PassResult.ACCURATE;
 			} else if (fumble) {
@@ -306,7 +315,7 @@ public class StepPass extends AbstractStepWithReRoll {
 				state.result = PassResult.INACCURATE;
 			}
 		}
-		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
+		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(source, jsonObject);
 		return this;
 	}
 

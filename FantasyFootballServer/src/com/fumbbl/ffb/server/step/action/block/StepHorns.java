@@ -24,7 +24,7 @@ public class StepHorns extends AbstractStep {
 		public Boolean usingHorns;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepHorns(GameState pGameState) {
 		super(pGameState);
@@ -55,10 +55,10 @@ public class StepHorns extends AbstractStep {
 	}
 
 	@Override
-	public StepHorns initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.usingHorns = IServerJsonOption.USING_HORNS.getFrom(game, jsonObject);
+	public StepHorns initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.usingHorns = IServerJsonOption.USING_HORNS.getFrom(source, jsonObject);
 		return this;
 	}
 

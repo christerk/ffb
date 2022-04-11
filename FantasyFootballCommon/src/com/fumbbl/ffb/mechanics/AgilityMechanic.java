@@ -9,9 +9,11 @@ import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
+import com.fumbbl.ffb.modifiers.ModifierContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -26,6 +28,8 @@ public abstract class AgilityMechanic implements Mechanic {
 	public abstract int minimumRollJumpUp(Player<?> pPlayer, Set<JumpUpModifier> modifiers);
 
 	public abstract int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers);
+
+	public abstract int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers, StatBasedRollModifier statBasedRollModifier);
 
 	public abstract int minimumRollPickup(Player<?> pPlayer, Set<PickupModifier> pPickupModifiers);
 
@@ -61,10 +65,10 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract Wording interceptionWording();
 
-	protected String formatRollModifiers(RollModifier[] pRollModifiers) {
+	protected String formatRollModifiers(RollModifier<? extends ModifierContext>[] pRollModifiers) {
 		StringBuilder modifiers = new StringBuilder();
 		if (ArrayTool.isProvided(pRollModifiers)) {
-			for (RollModifier rollModifier : pRollModifiers) {
+			for (RollModifier<? extends ModifierContext> rollModifier : pRollModifiers) {
 				if (rollModifier.getModifier() > 0) {
 					modifiers.append(" - ");
 				} else {

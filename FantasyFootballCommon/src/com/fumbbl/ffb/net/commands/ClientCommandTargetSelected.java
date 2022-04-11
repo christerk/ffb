@@ -35,10 +35,10 @@ public class ClientCommandTargetSelected extends ClientCommand {
 	}
 
 	@Override
-	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
+	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		super.initFrom(game, jsonObject);
-		targetPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		super.initFrom(source, jsonObject);
+		targetPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 }

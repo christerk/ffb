@@ -182,13 +182,13 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameOptions initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(game, jsonObject);
+	public GameOptions initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(source, jsonObject);
 		int nrOfOptions = optionArray.size();
 		GameOptionFactory optionFactory = new GameOptionFactory();
 		for (int i = 0; i < nrOfOptions; i++) {
-			IGameOption gameOption = optionFactory.fromJsonValue(game, optionArray.get(i));
+			IGameOption gameOption = optionFactory.fromJsonValue(source, optionArray.get(i));
 			addOption(gameOption);
 		}
 		if (!fOptionById.containsKey(GameOptionId.RULESVERSION)) {

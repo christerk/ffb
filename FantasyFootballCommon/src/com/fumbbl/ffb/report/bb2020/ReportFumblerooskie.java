@@ -40,11 +40,11 @@ public class ReportFumblerooskie implements IReport {
 		return jsonObject;
 	}
 
-	public ReportFumblerooskie initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		used = IJsonOption.USED.getFrom(game, jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+	public ReportFumblerooskie initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		used = IJsonOption.USED.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

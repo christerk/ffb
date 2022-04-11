@@ -24,7 +24,7 @@ public class ModifierAggregator {
 	public Set<CatchModifier> getCatchModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getCatchModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+			Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof CatchModifier)
 				.map(modifier -> (CatchModifier)modifier))
@@ -34,7 +34,7 @@ public class ModifierAggregator {
 	public Set<InterceptionModifier> getInterceptionModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getInterceptionModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof InterceptionModifier)
 				.map(modifier -> (InterceptionModifier)modifier))
@@ -44,7 +44,7 @@ public class ModifierAggregator {
 	public Set<PassModifier> getPassModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getPassModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof PassModifier)
 				.map(modifier -> (PassModifier)modifier))
@@ -54,7 +54,7 @@ public class ModifierAggregator {
 	public Set<DodgeModifier> getDodgeModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getDodgeModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof DodgeModifier)
 				.map(modifier -> (DodgeModifier)modifier))
@@ -64,7 +64,7 @@ public class ModifierAggregator {
 	public Set<PickupModifier> getPickupModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getPickupModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof PickupModifier)
 				.map(modifier -> (PickupModifier)modifier))
@@ -74,7 +74,7 @@ public class ModifierAggregator {
 	public Set<JumpModifier> getJumpModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getJumpModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof JumpModifier)
 				.map(modifier -> (JumpModifier) modifier))
@@ -84,7 +84,7 @@ public class ModifierAggregator {
 	public Set<JumpUpModifier> getJumpUpModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getJumpUpModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof JumpUpModifier)
 				.map(modifier -> (JumpUpModifier) modifier))
@@ -94,7 +94,7 @@ public class ModifierAggregator {
 	public Set<GazeModifier> getGazeModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getGazeModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof GazeModifier)
 				.map(modifier -> (GazeModifier) modifier))
@@ -104,7 +104,7 @@ public class ModifierAggregator {
 	public Set<GoForItModifier> getGoForItModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getGoForItModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof GoForItModifier)
 				.map(modifier -> (GoForItModifier)modifier))
@@ -114,7 +114,7 @@ public class ModifierAggregator {
 	public Set<RightStuffModifier> getRightStuffModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getRightStuffModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.rollModifiers().stream())
 				.filter(modifier -> modifier instanceof RightStuffModifier)
 				.map(modifier -> (RightStuffModifier)modifier))
@@ -124,7 +124,7 @@ public class ModifierAggregator {
 	public Set<ArmorModifier> getArmourModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getArmorModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.armourModifiers().stream()))
 			.collect(Collectors.toSet());
 	}
@@ -132,7 +132,7 @@ public class ModifierAggregator {
 	public Set<InjuryModifier> getInjuryModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getInjuryModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.injuryModifiers().stream()))
 			.collect(Collectors.toSet());
 	}
@@ -140,7 +140,7 @@ public class ModifierAggregator {
 	public Set<CasualtyModifier> getCasualtyModifiers() {
 		return Stream.concat(
 			skillFactory.getSkills().stream().flatMap(skill -> skill.getCasualtyModifiers().stream()),
-			Arrays.stream(UtilCards.findAllActiveCards(game))
+				Arrays.stream(UtilCards.findAllCards(game))
 				.flatMap(card -> card.casualtyModifiers().stream()))
 			.collect(Collectors.toSet());
 	}

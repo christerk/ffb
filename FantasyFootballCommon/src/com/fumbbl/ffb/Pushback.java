@@ -48,10 +48,10 @@ public class Pushback implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public Pushback initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
+	public Pushback initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

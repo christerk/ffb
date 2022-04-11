@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -12,13 +9,16 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
  */
 public class ServerCommandTeamSetupList extends ServerCommand {
 
-	private List<String> fSetupNames;
+	private final List<String> fSetupNames;
 
 	public ServerCommandTeamSetupList() {
 		fSetupNames = new ArrayList<>();
@@ -65,8 +65,8 @@ public class ServerCommandTeamSetupList extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandTeamSetupList initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ServerCommandTeamSetupList initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		addSetupNames(IJsonOption.SETUP_NAMES.getFrom(source, jsonObject));

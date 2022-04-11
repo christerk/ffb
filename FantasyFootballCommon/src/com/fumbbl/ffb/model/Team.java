@@ -495,25 +495,25 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 
 	}
 
-	public Team initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public Team initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
-		fId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fName = IJsonOption.TEAM_NAME.getFrom(game, jsonObject);
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fRace = IJsonOption.RACE.getFrom(game, jsonObject);
-		fReRolls = IJsonOption.RE_ROLLS.getFrom(game, jsonObject);
-		fApothecaries = IJsonOption.APOTHECARIES.getFrom(game, jsonObject);
-		fCheerleaders = IJsonOption.CHEERLEADERS.getFrom(game, jsonObject);
-		fAssistantCoaches = IJsonOption.ASSISTANT_COACHES.getFrom(game, jsonObject);
-		fFanFactor = IJsonOption.FAN_FACTOR.getFrom(game, jsonObject);
-		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
-		fTreasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
-		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(game, jsonObject);
-		fLogoUrl = IJsonOption.LOGO_URL.getFrom(game, jsonObject);
-		dedicatedFans = IJsonOption.DEDICATED_FANS.getFrom(game, jsonObject);
-		String[] rulesArray = IJsonOption.SPECIAL_RULES.getFrom(game, jsonObject);
+		fId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fName = IJsonOption.TEAM_NAME.getFrom(source, jsonObject);
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		fRace = IJsonOption.RACE.getFrom(source, jsonObject);
+		fReRolls = IJsonOption.RE_ROLLS.getFrom(source, jsonObject);
+		fApothecaries = IJsonOption.APOTHECARIES.getFrom(source, jsonObject);
+		fCheerleaders = IJsonOption.CHEERLEADERS.getFrom(source, jsonObject);
+		fAssistantCoaches = IJsonOption.ASSISTANT_COACHES.getFrom(source, jsonObject);
+		fFanFactor = IJsonOption.FAN_FACTOR.getFrom(source, jsonObject);
+		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
+		fTreasury = IJsonOption.TREASURY.getFrom(source, jsonObject);
+		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(source, jsonObject);
+		fLogoUrl = IJsonOption.LOGO_URL.getFrom(source, jsonObject);
+		dedicatedFans = IJsonOption.DEDICATED_FANS.getFrom(source, jsonObject);
+		String[] rulesArray = IJsonOption.SPECIAL_RULES.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(rulesArray)) {
 			specialRules.addAll(Arrays.stream(rulesArray).filter(Objects::nonNull).map(SpecialRule::valueOf).collect(Collectors.toSet()));
 		}
@@ -521,17 +521,17 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		fPlayerById.clear();
 		fPlayerByNr.clear();
 
-		JsonArray playerArray = IJsonOption.PLAYER_ARRAY.getFrom(game, jsonObject);
+		JsonArray playerArray = IJsonOption.PLAYER_ARRAY.getFrom(source, jsonObject);
 		for (int i = 0; i < playerArray.size(); i++) {
-			addPlayer(Player.getFrom(game, playerArray.get(i)));
+			addPlayer(Player.getFrom(source, playerArray.get(i)));
 		}
 
 		Roster roster = null;
-		JsonObject rosterObject = IJsonOption.ROSTER.getFrom(game, jsonObject);
+		JsonObject rosterObject = IJsonOption.ROSTER.getFrom(source, jsonObject);
 		if (rosterObject != null) {
-			roster = new Roster().initFrom(game, rosterObject);
+			roster = new Roster().initFrom(source, rosterObject);
 		}
-		updateRoster(roster, false, game);
+		updateRoster(roster, false, source);
 
 		return this;
 

@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.PlayerChoiceMode;
@@ -14,6 +11,9 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -21,7 +21,7 @@ import com.fumbbl.ffb.util.StringTool;
 public class ClientCommandPlayerChoice extends ClientCommand {
 
 	private PlayerChoiceMode fPlayerChoiceMode;
-	private List<String> fPlayerIds;
+	private final List<String> fPlayerIds;
 
 	public ClientCommandPlayerChoice() {
 		fPlayerIds = new ArrayList<>();
@@ -46,7 +46,7 @@ public class ClientCommandPlayerChoice extends ClientCommand {
 	}
 
 	public String[] getPlayerIds() {
-		return fPlayerIds.toArray(new String[fPlayerIds.size()]);
+		return fPlayerIds.toArray(new String[0]);
 	}
 
 	public void addPlayerId(String pPlayerId) {
@@ -76,11 +76,11 @@ public class ClientCommandPlayerChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPlayerChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(game, jsonObject);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+	public ClientCommandPlayerChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(source, jsonObject);
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
 		return this;
 	}
 

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ReportList implements IJsonSerializable {
 
-	private List<IReport> fReports;
+	private final List<IReport> fReports;
 
 	private ReportList(int pInitialCapacity) {
 		fReports = new ArrayList<>(pInitialCapacity);
@@ -93,8 +93,8 @@ public class ReportList implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ReportList initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportList initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		JsonArray reportArray = IJsonOption.REPORTS.getFrom(source, jsonObject);
 		ReportFactory factory = source.getFactory(FactoryType.Factory.REPORT);
 		if (reportArray != null) {

@@ -76,11 +76,11 @@ public class PlayerMarker implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public PlayerMarker initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fHomeText = IJsonOption.HOME_TEXT.getFrom(game, jsonObject);
-		fAwayText = IJsonOption.AWAY_TEXT.getFrom(game, jsonObject);
+	public PlayerMarker initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fHomeText = IJsonOption.HOME_TEXT.getFrom(source, jsonObject);
+		fAwayText = IJsonOption.AWAY_TEXT.getFrom(source, jsonObject);
 		return this;
 	}
 

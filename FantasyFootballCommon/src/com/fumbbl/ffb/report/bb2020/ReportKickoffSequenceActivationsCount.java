@@ -49,12 +49,12 @@ public class ReportKickoffSequenceActivationsCount implements IReport {
 	}
 
 	@Override
-	public Object initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		amount = IJsonOption.NR_OF_PLAYERS.getFrom(game, jsonObject);
-		limit = IJsonOption.NR_OF_PLAYERS_ALLOWED.getFrom(game, jsonObject);
-		available = IJsonOption.NUMBER.getFrom(game, jsonObject);
+	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		amount = IJsonOption.NR_OF_PLAYERS.getFrom(source, jsonObject);
+		limit = IJsonOption.NR_OF_PLAYERS_ALLOWED.getFrom(source, jsonObject);
+		available = IJsonOption.NUMBER.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -38,11 +38,11 @@ public class DialogSwarmingErrorParameter implements IDialogParameter {
 	}
 
 	@Override
-	public IDialogParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		allowed = IJsonOption.SWARMING_PLAYER_ALLOWED.getFrom(game, jsonObject);
-		actual = IJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(game, jsonObject);
+	public IDialogParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		allowed = IJsonOption.SWARMING_PLAYER_ALLOWED.getFrom(source, jsonObject);
+		actual = IJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(source, jsonObject);
 		return this;
 	}
 

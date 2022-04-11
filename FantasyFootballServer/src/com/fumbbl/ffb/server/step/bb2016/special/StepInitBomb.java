@@ -193,13 +193,13 @@ public final class StepInitBomb extends AbstractStep {
 	}
 
 	@Override
-	public StepInitBomb initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
-		fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
-		fBombCoordinate = IServerJsonOption.BOMB_COORDINATE.getFrom(game, jsonObject);
+	public StepInitBomb initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(source, jsonObject);
+		fBombCoordinate = IServerJsonOption.BOMB_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

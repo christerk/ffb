@@ -22,6 +22,7 @@ import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifierFactory;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 
@@ -58,6 +59,7 @@ public abstract class Skill implements INamedObject {
 	private final SkillUsageType skillUsageType;
 	private final boolean negativeTrait;
 	private TemporaryEnhancements enhancements;
+	private StatBasedRollModifierFactory statBasedRollModifierFactory;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
@@ -338,5 +340,13 @@ public abstract class Skill implements INamedObject {
 
 	public String superString() {
 		return super.toString();
+	}
+
+	public StatBasedRollModifierFactory getStatBasedRollModifierFactory() {
+		return statBasedRollModifierFactory;
+	}
+
+	public void setStatBasedRollModifierFactory(StatBasedRollModifierFactory statBasedRollModifierFactory) {
+		this.statBasedRollModifierFactory = statBasedRollModifierFactory;
 	}
 }

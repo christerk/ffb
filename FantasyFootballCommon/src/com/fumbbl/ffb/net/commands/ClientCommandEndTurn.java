@@ -34,9 +34,9 @@ public class ClientCommandEndTurn extends ClientCommand {
 
 	// JSON serialization
 
-	public ClientCommandEndTurn initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
-		turnMode = (TurnMode) IJsonOption.TURN_MODE.getFrom(game, UtilJson.toJsonObject(jsonValue));
+	public ClientCommandEndTurn initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		turnMode = (TurnMode) IJsonOption.TURN_MODE.getFrom(source, UtilJson.toJsonObject(jsonValue));
 		return this;
 	}
 

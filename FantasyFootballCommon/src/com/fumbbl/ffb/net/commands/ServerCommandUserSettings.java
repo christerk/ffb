@@ -1,9 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
@@ -13,13 +9,17 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Kalimar
  */
 public class ServerCommandUserSettings extends ServerCommand {
 
-	private Map<String, String> fUserSettings;
+	private final Map<String, String> fUserSettings;
 
 	public ServerCommandUserSettings() {
 		fUserSettings = new HashMap<>();
@@ -82,12 +82,12 @@ public class ServerCommandUserSettings extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandUserSettings initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		String[] userSettingNames = IJsonOption.USER_SETTING_NAMES.getFrom(game, jsonObject);
-		String[] userSettingValues = IJsonOption.USER_SETTING_VALUES.getFrom(game, jsonObject);
+	public ServerCommandUserSettings initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		String[] userSettingNames = IJsonOption.USER_SETTING_NAMES.getFrom(source, jsonObject);
+		String[] userSettingValues = IJsonOption.USER_SETTING_VALUES.getFrom(source, jsonObject);
 		init(userSettingNames, userSettingValues);
 		return this;
 	}

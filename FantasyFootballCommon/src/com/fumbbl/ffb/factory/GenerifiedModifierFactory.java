@@ -81,7 +81,7 @@ public abstract class GenerifiedModifierFactory<
 
 	public Set<V> findModifiers(C context) {
 		Set<V> modifiers = getSkillModifiers(context);
-		Arrays.stream(UtilCards.findAllActiveCards(context.getGame()))
+		Arrays.stream(UtilCards.findAllCards(context.getGame()))
 			.flatMap((Function<Card, Stream<RollModifier<?>>>) card -> card.rollModifiers().stream())
 			.map(this::checkClass)
 			.filter(Optional::isPresent)

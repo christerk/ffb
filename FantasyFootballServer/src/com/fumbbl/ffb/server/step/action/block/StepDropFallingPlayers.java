@@ -98,16 +98,16 @@ public class StepDropFallingPlayers extends AbstractStep {
 	}
 
 	@Override
-	public StepDropFallingPlayers initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepDropFallingPlayers initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.injuryResultDefender = null;
-		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(game, jsonObject);
+		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(source, jsonObject);
 		if (injuryResultDefenderObject != null) {
-			state.injuryResultDefender = new InjuryResult().initFrom(game, injuryResultDefenderObject);
+			state.injuryResultDefender = new InjuryResult().initFrom(source, injuryResultDefenderObject);
 		}
-		state.usingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(game, jsonObject);
-		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
+		state.usingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(source, jsonObject);
+		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 

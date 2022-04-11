@@ -209,14 +209,14 @@ public class StepEndBlocking extends AbstractStep {
 	}
 
 	@Override
-	public StepEndBlocking initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(game, jsonObject);
-		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
-		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
+	public StepEndBlocking initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(source, jsonObject);
+		fUsingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 

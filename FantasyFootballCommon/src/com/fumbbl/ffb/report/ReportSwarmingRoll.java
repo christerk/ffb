@@ -50,17 +50,17 @@ public class ReportSwarmingRoll implements IReport {
 	}
 
 	@Override
-	public Object initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		amount = IJsonOption.SWARMING_PLAYER_AMOUNT.getFrom(game, jsonObject);
-		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		amount = IJsonOption.SWARMING_PLAYER_AMOUNT.getFrom(source, jsonObject);
+		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		if (IJsonOption.SWARMING_PLAYER_LIMIT.isDefinedIn(jsonObject)) {
-			limit = IJsonOption.SWARMING_PLAYER_LIMIT.getFrom(game, jsonObject);
+			limit = IJsonOption.SWARMING_PLAYER_LIMIT.getFrom(source, jsonObject);
 		}
 
 		if (IJsonOption.SWARMING_PLAYER_ROLL.isDefinedIn(jsonObject)) {
-			roll = IJsonOption.SWARMING_PLAYER_ROLL.getFrom(game, jsonObject);
+			roll = IJsonOption.SWARMING_PLAYER_ROLL.getFrom(source, jsonObject);
 		}
 		return this;
 	}

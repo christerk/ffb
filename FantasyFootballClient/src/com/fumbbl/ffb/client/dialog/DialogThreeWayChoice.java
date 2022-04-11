@@ -19,36 +19,54 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 /**
- * 
  * @author Kalimar
  */
-public abstract class DialogYesOrNoQuestion extends Dialog implements ActionListener, KeyListener {
+public abstract class DialogThreeWayChoice extends Dialog implements ActionListener, KeyListener {
 
-	private final JButton fButtonYes;
-	private boolean fChoiceYes;
+	private final JButton buttonChoiceOne;
+	private final int choiceOneMnemonic, choiceTwoMnemonic, choiceThreeMnemonic;
+	private JButton buttonChoiceTwo;
+	private boolean choiceOne, choiceTwo;
 
-	public DialogYesOrNoQuestion(FantasyFootballClient pClient, String pTitle, String pMessageLine) {
-		this(pClient, pTitle, new String[] { pMessageLine }, null);
+	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String pMessageLine) {
+		this(pClient, pTitle, new String[]{pMessageLine}, null);
 	}
 
-	public DialogYesOrNoQuestion(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty) {
+	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty) {
 		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', "No", 'N');
 	}
 
-	public DialogYesOrNoQuestion(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
-			String pYesButtonText, int pYesButtonMnemonic, String pNoButtonText, int pNoButtonMnemonic) {
+	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
+															String pYesButtonText, int pYesButtonMnemonic, String pNoButtonText, int pNoButtonMnemonic) {
+		this(pClient, pTitle, pMessages, pIconProperty, pYesButtonText, pYesButtonMnemonic, null, 0, pNoButtonText, pNoButtonMnemonic);
+	}
+
+	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
+															String choiceOneText, int choiceOneMnemonic, String choiceTwoText, int choiceTwoMnemonic,
+															String choiceThreeText, int choiceThreeMnemonic) {
 
 		super(pClient, pTitle, false);
 
-		fButtonYes = new JButton(pYesButtonText);
-		fButtonYes.addActionListener(this);
-		fButtonYes.addKeyListener(this);
-		fButtonYes.setMnemonic(pYesButtonMnemonic);
+		this.choiceOneMnemonic = choiceOneMnemonic;
+		this.choiceTwoMnemonic = choiceTwoMnemonic;
+		this.choiceThreeMnemonic = choiceThreeMnemonic;
 
-		JButton fButtonNo = new JButton(pNoButtonText);
-		fButtonNo.addActionListener(this);
-		fButtonNo.addKeyListener(this);
-		fButtonNo.setMnemonic(pNoButtonMnemonic);
+		buttonChoiceOne = new JButton(choiceOneText);
+		buttonChoiceOne.addActionListener(this);
+		buttonChoiceOne.addKeyListener(this);
+		buttonChoiceOne.setMnemonic(choiceOneMnemonic);
+
+		if (StringTool.isProvided(choiceTwoText)) {
+			buttonChoiceTwo = new JButton(choiceTwoText);
+			buttonChoiceTwo.addActionListener(this);
+			buttonChoiceTwo.addKeyListener(this);
+			buttonChoiceTwo.setMnemonic(choiceTwoMnemonic);
+		}
+
+		JButton buttonChoiceThree = new JButton(choiceThreeText);
+		buttonChoiceThree.addActionListener(this);
+		buttonChoiceThree.addKeyListener(this);
+		buttonChoiceThree.setMnemonic(choiceThreeMnemonic);
 
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
@@ -83,9 +101,13 @@ public abstract class DialogYesOrNoQuestion extends Dialog implements ActionList
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.add(fButtonYes);
+		buttonPanel.add(buttonChoiceOne);
 		buttonPanel.add(Box.createHorizontalStrut(5));
-		buttonPanel.add(fButtonNo);
+		if (buttonChoiceTwo != null) {
+			buttonPanel.add(buttonChoiceTwo);
+			buttonPanel.add(Box.createHorizontalStrut(5));
+		}
+		buttonPanel.add(buttonChoiceThree);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -98,14 +120,23 @@ public abstract class DialogYesOrNoQuestion extends Dialog implements ActionList
 	}
 
 	public void actionPerformed(ActionEvent pActionEvent) {
-		fChoiceYes = (pActionEvent.getSource() == fButtonYes);
+		choiceOne = (pActionEvent.getSource() == buttonChoiceOne);
+		choiceTwo = (pActionEvent.getSource() == buttonChoiceTwo);
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(this);
 		}
 	}
 
 	public boolean isChoiceYes() {
-		return fChoiceYes;
+		return isChoiceOne();
+	}
+
+	public boolean isChoiceOne() {
+		return choiceOne;
+	}
+
+	public boolean isChoiceTwo() {
+		return choiceTwo;
 	}
 
 	public DialogId getId() {
@@ -117,16 +148,17 @@ public abstract class DialogYesOrNoQuestion extends Dialog implements ActionList
 
 	public void keyReleased(KeyEvent pKeyEvent) {
 		boolean keyHandled = true;
-		switch (pKeyEvent.getKeyCode()) {
-		case KeyEvent.VK_Y:
-			fChoiceYes = true;
-			break;
-		case KeyEvent.VK_N:
-			fChoiceYes = false;
-			break;
-		default:
+		if (pKeyEvent.getKeyCode() == choiceOneMnemonic) {
+			choiceOne = true;
+			choiceTwo = false;
+		} else if (buttonChoiceTwo != null && pKeyEvent.getKeyCode() == choiceTwoMnemonic) {
+			choiceOne = false;
+			choiceTwo = true;
+		} else if (pKeyEvent.getKeyCode() == choiceThreeMnemonic) {
+			choiceOne = false;
+			choiceTwo = false;
+		} else {
 			keyHandled = false;
-			break;
 		}
 		if (keyHandled) {
 			if (getCloseListener() != null) {

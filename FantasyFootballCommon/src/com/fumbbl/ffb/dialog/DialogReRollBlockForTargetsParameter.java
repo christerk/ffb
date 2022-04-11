@@ -56,12 +56,12 @@ public class DialogReRollBlockForTargetsParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogReRollBlockForTargetsParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		JsonArray array =  IJsonOption.BLOCK_ROLLS.getFrom(game, jsonObject);
-		blockRolls = array.values().stream().map(roll -> new BlockRoll().initFrom(game, roll)).collect(Collectors.toList());
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+	public DialogReRollBlockForTargetsParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		JsonArray array =  IJsonOption.BLOCK_ROLLS.getFrom(source, jsonObject);
+		blockRolls = array.values().stream().map(roll -> new BlockRoll().initFrom(source, roll)).collect(Collectors.toList());
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

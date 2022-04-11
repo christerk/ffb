@@ -179,10 +179,10 @@ public class StepMissedPass extends AbstractStep {
 	}
 
 	@Override
-	public StepMissedPass initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		passDeviates = IJsonOption.PASS_DEVIATES.getFrom(game, jsonObject);
+	public StepMissedPass initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		passDeviates = IJsonOption.PASS_DEVIATES.getFrom(source, jsonObject);
 		return this;
 	}
 

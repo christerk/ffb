@@ -27,8 +27,8 @@ public class ClientCommandStartGame extends ClientCommand {
 	
 	// JSON serialization
 
-	public ClientCommandStartGame initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandStartGame initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

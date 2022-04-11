@@ -114,6 +114,7 @@ public interface IJsonOption {
 	JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");
 	JsonBooleanOption CONCESSION_POSSIBLE = new JsonBooleanOption("concessionPossible");
 	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", Factory.SKILL);
+	JsonBooleanOption CONSUMMATE_OPTION = new JsonBooleanOption("consummateOption");
 	JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
 	JsonFieldCoordinateOption COORDINATE_FROM = new JsonFieldCoordinateOption("coordinateFrom");
 	JsonFieldCoordinateArrayOption COORDINATES_TO = new JsonFieldCoordinateArrayOption("coordinatesTo");
@@ -258,6 +259,7 @@ public interface IJsonOption {
 	JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
 	JsonObjectOption MODEL_CHANGE_LIST = new JsonObjectOption("modelChangeList");
 	JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
+	JsonEnumWithNameOption MODIFYING_SKILL = new JsonEnumWithNameOption("modifyingSkill", Factory.SKILL);
 	JsonObjectOption MODIFIED_INJURY_CONTEXT = new JsonObjectOption("modifiedInjuryContext");
 	JsonIntOption MODIFIER = new JsonIntOption("modifier");
 	JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");
@@ -282,8 +284,10 @@ public interface IJsonOption {
 	JsonIntOption NR_OF_STARS = new JsonIntOption("nrOfStars");
 	JsonIntOption NUMBER = new JsonIntOption("number");
 	JsonBooleanOption NURGLES_ROT = new JsonBooleanOption("nurglesRot");
+	JsonBooleanOption OFFICIOUS_REF = new JsonBooleanOption("officiousRef");
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
+	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
 	JsonFieldCoordinateOption PASS_COORDINATE = new JsonFieldCoordinateOption("passCoordinate");
 	JsonBooleanOption PASS_DEVIATES = new JsonBooleanOption("passDeviates");
@@ -310,6 +314,8 @@ public interface IJsonOption {
 	JsonArrayOption PLAYER_DATA_ARRAY = new JsonArrayOption("playerDataArray");
 	JsonEnumWithNameOption PLAYER_GENDER = new JsonEnumWithNameOption("playerGender", Factory.PLAYER_GENDER);
 	JsonStringOption PLAYER_ID = new JsonStringOption("playerId");
+	JsonStringOption PLAYER_ID_OTHER_PLAYER = new JsonStringOption("playerIdOtherPlayer");
+	JsonStringOption PLAYER_ID_SINGLE_USE_RE_ROLL = new JsonStringOption("playerIdSingleUseReRoll");
 	JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
 	JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
 	JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
@@ -367,6 +373,7 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
+	JsonEnumWithNameOption RE_ROLL_SOURCE_SINGLE_USE = new JsonEnumWithNameOption("reRollSourceSingleUse", Factory.RE_ROLL_SOURCE);
 	JsonArrayOption RE_ROLL_SOURCES = new JsonArrayOption("reRollSources");
 	JsonBooleanOption RE_ROLL_USED = new JsonBooleanOption("reRollUsed");
 	JsonIntOption RE_ROLLS = new JsonIntOption("reRolls");
@@ -430,6 +437,7 @@ public interface IJsonOption {
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
+	JsonStringListMapOption SKILLS_GRANTED_BY = new JsonStringListMapOption("skillsGrantedBy");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
@@ -446,6 +454,7 @@ public interface IJsonOption {
 	JsonStringArrayOption STAR_PLAYER_POSTION_IDS = new JsonStringArrayOption("starPlayerPositionIds");
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
+	JsonObjectOption STAT_BASED_ROLL_MODIFIER = new JsonObjectOption("statBasedRollModifier");
 	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
 	JsonStringArrayOption STEP_PARAMETER_KEYS = new JsonStringArrayOption("stepParameterKeys");
 	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");

@@ -54,11 +54,11 @@ public class ReportReferee implements IReport {
 		return jsonObject;
 	}
 
-	public ReportReferee initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fFoulingPlayerBanned = IJsonOption.FOULING_PLAYER_BANNED.getFrom(game, jsonObject);
-		underScrutiny = IJsonOption.UNDER_SCRUTINY.getFrom(game, jsonObject);
+	public ReportReferee initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fFoulingPlayerBanned = IJsonOption.FOULING_PLAYER_BANNED.getFrom(source, jsonObject);
+		underScrutiny = IJsonOption.UNDER_SCRUTINY.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -9,14 +9,13 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogInterception extends DialogYesOrNoQuestion {
+public class DialogInterception extends DialogThreeWayChoice {
 
 	public DialogInterception(FantasyFootballClient pClient) {
-		super(pClient, title(pClient.getGame()), new String[] { description(pClient.getGame()) },
-				IIconProperty.GAME_REF);
+		super(pClient, title(pClient.getGame()), new String[]{description(pClient.getGame())},
+			IIconProperty.GAME_REF);
 	}
 
 	public DialogId getId() {

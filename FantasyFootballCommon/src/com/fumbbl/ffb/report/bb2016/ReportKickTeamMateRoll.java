@@ -90,15 +90,15 @@ public class ReportKickTeamMateRoll implements IReport {
 	}
 
 	@Override
-	public ReportKickTeamMateRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fKickingPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fKickedPlayerId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		fKickDistance = IJsonOption.DISTANCE.getFrom(game, jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
-		fRoll = IJsonOption.ROLLS.getFrom(game, jsonObject);
-		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);
+	public ReportKickTeamMateRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fKickingPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fKickedPlayerId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		fKickDistance = IJsonOption.DISTANCE.getFrom(source, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);
+		fRoll = IJsonOption.ROLLS.getFrom(source, jsonObject);
+		fReRolled = IJsonOption.RE_ROLLED.getFrom(source, jsonObject);
 		return this;
 	}
 

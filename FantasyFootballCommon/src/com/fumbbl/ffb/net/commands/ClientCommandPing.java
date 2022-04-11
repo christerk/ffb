@@ -46,10 +46,10 @@ public class ClientCommandPing extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPing initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		fTimestamp = IJsonOption.TIMESTAMP.getFrom(game, jsonObject);
+	public ClientCommandPing initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		fTimestamp = IJsonOption.TIMESTAMP.getFrom(source, jsonObject);
 		return this;
 	}
 

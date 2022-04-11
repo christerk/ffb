@@ -53,12 +53,12 @@ public class ClientCommandKickTeamMate extends ClientCommand implements ICommand
 		return jsonObject;
 	}
 
-	public ClientCommandKickTeamMate initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandKickTeamMate initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
-		fKickedPlayerId = IJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
-		fNumDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
+		fKickedPlayerId = IJsonOption.KICKED_PLAYER_ID.getFrom(source, jsonObject);
+		fNumDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
 		return this;
 	}
 

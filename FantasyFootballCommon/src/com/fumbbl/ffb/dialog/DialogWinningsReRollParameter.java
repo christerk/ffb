@@ -53,11 +53,11 @@ public class DialogWinningsReRollParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogWinningsReRollParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fOldRoll = IJsonOption.OLD_ROLL.getFrom(game, jsonObject);
+	public DialogWinningsReRollParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fOldRoll = IJsonOption.OLD_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

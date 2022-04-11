@@ -137,12 +137,12 @@ public final class StepEndBomb extends AbstractStep {
 	}
 
 	@Override
-	public StepEndBomb initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		allowMoveAfterPass = toPrimitive(IServerJsonOption.ALLOW_MOVE_AFTER_PASS.getFrom(game, jsonObject));
+	public StepEndBomb initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		allowMoveAfterPass = toPrimitive(IServerJsonOption.ALLOW_MOVE_AFTER_PASS.getFrom(source, jsonObject));
 		return this;
 	}
 

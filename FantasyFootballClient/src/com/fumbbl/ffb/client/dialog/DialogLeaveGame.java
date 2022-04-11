@@ -4,13 +4,12 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogLeaveGame extends DialogYesOrNoQuestion {
+public class DialogLeaveGame extends DialogThreeWayChoice {
 
 	public DialogLeaveGame(FantasyFootballClient pClient) {
-		super(pClient, "Leave Game", new String[] { "Do you really want to leave the game?" }, null);
+		super(pClient, "Leave Game", new String[]{"Do you really want to leave the game?"}, null);
 	}
 
 	public DialogId getId() {

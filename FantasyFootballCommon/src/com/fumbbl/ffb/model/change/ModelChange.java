@@ -64,11 +64,11 @@ public class ModelChange implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ModelChange initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fChangeId = (ModelChangeId) IJsonOption.MODEL_CHANGE_ID.getFrom(game, jsonObject);
-		fKey = IJsonOption.MODEL_CHANGE_KEY.getFrom(game, jsonObject);
-		fValue = fChangeId.fromJsonValue(game, IJsonOption.MODEL_CHANGE_VALUE.getFrom(game, jsonObject));
+	public ModelChange initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fChangeId = (ModelChangeId) IJsonOption.MODEL_CHANGE_ID.getFrom(source, jsonObject);
+		fKey = IJsonOption.MODEL_CHANGE_KEY.getFrom(source, jsonObject);
+		fValue = fChangeId.fromJsonValue(source, IJsonOption.MODEL_CHANGE_VALUE.getFrom(source, jsonObject));
 		return this;
 	}
 

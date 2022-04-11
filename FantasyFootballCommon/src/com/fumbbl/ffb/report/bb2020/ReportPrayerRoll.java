@@ -45,10 +45,10 @@ public class ReportPrayerRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPrayerRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		roll = IJsonOption.ROLL.getFrom(game, jsonObject);
+	public ReportPrayerRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		roll = IJsonOption.ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

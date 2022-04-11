@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ClientMode;
@@ -14,6 +11,9 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -22,7 +22,7 @@ public class ServerCommandJoin extends ServerCommand {
 
 	private String fCoach;
 	private ClientMode fClientMode;
-	private List<String> fPlayerNames;
+	private final List<String> fPlayerNames;
 	private int fSpectators;
 
 	public ServerCommandJoin() {
@@ -93,14 +93,14 @@ public class ServerCommandJoin extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandJoin initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(game, jsonObject);
-		fSpectators = IJsonOption.SPECTATORS.getFrom(game, jsonObject);
-		addPlayerNames(IJsonOption.PLAYER_NAMES.getFrom(game, jsonObject));
+	public ServerCommandJoin initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(source, jsonObject);
+		fSpectators = IJsonOption.SPECTATORS.getFrom(source, jsonObject);
+		addPlayerNames(IJsonOption.PLAYER_NAMES.getFrom(source, jsonObject));
 		return this;
 	}
 

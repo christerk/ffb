@@ -104,9 +104,9 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		Boolean endTurnObject = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		endTurn = endTurnObject != null && endTurnObject;
 		return this;

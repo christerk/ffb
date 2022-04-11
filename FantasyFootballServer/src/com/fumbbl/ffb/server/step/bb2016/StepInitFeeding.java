@@ -204,13 +204,13 @@ public class StepInitFeeding extends AbstractStep {
 	}
 
 	@Override
-	public StepInitFeeding initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fFeedOnPlayerChoice = IServerJsonOption.FEED_ON_PLAYER_CHOICE.getFrom(game, jsonObject);
-		fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+	public StepInitFeeding initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fFeedOnPlayerChoice = IServerJsonOption.FEED_ON_PLAYER_CHOICE.getFrom(source, jsonObject);
+		fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}
 

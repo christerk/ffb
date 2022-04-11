@@ -3,6 +3,7 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -11,10 +12,17 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.ISkillProperty;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifierFactory;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -41,6 +49,8 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean fStandingUp;
 	private boolean fSufferingBloodLust;
 	private boolean fSufferingAnimosity;
+	private boolean wasProne;
+	private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
 	private final transient Game fGame;
 
@@ -73,9 +83,11 @@ public class ActingPlayer implements IJsonSerializable {
 		fSufferingBloodLust = false;
 		fSufferingAnimosity = false;
 		hasJumped = false;
+		wasProne = false;
 		fumblerooskiePending = false;
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
+		skillsGrantedBy.clear();
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, fPlayerId);
 	}
 
@@ -128,6 +140,14 @@ public class ActingPlayer implements IJsonSerializable {
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ACTION, fPlayerAction);
 	}
 
+	public boolean wasProne() {
+		return wasProne;
+	}
+
+	public void setWasProne(boolean wasProne) {
+		this.wasProne = wasProne;
+	}
+
 	public boolean isSkillUsed(Skill pSkill) {
 		return fUsedSkills.contains(pSkill) || getPlayer().isUsed(pSkill);
 	}
@@ -136,10 +156,11 @@ public class ActingPlayer implements IJsonSerializable {
 		if ((pSkill == null) || isSkillUsed(pSkill)) {
 			return;
 		}
+		fUsedSkills.add(pSkill);
+
 		if (pSkill.getSkillUsageType().isTrackOutsideActivation()) {
 			getPlayer().markUsed(pSkill, getGame());
 		} else {
-			fUsedSkills.add(pSkill);
 			notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, pSkill);
 		}
 	}
@@ -249,6 +270,10 @@ public class ActingPlayer implements IJsonSerializable {
 		if (pStandingUp == fStandingUp) {
 			return;
 		}
+
+		if (pStandingUp) {
+			setWasProne(true);
+		}
 		fStandingUp = pStandingUp;
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_STANDING_UP, fStandingUp);
 	}
@@ -325,6 +350,40 @@ public class ActingPlayer implements IJsonSerializable {
 		return hasMoved() || hasFouled() || hasBlocked() || hasPassed() || fUsedSkills.stream().anyMatch(skill -> !skill.isNegativeTrait());
 	}
 
+	public StatBasedRollModifier statBasedModifier(ISkillProperty property) {
+		Skill skill = getPlayer().getSkillWithProperty(property);
+		if (skill != null && !isSkillUsed(skill)) {
+			StatBasedRollModifierFactory factory = skill.getStatBasedRollModifierFactory();
+			if (factory != null) {
+				return factory.create(getPlayer());
+			}
+		}
+
+		return null;
+	}
+
+	public boolean justStoodUp() {
+		Skill jumpUp = getPlayer().getSkillWithProperty(NamedProperties.canStandUpForFree);
+		boolean hasJumpUp = jumpUp != null;
+		boolean jumpUpUsedForBlock = hasJumpUp && isSkillUsed(jumpUp) && fPlayerAction == PlayerAction.BLOCK;
+
+		boolean justStoodUp = (isStandingUp() || wasProne()) && !hasJumpUp && fCurrentMove == Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP, getPlayer().getMovementWithModifiers());
+		boolean justStoodUpForFree = isStandingUp() && hasJumpUp && fCurrentMove == 0;
+
+		return jumpUpUsedForBlock || justStoodUp || justStoodUpForFree;
+	}
+
+	public void addGrantedSkill(Skill skill, Player<?> player) {
+		List<String> players = skillsGrantedBy.computeIfAbsent(skill.getName(), k -> new ArrayList<>());
+		if (player != null) {
+			players.add(player.getId());
+		}
+	}
+
+	public Map<String, List<String>> getSkillsGrantedBy() {
+		return skillsGrantedBy;
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
@@ -356,11 +415,12 @@ public class ActingPlayer implements IJsonSerializable {
 			usedSkillsArray.add(UtilJson.toJsonValue(skill));
 		}
 		IJsonOption.USED_SKILLS.addTo(jsonObject, usedSkillsArray);
+		IJsonOption.SKILLS_GRANTED_BY.addTo(jsonObject, skillsGrantedBy);
 		return jsonObject;
 	}
 
-	public ActingPlayer initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ActingPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fCurrentMove = IJsonOption.CURRENT_MOVE.getFrom(source, jsonObject);
 		fGoingForIt = IJsonOption.GOING_FOR_IT.getFrom(source, jsonObject);
@@ -381,6 +441,10 @@ public class ActingPlayer implements IJsonSerializable {
 			for (int i = 0; i < usedSkillsArray.size(); i++) {
 				fUsedSkills.add((Skill) UtilJson.toEnumWithName(fGame.getRules().getSkillFactory(), usedSkillsArray.get(i)));
 			}
+		}
+		if (IJsonOption.SKILLS_GRANTED_BY.isDefinedIn(jsonObject)) {
+			skillsGrantedBy.clear();
+			skillsGrantedBy.putAll(IJsonOption.SKILLS_GRANTED_BY.getFrom(source, jsonObject));
 		}
 		return this;
 	}

@@ -46,10 +46,10 @@ public class DialogInterceptionParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogInterceptionParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fThrowerId = IJsonOption.THROWER_ID.getFrom(game, jsonObject);
+	public DialogInterceptionParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fThrowerId = IJsonOption.THROWER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

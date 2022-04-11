@@ -24,7 +24,7 @@ public class ReportKickoffThrowARock implements IReport {
 
 	private int fRollHome;
 	private int fRollAway;
-	private List<String> fPlayersHit;
+	private final List<String> fPlayersHit;
 
 	public ReportKickoffThrowARock() {
 		fPlayersHit = new ArrayList<>();
@@ -84,13 +84,13 @@ public class ReportKickoffThrowARock implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffThrowARock initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fRollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		fRollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
+	public ReportKickoffThrowARock initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fRollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		fRollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
 		fPlayersHit.clear();
-		addPlayerIds(IJsonOption.PLAYER_IDS_HIT.getFrom(game, jsonObject));
+		addPlayerIds(IJsonOption.PLAYER_IDS_HIT.getFrom(source, jsonObject));
 		return this;
 	}
 

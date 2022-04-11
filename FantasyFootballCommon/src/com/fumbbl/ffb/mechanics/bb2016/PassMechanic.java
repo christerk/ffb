@@ -8,6 +8,7 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -31,15 +32,25 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 			"L L L B B B B B B          ",
 			"B B B B B B B              ",
 			"B B B B B                  ",
-			"B B                        " };
+			"B B                        "};
 
 	}
 
 	@Override
+	public Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers, StatBasedRollModifier statBasedRollModifier) {
+		return minimumRoll(thrower, distance, modifiers);
+	}
+
+	@Override
 	public Optional<Integer> minimumRoll(Player<?> pThrower, PassingDistance pPassingDistance,
-	                                     Collection<PassModifier> pPassModifiers) {
+																			 Collection<PassModifier> pPassModifiers) {
 		int minimumRoll = minimumRollInternal(pThrower, pPassingDistance, pPassModifiers);
 		return Optional.of(minimumRoll);
+	}
+
+	@Override
+	public PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction, StatBasedRollModifier statBasedRollModifier) {
+		return evaluatePass(thrower, roll, distance, modifiers, bombAction);
 	}
 
 	private int minimumRollInternal(Player<?> pThrower, PassingDistance pPassingDistance, Collection<PassModifier> pPassModifiers) {

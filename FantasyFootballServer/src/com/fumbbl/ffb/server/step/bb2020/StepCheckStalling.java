@@ -126,9 +126,9 @@ public class StepCheckStalling extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		ignoreActedFlag = IServerJsonOption.IGNORE_ACTED_FLAG.getFrom(source, UtilJson.toJsonObject(pJsonValue));
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		ignoreActedFlag = IServerJsonOption.IGNORE_ACTED_FLAG.getFrom(source, UtilJson.toJsonObject(jsonValue));
 		return this;
 	}
 }

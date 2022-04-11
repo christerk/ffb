@@ -198,13 +198,11 @@ public abstract class AbstractStep implements IStep {
 		pParameter.consume();
 	}
 
-	// JSON serialization
-
-	protected void markSkillsTrackedOutsideOfActivation(Game game) {
+	protected void markSkillsTrackedOutsideOfActivationAndRemoveEffects(Game game) {
 		Player<?> player = game.getActingPlayer().getPlayer();
 		if (player != null) {
 			player.getSkillsIncludingTemporaryOnes().stream()
-				.filter(skill -> skill.getSkillUsageType().isTrackOutsideActivation() && player.hasActiveEnhancement(skill))
+				.filter(skill -> skill.getSkillUsageType().isTrackOutsideActivation() && skill.getSkillUsageType().removeEffectsAtEndOfTurn() && player.hasActiveEnhancement(skill))
 				.forEach(skill -> {
 					if (game.getActingPlayer().hasActed()) {
 						player.markUsed(skill, game);
@@ -214,6 +212,8 @@ public abstract class AbstractStep implements IStep {
 		}
 	}
 
+	// JSON serialization
+
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.STEP_ID.addTo(jsonObject, getId());
@@ -222,8 +222,8 @@ public abstract class AbstractStep implements IStep {
 		return jsonObject;
 	}
 
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(source, jsonObject));
 		fLabel = IServerJsonOption.LABEL.getFrom(source, jsonObject);
 		fStepResult = null;

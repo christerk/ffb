@@ -54,13 +54,13 @@ public class ReportFanFactor implements IReport {
 	}
 
 	@Override
-	public ReportFanFactor initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		dedicatedFans = IJsonOption.DEDICATED_FANS.getFrom(game, jsonObject);
-		roll = IJsonOption.DEDICATED_FANS_ROLL.getFrom(game, jsonObject);
-		result = IJsonOption.DEDICATED_FANS_RESULT.getFrom(game, jsonObject);
+	public ReportFanFactor initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		dedicatedFans = IJsonOption.DEDICATED_FANS.getFrom(source, jsonObject);
+		roll = IJsonOption.DEDICATED_FANS_ROLL.getFrom(source, jsonObject);
+		result = IJsonOption.DEDICATED_FANS_RESULT.getFrom(source, jsonObject);
 		return this;
 	}
 

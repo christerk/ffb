@@ -3,6 +3,7 @@ package com.fumbbl.ffb.dialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -21,14 +22,16 @@ public class DialogReRollParameter implements IDialogParameter {
 	private boolean fTeamReRollOption;
 	private boolean fProReRollOption;
 	private boolean fFumble;
-	private Skill reRollSkill;
+	private ReRollSource singleUseReRollSource;
+	private Skill reRollSkill, modifyingSkill;
 
 	public DialogReRollParameter() {
 		super();
 	}
 
 	public DialogReRollParameter(String pPlayerId, ReRolledAction pReRolledAction, int pMinimumRoll,
-															 boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble, Skill reRollSkill) {
+															 boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble,
+															 Skill reRollSkill, ReRollSource singleUseReRollSource, Skill modifyingSkill) {
 		fPlayerId = pPlayerId;
 		fReRolledAction = pReRolledAction;
 		fMinimumRoll = pMinimumRoll;
@@ -36,6 +39,8 @@ public class DialogReRollParameter implements IDialogParameter {
 		fProReRollOption = pProReRollOption;
 		fFumble = pFumble;
 		this.reRollSkill = reRollSkill;
+		this.singleUseReRollSource = singleUseReRollSource;
+		this.modifyingSkill = modifyingSkill;
 	}
 
 	public DialogId getId() {
@@ -70,11 +75,18 @@ public class DialogReRollParameter implements IDialogParameter {
 		return reRollSkill;
 	}
 
-	// transformation
+	public ReRollSource getSingleUseReRollSource() {
+		return singleUseReRollSource;
+	}
+
+	public Skill getModifyingSkill() {
+		return modifyingSkill;
+	}
+// transformation
 
 	public IDialogParameter transform() {
 		return new DialogReRollParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(),
-			isProReRollOption(), isFumble(), reRollSkill);
+			isProReRollOption(), isFumble(), reRollSkill, singleUseReRollSource, modifyingSkill);
 	}
 
 	// JSON serialization
@@ -87,21 +99,25 @@ public class DialogReRollParameter implements IDialogParameter {
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
 		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
+		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
 		IJsonOption.FUMBLE.addTo(jsonObject, fFumble);
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
+		IJsonOption.MODIFYING_SKILL.addTo(jsonObject, modifyingSkill);
 		return jsonObject;
 	}
 
-	public DialogReRollParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(game, jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		fFumble = IJsonOption.FUMBLE.getFrom(game, jsonObject);
-		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+	public DialogReRollParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
+		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
+		fFumble = IJsonOption.FUMBLE.getFrom(source, jsonObject);
+		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -430,9 +430,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 	}
 
 	@Override
-	public StepApothecaryMultiple initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepApothecaryMultiple initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
 		JsonArray regenerationInjuryResultObject = IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED.getFrom(source, jsonObject);
 		if (regenerationInjuryResultObject != null) {

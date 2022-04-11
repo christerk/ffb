@@ -54,11 +54,11 @@ public class ReportPettyCash implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPettyCash initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fGold = IJsonOption.GOLD.getFrom(game, jsonObject);
+	public ReportPettyCash initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fGold = IJsonOption.GOLD.getFrom(source, jsonObject);
 		return this;
 	}
 

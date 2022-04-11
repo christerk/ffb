@@ -87,16 +87,16 @@ public class ReportCardsAndInducementsBought implements IReport {
 		return jsonObject;
 	}
 
-	public ReportCardsAndInducementsBought initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		inducements = IJsonOption.NR_OF_INDUCEMENTS.getFrom(game, jsonObject);
-		stars = IJsonOption.NR_OF_STARS.getFrom(game, jsonObject);
-		mercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(game, jsonObject);
-		gold = IJsonOption.GOLD.getFrom(game, jsonObject);
-		cards = IJsonOption.NR_OF_CARDS.getFrom(game, jsonObject);
-		newTv = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
+	public ReportCardsAndInducementsBought initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		inducements = IJsonOption.NR_OF_INDUCEMENTS.getFrom(source, jsonObject);
+		stars = IJsonOption.NR_OF_STARS.getFrom(source, jsonObject);
+		mercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(source, jsonObject);
+		gold = IJsonOption.GOLD.getFrom(source, jsonObject);
+		cards = IJsonOption.NR_OF_CARDS.getFrom(source, jsonObject);
+		newTv = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
 		return this;
 	}
 

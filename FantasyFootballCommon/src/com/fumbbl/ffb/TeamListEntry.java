@@ -1,9 +1,5 @@
 package com.fumbbl.ffb;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -16,6 +12,9 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.Attributes;
+
+import javax.xml.transform.sax.TransformerHandler;
 
 /**
  * 
@@ -192,15 +191,15 @@ public class TeamListEntry implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamListEntry initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fTeamStatus = (TeamStatus) IJsonOption.TEAM_STATUS.getFrom(game, jsonObject);
-		fDivision = IJsonOption.DIVISION.getFrom(game, jsonObject);
-		fTeamName = IJsonOption.TEAM_NAME.getFrom(game, jsonObject);
-		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
-		fRace = IJsonOption.RACE.getFrom(game, jsonObject);
-		fTreasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
+	public TeamListEntry initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fTeamStatus = (TeamStatus) IJsonOption.TEAM_STATUS.getFrom(source, jsonObject);
+		fDivision = IJsonOption.DIVISION.getFrom(source, jsonObject);
+		fTeamName = IJsonOption.TEAM_NAME.getFrom(source, jsonObject);
+		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
+		fRace = IJsonOption.RACE.getFrom(source, jsonObject);
+		fTreasury = IJsonOption.TREASURY.getFrom(source, jsonObject);
 		return this;
 	}
 

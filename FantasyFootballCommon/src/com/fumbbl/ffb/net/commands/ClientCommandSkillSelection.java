@@ -8,14 +8,14 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommandId;
 
-public class ClientCommandPrayerSelection extends ClientCommand {
+public class ClientCommandSkillSelection extends ClientCommand {
 	private String playerId;
 	private Skill skill;
 
-	public ClientCommandPrayerSelection() {
+	public ClientCommandSkillSelection() {
 	}
 
-	public ClientCommandPrayerSelection(String playerId, Skill skill) {
+	public ClientCommandSkillSelection(String playerId, Skill skill) {
 		this.playerId = playerId;
 		this.skill = skill;
 	}
@@ -30,6 +30,7 @@ public class ClientCommandPrayerSelection extends ClientCommand {
 
 	@Override
 	public NetCommandId getId() {
+		// The class was renamed but this id needs to stay the same in order for replays to work
 		return NetCommandId.CLIENT_PRAYER_SELECTION;
 	}
 
@@ -40,11 +41,11 @@ public class ClientCommandPrayerSelection extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPrayerSelection initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		skill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+	public ClientCommandSkillSelection initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		skill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

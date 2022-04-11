@@ -46,11 +46,11 @@ public class ClientCommandReplay extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandReplay initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandReplay initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
-		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(game, jsonObject);
+		fGameId = IJsonOption.GAME_ID.getFrom(source, jsonObject);
+		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -11,6 +8,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -84,18 +84,18 @@ public class ServerCommandTalk extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandTalk initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
+	public ServerCommandTalk initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
 		// paranoid backwards compatibility in case a staff member was talking to coaches during the update.
 		// can be removed for the next update
 		if (IJsonOption.ADMIN_MODE.isDefinedIn(jsonObject)) {
-			mode = IJsonOption.ADMIN_MODE.getFrom(game, jsonObject) ? Mode.STAFF : Mode.REGULAR;
+			mode = IJsonOption.ADMIN_MODE.getFrom(source, jsonObject) ? Mode.STAFF : Mode.REGULAR;
 		} else if (IJsonOption.TALK_MODE.isDefinedIn(jsonObject)) {
-			mode = Mode.valueOf(IJsonOption.TALK_MODE.getFrom(game, jsonObject));
+			mode = Mode.valueOf(IJsonOption.TALK_MODE.getFrom(source, jsonObject));
 		}
-		addTalks(IJsonOption.TALKS.getFrom(game, jsonObject));
+		addTalks(IJsonOption.TALKS.getFrom(source, jsonObject));
 		return this;
 	}
 

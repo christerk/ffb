@@ -40,6 +40,16 @@ public final class UtilCards {
 		return Arrays.stream(findAllSkills(player)).filter(skill -> skill.hasSkillProperty(property)).findFirst();
 	}
 
+	public static Optional<Skill> getUnusedSkillWithProperty(Player<?> player, ISkillProperty property) {
+		Optional<Skill> skill = getSkillWithProperty(player, property);
+		if (skill.isPresent()) {
+			if (!player.isUsed(skill.get())) {
+				return skill;
+			}
+		}
+		return Optional.empty();
+	}
+
 	public static boolean hasUncanceledSkillWithProperty(Player<?> player, ISkillProperty property) {
 		Skill[] skills = findAllSkills(player);
 		return Arrays.stream(skills).anyMatch(skill -> skill.hasSkillProperty(property))
@@ -75,10 +85,15 @@ public final class UtilCards {
 		return pPlayer.getSkillsIncludingTemporaryOnes().toArray(new Skill[0]);
 	}
 
-	public static Card[] findAllActiveCards(Game pGame) {
+	public static Card[] findAllCards(Game pGame) {
 		List<Card> allActiveCards = new ArrayList<>();
 		Collections.addAll(allActiveCards, pGame.getTurnDataHome().getInducementSet().getActiveCards());
 		Collections.addAll(allActiveCards, pGame.getTurnDataAway().getInducementSet().getActiveCards());
+		// we have to add all cards so that replays do not break as cards used during the game are always
+		// marked as deactivated while deserializing commands
+		// so card modifiers need to check if the card is active
+		Collections.addAll(allActiveCards, pGame.getTurnDataHome().getInducementSet().getDeactivatedCards());
+		Collections.addAll(allActiveCards, pGame.getTurnDataAway().getInducementSet().getDeactivatedCards());
 		return allActiveCards.toArray(new Card[0]);
 	}
 

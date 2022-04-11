@@ -38,7 +38,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -101,7 +100,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fPosition = new RosterPosition(null);
 		skillValues = new LinkedHashMap<>();
 		displayValues = new LinkedHashMap<>();
-        usedSkills  = new HashSet<>();
+		usedSkills = new HashSet<>();
 	}
 
 	@Override
@@ -720,9 +719,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 		}
 	}
 
-	public RosterPlayer initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public RosterPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		fId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fNr = IJsonOption.PLAYER_NR.getFrom(source, jsonObject);
@@ -785,7 +784,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void addTemporaryModifiers(String source, Set<TemporaryStatModifier> modifiers) {
-		temporaryModifiers.put(source, modifiers);
+		if (!temporaryModifiers.containsKey(source)) {
+			temporaryModifiers.put(source, new HashSet<>());
+		}
+		temporaryModifiers.get(source).addAll(modifiers);
 	}
 
 	@Override
@@ -809,7 +811,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void addTemporarySkills(String source, Set<SkillWithValue> skills) {
-		temporarySkills.put(source, skills);
+		if (!temporarySkills.containsKey(source)) {
+			temporarySkills.put(source, new HashSet<>());
+		}
+		temporarySkills.get(source).addAll(skills);
 	}
 
 	@Override
@@ -824,7 +829,11 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void addTemporaryProperties(String source, Set<ISkillProperty> properties) {
-		temporaryProperties.put(source, properties);
+		if (!temporaryProperties.containsKey(source)) {
+			temporaryProperties.put(source, new HashSet<>());
+		}
+		temporaryProperties.get(source).addAll(properties);
+
 	}
 
 	@Override

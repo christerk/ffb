@@ -39,10 +39,10 @@ public class ClientCommandReceiveChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandReceiveChoice initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandReceiveChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fChoiceReceive = IJsonOption.CHOICE_RECEIVE.getFrom(game, jsonObject);
+		fChoiceReceive = IJsonOption.CHOICE_RECEIVE.getFrom(source, jsonObject);
 		return this;
 	}
 

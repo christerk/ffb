@@ -364,8 +364,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameState initFrom(IFactorySource emptySource, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public GameState initFrom(IFactorySource emptySource, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		
 		// Preinitialize the game so we can get the correct factories later.
 		setGame(null);

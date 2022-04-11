@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.game.end;
 
-import java.util.Date;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.GameStatus;
@@ -21,6 +19,8 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+
+import java.util.Date;
 
 /**
  * Final step in end game sequence.
@@ -74,8 +74,8 @@ public final class StepEndGame extends AbstractStep {
 	}
 
 	@Override
-	public StepEndGame initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepEndGame initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

@@ -47,11 +47,11 @@ public class ClientCommandSwoop extends ClientCommand implements ICommandWithAct
 		return jsonObject;
 	}
 
-	public ClientCommandSwoop initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandSwoop initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
-		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
+		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

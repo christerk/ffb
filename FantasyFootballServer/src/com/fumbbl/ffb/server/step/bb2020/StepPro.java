@@ -110,9 +110,9 @@ public class StepPro extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public AbstractStepWithReRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, UtilJson.toJsonObject(pJsonValue));
+	public AbstractStepWithReRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, UtilJson.toJsonObject(jsonValue));
 		return this;
 	}
 }

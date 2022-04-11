@@ -88,9 +88,9 @@ public class StepSetDefender extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		ignoreNullValue = IJsonOption.IGNORE_NULL_VALUE.getFrom(source, jsonObject);
 		return this;

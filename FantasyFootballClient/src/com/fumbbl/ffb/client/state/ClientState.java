@@ -1,14 +1,17 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.IClientPropertyValue;
+import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -18,12 +21,19 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.ISkillProperty;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillClassWithValue;
+import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -32,8 +42,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -119,7 +131,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		if (pCoordinate != null) {
 			fSelectSquareCoordinate = pCoordinate;
 			drawSelectSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f, 0.2f));
-			// drawSelectSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f));
 		}
 	}
 
@@ -304,4 +315,48 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			&& UtilPlayer.canGaze(game, player, property));
 	}
 
+	protected boolean isTreacherousAvailable(ActingPlayer actingPlayer) {
+		return !actingPlayer.hasActed() && isTreacherousAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isTreacherousAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canStabTeamMateForBall)
+			&& Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(player)))
+			.anyMatch(adjacentPlayer -> UtilPlayer.hasBall(game, adjacentPlayer));
+	}
+
+	protected JMenuItem createTreacherousItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Treacherous",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
+		return menuItem;
+	}
+
+	protected boolean isWisdomAvailable(ActingPlayer actingPlayer) {
+		return !actingPlayer.hasActed() && isWisdomAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isWisdomAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+
+		Set<Skill> ownedSkills = player.getSkillsIncludingTemporaryOnes();
+
+		boolean canGainSkill = Constant.getGrantAbleSkills(game.getFactory(FactoryType.Factory.SKILL)).stream()
+			.map(SkillWithValue::getSkill)
+			.anyMatch(skillClass -> !ownedSkills.contains(skillClass));
+
+		return canGainSkill && Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
+				game.getFieldModel().getPlayerCoordinate(player), false))
+			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates) && !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
+	}
+
+	protected JMenuItem createWisdomItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Wisdom of the White Dwarf",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
+		return menuItem;
+	}
 }

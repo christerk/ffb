@@ -228,14 +228,14 @@ public final class StepPlayCard extends AbstractStep {
 	}
 
 	@Override
-	public StepPlayCard initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(game, jsonObject);
-		fCard = (Card) IServerJsonOption.CARD.getFrom(game, jsonObject);
-		fIllegalSubstitution = IServerJsonOption.ILLEGAL_SUBSTITUTION.getFrom(game, jsonObject);
-		fSetupPlayerId = IServerJsonOption.SETUP_PLAYER_ID.getFrom(game, jsonObject);
-		fSetupPlayerCoordinate = IServerJsonOption.SETUP_PLAYER_COORDINATE.getFrom(game, jsonObject);
+	public StepPlayCard initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(source, jsonObject);
+		fCard = (Card) IServerJsonOption.CARD.getFrom(source, jsonObject);
+		fIllegalSubstitution = IServerJsonOption.ILLEGAL_SUBSTITUTION.getFrom(source, jsonObject);
+		fSetupPlayerId = IServerJsonOption.SETUP_PLAYER_ID.getFrom(source, jsonObject);
+		fSetupPlayerCoordinate = IServerJsonOption.SETUP_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.util;
 
+import com.fumbbl.ffb.Constant;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -9,14 +12,15 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
+import java.util.Set;
+
 /**
- * 
  * @author Kalimar
  */
 public class UtilActingPlayer {
 
 	public static boolean changeActingPlayer(Game pGame, String pActingPlayerId, PlayerAction pPlayerAction,
-			boolean jumping) {
+																					 boolean jumping) {
 
 		boolean changed = false;
 
@@ -42,7 +46,21 @@ public class UtilActingPlayer {
 				} else {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.STANDING));
 				}
+
 			}
+			if (!actingPlayer.hasActed()) {
+				Set<String> enhancementsToRemove = Constant.getEnhancementSkillsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
+				enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), enhancement));
+
+				SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
+				actingPlayer.getSkillsGrantedBy().forEach((key, value) -> {
+					if (key != null && value != null) {
+						Skill skill = skillFactory.forName(key);
+						value.stream().map(pGame::getPlayerById).forEach(player -> player.markUnused(skill, pGame));
+					}
+				});
+			}
+
 			pGame.getActingPlayer().setPlayer(null);
 		}
 
@@ -73,11 +91,11 @@ public class UtilActingPlayer {
 				}
 			}
 			Player<?>[] players = pGame.getPlayers();
-			for (int i = 0; i < players.length; i++) {
-				PlayerState playerState = fieldModel.getPlayerState(players[i]);
+			for (Player<?> value : players) {
+				PlayerState playerState = fieldModel.getPlayerState(value);
 				if ((playerState.getBase() == PlayerState.BLOCKED) || ((playerState.getBase() == PlayerState.MOVING)
-						&& (players[i] != actingPlayer.getPlayer()) && (players[i] != pGame.getThrower()))) {
-					fieldModel.setPlayerState(players[i], playerState.changeBase(PlayerState.STANDING));
+					&& (value != actingPlayer.getPlayer()) && (value != pGame.getThrower()))) {
+					fieldModel.setPlayerState(value, playerState.changeBase(PlayerState.STANDING));
 				}
 			}
 		}

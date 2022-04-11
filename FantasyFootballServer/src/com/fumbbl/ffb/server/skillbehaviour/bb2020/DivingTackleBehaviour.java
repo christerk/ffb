@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -46,7 +47,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepDivingTackle step, StepState state,
-			                                           ClientCommandUseSkill useSkillCommand) {
+																								 ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -55,6 +56,10 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+				StatBasedRollModifier usedStatBasedRollModifier = null;
+				if (state.usingModifyingSkill != null && state.usingModifyingSkill) {
+					usedStatBasedRollModifier = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
+				}
 				if (state.usingDivingTackle == null) {
 					game.setDefenderId(null);
 					state.usingDivingTackle = false;
@@ -70,31 +75,61 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
 								state.coordinateTo, state.usingBreakTackle));
 							dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
-							int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
-								dodgeModifiers);
-							int minimumRollWithoutBreakTackle = minimumRoll;
+
+							int minimumRollWithCurrentModifiers = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
+								dodgeModifiers, usedStatBasedRollModifier);
+							int minimumRollWithoutBreakTackle = minimumRollWithCurrentModifiers;
 							Optional<DodgeModifier> strengthModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
 							if (strengthModifier.isPresent() && dodgeModifiers.remove(strengthModifier.get())) {
 								minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game,
-									actingPlayer.getPlayer(), dodgeModifiers);
+									actingPlayer.getPlayer(), dodgeModifiers, usedStatBasedRollModifier);
 								dodgeModifiers.add(strengthModifier.get());
 							}
-							if (!DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRoll)) {
-								String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-								UtilServerDialog.showDialog(step.getGameState(),
-									new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1),
-									true);
-								state.usingDivingTackle = null;
+							String[] descriptions = null;
+							if (!DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRollWithCurrentModifiers)) {
+								StatBasedRollModifier availableStatBasedModifier = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
+
+								if (strengthModifier.isPresent()) {
+									if (usedStatBasedRollModifier == null && availableStatBasedModifier != null) {
+										if (wouldSucceed(state, game, actingPlayer, mechanic, availableStatBasedModifier, dodgeModifiers)) {
+											descriptions = new String[]{
+												"This will NOT trip the dodger, but will force the use of " + availableStatBasedModifier.getName() + "."};
+										}
+									}
+								} else {
+									Set<DodgeModifier> dodgeModifiersWithBT = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
+										state.coordinateTo, true));
+									dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
+									int requiredRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
+										dodgeModifiersWithBT, usedStatBasedRollModifier);
+									boolean strengthModifierCanBeAdded = dodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength);
+
+									if (strengthModifierCanBeAdded && DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, requiredRoll)) {
+										// Ask if Diving tackle is going to be used strictly to trigger Break Tackle.
+										// The dodge will still succeed.
+										descriptions = new String[]{
+											"This will NOT trip the dodger, but will force the use of BREAK TACKLE."};
+									} else if (usedStatBasedRollModifier == null && availableStatBasedModifier != null) {
+										if (wouldSucceed(state, game, actingPlayer, mechanic, availableStatBasedModifier, dodgeModifiersWithBT)) {
+											if (strengthModifierCanBeAdded) {
+												descriptions = new String[]{
+													"This will only trip the dodger, if BREAK TACKLE and " + availableStatBasedModifier.getName() + " are not used."};
+											} else {
+												descriptions = new String[]{
+													"This will only trip the dodger, if " + availableStatBasedModifier.getName() + " is not used."};
+											}
+										}
+									}
+								}
+
+								promptForDT(game, step, divingTacklers, descriptions, state);
 							} else if (!DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll,
 								minimumRollWithoutBreakTackle)) {
 								// Ask if Diving tackle is going to be used strictly to trigger Break Tackle.
 								// The dodge will still succeed.
-								String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-								String[] descriptions = new String[]{
+								descriptions = new String[]{
 									"This will NOT trip the dodger, but will force the use of BREAK TACKLE."};
-								UtilServerDialog.showDialog(step.getGameState(), new DialogPlayerChoiceParameter(teamId,
-									PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1), true);
-								state.usingDivingTackle = null;
+								promptForDT(game, step, divingTacklers, descriptions, state);
 							} else {
 								step.getResult().addReport(new ReportSkillUse(null, skill, false, SkillUse.WOULD_NOT_HELP));
 							}
@@ -110,8 +145,10 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 						Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
 							state.coordinateTo, false));
+						dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
+
 						int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
-							dodgeModifiers);
+							dodgeModifiers, usedStatBasedRollModifier);
 
 						Optional<DodgeModifier> strengthModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
 
@@ -135,6 +172,19 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 					}
 				}
 				return false;
+			}
+
+			private boolean wouldSucceed(StepState state, Game game, ActingPlayer actingPlayer, AgilityMechanic mechanic, StatBasedRollModifier availableStatBasedModifier, Set<DodgeModifier> dodgeModifiersWithBT) {
+				int requiredRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
+					dodgeModifiersWithBT, availableStatBasedModifier);
+				return DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, requiredRoll);
+			}
+
+			private void promptForDT(Game game, StepDivingTackle step, Player<?>[] divingTacklers, String[] descriptions, StepState state) {
+				String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
+				UtilServerDialog.showDialog(step.getGameState(), new DialogPlayerChoiceParameter(teamId,
+					PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1), true);
+				state.usingDivingTackle = null;
 			}
 
 		});

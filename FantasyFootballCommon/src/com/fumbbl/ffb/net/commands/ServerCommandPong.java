@@ -50,8 +50,8 @@ public class ServerCommandPong extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandPong initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ServerCommandPong initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		fTimestamp = IJsonOption.TIMESTAMP.getFrom(source, jsonObject);
 		return this;

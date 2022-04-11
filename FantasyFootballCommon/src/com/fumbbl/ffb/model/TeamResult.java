@@ -471,8 +471,8 @@ public class TeamResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamResult initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public TeamResult initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fScore = IJsonOption.SCORE.getFrom(source, jsonObject);
 		fConceded = IJsonOption.CONCEDED.getFrom(source, jsonObject);
 		fRaisedDead = IJsonOption.RAISED_DEAD.getFrom(source, jsonObject);

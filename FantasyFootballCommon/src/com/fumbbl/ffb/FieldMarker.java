@@ -82,11 +82,11 @@ public class FieldMarker implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public FieldMarker initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		coordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
-		homeText = IJsonOption.HOME_TEXT.getFrom(game, jsonObject);
-		awayText = IJsonOption.AWAY_TEXT.getFrom(game, jsonObject);
+	public FieldMarker initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		coordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
+		homeText = IJsonOption.HOME_TEXT.getFrom(source, jsonObject);
+		awayText = IJsonOption.AWAY_TEXT.getFrom(source, jsonObject);
 		return this;
 	}
 

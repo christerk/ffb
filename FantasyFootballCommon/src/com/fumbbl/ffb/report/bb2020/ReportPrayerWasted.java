@@ -47,10 +47,10 @@ public class ReportPrayerWasted implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPrayerWasted initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		name = IJsonOption.NAME.getFrom(game, jsonObject);
+	public ReportPrayerWasted initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		name = IJsonOption.NAME.getFrom(source, jsonObject);
 		return this;
 	}
 

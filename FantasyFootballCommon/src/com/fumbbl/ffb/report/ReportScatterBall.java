@@ -4,8 +4,8 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.DirectionFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -22,8 +22,8 @@ import java.util.List;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportScatterBall implements IReport {
 
-	private List<Direction> fDirections;
-	private List<Integer> fRolls;
+	private final List<Direction> fDirections;
+	private final List<Integer> fRolls;
 	private boolean fGustOfWind;
 
 	public ReportScatterBall() {
@@ -105,17 +105,17 @@ public class ReportScatterBall implements IReport {
 		return jsonObject;
 	}
 
-	public ReportScatterBall initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(game, jsonObject);
+	public ReportScatterBall initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(source, jsonObject);
 		if (directionArray != null) {
 			for (int i = 0; i < directionArray.size(); i++) {
-				addDirection((Direction) UtilJson.toEnumWithName(game.<DirectionFactory>getFactory(Factory.DIRECTION), directionArray.get(i)));
+				addDirection((Direction) UtilJson.toEnumWithName(source.<DirectionFactory>getFactory(Factory.DIRECTION), directionArray.get(i)));
 			}
 		}
-		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));
-		fGustOfWind = IJsonOption.GUST_OF_WIND.getFrom(game, jsonObject);
+		addRolls(IJsonOption.ROLLS.getFrom(source, jsonObject));
+		fGustOfWind = IJsonOption.GUST_OF_WIND.getFrom(source, jsonObject);
 		return this;
 	}
 

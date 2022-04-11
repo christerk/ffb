@@ -19,9 +19,12 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.BlitzMove;
@@ -33,13 +36,16 @@ import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
+import com.fumbbl.ffb.server.step.generator.bb2020.Treacherous;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -98,6 +104,19 @@ public final class StepEndSelecting extends AbstractStep {
 	public void start() {
 		super.start();
 		executeStep();
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		super.init(pParameterSet);
+		if (pParameterSet != null) {
+			Arrays.stream(pParameterSet.values()).forEach(parameter -> {
+				if (parameter.getKey() == StepParameterKey.BLOCK_TARGETS) {
+					//noinspection unchecked
+					blockTargets = (List<BlockTarget>) parameter.getValue();
+				}
+			});
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -239,6 +258,8 @@ public final class StepEndSelecting extends AbstractStep {
 		SelectBlitzTarget selectBlitzTarget = (SelectBlitzTarget) factory.forName(SequenceGenerator.Type.SelectBlitzTarget.name());
 		SelectGazeTarget selectGazeTarget = (SelectGazeTarget) factory.forName(SequenceGenerator.Type.SelectGazeTarget.name());
 		MultiBlock multiBlock = (MultiBlock) factory.forName(SequenceGenerator.Type.MultiBlock.name());
+		Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true, blockTargets);
+		Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pPlayerAction) {
@@ -335,6 +356,18 @@ public final class StepEndSelecting extends AbstractStep {
 				game.getTurnData().setBlitzUsed(true);
 				endGenerator.pushSequence(endParams);
 				break;
+			case TREACHEROUS:
+				selectGenerator.pushSequence(selectParams);
+				Treacherous.SequenceParams treacherousParams = new Treacherous.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
+				Treacherous treacherousGenerator = (Treacherous) factory.forName(SequenceGenerator.Type.Treacherous.name());
+				treacherousGenerator.pushSequence(treacherousParams);
+				break;
+			case WISDOM_OF_THE_WHITE_DWARF:
+				selectGenerator.pushSequence(selectParams);
+				Sequence sequence = new Sequence(getGameState());
+				sequence.add(StepId.WISDOM_OF_THE_WHITE_DWARF);
+				getGameState().getStepStack().push(sequence.getSequence());
+				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
 		}
@@ -367,28 +400,28 @@ public final class StepEndSelecting extends AbstractStep {
 	}
 
 	@Override
-	public StepEndSelecting initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
-		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
-		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(game, jsonObject);
-		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
-		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
-		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(game, jsonObject);
-		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
-		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(game, jsonObject);
-		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
-		fHailMaryPass = IServerJsonOption.HAIL_MARY_PASS.getFrom(game, jsonObject);
-		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
-		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
-		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(game, jsonObject);
+	public StepEndSelecting initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(source, jsonObject);
+		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(source, jsonObject);
+		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(source, jsonObject);
+		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
+		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
+		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(source, jsonObject);
+		fUsingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
+		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(source, jsonObject);
+		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(source, jsonObject);
+		fHailMaryPass = IServerJsonOption.HAIL_MARY_PASS.getFrom(source, jsonObject);
+		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(source, jsonObject);
+		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		JsonArray jsonArray = IJsonOption.SELECTED_BLOCK_TARGETS.getFrom(source, jsonObject);
 		blockTargets.clear();
 		jsonArray.values().stream()
-			.map(value -> new BlockTarget().initFrom(game, value))
+			.map(value -> new BlockTarget().initFrom(source, value))
 			.forEach(value -> blockTargets.add(value));
 
 		return this;

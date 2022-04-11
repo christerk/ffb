@@ -56,12 +56,12 @@ public class KnockoutRecovery implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public KnockoutRecovery initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fRecovering = IJsonOption.RECOVERING.getFrom(game, jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		fBloodweiserBabes = IJsonOption.BLOODWEISER_KEGS.getFrom(game, jsonObject);
+	public KnockoutRecovery initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fRecovering = IJsonOption.RECOVERING.getFrom(source, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		fBloodweiserBabes = IJsonOption.BLOODWEISER_KEGS.getFrom(source, jsonObject);
 		return this;
 	}
 

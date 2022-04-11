@@ -8,7 +8,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.action.pass.StepHailMaryPass;
+import com.fumbbl.ffb.server.step.bb2020.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.skill.bb2020.special.TheBallista;
 

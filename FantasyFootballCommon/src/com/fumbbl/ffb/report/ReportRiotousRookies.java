@@ -54,12 +54,12 @@ public class ReportRiotousRookies implements IReport {
 		return jsonObject;
 	}
 
-	public ReportRiotousRookies initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		roll = IJsonOption.RIOTOUS_ROLL.getFrom(game, jsonObject);
-		amount = IJsonOption.RIOTOUS_AMOUNT.getFrom(game, jsonObject);
-		teamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+	public ReportRiotousRookies initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		roll = IJsonOption.RIOTOUS_ROLL.getFrom(source, jsonObject);
+		amount = IJsonOption.RIOTOUS_AMOUNT.getFrom(source, jsonObject);
+		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		return this;
 	}
 }

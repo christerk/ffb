@@ -126,12 +126,12 @@ public class StepMove extends AbstractStep {
 	}
 
 	@Override
-	public StepMove initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
-		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(game, jsonObject);
-		fMoveStackSize = IServerJsonOption.MOVE_STACK_SIZE.getFrom(game, jsonObject);
+	public StepMove initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		fMoveStackSize = IServerJsonOption.MOVE_STACK_SIZE.getFrom(source, jsonObject);
 		return this;
 	}
 

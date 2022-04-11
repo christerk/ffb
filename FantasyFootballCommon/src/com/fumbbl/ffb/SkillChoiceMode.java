@@ -5,12 +5,16 @@ package com.fumbbl.ffb;
  */
 public enum SkillChoiceMode implements INamedObject {
 
-	INTENSIVE_TRAINING("intensiveTraining");
+	INTENSIVE_TRAINING("intensiveTraining", "Select a primary skill for ", "Intensive Training", "Waiting for coach to choose Skill."),
+	WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", "Select a skill for", "Wisdom of the White Dwarf", "Waiting for coach to choose Skill.");
 
-	private final String name;
+	private final String name, header, title, message;
 
-	SkillChoiceMode(String pName) {
+	SkillChoiceMode(String pName, String header, String title, String message) {
 		name = pName;
+		this.header = header;
+		this.title = title;
+		this.message = message;
 	}
 
 	public String getName() {
@@ -18,39 +22,15 @@ public enum SkillChoiceMode implements INamedObject {
 	}
 
 	public String getDialogHeader(String playerName) {
-		StringBuilder header = new StringBuilder();
-		switch (this) {
-			case INTENSIVE_TRAINING:
-				header.append("Select a primary skill for ").append(playerName);
-				break;
-			default:
-				break;
-		}
-		return header.toString();
+		return header + playerName;
 	}
 
 	public String getStatusTitle() {
-		StringBuilder title = new StringBuilder();
-		switch (this) {
-			case INTENSIVE_TRAINING:
-				title.append("Intensive Training");
-				break;
-			default:
-				break;
-		}
-		return title.toString();
+		return title;
 	}
 
 	public String getStatusMessage() {
-		StringBuilder message = new StringBuilder();
-		switch (this) {
-			case INTENSIVE_TRAINING:
-				message.append("Waiting for coach to choose Skill.");
-				break;
-			default:
-				break;
-		}
-		return message.toString();
+		return message;
 	}
 
 }

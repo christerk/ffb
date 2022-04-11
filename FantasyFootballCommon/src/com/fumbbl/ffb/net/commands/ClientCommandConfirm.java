@@ -20,8 +20,8 @@ public class ClientCommandConfirm extends ClientCommand {
 
 	// JSON serialization
 
-	public ClientCommandConfirm initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandConfirm initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

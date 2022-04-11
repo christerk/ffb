@@ -317,22 +317,22 @@ public final class StepEndSelecting extends AbstractStep {
 	}
 
 	@Override
-	public StepEndSelecting initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
-		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
-		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(game, jsonObject);
-		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
-		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
-		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(game, jsonObject);
-		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
-		fHailMaryPass = IServerJsonOption.HAIL_MARY_PASS.getFrom(game, jsonObject);
-		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
-		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
+	public StepEndSelecting initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(source, jsonObject);
+		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(source, jsonObject);
+		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(source, jsonObject);
+		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
+		fUsingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
+		fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(source, jsonObject);
+		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(source, jsonObject);
+		fHailMaryPass = IServerJsonOption.HAIL_MARY_PASS.getFrom(source, jsonObject);
+		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(source, jsonObject);
+		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
 		return this;
 	}
 

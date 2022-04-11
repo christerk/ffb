@@ -62,12 +62,12 @@ public class ReportThrowIn implements IReport {
 		return jsonObject;
 	}
 
-	public ReportThrowIn initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(game, jsonObject);
-		fDirectionRoll = IJsonOption.DIRECTION_ROLL.getFrom(game, jsonObject);
-		fDistanceRoll = IJsonOption.DISTANCE_ROLL.getFrom(game, jsonObject);
+	public ReportThrowIn initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(source, jsonObject);
+		fDirectionRoll = IJsonOption.DIRECTION_ROLL.getFrom(source, jsonObject);
+		fDistanceRoll = IJsonOption.DISTANCE_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

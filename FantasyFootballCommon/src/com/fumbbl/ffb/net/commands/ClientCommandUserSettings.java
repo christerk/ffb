@@ -69,10 +69,10 @@ public class ClientCommandUserSettings extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUserSettings initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandUserSettings initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		init(IJsonOption.SETTING_NAMES.getFrom(game, jsonObject), IJsonOption.SETTING_VALUES.getFrom(game, jsonObject));
+		init(IJsonOption.SETTING_NAMES.getFrom(source, jsonObject), IJsonOption.SETTING_VALUES.getFrom(source, jsonObject));
 		return this;
 	}
 

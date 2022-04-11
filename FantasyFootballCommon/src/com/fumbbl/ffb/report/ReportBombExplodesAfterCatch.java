@@ -23,12 +23,12 @@ public class ReportBombExplodesAfterCatch implements IReport {
 	}
 
 	@Override
-	public ReportBombExplodesAfterCatch initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		roll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		catcherId = IJsonOption.CATCHER_ID.getFrom(game, jsonObject);
-		explodes = IJsonOption.EXPLODES.getFrom(game, jsonObject);
+	public ReportBombExplodesAfterCatch initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		roll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		catcherId = IJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		explodes = IJsonOption.EXPLODES.getFrom(source, jsonObject);
 		return this;
 	}
 

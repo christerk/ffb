@@ -27,6 +27,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -45,6 +46,7 @@ import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -75,6 +77,7 @@ public class PlayerDetailComponent extends JPanel {
 	private static final int _DISPLAY_ACTING_PLAYER = 1;
 	private static final int _DISPLAY_DEFENDING_PLAYER = 2;
 	private static final int _DISPLAY_SELECTED_PLAYER = 3;
+	public static final int LINE_LENGTH = 19;
 
 	private final SideBarComponent fSideBar;
 	private Player<?> fPlayer;
@@ -224,10 +227,13 @@ public class PlayerDetailComponent extends JPanel {
 				moveLeft -= actingPlayer.getCurrentMove();
 				if (actingPlayer.isGoingForIt() && (moveLeft <= 0)) {
 					moveIsRed = true;
+					moveLeft = 2 + moveLeft;
 					if (getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi)) {
-						moveLeft = 3 + moveLeft;
-					} else {
-						moveLeft = 2 + moveLeft;
+						moveLeft++;
+					}
+
+					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeAnExtraGfiOnce)) {
+						moveLeft++;
 					}
 				}
 			}
@@ -363,7 +369,7 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			PlayerState playerState = game.getFieldModel().getPlayerState(getPlayer());
-			List<String> modifications = new ArrayList<>();
+			Set<String> modifications = new LinkedHashSet<>();
 			List<String> acquiredSkills = new ArrayList<>();
 			List<String> rosterSkills = new ArrayList<>();
 			Set<String> usedSkills = new HashSet<>();
@@ -396,10 +402,13 @@ public class PlayerDetailComponent extends JPanel {
 			}
 			modifications.addAll(getPlayer().getEnhancementSources().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
 
+			acquiredSkills.removeAll(modifications);
+			rosterSkills.removeAll(modifications);
+
 			int height = 0;
 			if (modifications.size() > 0) {
 				g2d.setColor(new Color(220, 0, 0));
-				height += drawPlayerSkills(g2d, x, y + height, modifications, usedSkills) + 2;
+				height += drawPlayerSkills(g2d, x, y + height, new ArrayList<>(modifications), usedSkills) + 2;
 			}
 
 			if (acquiredSkills.size() > 0) {
@@ -439,27 +448,34 @@ public class PlayerDetailComponent extends JPanel {
 
 	private List<String> splitSkill(String skill) {
 		List<String> parts = new ArrayList<>();
-		boolean isLong = StringTool.isProvided(skill) && skill.length() > 20;
-		if (!isLong) {
+		boolean isShort = StringTool.isProvided(skill) && skill.length() <= LINE_LENGTH;
+		if (isShort) {
 			parts.add(skill);
 			return parts;
 		}
 
-		int index = skill.indexOf(",");
-		if (index < 0) {
-			index = skill.indexOf("(");
-		} else {
-			// the comma should be on the first line
-			index++;
-		}
-		if (index < 0) {
-			parts.add(skill);
-			return parts;
+		String[] words = skill.split(" ");
+
+		StringBuilder line = new StringBuilder(LINE_LENGTH);
+
+		for (String word: words) {
+			if (line.length() + word.length() > LINE_LENGTH && line.toString().trim().length() > 0) {
+				addPart(parts, line);
+				line = new StringBuilder(LINE_LENGTH);
+			}
+			line.append(word).append(" ");
+
 		}
 
-		parts.add(skill.substring(0, index));
-		parts.add("  " + skill.substring(index));
+		if (line.toString().trim().length() > 0) {
+			addPart(parts, line);
+		}
+
 		return parts;
+	}
+
+	private void addPart(List<String> parts, StringBuilder line) {
+		parts.add((parts.isEmpty() ? "" : "  ") + line.toString().trim());
 	}
 
 	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier) {
@@ -603,6 +619,8 @@ public class PlayerDetailComponent extends JPanel {
 				break;
 			case _DISPLAY_SELECTED_PLAYER:
 				displayedPlayer = clientData.getSelectedPlayer();
+				break;
+			default:
 				break;
 		}
 		return displayedPlayer;

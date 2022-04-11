@@ -49,7 +49,7 @@ public class DialogSelectSkillHandler extends DialogHandler {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
 			DialogSelectSkill skillChoiceDialog = (DialogSelectSkill) pDialog;
-			getClient().getCommunication().sendPrayerSelection(dialogParameter.getPlayerId(), skillChoiceDialog.getSelectedSkills()[0]);
+			getClient().getCommunication().sendSkillSelection(dialogParameter.getPlayerId(), skillChoiceDialog.getSelectedSkills()[0]);
 		}
 	}
 

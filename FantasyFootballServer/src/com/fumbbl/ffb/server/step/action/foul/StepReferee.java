@@ -119,14 +119,14 @@ public class StepReferee extends AbstractStep {
 	}
 
 	@Override
-	public StepReferee initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+	public StepReferee initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		state.injuryResultDefender = null;
-		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(game, jsonObject);
+		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(source, jsonObject);
 		if (injuryResultDefenderObject != null) {
-			state.injuryResultDefender = new InjuryResult().initFrom(game, injuryResultDefenderObject);
+			state.injuryResultDefender = new InjuryResult().initFrom(source, injuryResultDefenderObject);
 		}
 		return this;
 	}

@@ -304,17 +304,17 @@ public class StepPassBlock extends AbstractStep {
 	}
 
 	@Override
-	public StepPassBlock initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		currentMove = IServerJsonOption.CURRENT_MOVE.getFrom(game, jsonObject);
-		isGoingForIt = IServerJsonOption.GOING_FOR_IT.getFrom(game, jsonObject);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+	public StepPassBlock initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		currentMove = IServerJsonOption.CURRENT_MOVE.getFrom(source, jsonObject);
+		isGoingForIt = IServerJsonOption.GOING_FOR_IT.getFrom(source, jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		fOldPlayerStates = null;
-		int[] playerStateIds = IServerJsonOption.OLD_PLAYER_STATES.getFrom(game, jsonObject);
+		int[] playerStateIds = IServerJsonOption.OLD_PLAYER_STATES.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(playerStateIds)) {
 			fOldPlayerStates = new PlayerState[playerStateIds.length];
 			for (int i = 0; i < playerStateIds.length; i++) {

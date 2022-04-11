@@ -53,13 +53,13 @@ public class ReportOldPro implements IReport {
 		return jsonObject;
 	}
 
-	public ReportOldPro initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		oldValue = IJsonOption.OLD_ROLL.getFrom(game, jsonObject);
-		newValue = IJsonOption.ROLL.getFrom(game, jsonObject);
-		selfInflicted = IJsonOption.SELF_INFLICTED.getFrom(game, jsonObject);
+	public ReportOldPro initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		oldValue = IJsonOption.OLD_ROLL.getFrom(source, jsonObject);
+		newValue = IJsonOption.ROLL.getFrom(source, jsonObject);
+		selfInflicted = IJsonOption.SELF_INFLICTED.getFrom(source, jsonObject);
 		return this;
 	}
 

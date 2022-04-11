@@ -1,13 +1,5 @@
 package com.fumbbl.ffb;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -22,6 +14,12 @@ import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -42,7 +40,7 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
 
 	private String fName;
 	private String fTeamId;
-	private Map<Integer, FieldCoordinate> fCoordinateByPlayerNr;
+	private final Map<Integer, FieldCoordinate> fCoordinateByPlayerNr;
 
 	private transient int fCurrentPlayerNr;
 
@@ -202,15 +200,15 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamSetup initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fName = IJsonOption.NAME.getFrom(game, jsonObject);
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+	public TeamSetup initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fName = IJsonOption.NAME.getFrom(source, jsonObject);
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		// get coordinates and playerNrs from array of inner jsonObjects
-		JsonArray playerPositions = IJsonOption.PLAYER_POSITIONS.getFrom(game, jsonObject);
+		JsonArray playerPositions = IJsonOption.PLAYER_POSITIONS.getFrom(source, jsonObject);
 		for (int i = 0; i < playerPositions.size(); i++) {
 			JsonObject playerPosition = playerPositions.get(i).asObject();
-			addCoordinate(IJsonOption.COORDINATE.getFrom(game, playerPosition), IJsonOption.PLAYER_NR.getFrom(game, playerPosition));
+			addCoordinate(IJsonOption.COORDINATE.getFrom(source, playerPosition), IJsonOption.PLAYER_NR.getFrom(source, playerPosition));
 		}
 		return this;
 	}

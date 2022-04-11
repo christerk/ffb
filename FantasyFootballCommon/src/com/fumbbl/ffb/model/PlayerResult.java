@@ -408,8 +408,8 @@ public class PlayerResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public PlayerResult initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public PlayerResult initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		String playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
 		fCompletions = IJsonOption.COMPLETIONS.getFrom(source, jsonObject);

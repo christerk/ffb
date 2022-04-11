@@ -49,9 +49,9 @@ public class ReportChainsawRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportChainsawRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, UtilJson.toJsonObject(pJsonValue));
+	public ReportChainsawRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, UtilJson.toJsonObject(jsonValue));
 		return this;
 	}
 }

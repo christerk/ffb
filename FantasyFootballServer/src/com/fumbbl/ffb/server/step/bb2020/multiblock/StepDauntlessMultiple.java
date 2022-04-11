@@ -13,7 +13,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.skillbehaviour.bb2020.StepStateMultipleRolls;
-import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class StepDauntlessMultiple extends AbstractStep {
+public class StepDauntlessMultiple extends AbstractStepMultiple {
 
 	private StepStateMultipleRolls state;
 
@@ -35,6 +34,11 @@ public class StepDauntlessMultiple extends AbstractStep {
 
 	public StepId getId() {
 		return StepId.DAUNTLESS_MULTIPLE;
+	}
+
+	@Override
+	protected StepStateMultipleRolls state() {
+		return state;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -72,9 +76,11 @@ public class StepDauntlessMultiple extends AbstractStep {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_RE_ROLL_FOR_TARGET) {
 				ClientCommandUseReRollForTarget command = (ClientCommandUseReRollForTarget) pReceivedCommand.getCommand();
 				if (command.getReRolledAction() == ReRolledActions.DAUNTLESS) {
-					state.reRollSource = command.getReRollSource();
+					if (reRollSourceSuccessfully(command.getReRollSource())) {
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
 					state.reRollTarget = command.getTargetId();
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
+
 				}
 			}
 		}
@@ -98,10 +104,10 @@ public class StepDauntlessMultiple extends AbstractStep {
 	}
 
 	@Override
-	public StepDauntlessMultiple initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state = new StepStateMultipleRolls().initFrom(game, IJsonOption.STEP_STATE.getFrom(game, jsonObject));
+	public StepDauntlessMultiple initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state = new StepStateMultipleRolls().initFrom(source, IJsonOption.STEP_STATE.getFrom(source, jsonObject));
 		return this;
 	}
 

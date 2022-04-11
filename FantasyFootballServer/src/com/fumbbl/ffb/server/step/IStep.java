@@ -14,33 +14,33 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
  */
 public interface IStep extends IJsonSerializable, INamedObject {
 
-	public StepId getId();
+	StepId getId();
 
-	public void setLabel(String pLabel);
+	void setLabel(String pLabel);
 
-	public String getLabel();
+	String getLabel();
 
-	public void start();
+	void start();
 
-	public void repeat();
+	void repeat();
 
-	public void init(StepParameterSet pParameterSet);
+	void init(StepParameterSet pParameterSet);
 
-	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand);
+	StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand);
 
-	public GameState getGameState();
+	GameState getGameState();
 
-	public StepResult getResult();
+	StepResult getResult();
 
-	public boolean setParameter(StepParameter pParameter);
+	boolean setParameter(StepParameter pParameter);
 
-	public void publishParameter(StepParameter pParameter);
+	void publishParameter(StepParameter pParameter);
 
-	public void publishParameters(StepParameterSet pParameterSet);
-
-	// overrides IJsonSerializable
-	public IStep initFrom(IFactorySource game, JsonValue pJsonValue);
+	void publishParameters(StepParameterSet pParameterSet);
 
 	// overrides IJsonSerializable
-	public JsonObject toJsonValue();
+	IStep initFrom(IFactorySource source, JsonValue jsonValue);
+
+	// overrides IJsonSerializable
+	JsonObject toJsonValue();
 }

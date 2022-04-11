@@ -91,6 +91,7 @@ public enum StepParameterKey {
 	MOVE_START, // FieldCoordinate
 	MULTI_BLOCK_DEFENDER_ID, // String
 	NR_OF_DICE, // Integer
+	OFFICIOUS_REF, // Boolean
 	OLD_DEFENDER_STATE, // PlayerState
 	PASS_ACCURATE, // Boolean
 	PASS_DEVIATES, // Boolean
@@ -133,6 +134,7 @@ public enum StepParameterKey {
 	USING_BREAK_TACKLE, // Boolean
 	USING_CHAINSAW, // Boolean
 	USING_DIVING_TACKLE, // Boolean
+	USING_MODIFYING_SKILL, // Boolean
 	USING_PILING_ON, // Boolean,
 	USING_STAB, // Boolean
 	USING_VOMIT // Boolean

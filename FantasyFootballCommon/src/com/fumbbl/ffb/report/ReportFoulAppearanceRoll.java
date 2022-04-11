@@ -50,9 +50,9 @@ public class ReportFoulAppearanceRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportFoulAppearanceRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportFoulAppearanceRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}

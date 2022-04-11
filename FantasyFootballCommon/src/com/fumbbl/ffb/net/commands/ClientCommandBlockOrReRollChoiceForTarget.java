@@ -55,13 +55,13 @@ public class ClientCommandBlockOrReRollChoiceForTarget extends ClientCommand {
 	}
 
 	@Override
-	public ClientCommandBlockOrReRollChoiceForTarget initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandBlockOrReRollChoiceForTarget initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
-		targetId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		selectedIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
-		proIndex = IJsonOption.PRO_INDEX.getFrom(game, jsonObject);
+		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
+		targetId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		selectedIndex = IJsonOption.DICE_INDEX.getFrom(source, jsonObject);
+		proIndex = IJsonOption.PRO_INDEX.getFrom(source, jsonObject);
 		return this;
 	}
 }

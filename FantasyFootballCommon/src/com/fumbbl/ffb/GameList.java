@@ -1,15 +1,5 @@
 package com.fumbbl.ffb;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -18,10 +8,16 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.Attributes;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -115,12 +111,12 @@ public class GameList implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameList initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray gameListArray = IJsonOption.GAME_LIST_ENTRIES.getFrom(game, jsonObject);
+	public GameList initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		JsonArray gameListArray = IJsonOption.GAME_LIST_ENTRIES.getFrom(source, jsonObject);
 		for (int i = 0; i < gameListArray.size(); i++) {
 			GameListEntry gameListEntry = new GameListEntry();
-			gameListEntry.initFrom(game, gameListArray.get(i));
+			gameListEntry.initFrom(source, gameListArray.get(i));
 			add(gameListEntry);
 		}
 		return this;

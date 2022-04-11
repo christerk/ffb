@@ -278,16 +278,16 @@ public class StepEndBlocking extends AbstractStep {
 	}
 
 	@Override
-	public StepEndBlocking initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(game, jsonObject);
-		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
-		knockedDownPlayers = Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject)).collect(Collectors.toList());
-		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(game, jsonObject));
+	public StepEndBlocking initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(source, jsonObject);
+		fUsingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
+		knockedDownPlayers = Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList());
+		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject));
 		return this;
 	}
 

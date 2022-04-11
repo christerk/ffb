@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -138,6 +139,12 @@ public class ClientStateFoul extends ClientStateMove {
 					break;
 				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
 					foul(pPlayer, true);
+					break;
+				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
+					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
+					break;
+				default:
 					break;
 			}
 		}
