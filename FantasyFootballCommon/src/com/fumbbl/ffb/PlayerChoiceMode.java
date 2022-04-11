@@ -101,6 +101,7 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case WISDOM:
 				header.append("Select the player of which to use Wisdom of the White Dwarf");
+				break;
 			default:
 				break;
 		}
