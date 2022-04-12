@@ -52,14 +52,15 @@ public class ClientStateThrowKeg extends ClientState {
 		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	protected void clickOnPlayer(Player<?> player) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
+		if (player == actingPlayer.getPlayer()) {
 			createAndShowPopupMenuForActingPlayer();
 		} else {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-			clickOnField(playerCoordinate);
+			if (isValidTarget(player, game)) {
+				getClient().getCommunication().sendThrowKeg(player);
+			}
 		}
 	}
 
@@ -68,7 +69,16 @@ public class ClientStateThrowKeg extends ClientState {
 		UserInterface userInterface = getClient().getUserInterface();
 		getClient().getClientData().setSelectedPlayer(player);
 		userInterface.refreshSideBars();
+		if (isValidTarget(player, game)) {
+			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_KEG);
+		} else {
+			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_INVALID_KEG);
+		}
 
+		return true;
+	}
+
+	private boolean isValidTarget(Player<?> player, Game game) {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate actingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 
@@ -77,13 +87,8 @@ public class ClientStateThrowKeg extends ClientState {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
-		if (distance <= 3 && playerState.getBase() == PlayerState.STANDING && player.getTeam() != game.getActingTeam()) {
-			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_KEG);
-		} else {
-			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_INVALID_KEG);
-		}
 
-		return true;
+		return distance <= 3 && playerState.getBase() == PlayerState.STANDING && player.getTeam() != game.getActingTeam();
 	}
 
 	@Override

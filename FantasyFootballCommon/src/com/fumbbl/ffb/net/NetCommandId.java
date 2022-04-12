@@ -34,7 +34,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandPing;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
@@ -43,6 +42,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSetMarker;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
+import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandStartGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
@@ -51,6 +51,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
+import com.fumbbl.ffb.net.commands.ClientCommandThrowKeg;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandTouchback;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
@@ -140,7 +141,8 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_SYNCHRONOUS_MULTI_BLOCK("clientSynchronousMultiBlock"), CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET("clientBlockOrReRollChoiceForTarget"),
 	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler"),
 	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie"),
-	CLIENT_PRAYER_SELECTION("clientPrayerSelection"), CLIENT_USE_TEAM_MATES_WISDOM("clientUseTeamMatesWisdom");
+	CLIENT_PRAYER_SELECTION("clientPrayerSelection"), CLIENT_USE_TEAM_MATES_WISDOM("clientUseTeamMatesWisdom"),
+	CLIENT_THROW_KEG("clientThrowKeg");
 
 	private final String fName;
 
@@ -333,6 +335,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseConsummateReRollForBlock();
 			case CLIENT_USE_TEAM_MATES_WISDOM:
 				return new ClientCommandUseTeamMatesWisdom();
+			case CLIENT_THROW_KEG:
+				return new ClientCommandThrowKeg();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}
