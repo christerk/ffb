@@ -30,6 +30,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
+import com.fumbbl.ffb.net.commands.ClientCommandThrowKeg;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -356,6 +357,11 @@ public final class StepInitSelecting extends AbstractStep {
 					fDispatchPlayerAction = PlayerAction.WISDOM_OF_THE_WHITE_DWARF;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					forceGotoOnDispatch = true;
+					break;
+				case CLIENT_THROW_KEG:
+					publishParameter(StepParameter.from(StepParameterKey.TARGET_PLAYER_ID, ((ClientCommandThrowKeg) pReceivedCommand.getCommand()).getPlayerId()));
+					fDispatchPlayerAction = PlayerAction.THROW_KEG;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
 					break;

@@ -472,6 +472,7 @@ public interface IJsonOption {
 	JsonStringOption TALK_MODE = new JsonStringOption("talkMode");
 	JsonStringArrayOption TALKS = new JsonStringArrayOption("talks");
 	JsonFieldCoordinateOption TARGET_COORDINATE = new JsonFieldCoordinateOption("targetCoordinate");
+	JsonStringOption TARGET_PLAYER_ID = new JsonStringOption("targetPlayerId");
 	JsonObjectOption TARGET_SELECTION_STATE = new JsonObjectOption("targetSelectionState");
 	JsonStringOption TARGET_SELECTION_STATUS = new JsonStringOption("targetSelectionStatus");
 	JsonBooleanOption TARGET_SELECTION_STATUS_IS_COMMITTED = new JsonBooleanOption("targetSelectionStatusIsCommitted");

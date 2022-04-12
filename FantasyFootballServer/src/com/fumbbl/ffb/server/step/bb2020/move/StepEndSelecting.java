@@ -91,6 +91,7 @@ public final class StepEndSelecting extends AbstractStep {
 	private String fKickedPlayerId;
 	private int fNumDice;
 	private List<BlockTarget> blockTargets = new ArrayList<>();
+	private String targetPlayerId;
 
 	public StepEndSelecting(GameState pGameState) {
 		super(pGameState);
@@ -194,6 +195,10 @@ public final class StepEndSelecting extends AbstractStep {
 					return true;
 				case IS_KICKED_PLAYER:
 					kicked = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				case TARGET_PLAYER_ID:
+					targetPlayerId = (String) parameter.getValue();
 					consume(parameter);
 					return true;
 				default:
@@ -398,6 +403,7 @@ public final class StepEndSelecting extends AbstractStep {
 		JsonArray jsonArray = new JsonArray();
 		blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
+		IJsonOption.PLAYER_ID.addTo(jsonObject, targetPlayerId);
 		return jsonObject;
 	}
 
@@ -425,7 +431,7 @@ public final class StepEndSelecting extends AbstractStep {
 		jsonArray.values().stream()
 			.map(value -> new BlockTarget().initFrom(source, value))
 			.forEach(value -> blockTargets.add(value));
-
+		targetPlayerId = IServerJsonOption.TARGET_PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 
