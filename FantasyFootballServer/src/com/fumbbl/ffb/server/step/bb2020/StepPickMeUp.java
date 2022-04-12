@@ -96,7 +96,7 @@ public class StepPickMeUp extends AbstractStep {
 					FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(teamMate);
 					PlayerState playerState = fieldModel.getPlayerState(teamMate);
 						return coordinate != null && !coordinate.isBoxCoordinate()
-							&& playerState.isProne()
+							&& playerState.getBase() == PlayerState.PRONE
 							&& coordinate.distanceInSteps(fieldModel.getPlayerCoordinate(player)) <= 3;
 					})
 				).map(Player::getId).collect(Collectors.toSet()));
