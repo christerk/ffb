@@ -38,6 +38,7 @@ import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.ThrowKeg;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
 import com.fumbbl.ffb.server.step.generator.bb2020.Treacherous;
@@ -374,6 +375,8 @@ public final class StepEndSelecting extends AbstractStep {
 				getGameState().getStepStack().push(sequence.getSequence());
 				break;
 			case THROW_KEG:
+				ThrowKeg throwKegGenerator = (ThrowKeg) factory.forName(SequenceGenerator.Type.ThrowKeg.name());
+				throwKegGenerator.pushSequence(new ThrowKeg.SequenceParams(getGameState(), targetPlayerId));
 				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
@@ -403,7 +406,7 @@ public final class StepEndSelecting extends AbstractStep {
 		JsonArray jsonArray = new JsonArray();
 		blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
-		IJsonOption.PLAYER_ID.addTo(jsonObject, targetPlayerId);
+		IJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
 		return jsonObject;
 	}
 
