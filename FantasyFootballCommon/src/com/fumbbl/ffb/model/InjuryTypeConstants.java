@@ -22,6 +22,7 @@ import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.KTMCrowd;
 import com.fumbbl.ffb.injury.KTMFumbleInjury;
 import com.fumbbl.ffb.injury.KTMInjury;
+import com.fumbbl.ffb.injury.KegHit;
 import com.fumbbl.ffb.injury.Lightning;
 import com.fumbbl.ffb.injury.PilingOnArmour;
 import com.fumbbl.ffb.injury.PilingOnInjury;
@@ -53,6 +54,7 @@ public class InjuryTypeConstants {
 	public static final InjuryType FOUL_FOR_SPP = new FoulForSpp();
 	public static final InjuryType FOUL_FOR_SPP_WITH_CHAINSAW = new FoulForSppWithChainsaw();
 	public static final InjuryType FOUL_WITH_CHAINSAW = new FoulWithChainsaw();
+	public static final InjuryType KEG_HIT = new KegHit();
 	public static final InjuryType KTM_CROWD = new KTMCrowd();
 	public static final InjuryType KTM_FUMBLE = new KTMFumbleInjury();
 	public static final InjuryType KTM_INJURY = new KTMInjury();

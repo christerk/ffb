@@ -19,7 +19,7 @@ public class DropPlayerContext implements IJsonSerializable {
 	}
 
 	public DropPlayerContext(InjuryResult injuryResult, String playerId, ApothecaryMode apothecaryMode, boolean alreadyDropped) {
-		this(injuryResult, false, false, null, playerId, apothecaryMode, false, true);
+		this(injuryResult, false, false, null, playerId, apothecaryMode, false, alreadyDropped);
 	}
 
 	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,

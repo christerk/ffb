@@ -2,10 +2,10 @@ package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -13,15 +13,18 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepEndThrowKeg extends AbstractStep {
 
-	private boolean endPlayerAction, endTurn;
-
 	public StepEndThrowKeg(GameState pGameState) {
 		super(pGameState);
 	}
+
+	private boolean endTurn;
 
 	@Override
 	public StepId getId() {
@@ -31,15 +34,9 @@ public class StepEndThrowKeg extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if (parameter != null) {
-			switch (parameter.getKey()) {
-				case END_TURN:
-					endTurn = toPrimitive((Boolean) parameter.getValue());
-					return true;
-				case END_PLAYER_ACTION:
-					endPlayerAction = toPrimitive((Boolean) parameter.getValue());
-					return true;
-				default:
-					break;
+			if (parameter.getKey() == StepParameterKey.END_TURN) {
+				endTurn = toPrimitive((Boolean) parameter.getValue());
+				return true;
 			}
 		}
 
@@ -57,20 +54,17 @@ public class StepEndThrowKeg extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 		Game game = getGameState().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 
+		EndPlayerAction endPlayerActionGenerator = (EndPlayerAction) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR).forName(SequenceGenerator.Type.EndPlayerAction.name());
+		EndPlayerAction.SequenceParams params = new EndPlayerAction.SequenceParams(getGameState(), false, true, endTurn);
 
-		if (endTurn || endPlayerAction) {
-			return;
-		}
-
+		endPlayerActionGenerator.pushSequence(params);
 	}
 
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
-		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
 		return jsonObject;
 	}
 
@@ -78,7 +72,6 @@ public class StepEndThrowKeg extends AbstractStep {
 	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}
