@@ -20,6 +20,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
@@ -93,6 +94,9 @@ public class StepEndFeeding extends AbstractStep {
 					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
 							game.isHomePlaying()));
+					Sequence sequence = new Sequence(getGameState());
+					sequence.add(StepId.PICK_ME_UP);
+					getGameState().getStepStack().push(sequence.getSequence());
 				} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
 					SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
 					((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name())).pushSequence(endTurnParams);

@@ -53,17 +53,18 @@ public class DiceInterpreter {
 			return Weather.SWELTERING_HEAT;
 		case 3:
 			return Weather.VERY_SUNNY;
-		case 11:
-			return Weather.POURING_RAIN;
-		case 12:
-			return Weather.BLIZZARD;
-		default: // 4 - 10
-			return Weather.NICE;
+			case 11:
+				return Weather.POURING_RAIN;
+			case 12:
+				return Weather.BLIZZARD;
+			default: // 4 - 10
+				return Weather.NICE;
 		}
 	}
 
-
-
+	public boolean interpretPickMeUp(int roll) {
+		return roll >= 5;
+	}
 
 	public int minimumRollGoingForIt(Set<GoForItModifier> pGoForItModifiers) {
 		int modifierTotal = 0;

@@ -323,6 +323,7 @@ public interface IJsonOption {
 	JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
 	JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
 	JsonStringArrayOption PLAYER_IDS_NATURAL_ONES = new JsonStringArrayOption("playerIdsNaturalOnes");
+	JsonStringArrayOption PLAYER_IDS_SELECTED = new JsonStringArrayOption("playerIdsSelected");
 	JsonArrayOption PLAYER_MARKER_ARRAY = new JsonArrayOption("playerMarkerArray");
 	JsonStringOption PLAYER_NAME = new JsonStringOption("playerName");
 	JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");

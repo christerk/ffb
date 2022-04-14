@@ -118,6 +118,7 @@ public enum StepId implements INamedObject {
 	PASS_BLOCK("passBlock"), // action.pass
 	PENALTY_SHOOTOUT("penaltyShootout"), // game.end
 	PETTY_CASH("pettyCash"), // game.start
+	PICK_ME_UP("pickMeUp"), // phase.endTurn
 	PICK_UP("pickUp"), // action.common
 	PILE_DRIVER("pileDriver"), // skill.pileDriver
 	PLACE_BALL("placeBall"), // skill.safePairOfHands
