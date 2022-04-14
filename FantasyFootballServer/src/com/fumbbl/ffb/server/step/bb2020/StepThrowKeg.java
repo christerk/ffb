@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.report.bb2020.ReportThrownKeg;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -76,7 +77,7 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 
 			if (getReRolledAction() == ReRolledActions.THROW_KEG) {
 				if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					fail();
+					fail(actingPlayer);
 				}
 			} else {
 				actingPlayer.markSkillUsed(skill);
@@ -87,22 +88,27 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 			boolean success = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, 3);
 
 			if (success) {
+				getResult().addReport(new ReportThrownKeg(actingPlayer.getPlayerId(), playerId, roll, true, false));
 				hitPlayer(game.getPlayerById(playerId), false);
 			} else {
 				if (getReRolledAction() != ReRolledActions.THROW_KEG && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.THROW_KEG, 3, false)) {
 					getResult().setNextAction(StepAction.CONTINUE);
 				} else {
-					fail();
+					fail(actingPlayer);
 				}
 			}
 
 		}
 	}
 
-	private void fail() {
+	private void fail(ActingPlayer actingPlayer) {
 		if (roll == 1) {
+			getResult().addReport(new ReportThrownKeg(actingPlayer.getPlayerId(), playerId, roll, false, true));
+
 			Player<?> hitPlayer = getGameState().getGame().getActingPlayer().getPlayer();
 			hitPlayer(hitPlayer, true);
+		} else {
+			getResult().addReport(new ReportThrownKeg(actingPlayer.getPlayerId(), playerId, roll, false, false));
 		}
 	}
 
