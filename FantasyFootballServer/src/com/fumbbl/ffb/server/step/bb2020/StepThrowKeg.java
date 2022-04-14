@@ -6,9 +6,12 @@ import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Animation;
+import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -20,8 +23,10 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeKegHit;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
@@ -59,6 +64,16 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 		}
 	}
 
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus stepCommandStatus = super.handleCommand(pReceivedCommand);
+
+		if (stepCommandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+
+		return stepCommandStatus;
+	}
 
 	@Override
 	public void start() {
@@ -77,7 +92,8 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 
 			if (getReRolledAction() == ReRolledActions.THROW_KEG) {
 				if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					fail(actingPlayer);
+					fail();
+					return;
 				}
 			} else {
 				actingPlayer.markSkillUsed(skill);
@@ -86,29 +102,34 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 			roll = getGameState().getDiceRoller().rollSkill();
 
 			boolean success = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, 3);
+			getResult().addReport(new ReportThrownKeg(actingPlayer.getPlayerId(), playerId, roll, success, roll == 1));
 
+			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(playerId));
 			if (success) {
-				getResult().addReport(new ReportThrownKeg(actingPlayer.getPlayerId(), playerId, roll, true, false));
+				getResult().setAnimation(new Animation(AnimationType.THROW_KEG,
+					throwerCoordinate,
+					targetCoordinate,
+					null));
 				hitPlayer(game.getPlayerById(playerId), false);
 			} else {
 				if (getReRolledAction() != ReRolledActions.THROW_KEG && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.THROW_KEG, 3, false)) {
+					setReRolledAction(ReRolledActions.THROW_KEG);
 					getResult().setNextAction(StepAction.CONTINUE);
 				} else {
-					fail(actingPlayer);
+					fail();
 				}
 			}
 
 		}
 	}
 
-	private void fail(ActingPlayer actingPlayer) {
+	private void fail() {
 		if (roll == 1) {
-			getResult().addReport(new ReportThrownKeg(actingPlayer.getPlayerId(), playerId, roll, false, true));
-
-			Player<?> hitPlayer = getGameState().getGame().getActingPlayer().getPlayer();
+			Game game = getGameState().getGame();
+			ActingPlayer actingPlayer = game.getActingPlayer();
+			Player<?> hitPlayer = actingPlayer.getPlayer();
 			hitPlayer(hitPlayer, true);
-		} else {
-			getResult().addReport(new ReportThrownKeg(actingPlayer.getPlayerId(), playerId, roll, false, false));
 		}
 	}
 
@@ -118,6 +139,7 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 			null, null, ApothecaryMode.DEFENDER);
 		publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT,
 			new DropPlayerContext(injuryResult, endTurn, true, null, hitPlayer.getId(), ApothecaryMode.DEFENDER, false)));
+		getResult().setSound(SoundId.EXPLODE);
 	}
 
 	@Override

@@ -13,10 +13,10 @@ import com.fumbbl.ffb.report.bb2020.ReportThrownKeg;
 public class ThrownKegMessage extends ReportMessageBase<ReportThrownKeg> {
 	@Override
 	protected void render(ReportThrownKeg report) {
-		println(getIndent(), TextStyle.ROLL, "[ " + report.getRoll() + "] Beer Barrel Bash Roll");
+		println(getIndent(), TextStyle.ROLL, "Beer Barrel Bash Roll [ " + report.getRoll() + " ]");
 		Player<?> thrower = game.getPlayerById(report.getPlayerId());
 		print(getIndent(), false, thrower);
-		print(getIndent(), TextStyle.NONE, "hits ");
+		print(getIndent(), TextStyle.NONE, " hits ");
 		if (report.isFumble()) {
 			print(getIndent(), TextStyle.NONE, thrower.getPlayerGender().getSelf());
 		} else if (report.isSuccess()) {
