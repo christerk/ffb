@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.9.0")
+			.addFeature("Beer Barrel Bash")
+		);
+
 		versions.add(new VersionChangeList("2.8.0")
 			.addFeature("Drunkard")
 			.addFeature("Pick-me-up")
