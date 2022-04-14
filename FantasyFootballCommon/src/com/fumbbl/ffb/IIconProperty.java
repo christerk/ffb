@@ -261,6 +261,14 @@ public interface IIconProperty {
 	String ANIMATION_CARD_MAGIC_ITEM_FRONT = "animation.card.magicItem.front";
 	String ANIMATION_CARD_MAGIC_ITEM_BACK = "animation.card.magicItem.back";
 
+	String ANIMATION_KEG_FUMBLE_00 = "animation.keg.fumble.00";
+	String ANIMATION_KEG_FUMBLE_30 = "animation.keg.fumble.30";
+	String ANIMATION_KEG_FUMBLE_60 = "animation.keg.fumble.60";
+	String ANIMATION_KEG_FUMBLE_90 = "animation.keg.fumble.90";
+	String ANIMATION_KEG_FUMBLE_120 = "animation.keg.fumble.120";
+	String ANIMATION_KEG_FUMBLE_150 = "animation.keg.fumble.150";
+
+
 	// Pitches
 	String PITCH_INTRO = "pitch.intro";
 	String PITCH_URL_DEFAULT = "pitch.url.default";

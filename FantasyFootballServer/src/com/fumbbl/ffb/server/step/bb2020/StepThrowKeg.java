@@ -128,6 +128,8 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 		if (roll == 1) {
 			Game game = getGameState().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
+			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			getResult().setAnimation(new Animation(AnimationType.FUMBLED_KEG, throwerCoordinate));
 			Player<?> hitPlayer = actingPlayer.getPlayer();
 			hitPlayer(hitPlayer, true);
 		}
