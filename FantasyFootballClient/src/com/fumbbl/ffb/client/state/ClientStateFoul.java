@@ -69,6 +69,12 @@ public class ClientStateFoul extends ClientStateMove {
 				case PLAYER_ACTION_END_MOVE:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
 					break;
+				case PLAYER_ACTION_TREACHEROUS:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					break;
+				case PLAYER_ACTION_WISDOM:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+					break;
 				default:
 					break;
 			}
@@ -141,8 +147,21 @@ public class ClientStateFoul extends ClientStateMove {
 					foul(pPlayer, true);
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
+					if (isTreacherousAvailable(actingPlayer)) {
+						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_WISDOM:
+					if (isWisdomAvailable(actingPlayer)) {
+						getClient().getCommunication().sendUseWisdom();
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
+					if (isRaidingPartyAvailable(actingPlayer)) {
+						Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+						getClient().getCommunication().sendUseSkill(raidingSkill, true, pPlayer.getId());
+					}
 					break;
 				default:
 					break;

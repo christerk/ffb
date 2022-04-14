@@ -68,6 +68,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_TREACHEROUS = "key.player.action.treacherous";
 	String KEY_PLAYER_ACTION_WISDOM = "key.player.action.wisdom";
 	String KEY_PLAYER_ACTION_BEER_BARREL_BASH = "key.player.action.beerBarrelBash";
+	String KEY_PLAYER_ACTION_RAIDING_PARTY = "key.player.action.raidingParty";
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";

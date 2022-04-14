@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.ISkillProperty;
@@ -26,11 +28,17 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -361,5 +369,43 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
+	}
+
+	protected boolean isRaidingPartyAvailable(ActingPlayer player) {
+		return !player.hasActed() && isRaidingPartyAvailable(player.getPlayer());
+	}
+
+	protected boolean isRaidingPartyAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canMoveOpenTeamMate)
+			&& Arrays.stream(game.getActingTeam().getPlayers()).filter(
+				teamMate -> {
+					FieldCoordinate teamMateCoordinate = fieldModel.getPlayerCoordinate(teamMate);
+					Player<?>[] adjacentPlayersWithTacklezones = UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()), teamMateCoordinate, false);
+					FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(teamMateCoordinate, FieldCoordinateBounds.FIELD,
+						1, false);
+					return fieldModel.getPlayerState(teamMate).getBase() == PlayerState.STANDING
+						&& teamMateCoordinate.distanceInSteps(playerCoordinate) <= 5
+						&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
+						&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> Arrays.stream(fieldModel.findAdjacentCoordinates(adjacentCoordinate, FieldCoordinateBounds.FIELD,
+						1, false)).anyMatch(fieldCoordinate -> {
+						List<Player<?>> players = game.getFieldModel().getPlayers(fieldCoordinate);
+						return !players.isEmpty() && !game.getActingTeam().hasPlayer(players.get(0));
+					}));
+				}
+			)
+			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates) && !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
+	}
+
+	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Raiding Party",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
+		return menuItem;
 	}
 }

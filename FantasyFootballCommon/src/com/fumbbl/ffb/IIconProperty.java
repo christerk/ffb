@@ -163,6 +163,7 @@ public interface IIconProperty {
 	String ACTION_VOMIT = "action.vomit";
 	String ACTION_WISDOM = "action.wisdom";
 	String ACTION_BEER_BARREL_BASH = "action.beerBarrelBash";
+	String ACTION_RAIDING_PARTY = "action.raidingParty";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

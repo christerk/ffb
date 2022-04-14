@@ -154,6 +154,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case PLAYER_ACTION_STAB:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_STAB);
 					break;
+				case PLAYER_ACTION_RAIDING_PARTY:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+					break;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -191,11 +194,21 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					selectPlayer(player, BlockKind.STAB);
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					getClient().getCommunication().sendUseSkill(skill, true, player.getId());
+					if (isTreacherousAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						getClient().getCommunication().sendUseSkill(skill, true, player.getId());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					getClient().getCommunication().sendUseWisdom();
+					if (isWisdomAvailable(player)) {
+						getClient().getCommunication().sendUseWisdom();
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
+					if (isRaidingPartyAvailable(player)) {
+						Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+						getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
+					}
 					break;
 				default:
 					break;
@@ -224,6 +237,10 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		if (isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			menuItemList.add(createRaidingPartyItem(iconCache));
+		}
+
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

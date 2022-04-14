@@ -144,6 +144,7 @@ public class ClientStateMove extends ClientState {
 				|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
 				|| isTreacherousAvailable(actingPlayer)
 				|| isWisdomAvailable(actingPlayer)
+				|| isRaidingPartyAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -221,14 +222,26 @@ public class ClientStateMove extends ClientState {
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
-					communication.sendUseFumblerooskie();
+					if (isFumblerooskieAvailable()) {
+						communication.sendUseFumblerooskie();
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					communication.sendUseSkill(skill, true, pPlayer.getId());
+					if (isTreacherousAvailable(actingPlayer)) {
+						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						communication.sendUseSkill(skill, true, pPlayer.getId());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					getClient().getCommunication().sendUseWisdom();
+					if (isWisdomAvailable(actingPlayer)) {
+						communication.sendUseWisdom();
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
+					if (isRaidingPartyAvailable(actingPlayer)) {
+						Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+						communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
+					}
 					break;
 				default:
 					break;
@@ -311,6 +324,9 @@ public class ClientStateMove extends ClientState {
 		if (isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			menuItemList.add(createRaidingPartyItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -357,6 +373,9 @@ public class ClientStateMove extends ClientState {
 					break;
 				case PLAYER_ACTION_WISDOM:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+					break;
+				case PLAYER_ACTION_RAIDING_PARTY:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 					break;
 				default:
 					actionHandled = false;

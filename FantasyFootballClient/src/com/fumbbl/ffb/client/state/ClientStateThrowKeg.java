@@ -117,12 +117,15 @@ public class ClientStateThrowKeg extends ClientState {
 		if (isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			menuItemList.add(createRaidingPartyItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
 		ClientCommunication communication = getClient().getCommunication();
 		switch (pMenuKey) {
 			case IPlayerPopupMenuKeys.KEY_END_MOVE:
@@ -131,11 +134,21 @@ public class ClientStateThrowKeg extends ClientState {
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-				Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-				communication.sendUseSkill(skill, true, pPlayer.getId());
+				if (isTreacherousAvailable(player)) {
+					Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					communication.sendUseSkill(skill, true, player.getId());
+				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_WISDOM:
-				getClient().getCommunication().sendUseWisdom();
+				if (isWisdomAvailable(player)) {
+					getClient().getCommunication().sendUseWisdom();
+				}
+				break;
+			case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
+				if (isRaidingPartyAvailable(player)) {
+					Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+					getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
+				}
 				break;
 			default:
 				break;
@@ -156,6 +169,9 @@ public class ClientStateThrowKeg extends ClientState {
 				return true;
 			case PLAYER_ACTION_WISDOM:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_WISDOM);
+				return true;
+			case PLAYER_ACTION_RAIDING_PARTY:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey);
