@@ -4,9 +4,11 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -164,6 +166,13 @@ public class StepRaidingParty extends AbstractStep {
 						});
 				}).collect(Collectors.toList());
 
+				if (eligibleSquares.isEmpty()) {
+					return;
+				}
+
+				eligibleSquares.stream().map(square -> new MoveSquare(square, 0, 0)).forEach(fieldModel::add);
+				getResult().setNextAction(StepAction.CONTINUE);
+				game.setTurnMode(TurnMode.RAIDING_PARTY);
 			}
 		}
 	}

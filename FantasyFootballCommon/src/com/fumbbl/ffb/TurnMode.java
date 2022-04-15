@@ -17,7 +17,7 @@ public enum TurnMode implements INamedObject {
 	BOMB_AWAY_BLITZ("bombAwayBlitz", false), // TODO: use game.getLastTurnMode() for this
 	ILLEGAL_SUBSTITUTION("illegalSubstitution", true), SELECT_BLITZ_TARGET("selectBlitzTarget", true),
 	SELECT_GAZE_TARGET("selectGazeTarget", true), SAFE_PAIR_OF_HANDS("safePairOfHands", true),
-	BETWEEN_TURNS("betweenTurns", true);
+	BETWEEN_TURNS("betweenTurns", true), RAIDING_PARTY("raidingParty", true);
 
 	private final String fName;
 	private boolean fStoreLast;
