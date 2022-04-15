@@ -365,9 +365,9 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendVersion(Session pSession, String pServerVersion, String pClientVersion, String[] pClientProperties,
-			String[] pClientPropertyValues) {
+													String[] pClientPropertyValues, boolean isTestServer) {
 		ServerCommandVersion versionCommand = new ServerCommandVersion(pServerVersion, pClientVersion, pClientProperties,
-				pClientPropertyValues);
+			pClientPropertyValues, isTestServer);
 		send(pSession, versionCommand, true);
 		// not logged in Game Log
 	}

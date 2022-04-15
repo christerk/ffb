@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class ServerCommandVersion extends ServerCommand {
@@ -22,13 +21,16 @@ public class ServerCommandVersion extends ServerCommand {
 	private String fClientVersion;
 	private final Map<String, String> fClientProperties;
 
+	private boolean isTestServer;
+
 	public ServerCommandVersion() {
 		fClientProperties = new HashMap<>();
 	}
 
 	public ServerCommandVersion(String pServerVersion, String pClientVersion, String[] pClientProperties,
-			String[] pClientPropertyValues) {
+															String[] pClientPropertyValues, boolean isTestServer) {
 		this();
+		this.isTestServer = isTestServer;
 		fServerVersion = pServerVersion;
 		fClientVersion = pClientVersion;
 		if (ArrayTool.isProvided(pClientProperties) && ArrayTool.isProvided(pClientPropertyValues)) {
@@ -51,7 +53,7 @@ public class ServerCommandVersion extends ServerCommand {
 	}
 
 	public String[] getClientProperties() {
-		return fClientProperties.keySet().toArray(new String[fClientProperties.size()]);
+		return fClientProperties.keySet().toArray(new String[0]);
 	}
 
 	public String getClientPropertyValue(String pClientProperty) {
@@ -60,6 +62,10 @@ public class ServerCommandVersion extends ServerCommand {
 
 	public boolean isReplayable() {
 		return false;
+	}
+
+	public boolean isTestServer() {
+		return isTestServer;
 	}
 
 	@Override
@@ -82,6 +88,7 @@ public class ServerCommandVersion extends ServerCommand {
 		}
 		IJsonOption.CLIENT_PROPERTY_NAMES.addTo(jsonObject, clientPropertyNames);
 		IJsonOption.CLIENT_PROPERTY_VALUES.addTo(jsonObject, clientPropertyValues);
+		IJsonOption.TESTING.addTo(jsonObject, isTestServer);
 		return jsonObject;
 	}
 
@@ -98,6 +105,10 @@ public class ServerCommandVersion extends ServerCommand {
 			for (int i = 0; i < clientPropertyNames.length; i++) {
 				fClientProperties.put(clientPropertyNames[i], clientPropertyValues[i]);
 			}
+		}
+
+		if (IJsonOption.TESTING.isDefinedIn(jsonObject)) {
+			isTestServer = IJsonOption.TESTING.getFrom(source, jsonObject);
 		}
 		return this;
 	}

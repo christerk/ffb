@@ -133,7 +133,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 		switch (pNetCommand.getId()) {
 			case SERVER_VERSION:
 				ServerCommandVersion versionCommand = (ServerCommandVersion) pNetCommand;
-				if (checkVersion(versionCommand.getServerVersion(), versionCommand.getClientVersion())) {
+				if (versionCommand.isTestServer() || checkVersion(versionCommand.getServerVersion(), versionCommand.getClientVersion())) {
 					String[] properties = versionCommand.getClientProperties();
 					for (String property : properties) {
 						getClient().setProperty(property, versionCommand.getClientPropertyValue(property));
