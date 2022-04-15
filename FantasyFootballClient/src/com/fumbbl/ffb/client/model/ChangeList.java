@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.7.1")
+			.addBugfix("BB2016: Games did crash after kick off")
+		);
+
 		versions.add(new VersionChangeList("2.7.0")
 			.addFeature("Treacherous")
 			.addFeature("Burst of Speed")
