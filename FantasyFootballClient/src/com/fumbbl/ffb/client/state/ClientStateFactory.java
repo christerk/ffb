@@ -8,8 +8,11 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateSynchronousMultiBlock;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateThrowKeg;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -72,6 +75,7 @@ public class ClientStateFactory {
 		register(new ClientStateSelectGazeTarget(pClient));
 		register(new ClientStateGazeMove(pClient));
 		register(new ClientStateThrowKeg(pClient));
+		register(new ClientStateRaidingParty(pClient));
 	}
 
 	public FantasyFootballClient getClient() {

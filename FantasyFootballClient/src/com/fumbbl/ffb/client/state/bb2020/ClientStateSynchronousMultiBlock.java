@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -8,6 +8,8 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
@@ -35,7 +37,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	private final Map<String, BlockKind> selectedPlayers = new HashMap<>();
 	private final Map<String, PlayerState> originalPlayerStates = new HashMap<>();
 
-	protected ClientStateSynchronousMultiBlock(FantasyFootballClient pClient) {
+	public ClientStateSynchronousMultiBlock(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
