@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.util;
 
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -270,8 +271,11 @@ public class UtilPlayer {
 	public static void refreshPlayersForTurnStart(Game pGame) {
 		FieldModel fieldModel = pGame.getFieldModel();
 		Player<?>[] players = pGame.getPlayers();
+		Set<String> enhancementsToRemove = Constant.getEnhancementSkillsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
 		for (Player<?> player : players) {
+			enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(player, enhancement));
 			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN, pGame);
+			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN_BY_TEAM_MATE, pGame);
 			PlayerState newPlayerState = null;
 			PlayerState oldPlayerState = fieldModel.getPlayerState(player);
 			switch (oldPlayerState.getBase()) {
@@ -497,8 +501,13 @@ public class UtilPlayer {
 			} else {
 				int extraMove = 0;
 				if (actingPlayer.isGoingForIt()) {
-					boolean canMakeAnExtraGfi = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi);
-					extraMove = canMakeAnExtraGfi ? 3 : 2;
+					extraMove = 2;
+					if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi)) {
+						extraMove++;
+					}
+					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeAnExtraGfiOnce)) {
+						extraMove++;
+					}
 					if (jumping) {
 						extraMove--;
 					}

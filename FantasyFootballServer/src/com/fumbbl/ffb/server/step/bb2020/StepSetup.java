@@ -157,11 +157,11 @@ public final class StepSetup extends AbstractStep {
 	}
 
 	@Override
-	public StepSetup initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fEndSetup = IServerJsonOption.END_KICKOFF.getFrom(game, jsonObject);
+	public StepSetup initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fEndSetup = IServerJsonOption.END_KICKOFF.getFrom(source, jsonObject);
 		return this;
 	}
 

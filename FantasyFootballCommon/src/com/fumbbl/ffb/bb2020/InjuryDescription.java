@@ -43,11 +43,11 @@ public class InjuryDescription implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public InjuryDescription initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		playerState = IJsonOption.PLAYER_STATE.getFrom(game, jsonObject);
-		seriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
+	public InjuryDescription initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		playerState = IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
+		seriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
 		return this;
 	}
 }

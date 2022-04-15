@@ -20,8 +20,8 @@ public class ClientCommandCloseSession extends ClientCommand {
 
 	// JSON serialization
 
-	public ClientCommandCloseSession initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandCloseSession initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

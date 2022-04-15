@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
@@ -12,6 +9,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
@@ -20,7 +20,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
 
 	private String fTeamId;
 	private int fNrOfSlots;
-	private List<String> fPositionIds;
+	private final List<String> fPositionIds;
 
 	public DialogJourneymenParameter() {
 		fPositionIds = new ArrayList<>();
@@ -80,12 +80,12 @@ public class DialogJourneymenParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogJourneymenParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fNrOfSlots = IJsonOption.NR_OF_SLOTS.getFrom(game, jsonObject);
-		addPositionIds(IJsonOption.POSITION_IDS.getFrom(game, jsonObject));
+	public DialogJourneymenParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fNrOfSlots = IJsonOption.NR_OF_SLOTS.getFrom(source, jsonObject);
+		addPositionIds(IJsonOption.POSITION_IDS.getFrom(source, jsonObject));
 		return this;
 	}
 

@@ -98,7 +98,7 @@ public final class StepBlitzTurn extends AbstractStep {
 				UtilServerTimer.startTurnTimer(getGameState(), currentTimeMillis);
 			}
 			game.startTurn();
-			UtilServerGame.updateLeaderReRolls(this);
+			UtilServerGame.updatePlayerStateDependentProperties(this);
 			// insert select sequence into kickoff sequence after this step
 			getGameState().pushCurrentStepOnStack();
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
@@ -121,9 +121,9 @@ public final class StepBlitzTurn extends AbstractStep {
 	}
 
 	@Override
-	public StepBlitzTurn initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBlitzTurn initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}

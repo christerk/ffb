@@ -226,10 +226,10 @@ public class ZappedPosition implements Position {
 		return jsonObject;
 	}
 
-	public ZappedPosition initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		originalPosition = new RosterPosition().initFrom(game, IJsonOption.ROSTER_POSITION.getFrom(game, jsonObject));
-		playerStats = ((GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name())).zappedPlayerStats();
+	public ZappedPosition initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		originalPosition = new RosterPosition().initFrom(source, IJsonOption.ROSTER_POSITION.getFrom(source, jsonObject));
+		playerStats = ((GameMechanic) source.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name())).zappedPlayerStats();
 		return this;
 	}
 }

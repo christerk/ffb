@@ -69,13 +69,13 @@ public class ReportKickoffOfficiousRef implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffOfficiousRef initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		rollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
-		rollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
+	public ReportKickoffOfficiousRef initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		rollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		rollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
 		playerIds.clear();
-		String[] playerIdsArray = IJsonOption.PLAYER_IDS_HIT.getFrom(game, jsonObject);
+		String[] playerIdsArray = IJsonOption.PLAYER_IDS_HIT.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(playerIdsArray)) {
 			playerIds.addAll(Arrays.stream(playerIdsArray).collect(Collectors.toList()));
 		}

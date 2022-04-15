@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.net.commands;
 
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -12,6 +10,8 @@ import com.fumbbl.ffb.net.commands.UtilNetCommand;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.util.ListTool;
 
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -20,7 +20,7 @@ public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand
 
 	private String fCoach;
 	private boolean fHomeTeam;
-	private List<String> fAccountProperties;
+	private final List<String> fAccountProperties;
 
 	public InternalServerCommandFumbblTeamLoaded(long pGameId, String pCoach, boolean pHomeTeam, List<String> pAccountProperties) {
 		super(pGameId);
@@ -56,12 +56,12 @@ public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand
 		return jsonObject;
 	}
 
-	public InternalServerCommandFumbblTeamLoaded initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fHomeTeam = IJsonOption.HOME_TEAM.getFrom(game, jsonObject);
-		ListTool.replaceAll(fAccountProperties, IServerJsonOption.ACCOUNT_PROPERTIES.getFrom(game, jsonObject));
+	public InternalServerCommandFumbblTeamLoaded initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		fHomeTeam = IJsonOption.HOME_TEAM.getFrom(source, jsonObject);
+		ListTool.replaceAll(fAccountProperties, IServerJsonOption.ACCOUNT_PROPERTIES.getFrom(source, jsonObject));
 
 		return this;
 	}

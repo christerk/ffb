@@ -61,8 +61,8 @@ public class ReportPilingOn implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPilingOn initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportPilingOn initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fUsed = IJsonOption.USED.getFrom(source, jsonObject);

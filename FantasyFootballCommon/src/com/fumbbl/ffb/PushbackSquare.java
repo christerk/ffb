@@ -99,13 +99,13 @@ public final class PushbackSquare implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public PushbackSquare initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
-		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(game, jsonObject);
-		fSelected = IJsonOption.SELECTED.getFrom(game, jsonObject);
-		fLocked = IJsonOption.LOCKED.getFrom(game, jsonObject);
-		fHomeChoice = IJsonOption.HOME_CHOICE.getFrom(game, jsonObject);
+	public PushbackSquare initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
+		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(source, jsonObject);
+		fSelected = IJsonOption.SELECTED.getFrom(source, jsonObject);
+		fLocked = IJsonOption.LOCKED.getFrom(source, jsonObject);
+		fHomeChoice = IJsonOption.HOME_CHOICE.getFrom(source, jsonObject);
 		return this;
 	}
 

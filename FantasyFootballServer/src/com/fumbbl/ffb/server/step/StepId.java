@@ -157,11 +157,13 @@ public enum StepId implements INamedObject {
 	TEST("test"), // test
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
 	TRAP_DOOR("trapDoor"), // action.common
+	TREACHEROUS("treacherous"), // action.special
 	TOUCHBACK("touchback"), // phase.kickoff
 	UNCHANNELLED_FURY("unchannelledFury"), // action.common
 	WEATHER("weather"), // game.start
 	WILD_ANIMAL("wildAnimal"), // action.common
 	WINNINGS("winnings"), // game.end
+	WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf"), // action.special
 	WIZARD("wizard"), // phase.inducement
 	WRESTLE("wrestle"); // action.block
 

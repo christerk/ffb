@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.step.game.start;
 
-import java.util.Date;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.GameStatus;
@@ -24,6 +22,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.util.StringTool;
+
+import java.util.Date;
 
 /**
  * Step to init the start game sequence.
@@ -125,7 +125,7 @@ public final class StepInitStartGame extends AbstractStep {
 					}
 				}
 				if (optionValues.length() > 0) {
-					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Options " + optionValues.toString());
+					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Options " + optionValues);
 				} else {
 					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Default Options");
 				}
@@ -145,10 +145,10 @@ public final class StepInitStartGame extends AbstractStep {
 	}
 
 	@Override
-	public StepInitStartGame initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fFumbblGameCreated = IServerJsonOption.FUMBBL_GAME_CREATED.getFrom(game, jsonObject);
+	public StepInitStartGame initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fFumbblGameCreated = IServerJsonOption.FUMBBL_GAME_CREATED.getFrom(source, jsonObject);
 		return this;
 	}
 

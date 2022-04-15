@@ -53,17 +53,17 @@ public class DialogSelectSkillParameter implements IDialogParameter {
 	}
 
 	@Override
-	public IDialogParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(game, jsonObject);
+	public IDialogParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
 		for (int i = 0; i < skillArray.size(); i++) {
-			SkillFactory skillFactory = game.getFactory(FactoryType.Factory.SKILL);
+			SkillFactory skillFactory = source.getFactory(FactoryType.Factory.SKILL);
 			skills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
 		}
 
-		skillChoiceMode = SkillChoiceMode.valueOf(IJsonOption.SKILL_CHOICE_MODE.getFrom(game, jsonObject));
+		skillChoiceMode = SkillChoiceMode.valueOf(IJsonOption.SKILL_CHOICE_MODE.getFrom(source, jsonObject));
 		return this;
 	}
 

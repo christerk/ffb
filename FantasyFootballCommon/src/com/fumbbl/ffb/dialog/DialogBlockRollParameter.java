@@ -76,14 +76,14 @@ public class DialogBlockRollParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBlockRollParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
-		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
+	public DialogBlockRollParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(source, jsonObject);
+		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
+		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
 		return this;
 	}
 

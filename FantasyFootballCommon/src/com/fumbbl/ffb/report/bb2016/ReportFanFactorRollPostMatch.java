@@ -73,13 +73,13 @@ public class ReportFanFactorRollPostMatch implements IReport {
 		return jsonObject;
 	}
 
-	public ReportFanFactorRollPostMatch initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fFanFactorRollHome = IJsonOption.FAN_FACTOR_ROLL_HOME.getFrom(game, jsonObject);
-		fFanFactorModifierHome = IJsonOption.FAN_FACTOR_MODIFIER_HOME.getFrom(game, jsonObject);
-		fFanFactorRollAway = IJsonOption.FAN_FACTOR_ROLL_AWAY.getFrom(game, jsonObject);
-		fFanFactorModifierAway = IJsonOption.FAN_FACTOR_MODIFIER_AWAY.getFrom(game, jsonObject);
+	public ReportFanFactorRollPostMatch initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fFanFactorRollHome = IJsonOption.FAN_FACTOR_ROLL_HOME.getFrom(source, jsonObject);
+		fFanFactorModifierHome = IJsonOption.FAN_FACTOR_MODIFIER_HOME.getFrom(source, jsonObject);
+		fFanFactorRollAway = IJsonOption.FAN_FACTOR_ROLL_AWAY.getFrom(source, jsonObject);
+		fFanFactorModifierAway = IJsonOption.FAN_FACTOR_MODIFIER_AWAY.getFrom(source, jsonObject);
 		return this;
 	}
 

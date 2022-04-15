@@ -393,8 +393,8 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public InducementSet initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public InducementSet initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		JsonArray inducements = IJsonOption.INDUCEMENT_ARRAY.getFrom(source, jsonObject);
 		if (inducements != null) {
 			for (int i = 0; i < inducements.size(); i++) {

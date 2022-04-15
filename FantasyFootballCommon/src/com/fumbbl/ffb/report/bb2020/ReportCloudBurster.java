@@ -25,11 +25,11 @@ public class ReportCloudBurster implements IReport {
 	}
 
 	@Override
-	public ReportCloudBurster initFrom(IFactorySource game, JsonValue jsonValue) {
+	public ReportCloudBurster initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		throwerId = IJsonOption.THROWER_ID.getFrom(game, jsonObject);
-		interceptorId = IJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		throwerId = IJsonOption.THROWER_ID.getFrom(source, jsonObject);
+		interceptorId = IJsonOption.INTERCEPTOR_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

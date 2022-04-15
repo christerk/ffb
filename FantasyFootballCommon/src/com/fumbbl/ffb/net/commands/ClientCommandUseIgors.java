@@ -42,12 +42,12 @@ public class ClientCommandUseIgors extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUseIgors initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandUseIgors initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		JsonArray jsonArray = IJsonOption.INJURY_DESCRIPTIONS.getFrom(game, jsonObject);
+		JsonArray jsonArray = IJsonOption.INJURY_DESCRIPTIONS.getFrom(source, jsonObject);
 		if (jsonArray != null) {
-			injuryDescriptions.addAll(jsonArray.values().stream().map(value -> new InjuryDescription().initFrom(game, value)).collect(Collectors.toList()));
+			injuryDescriptions.addAll(jsonArray.values().stream().map(value -> new InjuryDescription().initFrom(source, value)).collect(Collectors.toList()));
 		}
 		return this;
 	}

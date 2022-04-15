@@ -37,10 +37,10 @@ public class InternalServerCommandReplayLoaded extends InternalServerCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommandReplayLoaded initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(game, jsonObject);
+	public InternalServerCommandReplayLoaded initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(source, jsonObject);
 		return this;
 	}
 

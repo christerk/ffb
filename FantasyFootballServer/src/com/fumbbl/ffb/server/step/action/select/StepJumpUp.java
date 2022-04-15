@@ -34,7 +34,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		public String goToLabelOnFailure;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepJumpUp(GameState pGameState) {
 		super(pGameState);
@@ -95,10 +95,10 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepJumpUp initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+	public StepJumpUp initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -52,12 +52,12 @@ public class ClientCommandFoul extends ClientCommand implements ICommandWithActi
 		return jsonObject;
 	}
 
-	public ClientCommandFoul initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandFoul initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(game, jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		return this;
 	}
 

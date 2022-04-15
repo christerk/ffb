@@ -56,11 +56,11 @@ public class ReportPushback implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPushback initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		fPushbackMode = (PushbackMode) IJsonOption.PUSHBACK_MODE.getFrom(game, jsonObject);
+	public ReportPushback initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		fPushbackMode = (PushbackMode) IJsonOption.PUSHBACK_MODE.getFrom(source, jsonObject);
 		return this;
 	}
 

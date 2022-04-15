@@ -56,11 +56,11 @@ public class ReportWinnings implements IReport {
 		return jsonObject;
 	}
 
-	public ReportWinnings initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		winningsHome = IJsonOption.WINNINGS_HOME.getFrom(game, jsonObject);
-		winningsAway = IJsonOption.WINNINGS_AWAY.getFrom(game, jsonObject);
+	public ReportWinnings initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		winningsHome = IJsonOption.WINNINGS_HOME.getFrom(source, jsonObject);
+		winningsAway = IJsonOption.WINNINGS_AWAY.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 
 import java.util.Arrays;
@@ -43,6 +44,11 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 		int statistic = pDodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength) ? pPlayer.getStrengthWithModifiers()
 			: pPlayer.getAgilityWithModifiers();
 		return Math.max(2, getAgilityRollBase(statistic) - 1 + modifierTotal);
+	}
+
+	@Override
+	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers, StatBasedRollModifier statBasedRollModifier) {
+		return minimumRollDodge(pGame, pPlayer, pDodgeModifiers);
 	}
 
 	@Override

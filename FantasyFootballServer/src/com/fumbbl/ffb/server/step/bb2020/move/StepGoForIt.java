@@ -202,11 +202,11 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepGoForIt initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(game, jsonObject);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+	public StepGoForIt initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(source, jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		return this;
 	}
 

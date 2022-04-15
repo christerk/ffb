@@ -303,18 +303,18 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	}
 
 	@Override
-	public StepInitScatterPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(game, jsonObject);
-		thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
-		thrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(game, jsonObject);
-		throwScatter = IServerJsonOption.THROW_SCATTER.getFrom(game, jsonObject);
-		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(game, jsonObject);
-		deviate = IServerJsonOption.PASS_DEVIATES.getFrom(game, jsonObject);
-		crashLanding = IServerJsonOption.CRASH_LANDING.getFrom(game, jsonObject);
-		swoopDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(game, jsonObject);
+	public StepInitScatterPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(source, jsonObject);
+		thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
+		thrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(source, jsonObject);
+		throwScatter = IServerJsonOption.THROW_SCATTER.getFrom(source, jsonObject);
+		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
+		deviate = IServerJsonOption.PASS_DEVIATES.getFrom(source, jsonObject);
+		crashLanding = IServerJsonOption.CRASH_LANDING.getFrom(source, jsonObject);
+		swoopDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
 		return this;
 	}
 

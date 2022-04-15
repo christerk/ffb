@@ -10,6 +10,20 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.7.0")
+			.addFeature("Treacherous")
+			.addFeature("Burst of Speed")
+			.addFeature("Two for One")
+			.addFeature("Lord of Chaos")
+			.addFeature("Consummate Professional")
+			.addFeature("Strong Passing Game")
+			.addFeature("Incorporeal")
+			.addFeature("Wisdom of the White Dwarf")
+			.addFeature("I'll be back!")
+			.addImprovement("Add missing action bindings and descriptions")
+			.setDescription("\"Wisdom of the White Dwarf\" and \"Treacherous\" can be activated after selecting an action (but before selecting a target) by clicking the player again. Wisdom will only be used if the player actually acts, if he is just deselected again the skill will still be available for this turn.")
+		);
+
 		versions.add(new VersionChangeList("2.6.2")
 			.addBugfix("Player falling on ball did not bounce it")
 		);

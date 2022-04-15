@@ -55,11 +55,11 @@ public class ReportWizardUse implements IReport {
 		return jsonObject;
 	}
 
-	public ReportWizardUse initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(game, jsonObject);
+	public ReportWizardUse initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -56,10 +56,10 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportInterceptionRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fBomb = IJsonOption.BOMB.getFrom(game, jsonObject);
+	public ReportInterceptionRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fBomb = IJsonOption.BOMB.getFrom(source, jsonObject);
 		return this;
 	}
 

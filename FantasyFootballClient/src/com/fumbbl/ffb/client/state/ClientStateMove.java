@@ -26,6 +26,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -141,6 +142,8 @@ public class ClientStateMove extends ClientState {
 			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 			if (actingPlayer.hasActed() || mechanic.canJump(game, pPlayer, position)
 				|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
+				|| isTreacherousAvailable(actingPlayer)
+				|| isWisdomAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -219,6 +222,13 @@ public class ClientStateMove extends ClientState {
 					break;
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
 					communication.sendUseFumblerooskie();
+					break;
+				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
+					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					communication.sendUseSkill(skill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_WISDOM:
+					getClient().getCommunication().sendUseWisdom();
 					break;
 				default:
 					break;
@@ -300,6 +310,12 @@ public class ClientStateMove extends ClientState {
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 			menuItemList.add(endMoveAction);
 		}
+		if (isTreacherousAvailable(actingPlayer)) {
+			menuItemList.add(createTreacherousItem(iconCache));
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			menuItemList.add(createWisdomItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -340,6 +356,12 @@ public class ClientStateMove extends ClientState {
 					break;
 				case PLAYER_ACTION_FUMBLEROOSKIE:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
+					break;
+				case PLAYER_ACTION_TREACHEROUS:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					break;
+				case PLAYER_ACTION_WISDOM:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
 					break;
 				default:
 					actionHandled = false;

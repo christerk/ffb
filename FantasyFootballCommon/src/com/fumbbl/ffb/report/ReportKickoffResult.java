@@ -2,11 +2,11 @@ package com.fumbbl.ffb.report;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.kickoff.KickoffResult;
 
 /**
  * 
@@ -55,8 +55,8 @@ public class ReportKickoffResult implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffResult initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportKickoffResult initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fKickoffResult = (KickoffResult) IJsonOption.KICKOFF_RESULT.getFrom(source, jsonObject);
 		fKickoffRoll = IJsonOption.KICKOFF_ROLL.getFrom(source, jsonObject);

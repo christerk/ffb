@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.net.commands;
 
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ClientMode;
@@ -13,6 +11,8 @@ import com.fumbbl.ffb.net.commands.UtilNetCommand;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.util.ListTool;
 
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -23,7 +23,7 @@ public class InternalServerCommandJoinApproved extends InternalServerCommand {
 	private String fGameName;
 	private ClientMode fClientMode;
 	private String fTeamId;
-	private List<String> fAccountProperties;
+	private final List<String> fAccountProperties;
 
 	public InternalServerCommandJoinApproved(long pGameId, String pGameName, String pCoach, String pTeamId,
 			ClientMode pClientMode, List<String> pAccountProperties) {
@@ -71,14 +71,14 @@ public class InternalServerCommandJoinApproved extends InternalServerCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommandJoinApproved initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fGameName = IJsonOption.GAME_NAME.getFrom(game, jsonObject);
-		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(game, jsonObject);
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		ListTool.replaceAll(fAccountProperties, IServerJsonOption.ACCOUNT_PROPERTIES.getFrom(game, jsonObject));
+	public InternalServerCommandJoinApproved initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		fGameName = IJsonOption.GAME_NAME.getFrom(source, jsonObject);
+		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(source, jsonObject);
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		ListTool.replaceAll(fAccountProperties, IServerJsonOption.ACCOUNT_PROPERTIES.getFrom(source, jsonObject));
 
 		return this;
 	}

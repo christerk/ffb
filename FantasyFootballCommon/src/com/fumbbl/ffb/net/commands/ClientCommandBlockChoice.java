@@ -39,10 +39,10 @@ public class ClientCommandBlockChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandBlockChoice initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandBlockChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
+		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(source, jsonObject);
 		return this;
 	}
 

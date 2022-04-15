@@ -9,7 +9,7 @@ import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandPrayerSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.report.bb2020.ReportPrayerRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -68,7 +68,7 @@ public class StepPrayer extends AbstractStep {
 		if (status.equals(StepCommandStatus.UNHANDLED_COMMAND)) {
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_PRAYER_SELECTION:
-					ClientCommandPrayerSelection clientCommandPrayerSelection = (ClientCommandPrayerSelection) pReceivedCommand.getCommand();
+					ClientCommandSkillSelection clientCommandPrayerSelection = (ClientCommandSkillSelection) pReceivedCommand.getCommand();
 					playerId = clientCommandPrayerSelection.getPlayerId();
 					skill = clientCommandPrayerSelection.getSkill();
 					status = StepCommandStatus.EXECUTE_STEP;
@@ -132,9 +132,9 @@ public class StepPrayer extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		firstRun = IServerJsonOption.FIRST_RUN.getFrom(source, jsonObject);
 		teamId = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);

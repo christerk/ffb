@@ -247,18 +247,18 @@ public class StepPushback extends AbstractStep {
 	// JSON serialization
 
 	@Override
-	public StepPushback initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
+	public StepPushback initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		state.startingPushbackSquare = null;
-		JsonObject startingPushbackSquareObject = IServerJsonOption.STARTING_PUSHBACK_SQUARE.getFrom(game, jsonObject);
+		JsonObject startingPushbackSquareObject = IServerJsonOption.STARTING_PUSHBACK_SQUARE.getFrom(source, jsonObject);
 		if (startingPushbackSquareObject != null) {
-			state.startingPushbackSquare = new PushbackSquare().initFrom(game, startingPushbackSquareObject);
+			state.startingPushbackSquare = new PushbackSquare().initFrom(source, startingPushbackSquareObject);
 		}
-		state.grabbing = IServerJsonOption.USING_GRAB.getFrom(game, jsonObject);
-		state.sideStepping = IServerJsonOption.USING_SIDE_STEP.getFrom(game, jsonObject);
-		state.standingFirm = IServerJsonOption.USING_STAND_FIRM.getFrom(game, jsonObject);
+		state.grabbing = IServerJsonOption.USING_GRAB.getFrom(source, jsonObject);
+		state.sideStepping = IServerJsonOption.USING_SIDE_STEP.getFrom(source, jsonObject);
+		state.standingFirm = IServerJsonOption.USING_STAND_FIRM.getFrom(source, jsonObject);
 		return this;
 	}
 

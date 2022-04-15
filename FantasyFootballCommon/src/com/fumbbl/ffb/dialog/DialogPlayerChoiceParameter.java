@@ -135,15 +135,15 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogPlayerChoiceParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(game, jsonObject);
-		fMaxSelects = IJsonOption.MAX_SELECTS.getFrom(game, jsonObject);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
-		addDescriptions(IJsonOption.DESCRIPTIONS.getFrom(game, jsonObject));
-		minSelects = IJsonOption.MIN_SELECTS.getFrom(game, jsonObject);
+	public DialogPlayerChoiceParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(source, jsonObject);
+		fMaxSelects = IJsonOption.MAX_SELECTS.getFrom(source, jsonObject);
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
+		addDescriptions(IJsonOption.DESCRIPTIONS.getFrom(source, jsonObject));
+		minSelects = IJsonOption.MIN_SELECTS.getFrom(source, jsonObject);
 		return this;
 	}
 

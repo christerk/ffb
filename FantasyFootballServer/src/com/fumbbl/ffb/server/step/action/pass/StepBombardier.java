@@ -23,7 +23,7 @@ public final class StepBombardier extends AbstractStep {
 
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepBombardier(GameState pGameState) {
 		super(pGameState);
@@ -71,8 +71,8 @@ public final class StepBombardier extends AbstractStep {
 	}
 
 	@Override
-	public StepBombardier initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
+	public StepBombardier initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

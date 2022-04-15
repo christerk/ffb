@@ -118,8 +118,11 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 							actingPlayer.setGoingForIt(true);
 							actingPlayer.setDodging(false);
 							actingPlayer.setJumping(false);
-							boolean canSprint = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi);
-							actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovementWithModifiers() + (canSprint ? 3 : 2));
+							int rushes = 2;
+							if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi)) {
+								rushes++;
+							}
+							actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovementWithModifiers() + rushes);
 							UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 							game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), state.coordinateFrom);
 							step.publishParameter(StepParameter.from(StepParameterKey.COORDINATE_FROM, null));

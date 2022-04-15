@@ -60,12 +60,12 @@ public class DialogPilingOnParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogPilingOnParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(game, jsonObject);
-		Boolean usesATeamReroll = IJsonOption.USES_A_TEAM_REROLL.getFrom(game, jsonObject);
+	public DialogPilingOnParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(source, jsonObject);
+		Boolean usesATeamReroll = IJsonOption.USES_A_TEAM_REROLL.getFrom(source, jsonObject);
 		fUsesATeamReroll = (usesATeamReroll != null) ? usesATeamReroll : false;
 		return this;
 	}

@@ -12,14 +12,14 @@ import com.fumbbl.ffb.json.IJsonSerializable;
  */
 public interface IDialogParameter extends IJsonSerializable {
 
-	public DialogId getId();
+	DialogId getId();
 
-	public IDialogParameter transform();
-
-	// overrides IJsonSerializable
-	public IDialogParameter initFrom(IFactorySource game, JsonValue pJsonValue);
+	IDialogParameter transform();
 
 	// overrides IJsonSerializable
-	public JsonObject toJsonValue();
+	IDialogParameter initFrom(IFactorySource source, JsonValue jsonValue);
+
+	// overrides IJsonSerializable
+	JsonObject toJsonValue();
 
 }

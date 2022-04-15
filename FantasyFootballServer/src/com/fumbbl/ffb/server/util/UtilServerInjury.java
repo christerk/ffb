@@ -181,7 +181,7 @@ public class UtilServerInjury {
 					playerResult.setSeriousInjuryDecay(null);
 					UtilBox.putPlayerIntoBox(game, pPlayer);
 					UtilBox.refreshBoxes(game);
-					UtilServerGame.updateLeaderReRolls(pStep);
+					UtilServerGame.updatePlayerStateDependentProperties(pStep);
 				}
 				pStep.getResult()
 						.addReport(new ReportRegenerationRoll(pPlayer.getId(), successful, roll, 4, false, null));

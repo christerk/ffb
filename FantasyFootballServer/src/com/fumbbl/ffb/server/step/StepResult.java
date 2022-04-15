@@ -110,8 +110,8 @@ public class StepResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public StepResult initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepResult initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fNextAction = (StepAction) IServerJsonOption.NEXT_ACTION.getFrom(source, jsonObject);
 		fNextActionParameter = IServerJsonOption.NEXT_ACTION_PARAMETER.getFrom(source, jsonObject);
 		fReportList.clear();

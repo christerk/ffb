@@ -23,8 +23,8 @@ import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
-import com.fumbbl.ffb.report.ReportDodgeRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2016.ReportDodgeRoll;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -289,16 +289,16 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepMoveDodge initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
-		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(game, jsonObject);
-		fDodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(game, jsonObject);
-		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
-		fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(game, jsonObject);
-		Boolean reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(game, jsonObject);
+	public StepMoveDodge initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		fDodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(source, jsonObject);
+		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
+		fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(source, jsonObject);
+		Boolean reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);
 		fReRollUsed = (reRollUsed != null) ? reRollUsed : false;
 		return this;
 	}

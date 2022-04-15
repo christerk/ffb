@@ -46,11 +46,11 @@ public class ClientCommandUseApothecary extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUseApothecary initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandUseApothecary initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fApothecaryUsed = IJsonOption.APOTHECARY_USED.getFrom(game, jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fApothecaryUsed = IJsonOption.APOTHECARY_USED.getFrom(source, jsonObject);
 		return this;
 	}
 

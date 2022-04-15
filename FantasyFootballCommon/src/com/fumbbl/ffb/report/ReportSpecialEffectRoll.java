@@ -69,13 +69,13 @@ public class ReportSpecialEffectRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSpecialEffectRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fSpecialEffect = (SpecialEffect) IJsonOption.SPECIAL_EFFECT.getFrom(game, jsonObject);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
+	public ReportSpecialEffectRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fSpecialEffect = (SpecialEffect) IJsonOption.SPECIAL_EFFECT.getFrom(source, jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);
 		return this;
 	}
 

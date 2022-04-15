@@ -39,10 +39,10 @@ public class ClientCommandInterceptorChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandInterceptorChoice initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandInterceptorChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fInterceptorId = IJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
+		fInterceptorId = IJsonOption.INTERCEPTOR_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

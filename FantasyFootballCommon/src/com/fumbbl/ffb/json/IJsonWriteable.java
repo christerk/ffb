@@ -8,6 +8,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public interface IJsonWriteable {
 
-	public JsonValue toJsonValue();
+	JsonValue toJsonValue();
 
 }

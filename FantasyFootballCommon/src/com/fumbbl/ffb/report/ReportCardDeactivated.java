@@ -48,10 +48,10 @@ public class ReportCardDeactivated implements IReport {
 		return jsonObject;
 	}
 
-	public ReportCardDeactivated initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fCard = (Card) IJsonOption.CARD.getFrom(game, jsonObject);
+	public ReportCardDeactivated initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fCard = (Card) IJsonOption.CARD.getFrom(source, jsonObject);
 		return this;
 	}
 

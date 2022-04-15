@@ -8,10 +8,9 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 /**
- *
  * @author Kalimar
  */
-public class DialogUseApothecary extends DialogYesOrNoQuestion {
+public class DialogUseApothecary extends DialogThreeWayChoice {
 
 	private final DialogUseApothecaryParameter fDialogParameter;
 

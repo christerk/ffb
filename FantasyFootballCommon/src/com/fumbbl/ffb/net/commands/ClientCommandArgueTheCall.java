@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -12,13 +9,16 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
  */
 public class ClientCommandArgueTheCall extends ClientCommand {
 
-	private List<String> fPlayerIds;
+	private final List<String> fPlayerIds;
 
 	public ClientCommandArgueTheCall() {
 		fPlayerIds = new ArrayList<>();
@@ -68,10 +68,10 @@ public class ClientCommandArgueTheCall extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandArgueTheCall initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandArgueTheCall initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
 		return this;
 	}
 

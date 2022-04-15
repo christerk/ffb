@@ -79,7 +79,7 @@ public class StepEndFeeding extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 		game.setDefenderId(null);
-		markSkillsTrackedOutsideOfActivation(game);
+		markSkillsTrackedOutsideOfActivationAndRemoveEffects(game);
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
@@ -123,11 +123,11 @@ public class StepEndFeeding extends AbstractStep {
 	}
 
 	@Override
-	public StepEndFeeding initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+	public StepEndFeeding initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}
 

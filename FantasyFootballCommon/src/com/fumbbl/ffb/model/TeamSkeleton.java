@@ -144,15 +144,15 @@ public class TeamSkeleton extends Team {
 		return jsonObject;
 	}
 
-	public TeamSkeleton initFrom(IFactorySource game, JsonValue pJsonValue) {
+	public TeamSkeleton initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
-		fId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fName = IJsonOption.TEAM_NAME.getFrom(game, jsonObject);
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
-		xmlContent = IJsonOption.XML_CONTENT.getFrom(game, jsonObject);
+		fId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fName = IJsonOption.TEAM_NAME.getFrom(source, jsonObject);
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
+		xmlContent = IJsonOption.XML_CONTENT.getFrom(source, jsonObject);
 
 		return this;
 

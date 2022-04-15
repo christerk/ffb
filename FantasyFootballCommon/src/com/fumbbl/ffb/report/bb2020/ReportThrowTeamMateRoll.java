@@ -84,13 +84,13 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportThrowTeamMateRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(game, jsonObject);
-		passResult = (PassResult) IJsonOption.PASS_RESULT.getFrom(game, jsonObject);
-		isKick = IJsonOption.KICKED.getFrom(game, jsonObject);
+	public ReportThrowTeamMateRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(source, jsonObject);
+		passResult = (PassResult) IJsonOption.PASS_RESULT.getFrom(source, jsonObject);
+		isKick = IJsonOption.KICKED.getFrom(source, jsonObject);
 		return this;
 	}
 

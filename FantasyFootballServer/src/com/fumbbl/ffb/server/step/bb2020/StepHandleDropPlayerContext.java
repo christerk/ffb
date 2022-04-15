@@ -153,9 +153,9 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepHandleDropPlayerContext initFrom(IFactorySource source, JsonValue pJsonValue) {
-		StepHandleDropPlayerContext step = (StepHandleDropPlayerContext) super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepHandleDropPlayerContext initFrom(IFactorySource source, JsonValue jsonValue) {
+		StepHandleDropPlayerContext step = (StepHandleDropPlayerContext) super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		if (IServerJsonOption.DROP_PLAYER_CONTEXT.isDefinedIn(jsonObject)) {
 			dropPlayerContext = new DropPlayerContext().initFrom(source, IServerJsonOption.DROP_PLAYER_CONTEXT.getFrom(source, jsonObject));
 		}

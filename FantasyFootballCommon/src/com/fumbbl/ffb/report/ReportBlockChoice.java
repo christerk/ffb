@@ -98,19 +98,19 @@ public class ReportBlockChoice implements IReport {
 		return jsonObject;
 	}
 
-	public ReportBlockChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
-		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
-		fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		Boolean extraEffectValue = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(game, jsonObject);
+	public ReportBlockChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(source, jsonObject);
+		fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		Boolean extraEffectValue = IJsonOption.SUPPRESS_EXTRA_EFFECT_HANDLING.getFrom(source, jsonObject);
 		suppressExtraEffectHandling = extraEffectValue != null && extraEffectValue;
-		Boolean showNameValue = IJsonOption.SHOW_NAME_IN_REPORT.getFrom(game, jsonObject);
+		Boolean showNameValue = IJsonOption.SHOW_NAME_IN_REPORT.getFrom(source, jsonObject);
 		showNameInReport = showNameValue != null && showNameValue;
-		blockRollId = IJsonOption.BLOCK_ROLL_ID.getFrom(game, jsonObject);
+		blockRollId = IJsonOption.BLOCK_ROLL_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

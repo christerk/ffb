@@ -39,10 +39,10 @@ public class ClientCommandSelectCardToBuy extends ClientCommand {
 	}
 
 	@Override
-	public ClientCommand initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		String selectionName = IJsonOption.CARD_SELECTION.getFrom(game, jsonObject);
+		String selectionName = IJsonOption.CARD_SELECTION.getFrom(source, jsonObject);
 		if (selectionName != null) {
 			selection = Selection.valueOf(selectionName);
 		}

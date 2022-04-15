@@ -92,12 +92,12 @@ public class StepDumpOff extends AbstractStep {
 	}
 
 	@Override
-	public StepDumpOff initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.usingDumpOff = IServerJsonOption.USING_DUMP_OFF.getFrom(game, jsonObject);
-		state.defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(game, jsonObject);
-		state.oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
+	public StepDumpOff initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.usingDumpOff = IServerJsonOption.USING_DUMP_OFF.getFrom(source, jsonObject);
+		state.defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(source, jsonObject);
+		state.oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);
 		return this;
 	}
 

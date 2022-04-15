@@ -405,17 +405,17 @@ public final class StepBuyInducements extends AbstractStep {
 	}
 
 	@Override
-	public StepBuyInducements initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(game, jsonObject);
-		fInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(game, jsonObject);
-		fInducementsSelectedAway = IServerJsonOption.INDUCEMENTS_SELECTED_AWAY.getFrom(game, jsonObject);
-		fInducementsSelectedHome = IServerJsonOption.INDUCEMENTS_SELECTED_HOME.getFrom(game, jsonObject);
-		fGoldUsedAway = IServerJsonOption.GOLD_USED_AWAY.getFrom(game, jsonObject);
-		fGoldUsedHome = IServerJsonOption.GOLD_USED_HOME.getFrom(game, jsonObject);
-		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(game, jsonObject);
-		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
+	public StepBuyInducements initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(source, jsonObject);
+		fInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(source, jsonObject);
+		fInducementsSelectedAway = IServerJsonOption.INDUCEMENTS_SELECTED_AWAY.getFrom(source, jsonObject);
+		fInducementsSelectedHome = IServerJsonOption.INDUCEMENTS_SELECTED_HOME.getFrom(source, jsonObject);
+		fGoldUsedAway = IServerJsonOption.GOLD_USED_AWAY.getFrom(source, jsonObject);
+		fGoldUsedHome = IServerJsonOption.GOLD_USED_HOME.getFrom(source, jsonObject);
+		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(source, jsonObject);
+		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(source, jsonObject);
 		return this;
 	}
 

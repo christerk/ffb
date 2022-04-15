@@ -682,9 +682,9 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	}
 
-	public Game initFrom(IFactorySource source, JsonValue pJsonValue) {
+	public Game initFrom(IFactorySource source, JsonValue jsonValue) {
 
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 
 		// We parse options first in order to get the correct context to deserialize the rest of the data
 		fOptions.initFrom(source, IJsonOption.GAME_OPTIONS.getFrom(source, jsonObject));

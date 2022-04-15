@@ -70,12 +70,12 @@ public class ReportCardEffectRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportCardEffectRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fCard = (Card) IJsonOption.CARD.getFrom(game, jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		fCardEffect = (CardEffect) IJsonOption.CARD_EFFECT.getFrom(game, jsonObject);
+	public ReportCardEffectRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fCard = (Card) IJsonOption.CARD.getFrom(source, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		fCardEffect = (CardEffect) IJsonOption.CARD_EFFECT.getFrom(source, jsonObject);
 		return this;
 	}
 

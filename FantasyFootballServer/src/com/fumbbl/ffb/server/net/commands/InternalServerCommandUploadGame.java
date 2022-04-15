@@ -41,10 +41,10 @@ public class InternalServerCommandUploadGame extends InternalServerCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommandUploadGame initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		fConcedingTeamId = IJsonOption.CONCEDING_TEAM_ID.getFrom(game, jsonObject);
+	public InternalServerCommandUploadGame initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		fConcedingTeamId = IJsonOption.CONCEDING_TEAM_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

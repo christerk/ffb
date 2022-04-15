@@ -62,7 +62,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandPing;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandPrayerSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
@@ -86,6 +86,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
+import com.fumbbl.ffb.net.commands.ClientCommandUseConsummateReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseFumblerooskie;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
@@ -93,6 +94,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
 import com.fumbbl.ffb.net.commands.ServerCommand;
@@ -301,8 +303,20 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseProReRollForBlock(proIndex));
 	}
 
+	public void sendUseConsummateReRollForBlock(int proIndex) {
+		send(new ClientCommandUseConsummateReRollForBlock(proIndex));
+	}
+
 	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
-		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId));
+		sendUseSkill(pSkill, pSkillUsed, playerId, null);
+	}
+
+	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId, ReRolledAction reRolledAction) {
+		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId, reRolledAction));
+	}
+
+	public void sendUseWisdom() {
+		send(new ClientCommandUseTeamMatesWisdom());
 	}
 
 	public void sendKickoff(FieldCoordinate pBallCoordinate) {
@@ -505,8 +519,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseFumblerooskie());
 	}
 
-	public void sendPrayerSelection(String playerId, Skill skill) {
-		send(new ClientCommandPrayerSelection(playerId, skill));
+	public void sendSkillSelection(String playerId, Skill skill) {
+		send(new ClientCommandSkillSelection(playerId, skill));
 	}
 
 	public FantasyFootballClient getClient() {

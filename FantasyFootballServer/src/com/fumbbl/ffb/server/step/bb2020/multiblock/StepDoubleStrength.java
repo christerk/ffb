@@ -130,10 +130,10 @@ public class StepDoubleStrength extends AbstractStep {
 	}
 
 	@Override
-	public StepDoubleStrength initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		playerIds.addAll(Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject)));
+	public StepDoubleStrength initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		playerIds.addAll(Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject)));
 		return this;
 	}
 

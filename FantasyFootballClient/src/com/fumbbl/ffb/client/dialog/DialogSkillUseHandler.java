@@ -29,7 +29,7 @@ public class DialogSkillUseHandler extends DialogHandler {
 			Player<?> player = game.getPlayerById(dialogSkillUseParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)) {
-				setDialog(new DialogSkillUse(getClient(), dialogSkillUseParameter));
+				setDialog(DialogSkillUse.create(getClient(), dialogSkillUseParameter));
 				getDialog().showDialog(this);
 				if (!game.isHomePlaying()) {
 					playSound(SoundId.QUESTION);
@@ -56,7 +56,9 @@ public class DialogSkillUseHandler extends DialogHandler {
 		if (testDialogHasId(pDialog, DialogId.SKILL_USE)) {
 			DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
 			String playerId = ((DialogSkillUseParameter) getClient().getGame().getDialogParameter()).getPlayerId();
-			getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes(), playerId);
+			getClient().getCommunication().sendUseSkill(
+				skillUseDialog.isChoiceTwo() ? skillUseDialog.getModiyingSkill() : skillUseDialog.getSkill(),
+				skillUseDialog.isChoiceOne() || skillUseDialog.isChoiceTwo(), playerId);
 		}
 	}
 

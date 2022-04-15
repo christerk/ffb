@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -12,13 +9,16 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
  */
 public class ServerCommandAdminMessage extends ServerCommand {
 
-	private List<String> fMessages;
+	private final List<String> fMessages;
 
 	public ServerCommandAdminMessage() {
 		fMessages = new ArrayList<>();
@@ -65,11 +65,11 @@ public class ServerCommandAdminMessage extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandAdminMessage initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		addMessages(IJsonOption.MESSAGE_ARRAY.getFrom(game, jsonObject));
+	public ServerCommandAdminMessage initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		addMessages(IJsonOption.MESSAGE_ARRAY.getFrom(source, jsonObject));
 		return this;
 	}
 

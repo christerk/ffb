@@ -7,7 +7,7 @@ import com.fumbbl.ffb.model.Player;
 /**
  * @author Kalimar
  */
-public class DialogArgueTheCall extends DialogYesOrNoQuestion {
+public class DialogArgueTheCall extends DialogThreeWayChoice {
 
 	public DialogArgueTheCall(FantasyFootballClient pClient, Player<?> pPlayer, boolean stayOnPitch, boolean friendsWithTheRef) {
 		super(pClient, "Argue the call", createMessages(pPlayer, stayOnPitch, friendsWithTheRef), null);

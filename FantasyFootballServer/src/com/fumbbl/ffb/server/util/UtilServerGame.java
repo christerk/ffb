@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.server.util;
 
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
@@ -15,6 +17,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.report.ReportInducement;
@@ -23,6 +26,8 @@ import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.report.ReportMasterChefRoll;
 import com.fumbbl.ffb.report.ReportPlayerAction;
 import com.fumbbl.ffb.report.ReportStartHalf;
+import com.fumbbl.ffb.report.bb2020.ReportSkillWasted;
+import com.fumbbl.ffb.report.bb2020.ReportTwoForOne;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
@@ -31,9 +36,14 @@ import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilActingPlayer;
+import com.fumbbl.ffb.util.UtilCards;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -53,7 +63,7 @@ public class UtilServerGame {
 	}
 
 	public static boolean syncGameModel(GameState pGameState, ReportList pReportList, Animation pAnimation,
-	                                    SoundId pSound) {
+																			SoundId pSound) {
 		boolean synced = false;
 		Game game = pGameState.getGame();
 		FantasyFootballServer server = pGameState.getServer();
@@ -69,7 +79,7 @@ public class UtilServerGame {
 	}
 
 	public static void changeActingPlayer(IStep pStep, String pActingPlayerId, PlayerAction pPlayerAction,
-	                                      boolean jumping) {
+																				boolean jumping) {
 		Game game = pStep.getGameState().getGame();
 		PlayerAction oldPlayerAction = game.getActingPlayer().getPlayerAction();
 		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, pPlayerAction, jumping) && (pPlayerAction != null)
@@ -126,7 +136,7 @@ public class UtilServerGame {
 			}
 		}
 		resetLeaderState(game);
-		updateLeaderReRolls(pStep);
+		updatePlayerStateDependentProperties(pStep);
 		resetSpecialSkills(game);
 
 	}
@@ -144,14 +154,88 @@ public class UtilServerGame {
 		}
 	}
 
-	public static void updateLeaderReRolls(IStep pStep) {
+	public static void checkForWastedSkills(Player<?> player, IStep step, FieldModel fieldModel) {
+
+		PlayerState playerState = fieldModel.getPlayerState(player);
+
+		if (playerState.isCasualty() || playerState.getBase() == PlayerState.BANNED) {
+			Constant.CHECK_AFTER_PLAYER_REMOVAL.stream()
+				.map(property -> UtilCards.getSkillWithProperty(player, property))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.filter(skill -> !player.isUsed(skill))
+				.forEach(skill -> step.getResult().addReport(new ReportSkillWasted(player.getId(), skill)));
+		}
+	}
+
+	public static void updatePlayerStateDependentProperties(IStep pStep) {
 		Game game = pStep.getGameState().getGame();
 		updateLeaderReRollsForTeam(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel(), pStep);
 		updateLeaderReRollsForTeam(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel(), pStep);
+		checkForMissingPartners(game, game.getTeamHome(), game.getFieldModel(), pStep);
+		checkForMissingPartners(game, game.getTeamAway(), game.getFieldModel(), pStep);
+		updateSingleUseReRolls(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel());
+		updateSingleUseReRolls(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel());
+	}
+
+	private static void checkForMissingPartners(Game game, Team team, FieldModel fieldModel, IStep step) {
+		List<Player<?>> players = Arrays.stream(team.getPlayers())
+			.filter(player -> player.hasSkillProperty(NamedProperties.reducesLonerRollIfPartnerIsHurt)).collect(Collectors.toList());
+
+		while (!players.isEmpty()) {
+			Player<?> currentPlayer = players.remove(0);
+			Skill skill = currentPlayer.getSkillWithProperty(NamedProperties.reducesLonerRollIfPartnerIsHurt);
+			String partnerPosId = currentPlayer.getPosition().getTeamWithPositionId();
+			if (StringTool.isProvided(partnerPosId)) {
+				Optional<Player<?>> partner = players.stream().filter(player -> partnerPosId.equals(player.getPosition().getId())).findFirst();
+				if (partner.isPresent()) {
+					players.remove(partner.get());
+					PlayerState playerState = fieldModel.getPlayerState(currentPlayer);
+					PlayerState partnerState = fieldModel.getPlayerState(partner.get());
+					boolean playerRemovedFromPlay = playerState.isCasualty() || playerState.getBase() == PlayerState.KNOCKED_OUT;
+					boolean partnerRemovedFromPlay = partnerState.isCasualty() || partnerState.getBase() == PlayerState.KNOCKED_OUT;
+					if (playerRemovedFromPlay) {
+						if (currentPlayer.hasActiveEnhancement(skill)) {
+							removePartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
+						}
+
+						if (partnerRemovedFromPlay && partner.get().hasActiveEnhancement(skill)) {
+							removePartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
+
+						} else if (!partner.get().hasActiveEnhancement(skill)) {
+							addPartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
+						}
+					} else {
+						if (partner.get().hasActiveEnhancement(skill)) {
+							removePartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
+						}
+
+						if (partnerRemovedFromPlay && !currentPlayer.hasActiveEnhancement(skill)) {
+							addPartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
+
+						} else if (currentPlayer.hasActiveEnhancement(skill)) {
+							removePartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static void removePartnerEnhancement(Game game, FieldModel fieldModel, Player<?> player, Player<?> partner, Skill skill, IStep step) {
+		fieldModel.removeSkillEnhancements(player, skill);
+		player.markUnused(skill, game);
+		step.getResult().addReport(new ReportTwoForOne(player.getId(), partner.getId(), false));
+	}
+
+	private static void addPartnerEnhancement(Game game, FieldModel fieldModel, Player<?> player, Player<?> partner, Skill skill, IStep step) {
+		fieldModel.addSkillEnhancements(player, skill);
+		player.markUsed(skill, game);
+		step.getResult().addReport(new ReportTwoForOne(player.getId(), partner.getId(), true));
 	}
 
 	private static void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
-	                                               IStep pStep) {
+																								 IStep pStep) {
 		if (!LeaderState.USED.equals(pTurnData.getLeaderState())) {
 			if (teamHasLeaderOnField(pTeam, pFieldModel)) {
 				if (LeaderState.NONE.equals(pTurnData.getLeaderState())) {
@@ -177,6 +261,16 @@ public class UtilServerGame {
 			}
 		}
 		return false;
+	}
+
+	public static void updateSingleUseReRolls(TurnData turnData, Team team, FieldModel fieldModel) {
+		int reRolls = (int) Arrays.stream(team.getPlayers())
+			.filter(player -> UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.grantsSingleUseTeamRerollWhenOnPitch))
+			.map(fieldModel::getPlayerState)
+			.filter(playerState -> !playerState.isCasualty() && playerState.getBase() != PlayerState.BANNED)
+			.count();
+
+		turnData.setSingleUseReRolls(reRolls);
 	}
 
 	protected static boolean playerOnField(Player<?> pPlayer, FieldModel pFieldModel) {
@@ -243,8 +337,8 @@ public class UtilServerGame {
 			FantasyFootballServer server = pGameState.getServer();
 			SessionManager sessionManager = server.getSessionManager();
 			Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
-			for (int i = 0; i < sessions.length; i++) {
-				server.getCommunication().close(sessions[i]);
+			for (Session session : sessions) {
+				server.getCommunication().close(session);
 			}
 		}
 	}

@@ -4,7 +4,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 
-public class DialogBriberyAndCorruption extends DialogYesOrNoQuestion {
+public class DialogBriberyAndCorruption extends DialogThreeWayChoice {
 	public DialogBriberyAndCorruption(FantasyFootballClient pClient) {
 		super(pClient, "Use Bribery and Corruption Re-Roll", createMessages(), IIconProperty.GAME_REF);
 	}

@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -12,14 +9,17 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Kalimar
  */
 public class ClientCommandJourneymen extends ClientCommand {
 
-	private List<Integer> fSlots;
-	private List<String> fPositionIds;
+	private final List<Integer> fSlots;
+	private final List<String> fPositionIds;
 
 	public ClientCommandJourneymen() {
 		fSlots = new ArrayList<>();
@@ -88,11 +88,11 @@ public class ClientCommandJourneymen extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandJourneymen initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandJourneymen initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		addPositionIds(IJsonOption.POSITION_IDS.getFrom(game, jsonObject));
-		addSlots(IJsonOption.SLOTS.getFrom(game, jsonObject));
+		addPositionIds(IJsonOption.POSITION_IDS.getFrom(source, jsonObject));
+		addSlots(IJsonOption.SLOTS.getFrom(source, jsonObject));
 		return this;
 	}
 }

@@ -10,6 +10,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PassModifierFactory;
@@ -17,13 +18,19 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportPassRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2020.ReportModifiedPassResult;
+import com.fumbbl.ffb.report.bb2020.ReportPassRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -73,6 +80,8 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 	private String goToLabelOnEnd, goToLabelOnSavedFumble, goToLabelOnMissedPass;
+	private Boolean usingModifyingSkill;
+	private int roll, minimumRoll;
 
 	@Override
 	public void init(StepParameterSet pParameterSet) {
@@ -127,7 +136,13 @@ public class StepPass extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
-			commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
+			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAddStrengthToPass)) {
+				usingModifyingSkill = commandUseSkill.isSkillUsed();
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			} else {
+				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
+			}
 		}
 
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -151,26 +166,55 @@ public class StepPass extends AbstractStepWithReRoll {
 			game.getFieldModel().setBallMoving(true);
 		}
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-		if (ReRolledActions.PASS == getReRolledAction()) {
-			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
-				handleFailedPass(throwerCoordinate);
-				return;
-			}
-		}
 
-		state.setThrowerCoordinate(throwerCoordinate);
 		PassModifierFactory factory = game.getFactory(FactoryType.Factory.PASS_MODIFIER);
 		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
 			false);
-		publishParameter(from(StepParameterKey.PASSING_DISTANCE, passingDistance));
+
 		Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(game, game.getThrower(),
 			passingDistance, false));
-		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
-		int minimumRoll = minimumRollO.orElse(0);
-		int roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
+
 		boolean isBomb = PlayerAction.THROW_BOMB == game.getThrowerAction() || PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction();
-		state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb));
+
+		if (ReRolledActions.PASS == getReRolledAction()) {
+			if (usingModifyingSkill == null || !usingModifyingSkill) {
+				if (getReRollSource() == null) {
+					handleFailedPass(throwerCoordinate);
+					return;
+				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
+					if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, passingDistance, passModifiers, isBomb)) {
+						handleFailedPass(throwerCoordinate);
+					}
+					return;
+				}
+			}
+		}
+
+		StatBasedRollModifier statBasedRollModifier = null;
+
+		if (usingModifyingSkill != null && usingModifyingSkill) {
+			if (minimumRoll == 0) {
+				Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
+				minimumRoll = minimumRollO.orElse(0);
+			}
+			if (roll == 0) {
+				roll = minimumRoll > 0 ? getGameState().getDiceRoller().rollSkill() : 0;
+			}
+			Skill modifyingSkill = game.getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canAddStrengthToPass);
+			getResult().addReport(new ReportSkillUse(game.getThrowerId(), modifyingSkill, true, SkillUse.ADD_STRENGTH_TO_ROLL));
+			statBasedRollModifier = game.getActingPlayer().statBasedModifier(NamedProperties.canAddStrengthToPass);
+			state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb, statBasedRollModifier));
+			game.getActingPlayer().markSkillUsed(modifyingSkill);
+		} else {
+			state.setThrowerCoordinate(throwerCoordinate);
+			publishParameter(from(StepParameterKey.PASSING_DISTANCE, passingDistance));
+			Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
+			minimumRoll = minimumRollO.orElse(0);
+			roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
+			state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb));
+		}
+
 		if (PassResult.FUMBLE == state.getResult()) {
 			publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, false));
 		} else if (PassResult.SAVED_FUMBLE == state.getResult()) {
@@ -178,13 +222,14 @@ public class StepPass extends AbstractStepWithReRoll {
 		}
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
-			passModifiers.toArray(new PassModifier[0]), passingDistance, isBomb, state.getResult()));
+			passModifiers.toArray(new PassModifier[0]), passingDistance, isBomb, state.getResult(), false, statBasedRollModifier));
 		if (PassResult.ACCURATE == state.getResult()) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		} else {
 			boolean doNextStep = true;
 			if (mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
 				setReRolledAction(ReRolledActions.PASS);
+				Skill modificationSkill = getModifyingSkill(mechanic, passingDistance, passModifiers, isBomb);
 
 				ReRollSource passingReroll = UtilCards.getRerollSource(game.getThrower(), ReRolledActions.PASS);
 				if (passingReroll != null && !state.isPassSkillUsed()) {
@@ -192,19 +237,47 @@ public class StepPass extends AbstractStepWithReRoll {
 					state.setPassSkillUsed(true);
 					Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 					UtilServerDialog.showDialog(getGameState(),
-						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll),
+						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll, modificationSkill),
 						actingTeam.hasPlayer(game.getThrower()));
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getActingPlayer(), ReRolledActions.PASS,
-						minimumRoll, PassResult.FUMBLE == state.getResult())) {
+						minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill)) {
 						doNextStep = false;
 					}
 				}
+			} else if (usingModifyingSkill == null && showUseModifyingSkillDialog(mechanic, passingDistance, passModifiers, isBomb)) {
+				doNextStep = false;
 			}
 			if (doNextStep) {
 				handleFailedPass(throwerCoordinate);
 			}
 		}
+	}
+
+	private boolean showUseModifyingSkillDialog(PassMechanic mechanic, PassingDistance passingDistance, Set<PassModifier> passModifiers, boolean isBomb) {
+		if (usingModifyingSkill == null) {
+			Skill modifyingSkill = getModifyingSkill(mechanic, passingDistance, passModifiers, isBomb);
+			if (modifyingSkill != null) {
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(getGameState().getGame().getThrowerId(), modifyingSkill, 0), false);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Skill getModifyingSkill(PassMechanic mechanic, PassingDistance passingDistance, Set<PassModifier> passModifiers, boolean isBomb) {
+		Game game = getGameState().getGame();
+		PassState state = getGameState().getPassState();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		Skill modifying = null;
+		if (game.getThrowerId().equals(actingPlayer.getPlayerId())) {
+			PassResult modifiedResult = mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb, actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToPass));
+			if (state.getResult() != modifiedResult) {
+				modifying = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAddStrengthToPass);
+				getResult().addReport(new ReportModifiedPassResult(modifying, modifiedResult));
+			}
+		}
+		return modifying;
 	}
 
 	private void handleFailedPass(FieldCoordinate throwerCoordinate) {
@@ -249,16 +322,22 @@ public class StepPass extends AbstractStepWithReRoll {
 		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, goToLabelOnEnd);
 		IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.addTo(jsonObject, goToLabelOnMissedPass);
 		IServerJsonOption.GOTO_LABEL_ON_SAVED_FUMBLE.addTo(jsonObject, goToLabelOnSavedFumble);
+		IServerJsonOption.USING_MODIFYING_SKILL.addTo(jsonObject, usingModifyingSkill);
+		IServerJsonOption.ROLL.addTo(jsonObject, roll);
+		IServerJsonOption.MINIMUM_ROLL.addTo(jsonObject, minimumRoll);
 		return jsonObject;
 	}
 
 	@Override
-	public StepPass initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(game, jsonObject);
-		goToLabelOnSavedFumble = IServerJsonOption.GOTO_LABEL_ON_SAVED_FUMBLE.getFrom(game, jsonObject);
+	public StepPass initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(source, jsonObject);
+		goToLabelOnSavedFumble = IServerJsonOption.GOTO_LABEL_ON_SAVED_FUMBLE.getFrom(source, jsonObject);
+		usingModifyingSkill = IServerJsonOption.USING_MODIFYING_SKILL.getFrom(source, jsonObject);
+		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
+		minimumRoll = IServerJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 }

@@ -119,9 +119,9 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepAnimosity initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepAnimosity initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.gotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		return this;

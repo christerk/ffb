@@ -161,12 +161,12 @@ public final class StepAssignTouchdowns extends AbstractStep {
 	}
 
 	@Override
-	public StepAssignTouchdowns initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		touchdowns = IServerJsonOption.TOUCHDOWNS.getFrom(game, jsonObject);
-		winningTeamId = IServerJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		playerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+	public StepAssignTouchdowns initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		touchdowns = IServerJsonOption.TOUCHDOWNS.getFrom(source, jsonObject);
+		winningTeamId = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

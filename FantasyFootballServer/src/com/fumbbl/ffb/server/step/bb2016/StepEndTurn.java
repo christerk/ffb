@@ -401,7 +401,7 @@ public class StepEndTurn extends AbstractStep {
 			}
 
 			game.startTurn();
-			UtilServerGame.updateLeaderReRolls(this);
+			UtilServerGame.updatePlayerStateDependentProperties(this);
 
 			if (fEndGame) {
 				endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
@@ -483,7 +483,7 @@ public class StepEndTurn extends AbstractStep {
 				playerResult.setHasUsedSecretWeapon(false);
 			}
 		}
-		UtilServerGame.updateLeaderReRolls(this);
+		UtilServerGame.updatePlayerStateDependentProperties(this);
 	}
 
 	private KnockoutRecovery recoverKnockout(Player<?> pPlayer) {
@@ -677,9 +677,9 @@ public class StepEndTurn extends AbstractStep {
 	}
 
 	@Override
-	public StepEndTurn initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepEndTurn initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(source, jsonObject);
 		fArgueTheCallChoiceHome = IServerJsonOption.ARGUE_THE_CALL_CHOICE_HOME.getFrom(source, jsonObject);
 		fArgueTheCallChoiceAway = IServerJsonOption.ARGUE_THE_CALL_CHOICE_AWAY.getFrom(source, jsonObject);

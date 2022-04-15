@@ -132,21 +132,21 @@ public class PassState implements IJsonSerializable {
 	}
 
 	@Override
-	public PassState initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		catcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
-		result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
-		passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
-		JsonObject throwerObject = IJsonOption.FIELD_COORDINATE_THROWER.getFrom(game, jsonObject);
+	public PassState initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		catcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
+		passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(source, jsonObject);
+		JsonObject throwerObject = IJsonOption.FIELD_COORDINATE_THROWER.getFrom(source, jsonObject);
 		if (throwerObject != null) {
-			throwerCoordinate = new FieldCoordinate(0).initFrom(game, throwerObject);
+			throwerCoordinate = new FieldCoordinate(0).initFrom(source, throwerObject);
 		}
-		landingOutOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(game, jsonObject);
-		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
-		interceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(game, jsonObject);
-		oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
-		deflectionSuccessful = IServerJsonOption.INTERCEPTION_SUCCESSFUL.getFrom(game, jsonObject);
-		originalBombardier = IServerJsonOption.ORIGINAL_BOMBER.getFrom(game, jsonObject);
+		landingOutOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
+		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(source, jsonObject);
+		interceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(source, jsonObject);
+		oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);
+		deflectionSuccessful = IServerJsonOption.INTERCEPTION_SUCCESSFUL.getFrom(source, jsonObject);
+		originalBombardier = IServerJsonOption.ORIGINAL_BOMBER.getFrom(source, jsonObject);
 		return this;
 	}
 }

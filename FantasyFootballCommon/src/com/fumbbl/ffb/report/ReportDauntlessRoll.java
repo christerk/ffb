@@ -60,11 +60,11 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportDauntlessRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fStrength = IJsonOption.STRENGTH.getFrom(game, jsonObject);
-		defenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
+	public ReportDauntlessRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fStrength = IJsonOption.STRENGTH.getFrom(source, jsonObject);
+		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

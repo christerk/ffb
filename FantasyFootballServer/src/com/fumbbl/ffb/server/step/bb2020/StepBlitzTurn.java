@@ -90,7 +90,7 @@ public final class StepBlitzTurn extends AbstractStep {
 					UtilServerTimer.startTurnTimer(getGameState(), currentTimeMillis);
 				}
 				game.startTurn();
-				UtilServerGame.updateLeaderReRolls(this);
+				UtilServerGame.updatePlayerStateDependentProperties(this);
 				// insert select sequence into kickoff sequence after this step
 				getGameState().pushCurrentStepOnStack();
 				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);

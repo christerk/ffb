@@ -117,8 +117,8 @@ public abstract class ReportSkillRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSkillRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ReportSkillRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);

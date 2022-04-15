@@ -47,12 +47,12 @@ public class ReportTrapDoor implements IReport {
 		return jsonObject;
 	}
 
-	public ReportTrapDoor initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		escaped = IJsonOption.ESCAPED.getFrom(game, jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		roll = IJsonOption.ROLL.getFrom(game, jsonObject);
+	public ReportTrapDoor initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		escaped = IJsonOption.ESCAPED.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		roll = IJsonOption.ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

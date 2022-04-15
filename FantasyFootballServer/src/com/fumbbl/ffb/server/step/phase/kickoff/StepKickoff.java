@@ -99,10 +99,10 @@ public final class StepKickoff extends AbstractStep {
 	}
 
 	@Override
-	public StepKickoff initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(game, jsonObject);
+	public StepKickoff initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

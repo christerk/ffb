@@ -36,10 +36,10 @@ public class ClientCommandUseReRollForTarget extends ClientCommandUseReRoll {
 		return jsonObject;
 	}
 
-	public ClientCommandUseReRollForTarget initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandUseReRollForTarget initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		targetId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		targetId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

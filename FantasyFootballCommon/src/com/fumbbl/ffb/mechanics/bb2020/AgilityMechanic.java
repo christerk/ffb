@@ -14,7 +14,9 @@ import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
+import com.fumbbl.ffb.report.bb2020.ReportDodgeRoll;
 
 import java.util.Collections;
 import java.util.Set;
@@ -30,6 +32,11 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	@Override
 	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers) {
 		return minimumRoll(pPlayer.getAgilityWithModifiers(), pDodgeModifiers);
+	}
+
+	@Override
+	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers, StatBasedRollModifier statBasedRollModifier) {
+		return minimumRoll(pPlayer.getAgilityWithModifiers(), pDodgeModifiers, statBasedRollModifier == null ? 0 : statBasedRollModifier.getModifier());
 	}
 
 	@Override
@@ -69,7 +76,11 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 
 	@Override
 	public String formatDodgeResult(ReportSkillRoll report, ActingPlayer player) {
-		return formatResult(player.getPlayer().getAgilityWithModifiers(), report.getRollModifiers());
+		StatBasedRollModifier statBasedRollModifier = null;
+		if (report instanceof ReportDodgeRoll) {
+			statBasedRollModifier = ((ReportDodgeRoll) report).getStatBasedRollModifier();
+		}
+		return formatResult(player.getPlayer().getAgilityWithModifiers(), report.getRollModifiers(), statBasedRollModifier);
 	}
 
 	@Override
@@ -118,10 +129,22 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	private int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {
-		return Math.max(2, agility + modifiers.stream().mapToInt(RollModifier::getModifier).sum());
+		return minimumRoll(agility, modifiers, 0);
+	}
+
+	private int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers, int statModifier) {
+		return Math.max(2, agility + modifiers.stream().mapToInt(RollModifier::getModifier).sum() - statModifier);
 	}
 
 	private String formatResult(int agility, RollModifier<?>[] modifiers) {
-		return " (Roll" + formatRollModifiers(modifiers) + " >= " + Math.max(2, agility) + "+)";
+		return formatResult(agility, modifiers, null);
+	}
+
+	private String formatResult(int agility, RollModifier<?>[] modifiers, StatBasedRollModifier statBasedRollModifier) {
+		String statModifier = "";
+		if (statBasedRollModifier != null) {
+			statModifier = " + " + statBasedRollModifier.getModifier() + " " + statBasedRollModifier.getReportString();
+		}
+		return " (Roll" + formatRollModifiers(modifiers) + statModifier + " >= " + Math.max(2, agility) + "+)";
 	}
 }

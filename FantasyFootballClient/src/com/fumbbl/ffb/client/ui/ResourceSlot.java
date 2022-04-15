@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.util.StringTool;
-
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +10,9 @@ import java.util.List;
 public class ResourceSlot {
 
 	private final Rectangle fLocation;
-	private int fValue;
+	private final List<ResourceValue> values = new ArrayList<>();
 	private boolean fEnabled;
-	private String fIconProperty, singular, plural;
+	private String fIconProperty;
 	private final List<String> details = new ArrayList<>();
 
 	public ResourceSlot(Rectangle pLocation) {
@@ -27,12 +25,12 @@ public class ResourceSlot {
 		return fLocation;
 	}
 
-	public int getValue() {
-		return fValue;
+	public void add(ResourceValue value) {
+		values.add(value);
 	}
 
-	public void setValue(int pValue) {
-		fValue = pValue;
+	public List<ResourceValue> getValues() {
+		return values;
 	}
 
 	public void setIconProperty(String pIconProperty) {
@@ -44,23 +42,23 @@ public class ResourceSlot {
 	}
 
 	public String getToolTip() {
-		if (StringTool.isProvided(singular) && StringTool.isProvided(plural)) {
-			StringBuilder toolTip = new StringBuilder();
-			if (getValue() > 0) {
-				toolTip.append(getValue()).append(" ");
+		StringBuilder toolTip = new StringBuilder();
+		toolTip.insert(0, "<html>");
+		final boolean[] firstLine = {true};
+		values.forEach(value -> {
+			if (firstLine[0]) {
+				firstLine[0] = false;
 			} else {
-				toolTip.append("No ");
+				toolTip.append("<br/>");
 			}
-			toolTip.append((getValue() == 1) ? singular : plural);
-			if (!details.isEmpty()) {
-				toolTip.insert(0, "<html>");
-				details.forEach(detail -> toolTip.append("<br/> - ").append(detail));
-				toolTip.append("</html>");
-			}
-			return toolTip.toString();
-		} else {
-			return null;
+			toolTip.append(value.toolTip());
+		});
+		if (!details.isEmpty()) {
+			toolTip.append("<br/>");
 		}
+		details.forEach(detail -> toolTip.append("<br/> - ").append(detail));
+		toolTip.append("</html>");
+		return toolTip.toString();
 	}
 
 	public void setEnabled(boolean pEnabled) {
@@ -71,14 +69,6 @@ public class ResourceSlot {
 		return fEnabled;
 	}
 
-	public void setSingular(String singular) {
-		this.singular = singular;
-	}
-
-	public void setPlural(String plural) {
-		this.plural = plural;
-	}
-
 	public List<String> getDetails() {
 		return details;
 	}
@@ -87,7 +77,8 @@ public class ResourceSlot {
 		details.add(detail);
 	}
 
-	public void clearDetails() {
+	public void clear() {
 		details.clear();
+		values.clear();
 	}
 }

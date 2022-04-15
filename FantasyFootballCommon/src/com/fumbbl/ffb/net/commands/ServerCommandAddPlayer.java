@@ -89,19 +89,19 @@ public class ServerCommandAddPlayer extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandAddPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		JsonObject playerObject = IJsonOption.PLAYER.getFrom(game, jsonObject);
+	public ServerCommandAddPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		JsonObject playerObject = IJsonOption.PLAYER.getFrom(source, jsonObject);
 		if (playerObject != null) {
-			fPlayer = new RosterPlayer().initFrom(game, playerObject);
+			fPlayer = new RosterPlayer().initFrom(source, playerObject);
 		}
-		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(game, jsonObject);
-		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(game, jsonObject);
-		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(game, jsonObject);
-		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(game, jsonObject);
+		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
+		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(source, jsonObject);
+		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(source, jsonObject);
+		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(source, jsonObject);
 		return this;
 	}
 

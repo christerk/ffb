@@ -41,10 +41,10 @@ public class ClientCommandDebugClientState extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandDebugClientState initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandDebugClientState initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fClientStateId = (ClientStateId) IJsonOption.CLIENT_STATE_ID.getFrom(game, jsonObject);
+		fClientStateId = (ClientStateId) IJsonOption.CLIENT_STATE_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

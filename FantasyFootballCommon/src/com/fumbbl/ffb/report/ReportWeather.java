@@ -55,11 +55,11 @@ public class ReportWeather implements IReport {
 		return jsonObject;
 	}
 
-	public ReportWeather initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fWeather = (Weather) IJsonOption.WEATHER.getFrom(game, jsonObject);
-		fWeatherRoll = IJsonOption.WEATHER_ROLL.getFrom(game, jsonObject);
+	public ReportWeather initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fWeather = (Weather) IJsonOption.WEATHER.getFrom(source, jsonObject);
+		fWeatherRoll = IJsonOption.WEATHER_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

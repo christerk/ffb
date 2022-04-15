@@ -1,12 +1,5 @@
 package com.fumbbl.ffb;
 
-import java.util.Date;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -17,6 +10,11 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.Date;
 
 /**
  * 
@@ -199,16 +197,16 @@ public class GameListEntry implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameListEntry initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
-		fStarted = IJsonOption.STARTED.getFrom(game, jsonObject);
-		fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(game, jsonObject);
-		fTeamHomeName = IJsonOption.TEAM_HOME_NAME.getFrom(game, jsonObject);
-		fTeamHomeCoach = IJsonOption.TEAM_HOME_COACH.getFrom(game, jsonObject);
-		fTeamAwayId = IJsonOption.TEAM_AWAY_ID.getFrom(game, jsonObject);
-		fTeamAwayName = IJsonOption.TEAM_AWAY_NAME.getFrom(game, jsonObject);
-		fTeamAwayCoach = IJsonOption.TEAM_AWAY_COACH.getFrom(game, jsonObject);
+	public GameListEntry initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGameId = IJsonOption.GAME_ID.getFrom(source, jsonObject);
+		fStarted = IJsonOption.STARTED.getFrom(source, jsonObject);
+		fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(source, jsonObject);
+		fTeamHomeName = IJsonOption.TEAM_HOME_NAME.getFrom(source, jsonObject);
+		fTeamHomeCoach = IJsonOption.TEAM_HOME_COACH.getFrom(source, jsonObject);
+		fTeamAwayId = IJsonOption.TEAM_AWAY_ID.getFrom(source, jsonObject);
+		fTeamAwayName = IJsonOption.TEAM_AWAY_NAME.getFrom(source, jsonObject);
+		fTeamAwayCoach = IJsonOption.TEAM_AWAY_COACH.getFrom(source, jsonObject);
 		return this;
 	}
 

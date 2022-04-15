@@ -32,7 +32,7 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 		public String goToLabelOnFailure;
 	}
 
-	private StepState state;
+	private final StepState state;
 
 	public StepBloodLust(GameState pGameState) {
 		super(pGameState);
@@ -90,9 +90,9 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepBloodLust initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public StepBloodLust initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		return this;
 	}

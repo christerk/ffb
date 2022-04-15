@@ -126,7 +126,7 @@ public final class StepInitSelecting extends AbstractStep {
 			FieldModel fieldModel = game.getFieldModel();
 			TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
 			switch (pReceivedCommand.getId()) {
-				case CLIENT_CONFIRM: // confirms ending blitz action
+				case CLIENT_CONFIRM: // confirms ending target select action like blitz or gaze
 					fEndPlayerAction = true;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -250,10 +250,7 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_PASS:
 					ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
-					boolean passAllowed = !game.getTurnData().isPassUsed()
-						|| ((actingPlayer.getPlayer() != null) && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)
-						|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB)));
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand) && passAllowed) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand)) {
 						if (passCommand.getTargetCoordinate() != null) {
 							if (game.isHomePlaying()) {
 								publishParameter(
@@ -276,8 +273,7 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_HAND_OVER:
 					ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)
-						&& !game.getTurnData().isHandOverUsed()) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
 						Player<?> catcher = game.getPlayerById(handOverCommand.getCatcherId());
 						FieldCoordinate catcherCoordinate = fieldModel.getPlayerCoordinate(catcher);
 						publishParameter(new StepParameter(StepParameterKey.TARGET_COORDINATE, catcherCoordinate));
@@ -343,12 +339,23 @@ public final class StepInitSelecting extends AbstractStep {
 					}
 					break;
 				case CLIENT_USE_SKILL:
-					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGainHailMary)) {
-						game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
-						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.GAIN_HAIL_MARY));
-					}
 					commandStatus = StepCommandStatus.SKIP_STEP;
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.isSkillUsed()) {
+						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGainHailMary)) {
+							game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
+							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.GAIN_HAIL_MARY));
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStabTeamMateForBall)) {
+							fDispatchPlayerAction = PlayerAction.TREACHEROUS;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
+						}
+					}
+					break;
+				case CLIENT_USE_TEAM_MATES_WISDOM:
+					fDispatchPlayerAction = PlayerAction.WISDOM_OF_THE_WHITE_DWARF;
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					forceGotoOnDispatch = true;
 					break;
 				default:
 					break;
@@ -451,14 +458,14 @@ public final class StepInitSelecting extends AbstractStep {
 	}
 
 	@Override
-	public StepInitSelecting initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		forceGotoOnDispatch = IServerJsonOption.FORCE_GOTO_ON_DISPATCH.getFrom(game, jsonObject);
+	public StepInitSelecting initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(source, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		forceGotoOnDispatch = IServerJsonOption.FORCE_GOTO_ON_DISPATCH.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -61,13 +61,13 @@ public class ClientCommandApothecaryChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandApothecaryChoice initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandApothecaryChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(game, jsonObject);
-		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
-		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(game, jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
+		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
+		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		return this;
 	}
 

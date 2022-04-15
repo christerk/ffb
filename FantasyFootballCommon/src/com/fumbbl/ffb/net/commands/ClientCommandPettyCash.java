@@ -39,10 +39,10 @@ public class ClientCommandPettyCash extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPettyCash initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandPettyCash initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fPettyCash = IJsonOption.PETTY_CASH.getFrom(game, jsonObject);
+		fPettyCash = IJsonOption.PETTY_CASH.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -130,12 +130,12 @@ public class StepTentacles extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepTentacles initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
-		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
-		state.usingTentacles = IServerJsonOption.USING_TENTACLES.getFrom(game, jsonObject);
+	public StepTentacles initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
+		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		state.usingTentacles = IServerJsonOption.USING_TENTACLES.getFrom(source, jsonObject);
 		return this;
 	}
 

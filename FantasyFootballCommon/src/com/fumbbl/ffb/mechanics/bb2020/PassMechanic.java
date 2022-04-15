@@ -8,6 +8,7 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -36,32 +37,49 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 	}
 
 	@Override
-	public Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers) {
+	public Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers, StatBasedRollModifier statBasedRollModifier) {
 		if (thrower.getPassingWithModifiers() > 0) {
 			int roll = thrower.getPassingWithModifiers() + distance.getModifier2020() + modifiers.stream().mapToInt(PassModifier::getModifier).sum();
+			if (statBasedRollModifier != null) {
+				roll += statBasedRollModifier.getModifier();
+			}
 			return Optional.of(Math.max(roll, 2));
 		} else {
 			return Optional.empty();
 		}
 	}
 
- 	@Override
-	public PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction) {
+	@Override
+	public Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers) {
+		return minimumRoll(thrower, distance, modifiers, null);
+	}
 
-	  int resultAfterModifiers = roll - calculateModifiers(modifiers) - distance.getModifier2020();
-	  if (thrower.getPassingWithModifiers() <= 0 || roll == 1) {
-		  if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles)) {
-			  return PassResult.SAVED_FUMBLE;
-		  } else {
-			  return PassResult.FUMBLE;
-		  }
-	  } else if (roll == 6 || resultAfterModifiers >= thrower.getPassingWithModifiers()) {
-		  return PassResult.ACCURATE;
-	  } else if (resultAfterModifiers <= 1) {
-		  return PassResult.WILDLY_INACCURATE;
-	  } else {
+	@Override
+	public PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers,
+																 boolean bombAction, StatBasedRollModifier statBasedRollModifier) {
+
+		int resultAfterModifiers = roll - calculateModifiers(modifiers) - distance.getModifier2020();
+		if (statBasedRollModifier != null) {
+			resultAfterModifiers += statBasedRollModifier.getModifier();
+		}
+		if (thrower.getPassingWithModifiers() <= 0 || roll == 1) {
+			if (thrower.hasSkillProperty(NamedProperties.dontDropFumbles)) {
+				return PassResult.SAVED_FUMBLE;
+			} else {
+				return PassResult.FUMBLE;
+			}
+		} else if (roll == 6 || resultAfterModifiers >= thrower.getPassingWithModifiers()) {
+			return PassResult.ACCURATE;
+		} else if (resultAfterModifiers <= 1) {
+			return PassResult.WILDLY_INACCURATE;
+		} else {
 			return PassResult.INACCURATE;
 		}
+	}
+
+	@Override
+	public PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction) {
+		return evaluatePass(thrower, roll, distance, modifiers, bombAction, null);
 	}
 
 	@Override

@@ -39,10 +39,10 @@ public class ClientCommandTalk extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandTalk initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandTalk initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fTalk = IJsonOption.TALK.getFrom(game, jsonObject);
+		fTalk = IJsonOption.TALK.getFrom(source, jsonObject);
 		return this;
 	}
 

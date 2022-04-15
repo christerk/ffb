@@ -64,12 +64,12 @@ public class ReportBlockReRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportBlockReRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
+	public ReportBlockReRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
 		return this;
 	}
 

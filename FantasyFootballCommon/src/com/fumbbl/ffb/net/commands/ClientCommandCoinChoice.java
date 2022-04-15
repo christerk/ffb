@@ -39,10 +39,10 @@ public class ClientCommandCoinChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandCoinChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fChoiceHeads = IJsonOption.CHOICE_HEADS.getFrom(game, jsonObject);
+	public ClientCommandCoinChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fChoiceHeads = IJsonOption.CHOICE_HEADS.getFrom(source, jsonObject);
 		return this;
 	}
 

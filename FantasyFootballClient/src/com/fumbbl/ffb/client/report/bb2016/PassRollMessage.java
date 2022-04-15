@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.report.bb2016;
 
-import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
@@ -13,7 +13,7 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportNervesOfSteel;
-import com.fumbbl.ffb.report.ReportPassRoll;
+import com.fumbbl.ffb.report.bb2016.ReportPassRoll;
 
 @ReportMessageType(ReportId.PASS_ROLL)
 @RulesCollection(Rules.BB2016)

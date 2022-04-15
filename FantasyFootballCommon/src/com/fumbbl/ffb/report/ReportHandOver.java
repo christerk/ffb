@@ -47,10 +47,10 @@ public class ReportHandOver implements IReport {
 		return jsonObject;
 	}
 
-	public ReportHandOver initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fCatcherId = IJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+	public ReportHandOver initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fCatcherId = IJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

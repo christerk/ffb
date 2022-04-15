@@ -103,8 +103,8 @@ public class StepBlockStatistics extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockStatistics initFrom(IFactorySource source, JsonValue pJsonValue) {
-		super.initFrom(source, pJsonValue);
+	public StepBlockStatistics initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		increment = IJsonOption.NUMBER.getFrom(source, UtilJson.toJsonObject(toJsonValue()));
 		return this;
 	}

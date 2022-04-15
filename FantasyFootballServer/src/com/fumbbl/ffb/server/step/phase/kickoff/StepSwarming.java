@@ -96,19 +96,19 @@ public class StepSwarming extends AbstractStep {
 	}
 
 	@Override
-	public StepSwarming initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.endTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(game, jsonObject);
-		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUNT.getFrom(game, jsonObject);
+	public StepSwarming initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		state.endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(source, jsonObject);
+		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUNT.getFrom(source, jsonObject);
 		if (IServerJsonOption.SWARMING_PLAYER_ROLL.isDefinedIn(jsonObject)) {
-			state.rolledAmount = IServerJsonOption.SWARMING_PLAYER_ROLL.getFrom(game, jsonObject);
+			state.rolledAmount = IServerJsonOption.SWARMING_PLAYER_ROLL.getFrom(source, jsonObject);
 		}
 		if (IServerJsonOption.SWARMING_PLAYER_LIMIT.isDefinedIn(jsonObject)) {
-			state.limitingAmount = IServerJsonOption.SWARMING_PLAYER_LIMIT.getFrom(game, jsonObject);
+			state.limitingAmount = IServerJsonOption.SWARMING_PLAYER_LIMIT.getFrom(source, jsonObject);
 		}
-		state.teamId = IServerJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		state.teamId = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

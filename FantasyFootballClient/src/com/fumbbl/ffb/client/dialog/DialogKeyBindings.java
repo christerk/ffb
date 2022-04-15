@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.InternalFrameEvent;
 
+import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -60,176 +61,67 @@ public class DialogKeyBindings extends Dialog {
 		html.append("<html>\n");
 		html.append("<body>\n");
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
-		html.append("<tr>\n");
-		html.append("  <td colspan=\"3\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Player Moves").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move North").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_NORTH))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 8").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move Northeast").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_NORTHEAST)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 9").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move East").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_EAST))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 6").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move Southeast").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_SOUTHEAST)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 3").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move South").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_SOUTH))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 2").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move Southwest").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_SOUTHWEST)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 1").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move West").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_WEST))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 4").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Move Northwest").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_MOVE_NORTHWEST)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append("NUMPAD 7").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
+		addTableHeader(html, "Player Moves", 3);
+		addDescriptionWithAlternative(html, "Move North", IClientProperty.KEY_PLAYER_MOVE_NORTH, "NUMPAD 8");
+		addDescriptionWithAlternative(html, "Move Northeast", IClientProperty.KEY_PLAYER_MOVE_NORTHEAST, "NUMPAD 9");
+		addDescriptionWithAlternative(html, "Move East", IClientProperty.KEY_PLAYER_MOVE_EAST, "NUMPAD 6");
+		addDescriptionWithAlternative(html, "Move Southeast", IClientProperty.KEY_PLAYER_MOVE_SOUTHEAST, "NUMPAD 3");
+		addDescriptionWithAlternative(html, "Move South", IClientProperty.KEY_PLAYER_MOVE_SOUTH, "NUMPAD 2");
+		addDescriptionWithAlternative(html, "Move Southwest", IClientProperty.KEY_PLAYER_MOVE_SOUTHWEST, "NUMPAD 1");
+		addDescriptionWithAlternative(html, "Move West", IClientProperty.KEY_PLAYER_MOVE_WEST, "NUMPAD 4");
+		addDescriptionWithAlternative(html, "Move Northwest", IClientProperty.KEY_PLAYER_MOVE_NORTHWEST, "NUMPAD 7");
 		html.append("</table>\n");
+
 		html.append("<br>\n");
+
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
-		html.append("<tr>\n");
-		html.append("  <td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Player Selection")
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Select Current Player").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_PLAYER_SELECT))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Selection Cycle Left").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_PLAYER_CYCLE_LEFT))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Selection Cycle Right").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_CYCLE_RIGHT)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
+		addTableHeader(html, "Player Selection", 2);
+		addDescription(html, "Select Current Player", IClientProperty.KEY_PLAYER_SELECT);
+		addDescription(html, "Select Cycle Left", IClientProperty.KEY_PLAYER_CYCLE_LEFT);
+		addDescription(html, "Select Cycle Right", IClientProperty.KEY_PLAYER_CYCLE_RIGHT);
 		html.append("</table>\n");
+
 		html.append("<br>\n");
+
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
-		html.append("<tr>\n");
-		html.append("  <td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Player Actions").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Block").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_BLOCK)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Blitz").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_BLITZ)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Move").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_MOVE)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Foul").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_FOUL)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Stand Up").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_STAND_UP)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Hand Over").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_HAND_OVER)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Pass").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_PASS)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Stab").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_STAB)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action Gaze").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_GAZE)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Action End Move").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN)
-				.append(getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_END_MOVE)).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
+		addTableHeader(html, "Player Actions", 2);
+		addDescription(html, "Action Block", IClientProperty.KEY_PLAYER_ACTION_BLOCK);
+		addDescription(html, "Action Blitz", IClientProperty.KEY_PLAYER_ACTION_BLITZ);
+		addDescription(html, "Action Move", IClientProperty.KEY_PLAYER_ACTION_MOVE);
+		addDescription(html, "Action Foul", IClientProperty.KEY_PLAYER_ACTION_FOUL);
+		addDescription(html, "Action Stand Up", IClientProperty.KEY_PLAYER_ACTION_STAND_UP);
+		addDescription(html, "Action Hand Over", IClientProperty.KEY_PLAYER_ACTION_HAND_OVER);
+		addDescription(html, "Action Pass", IClientProperty.KEY_PLAYER_ACTION_PASS);
+		addDescription(html, "Action Stab", IClientProperty.KEY_PLAYER_ACTION_STAB);
+		addDescription(html, "Action Gaze", IClientProperty.KEY_PLAYER_ACTION_GAZE);
+		addDescription(html, "Action End Move", IClientProperty.KEY_PLAYER_ACTION_END_MOVE);
+
+		addDescription(html, "Action Stab", IClientProperty.KEY_PLAYER_ACTION_STAB);
+		addDescription(html, "Action Chainsaw", IClientProperty.KEY_PLAYER_ACTION_CHAINSAW);
+		addDescription(html, "Action Projectile Vomit", IClientProperty.KEY_PLAYER_ACTION_PROJECTILE_VOMIT);
+		addDescription(html, "Action Gaze", IClientProperty.KEY_PLAYER_ACTION_GAZE);
+		addDescription(html, "Action Fumblerooskie", IClientProperty.KEY_PLAYER_ACTION_FUMBLEROOSKIE);
+		addDescription(html, "Action Range Grid", IClientProperty.KEY_PLAYER_ACTION_RANGE_GRID);
+		addDescription(html, "Action Hail Mary Pass", IClientProperty.KEY_PLAYER_ACTION_HAIL_MARY_PASS);
+		addDescription(html, "Action Multiple Block", IClientProperty.KEY_PLAYER_ACTION_MULTIPLE_BLOCK);
+		addDescription(html, "Action Frenzied Rush", IClientProperty.KEY_PLAYER_ACTION_FRENZIED_RUSH);
+		addDescription(html, "Action Shot to Nothing", IClientProperty.KEY_PLAYER_ACTION_SHOT_TO_NOTHING);
+		addDescription(html, "Action Shot to Nothing Bomb", IClientProperty.KEY_PLAYER_ACTION_SHOT_TO_NOTHING_BOMB);
+		addDescription(html, "Action Treacherous", IClientProperty.KEY_PLAYER_ACTION_TREACHEROUS);
+		addDescription(html, "Action Wisdom White Dwarf", IClientProperty.KEY_PLAYER_ACTION_WISDOM);
 		html.append("</table>\n");
+
 		html.append("<br>\n");
+
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
-		html.append("<tr>\n");
-		html.append("  <td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Toolbar &amp; Menu Shortcuts")
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("End Turn").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_TOOLBAR_TURN_END))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Load Team Setup").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_MENU_SETUP_LOAD))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append("Save Team Setup").append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(IClientProperty.KEY_MENU_SETUP_SAVE))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
+		addTableHeader(html, "Toolbar &amp; Menu Shortcuts", 2);
+		addDescription(html, "End Turn", IClientProperty.KEY_TOOLBAR_TURN_END);
+		addDescription(html, "Load Team Setup", IClientProperty.KEY_MENU_SETUP_LOAD);
+		addDescription(html, "Save Team Setup", IClientProperty.KEY_MENU_SETUP_SAVE);
 		html.append("</table>\n");
+
 		html.append("<br>\n");
+
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
 		html.append("<tr>\n");
 		html.append("  <td>").append(_FONT_MEDIUM_BOLD_OPEN).append("Dialogs").append(_FONT_BOLD_CLOSE).append("</td>\n");
@@ -248,6 +140,30 @@ public class DialogKeyBindings extends Dialog {
 
 		return keyBindingsPane;
 
+	}
+
+	private void addDescription(StringBuilder html, String text, String property) {
+		html.append("<tr>\n");
+		html.append("  <td>").append(_FONT_OPEN).append(text).append(_FONT_CLOSE).append("</td>\n");
+		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(property))
+				.append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("</tr>\n");
+	}
+
+	private void addDescriptionWithAlternative(StringBuilder html, String text, String property, String key) {
+		html.append("<tr>\n");
+		html.append("  <td>").append(_FONT_OPEN).append(text).append(_FONT_CLOSE).append("</td>\n");
+		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(property))
+				.append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("  <td>").append(_FONT_BOLD_OPEN).append(key).append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("</tr>\n");
+	}
+
+	private void addTableHeader(StringBuilder html, String header, int colspan) {
+		html.append("<tr>\n");
+		html.append("  <td colspan=\"").append(colspan).append("\">").append(_FONT_MEDIUM_BOLD_OPEN).append(header).append(_FONT_BOLD_CLOSE)
+				.append("</td>\n");
+		html.append("</tr>\n");
 	}
 
 	protected void setLocationToCenter() {

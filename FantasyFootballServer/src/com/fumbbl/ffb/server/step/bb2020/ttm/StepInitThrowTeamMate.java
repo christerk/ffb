@@ -187,15 +187,15 @@ public final class StepInitThrowTeamMate extends AbstractStep {
 	}
 
 	@Override
-	public StepInitThrowTeamMate initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		endTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
-		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		targetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
-		gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		kicked = IServerJsonOption.IS_KICKED_PLAYER.getFrom(game, jsonObject);
+	public StepInitThrowTeamMate initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		targetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(source, jsonObject);
+		gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		kicked = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -97,10 +97,10 @@ public class StepDispatchDumpOff extends AbstractStep {
 	}
 
 	@Override
-	public StepDispatchDumpOff initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		targets = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+	public StepDispatchDumpOff initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		targets = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
 
 		return this;
 	}

@@ -147,17 +147,17 @@ public class PrayerState implements IJsonSerializable {
 	}
 
 	@Override
-	public PrayerState initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		friendsWithRef.addAll(Arrays.asList(IServerJsonOption.FRIENDS_WITH_REF.getFrom(game, jsonObject)));
-		getAdditionalCasSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_CASUALTY_SPP.getFrom(game, jsonObject)));
-		getAdditionalCompletionSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_COMPLETION_SPP.getFrom(game, jsonObject)));
-		underScrutiny.addAll(Arrays.asList(IServerJsonOption.TEAM_UNDER_SCRUTINY.getFrom(game, jsonObject)));
-		fanInteraction.addAll(Arrays.asList(IServerJsonOption.FAN_INTERACTION.getFrom(game, jsonObject)));
-		foulingFrenzy.addAll(Arrays.asList(IServerJsonOption.FOULING_FRENZY.getFrom(game, jsonObject)));
-		molesUnderThePitch.addAll(Arrays.asList(IServerJsonOption.MOLES_UNDER_THE_PITCH.getFrom(game, jsonObject)));
-		shouldNotStall.addAll(Arrays.asList(IServerJsonOption.SHOULD_NOT_STALL.getFrom(game, jsonObject)));
-		stallers.addAll(Arrays.asList(IServerJsonOption.STALLERS.getFrom(game, jsonObject)));
+	public PrayerState initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		friendsWithRef.addAll(Arrays.asList(IServerJsonOption.FRIENDS_WITH_REF.getFrom(source, jsonObject)));
+		getAdditionalCasSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_CASUALTY_SPP.getFrom(source, jsonObject)));
+		getAdditionalCompletionSpp.addAll(Arrays.asList(IServerJsonOption.GET_ADDITIONAL_COMPLETION_SPP.getFrom(source, jsonObject)));
+		underScrutiny.addAll(Arrays.asList(IServerJsonOption.TEAM_UNDER_SCRUTINY.getFrom(source, jsonObject)));
+		fanInteraction.addAll(Arrays.asList(IServerJsonOption.FAN_INTERACTION.getFrom(source, jsonObject)));
+		foulingFrenzy.addAll(Arrays.asList(IServerJsonOption.FOULING_FRENZY.getFrom(source, jsonObject)));
+		molesUnderThePitch.addAll(Arrays.asList(IServerJsonOption.MOLES_UNDER_THE_PITCH.getFrom(source, jsonObject)));
+		shouldNotStall.addAll(Arrays.asList(IServerJsonOption.SHOULD_NOT_STALL.getFrom(source, jsonObject)));
+		stallers.addAll(Arrays.asList(IServerJsonOption.STALLERS.getFrom(source, jsonObject)));
 		return this;
 	}
 

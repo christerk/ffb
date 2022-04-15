@@ -19,8 +19,8 @@ import java.util.List;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportMostValuablePlayers implements IReport {
 
-	private List<String> fPlayerIdsHome;
-	private List<String> fPlayerIdsAway;
+	private final List<String> fPlayerIdsHome;
+	private final List<String> fPlayerIdsAway;
 
 	public ReportMostValuablePlayers() {
 		fPlayerIdsHome = new ArrayList<>();
@@ -86,11 +86,11 @@ public class ReportMostValuablePlayers implements IReport {
 		return jsonObject;
 	}
 
-	public ReportMostValuablePlayers initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		addPlayerIdsHome(IJsonOption.PLAYER_IDS_HOME.getFrom(game, jsonObject));
-		addPlayerIdsAway(IJsonOption.PLAYER_IDS_AWAY.getFrom(game, jsonObject));
+	public ReportMostValuablePlayers initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		addPlayerIdsHome(IJsonOption.PLAYER_IDS_HOME.getFrom(source, jsonObject));
+		addPlayerIdsAway(IJsonOption.PLAYER_IDS_AWAY.getFrom(source, jsonObject));
 		return this;
 	}
 

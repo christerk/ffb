@@ -2,6 +2,7 @@ package com.fumbbl.ffb.net.commands;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
@@ -17,15 +18,17 @@ public class ClientCommandUseSkill extends ClientCommand {
 	private Skill fSkill;
 	private boolean fSkillUsed;
 	private String playerId;
+	private ReRolledAction reRolledAction;
 
 	public ClientCommandUseSkill() {
 		super();
 	}
 
-	public ClientCommandUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
+	public ClientCommandUseSkill(Skill pSkill, boolean pSkillUsed, String playerId, ReRolledAction reRolledAction) {
 		fSkill = pSkill;
 		fSkillUsed = pSkillUsed;
 		this.playerId = playerId;
+		this.reRolledAction = reRolledAction;
 	}
 
 	public NetCommandId getId() {
@@ -44,22 +47,29 @@ public class ClientCommandUseSkill extends ClientCommand {
 		return playerId;
 	}
 
-	// JSON serialization
+	public ReRolledAction getReRolledAction() {
+		return reRolledAction;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.SKILL.addTo(jsonObject, fSkill);
 		IJsonOption.SKILL_USED.addTo(jsonObject, fSkillUsed);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, reRolledAction);
 		return jsonObject;
 	}
 
-	public ClientCommandUseSkill initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandUseSkill initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
-		fSkillUsed = IJsonOption.SKILL_USED.getFrom(game, jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		fSkillUsed = IJsonOption.SKILL_USED.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		if (IJsonOption.RE_ROLLED_ACTION.isDefinedIn(jsonObject)) {
+			reRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 }

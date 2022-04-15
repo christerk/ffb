@@ -294,15 +294,15 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepJump initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		moveStart = IServerJsonOption.MOVE_START.getFrom(game, jsonObject);
-		roll = IServerJsonOption.ROLL.getFrom(game, jsonObject);
-		usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
-		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(game, jsonObject);
-		String statusString = IServerJsonOption.STATUS.getFrom(game, jsonObject);
+	public StepJump initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		moveStart = IServerJsonOption.MOVE_START.getFrom(source, jsonObject);
+		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
+		usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
+		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
+		String statusString = IServerJsonOption.STATUS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(statusString)) {
 			status = ActionStatus.valueOf(statusString);
 		}

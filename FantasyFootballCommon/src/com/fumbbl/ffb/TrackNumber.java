@@ -58,10 +58,10 @@ public class TrackNumber implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TrackNumber initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fNumber = IJsonOption.NUMBER.getFrom(game, jsonObject);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
+	public TrackNumber initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fNumber = IJsonOption.NUMBER.getFrom(source, jsonObject);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

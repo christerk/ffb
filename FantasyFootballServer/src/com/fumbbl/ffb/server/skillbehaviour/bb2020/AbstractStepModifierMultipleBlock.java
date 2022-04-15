@@ -2,11 +2,13 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
@@ -115,15 +117,21 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		if (state.blockTargets.isEmpty()) {
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
-			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), game.getActingPlayer().getPlayer());
-			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(game.getActingPlayer().getPlayer(), game);
-			Optional<Skill> reRollSkill = reRollSkill(game.getActingPlayer(), game);
-			if (state.reRollAvailableAgainst.isEmpty() || (!state.teamReRollAvailable && !state.proReRollAvailable && !reRollSkill.isPresent())) {
+			ActingPlayer actingPlayer = game.getActingPlayer();
+			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), actingPlayer.getPlayer());
+			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
+			state.consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
+			if (UtilServerReRoll.isSingleUseReRollAvailable(step.getGameState(), actingPlayer.getPlayer())) {
+				state.singleUseReRollSource = ReRollSources.LORD_OF_CHAOS;
+			}
+			Optional<Skill> reRollSkill = reRollSkill(actingPlayer, game);
+			if (state.reRollAvailableAgainst.isEmpty() ||
+				(!state.teamReRollAvailable && !state.proReRollAvailable && !reRollSkill.isPresent() && state.singleUseReRollSource == null)) {
 				nextStep(step, state);
 			} else {
 				state.reRollTarget = null;
 				state.reRollSource = null;
-				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(game.getActingPlayer().getPlayer(), state, reRollSkill.orElse(null)), false);
+				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(actingPlayer.getPlayer(), state, reRollSkill.orElse(null)), false);
 			}
 		}
 	}
@@ -164,6 +172,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, V state, Skill skill) {
 		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets, reRolledAction(),
-			state.minimumRolls, state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable, skill);
+			state.minimumRolls, state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable,
+			skill, state.singleUseReRollSource, state.consummateAvailable);
 	}
 }

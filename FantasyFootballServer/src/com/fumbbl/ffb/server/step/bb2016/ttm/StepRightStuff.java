@@ -194,12 +194,12 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepRightStuff initFrom(IFactorySource game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
-		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
-		String storedKtmRange = IServerJsonOption.KICK_TEAM_MATE_RANGE.getFrom(game, jsonObject);
+	public StepRightStuff initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
+		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		String storedKtmRange = IServerJsonOption.KICK_TEAM_MATE_RANGE.getFrom(source, jsonObject);
 		if (storedKtmRange != null) {
 			ktmRange = KickTeamMateRange.valueOf(storedKtmRange);
 		}

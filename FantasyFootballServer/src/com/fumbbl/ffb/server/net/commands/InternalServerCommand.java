@@ -55,12 +55,12 @@ public abstract class InternalServerCommand extends NetCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommand initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+	public InternalServerCommand initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		fGameId = 0L;
 		if (IJsonOption.GAME_ID.isDefinedIn(jsonObject)) {
-			fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
+			fGameId = IJsonOption.GAME_ID.getFrom(source, jsonObject);
 		}
 		return this;
 	}

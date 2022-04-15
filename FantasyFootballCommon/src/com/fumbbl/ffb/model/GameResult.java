@@ -16,7 +16,7 @@ public class GameResult implements IJsonSerializable {
 	private TeamResult fTeamResultHome;
 	private TeamResult fTeamResultAway;
 
-	private transient Game fGame;
+	private final transient Game fGame;
 
 	public GameResult(Game pGame) {
 		this(pGame, null, null);
@@ -83,10 +83,10 @@ public class GameResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameResult initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTeamResultHome.initFrom(game, IJsonOption.TEAM_RESULT_HOME.getFrom(game, jsonObject));
-		fTeamResultAway.initFrom(game, IJsonOption.TEAM_RESULT_AWAY.getFrom(game, jsonObject));
+	public GameResult initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fTeamResultHome.initFrom(source, IJsonOption.TEAM_RESULT_HOME.getFrom(source, jsonObject));
+		fTeamResultAway.initFrom(source, IJsonOption.TEAM_RESULT_AWAY.getFrom(source, jsonObject));
 		return this;
 	}
 

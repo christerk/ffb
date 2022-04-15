@@ -20,8 +20,8 @@ public class ClientCommandIllegalProcedure extends ClientCommand {
 
 	// JSON serialization
 
-	public ClientCommandIllegalProcedure initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandIllegalProcedure initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		return this;
 	}
 

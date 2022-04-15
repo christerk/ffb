@@ -132,13 +132,13 @@ public final class StepEndInducement extends AbstractStep {
     }
 
     @Override
-    public StepEndInducement initFrom(IFactorySource game, JsonValue pJsonValue) {
-        super.initFrom(game, pJsonValue);
-        JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-        fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(game, jsonObject);
-        fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(game, jsonObject);
-        fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-        fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(game, jsonObject);
+    public StepEndInducement initFrom(IFactorySource source, JsonValue jsonValue) {
+        super.initFrom(source, jsonValue);
+        JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+        fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(source, jsonObject);
+        fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(source, jsonObject);
+        fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+        fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(source, jsonObject);
         return this;
     }
 

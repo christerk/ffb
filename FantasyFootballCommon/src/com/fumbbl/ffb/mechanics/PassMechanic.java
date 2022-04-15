@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.mechanics;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.ReRolledAction;
@@ -11,6 +8,10 @@ import com.fumbbl.ffb.factory.PassingDistanceFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.PassModifier;
+import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
+
+import java.util.Collection;
+import java.util.Optional;
 
 public abstract class PassMechanic implements Mechanic {
 
@@ -33,7 +34,11 @@ public abstract class PassMechanic implements Mechanic {
 
 	protected abstract String[] throwingRangeTable();
 
+	public abstract Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers, StatBasedRollModifier statBasedRollModifier);
+
 	public abstract Optional<Integer> minimumRoll(Player<?> thrower, PassingDistance distance, Collection<PassModifier> modifiers);
+
+	public abstract PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction, StatBasedRollModifier statBasedRollModifier);
 
 	public abstract PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction);
 

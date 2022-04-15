@@ -12,7 +12,6 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 import com.fumbbl.ffb.xml.UtilXml;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -107,11 +106,11 @@ public class Inducement implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public Inducement initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(game, jsonObject);
-		fValue = IJsonOption.VALUE.getFrom(game, jsonObject);
-		fUses = IJsonOption.USES.getFrom(game, jsonObject);
+	public Inducement initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(source, jsonObject);
+		fValue = IJsonOption.VALUE.getFrom(source, jsonObject);
+		fUses = IJsonOption.USES.getFrom(source, jsonObject);
 		return this;
 	}
 

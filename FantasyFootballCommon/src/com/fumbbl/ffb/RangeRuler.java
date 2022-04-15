@@ -160,12 +160,12 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public RangeRuler initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrowerId = IJsonOption.THROWER_ID.getFrom(game, jsonObject);
-		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
-		fThrowTeamMate = IJsonOption.THROW_TEAM_MATE.getFrom(game, jsonObject);
+	public RangeRuler initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fThrowerId = IJsonOption.THROWER_ID.getFrom(source, jsonObject);
+		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(source, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
+		fThrowTeamMate = IJsonOption.THROW_TEAM_MATE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -17,6 +17,7 @@ import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -141,6 +142,12 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 			return actionHandled;
 		} else {
 			switch (pActionKey) {
+				case PLAYER_ACTION_TREACHEROUS:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					break;
+				case PLAYER_ACTION_WISDOM:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+					break;
 				case PLAYER_ACTION_BLOCK:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BLOCK);
 					break;
@@ -183,6 +190,13 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_STAB:
 					selectPlayer(player, BlockKind.STAB);
 					break;
+				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
+					Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					getClient().getCommunication().sendUseSkill(skill, true, player.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_WISDOM:
+					getClient().getCommunication().sendUseWisdom();
+					break;
 				default:
 					break;
 			}
@@ -209,6 +223,12 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
+		if (isTreacherousAvailable(actingPlayer)) {
+			menuItemList.add(createTreacherousItem(iconCache));
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			menuItemList.add(createWisdomItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

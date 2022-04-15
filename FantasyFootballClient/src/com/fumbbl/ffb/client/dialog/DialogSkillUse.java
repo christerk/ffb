@@ -6,16 +6,29 @@ import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.skill.Skill;
 
 /**
- * 
  * @author Kalimar
  */
-public class DialogSkillUse extends DialogYesOrNoQuestion {
+public class DialogSkillUse extends DialogThreeWayChoice {
 
 	private final DialogSkillUseParameter fDialogParameter;
+
+	public DialogSkillUse(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter, Skill modifyingSkill) {
+		super(pClient, "Use a skill", createMessages(pDialogParameter), null,
+			pDialogParameter.getSkill().getName(), 'S', modifyingSkill.getName(), 'M',
+			"None", 'N');
+		fDialogParameter = pDialogParameter;
+	}
 
 	public DialogSkillUse(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter) {
 		super(pClient, "Use a skill", createMessages(pDialogParameter), null);
 		fDialogParameter = pDialogParameter;
+	}
+
+	public static DialogSkillUse create(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter) {
+		if (pDialogParameter.getModifyingSkill() == null) {
+			return new DialogSkillUse(pClient, pDialogParameter);
+		}
+		return new DialogSkillUse(pClient, pDialogParameter, pDialogParameter.getModifyingSkill());
 	}
 
 	public DialogId getId() {
@@ -24,6 +37,17 @@ public class DialogSkillUse extends DialogYesOrNoQuestion {
 
 	public Skill getSkill() {
 		return (fDialogParameter != null) ? fDialogParameter.getSkill() : null;
+	}
+
+	private static String createDefaultQuestion(DialogSkillUseParameter pDialogParameter) {
+		StringBuilder useSkillQuestion = new StringBuilder();
+		String skillName = (pDialogParameter.getSkill() != null) ? pDialogParameter.getSkill().getName() : null;
+		useSkillQuestion.append("Do you want to use the ").append(skillName);
+		if (pDialogParameter.getModifyingSkill() != null) {
+			useSkillQuestion.append(" or the ").append(pDialogParameter.getModifyingSkill().getName());
+		}
+		useSkillQuestion.append(" skill ?");
+		return useSkillQuestion.toString();
 	}
 
 	private static String[] createMessages(DialogSkillUseParameter pDialogParameter) {
@@ -49,11 +73,8 @@ public class DialogSkillUse extends DialogYesOrNoQuestion {
 		return messages;
 	}
 
-	private static String createDefaultQuestion(DialogSkillUseParameter pDialogParameter) {
-		StringBuilder useSkillQuestion = new StringBuilder();
-		String skillName = (pDialogParameter.getSkill() != null) ? pDialogParameter.getSkill().getName() : null;
-		useSkillQuestion.append("Do you want to use the ").append(skillName).append(" skill ?");
-		return useSkillQuestion.toString();
+	public Skill getModiyingSkill() {
+		return fDialogParameter != null ? fDialogParameter.getModifyingSkill() : null;
 	}
 
 	private static String createDefaultMinimumRoll(DialogSkillUseParameter pDialogParameter) {

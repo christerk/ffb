@@ -35,11 +35,11 @@ public class ReportAnimalSavagery implements IReport {
 	}
 
 	@Override
-	public ReportAnimalSavagery initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		attackerId = IJsonOption.ATTACKER_ID.getFrom(game, jsonObject);
-		defenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
+	public ReportAnimalSavagery initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		attackerId = IJsonOption.ATTACKER_ID.getFrom(source, jsonObject);
+		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

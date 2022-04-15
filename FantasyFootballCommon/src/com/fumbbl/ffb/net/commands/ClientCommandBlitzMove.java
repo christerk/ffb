@@ -73,12 +73,12 @@ public class ClientCommandBlitzMove extends ClientCommand implements ICommandWit
 		return jsonObject;
 	}
 
-	public ClientCommandBlitzMove initFrom(IFactorySource game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandBlitzMove initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
-		fCoordinateFrom = IJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
-		addCoordinatesTo(IJsonOption.COORDINATES_TO.getFrom(game, jsonObject));
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
+		fCoordinateFrom = IJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		addCoordinatesTo(IJsonOption.COORDINATES_TO.getFrom(source, jsonObject));
 		return this;
 	}
 

@@ -109,8 +109,8 @@ public class ServerCommandReplay extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandReplay initFrom(IFactorySource source, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	public ServerCommandReplay initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		fTotalNrOfCommands = IJsonOption.TOTAL_NR_OF_COMMANDS.getFrom(source, jsonObject);
 		JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(source, jsonObject);

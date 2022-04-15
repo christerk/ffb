@@ -72,16 +72,16 @@ public class DropPlayerContext implements IJsonSerializable {
 	}
 
 	@Override
-	public DropPlayerContext initFrom(IFactorySource game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		playerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		injuryResult = new InjuryResult().initFrom(game, IServerJsonOption.INJURY_RESULT.getFrom(game, jsonObject));
-		endTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
-		eligibleForSafePairOfHands = IServerJsonOption.ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS.getFrom(game, jsonObject);
-		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(game, jsonObject);
-		label = IServerJsonOption.LABEL.getFrom(game, jsonObject);
-		requiresArmourBreak = IServerJsonOption.REQUIRES_ARMOUR_BREAK.getFrom(game, jsonObject);
-		alreadyDropped = IServerJsonOption.ALREADY_DROPPED.getFrom(game, jsonObject);
+	public DropPlayerContext initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		injuryResult = new InjuryResult().initFrom(source, IServerJsonOption.INJURY_RESULT.getFrom(source, jsonObject));
+		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		eligibleForSafePairOfHands = IServerJsonOption.ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS.getFrom(source, jsonObject);
+		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
+		label = IServerJsonOption.LABEL.getFrom(source, jsonObject);
+		requiresArmourBreak = IServerJsonOption.REQUIRES_ARMOUR_BREAK.getFrom(source, jsonObject);
+		alreadyDropped = IServerJsonOption.ALREADY_DROPPED.getFrom(source, jsonObject);
 		return this;
 	}
 
