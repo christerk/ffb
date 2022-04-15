@@ -11,7 +11,8 @@ public enum PlayerChoiceMode implements INamedObject {
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
 	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
 	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true),
-	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf");
+	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
+	RAIDING_PARTY("raidingParty");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -102,6 +103,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case WISDOM:
 				header.append("Select the player of which to use Wisdom of the White Dwarf");
 				break;
+			case RAIDING_PARTY:
+				header.append("Select the player to move");
+				break;
 			default:
 				break;
 		}
@@ -168,6 +172,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case WISDOM:
 				title.append("Wisdom of the White Dwarf");
 				break;
+			case RAIDING_PARTY:
+				title.append("Raiding Party");
+				break;
 			default:
 				break;
 		}
@@ -233,6 +240,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case WISDOM:
 				message.append("Waiting for coach to select player for Wisdom of the White Dwarf");
+				break;
+			case RAIDING_PARTY:
+				message.append("Waiting for coach to select player to move");
 				break;
 			default:
 				break;

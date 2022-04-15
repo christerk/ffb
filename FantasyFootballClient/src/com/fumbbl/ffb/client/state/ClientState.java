@@ -382,23 +382,26 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
 
 		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canMoveOpenTeamMate)
-			&& Arrays.stream(game.getActingTeam().getPlayers()).filter(
-				teamMate -> {
-					FieldCoordinate teamMateCoordinate = fieldModel.getPlayerCoordinate(teamMate);
-					Player<?>[] adjacentPlayersWithTacklezones = UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()), teamMateCoordinate, false);
-					FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(teamMateCoordinate, FieldCoordinateBounds.FIELD,
-						1, false);
-					return fieldModel.getPlayerState(teamMate).getBase() == PlayerState.STANDING
-						&& teamMateCoordinate.distanceInSteps(playerCoordinate) <= 5
-						&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
-						&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> Arrays.stream(fieldModel.findAdjacentCoordinates(adjacentCoordinate, FieldCoordinateBounds.FIELD,
+			&& Arrays.stream(game.getActingTeam().getPlayers()).anyMatch(
+			teamMate -> {
+				FieldCoordinate teamMateCoordinate = fieldModel.getPlayerCoordinate(teamMate);
+				Player<?>[] adjacentPlayersWithTacklezones = UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()), teamMateCoordinate, false);
+				FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(teamMateCoordinate, FieldCoordinateBounds.FIELD,
+					1, false);
+				return fieldModel.getPlayerState(teamMate).getBase() == PlayerState.STANDING
+					&& teamMateCoordinate.distanceInSteps(playerCoordinate) <= 5
+					&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
+					&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> {
+					List<Player<?>> playersOnSquare = fieldModel.getPlayers(adjacentCoordinate);
+					return playersOnSquare != null && !playersOnSquare.isEmpty()
+						&& Arrays.stream(fieldModel.findAdjacentCoordinates(adjacentCoordinate, FieldCoordinateBounds.FIELD,
 						1, false)).anyMatch(fieldCoordinate -> {
 						List<Player<?>> players = game.getFieldModel().getPlayers(fieldCoordinate);
-						return !players.isEmpty() && !game.getActingTeam().hasPlayer(players.get(0));
-					}));
-				}
-			)
-			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates) && !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
+						return players != null && !players.isEmpty() && !game.getActingTeam().hasPlayer(players.get(0));
+					});
+				});
+			}
+		);
 	}
 
 	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {

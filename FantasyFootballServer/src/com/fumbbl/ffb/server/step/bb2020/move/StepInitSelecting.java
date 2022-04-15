@@ -350,6 +350,10 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.TREACHEROUS;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMoveOpenTeamMate)) {
+							fDispatchPlayerAction = PlayerAction.RAIDING_PARTY;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
 						}
 					}
 					break;

@@ -33,6 +33,7 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Foul;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.RadingParty;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
@@ -367,6 +368,12 @@ public final class StepEndSelecting extends AbstractStep {
 				Treacherous.SequenceParams treacherousParams = new Treacherous.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
 				Treacherous treacherousGenerator = (Treacherous) factory.forName(SequenceGenerator.Type.Treacherous.name());
 				treacherousGenerator.pushSequence(treacherousParams);
+				break;
+			case RAIDING_PARTY:
+				selectGenerator.pushSequence(selectParams);
+				RadingParty.SequenceParams raidingParams = new RadingParty.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
+				RadingParty raidingGenerator = (RadingParty) factory.forName(SequenceGenerator.Type.RaidingParty.name());
+				raidingGenerator.pushSequence(raidingParams);
 				break;
 			case WISDOM_OF_THE_WHITE_DWARF:
 				selectGenerator.pushSequence(selectParams);

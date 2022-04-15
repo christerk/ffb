@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStatePass extends ClientStateMove {
@@ -76,7 +76,7 @@ public class ClientStatePass extends ClientStateMove {
 			super.clickOnField(pCoordinate);
 		} else {
 			if ((PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())
-					|| UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+				|| UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
 				game.setPassCoordinate(pCoordinate);
 				getClient().getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
@@ -91,7 +91,7 @@ public class ClientStatePass extends ClientStateMove {
 		UserInterface userInterface = getClient().getUserInterface();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((PlayerAction.HAIL_MARY_PASS != actingPlayer.getPlayerAction())
-				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
 			FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			if ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer)) {
 				drawRangeRuler(catcherCoordinate);
@@ -160,8 +160,8 @@ public class ClientStatePass extends ClientStateMove {
 		if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
 			PlayerState catcherState = game.getFieldModel().getPlayerState(pCatcher);
 			canGetPass = ((catcherState != null)
-					&& catcherState.hasTacklezones() && (game.getTeamHome() == pCatcher.getTeam())
-					&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace())));
+				&& catcherState.hasTacklezones() && (game.getTeamHome() == pCatcher.getTeam())
+				&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace())));
 		}
 		return canGetPass;
 	}
@@ -200,15 +200,15 @@ public class ClientStatePass extends ClientStateMove {
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()
 			&& !game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
-					: "Use Hail Mary Pass";
+				: "Use Hail Mary Pass";
 			JMenuItem hailMaryPassAction = new JMenuItem(text,
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS)));
 			hailMaryPassAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS);
 			hailMaryPassAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS, 0));
 			menuItemList.add(hailMaryPassAction);
 		}
 
-		if (isJumpAvailableAsNextMove(game, actingPlayer,false)) {
+		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			JMenuItem jumpAction;
 			if (actingPlayer.isJumping()) {
 				jumpAction = new JMenuItem("Don't Jump",
@@ -240,6 +240,10 @@ public class ClientStatePass extends ClientStateMove {
 			}
 		}
 
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			menuItemList.add(createRaidingPartyItem(iconCache));
+		}
+
 		addEndActionLabel(iconCache, menuItemList, actingPlayer);
 
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
@@ -251,25 +255,27 @@ public class ClientStatePass extends ClientStateMove {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		ClientCommunication communication = getClient().getCommunication();
-		if (pMenuKey == IPlayerPopupMenuKeys.KEY_RANGE_GRID) {
-			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
-			fRangeGridHandler.refreshRangeGrid();
-		} else if (pMenuKey == IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS) {
-			if (game.getActingPlayer().getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)) {
-				if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isJumping());
-					fShowRangeRuler = true;
-				} else {
-					communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_PASS, actingPlayer.isJumping());
-					fShowRangeRuler = false;
+		switch (pMenuKey) {
+			case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
+				fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
+				fRangeGridHandler.refreshRangeGrid();
+				break;
+			case IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS:
+				if (game.getActingPlayer().getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)) {
+					if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isJumping());
+						fShowRangeRuler = true;
+					} else {
+						communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_PASS, actingPlayer.isJumping());
+						fShowRangeRuler = false;
+					}
+					if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {
+						game.getFieldModel().setRangeRuler(null);
+					}
 				}
-				if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {
-					game.getFieldModel().setRangeRuler(null);
-				}
-			}
-
-		} else {
-			super.menuItemSelected(pPlayer, pMenuKey);
+				break;
+			default:
+				super.menuItemSelected(pPlayer, pMenuKey);
 		}
 	}
 
