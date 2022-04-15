@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.7.1")
 			.addBugfix("BB2016: Games did crash after kick off")
+			.addBugfix("\"Excuse me, are you a Zoat?\" was not available")
 		);
 
 		versions.add(new VersionChangeList("2.7.0")
