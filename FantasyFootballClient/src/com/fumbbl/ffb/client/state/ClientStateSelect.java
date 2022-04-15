@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
@@ -26,10 +27,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-import java.security.Key;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -592,6 +590,6 @@ public class ClientStateSelect extends ClientState {
 	private boolean isBeerBarrelBashAvailable(Player<?> player) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return playerState.getBase() == PlayerState.STANDING && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canThrowKeg);
+		return game.getTurnMode() == TurnMode.REGULAR && playerState.getBase() == PlayerState.STANDING && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canThrowKeg);
 	}
 }
