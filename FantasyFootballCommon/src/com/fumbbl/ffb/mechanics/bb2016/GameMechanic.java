@@ -8,6 +8,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -20,6 +21,7 @@ import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -286,5 +288,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return "No weather at all, but the intro screen shown by the client.";
 		}
 
+	}
+
+	@Override
+	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
+		return Collections.emptySet();
 	}
 }
