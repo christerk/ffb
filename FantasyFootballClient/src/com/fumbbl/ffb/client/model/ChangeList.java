@@ -15,6 +15,7 @@ public class ChangeList {
 			.addFeature("Pick-me-up")
 			.addFeature("Beer Barrel Bash")
 			.addFeature("Raiding Party")
+			.addImprovement("Added Java, Neilwat, Nelphine, Stimme, Tussock to credits")
 		);
 
 		versions.add(new VersionChangeList("2.7.2")
