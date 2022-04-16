@@ -11,6 +11,7 @@ import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -201,6 +202,7 @@ public class StepRaidingParty extends AbstractStep {
 				FieldCoordinate fromCoordinate = fieldModel.getPlayerCoordinate(player);
 				Direction direction = FieldCoordinate.getDirection(fromCoordinate, coordinate);
 				getResult().addReport(new ReportRaidingParty(actingPlayer.getPlayerId(), playerId, direction));
+				getResult().setSound(SoundId.STEP);
 				fieldModel.setPlayerCoordinate(player, coordinate);
 				actingPlayer.markSkillUsed(skill);
 				resetState(game);
