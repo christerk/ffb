@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -16,6 +17,8 @@ import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
+
+import java.util.Set;
 
 public abstract class GameMechanic implements Mechanic {
 	@Override
@@ -99,4 +102,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean canUseApo(Game game, Player<?> defender);
 
 	public abstract String weatherDescription(Weather weather);
+
+	public abstract Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory);
 }

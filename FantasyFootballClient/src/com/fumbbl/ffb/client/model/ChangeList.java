@@ -15,6 +15,15 @@ public class ChangeList {
 			.addFeature("Pick-me-up")
 		);
 
+		versions.add(new VersionChangeList("2.7.2")
+			.addBugfix("BB2016: Games did crash when deselecting a player")
+		);
+
+		versions.add(new VersionChangeList("2.7.1")
+			.addBugfix("BB2016: Games did crash after kick off")
+			.addBugfix("\"Excuse me, are you a Zoat?\" was not available")
+		);
+
 		versions.add(new VersionChangeList("2.7.0")
 			.addFeature("Treacherous")
 			.addFeature("Burst of Speed")
@@ -26,6 +35,7 @@ public class ChangeList {
 			.addFeature("Wisdom of the White Dwarf")
 			.addFeature("I'll be back!")
 			.addImprovement("Add missing action bindings and descriptions")
+			.setDescription("\"Wisdom of the White Dwarf\" and \"Treacherous\" can be activated after selecting an action (but before selecting a target) by clicking the player again. Wisdom will only be used if the player actually acts, if he is just deselected again the skill will still be available for this turn.")
 		);
 
 		versions.add(new VersionChangeList("2.6.2")

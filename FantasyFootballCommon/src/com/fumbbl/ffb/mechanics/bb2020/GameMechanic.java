@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
@@ -9,6 +10,7 @@ import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -329,6 +331,11 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return "No weather at all, but the intro screen shown by the client.";
 		}
 
+	}
+
+	@Override
+	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
+		return Constant.getEnhancementSkillsToRemoveAtEndOfTurn(skillFactory);
 	}
 
 }
