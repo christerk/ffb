@@ -5,6 +5,8 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SkillCategory;
@@ -51,13 +53,17 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}};
 
 	@Override
-	public boolean updateTurnDataAfterReRollUsage(TurnData turnData) {
+	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
 		turnData.setReRolls(turnData.getReRolls() - 1);
 		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
 			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
-			return true;
+			return ReRollSources.BRILLIANT_COACHING_RE_ROLL;
 		}
-		return false;
+		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
+			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
+			return ReRollSources.PUMP_UP_THE_CROWD;
+		}
+		return null;
 	}
 
 	@Override

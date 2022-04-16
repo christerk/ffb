@@ -105,7 +105,7 @@ public class NamedProperties {
 	public static final ISkillProperty flipSameTeamOpponentToOtherTeam = new NamedProperty(
 			"Flip Same Team Opponent to Other Team");
 	public static final ISkillProperty forceOpponentToDropBallOnPushback = new NamedProperty(
-			"Force Opponent To Drop Ball On Pushback");
+		"Force Opponent To Drop Ball On Pushback");
 	public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
 	public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
 	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
@@ -115,8 +115,9 @@ public class NamedProperties {
 	public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
-	public static final ISkillProperty grantsTeamRerollWhenOnPitch = new NamedProperty(
-		"Grants Team Reroll When On Pitch");
+	public static final ISkillProperty grantsTeamReRollWhenCausingCas = new NamedProperty("Grants Team Re-Roll When Causing Cas");
+	public static final ISkillProperty grantsTeamReRollWhenOnPitch = new NamedProperty(
+		"Grants Team Re-Roll When On Pitch");
 	public static final ISkillProperty grantsSingleUseTeamRerollWhenOnPitch = new NamedProperty(
 		"Grants Single Use Team Reroll When On Pitch");
 	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");

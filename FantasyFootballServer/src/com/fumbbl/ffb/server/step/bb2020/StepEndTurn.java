@@ -44,7 +44,6 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
@@ -58,6 +57,7 @@ import com.fumbbl.ffb.report.bb2020.ReportArgueTheCallRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
 import com.fumbbl.ffb.report.bb2020.ReportPrayerEnd;
+import com.fumbbl.ffb.report.bb2020.ReportPumpUpTheCrowdReRollsLost;
 import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -503,8 +503,8 @@ public class StepEndTurn extends AbstractStep {
 			}
 			if (fNewHalf || fTouchdown) {
 				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
-				removeBrilliantCoachingReRolls(true);
-				removeBrilliantCoachingReRolls(false);
+				removeReRollsLastingForDrive(true);
+				removeReRollsLastingForDrive(false);
 			}
 
 			game.startTurn();
@@ -553,7 +553,7 @@ public class StepEndTurn extends AbstractStep {
 		return false;
 	}
 
-	private void removeBrilliantCoachingReRolls(boolean homeTeam) {
+	private void removeReRollsLastingForDrive(boolean homeTeam) {
 		String teamId;
 		TurnData turnData;
 
@@ -566,12 +566,19 @@ public class StepEndTurn extends AbstractStep {
 		}
 
 		int reRollsBrilliantCoaching = turnData.getReRollsBrilliantCoachingOneDrive();
-		if (reRollsBrilliantCoaching > 0) {
-			turnData.setReRollsBrilliantCoachingOneDrive(0);
-			if (!fNewHalf || getGameState().getGame().getHalf() > 2) {
-				turnData.setReRolls(Math.max(turnData.getReRolls() - reRollsBrilliantCoaching, 0));
+		int reRollsPumpUpTheCrowd = turnData.getReRollsPumpUpTheCrowdOneDrive();
+		if (reRollsBrilliantCoaching + reRollsPumpUpTheCrowd > 0) {
+			if (reRollsBrilliantCoaching > 0) {
+				turnData.setReRollsBrilliantCoachingOneDrive(0);
+				getResult().addReport(new ReportBrilliantCoachingReRollsLost(teamId, reRollsBrilliantCoaching));
 			}
-			getResult().addReport(new ReportBrilliantCoachingReRollsLost(teamId, reRollsBrilliantCoaching));
+			if (reRollsPumpUpTheCrowd > 0) {
+				turnData.setReRollsPumpUpTheCrowdOneDrive(0);
+				getResult().addReport(new ReportPumpUpTheCrowdReRollsLost(teamId, reRollsPumpUpTheCrowd));
+			}
+			if (!fNewHalf || getGameState().getGame().getHalf() > 2) {
+				turnData.setReRolls(Math.max(turnData.getReRolls() - (reRollsBrilliantCoaching + reRollsPumpUpTheCrowd), 0));
+			}
 		}
 
 	}

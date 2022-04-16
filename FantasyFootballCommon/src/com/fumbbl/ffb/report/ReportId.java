@@ -23,7 +23,7 @@ public enum ReportId implements INamedObject {
 	APOTHECARY_ROLL("apothecaryRoll"), APOTHECARY_CHOICE("apothecaryChoice"), THROW_IN("throwIn"),
 	SCATTER_BALL("scatterBall"), BLOCK("block"), BLOCK_CHOICE("blockChoice"), SPECTATORS("spectators"),
 	WEATHER("weather"), COIN_THROW("coinThrow"), RECEIVE_CHOICE("receiveChoice"), KICKOFF_RESULT("kickoffResult"),
-	KICKOFF_SCATTER("kickoffScatter"), KICKOFF_EXTRA_REROLL("extraReRoll"), KICKOFF_RIOT("kickoffRiot"),
+	KICKOFF_SCATTER("kickoffScatter"), KICKOFF_EXTRA_RE_ROLL("extraReRoll"), KICKOFF_RIOT("kickoffRiot"),
 	KICKOFF_TIMEOUT("kickoffTimeout"), SOLID_DEFENCE_ROLL("solidDefenceRoll"), QUICK_SNAP_ROLL("quickSnapRoll"),
 	KICKOFF_SEQUENCE_ACTIVATIONS_COUNT("kickoffSequenceActivationsCount"), KICKOFF_SEQUENCE_ACTIVATIONS_EXHAUSTED("kickoffSequenceActivationsExhausted"),
 	BLITZ_ROLL("blitzRoll"), KICKOFF_OFFICIOUIS_REF("kickoffOfficiousRef"), OFFICIOUS_REF_ROLL("officiousRefRoll"),
@@ -45,7 +45,8 @@ public enum ReportId implements INamedObject {
 	SWARMING_PLAYERS_ROLL("swarmingPlayersRoll"), PASS_DEVIATE("passDeviate"), CARDS_AND_INDUCEMENTS_BOUGHT("cardsAndInducementsBought"),
 	FAN_FACTOR("fanFactor"), SELECT_BLITZ_TARGET("selectBlitzTarget"), SELECT_GAZE_TARGET("selectGazeTarget"), BOMB_EXPLODES_AFTER_CATCH("bombExplodesAfterCatch"),
 	PLACE_BALL_DIRECTION("placedBallDirection"), FUMBLEROOSKIE("fumblerooskie"),
-	ANIMAL_SAVAGERY("animalSavagery"), PROJECTILE_VOMIT("projectileVomit"), BRILLIANT_COACHING_REROLLS_LOST("brilliantCoachingReRoll"),
+	ANIMAL_SAVAGERY("animalSavagery"), PROJECTILE_VOMIT("projectileVomit"), BRILLIANT_COACHING_RE_ROLLS_LOST("brilliantCoachingReRoll"),
+	PUMP_UP_THE_CROWD_RE_ROLLS_LOST("pumpUpTheCrowdReRollLost"),
 	KICK_TEAM_MATE_FUMBLE("kickTeamMateFumble"), BLOCK_RE_ROLL("blockReRoll"), TRAP_DOOR("trapDoor"),
 	PRAYER_AMOUNT("prayerAmount"), PRAYER_ROLL("prayerRoll"), PRAYER_END("prayerEnd"),
 	PRAYER_WASTED("prayerWasted"), KICKOFF_CHEERING_FANS("cheeringFans"), BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"),
@@ -54,7 +55,7 @@ public enum ReportId implements INamedObject {
 	SKILL_WASTED("skillWasted"), TWO_FOR_ONE("twoForOne"),
 	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
 	RAIDING_PARTY("raidingParty"),
-	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg");
+	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)

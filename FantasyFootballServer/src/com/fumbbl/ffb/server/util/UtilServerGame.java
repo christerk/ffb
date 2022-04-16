@@ -263,7 +263,7 @@ public class UtilServerGame {
 	protected static boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (playerOnField(player, pFieldModel)
-				&& player.hasSkillProperty(NamedProperties.grantsTeamRerollWhenOnPitch)) {
+				&& player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
 				return true;
 			}
 		}

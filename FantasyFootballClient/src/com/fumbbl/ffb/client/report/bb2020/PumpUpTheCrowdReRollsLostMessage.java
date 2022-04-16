@@ -6,14 +6,14 @@ import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
+import com.fumbbl.ffb.report.bb2020.ReportPumpUpTheCrowdReRollsLost;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@ReportMessageType(ReportId.BRILLIANT_COACHING_RE_ROLLS_LOST)
-public class BrilliantCoachingReRollsLostMessage extends ReportMessageBase<ReportBrilliantCoachingReRollsLost> {
+@ReportMessageType(ReportId.PUMP_UP_THE_CROWD_RE_ROLLS_LOST)
+public class PumpUpTheCrowdReRollsLostMessage extends ReportMessageBase<ReportPumpUpTheCrowdReRollsLost> {
 
 	@Override
-	protected void render(ReportBrilliantCoachingReRollsLost report) {
+	protected void render(ReportPumpUpTheCrowdReRollsLost report) {
 		Team team = game.getTeamById(report.getTeamId());
 		TextStyle teamStyle = game.getTeamHome() == team ? TextStyle.HOME : TextStyle.AWAY;
 
@@ -21,9 +21,9 @@ public class BrilliantCoachingReRollsLostMessage extends ReportMessageBase<Repor
 
 		StringBuilder builder = new StringBuilder(" lose ");
 		if (report.getAmount() == 1) {
-			builder.append("1 Brilliant Coaching Re-Roll as it was");
+			builder.append("1 Pump Up The Crowd Re-Roll as it was");
 		} else {
-			builder.append(report.getAmount()).append(" Brilliant Coaching Re-Rolls as they were");
+			builder.append(report.getAmount()).append(" Pump Up The Crowd Re-Rolls as they were");
 		}
 		builder.append(" not used in this drive.");
 

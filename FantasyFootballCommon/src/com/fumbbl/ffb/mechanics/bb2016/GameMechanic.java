@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
@@ -34,10 +35,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}};
 
 	@Override
-	public boolean updateTurnDataAfterReRollUsage(TurnData turnData) {
+	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
 		turnData.setReRollUsed(true);
 		turnData.setReRolls(turnData.getReRolls() - 1);
-		return false;
+		return null;
 	}
 
 	@Override
