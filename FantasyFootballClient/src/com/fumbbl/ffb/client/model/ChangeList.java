@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.7.2")
+			.addBugfix("BB2016: Games did crash when deselecting a player")
+		);
+
 		versions.add(new VersionChangeList("2.7.1")
 			.addBugfix("BB2016: Games did crash after kick off")
 			.addBugfix("\"Excuse me, are you a Zoat?\" was not available")
