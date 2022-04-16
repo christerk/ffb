@@ -18,7 +18,8 @@ public enum PlayerAction implements INamedObject {
 	DUMP_OFF("dumpOff", 7, null), STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
 	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
 	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, "starts a Kick Team-mate action"), KICK_TEAM_MATE("kickTeamMate", 31, null),
-	TREACHEROUS("treacherous", 32, null), WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", 33, null);
+	TREACHEROUS("treacherous", 32, null), WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", 33, null),
+	THROW_KEG("throwKey", 34, "readies a beer keg"), RAIDING_PARTY("raidingParty", 35, null);
 
 	private final String fName;
 	private final int fType;

@@ -8,7 +8,7 @@ import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffExtraReRoll;
 
-@ReportMessageType(ReportId.KICKOFF_EXTRA_REROLL)
+@ReportMessageType(ReportId.KICKOFF_EXTRA_RE_ROLL)
 @RulesCollection(Rules.BB2020)
 public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffExtraReRoll> {
 

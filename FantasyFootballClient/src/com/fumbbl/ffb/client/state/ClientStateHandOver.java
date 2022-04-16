@@ -142,12 +142,7 @@ public class ClientStateHandOver extends ClientStateMove {
 			}
 		}
 
-		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
-		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
-		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
-		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
-		menuItemList.add(endMoveAction);
+		addEndActionLabel(iconCache, menuItemList, actingPlayer);
 
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
@@ -155,6 +150,10 @@ public class ClientStateHandOver extends ClientStateMove {
 		if (isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			menuItemList.add(createRaidingPartyItem(iconCache));
+		}
+
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 

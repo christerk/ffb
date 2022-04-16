@@ -9,7 +9,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@ReportMessageType(ReportId.BRILLIANT_COACHING_REROLLS_LOST)
+@ReportMessageType(ReportId.BRILLIANT_COACHING_RE_ROLLS_LOST)
 public class BrilliantCoachingReRollsLostMessage extends ReportMessageBase<ReportBrilliantCoachingReRollsLost> {
 
 	@Override

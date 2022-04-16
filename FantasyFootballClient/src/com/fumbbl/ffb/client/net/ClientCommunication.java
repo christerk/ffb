@@ -62,7 +62,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandPing;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
@@ -71,6 +70,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSetMarker;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
+import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandStartGame;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
 import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
@@ -79,6 +79,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
+import com.fumbbl.ffb.net.commands.ClientCommandThrowKeg;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandTouchback;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
@@ -521,6 +522,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendSkillSelection(String playerId, Skill skill) {
 		send(new ClientCommandSkillSelection(playerId, skill));
+	}
+
+	public void sendThrowKeg(Player<?> player) {
+		send(new ClientCommandThrowKeg(player.getId()));
 	}
 
 	public FantasyFootballClient getClient() {

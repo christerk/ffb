@@ -57,6 +57,10 @@ public class UtilClientStateBlocking {
 				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
 				actionHandled = true;
 				break;
+			case PLAYER_ACTION_RAIDING_PARTY:
+				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				actionHandled = true;
+				break;
 			default:
 				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -96,6 +100,10 @@ public class UtilClientStateBlocking {
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
 					pClientState.getClient().getCommunication().sendUseWisdom();
+					break;
+				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
+					Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+					pClientState.getClient().getCommunication().sendUseSkill(raidingSkill, true, pPlayer.getId());
 					break;
 				default:
 					break;

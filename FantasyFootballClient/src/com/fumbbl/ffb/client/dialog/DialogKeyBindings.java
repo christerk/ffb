@@ -109,6 +109,7 @@ public class DialogKeyBindings extends Dialog {
 		addDescription(html, "Action Shot to Nothing Bomb", IClientProperty.KEY_PLAYER_ACTION_SHOT_TO_NOTHING_BOMB);
 		addDescription(html, "Action Treacherous", IClientProperty.KEY_PLAYER_ACTION_TREACHEROUS);
 		addDescription(html, "Action Wisdom White Dwarf", IClientProperty.KEY_PLAYER_ACTION_WISDOM);
+		addDescription(html, "Action Beer Barrel Bash", IClientProperty.KEY_PLAYER_ACTION_BEER_BARREL_BASH);
 		html.append("</table>\n");
 
 		html.append("<br>\n");

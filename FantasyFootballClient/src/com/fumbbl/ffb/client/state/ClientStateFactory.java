@@ -8,8 +8,11 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateSynchronousMultiBlock;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateThrowKeg;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -71,6 +74,8 @@ public class ClientStateFactory {
 		register(new ClientStateSolidDefence(pClient));
 		register(new ClientStateSelectGazeTarget(pClient));
 		register(new ClientStateGazeMove(pClient));
+		register(new ClientStateThrowKeg(pClient));
+		register(new ClientStateRaidingParty(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -188,6 +193,9 @@ public class ClientStateFactory {
 									break;
 								case GAZE_MOVE:
 									clientStateId = ClientStateId.GAZE_MOVE;
+									break;
+								case THROW_KEG:
+									clientStateId = ClientStateId.THROW_KEG;
 									break;
 								default:
 									break;
@@ -310,6 +318,9 @@ public class ClientStateFactory {
 					} else {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					}
+					break;
+				case RAIDING_PARTY:
+					clientStateId = ClientStateId.RAIDING_PARTY;
 					break;
 				default:
 					break;

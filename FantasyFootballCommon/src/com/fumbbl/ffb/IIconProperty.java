@@ -162,6 +162,8 @@ public interface IIconProperty {
 	String ACTION_CHAINSAW = "action.chainsaw";
 	String ACTION_VOMIT = "action.vomit";
 	String ACTION_WISDOM = "action.wisdom";
+	String ACTION_BEER_BARREL_BASH = "action.beerBarrelBash";
+	String ACTION_RAIDING_PARTY = "action.raidingParty";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";
@@ -184,6 +186,10 @@ public interface IIconProperty {
 	String CURSOR_GAZE = "cursor.gaze";
 	String CURSOR_INVALID_GAZE = "cursor.invalidgaze";
 	String CURSOR_BOMB = "cursor.bomb";
+	String CURSOR_KEG = "cursor.keg";
+	String CURSOR_INVALID_KEG = "cursor.invalidkeg";
+	String CURSOR_RAID = "cursor.raid";
+	String CURSOR_INVALID_RAID = "cursor.invalidraid";
 
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
@@ -257,6 +263,14 @@ public interface IIconProperty {
 	String ANIMATION_CARD_DIRTY_TRICK_BACK = "animation.card.dirtyTrick.back";
 	String ANIMATION_CARD_MAGIC_ITEM_FRONT = "animation.card.magicItem.front";
 	String ANIMATION_CARD_MAGIC_ITEM_BACK = "animation.card.magicItem.back";
+
+	String ANIMATION_KEG_FUMBLE_00 = "animation.keg.fumble.00";
+	String ANIMATION_KEG_FUMBLE_30 = "animation.keg.fumble.30";
+	String ANIMATION_KEG_FUMBLE_60 = "animation.keg.fumble.60";
+	String ANIMATION_KEG_FUMBLE_90 = "animation.keg.fumble.90";
+	String ANIMATION_KEG_FUMBLE_120 = "animation.keg.fumble.120";
+	String ANIMATION_KEG_FUMBLE_150 = "animation.keg.fumble.150";
+
 
 	// Pitches
 	String PITCH_INTRO = "pitch.intro";

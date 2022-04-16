@@ -61,13 +61,15 @@ public class NamedProperties {
 	public static final ISkillProperty canGrantSkillsToTeamMates = new NamedProperty("Can Grant Skills to Team-Mates");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
+	public static final ISkillProperty canThrowKeg = new NamedProperty("Can Throw Keg");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Can Make Extra GFI");
 	public static final ISkillProperty canMakeAnExtraGfiOnce = new NamedProperty("Can Make Extra GFI Once");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");
 	public static final ISkillProperty canMoveAfterQuickPass = new NamedProperty("Can Move After Quick Pass");
 	public static final ISkillProperty canMoveDuringKickOffScatter = new NamedProperty(
-			"Can Move During Kick Off Scatter");
+		"Can Move During Kick Off Scatter");
+	public static final ISkillProperty canMoveOpenTeamMate = new NamedProperty("Can Move Open Team-mate");
 	public static final ISkillProperty canMoveWhenOpponentPasses = new NamedProperty("Can Move When Opponent Passes");
 	public static final ISkillProperty canPassToAnySquare = new NamedProperty("Can Pass To Any Square");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlock = new NamedProperty(
@@ -103,7 +105,7 @@ public class NamedProperties {
 	public static final ISkillProperty flipSameTeamOpponentToOtherTeam = new NamedProperty(
 			"Flip Same Team Opponent to Other Team");
 	public static final ISkillProperty forceOpponentToDropBallOnPushback = new NamedProperty(
-			"Force Opponent To Drop Ball On Pushback");
+		"Force Opponent To Drop Ball On Pushback");
 	public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
 	public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
 	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
@@ -113,8 +115,9 @@ public class NamedProperties {
 	public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
-	public static final ISkillProperty grantsTeamRerollWhenOnPitch = new NamedProperty(
-		"Grants Team Reroll When On Pitch");
+	public static final ISkillProperty grantsTeamReRollWhenCausingCas = new NamedProperty("Grants Team Re-Roll When Causing Cas");
+	public static final ISkillProperty grantsTeamReRollWhenOnPitch = new NamedProperty(
+		"Grants Team Re-Roll When On Pitch");
 	public static final ISkillProperty grantsSingleUseTeamRerollWhenOnPitch = new NamedProperty(
 		"Grants Single Use Team Reroll When On Pitch");
 	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");

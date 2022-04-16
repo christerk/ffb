@@ -32,7 +32,7 @@ public class ReportKickoffExtraReRoll implements IReport {
 	}
 
 	public ReportId getId() {
-		return ReportId.KICKOFF_EXTRA_REROLL;
+		return ReportId.KICKOFF_EXTRA_RE_ROLL;
 	}
 
 	public int getRollHome() {

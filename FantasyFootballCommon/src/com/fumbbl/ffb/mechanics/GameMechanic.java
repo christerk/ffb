@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
@@ -29,7 +30,7 @@ public abstract class GameMechanic implements Mechanic {
 	/**
 	 * @return true if the re-roll used was only available in the current drive
 	 */
-	public abstract boolean updateTurnDataAfterReRollUsage(TurnData turnData);
+	public abstract ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData);
 
 	public abstract int minimumLonerRoll(Player<?> player);
 

@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -27,7 +27,7 @@ public class Leader extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.grantsTeamRerollWhenOnPitch);
+		registerProperty(NamedProperties.grantsTeamReRollWhenOnPitch);
 	}
 
 }

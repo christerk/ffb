@@ -1,15 +1,14 @@
 package com.fumbbl.ffb.server.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 
  * @author Kalimar
  */
 public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
@@ -32,9 +31,10 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
 				clientPropertyValues.add(getServer().getProperty(property));
 			}
 		}
+
 		getServer().getCommunication().sendVersion(pReceivedCommand.getSession(), FantasyFootballConstants.SERVER_VERSION,
-				FantasyFootballConstants.CLIENT_VERSION, clientProperties.toArray(new String[clientProperties.size()]),
-				clientPropertyValues.toArray(new String[clientPropertyValues.size()]));
+			FantasyFootballConstants.CLIENT_VERSION, clientProperties.toArray(new String[clientProperties.size()]),
+			clientPropertyValues.toArray(new String[clientPropertyValues.size()]), isServerInTestMode());
 		return true;
 	}
 

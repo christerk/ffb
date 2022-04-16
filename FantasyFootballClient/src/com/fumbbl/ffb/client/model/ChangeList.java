@@ -13,6 +13,10 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.8.0")
 			.addFeature("Drunkard")
 			.addFeature("Pick-me-up")
+			.addFeature("Beer Barrel Bash")
+			.addFeature("Raiding Party")
+			.addImprovement("Added Java, Neilwat, Nelphine, Stimme, Tussock to credits")
+			.addFeature("Pump Up The Crowd")
 		);
 
 		versions.add(new VersionChangeList("2.7.2")

@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.client.animation;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Timer;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.SoundId;
@@ -12,6 +7,10 @@ import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
+
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * 
@@ -80,24 +79,36 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
 						new AnimationFrame(IIconProperty.ANIMATION_ZAP_04, 1.0f, 100),
 						new AnimationFrame(IIconProperty.ANIMATION_ZAP_05, 1.0f, 100),
 						new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_08, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_09, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_10, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_11, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_12, 1.0f, 100) });
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_08, 1.0f, 100),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_09, 1.0f, 100),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_10, 1.0f, 100),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_11, 1.0f, 100),
+					new AnimationFrame(IIconProperty.ANIMATION_ZAP_12, 1.0f, 100)});
 	}
 
-	private static final int _TIMER_DELAY = 100;
+	private final AnimationFrame[] fFrames;
 
-	private AnimationFrame[] fFrames;
+	private static final int _TIMER_DELAY = 100;
+	private final Timer fTimer;
 	private int fPosition;
-	private Timer fTimer;
+	private final FieldCoordinate fCoordinate;
 	private FieldLayer fFieldLayer;
-	private FieldCoordinate fCoordinate;
+
+	public static AnimationSequenceSpecialEffect createAnimationFumbledKeg(FieldCoordinate pCoordinate) {
+		return new AnimationSequenceSpecialEffect(pCoordinate,
+			new AnimationFrame[]{
+				new AnimationFrame(IIconProperty.ANIMATION_KEG_FUMBLE_00, 1.0f, 100, SoundId.THROW),
+				new AnimationFrame(IIconProperty.ANIMATION_KEG_FUMBLE_30, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_KEG_FUMBLE_60, 1.0f, 150),
+				new AnimationFrame(IIconProperty.ANIMATION_KEG_FUMBLE_90, 1.0f, 150),
+				new AnimationFrame(IIconProperty.ANIMATION_KEG_FUMBLE_120, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_KEG_FUMBLE_150, 1.0f, 100)});
+	}
+
 	private int fDelay;
 	private IAnimationListener fListener;
 
