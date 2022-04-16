@@ -319,6 +319,9 @@ public class ClientStateFactory {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					}
 					break;
+				case RAIDING_PARTY:
+					clientStateId = ClientStateId.RAIDING_PARTY;
+					break;
 				default:
 					break;
 			}

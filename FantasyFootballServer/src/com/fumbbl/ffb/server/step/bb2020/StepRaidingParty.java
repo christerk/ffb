@@ -1,13 +1,16 @@
 package com.fumbbl.ffb.server.step.bb2020;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -18,7 +21,10 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2020.ReportRaidingParty;
 import com.fumbbl.ffb.report.bb2020.ReportSkillWasted;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -30,6 +36,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -37,7 +44,9 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -45,6 +54,8 @@ public class StepRaidingParty extends AbstractStep {
 
 	private boolean endPlayerAction, endTurn;
 	private String goToLabelOnFailure, playerId;
+	private final Set<MoveSquare> moveSquares = new HashSet<>();
+	private FieldCoordinate coordinate;
 
 	public StepRaidingParty(GameState pGameState) {
 		super(pGameState);
@@ -81,6 +92,15 @@ public class StepRaidingParty extends AbstractStep {
 					} else {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 					}
+					break;
+				case CLIENT_FIELD_COORDINATE:
+					ClientCommandFieldCoordinate clientCommandFieldCoordinate = (ClientCommandFieldCoordinate) pReceivedCommand.getCommand();
+					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+						coordinate = clientCommandFieldCoordinate.getFieldCoordinate();
+					} else {
+						coordinate = clientCommandFieldCoordinate.getFieldCoordinate();
+					}
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
 					break;
@@ -140,6 +160,7 @@ public class StepRaidingParty extends AbstractStep {
 				if (eligiblePlayers.isEmpty()) {
 					return;
 				}
+				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.MOVE_OPEN_TEAM_MATE));
 				if (eligiblePlayers.size() == 1) {
 					playerId = eligiblePlayers.get(0).getId();
 				} else {
@@ -150,10 +171,11 @@ public class StepRaidingParty extends AbstractStep {
 				}
 			}
 
-			if (StringTool.isProvided(playerId)) {
-				FieldModel fieldModel = game.getFieldModel();
-				FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(game.getPlayerById(playerId));
-				FieldCoordinate[] possibleCoordinates = fieldModel.findAdjacentCoordinates(coordinate, FieldCoordinateBounds.FIELD,
+			Player<?> player = game.getPlayerById(playerId);
+			FieldModel fieldModel = game.getFieldModel();
+			if (StringTool.isProvided(playerId) && coordinate == null) {
+				FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+				FieldCoordinate[] possibleCoordinates = fieldModel.findAdjacentCoordinates(playerCoordinate, FieldCoordinateBounds.FIELD,
 					1, false);
 				List<FieldCoordinate> eligibleSquares = Arrays.stream(possibleCoordinates).filter(possibleCoordinate -> {
 					List<Player<?>> playersOnSquare = fieldModel.getPlayers(possibleCoordinate);
@@ -170,9 +192,28 @@ public class StepRaidingParty extends AbstractStep {
 					return;
 				}
 
-				eligibleSquares.stream().map(square -> new MoveSquare(square, 0, 0)).forEach(fieldModel::add);
-				getResult().setNextAction(StepAction.CONTINUE);
-				game.setTurnMode(TurnMode.RAIDING_PARTY);
+				if (eligibleSquares.size() == 1) {
+					coordinate = eligibleSquares.get(0);
+				} else {
+					moveSquares.addAll(Arrays.asList(fieldModel.getMoveSquares()));
+					fieldModel.clearMoveSquares();
+					eligibleSquares.stream().map(square -> new MoveSquare(square, 0, 0)).forEach(fieldModel::add);
+					getResult().setNextAction(StepAction.CONTINUE);
+					game.setLastTurnMode(game.getTurnMode());
+					game.setTurnMode(TurnMode.RAIDING_PARTY);
+					return;
+				}
+			}
+
+			if (StringTool.isProvided(playerId) && coordinate != null) {
+				game.setTurnMode(game.getLastTurnMode());
+				FieldCoordinate fromCoordinate = fieldModel.getPlayerCoordinate(player);
+				Direction direction = FieldCoordinate.getDirection(fromCoordinate, coordinate);
+				getResult().addReport(new ReportRaidingParty(actingPlayer.getPlayerId(), playerId, direction));
+				fieldModel.setPlayerCoordinate(player, coordinate);
+				actingPlayer.markSkillUsed(skill);
+				fieldModel.clearMoveSquares();
+				moveSquares.forEach(fieldModel::add);
 			}
 		}
 	}
@@ -192,7 +233,7 @@ public class StepRaidingParty extends AbstractStep {
 					&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
 					&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> {
 					List<Player<?>> playersOnSquare = fieldModel.getPlayers(adjacentCoordinate);
-					return playersOnSquare != null && !playersOnSquare.isEmpty()
+					return (playersOnSquare == null || playersOnSquare.isEmpty())
 						&& Arrays.stream(fieldModel.findAdjacentCoordinates(adjacentCoordinate, FieldCoordinateBounds.FIELD,
 						1, false)).anyMatch(fieldCoordinate -> {
 						List<Player<?>> players = game.getFieldModel().getPlayers(fieldCoordinate);
@@ -211,6 +252,12 @@ public class StepRaidingParty extends AbstractStep {
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		if (coordinate != null) {
+			IServerJsonOption.FIELD_COORDINATE.addTo(jsonObject, coordinate.toJsonValue());
+		}
+		JsonArray jsonArray = new JsonArray();
+		moveSquares.stream().map(MoveSquare::toJsonValue).forEach(jsonArray::add);
+		IServerJsonOption.MOVE_SQUARE_ARRAY.addTo(jsonObject, jsonArray);
 		return jsonObject;
 	}
 
@@ -222,6 +269,12 @@ public class StepRaidingParty extends AbstractStep {
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		if (IServerJsonOption.FIELD_COORDINATE.isDefinedIn(jsonObject)) {
+			coordinate = new FieldCoordinate(0).initFrom(source, IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));
+		}
+		IServerJsonOption.MOVE_SQUARE_ARRAY.getFrom(source,
+			jsonObject).values().stream().map(value ->
+			new MoveSquare().initFrom(source, value)).forEach(moveSquares::add);
 		return this;
 	}
 }

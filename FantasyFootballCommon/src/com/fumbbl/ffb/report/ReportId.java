@@ -53,6 +53,7 @@ public enum ReportId implements INamedObject {
 	INDOMITABLE("indomitable"), OLD_PRO("oldPro"), PICK_ME_UP("pickMeUp"),
 	SKILL_WASTED("skillWasted"), TWO_FOR_ONE("twoForOne"),
 	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
+	RAIDING_PARTY("raidingParty"),
 	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg");
 
 	// obsolete: 50 (spiralling expenses)

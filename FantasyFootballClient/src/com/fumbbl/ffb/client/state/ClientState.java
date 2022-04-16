@@ -393,7 +393,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 					&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
 					&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> {
 					List<Player<?>> playersOnSquare = fieldModel.getPlayers(adjacentCoordinate);
-					return playersOnSquare != null && !playersOnSquare.isEmpty()
+					return (playersOnSquare == null || playersOnSquare.isEmpty())
 						&& Arrays.stream(fieldModel.findAdjacentCoordinates(adjacentCoordinate, FieldCoordinateBounds.FIELD,
 						1, false)).anyMatch(fieldCoordinate -> {
 						List<Player<?>> players = game.getFieldModel().getPlayers(fieldCoordinate);

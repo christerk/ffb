@@ -188,6 +188,8 @@ public interface IIconProperty {
 	String CURSOR_BOMB = "cursor.bomb";
 	String CURSOR_KEG = "cursor.keg";
 	String CURSOR_INVALID_KEG = "cursor.invalidkeg";
+	String CURSOR_RAID = "cursor.raid";
+	String CURSOR_INVALID_RAID = "cursor.invalidraid";
 
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
