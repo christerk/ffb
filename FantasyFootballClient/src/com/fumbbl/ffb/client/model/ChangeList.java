@@ -16,6 +16,15 @@ public class ChangeList {
 			.addFeature("Beer Barrel Bash")
 		);
 
+		versions.add(new VersionChangeList("2.7.2")
+			.addBugfix("BB2016: Games did crash when deselecting a player")
+		);
+
+		versions.add(new VersionChangeList("2.7.1")
+			.addBugfix("BB2016: Games did crash after kick off")
+			.addBugfix("\"Excuse me, are you a Zoat?\" was not available")
+		);
+
 		versions.add(new VersionChangeList("2.7.0")
 			.addFeature("Treacherous")
 			.addFeature("Burst of Speed")

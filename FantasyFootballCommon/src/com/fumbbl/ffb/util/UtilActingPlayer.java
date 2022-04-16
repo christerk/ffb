@@ -1,10 +1,11 @@
 package com.fumbbl.ffb.util;
 
-import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.SkillFactory;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -49,7 +50,8 @@ public class UtilActingPlayer {
 
 			}
 			if (!actingPlayer.hasActed()) {
-				Set<String> enhancementsToRemove = Constant.getEnhancementSkillsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
+				GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+				Set<String> enhancementsToRemove = mechanic.enhancementsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
 				enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), enhancement));
 
 				SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);

@@ -20,7 +20,7 @@ import java.util.Collections;
 @RulesCollection(Rules.BB2020)
 public class ExcuseMeAreYouAZoat extends Skill {
 	public ExcuseMeAreYouAZoat() {
-		super("Excuse Me, Are You a Zoat?", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
+		super("\"Excuse Me, Are You a Zoat?\"", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
 	}
 
 	@Override
