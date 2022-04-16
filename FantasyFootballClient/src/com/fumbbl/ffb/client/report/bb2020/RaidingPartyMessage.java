@@ -24,7 +24,7 @@ public class RaidingPartyMessage extends ReportMessageBase<ReportRaidingParty> {
 		print(indent, false, otherPlayer);
 		print(indent, TextStyle.NONE, " to move one square ");
 		print(indent, TextStyle.NONE, report.getDirection().getName());
-		print(indent, TextStyle.NONE, ".");
+		println(indent, TextStyle.NONE, ".");
 
 	}
 }

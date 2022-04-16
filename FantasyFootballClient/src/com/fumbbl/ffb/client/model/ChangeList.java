@@ -14,6 +14,7 @@ public class ChangeList {
 			.addFeature("Drunkard")
 			.addFeature("Pick-me-up")
 			.addFeature("Beer Barrel Bash")
+			.addFeature("Raiding Party")
 		);
 
 		versions.add(new VersionChangeList("2.7.2")
