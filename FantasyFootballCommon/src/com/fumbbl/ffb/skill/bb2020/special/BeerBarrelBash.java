@@ -9,7 +9,7 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class BeerBarrelBash extends Skill {
 	public BeerBarrelBash() {
-		super("Beer Barrel Bash", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_DRIVE);
+		super("Beer Barrel Bash!", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_DRIVE);
 	}
 
 	@Override
