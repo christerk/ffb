@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.8.1")
+
+		);
+
 		versions.add(new VersionChangeList("2.8.0")
 			.addFeature("Drunkard")
 			.addFeature("Pick-me-up")
