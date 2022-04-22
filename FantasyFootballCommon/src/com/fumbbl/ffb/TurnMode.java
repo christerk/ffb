@@ -6,9 +6,9 @@ package com.fumbbl.ffb;
  */
 public enum TurnMode implements INamedObject {
 
-	REGULAR("regular"), SETUP("setup"), KICKOFF("kickoff"),
+	REGULAR("regular", true), SETUP("setup"), KICKOFF("kickoff"),
 	PERFECT_DEFENCE("perfectDefence"), SOLID_DEFENCE("solidDefence"),
-	QUICK_SNAP("quickSnap"), HIGH_KICK("highKick"), START_GAME("startGame"), BLITZ("blitz"),
+	QUICK_SNAP("quickSnap"), HIGH_KICK("highKick"), START_GAME("startGame"), BLITZ("blitz", true),
 	TOUCHBACK("touchback"), INTERCEPTION("interception"), END_GAME("endGame"),
 	SWARMING("swarming"), KICKOFF_RETURN("kickoffReturn"), WIZARD("wizard"),
 	PASS_BLOCK("passBlock"), DUMP_OFF("dumpOff"), NO_PLAYERS_TO_FIELD("noPlayersToField"),
@@ -17,12 +17,18 @@ public enum TurnMode implements INamedObject {
 	BOMB_AWAY_BLITZ("bombAwayBlitz"),
 	ILLEGAL_SUBSTITUTION("illegalSubstitution"), SELECT_BLITZ_TARGET("selectBlitzTarget"),
 	SELECT_GAZE_TARGET("selectGazeTarget"), SAFE_PAIR_OF_HANDS("safePairOfHands"),
-	BETWEEN_TURNS("betweenTurns"), RAIDING_PARTY("raidingParty");
+	BETWEEN_TURNS("betweenTurns", true), RAIDING_PARTY("raidingParty");
 
 	private final String fName;
+	private final boolean checkForActivePlayers;
 
 	TurnMode(String pName) {
+		this(pName, false);
+	}
+
+	TurnMode(String pName, boolean checkForActivePlayers) {
 		fName = pName;
+		this.checkForActivePlayers = checkForActivePlayers;
 	}
 
 	public String getName() {
@@ -37,4 +43,7 @@ public enum TurnMode implements INamedObject {
 		return ((this == BOMB_HOME) || (this == BOMB_HOME_BLITZ) || (this == BOMB_AWAY) || (this == BOMB_AWAY_BLITZ));
 	}
 
+	public boolean isCheckForActivePlayers() {
+		return checkForActivePlayers;
+	}
 }

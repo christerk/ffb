@@ -11,7 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.8.1")
-
+			.addBugfix("Potential fix for skipped turns")
 		);
 
 		versions.add(new VersionChangeList("2.8.0")

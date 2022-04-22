@@ -381,7 +381,7 @@ public class TurnDiceStatusComponent extends JPanel
 				buttonEnabled = false;
 				fButtonSelected = false;
 				if (fHomePlaying) {
-					if (((fTurnMode == TurnMode.REGULAR) || (fTurnMode == TurnMode.BLITZ))
+					if (fTurnMode != null && fTurnMode.isCheckForActivePlayers()
 						&& UtilPlayer.testPlayersAbleToAct(game, game.getTeamHome())) {
 						DialogEndTurn endTurnDialog = new DialogEndTurn(getSideBar().getClient());
 						endTurnDialog.showDialog(this);
