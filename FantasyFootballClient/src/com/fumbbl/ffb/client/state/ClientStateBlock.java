@@ -103,7 +103,7 @@ public class ClientStateBlock extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
-		getClient().getCommunication().sendEndTurn();
+		getClient().getCommunication().sendEndTurn(game.getTurnMode());
 	}
 
 	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {

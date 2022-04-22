@@ -199,7 +199,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 				return;
 			}
 		}
-		getClient().getCommunication().sendEndTurn();
+		getClient().getCommunication().sendEndTurn(getClient().getGame().getTurnMode());
 		getClient().getClientData().setEndTurnButtonHidden(true);
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		sideBarHome.refresh();

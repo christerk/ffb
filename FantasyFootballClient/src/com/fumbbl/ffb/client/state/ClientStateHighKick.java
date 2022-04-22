@@ -79,7 +79,7 @@ public class ClientStateHighKick extends ClientState {
 		if (sideBarHome.getOpenBox() == BoxType.RESERVES) {
 			sideBarHome.closeBox();
 		}
-		getClient().getCommunication().sendEndTurn();
+		getClient().getCommunication().sendEndTurn(getClient().getGame().getTurnMode());
 		getClient().getClientData().setEndTurnButtonHidden(true);
 		sideBarHome.refresh();
 	}
