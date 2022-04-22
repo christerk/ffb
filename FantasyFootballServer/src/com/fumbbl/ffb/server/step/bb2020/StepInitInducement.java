@@ -163,6 +163,9 @@ public final class StepInitInducement extends AbstractStep {
 		if ((InducementPhase.END_OF_OWN_TURN == fInducementPhase || InducementPhase.END_OF_OPPONENT_TURN == fInducementPhase) && !fTouchdownOrEndOfHalf) {
 			game.setTurnMode(TurnMode.BETWEEN_TURNS);
 			useableInducements.addAll(availableTypes);
+			if (InducementPhase.END_OF_OPPONENT_TURN == fInducementPhase && fHomeTeam != game.isHomePlaying()) {
+				game.setHomePlaying(!game.isHomePlaying());
+			}
 		}
 		return useableInducements.toArray(new InducementType[0]);
 	}
