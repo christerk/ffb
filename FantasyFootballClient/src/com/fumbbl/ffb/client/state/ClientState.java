@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -18,15 +19,16 @@ import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -44,8 +46,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -357,6 +359,56 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
+		return menuItem;
+	}
+
+	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList, ActingPlayer actingPlayer) {
+		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
+		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
+		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
+		menuItemList.add(endMoveAction);
+	}
+
+	protected boolean isRaidingPartyAvailable(ActingPlayer player) {
+		return !player.hasActed() && isRaidingPartyAvailable(player.getPlayer());
+	}
+
+	protected boolean isRaidingPartyAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canMoveOpenTeamMate)
+			&& Arrays.stream(game.getActingTeam().getPlayers()).anyMatch(
+			teamMate -> {
+				FieldCoordinate teamMateCoordinate = fieldModel.getPlayerCoordinate(teamMate);
+				Player<?>[] adjacentPlayersWithTacklezones = UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()), teamMateCoordinate, false);
+				FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(teamMateCoordinate, FieldCoordinateBounds.FIELD,
+					1, false);
+				return fieldModel.getPlayerState(teamMate).getBase() == PlayerState.STANDING
+					&& teamMateCoordinate.distanceInSteps(playerCoordinate) <= 5
+					&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
+					&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> {
+					List<Player<?>> playersOnSquare = fieldModel.getPlayers(adjacentCoordinate);
+					return (playersOnSquare == null || playersOnSquare.isEmpty())
+						&& Arrays.stream(fieldModel.findAdjacentCoordinates(adjacentCoordinate, FieldCoordinateBounds.FIELD,
+						1, false)).anyMatch(fieldCoordinate -> {
+						List<Player<?>> players = game.getFieldModel().getPlayers(fieldCoordinate);
+						return players != null && !players.isEmpty() && !game.getActingTeam().hasPlayer(players.get(0));
+					});
+				});
+			}
+		);
+	}
+
+	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Raiding Party",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;
 	}
 }

@@ -40,6 +40,7 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.Treacherous;
+import com.fumbbl.ffb.server.step.generator.bb2020.RaidingParty;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 import java.util.Arrays;
@@ -104,6 +105,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 								.forName(SequenceGenerator.Type.Treacherous.name());
 							generator.pushSequence(new Treacherous.SequenceParams(getGameState(), IStepLabel.SELECT));
 							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMoveOpenTeamMate)) {
+								getGameState().pushCurrentStepOnStack();
+							RaidingParty generator = (RaidingParty) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+									.forName(SequenceGenerator.Type.RaidingParty.name());
+								generator.pushSequence(new RaidingParty.SequenceParams(getGameState(), IStepLabel.SELECT));
+								getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							usedSkill = commandUseSkill.getSkill();
 						}

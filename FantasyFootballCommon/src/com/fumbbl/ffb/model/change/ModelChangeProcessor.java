@@ -33,7 +33,6 @@ import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.option.IGameOption;
 
@@ -488,6 +487,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollsBrilliantCoachingOneDrive((Integer) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE:
+				getTurnData(pGame, isHomeData(pModelChange)).setReRollsPumpUpTheCrowdOneDrive((Integer) pModelChange.getValue());
+				return true;
 			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
 				getTurnData(pGame, isHomeData(pModelChange)).setSingleUseReRolls((Integer) pModelChange.getValue());
 				return true;
@@ -628,6 +630,7 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_KTM_USED:
 			case TURN_DATA_SET_RE_ROLLS:
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
+			case TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE:
 			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
 			case TURN_DATA_SET_RE_ROLL_USED:
 			case TURN_DATA_SET_TURN_NR:

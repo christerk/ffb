@@ -261,7 +261,7 @@ public class StepApothecary extends AbstractStep {
 				}
 			}
 			if (doNextStep) {
-				UtilServerInjury.handleRaiseDead(this, fInjuryResult);
+				UtilServerInjury.handleInjurySideEffects(this, fInjuryResult);
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		}

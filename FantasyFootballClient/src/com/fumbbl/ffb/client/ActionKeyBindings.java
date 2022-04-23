@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class ActionKeyBindings {
@@ -33,21 +32,22 @@ public class ActionKeyBindings {
 
 		List<ActionKeyAction> playerMoves = new ArrayList<>();
 
-		addActionBinding(playerMoves);
+		playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0),
+			ActionKey.PLAYER_MOVE_NORTH));
 		playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD9, 0),
-				ActionKey.PLAYER_MOVE_NORTHEAST));
+			ActionKey.PLAYER_MOVE_NORTHEAST));
 		playerMoves.add(
-				new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, 0), ActionKey.PLAYER_MOVE_EAST));
+			new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, 0), ActionKey.PLAYER_MOVE_EAST));
 		playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD3, 0),
-				ActionKey.PLAYER_MOVE_SOUTHEAST));
+			ActionKey.PLAYER_MOVE_SOUTHEAST));
 		playerMoves.add(
-				new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD2, 0), ActionKey.PLAYER_MOVE_SOUTH));
+			new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD2, 0), ActionKey.PLAYER_MOVE_SOUTH));
 		playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD1, 0),
-				ActionKey.PLAYER_MOVE_SOUTHWEST));
+			ActionKey.PLAYER_MOVE_SOUTHWEST));
 		playerMoves.add(
-				new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, 0), ActionKey.PLAYER_MOVE_WEST));
+			new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, 0), ActionKey.PLAYER_MOVE_WEST));
 		playerMoves.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD7, 0),
-				ActionKey.PLAYER_MOVE_NORTHWEST));
+			ActionKey.PLAYER_MOVE_NORTHWEST));
 
 		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_NORTH, playerMoves, ActionKey.PLAYER_MOVE_NORTH);
 		addActionBinding(IClientProperty.KEY_PLAYER_MOVE_NORTHEAST, playerMoves, ActionKey.PLAYER_MOVE_NORTHEAST);
@@ -89,6 +89,7 @@ public class ActionKeyBindings {
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_SHOT_TO_NOTHING_BOMB, playerActions, ActionKey.PLAYER_ACTION_SHOT_TO_NOTHING_BOMB);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_TREACHEROUS, playerActions, ActionKey.PLAYER_ACTION_TREACHEROUS);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_WISDOM, playerActions, ActionKey.PLAYER_ACTION_WISDOM);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BEER_BARREL_BASH, playerActions, ActionKey.PLAYER_ACTION_BEER_BARREL_BASH);
 
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_ACTIONS, playerActions);
 
@@ -99,16 +100,11 @@ public class ActionKeyBindings {
 
 	}
 
-	private void addActionBinding(List<ActionKeyAction> playerMoves) {
-		playerMoves.add(
-				new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0), ActionKey.PLAYER_MOVE_NORTH));
-	}
-
-	private void addActionBinding(String keyPlayerActionFrenziedRush, List<ActionKeyAction> playerActions, ActionKey playerActionFrenziedRush) {
-		String frenziedRush = getClient().getProperty(keyPlayerActionFrenziedRush);
-		if (StringTool.isProvided(frenziedRush)) {
-			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(frenziedRush),
-				playerActionFrenziedRush));
+	private void addActionBinding(String keyProperty, List<ActionKeyAction> playerActions, ActionKey actionKey) {
+		String key = getClient().getProperty(keyProperty);
+		if (StringTool.isProvided(key)) {
+			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(key),
+				actionKey));
 		}
 	}
 

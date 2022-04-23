@@ -63,6 +63,8 @@ public enum StepId implements INamedObject {
 	END_SELECTING("endSelecting"), // action.select
 	END_THROW_TEAM_MATE("endThrowTeamMate"), // action.ttm
 	END_KICK_TEAM_MATE("endKickTeamMate"), // action.kickTeamMate
+	END_THROW_KEG("endThrowKeg"), // action.special
+
 	END_TURN("endTurn"), // action.common
 	FALL_DOWN("fallDown"), // action.common
 	FAN_FACTOR("fanFactor"), // game.end
@@ -116,6 +118,7 @@ public enum StepId implements INamedObject {
 	PASS_BLOCK("passBlock"), // action.pass
 	PENALTY_SHOOTOUT("penaltyShootout"), // game.end
 	PETTY_CASH("pettyCash"), // game.start
+	PICK_ME_UP("pickMeUp"), // phase.endTurn
 	PICK_UP("pickUp"), // action.common
 	PILE_DRIVER("pileDriver"), // skill.pileDriver
 	PLACE_BALL("placeBall"), // skill.safePairOfHands
@@ -126,6 +129,7 @@ public enum StepId implements INamedObject {
 	PRO("pro"), // action.common
 	PROJECTILE_VOMIT("projectileVomit"),
 	PUSHBACK("pushback"), // action.block
+	RAIDING_PARTY("raidingParty"),
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start
 	REFEREE("referee"), // action.foul
@@ -155,6 +159,7 @@ public enum StepId implements INamedObject {
 	TAKE_ROOT("takeRoot"), // action.common
 	TENTACLES("tentacles"), // action.move
 	TEST("test"), // test
+	THROW_KEG("throwKeg"), // action.special
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
 	TRAP_DOOR("trapDoor"), // action.common
 	TREACHEROUS("treacherous"), // action.special

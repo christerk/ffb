@@ -10,18 +10,25 @@ public enum PlayerChoiceMode implements INamedObject {
 	MVP("mvp", false), ANIMAL_SAVAGERY("animalSavagery"), IRON_MAN("ironMan", false),
 	KNUCKLE_DUSTERS("knuckleDusters", false), BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle", false),
 	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
-	INDOMITABLE("indomitable"), LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf");
+	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true),
+	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
+	RAIDING_PARTY("raidingParty", false);
 
 	private final String name;
-	private final boolean usePlayerPosition;
+	private final boolean usePlayerPosition, preselect;
 
 	PlayerChoiceMode(String pName) {
 		this(pName, true);
 	}
 
 	PlayerChoiceMode(String pName, boolean usePlayerPosition) {
+		this(pName, usePlayerPosition, false);
+	}
+
+	PlayerChoiceMode(String pName, boolean usePlayerPosition, boolean preselect) {
 		name = pName;
 		this.usePlayerPosition = usePlayerPosition;
+		this.preselect = preselect;
 	}
 
 	public String getName() {
@@ -30,6 +37,10 @@ public enum PlayerChoiceMode implements INamedObject {
 
 	public boolean isUsePlayerPosition() {
 		return usePlayerPosition;
+	}
+
+	public boolean isPreselect() {
+		return preselect;
 	}
 
 	public String getDialogHeader(int nrOfPlayers) {
@@ -83,11 +94,18 @@ public enum PlayerChoiceMode implements INamedObject {
 			case INDOMITABLE:
 				header.append("Select a player to use Indomitable against");
 				break;
+			case PICK_ME_UP:
+				header.append("Select players to be picked up");
+				break;
 			case LORD_OF_CHAOS:
 				header.append("Select the player of which to use Lord of Chaos");
 				break;
 			case WISDOM:
 				header.append("Select the player of which to use Wisdom of the White Dwarf");
+				break;
+			case RAIDING_PARTY:
+				header.append("Select the player to move");
+				break;
 			default:
 				break;
 		}
@@ -145,11 +163,17 @@ public enum PlayerChoiceMode implements INamedObject {
 			case INDOMITABLE:
 				title.append("Indomitable");
 				break;
+			case PICK_ME_UP:
+				title.append("Pick-me-up");
+				break;
 			case LORD_OF_CHAOS:
 				title.append("Lord of Chaos");
 				break;
 			case WISDOM:
 				title.append("Wisdom of the White Dwarf");
+				break;
+			case RAIDING_PARTY:
+				title.append("Raiding Party");
 				break;
 			default:
 				break;
@@ -208,11 +232,17 @@ public enum PlayerChoiceMode implements INamedObject {
 			case INDOMITABLE:
 				message.append("Waiting for coach to use Indomitable");
 				break;
+			case PICK_ME_UP:
+				message.append("Waiting for coach to choose players to be picked up");
+				break;
 			case LORD_OF_CHAOS:
 				message.append("Waiting for coach to select player for Lord of Chaos");
 				break;
 			case WISDOM:
 				message.append("Waiting for coach to select player for Wisdom of the White Dwarf");
+				break;
+			case RAIDING_PARTY:
+				message.append("Waiting for coach to select player to move");
 				break;
 			default:
 				break;

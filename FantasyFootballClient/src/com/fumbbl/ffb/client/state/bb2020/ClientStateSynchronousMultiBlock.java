@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -8,6 +8,8 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
@@ -35,7 +37,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	private final Map<String, BlockKind> selectedPlayers = new HashMap<>();
 	private final Map<String, PlayerState> originalPlayerStates = new HashMap<>();
 
-	protected ClientStateSynchronousMultiBlock(FantasyFootballClient pClient) {
+	public ClientStateSynchronousMultiBlock(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
@@ -154,6 +156,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case PLAYER_ACTION_STAB:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_STAB);
 					break;
+				case PLAYER_ACTION_RAIDING_PARTY:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+					break;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -191,11 +196,21 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					selectPlayer(player, BlockKind.STAB);
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					getClient().getCommunication().sendUseSkill(skill, true, player.getId());
+					if (isTreacherousAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						getClient().getCommunication().sendUseSkill(skill, true, player.getId());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					getClient().getCommunication().sendUseWisdom();
+					if (isWisdomAvailable(player)) {
+						getClient().getCommunication().sendUseWisdom();
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
+					if (isRaidingPartyAvailable(player)) {
+						Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+						getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
+					}
 					break;
 				default:
 					break;
@@ -217,18 +232,17 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
 		}
-		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
-		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
-		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
-		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
-		menuItemList.add(endMoveAction);
+		addEndActionLabel(iconCache, menuItemList, actingPlayer);
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
 		if (isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			menuItemList.add(createRaidingPartyItem(iconCache));
+		}
+
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

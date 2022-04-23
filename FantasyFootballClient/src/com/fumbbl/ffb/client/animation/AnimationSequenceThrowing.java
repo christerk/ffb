@@ -1,12 +1,5 @@
 package com.fumbbl.ffb.client.animation;
 
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-
-import javax.swing.Timer;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.SoundId;
@@ -20,6 +13,12 @@ import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Player;
+
+import javax.swing.Timer;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -68,30 +67,32 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	}
 
 	public static AnimationSequenceThrowing createAnimationSequenceHailMaryBomb(FantasyFootballClient pClient,
-			Animation pAnimation) {
+																																							Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_BOMB,
-				pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG),
-				pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-				SoundId.THROW);
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG),
+			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
+			SoundId.THROW);
 	}
 
+	private final AnimationType fAnimationType;
+
 	public static AnimationSequenceThrowing createAnimationSequenceThrowTeamMate(FantasyFootballClient pClient,
-			Animation pAnimation) {
+																																							 Animation pAnimation) {
 		Player<?> thrownPlayer = pClient.getGame().getPlayerById(pAnimation.getThrownPlayerId());
 		boolean homePlayer = pClient.getGame().getTeamHome().hasPlayer(thrownPlayer);
 		PlayerIconFactory playerIconFactory = pClient.getUserInterface().getPlayerIconFactory();
 		BufferedImage playerIcon = playerIconFactory.getBasicIcon(pClient, thrownPlayer, homePlayer, false,
-				pAnimation.isWithBall(), false);
+			pAnimation.isWithBall(), false);
 		return new AnimationSequenceThrowing(AnimationType.THROW_TEAM_MATE, playerIcon, pAnimation.getStartCoordinate(),
-				pAnimation.getEndCoordinate(), null, SoundId.WOOOAAAH);
+			pAnimation.getEndCoordinate(), null, SoundId.WOOOAAAH);
 	}
 
-	private AnimationType fAnimationType;
-	private BufferedImage fAnimatedIcon;
-	private FieldCoordinate fStartCoordinate;
-	private FieldCoordinate fEndCoordinate;
-	private FieldCoordinate fInterceptorCoordinate;
-	private SoundId fSound;
+	private final BufferedImage fAnimatedIcon;
+	private final FieldCoordinate fStartCoordinate;
+	private final FieldCoordinate fEndCoordinate;
+	private final FieldCoordinate fInterceptorCoordinate;
+	private final SoundId fSound;
+	private final Timer fTimer;
 
 	private int fStartX;
 	private int fStartY;
@@ -110,11 +111,17 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	private FieldLayer fFieldLayer;
 	private IAnimationListener fListener;
 
-	private Timer fTimer;
+	public static AnimationSequenceThrowing createAnimationSequenceThrowKeg(FantasyFootballClient pClient,
+																																					Animation pAnimation) {
+		return new AnimationSequenceThrowing(pAnimation.getAnimationType(),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH),
+			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
+			SoundId.THROW);
+	}
 
 	protected AnimationSequenceThrowing(AnimationType pAnimationType, BufferedImage pAnimatedIcon,
-			FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate,
-			SoundId pSound) {
+																			FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate,
+																			SoundId pSound) {
 		fAnimationType = pAnimationType;
 		fAnimatedIcon = pAnimatedIcon;
 		fStartCoordinate = pStartCoordinate;
@@ -169,38 +176,12 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		boolean xAxisAnimation = (Math.abs(fEndX - fStartX) > Math.abs(fEndY - fStartY));
 
 		if (xAxisAnimation) {
-			fPositionY = fStartY + (int) (((double) (fEndY - fStartY) / (double) (fEndX - fStartX)) * (fPositionX - fStartX)); // y
-																																																													// -
-																																																													// y1
-																																																													// =
-																																																													// (y2
-																																																													// -
-																																																													// y1)
-																																																													// /
-																																																													// (x2
-																																																													// -
-																																																													// x1)
-																																																													// *
-																																																													// (x
-																																																													// -
-																																																													// x1)
+			// y - y1 = (y2 - y1) / (x2 - x1) * (x - x1)
+			fPositionY = fStartY + (int) (((double) (fEndY - fStartY) / (double) (fEndX - fStartX)) * (fPositionX - fStartX));
 			scale = findScale(((double) (fPositionX - fStartX) / (double) (fEndX - fStartX)) * 2);
 		} else {
-			fPositionX = fStartX + (int) (((double) (fEndX - fStartX) / (double) (fEndY - fStartY)) * (fPositionY - fStartY)); // x
-																																																													// -
-																																																													// x1
-																																																													// =
-																																																													// (x2
-																																																													// -
-																																																													// x1)
-																																																													// /
-																																																													// (y2
-																																																													// -
-																																																													// y1)
-																																																													// *
-																																																													// (y
-																																																													// -
-																																																													// y1)
+			// x - x1 = (x2 - x1) / (y2 - y1) * (y - y1)
+			fPositionX = fStartX + (int) (((double) (fEndX - fStartX) / (double) (fEndY - fStartY)) * (fPositionY - fStartY));
 			scale = findScale(((double) (fPositionY - fStartY) / (double) (fEndY - fStartY)) * 2);
 		}
 
@@ -252,12 +233,12 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 
 	private double findScale(double pX) {
 		if ((AnimationType.PASS == fAnimationType) || (AnimationType.THROW_A_ROCK == fAnimationType)
-				|| (AnimationType.THROW_BOMB == fAnimationType)) {
+			|| (AnimationType.THROW_BOMB == fAnimationType)) {
 			return 1 - ((pX - 1) * (pX - 1) * 0.5);
-		} else if (AnimationType.THROW_TEAM_MATE == fAnimationType) {
+		} else if (AnimationType.THROW_TEAM_MATE == fAnimationType || AnimationType.THROW_KEG == fAnimationType) {
 			return 1.5 - ((pX - 1) * (pX - 1) * 0.5);
 		} else if ((AnimationType.KICK == fAnimationType) || (AnimationType.HAIL_MARY_PASS == fAnimationType)
-				|| (AnimationType.HAIL_MARY_BOMB == fAnimationType)) {
+			|| (AnimationType.HAIL_MARY_BOMB == fAnimationType)) {
 			return 1 - ((pX - 1) * (pX - 1) * 0.75);
 		} else {
 			return 0.0;

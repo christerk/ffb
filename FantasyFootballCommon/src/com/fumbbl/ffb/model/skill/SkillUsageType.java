@@ -5,6 +5,7 @@ public enum SkillUsageType {
 	ONCE_PER_TURN(true),
 	ONCE_PER_GAME(true),
 	ONCE_PER_HALF(true),
+	ONCE_PER_DRIVE(true),
 	ONCE_PER_TURN_BY_TEAM_MATE(true, false),
 	SPECIAL(true, false);
 

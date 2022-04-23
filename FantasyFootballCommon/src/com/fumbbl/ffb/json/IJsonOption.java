@@ -323,6 +323,7 @@ public interface IJsonOption {
 	JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
 	JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
 	JsonStringArrayOption PLAYER_IDS_NATURAL_ONES = new JsonStringArrayOption("playerIdsNaturalOnes");
+	JsonStringArrayOption PLAYER_IDS_SELECTED = new JsonStringArrayOption("playerIdsSelected");
 	JsonArrayOption PLAYER_MARKER_ARRAY = new JsonArrayOption("playerMarkerArray");
 	JsonStringOption PLAYER_NAME = new JsonStringOption("playerName");
 	JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");
@@ -379,7 +380,9 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE = new JsonIntOption("rerollBrilliantCoachingOneDrive");
 	JsonIntOption RE_ROLLS_LEFT_AWAY = new JsonIntOption("reRollsLeftAway");
 	JsonIntOption RE_ROLLS_LEFT_HOME = new JsonIntOption("reRollsLeftHome");
+	JsonIntOption RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE = new JsonIntOption("rerollPumpUpTheCrowdOneDrive");
 	JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
+	JsonBooleanOption RESET_MOVE_SQUARES = new JsonBooleanOption("resetMoveSquares");
 	JsonStringOption RIOTOUS_POSITION_ID = new JsonStringOption("riotousPositionId");
 	JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");
 	JsonIntArrayOption RIOTOUS_ROLL = new JsonIntArrayOption("riotousRoll");
@@ -472,6 +475,7 @@ public interface IJsonOption {
 	JsonStringOption TALK_MODE = new JsonStringOption("talkMode");
 	JsonStringArrayOption TALKS = new JsonStringArrayOption("talks");
 	JsonFieldCoordinateOption TARGET_COORDINATE = new JsonFieldCoordinateOption("targetCoordinate");
+	JsonStringOption TARGET_PLAYER_ID = new JsonStringOption("targetPlayerId");
 	JsonObjectOption TARGET_SELECTION_STATE = new JsonObjectOption("targetSelectionState");
 	JsonStringOption TARGET_SELECTION_STATUS = new JsonStringOption("targetSelectionStatus");
 	JsonBooleanOption TARGET_SELECTION_STATUS_IS_COMMITTED = new JsonBooleanOption("targetSelectionStatusIsCommitted");

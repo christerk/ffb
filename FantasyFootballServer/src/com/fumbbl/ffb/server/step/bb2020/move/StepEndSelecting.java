@@ -33,11 +33,13 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Foul;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.RadingParty;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.ThrowKeg;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
 import com.fumbbl.ffb.server.step.generator.bb2020.Treacherous;
@@ -91,6 +93,7 @@ public final class StepEndSelecting extends AbstractStep {
 	private String fKickedPlayerId;
 	private int fNumDice;
 	private List<BlockTarget> blockTargets = new ArrayList<>();
+	private String targetPlayerId;
 
 	public StepEndSelecting(GameState pGameState) {
 		super(pGameState);
@@ -194,6 +197,10 @@ public final class StepEndSelecting extends AbstractStep {
 					return true;
 				case IS_KICKED_PLAYER:
 					kicked = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				case TARGET_PLAYER_ID:
+					targetPlayerId = (String) parameter.getValue();
 					consume(parameter);
 					return true;
 				default:
@@ -362,11 +369,21 @@ public final class StepEndSelecting extends AbstractStep {
 				Treacherous treacherousGenerator = (Treacherous) factory.forName(SequenceGenerator.Type.Treacherous.name());
 				treacherousGenerator.pushSequence(treacherousParams);
 				break;
+			case RAIDING_PARTY:
+				selectGenerator.pushSequence(selectParams);
+				RadingParty.SequenceParams raidingParams = new RadingParty.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
+				RadingParty raidingGenerator = (RadingParty) factory.forName(SequenceGenerator.Type.RaidingParty.name());
+				raidingGenerator.pushSequence(raidingParams);
+				break;
 			case WISDOM_OF_THE_WHITE_DWARF:
 				selectGenerator.pushSequence(selectParams);
 				Sequence sequence = new Sequence(getGameState());
 				sequence.add(StepId.WISDOM_OF_THE_WHITE_DWARF);
 				getGameState().getStepStack().push(sequence.getSequence());
+				break;
+			case THROW_KEG:
+				ThrowKeg throwKegGenerator = (ThrowKeg) factory.forName(SequenceGenerator.Type.ThrowKeg.name());
+				throwKegGenerator.pushSequence(new ThrowKeg.SequenceParams(getGameState(), targetPlayerId));
 				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
@@ -396,6 +413,7 @@ public final class StepEndSelecting extends AbstractStep {
 		JsonArray jsonArray = new JsonArray();
 		blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
+		IJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
 		return jsonObject;
 	}
 
@@ -423,7 +441,7 @@ public final class StepEndSelecting extends AbstractStep {
 		jsonArray.values().stream()
 			.map(value -> new BlockTarget().initFrom(source, value))
 			.forEach(value -> blockTargets.add(value));
-
+		targetPlayerId = IServerJsonOption.TARGET_PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

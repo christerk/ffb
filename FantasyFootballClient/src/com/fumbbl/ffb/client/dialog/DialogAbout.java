@@ -19,13 +19,13 @@ import java.awt.image.BufferedImage;
 public class DialogAbout extends Dialog {
 
 	private static final String[] _PLAYTESTERS = {
-			"Ale1972, Asharak, Avantar, Avien, Ballcrusher, Balle2000, Barre, Benjysmyth, BiggieB, Brainsaw, Calthor, Carnis, CircularLogic, Chavo,",
-			"Clarkin, Cmelchior, Cyrus-Havoc, Don Tomaso, DanTitan76, DukeTyrion, Dynamo380, Ebenezer, Ehlers, Flix, Floppeditbackwards,",
-			"Freak_in_a_Frock, Freppa, Gandresch, Garaygos, Gjopie, Hangar18, Happygrue, Hitonagashi, Howlett, Janekt, JanMattys, Janzki,",
-			"Jarvis_Pants, JoeMalik, Koigokoro, LeBlanc, Lerysh, Lewdgrip, Loraxwolfsbane, Louky, LoxleyAndy, Magistern, Malitrius, Mickael, Mtknight,",
-			"MxFr, Nazgob, Nighteye, On1, PhrollikK, Purplegoo, RamonSalazar, Ravenmore, Razin, RedDevilCG, Reisender, Relezite, Shadow46x2,",
-			"Sl8, Stej, Steve, Svemole, SvenS, Tarabaralla, Teluriel, Tensai, Thul, Tortured-Robot, Treborius, Ulrik, Ultwe, Uomotigre3, Uuni,",
-			"Vesikannu, Woodstock, XZCion, Zakatan" };
+		"Ale1972, Asharak, Avantar, Avien, Ballcrusher, Balle2000, Barre, Benjysmyth, BiggieB, Brainsaw, Calthor, Carnis, CircularLogic, Chavo,",
+		"Clarkin, Cmelchior, Cyrus-Havoc, Don Tomaso, DanTitan76, DukeTyrion, Dynamo380, Ebenezer, Ehlers, Flix, Floppeditbackwards,",
+		"Freak_in_a_Frock, Freppa, Gandresch, Garaygos, Gjopie, Hangar18, Happygrue, Hitonagashi, Howlett, Janekt, JanMattys, Janzki,",
+		"Jarvis_Pants, Java, JoeMalik, Koigokoro, LeBlanc, Lerysh, Lewdgrip, Loraxwolfsbane, Louky, LoxleyAndy, Magistern, Malitrius, Mickael, Mtknight,",
+		"MxFr, Nazgob, Neilwat, Nelphine, Nighteye, On1, PhrollikK, Purplegoo, RamonSalazar, Ravenmore, Razin, RedDevilCG, Reisender, Relezite, Shadow46x2,",
+		"Sl8, Stej, Steve, Stimme, Svemole, SvenS, Tarabaralla, Teluriel, Tensai, Thul, Tortured-Robot, Treborius, Tussock, Ulrik, Ultwe, Uomotigre3, Uuni,",
+		"Vesikannu, Woodstock, XZCion, Zakatan"};
 
 	private static final int _WIDTH = 813;
 	private static final int _HEIGHT = 542;

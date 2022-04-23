@@ -26,7 +26,7 @@ public class ReportBrilliantCoachingReRollsLost implements IReport {
 
 	@Override
 	public ReportId getId() {
-		return ReportId.BRILLIANT_COACHING_REROLLS_LOST;
+		return ReportId.BRILLIANT_COACHING_RE_ROLLS_LOST;
 	}
 
 	public String getTeamId() {

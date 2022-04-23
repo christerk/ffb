@@ -335,7 +335,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 
 			for (InjuryResult injuryResult : injuryResults) {
-				if (UtilServerInjury.handleRaiseDead(this, injuryResult)) {
+				if (UtilServerInjury.handleInjurySideEffects(this, injuryResult)) {
 					UtilServerGame.syncGameModel(this);
 					break;
 				}

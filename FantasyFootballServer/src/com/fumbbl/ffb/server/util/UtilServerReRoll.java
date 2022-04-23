@@ -47,8 +47,14 @@ public class UtilServerReRoll {
 			Skill reRollSourceSkill = pReRollSource.getSkill(game);
 			if (teamReRoll || lordOfChaos) {
 				TurnData turnData = game.getTurnData();
-				if (teamReRoll && gameMechanic.updateTurnDataAfterReRollUsage(turnData)) {
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.BRILLIANT_COACHING_RE_ROLL, successful, 0));
+				ReRollSource usedAdditionalReRollSource = null;
+
+				if (teamReRoll) {
+					usedAdditionalReRollSource = gameMechanic.updateTurnDataAfterReRollUsage(turnData);
+				}
+
+				if (teamReRoll && usedAdditionalReRollSource != null) {
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
 				} else if (teamReRoll && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
 					turnData.setLeaderState(LeaderState.USED);

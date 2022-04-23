@@ -38,7 +38,7 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer.equals(actingPlayer.getPlayer()) && (isTreacherousAvailable(actingPlayer) || isWisdomAvailable(actingPlayer))) {
+		if (pPlayer.equals(actingPlayer.getPlayer()) && (isTreacherousAvailable(actingPlayer) || isWisdomAvailable(actingPlayer) || isRaidingPartyAvailable(actingPlayer))) {
 			createAndShowPopupMenuForActingPlayer();
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && UtilPlayer.isValidBlitzTarget(game, pPlayer))) {
 			getClient().getCommunication().sendTargetSelected(pPlayer.getId());
@@ -96,6 +96,9 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		if (isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			menuItemList.add(createRaidingPartyItem(iconCache));
+		}
 
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
@@ -119,6 +122,9 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 			case PLAYER_ACTION_WISDOM:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
 				break;
+			case PLAYER_ACTION_RAIDING_PARTY:
+				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				break;
 			default:
 				actionHandled = false;
 				break;
@@ -126,19 +132,29 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		return actionHandled;
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
+		if (player != null) {
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
-					getClient().getCommunication().sendTargetSelected(pPlayer.getId());
+					getClient().getCommunication().sendTargetSelected(player.getId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					communication.sendUseSkill(skill, true, pPlayer.getId());
+					if (isTreacherousAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					communication.sendUseWisdom();
+					if (isWisdomAvailable(player)) {
+						communication.sendUseWisdom();
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
+					if (isRaidingPartyAvailable(player)) {
+						Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+						getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
+					}
 					break;
 				default:
 					break;
