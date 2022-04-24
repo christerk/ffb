@@ -12,6 +12,8 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.8.1")
 			.addBugfix("Potential fix for skipped turns")
+			.addImprovement("Combined icons for rooted with confused/gazed")
+			.addBugfix("Selecting a player on kick-off return sequence forced at least one movement square")
 		);
 
 		versions.add(new VersionChangeList("2.8.0")
