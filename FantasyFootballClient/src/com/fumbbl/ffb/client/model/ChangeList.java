@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Selecting a player on kick-off return sequence forced at least one movement square")
 			.addBugfix("B&C did uproot prone or stunned players when hitting them")
 			.addBugfix("Riotous Rookies could be healed by team apo despite being Journeymen")
+			.addBugfix("FA did not trigger on second frenzy block during blitz action")
 		);
 
 		versions.add(new VersionChangeList("2.8.0")
