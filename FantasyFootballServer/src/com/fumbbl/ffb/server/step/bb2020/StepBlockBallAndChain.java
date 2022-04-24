@@ -53,13 +53,9 @@ public class StepBlockBallAndChain extends AbstractStep {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-					// mandatory
-					case GOTO_LABEL_ON_PUSHBACK:
-						fGotoLabelOnPushback = (String) parameter.getValue();
-						break;
-					default:
-						break;
+				// mandatory
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_PUSHBACK) {
+					fGotoLabelOnPushback = (String) parameter.getValue();
 				}
 			}
 		}
@@ -100,14 +96,14 @@ public class StepBlockBallAndChain extends AbstractStep {
 			game.getFieldModel().setPlayerState(game.getActingPlayer().getPlayer(), playerState.changeBase(PlayerState.FALLING));
 
 			if (fOldDefenderState.getBase() == PlayerState.PRONE || fOldDefenderState.getBase() == PlayerState.STUNNED) {
-				game.getFieldModel().setPlayerState(game.getDefender(), playerState.changeBase(PlayerState.FALLING));
+				game.getFieldModel().setPlayerState(game.getDefender(), playerState.changeBase(PlayerState.HIT_ON_GROUND));
 			}
 
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
 		} else if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly) && (fOldDefenderState != null)
 			&& fOldDefenderState.isProne()) {
 			publishParameters(UtilBlockSequence.initPushback(this));
-			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.FALLING));
+			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.HIT_ON_GROUND));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);

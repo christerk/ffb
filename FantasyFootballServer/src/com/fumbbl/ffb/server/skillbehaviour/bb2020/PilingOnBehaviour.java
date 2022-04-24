@@ -70,6 +70,9 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 				if ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && defenderState.isRooted()) {
 					defenderState = defenderState.changeRooted(false);
 				}
+				if ((defenderState != null) && (defenderState.getBase() == PlayerState.HIT_ON_GROUND)) {
+					defenderState = defenderState.changeBase(PlayerState.FALLING);
+				}
 				if (((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING)
 						&& (defenderCoordinate != null)) || (state.usingPilingOn != null)) {
 					if (state.usingPilingOn != null) {
@@ -103,7 +106,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						}
 					} else {
 
-						InjuryTypeBlock.Mode mode = attackerState.getBase() == PlayerState.FALLING ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.REGULAR;
+						InjuryTypeBlock.Mode mode = (attackerState != null && attackerState.getBase() == PlayerState.FALLING) ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.REGULAR;
 
 						InjuryTypeServer<?> injuryType = new InjuryTypeBlock(mode, false);
 
@@ -126,7 +129,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 							}
 						}
 						boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
-						if ((attackerState.getBase() != PlayerState.FALLING)
+						if (attackerState != null && (attackerState.getBase() != PlayerState.FALLING)
 								&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPileOnOpponent)
 								&& (!usesATeamReroll
 										|| UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), actingPlayer.getPlayer()))

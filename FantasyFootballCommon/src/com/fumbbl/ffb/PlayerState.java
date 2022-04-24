@@ -23,6 +23,7 @@ public class PlayerState {
     public static final int EXHAUSTED = 0x0000e;
     public static final int BEING_DRAGGED = 0x0000f;
     public static final int PICKED_UP = 0x00010;
+    public static final int HIT_ON_GROUND = 0x00011;
     public static final int HIT_BY_FIREBALL = 0x00011; // used for bloodSpots only
     public static final int HIT_BY_LIGHTNING = 0x00012; // used for bloodSpots only
     public static final int HIT_BY_BOMB = 0x00013; // used for bloodSpots only
@@ -55,6 +56,7 @@ public class PlayerState {
         0xfff00, // EXHAUSTED
         0xfff00, // BEING_DRAGGED
         0xfff00, // PICKED_UP
+        0xfff00, // HIT_ON_GROUND
     };
 
     public static List<Integer> REMOVED_FROM_PLAY = new ArrayList<Integer>() {{
@@ -189,7 +191,7 @@ public class PlayerState {
 
     public boolean canBeSetUp() {
         return ((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase()) || (STUNNED == getBase())
-            || (RESERVE == getBase()) || (FALLING == getBase()) || (BLOCKED == getBase()));
+            || (RESERVE == getBase()) || (FALLING == getBase()) || (HIT_ON_GROUND == getBase()) || (BLOCKED == getBase()));
     }
 
     public boolean hasTacklezones() {
@@ -265,6 +267,8 @@ public class PlayerState {
                 return "is being dragged";
             case PICKED_UP:
                 return "has been picked up";
+            case HIT_ON_GROUND:
+                return "was hit while on the ground";
             default:
                 return null;
         }
@@ -306,6 +310,8 @@ public class PlayerState {
                 return "Being Dragged";
             case PICKED_UP:
                 return "Picked Up";
+            case HIT_ON_GROUND:
+                return "Hit on the ground";
             default:
                 return null;
         }

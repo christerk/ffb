@@ -200,6 +200,7 @@ public class PlayerIconFactory {
 					break;
 				case PlayerState.BLOCKED:
 				case PlayerState.FALLING:
+				case PlayerState.HIT_ON_GROUND:
 					if (game.isHomePlaying()) {
 						decorationProperty2 = IIconProperty.DECORATION_BLOCK_HOME;
 					} else {

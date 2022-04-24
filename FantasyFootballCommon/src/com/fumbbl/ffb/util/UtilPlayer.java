@@ -283,6 +283,7 @@ public class UtilPlayer {
 				case PlayerState.BLOCKED:
 				case PlayerState.MOVING:
 				case PlayerState.FALLING:
+				case PlayerState.HIT_ON_GROUND:
 					newPlayerState = oldPlayerState.changeBase(PlayerState.STANDING).changeActive(true);
 					break;
 				case PlayerState.PRONE:

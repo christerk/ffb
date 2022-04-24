@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("Potential fix for skipped turns")
 			.addImprovement("Combined icons for rooted with confused/gazed")
 			.addBugfix("Selecting a player on kick-off return sequence forced at least one movement square")
+			.addBugfix("B&C did uproot prone or stunned players when hitting them")
 		);
 
 		versions.add(new VersionChangeList("2.8.0")
