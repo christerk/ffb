@@ -96,7 +96,7 @@ public class StepBlockBallAndChain extends AbstractStep {
 			game.getFieldModel().setPlayerState(game.getActingPlayer().getPlayer(), playerState.changeBase(PlayerState.FALLING));
 
 			if (fOldDefenderState.getBase() == PlayerState.PRONE || fOldDefenderState.getBase() == PlayerState.STUNNED) {
-				game.getFieldModel().setPlayerState(game.getDefender(), playerState.changeBase(PlayerState.HIT_ON_GROUND));
+				game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.HIT_ON_GROUND));
 			}
 
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
