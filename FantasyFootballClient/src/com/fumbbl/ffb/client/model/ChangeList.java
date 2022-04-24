@@ -15,6 +15,7 @@ public class ChangeList {
 			.addImprovement("Combined icons for rooted with confused/gazed")
 			.addBugfix("Selecting a player on kick-off return sequence forced at least one movement square")
 			.addBugfix("B&C did uproot prone or stunned players when hitting them")
+			.addBugfix("Riotous Rookies could be healed by team apo despite being Journeymen")
 		);
 
 		versions.add(new VersionChangeList("2.8.0")

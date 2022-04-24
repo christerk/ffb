@@ -851,6 +851,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 		return playerStatus == PlayerStatus.JOURNEYMAN;
 	}
 
+	public void setPlayerStatus(PlayerStatus playerStatus) {
+		this.playerStatus = playerStatus;
+	}
+
 	@Override
 	public boolean isUsed(Skill skill) {
 		return usedSkills.contains(skill);
