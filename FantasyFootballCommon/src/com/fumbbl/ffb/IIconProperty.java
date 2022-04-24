@@ -21,6 +21,8 @@ public interface IIconProperty {
 	String DECORATION_BLOCK_HOME = "decoration.block.home";
 	String DECORATION_BLOCK_AWAY = "decoration.block.away";
 	String DECORATION_ROOTED = "decoration.rooted";
+	String DECORATION_ROOTED_CONFUSED = "decoration.rooted.confused";
+	String DECORATION_ROOTED_HYPNOTIZED = "decoration.rooted.hypnotized";
 	String DECORATION_BLOOD_LUST = "decoration.bloodlust";
 	String DECORATION_BOMB = "decoration.bomb";
 	String DECORATION_BOMB_SELECTED = "decoration.bomb.selected";
