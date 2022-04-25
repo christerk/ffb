@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("B&C did uproot prone or stunned players when hitting them")
 			.addBugfix("Riotous Rookies could be healed by team apo despite being Journeymen")
 			.addBugfix("FA did not trigger on second frenzy block during blitz action")
+			.addImprovement("Report touchback during kick-off")
 		);
 
 		versions.add(new VersionChangeList("2.8.0")
