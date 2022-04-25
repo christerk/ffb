@@ -37,7 +37,7 @@ public class ReportKickoffOfficiousRef implements IReport {
 	}
 
 	public ReportId getId() {
-		return ReportId.KICKOFF_OFFICIOUIS_REF;
+		return ReportId.KICKOFF_OFFICIOUS_REF;
 	}
 
 	public int getRollHome() {

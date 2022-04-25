@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffOfficiousRef;
 
-@ReportMessageType(ReportId.KICKOFF_OFFICIOUIS_REF)
+@ReportMessageType(ReportId.KICKOFF_OFFICIOUS_REF)
 @RulesCollection(Rules.BB2020)
 public class KickoffOfficiousRefMessage extends ReportMessageBase<ReportKickoffOfficiousRef> {
 
