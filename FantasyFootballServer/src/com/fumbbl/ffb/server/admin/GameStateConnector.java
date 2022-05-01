@@ -89,7 +89,7 @@ public class GameStateConnector {
 				String servletResponse = UtilServerHttpClient.post(url, new File(args[1]));
 				System.out.println(servletResponse);
 			} else if (GameStateServlet.RESULT.equals(args[0])) {
-				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_GET),
+				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_RESULT),
 					response, args[1], args[2]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
