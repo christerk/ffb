@@ -240,10 +240,10 @@ public class StepPass extends AbstractStepWithReRoll {
 						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll, modificationSkill),
 						actingTeam.hasPlayer(game.getThrower()));
 				} else {
-					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getActingPlayer(), ReRolledActions.PASS,
-						minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill)) {
-						doNextStep = false;
-					}
+						if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
+							minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill, null)) {
+							doNextStep = false;
+						}
 				}
 			} else if (usingModifyingSkill == null && showUseModifyingSkillDialog(mechanic, passingDistance, passModifiers, isBomb)) {
 				doNextStep = false;
