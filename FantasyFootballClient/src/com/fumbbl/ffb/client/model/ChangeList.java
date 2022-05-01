@@ -20,6 +20,7 @@ public class ChangeList {
 			.addImprovement("Report touchback during kick-off")
 			.addBugfix("Synchronize mouse click handling during setup")
 			.addBugfix("Wrong team got asked to use pass re-roll if player with pass skill did blitz player with dump-off but no pass skill")
+			.addImprovement("Added api call to game state connector to access game results")
 		);
 
 		versions.add(new VersionChangeList("2.8.0")

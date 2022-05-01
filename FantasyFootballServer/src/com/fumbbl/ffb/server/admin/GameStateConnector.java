@@ -25,6 +25,8 @@ public class GameStateConnector {
 		"java com.fumbbl.ffb.server.admin.GameStateConnector get <gameId> <fromDb> <includeLog>\n" +
 		"  [fromDb being true, false or auto, where auto tries in memory first and falls back to db if needed]\n" +
 		"  [includeLog being true, false or a positive integer, where an integer limits the log the last n entries, 0 has the same effect as true]\n" +
+		"java com.fumbbl.ffb.server.admin.GameStateConnector result <gameId> <fromDb>\n" +
+		"  [fromDb being true, false or auto, where auto tries in memory first and falls back to db if needed]\n" +
 		"java com.fumbbl.ffb.server.admin.GameStateConnector set <file>\n" +
 		"  [file being an unzipped json file containing the new gameState]\n";
 
@@ -54,7 +56,7 @@ public class GameStateConnector {
 
 			String challenge = null;
 			try (BufferedReader xmlReader = new BufferedReader(new StringReader(adminChallengeXml))) {
-				String line = null;
+				String line;
 				while ((line = xmlReader.readLine()) != null) {
 					Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
 					if (challengeMatcher.find()) {
@@ -85,6 +87,12 @@ public class GameStateConnector {
 					response);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.post(url, new File(args[1]));
+				System.out.println(servletResponse);
+			} else if (GameStateServlet.RESULT.equals(args[0])) {
+				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_GET),
+					response, args[1], args[2]);
+				System.out.println(url);
+				String servletResponse = UtilServerHttpClient.fetchPage(url);
 				System.out.println(servletResponse);
 			}
 
