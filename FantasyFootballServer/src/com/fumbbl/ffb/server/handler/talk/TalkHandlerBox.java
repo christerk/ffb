@@ -28,7 +28,7 @@ public class TalkHandlerBox extends TalkHandler {
 		ServerCommunication communication = server.getCommunication();
 
 		RollMechanic mechanic = ((RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
-		for (Player<?> player : findPlayersInCommand(team, commands, 2)) {
+		for (Player<?> player : findPlayersInCommand(team, commands)) {
 			if ("rsv".equalsIgnoreCase(commands[1])) {
 				putPlayerIntoBox(gameState, communication, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);
 			} else if ("ko".equalsIgnoreCase(commands[1])) {

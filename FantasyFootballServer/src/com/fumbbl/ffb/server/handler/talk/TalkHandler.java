@@ -21,11 +21,11 @@ import java.util.Set;
 
 public abstract class TalkHandler {
 
-	private final String prefix;
+	private final String command;
 	private final int minimumCommandParts;
 
-	public TalkHandler(String prefix, int minimumCommandParts) {
-		this.prefix = prefix;
+	public TalkHandler(String command, int minimumCommandParts) {
+		this.command = command;
 		this.minimumCommandParts = minimumCommandParts;
 	}
 
@@ -48,13 +48,13 @@ public abstract class TalkHandler {
 
 	public abstract void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team);
 
-	protected Player<?>[] findPlayersInCommand(Team pTeam, String[] pCommands, int pIndex) {
+	protected Player<?>[] findPlayersInCommand(Team pTeam, String[] pCommands) {
 		Set<Player<?>> players = new HashSet<>();
-		if (ArrayTool.isProvided(pCommands) && (pIndex < pCommands.length)) {
-			if ("all".equalsIgnoreCase(pCommands[pIndex])) {
+		if (ArrayTool.isProvided(pCommands) && (minimumCommandParts < pCommands.length)) {
+			if ("all".equalsIgnoreCase(pCommands[minimumCommandParts])) {
 				Collections.addAll(players, pTeam.getPlayers());
 			} else {
-				for (int i = pIndex; i < pCommands.length; i++) {
+				for (int i = minimumCommandParts; i < pCommands.length; i++) {
 					try {
 						Player<?> player = pTeam.getPlayerByNr(Integer.parseInt(pCommands[i]));
 						if (player != null) {
