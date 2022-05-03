@@ -18,7 +18,7 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
 public class TalkHandlerBox extends TalkHandler {
 
 	public TalkHandlerBox() {
-		super("/box", 2);
+		super("/box", 2, TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_GAME);
 	}
 
 	@Override
