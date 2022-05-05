@@ -14,6 +14,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.util.UtilServerGame;
+import org.eclipse.jetty.websocket.api.Session;
 
 public class TalkHandlerBox extends TalkHandler {
 
@@ -22,7 +23,7 @@ public class TalkHandlerBox extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team) {
+	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 
 		Game game = gameState.getGame();
 		ServerCommunication communication = server.getCommunication();

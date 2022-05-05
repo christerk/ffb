@@ -15,22 +15,29 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class TalkHandler {
 
-	private final String command;
-	private final int minimumCommandParts;
+	private final Set<String> commands;
+	private final int commandPartsThreshold;
 	private final Set<TalkRequirements.Privilege> requiresOnePrivilegeOf = new HashSet<>();
 	private final TalkRequirements.Client requiredClientMode;
 	private final TalkRequirements.Environment requiredEnvironment;
 
-	public TalkHandler(String command, int minimumCommandParts, TalkRequirements.Client requiredClientMode, TalkRequirements.Environment requiredEnvironment, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
-		this.command = command;
-		this.minimumCommandParts = minimumCommandParts;
+	public TalkHandler(String command, int commandPartsThreshold, TalkRequirements.Client requiredClientMode, TalkRequirements.Environment requiredEnvironment, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		this(Collections.singleton(command), commandPartsThreshold, requiredClientMode, requiredEnvironment, requiresOnePrivilegeOf);
+	}
+
+	public TalkHandler(Set<String> commands, int commandPartsThreshold, TalkRequirements.Client requiredClientMode, TalkRequirements.Environment requiredEnvironment, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		this.commands = commands;
+		this.commandPartsThreshold = commandPartsThreshold;
 		this.requiredClientMode = requiredClientMode;
 		this.requiredEnvironment = requiredEnvironment;
 		if (requiresOnePrivilegeOf != null) {
@@ -46,7 +53,7 @@ public abstract class TalkHandler {
 		Game game = gameState.getGame();
 		String talk = talkCommand.getTalk();
 		String[] commands = talk.split(" +");
-		if (commands.length <= minimumCommandParts) {
+		if (commands.length <= commandPartsThreshold) {
 			return false;
 		}
 
@@ -57,7 +64,7 @@ public abstract class TalkHandler {
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 			: game.getTeamAway();
 
-		handle(server, gameState, commands, team);
+		handle(server, gameState, commands, team, session);
 
 		return true;
 	}
@@ -67,21 +74,21 @@ public abstract class TalkHandler {
 		long gameId = sessionManager.getGameIdForSession(session);
 		GameState gameState = server.getGameCache().getGameStateById(gameId);
 
-		return gameState != null && this.command.equals(command)
+		return gameState != null && this.commands.contains(command)
 			&& requiredClientMode.isMet(sessionManager, gameId, session)
 			&& requiredEnvironment.isMet(server, gameState)
 			&& (requiresOnePrivilegeOf.isEmpty() || requiresOnePrivilegeOf.stream().anyMatch(requirement -> requirement.isMet(sessionManager, session)));
 	}
 
-	public abstract void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team);
+	public abstract void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session);
 
 	protected Player<?>[] findPlayersInCommand(Team pTeam, String[] pCommands) {
 		Set<Player<?>> players = new HashSet<>();
-		if (ArrayTool.isProvided(pCommands) && (minimumCommandParts < pCommands.length)) {
-			if ("all".equalsIgnoreCase(pCommands[minimumCommandParts])) {
+		if (ArrayTool.isProvided(pCommands) && (commandPartsThreshold < pCommands.length)) {
+			if ("all".equalsIgnoreCase(pCommands[commandPartsThreshold])) {
 				Collections.addAll(players, pTeam.getPlayers());
 			} else {
-				for (int i = minimumCommandParts; i < pCommands.length; i++) {
+				for (int i = commandPartsThreshold; i < pCommands.length; i++) {
 					try {
 						Player<?> player = pTeam.getPlayerByNr(Integer.parseInt(pCommands[i]));
 						if (player != null) {
@@ -106,4 +113,52 @@ public abstract class TalkHandler {
 		communication.sendPlayerTalk(pGameState, null, "Player " + pPlayer.getName() + " moved into box " + pBoxName + ".");
 	}
 
+	protected void handleSpecs(FantasyFootballServer server, GameState gameState, Session session, boolean issuedBySpec) {
+		String[] spectators = findSpectators(server, gameState);
+		Arrays.sort(spectators, new SpecsComparator());
+		String[] info;
+		StringBuilder spectatorMessage = new StringBuilder();
+		if (spectators.length == 0) {
+			info = new String[1];
+			info[0] = "There are no spectators.";
+		} else if (issuedBySpec && spectators.length == 1) {
+			info = new String[1];
+			info[0] = "You are the only spectator of this game.";
+		} else {
+			info = new String[spectators.length + 1];
+			spectatorMessage.append(spectators.length).append(" spectators are watching this game:");
+			info[0] = spectatorMessage.toString();
+			System.arraycopy(spectators, 0, info, 1, spectators.length);
+		}
+		server.getCommunication().sendTalk(session, null, info);
+	}
+
+	private String[] findSpectators(FantasyFootballServer server, GameState gameState) {
+		List<String> spectatorList = new ArrayList<>();
+		SessionManager sessionManager = server.getSessionManager();
+		Session[] sessions = sessionManager.getSessionsOfSpectators(gameState.getId());
+		for (Session session : sessions) {
+			String spectator = sessionManager.getCoachForSession(session);
+			if (spectator != null && !sessionManager.isSessionAdmin(session)) {
+				spectatorList.add(spectator);
+			}
+		}
+		String[] spectatorArray = spectatorList.toArray(new String[0]);
+		Arrays.sort(spectatorArray);
+		return spectatorArray;
+	}
+
+	private static class SpecsComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			if (o1 == null) {
+				return o2 == null ? 0 : -1;
+			} else if (o2 == null) {
+				return 1;
+			}
+
+			return o1.compareToIgnoreCase(o2);
+		}
+	}
 }
