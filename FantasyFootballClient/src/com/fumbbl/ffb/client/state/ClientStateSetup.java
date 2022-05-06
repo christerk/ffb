@@ -54,36 +54,41 @@ public class ClientStateSetup extends ClientState {
 	}
 
 	public void mousePressed(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() != MouseEvent.NOBUTTON || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
-			return;
+		synchronized (getClient()) {
+			if (getClient().getCurrentMouseButton() != MouseEvent.NOBUTTON || pMouseEvent.getID() == MouseEvent.MOUSE_WHEEL) {
+				return;
+			}
+			getClient().setCurrentMouseButton(pMouseEvent.getButton());
+			UtilClientPlayerDrag.mousePressed(getClient(), pMouseEvent, false);
 		}
-		getClient().setCurrentMouseButton(pMouseEvent.getButton());
-		UtilClientPlayerDrag.mousePressed(getClient(), pMouseEvent, false);
-
 	}
 
 	public void mouseDragged(MouseEvent pMouseEvent) {
-		if (getClient().getCurrentMouseButton() != MouseEvent.BUTTON1) {
-			return;
+		synchronized (getClient()) {
+			if (getClient().getCurrentMouseButton() != MouseEvent.BUTTON1) {
+				return;
+			}
+			UtilClientPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
 		}
-		UtilClientPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
+		synchronized (getClient()) {
 
-		// SwingUtilities#isRightMouseButton would return true even if both buttons are pressed
-		if (pMouseEvent.getButton() == MouseEvent.BUTTON3 || pMouseEvent.isShiftDown()) {
-			super.mouseReleased(pMouseEvent);
-		} else {
-			if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
-				System.out.println("ClientStateSetup: Release event ignored");
+			// SwingUtilities#isRightMouseButton would return true even if both buttons are pressed
+			if (pMouseEvent.getButton() == MouseEvent.BUTTON3 || pMouseEvent.isShiftDown()) {
+				super.mouseReleased(pMouseEvent);
+			} else {
+				if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
+					System.out.println("ClientStateSetup: Release event ignored");
+					System.out.println("Event: " + pMouseEvent);
+					return;
+				}
+				System.out.println("ClientStateSetup: Release event handled");
 				System.out.println("Event: " + pMouseEvent);
-				return;
+				getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
+				UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
 			}
-			System.out.println("ClientStateSetup: Release event handled");
-			System.out.println("Event: " + pMouseEvent);
-			getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
-			UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
 		}
 	}
 

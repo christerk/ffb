@@ -11,13 +11,13 @@ import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.server.request.fumbbl.FumbblResult;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.UtilXml;
 import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.SAXException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +38,7 @@ public class GameStateServlet extends HttpServlet {
 	public static final String GET = "get";
 	public static final String SET = "set";
 	public static final String AUTO = "auto";
+	public static final String RESULT = "result";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
@@ -63,7 +64,7 @@ public class GameStateServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest pRequest, HttpServletResponse pResponse) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
 		boolean isOk;
 
 		String command = pRequest.getPathInfo();
@@ -115,6 +116,8 @@ public class GameStateServlet extends HttpServlet {
 					response = handleBehaviours(parameters, pResponse);
 				} else if (GET.equals(command)) {
 					response = handleGet(parameters, pResponse);
+				} else if (RESULT.equals(command)) {
+					response = handleResult(parameters, pResponse);
 				} else {
 					JsonObject someObject = new JsonObject();
 					someObject.add("message", "method '" + command + "' not found");
@@ -129,22 +132,30 @@ public class GameStateServlet extends HttpServlet {
 
 	}
 
-	private String handleGet(Map<String, String[]> pParameters, HttpServletResponse pResponse) {
+	private String handleResult(Map<String, String[]> pParameters, HttpServletResponse pResponse) {
+		GameState gameState = getGameState(pParameters);
+
+		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
+		long gameId = parseGameId(gameIdString);
+
+		JsonObject jsonObject = new JsonObject();
+
+		if (gameState == null) {
+			pResponse.setStatus(404);
+			return jsonObject.add("message", "Game '" + gameId + "' not found").toString();
+		} else {
+			return new FumbblResult(gameState.getGame()).toXml(true);
+		}
+
+	}
+
+	private GameState getGameState(Map<String, String[]> pParameters) {
 		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
 		long gameId = parseGameId(gameIdString);
 		String fromDbString = ArrayTool.firstElement(pParameters.get(_PARAMETER_FROM_DB));
 		Boolean fromDb = null;
 		if (StringTool.isProvided(fromDbString) && !AUTO.equals(fromDbString)) {
 			fromDb = Boolean.parseBoolean(fromDbString);
-		}
-
-		String includeString = ArrayTool.firstElement(pParameters.get(_PARAMETER_INCLUDE_LOG));
-		boolean include = true;
-		int logLimit = 0;
-		if (includeString != null && StringTool.isNumber(includeString)) {
-			logLimit = Integer.parseInt(includeString);
-		} else {
-			include = Boolean.parseBoolean(includeString);
 		}
 
 		GameCache gameCache = getServer().getGameCache();
@@ -156,6 +167,24 @@ public class GameStateServlet extends HttpServlet {
 		if (gameState == null && (fromDb == null || fromDb)) {
 			gameState = gameCache.queryFromDb(gameId);
 		}
+		return gameState;
+	}
+
+	private String handleGet(Map<String, String[]> pParameters, HttpServletResponse pResponse) {
+		GameState gameState = getGameState(pParameters);
+
+		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
+		long gameId = parseGameId(gameIdString);
+
+		String includeString = ArrayTool.firstElement(pParameters.get(_PARAMETER_INCLUDE_LOG));
+		boolean include = true;
+		int logLimit = 0;
+		if (includeString != null && StringTool.isNumber(includeString)) {
+			logLimit = Integer.parseInt(includeString);
+		} else {
+			include = Boolean.parseBoolean(includeString);
+		}
+
 		JsonObject jsonObject = new JsonObject();
 
 		if (gameState == null) {
