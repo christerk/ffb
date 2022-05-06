@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.handler.talk;
 
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
@@ -28,6 +29,10 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class TalkHandler implements IKeyedItem {
+
+	private static final String HOME = "home";
+	private static final String AWAY = "away";
+	private static final String TEAM_DELIM = "_";
 
 	private final Set<String> commands;
 	private final int commandPartsThreshold;
@@ -70,12 +75,47 @@ public abstract class TalkHandler implements IKeyedItem {
 			return false;
 		}
 
-		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
-			: game.getTeamAway();
+		try {
+			Team team = shouldGetTeamFromCommand() ? getTeamFromCommand(commands[0], game) : getTeamFromSession(session, sessionManager, game);
 
-		handle(server, gameState, commands, team, session);
+			handle(server, gameState, commands, team, session);
+
+		} catch (FantasyFootballException e) {
+			server.getDebugLog().log(gameId, e);
+			return false;
+		}
 
 		return true;
+	}
+
+	protected boolean shouldGetTeamFromCommand() {
+		return false;
+	}
+
+	private Team getTeamFromCommand(String command, Game game) throws FantasyFootballException {
+		if (!StringTool.isProvided(command)) {
+			throw new FantasyFootballException("No command given");
+		}
+
+		String[] commandParts = command.split(TEAM_DELIM);
+
+		if (commandParts.length != 2) {
+			throw new FantasyFootballException("Unsupported format for command: " + command);
+		}
+
+		switch (commandParts[1].toLowerCase()) {
+			case HOME:
+				return game.getTeamHome();
+			case AWAY:
+				return game.getTeamAway();
+			default:
+				throw new FantasyFootballException("Invalid team: " + commandParts[1]);
+		}
+	}
+
+	private Team getTeamFromSession(Session session, SessionManager sessionManager, Game game) {
+		return (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
+			: game.getTeamAway();
 	}
 
 	private boolean handles(FantasyFootballServer server, String command, Session session) {
