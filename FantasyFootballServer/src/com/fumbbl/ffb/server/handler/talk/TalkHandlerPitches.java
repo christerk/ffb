@@ -15,7 +15,7 @@ public class TalkHandlerPitches extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		List<String> pitchNames = new ArrayList<>();
 		for (String property : server.getProperties()) {
 			if (property.startsWith("pitch.")) {

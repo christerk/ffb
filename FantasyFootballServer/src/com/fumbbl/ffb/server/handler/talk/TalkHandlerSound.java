@@ -13,7 +13,7 @@ public class TalkHandlerSound extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		if (commands.length > 1) {
 			SoundId soundId = new SoundIdFactory().forName(commands[1]);
 			if (soundId == null) {

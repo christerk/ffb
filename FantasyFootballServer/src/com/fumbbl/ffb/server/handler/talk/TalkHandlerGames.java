@@ -14,7 +14,7 @@ public class TalkHandlerGames extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		String[] response = Arrays.stream(server.getGameCache().findActiveGames().getEntriesSorted())
 			.map(entry -> entry.getTeamHomeCoach() + " vs " + entry.getTeamAwayCoach()).toArray(String[]::new);
 

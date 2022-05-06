@@ -1,7 +1,9 @@
 package com.fumbbl.ffb.server.handler.talk;
 
+import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
@@ -9,9 +11,11 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.commands.ClientCommandTalk;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -23,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class TalkHandler {
+public abstract class TalkHandler implements IKeyedItem {
 
 	private final Set<String> commands;
 	private final int commandPartsThreshold;
@@ -43,6 +47,11 @@ public abstract class TalkHandler {
 		if (requiresOnePrivilegeOf != null) {
 			this.requiresOnePrivilegeOf.addAll(Arrays.asList(requiresOnePrivilegeOf));
 		}
+	}
+
+	@Override
+	public String getKey() {
+		return getClass().getSimpleName();
 	}
 
 	public boolean handle(FantasyFootballServer server, ClientCommandTalk talkCommand, Session session) {
@@ -80,7 +89,7 @@ public abstract class TalkHandler {
 			&& (requiresOnePrivilegeOf.isEmpty() || requiresOnePrivilegeOf.stream().anyMatch(requirement -> requirement.isMet(sessionManager, session)));
 	}
 
-	public abstract void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session);
+	abstract void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session);
 
 	protected Player<?>[] findPlayersInCommand(Team pTeam, String[] pCommands) {
 		Set<Player<?>> players = new HashSet<>();
@@ -131,6 +140,21 @@ public abstract class TalkHandler {
 			System.arraycopy(spectators, 0, info, 1, spectators.length);
 		}
 		server.getCommunication().sendTalk(session, null, info);
+	}
+
+	protected void playSoundAfterCooldown(FantasyFootballServer server, GameState pGameState, String pCoach, SoundId pSound) {
+		if ((pGameState != null) && (pCoach != null) && (pSound != null)) {
+			if (StringTool.isProvided(server.getProperty(IServerProperty.SERVER_SPECTATOR_COOLDOWN))) {
+				long spectatorCooldown = Long.parseLong(server.getProperty(IServerProperty.SERVER_SPECTATOR_COOLDOWN));
+				long currentTime = System.currentTimeMillis();
+				if (currentTime > (pGameState.getSpectatorCooldownTime(pCoach) + spectatorCooldown)) {
+					server.getCommunication().sendSound(pGameState, pSound);
+					pGameState.putSpectatorCooldownTime(pCoach, currentTime);
+				}
+			} else {
+				server.getCommunication().sendSound(pGameState, pSound);
+			}
+		}
 	}
 
 	private String[] findSpectators(FantasyFootballServer server, GameState gameState) {

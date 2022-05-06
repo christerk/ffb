@@ -17,7 +17,7 @@ public class TalkHandlerRoll extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		Game game = gameState.getGame();
 		if (commands.length > 1) {
 			if ("clear".equals(commands[1])) {

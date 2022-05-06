@@ -14,7 +14,7 @@ public class TalkHandlerMessage extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		String message = String.join(" ", commands);
 		if (message.length() > MESSAGE_COMMAND.length()) {
 			server.getCommunication().sendAdminMessage(new String[]{message.substring(MESSAGE_COMMAND.length() + 1).trim()});

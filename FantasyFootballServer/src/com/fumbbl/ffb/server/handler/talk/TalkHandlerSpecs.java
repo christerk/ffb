@@ -17,7 +17,7 @@ public class TalkHandlerSpecs extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		long gameId = gameState.getId();
 		SessionManager sessionManager = server.getSessionManager();
 		boolean issuedBySpec = (sessionManager.getSessionOfHomeCoach(gameId) != session) && (sessionManager.getSessionOfAwayCoach(gameId) != session);

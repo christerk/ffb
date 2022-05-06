@@ -16,7 +16,7 @@ public class TalkHandlerOption extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 
 		GameOptionId optionId = new GameOptionIdFactory().forName(commands[1]);
 		if (optionId == null) {

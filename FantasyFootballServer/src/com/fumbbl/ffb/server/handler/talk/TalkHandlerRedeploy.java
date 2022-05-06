@@ -24,7 +24,7 @@ public class TalkHandlerRedeploy extends TalkHandler {
 
 	@Override
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		String branch = server.getProperty(IServerProperty.SERVER_REDEPLOY_DEFAULT_BRANCH);
 		if (commands.length > 1 && BRANCH_PATTERN.matcher(commands[1]).matches()) {
 			branch = commands[1];

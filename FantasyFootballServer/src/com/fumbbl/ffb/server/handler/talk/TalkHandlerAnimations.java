@@ -16,7 +16,7 @@ public class TalkHandlerAnimations extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		List<String> animationNames = new ArrayList<>();
 		for (AnimationType animationType : AnimationType.values()) {
 			animationNames.add(animationType.getName());

@@ -16,7 +16,7 @@ public class TalkHandlerProne extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		Game game = gameState.getGame();
 
 		for (Player<?> player : findPlayersInCommand(team, commands)) {

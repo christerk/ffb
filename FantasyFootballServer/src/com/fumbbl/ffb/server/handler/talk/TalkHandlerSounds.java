@@ -16,7 +16,7 @@ public class TalkHandlerSounds extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		List<String> soundNames = new ArrayList<>();
 		for (SoundId soundId : SoundId.values()) {
 			soundNames.add(soundId.getName());

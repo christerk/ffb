@@ -20,7 +20,7 @@ public class TalkHandlerAnimation extends TalkHandler {
 	}
 
 	@Override
-	public void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
+	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 
 		AnimationType animationType = gameState.getGame().getRules().<AnimationTypeFactory>getFactory(FactoryType.Factory.ANIMATION_TYPE).forName(commands[1]);
 		if ((animationType == null) || (animationType == AnimationType.PASS) || (animationType == AnimationType.KICK)
