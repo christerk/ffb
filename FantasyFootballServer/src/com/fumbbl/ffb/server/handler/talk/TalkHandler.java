@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.server.handler.talk;
 
-import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
@@ -30,28 +29,35 @@ import java.util.Set;
 
 public abstract class TalkHandler implements IKeyedItem {
 
-	private static final String HOME = "home";
-	private static final String AWAY = "away";
-	private static final String TEAM_DELIM = "_";
-
 	private final Set<String> commands;
 	private final int commandPartsThreshold;
 	private final Set<TalkRequirements.Privilege> requiresOnePrivilegeOf = new HashSet<>();
 	private final TalkRequirements.Client requiredClientMode;
 	private final TalkRequirements.Environment requiredEnvironment;
 
+	private final CommandAdapter commandAdapter;
+
 	public TalkHandler(String command, int commandPartsThreshold, TalkRequirements.Client requiredClientMode, TalkRequirements.Environment requiredEnvironment, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
 		this(Collections.singleton(command), commandPartsThreshold, requiredClientMode, requiredEnvironment, requiresOnePrivilegeOf);
 	}
 
 	public TalkHandler(Set<String> commands, int commandPartsThreshold, TalkRequirements.Client requiredClientMode, TalkRequirements.Environment requiredEnvironment, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
-		this.commands = commands;
+		this(commands, commandPartsThreshold, new IdentityCommandAdapter(), requiredClientMode, requiredEnvironment, requiresOnePrivilegeOf);
+	}
+
+	public TalkHandler(String command, int commandPartsThreshold, CommandAdapter commandAdapter, TalkRequirements.Client requiredClientMode, TalkRequirements.Environment requiredEnvironment, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		this(Collections.singleton(command), commandPartsThreshold, commandAdapter, requiredClientMode, requiredEnvironment, requiresOnePrivilegeOf);
+	}
+
+	public TalkHandler(Set<String> commands, int commandPartsThreshold, CommandAdapter commandAdapter, TalkRequirements.Client requiredClientMode, TalkRequirements.Environment requiredEnvironment, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		this.commands = commandAdapter.decorateCommands(commands);
 		this.commandPartsThreshold = commandPartsThreshold;
 		this.requiredClientMode = requiredClientMode;
 		this.requiredEnvironment = requiredEnvironment;
 		if (requiresOnePrivilegeOf != null) {
 			this.requiresOnePrivilegeOf.addAll(Arrays.asList(requiresOnePrivilegeOf));
 		}
+		this.commandAdapter = commandAdapter;
 	}
 
 	@Override
@@ -76,11 +82,11 @@ public abstract class TalkHandler implements IKeyedItem {
 		}
 
 		try {
-			Team team = shouldGetTeamFromCommand() ? getTeamFromCommand(commands[0], game) : getTeamFromSession(session, sessionManager, game);
+			Team team = commandAdapter.determineTeam(game, sessionManager, session, commands);
 
 			handle(server, gameState, commands, team, session);
 
-		} catch (FantasyFootballException e) {
+		} catch (Exception e) {
 			server.getDebugLog().log(gameId, e);
 			return false;
 		}
@@ -88,35 +94,6 @@ public abstract class TalkHandler implements IKeyedItem {
 		return true;
 	}
 
-	protected boolean shouldGetTeamFromCommand() {
-		return false;
-	}
-
-	private Team getTeamFromCommand(String command, Game game) throws FantasyFootballException {
-		if (!StringTool.isProvided(command)) {
-			throw new FantasyFootballException("No command given");
-		}
-
-		String[] commandParts = command.split(TEAM_DELIM);
-
-		if (commandParts.length != 2) {
-			throw new FantasyFootballException("Unsupported format for command: " + command);
-		}
-
-		switch (commandParts[1].toLowerCase()) {
-			case HOME:
-				return game.getTeamHome();
-			case AWAY:
-				return game.getTeamAway();
-			default:
-				throw new FantasyFootballException("Invalid team: " + commandParts[1]);
-		}
-	}
-
-	private Team getTeamFromSession(Session session, SessionManager sessionManager, Game game) {
-		return (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
-			: game.getTeamAway();
-	}
 
 	private boolean handles(FantasyFootballServer server, String command, Session session) {
 		SessionManager sessionManager = server.getSessionManager();
