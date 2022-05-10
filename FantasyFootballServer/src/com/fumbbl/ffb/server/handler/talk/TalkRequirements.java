@@ -70,6 +70,13 @@ public class TalkRequirements {
 	}
 
 	public enum Privilege {
+
+		EDIT_STATE {
+			@Override
+			public boolean isMet(SessionManager sessionManager, Session session) {
+				return sessionManager.hasEditPrivilege(session);
+			}
+		},
 		STAFF {
 			@Override
 			public boolean isMet(SessionManager sessionManager, Session session) {

@@ -52,7 +52,12 @@ public class SessionManager {
 		return client != null && client.hasProperty("ADMIN");
 	}
 
-	private class JoinedClient {
+	public synchronized boolean hasEditPrivilege(Session pSession) {
+		JoinedClient client = fClientBySession.get(pSession);
+		return client != null && client.hasProperty("STATE_EDIT");
+	}
+
+	private static class JoinedClient {
 
 		private final long fGameId;
 		private final String fCoach;
