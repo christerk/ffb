@@ -12,9 +12,10 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import org.eclipse.jetty.websocket.api.Session;
 
-public class TalkHandlerInjury extends TalkHandler {
-	public TalkHandlerInjury() {
-		super("/injury", 2, TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_GAME);
+public abstract class TalkHandlerInjury extends TalkHandler {
+
+	public TalkHandlerInjury(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		super("/injury", 2, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 
 	@Override
@@ -41,6 +42,7 @@ public class TalkHandlerInjury extends TalkHandler {
 			}
 			if ((player instanceof RosterPlayer) && (lastingInjury != null)) {
 				((RosterPlayer) player).addLastingInjury(lastingInjury);
+				player.updatePosition(((RosterPlayer) player).getPosition(), true, game.getRules(), game.getId());
 				server.getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
 					game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
 				String info = "Player " + player.getName() + " suffers injury " + lastingInjury.getName() +

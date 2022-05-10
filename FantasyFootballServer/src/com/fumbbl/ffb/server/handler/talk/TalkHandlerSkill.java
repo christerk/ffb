@@ -9,12 +9,12 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import org.eclipse.jetty.websocket.api.Session;
 
-public class TalkHandlerSkill extends TalkHandler {
+public abstract class TalkHandlerSkill extends TalkHandler {
 	private static final String _ADD = "add";
 	private static final String _REMOVE = "remove";
 
-	public TalkHandlerSkill() {
-		super("/skill", 3, TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_GAME);
+	public TalkHandlerSkill(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		super("/skill", 3, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 
 	@Override

@@ -7,9 +7,9 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import org.eclipse.jetty.websocket.api.Session;
 
-public class TalkHandlerTurn extends TalkHandler {
-	public TalkHandlerTurn() {
-		super("/turn", 1, TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_GAME);
+public abstract class TalkHandlerTurn extends TalkHandler {
+	public TalkHandlerTurn(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		super("/turn", 1, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 
 	@Override

@@ -10,9 +10,10 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import org.eclipse.jetty.websocket.api.Session;
 
-public class TalkHandlerStun extends TalkHandler {
-	public TalkHandlerStun() {
-		super("/prone", 1, TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_GAME);
+public abstract class TalkHandlerStun extends TalkHandler {
+
+	public TalkHandlerStun(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+		super("/stun", 1, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 
 	@Override
