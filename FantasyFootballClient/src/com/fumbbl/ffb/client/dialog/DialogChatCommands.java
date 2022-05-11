@@ -68,216 +68,73 @@ public class DialogChatCommands extends Dialog {
 		html.append("<table border=\"0\" cellspacing=\"1\" width=\"100%\">\n");
 		html.append("<tr><td>").append(_FONT_OPEN);
 		html.append(
-				"All commands can be given in the chat input field.<br><i>Spectator sounds are played with a 10 sec. enforced &quot;cooldown&quot; time between sounds.</i>");
+			"All commands can be given in the chat input field.<br><i>Spectator sounds are played with a 10 sec. enforced &quot;cooldown&quot; time between sounds.</i>");
 		html.append(_FONT_CLOSE).append("</td></tr>\n");
 		html.append("</table>\n<br>\n");
 		html.append("<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n");
 		html.append("<tr>\n");
 		html.append("<td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Spectator Commands")
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/aah").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("aaahing spectators").append(_FONT_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/boo").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("booing spectators").append(_FONT_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/cheer").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("cheering spectators").append(_FONT_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/clap").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("clapping spectators").append(_FONT_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/crickets").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("the sound of crickets in the grass").append(_FONT_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/hurt").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("ouch").append(_FONT_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/laugh").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("laughing spectators").append(_FONT_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/ooh").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("ooohing spectators").append(_FONT_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/shock").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("shocked, gasping spectators").append(_FONT_CLOSE).append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/stomp").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("spectators stomping their feet").append(_FONT_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
-		html.append("<tr>\n");
-		html.append("<td>").append(_FONT_BOLD_OPEN).append("/specs").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("<td>").append(_FONT_OPEN).append("shows all logged in spectators by name - can also be used by ")
-				.append(_FONT_CLOSE).append(_FONT_BOLD_OPEN).append("playing coaches").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-		html.append("</tr>\n");
+		html.append(commandLine("/aah", "aaahing spectators"));
+		html.append(commandLine("/boo", "booing spectators"));
+		html.append(commandLine("/cheer", "cheering spectators"));
+		html.append(commandLine("/clap", "clapping spectators"));
+		html.append(commandLine("/crickets", "the sound of crickets in the grass"));
+		html.append(commandLine("/hurt", "ouch"));
+		html.append(commandLine("/laugh", "laughing spectators"));
+		html.append(commandLine("/ooh", "ooohing spectators"));
+		html.append(commandLine("/shock", "shocked, gasping spectators"));
+		html.append(commandLine("/stomp", "spectators stomping their feet"));
+		html.append(commandLine("/specs", "shows all logged in spectators by name - can also be used by playing coaches"));
 		html.append("</table>\n");
 
 		if (getClient().getGame().isTesting()) {
 			html.append("<br>\n<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n");
 			html.append("<tr>\n");
 			html.append("<td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Test Commands").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/animation &lt;name&gt &lt;x&gt; &lt;y&gt;")
-					.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("plays animation at the given coordinate.").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/animations").append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("lists all available animations.").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/box &lt;box&gt &lt;playerlist&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("puts players on your team into a box (rsv, ko, bh, si, rip, ban).")
-					.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/card &lt;add|remove&gt; &lt;shortCardName&gt;")
-					.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("adds or removes card with given name to/from your inducements.")
-					.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/gameid").append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("outputs the current game id.")
-					.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/injury &lt;injury&gt; &lt;playerlist&gt; ")
-					.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN)
-					.append("gives players on your team an injury of that type (ni, -ma, -av, -ag or -st).").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/option &lt;name&gt; &lt;value&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("sets option with given name to given value.").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/options").append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("lists all available options with their current value.")
-					.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/pitch &lt;name&gt;").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("changes the pitch (all weather conditions).").append(_FONT_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/pitches").append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("lists all available pitches.").append(_FONT_CLOSE)
-				.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prayer &lt;roll&gt; [&lt;playerNr|skillName&gt;]").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("adds the prayer for this roll to your team.<br>" +
+
+			html.append(commandLine("/animation &lt;name&gt &lt;x&gt; &lt;y&gt;", "plays animation at the given coordinate."));
+			html.append(commandLine("/animations", "lists all available animations."));
+
+			html.append(commandLine("/box &lt;box&gt &lt;playerlist&gt;", "puts players on your team into a box (rsv, ko, bh, si, rip, ban)."));
+			html.append(commandLine("/card &lt;add|remove&gt; &lt;shortCardName&gt;", "adds or removes card with given name to/from your inducements."));
+			html.append(commandLine("/gameid", "outputs the current game id."));
+			html.append(commandLine("/injury &lt;injury&gt; &lt;playerlist&gt;", "gives players on your team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
+				+ "Any other string will remove all injuries from the player."));
+			html.append(commandLine("/option &lt;name&gt; &lt;value&gt;", "sets option with given name to given value."));
+			html.append(commandLine("/options", "lists all available options with their current value."));
+			html.append(commandLine("/pitch &lt;name&gt;", "changes the pitch (all weather conditions)."));
+			html.append(commandLine("/pitches", "lists all available pitches."));
+			html.append(commandLine("/prayer &lt;roll&gt; [&lt;playerNr|skillName&gt;]", "adds the prayer for this roll to your team.<br>" +
 				"&lt;playerNumber|skillName&gt; is needed for prayers that require player or skill selection (would show a dialog during the game).<br>" +
 				"For a playerNumber the player with the corresponding roster number gains the prayer effect, if they are eligible for selection.<br>" +
 				"For the skillName that skill will be assigned to a random player if it is a primary skill.<br>" +
-					"skillName has the same format when adding removing skills<br>" +
-					"Should the prayer, player or the skill not be available for any reason there will be no effect.").append(_FONT_CLOSE)
-				.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/prone &lt;playerlist&gt;").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("places players on your team prone.").append(_FONT_CLOSE)
-				.append("</td>\n");
-			html.append("</tr>\n");
+				"skillName has the same format when adding removing skills<br>" +
+				"Should the prayer, player or the skill not be available for any reason there will be no effect."));
+			html.append(commandLine("/prone &lt;playerlist&gt;", "places players on your team prone."));
+			html.append(commandLine("/redeploy [brachname]", "shuts down the server and redeploys the current HEAD of the given branch. Defaults to master<br>" +
+				"Only available for DEV users and if the server is in test mode."));
 
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/redeploy [brachname]").append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("shuts down the server and redeploys the current HEAD of the given branch. Defaults to master<br>" +
-					"Only available for DEV users and if the server is in test mode.").append(_FONT_CLOSE)
-				.append("</td>\n");
-			html.append("</tr>\n");
 
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/roll &lt;roll1&gt; &lt;roll2&gt; &lt;roll3&gt; &lt;...&gt;")
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("determines the next dicerolls (separated by space).<br>" +
-					"General roll values 1 2 3 4..... etc<br>" +
-					"Directional roll values n ne e se s sw w nw<br>" +
-					"Block roll values skull bothdown push stumble pow."
-				)
-				.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/roll clear").append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("removes all queued dicerolls from the RNG.").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td valign=\"top\">").append(_FONT_BOLD_OPEN)
-					.append("/skill &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append(
-					"adds or removes a skill to players on your team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block).")
-					.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/stat &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt; ")
-					.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("sets a stat of players on your team to the given value.")
-					.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/sound &lt;name&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("plays the given sound.").append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/sounds").append(_FONT_BOLD_CLOSE).append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("lists all available sounds.").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/stun &lt;playerlist&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("stuns players on your team.").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/turn &lt;turnnr&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("jumps to the turn with the given number.").append(_FONT_CLOSE)
-					.append("</td>\n");
-			html.append("</tr>\n");
-			html.append("<tr>\n");
-			html.append("<td>").append(_FONT_BOLD_OPEN).append("/weather &lt;shortname&gt;").append(_FONT_BOLD_CLOSE)
-					.append("</td>\n");
-			html.append("<td>").append(_FONT_OPEN).append("changes the weather to nice, sunny, rain, heat or blizzard.")
-					.append(_FONT_CLOSE).append("</td>\n");
-			html.append("</tr>\n");
+			html.append(commandLine("/roll &lt;roll1&gt; &lt;roll2&gt; &lt;roll3&gt; &lt;...&gt;", "determines the next dicerolls (separated by space).<br>" +
+				"General roll values 1 2 3 4..... etc<br>" +
+				"Directional roll values n ne e se s sw w nw<br>" +
+				"Block roll values skull bothdown push stumble pow."));
+			html.append(commandLine("/roll clear", "removes all queued dicerolls from the RNG."));
+			html.append(commandLine("/skill &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on your team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
+			html.append(commandLine("/stat &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on your team to the given value."));
+			html.append(commandLine("/sound &lt;name&gt;", "plays the given sound."));
+			html.append(commandLine("/stun &lt;playerlist&gt;", "stuns players on your team."));
+
+			html.append(commandLine("/turn &lt;turnnr&gt;", "jumps to the turn with the given number."));
+			html.append(commandLine("/weather &lt;shortname&gt;", "changes the weather to nice, sunny, rain, heat or blizzard."));
 			html.append("<tr>\n");
 			html.append("<td colspan=\"2\">").append(_FONT_OPEN).append(
 					"<i>Commands accepting a playerlist may either list player numbers separated by space or use the keyword &quot;all&quot; for all players.</i>")
-					.append(_FONT_CLOSE).append("</td>\n");
+				.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");
 			html.append("</table>\n");
 		}
@@ -292,13 +149,22 @@ public class DialogChatCommands extends Dialog {
 
 	}
 
+	private String commandLine(String command, String description) {
+		return "<tr>\n" +
+			"<td>" + _FONT_BOLD_OPEN + command + _FONT_BOLD_CLOSE +
+			"</td>\n" +
+			"<td>" + _FONT_OPEN + description +
+			_FONT_CLOSE + "</td>\n" +
+			"</tr>\n";
+	}
+
 	protected void setLocationToCenter() {
 		Dimension dialogSize = getSize();
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
 		// Dimension menuBarSize = getClient().getGameMenuBar().getSize();
 		setLocation((frameSize.width - dialogSize.width) / 2,
-				((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
+			((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
 	}
 
 }
