@@ -11,7 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.9.0")
-			.addFeature("Add admin commands to alter game states")
+			.addFeature("Add admin commands to alter game state")
 			.addBehaviorChange("Injury command now can set up to 2 injuries on a player, using an unknown injury type erases them")
 		);
 

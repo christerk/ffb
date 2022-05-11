@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
@@ -88,6 +89,35 @@ public class DialogChatCommands extends Dialog {
 		html.append(commandLine("/stomp", "spectators stomping their feet"));
 		html.append(commandLine("/specs", "shows all logged in spectators by name - can also be used by playing coaches"));
 		html.append("</table>\n");
+
+		if (getClient().getMode() == ClientMode.SPECTATOR) {
+			html.append("<br>\n<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n");
+			html.append("<tr>\n");
+			html.append("<td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Admin Commands").append(_FONT_BOLD_CLOSE)
+				.append("</td>\n");
+			html.append("</tr>\n");
+			html.append(commandLine("/box_home &lt;box&gt &lt;playerlist&gt;", "puts players on home team into a box (rsv, ko, bh, si, rip, ban)."));
+			html.append(commandLine("/box_away &lt;box&gt &lt;playerlist&gt;", "puts players on away team into a box (rsv, ko, bh, si, rip, ban)."));
+			html.append(commandLine("/injury_home &lt;injury&gt; &lt;playerlist&gt;", "gives players on away team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
+				+ "Any other string will remove all injuries from the player."));
+			html.append(commandLine("/injury_away &lt;injury&gt; &lt;playerlist&gt;", "gives players on away team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
+				+ "Any other string will remove all injuries from the player."));
+
+			html.append(commandLine("/prone_home &lt;playerlist&gt;", "places players on home team prone."));
+			html.append(commandLine("/prone_away &lt;playerlist&gt;", "places players on away team prone."));
+			html.append(commandLine("/skill_home &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on home team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
+			html.append(commandLine("/skill_away &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on away team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
+			html.append(commandLine("/stat_home &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on home team to the given value."));
+			html.append(commandLine("/stat_away &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on away team to the given value."));
+			html.append(commandLine("/stun_home &lt;playerlist&gt;", "stuns players on home team."));
+			html.append(commandLine("/stun_away &lt;playerlist&gt;", "stuns players on away team."));
+
+			html.append(commandLine("/turn_home &lt;turnnr&gt;", "jumps to the turn with the given number for home team."));
+			html.append(commandLine("/turn_away &lt;turnnr&gt;", "jumps to the turn with the given number for away team."));
+			html.append(commandLine("/weather &lt;shortname&gt;", "changes the weather to nice, sunny, rain, heat or blizzard."));
+
+			html.append("</table>\n");
+		}
 
 		if (getClient().getGame().isTesting()) {
 			html.append("<br>\n<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n");
