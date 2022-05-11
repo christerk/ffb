@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportKickoffScatter;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2020.ReportEvent;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -172,6 +173,10 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 			if (fUseKickChoice && skillReduceKickDistance != null) {
 				getResult().addReport(
 					new ReportSkillUse(kickingPlayer.getId(), skillReduceKickDistance, true, SkillUse.HALVE_KICKOFF_SCATTER));
+			}
+
+			if (fTouchback) {
+				getResult().addReport(new ReportEvent("The ball lands out of bounds -> TOUCHBACK!!"));
 			}
 
 			publishParameter(new StepParameter(StepParameterKey.KICKING_PLAYER_COORDINATE, fKickingPlayerCoordinate));

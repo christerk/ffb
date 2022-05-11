@@ -391,7 +391,7 @@ public class ClientStateSelect extends ClientState {
 
 	@Override
 	public void endTurn() {
-		getClient().getCommunication().sendEndTurn();
+		getClient().getCommunication().sendEndTurn(getClient().getGame().getTurnMode());
 		getClient().getClientData().setEndTurnButtonHidden(true);
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		sideBarHome.refresh();

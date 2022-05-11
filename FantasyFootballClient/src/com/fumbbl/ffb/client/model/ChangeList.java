@@ -10,6 +10,19 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.8.1")
+			.addBugfix("Potential fix for skipped turns")
+			.addImprovement("Combined icons for rooted with confused/gazed")
+			.addBugfix("Selecting a player on kick-off return sequence forced at least one movement square")
+			.addBugfix("B&C did uproot prone or stunned players when hitting them")
+			.addBugfix("Riotous Rookies could be healed by team apo despite being Journeymen")
+			.addBugfix("FA did not trigger on second frenzy block during blitz action")
+			.addImprovement("Report touchback during kick-off")
+			.addBugfix("Synchronize mouse click handling during setup")
+			.addBugfix("Wrong team got asked to use pass re-roll if player with pass skill did blitz player with dump-off but no pass skill")
+			.addImprovement("Added api call to game state connector to access game results")
+		);
+
 		versions.add(new VersionChangeList("2.8.0")
 			.addFeature("Drunkard")
 			.addFeature("Pick-me-up")

@@ -10,6 +10,7 @@ import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.PlayerStatus;
 import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
@@ -80,6 +81,7 @@ public class StepRiotousRookies extends AbstractStep {
 		riotousPlayer.setGender(gender);
 		riotousPlayer.setType(PlayerType.RIOTOUS_ROOKIE);
 		riotousPlayer.addSkill(factory.forName("Loner"));
+		riotousPlayer.setPlayerStatus(PlayerStatus.JOURNEYMAN);
 		team.addPlayer(riotousPlayer);
 		game.getFieldModel().setPlayerState(riotousPlayer, new PlayerState(PlayerState.RESERVE));
 		UtilBox.putPlayerIntoBox(game, riotousPlayer);

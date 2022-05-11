@@ -200,6 +200,7 @@ public class PlayerIconFactory {
 					break;
 				case PlayerState.BLOCKED:
 				case PlayerState.FALLING:
+				case PlayerState.HIT_ON_GROUND:
 					if (game.isHomePlaying()) {
 						decorationProperty2 = IIconProperty.DECORATION_BLOCK_HOME;
 					} else {
@@ -211,15 +212,22 @@ public class PlayerIconFactory {
 			}
 		}
 
-		if (playerState.isHypnotized()) {
-			decorationProperty1 = IIconProperty.DECORATION_HYPNOTIZED;
-		}
-		if (playerState.isConfused()) {
-			decorationProperty1 = IIconProperty.DECORATION_CONFUSED;
-		}
 		if (playerState.isRooted()) {
-			decorationProperty1 = IIconProperty.DECORATION_ROOTED;
+			if (playerState.isHypnotized()) {
+				decorationProperty1 = IIconProperty.DECORATION_ROOTED_HYPNOTIZED;
+			} else if (playerState.isConfused()) {
+				decorationProperty1 = IIconProperty.DECORATION_ROOTED_CONFUSED;
+			} else {
+				decorationProperty1 = IIconProperty.DECORATION_ROOTED;
+			}
+		} else {
+			if (playerState.isConfused()) {
+				decorationProperty1 = IIconProperty.DECORATION_CONFUSED;
+			} else if (playerState.isHypnotized()) {
+				decorationProperty1 = IIconProperty.DECORATION_HYPNOTIZED;
+			}
 		}
+
 		if (playerState.isSelectedBlitzTarget()) {
 			decorationProperty2 = IIconProperty.DECORATION_BLITZ_TARGET_SELECTED;
 		}

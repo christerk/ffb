@@ -331,12 +331,14 @@ public class UtilServerInjury {
 					new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null, null, pApothecaryMode)));
 			} else {
 				if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
+					if (playerState.getBase() != PlayerState.HIT_ON_GROUND) {
+						playerState = playerState.changeRooted(false);
+					}
 					playerState = playerState.changeBase(pPlayerBase);
 					if ((pPlayer == game.getActingPlayer().getPlayer() && pApothecaryMode != ApothecaryMode.THROWN_PLAYER) || (PlayerState.STUNNED == pPlayerBase)) {
 						playerState = playerState.changeActive(false);
 					}
 				}
-				playerState = playerState.changeRooted(false);
 				game.getFieldModel().setPlayerState(pPlayer, playerState);
 			}
 

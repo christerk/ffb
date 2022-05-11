@@ -66,7 +66,13 @@ public class StepRemoveTargetSelectionState extends AbstractStep {
 				}
 			}
 			if (retainModelData) {
-				targetSelectionState.removePlayer();
+				// Keeping empty block here so this position can be found again more easily.
+				// Before this change we removed the player id at this point which lead to FA not being triggered
+				// anymore on the second frenzy block (see FA Behavior, it got null from the selection state and thus
+				// no defender was found.
+				// This was introduced with Frenzied Rush. It _should_ not cause other issues to leave the id, but we are not sure.
+
+				// 				targetSelectionState.removePlayer();
 			} else {
 				markSkillsTrackedOutsideOfActivationAndRemoveEffects(game);
 				game.getFieldModel().setTargetSelectionState(null);

@@ -8,6 +8,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -104,6 +105,8 @@ public final class StepEndInducement extends AbstractStep {
         } else if (fEndInducementPhase) {
             switch (fInducementPhase) {
                 case END_OF_OPPONENT_TURN:
+                    Game game = getGameState().getGame();
+                    game.setHomePlaying(!game.isHomePlaying());
                     endTurnGenerator.pushSequence(endTurnParams);
                     break;
                 case START_OF_OWN_TURN:

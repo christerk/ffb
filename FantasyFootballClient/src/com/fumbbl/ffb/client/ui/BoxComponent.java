@@ -185,33 +185,39 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void mousePressed(MouseEvent pMouseEvent) {
-		if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-			UtilClientPlayerDrag.mousePressed(getSideBar().getClient(), pMouseEvent, true);
+		synchronized (getSideBar().getClient()) {
+			if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
+				UtilClientPlayerDrag.mousePressed(getSideBar().getClient(), pMouseEvent, true);
+			}
 		}
 	}
 
 	public void mouseDragged(MouseEvent pMouseEvent) {
-		if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-			UtilClientPlayerDrag.mouseDragged(getSideBar().getClient(), pMouseEvent, true);
+		synchronized (getSideBar().getClient()) {
+			if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
+				UtilClientPlayerDrag.mouseDragged(getSideBar().getClient(), pMouseEvent, true);
+			}
 		}
 	}
 
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		if (pMouseEvent.isShiftDown()) {
-			BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
-			if (boxSlot != null) {
-				int x = getSideBar().isHomeSide() ? 5 : FieldLayer.FIELD_IMAGE_WIDTH - 135;
-				int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
-				UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
-			}
-		} else {
-			if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-				System.out.println("BoxComponent: Release event handled");
-				System.out.println("Event: " + pMouseEvent);
-				UtilClientPlayerDrag.mouseReleased(getSideBar().getClient(), pMouseEvent, true);
+		synchronized (getSideBar().getClient()) {
+			if (pMouseEvent.isShiftDown()) {
+				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
+				if (boxSlot != null) {
+					int x = getSideBar().isHomeSide() ? 5 : FieldLayer.FIELD_IMAGE_WIDTH - 135;
+					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
+					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
+				}
 			} else {
-				System.out.println("BoxComponent: Release event ignored");
-				System.out.println("Event: " + pMouseEvent);
+				if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
+					System.out.println("BoxComponent: Release event handled");
+					System.out.println("Event: " + pMouseEvent);
+					UtilClientPlayerDrag.mouseReleased(getSideBar().getClient(), pMouseEvent, true);
+				} else {
+					System.out.println("BoxComponent: Release event ignored");
+					System.out.println("Event: " + pMouseEvent);
+				}
 			}
 		}
 	}

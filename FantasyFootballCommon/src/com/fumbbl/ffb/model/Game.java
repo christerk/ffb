@@ -170,7 +170,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		}
 		TurnMode lastTurnMode = fTurnMode;
 		fTurnMode = turnMode;
-		if ((lastTurnMode != null) && !lastTurnMode.isStoreLast()) {
+		if (lastTurnMode != null) {
 			setLastTurnMode(lastTurnMode);
 		}
 		notifyObservers(ModelChangeId.GAME_SET_TURN_MODE, null, fTurnMode);

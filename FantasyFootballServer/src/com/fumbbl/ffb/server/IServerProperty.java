@@ -61,6 +61,7 @@ public interface IServerProperty {
 	String GAMESTATE_URL_CHALLENGE = "gamestate.url.challenge";
 	String GAMESTATE_URL_BEHAVIORS = "gamestate.url.behaviours";
 	String GAMESTATE_URL_GET = "gamestate.url.get";
+	String GAMESTATE_URL_RESULT = "gamestate.url.result";
 	String GAMESTATE_URL_SET = "gamestate.url.set";
 
 	String BACKUP_DIR = "backup.dir";

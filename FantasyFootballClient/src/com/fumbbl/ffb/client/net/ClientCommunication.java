@@ -247,10 +247,6 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandStartGame());
 	}
 
-	public void sendEndTurn() {
-		sendEndTurn(null);
-	}
-
 	public void sendEndTurn(TurnMode turnMode) {
 		send(new ClientCommandEndTurn(turnMode));
 	}

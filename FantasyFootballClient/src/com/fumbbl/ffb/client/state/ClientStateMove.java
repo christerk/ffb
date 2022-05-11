@@ -390,7 +390,7 @@ public class ClientStateMove extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
-		getClient().getCommunication().sendEndTurn();
+		getClient().getCommunication().sendEndTurn(game.getTurnMode());
 		getClient().getClientData().setEndTurnButtonHidden(true);
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		sideBarHome.refresh();

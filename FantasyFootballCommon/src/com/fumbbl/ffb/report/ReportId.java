@@ -26,7 +26,7 @@ public enum ReportId implements INamedObject {
 	KICKOFF_SCATTER("kickoffScatter"), KICKOFF_EXTRA_RE_ROLL("extraReRoll"), KICKOFF_RIOT("kickoffRiot"),
 	KICKOFF_TIMEOUT("kickoffTimeout"), SOLID_DEFENCE_ROLL("solidDefenceRoll"), QUICK_SNAP_ROLL("quickSnapRoll"),
 	KICKOFF_SEQUENCE_ACTIVATIONS_COUNT("kickoffSequenceActivationsCount"), KICKOFF_SEQUENCE_ACTIVATIONS_EXHAUSTED("kickoffSequenceActivationsExhausted"),
-	BLITZ_ROLL("blitzRoll"), KICKOFF_OFFICIOUIS_REF("kickoffOfficiousRef"), OFFICIOUS_REF_ROLL("officiousRefRoll"),
+	BLITZ_ROLL("blitzRoll"), KICKOFF_OFFICIOUS_REF("kickoffOfficiousRef"), OFFICIOUS_REF_ROLL("officiousRefRoll"),
 	KICKOFF_THROW_A_ROCK("kickoffThrowARock"), PUSHBACK("pushback"), REFEREE("referee"),
 	KICKOFF_PITCH_INVASION("kickoffPitchInvasion"), THROW_TEAM_MATE_ROLL("throwTeamMateRoll"), DEDICATED_FANS("dedicatedFans"),
 	SCATTER_PLAYER("scatterPlayer"), SWOOP_PLAYER("swoopPlayer"), TIMEOUT_ENFORCED("timeoutEnforced"), WINNINGS("winnings"),
@@ -54,7 +54,7 @@ public enum ReportId implements INamedObject {
 	INDOMITABLE("indomitable"), OLD_PRO("oldPro"), PICK_ME_UP("pickMeUp"),
 	SKILL_WASTED("skillWasted"), TWO_FOR_ONE("twoForOne"),
 	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
-	RAIDING_PARTY("raidingParty"),
+	RAIDING_PARTY("raidingParty"), EVENT("event"),
 	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll");
 
 	// obsolete: 50 (spiralling expenses)

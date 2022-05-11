@@ -112,7 +112,7 @@ public final class StepKickoffReturn extends AbstractStep {
 		Select generator = ((Select)factory.forName(SequenceGenerator.Type.Select.name()));
 		if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
 
-			if (fEndPlayerAction && !actingPlayer.hasActed()) {
+			if (fEndPlayerAction && !actingPlayer.hasActed() && !fEndTurn) {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
 				getGameState().pushCurrentStepOnStack();
 				generator.pushSequence(new Select.SequenceParams(getGameState(), false));

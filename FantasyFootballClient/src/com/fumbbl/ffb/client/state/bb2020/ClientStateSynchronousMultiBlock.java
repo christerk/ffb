@@ -178,7 +178,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
-		getClient().getCommunication().sendEndTurn();
+		getClient().getCommunication().sendEndTurn(getClient().getGame().getTurnMode());
 	}
 
 	protected void menuItemSelected(Player<?> player, int pMenuKey) {
