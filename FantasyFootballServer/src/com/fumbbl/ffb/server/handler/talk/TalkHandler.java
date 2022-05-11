@@ -14,6 +14,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
@@ -85,6 +86,9 @@ public abstract class TalkHandler implements IKeyedItem {
 			Team team = commandAdapter.determineTeam(game, sessionManager, session, commands);
 
 			handle(server, gameState, commands, team, session);
+			if (!requiresOnePrivilegeOf.isEmpty()) {
+				UtilServerGame.syncGameModel(gameState, null, null, null);
+			}
 
 		} catch (Exception e) {
 			server.getDebugLog().log(gameId, e);
