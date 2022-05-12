@@ -31,7 +31,7 @@ import java.util.Set;
 public abstract class TalkHandler implements IKeyedItem {
 
 	private final Set<String> commands;
-	private final int commandPartsThreshold;
+	protected final int commandPartsThreshold;
 	private final Set<TalkRequirements.Privilege> requiresOnePrivilegeOf = new HashSet<>();
 	private final TalkRequirements.Client requiredClientMode;
 	private final TalkRequirements.Environment requiredEnvironment;
