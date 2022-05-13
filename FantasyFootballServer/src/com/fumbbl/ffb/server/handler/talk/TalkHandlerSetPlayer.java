@@ -21,6 +21,10 @@ public abstract class TalkHandlerSetPlayer extends TalkHandler {
 
 			FieldCoordinate coordinate = new FieldCoordinate(Integer.parseInt(commands[2]), Integer.parseInt(commands[3]));
 
+			if (session == server.getSessionManager().getSessionOfAwayCoach(gameState.getId())) {
+				coordinate = coordinate.transform();
+			}
+
 			movePlayerToCoordinate(server, gameState, player, coordinate);
 
 		} catch (Exception e) {

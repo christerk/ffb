@@ -24,6 +24,10 @@ public abstract class TalkHandlerMoveBall extends TalkHandler {
 
 			Direction direction = Direction.forName(commands[2]);
 
+			if (session == server.getSessionManager().getSessionOfAwayCoach(game.getId())) {
+				direction = direction.transform();
+			}
+
 			FieldCoordinate coordinate = startCoordinate.move(direction, Integer.parseInt(commands[3]));
 
 			moveBallToCoordinate(server, gameState, coordinate);
