@@ -104,6 +104,9 @@ public class DialogChatCommands extends Dialog {
 				+ "Any other string will remove all injuries from the player."));
 			html.append(commandLine("/injury_away &lt;injury&gt; &lt;playerlist&gt;", "gives players on away team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
 				+ "Any other string will remove all injuries from the player."));
+			html.append(commandLine("/move_ball &lt;direction&gt; &lt;distance&gt;", "moves ball to given direction by given distance. Direction can be [north|northwest|west..."));
+			html.append(commandLine("/move_player_home &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on home team to given direction by given distance. Direction can be [north|northwest|west..."));
+			html.append(commandLine("/move_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team to given direction by given distance. Direction can be [north|northwest|west..."));
 			html.append(commandLine("/reset_stack", "reset the internal state to await a new player selection.<br/>" +
 				"Use with care and not during special sequences like kick-off events or dump off."));
 
@@ -114,8 +117,9 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/prone_away &lt;playerlist&gt;", "places players on away team prone."));
 			html.append(commandLine("/set_activated_home &lt;true|false&gt;  &lt;playerlist&gt;", "sets players on home team to (not) activated for this turn."));
 			html.append(commandLine("/set_activated_away &lt;true|false&gt;  &lt;playerlist&gt;", "sets players on away team to (not) activated for this turn."));
-			html.append(commandLine("/set_player_home &lt;x coordinate&gt; &lt;y coordinate&gt; &lt;player nr&gt;", "sets player on home team on square defined by coordinate."));
-			html.append(commandLine("/set_player_away &lt;x coordinate&gt; &lt;y coordinate&gt; &lt;player nr&gt;", "sets player on away team on square defined by coordinate."));
+			html.append(commandLine("/set_ball &lt;x coordinate&gt; &lt;y coordinate&gt;", "moves ball to square defined by coordinate."));
+			html.append(commandLine("/set_player_home &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on home team on square defined by coordinate."));
+			html.append(commandLine("/set_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team on square defined by coordinate."));
 			html.append(commandLine("/skill_home &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on home team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/skill_away &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on away team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/stat_home &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on home team to the given value."));
@@ -146,6 +150,8 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/gameid", "outputs the current game id."));
 			html.append(commandLine("/injury &lt;injury&gt; &lt;playerlist&gt;", "gives players on your team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
 				+ "Any other string will remove all injuries from the player."));
+			html.append(commandLine("/move_ball &lt;direction&gt; &lt;distance&gt;", "moves ball to given direction by given distance. Direction can be [north|northwest|west..."));
+			html.append(commandLine("/move_player &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on your team to given direction by given distance. Direction can be [north|northwest|west..."));
 			html.append(commandLine("/option &lt;name&gt; &lt;value&gt;", "sets option with given name to given value."));
 			html.append(commandLine("/options", "lists all available options with their current value."));
 			html.append(commandLine("/pitch &lt;name&gt;", "changes the pitch (all weather conditions)."));
@@ -167,7 +173,8 @@ public class DialogChatCommands extends Dialog {
 				"Block roll values skull bothdown push stumble pow."));
 			html.append(commandLine("/roll clear", "removes all queued dicerolls from the RNG."));
 			html.append(commandLine("/set_activated &lt;true|false&gt;  &lt;playerlist&gt;", "sets players on your team to (not) activated for this turn."));
-			html.append(commandLine("/set_player &lt;x coordinate&gt; &lt;y coordinate&gt; &lt;player nr&gt;", "sets player on your team on square defined by coordinate."));
+			html.append(commandLine("/set_ball &lt;x coordinate&gt; &lt;y coordinate&gt;", "moves ball to square defined by coordinate."));
+			html.append(commandLine("/set_player &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on your team on square defined by coordinate."));
 			html.append(commandLine("/skill &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on your team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/stat &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on your team to the given value."));
 			html.append(commandLine("/sound &lt;name&gt;", "plays the given sound."));

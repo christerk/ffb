@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.server.handler.talk;
 
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
@@ -191,6 +193,39 @@ public abstract class TalkHandler implements IKeyedItem {
 		String[] spectatorArray = spectatorList.toArray(new String[0]);
 		Arrays.sort(spectatorArray);
 		return spectatorArray;
+	}
+
+	protected void movePlayerToCoordinate(FantasyFootballServer server, GameState gameState, Player<?> player, FieldCoordinate coordinate) {
+		Game game = gameState.getGame();
+		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinate)) {
+			String info = "Coordinate " + coordinate + " is not on the pitch.";
+			server.getCommunication().sendPlayerTalk(gameState, null, info);
+			return;
+		}
+
+		Player<?> occupyingPlayer = game.getFieldModel().getPlayer(coordinate);
+		if (occupyingPlayer != null) {
+			String info = "Coordinate " + coordinate + " already occupied by " + occupyingPlayer.getName() + ".";
+			server.getCommunication().sendPlayerTalk(gameState, null, info);
+
+		} else {
+			game.getFieldModel().setPlayerCoordinate(player, coordinate);
+			String info = "Set player " + player.getName() + " to coordinate " + coordinate + ".";
+			server.getCommunication().sendPlayerTalk(gameState, null, info);
+		}
+	}
+
+	protected void moveBallToCoordinate(FantasyFootballServer server, GameState gameState, FieldCoordinate coordinate) {
+		Game game = gameState.getGame();
+		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinate)) {
+			String info = "Coordinate " + coordinate + " is not on the pitch.";
+			server.getCommunication().sendPlayerTalk(gameState, null, info);
+			return;
+		}
+
+		game.getFieldModel().setBallCoordinate(coordinate);
+		String info = "Set ball to coordinate " + coordinate + ".";
+		server.getCommunication().sendPlayerTalk(gameState, null, info);
 	}
 
 	private static class SpecsComparator implements Comparator<String> {
