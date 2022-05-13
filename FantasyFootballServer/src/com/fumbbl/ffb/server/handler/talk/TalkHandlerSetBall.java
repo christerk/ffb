@@ -9,7 +9,7 @@ import org.eclipse.jetty.websocket.api.Session;
 public abstract class TalkHandlerSetBall extends TalkHandler {
 
 	public TalkHandlerSetBall(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
-		super("/set_ball", 3, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
+		super("/set_ball", 2, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 
 	@Override
@@ -17,7 +17,7 @@ public abstract class TalkHandlerSetBall extends TalkHandler {
 
 		try {
 
-			FieldCoordinate coordinate = new FieldCoordinate(Integer.parseInt(commands[2]), Integer.parseInt(commands[3]));
+			FieldCoordinate coordinate = new FieldCoordinate(Integer.parseInt(commands[1]), Integer.parseInt(commands[2]));
 
 			if (session == server.getSessionManager().getSessionOfAwayCoach(gameState.getId())) {
 				coordinate = coordinate.transform();

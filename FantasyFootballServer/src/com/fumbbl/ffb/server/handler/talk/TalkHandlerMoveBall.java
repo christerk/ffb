@@ -11,7 +11,7 @@ import org.eclipse.jetty.websocket.api.Session;
 public abstract class TalkHandlerMoveBall extends TalkHandler {
 
 	public TalkHandlerMoveBall(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
-		super("/move_ball", 3, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
+		super("/move_ball", 2, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 
 	@Override
@@ -22,13 +22,13 @@ public abstract class TalkHandlerMoveBall extends TalkHandler {
 
 			FieldCoordinate startCoordinate = game.getFieldModel().getBallCoordinate();
 
-			Direction direction = Direction.forName(commands[2]);
+			Direction direction = Direction.forName(commands[1]);
 
 			if (session == server.getSessionManager().getSessionOfAwayCoach(game.getId())) {
 				direction = direction.transform();
 			}
 
-			FieldCoordinate coordinate = startCoordinate.move(direction, Integer.parseInt(commands[3]));
+			FieldCoordinate coordinate = startCoordinate.move(direction, Integer.parseInt(commands[2]));
 
 			moveBallToCoordinate(server, gameState, coordinate);
 		} catch (Exception e) {
