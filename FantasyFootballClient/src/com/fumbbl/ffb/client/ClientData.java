@@ -25,6 +25,8 @@ public class ClientData {
 	private boolean fTurnTimerStopped;
 	private boolean fEndTurnButtonHidden;
 
+	private boolean log;
+
 	private int fSpectators;
 	private SpecialEffect fWizardSpell;
 
@@ -38,6 +40,13 @@ public class ClientData {
 
 	public void setSelectedPlayer(Player<?> pPlayer) {
 		fSelectedPlayer = pPlayer;
+		if (log && fSelectedPlayer == null) {
+			try {
+				throw new Exception("Setting selectedPlayer to null");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public FieldCoordinate getDragEndPosition() {
@@ -46,6 +55,13 @@ public class ClientData {
 
 	public void setDragEndPosition(FieldCoordinate pEndPosition) {
 		fDragEndPosition = pEndPosition;
+		if (log && fDragEndPosition == null) {
+			try {
+				throw new Exception("Setting dragEndPosition to null");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public FieldCoordinate getDragStartPosition() {
@@ -54,6 +70,13 @@ public class ClientData {
 
 	public void setDragStartPosition(FieldCoordinate pStartPosition) {
 		fDragStartPosition = pStartPosition;
+		if (log && fDragStartPosition == null) {
+			try {
+				throw new Exception("Setting dragStartPosition to null");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void setBlockDiceResult(List<BlockRoll> blockRolls) {
@@ -129,6 +152,14 @@ public class ClientData {
 
 	public void setEndTurnButtonHidden(boolean pEndTurnButtonHidden) {
 		fEndTurnButtonHidden = pEndTurnButtonHidden;
+	}
+
+	public boolean isLog() {
+		return log;
+	}
+
+	public void setLog(boolean log) {
+		this.log = log;
 	}
 
 	public void clear() {
