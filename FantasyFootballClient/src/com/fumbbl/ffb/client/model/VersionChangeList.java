@@ -11,6 +11,7 @@ public class VersionChangeList {
 	private final List<String> features = new ArrayList<>();
 	private final List<String> improvements = new ArrayList<>();
 	private final List<String> behaviorChanges = new ArrayList<>();
+	private final List<String> removals = new ArrayList<>();
 	private String description;
 
 	private final String version;
@@ -44,6 +45,10 @@ public class VersionChangeList {
 		return add(behaviorChanges, behaviorChange);
 	}
 
+	public VersionChangeList addRemoval(String removal) {
+		return add(removals, removal);
+	}
+
 	public List<String> getBugfixes() {
 		return bugfixes;
 	}
@@ -58,6 +63,10 @@ public class VersionChangeList {
 
 	public List<String> getBehaviorChanges() {
 		return behaviorChanges;
+	}
+
+	public List<String> getRemovals() {
+		return removals;
 	}
 
 	public VersionChangeList setDescription(String description) {
@@ -89,9 +98,14 @@ public class VersionChangeList {
 		return StringTool.isProvided(description);
 	}
 
-	public boolean hasEntries() {
-		return hasBugfixes() || hasFeatures() || hasImprovements() || hasBehaviorChanges() || hasDescription();
+	public boolean hasRemovals() {
+		return !removals.isEmpty();
 	}
+
+	public boolean hasEntries() {
+		return hasBugfixes() || hasFeatures() || hasImprovements() || hasBehaviorChanges() || hasDescription() || hasRemovals();
+	}
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -104,6 +118,7 @@ public class VersionChangeList {
 		if (!features.equals(that.features)) return false;
 		if (!improvements.equals(that.improvements)) return false;
 		if (!behaviorChanges.equals(that.behaviorChanges)) return false;
+		if (!removals.equals(that.removals)) return false;
 		if (description != null ? !description.equals(that.description) : that.description != null) return false;
 		return version != null ? version.equals(that.version) : that.version == null;
 	}
@@ -114,6 +129,7 @@ public class VersionChangeList {
 		result = 31 * result + features.hashCode();
 		result = 31 * result + improvements.hashCode();
 		result = 31 * result + behaviorChanges.hashCode();
+		result = 31 * result + removals.hashCode();
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (version != null ? version.hashCode() : 0);
 		return result;

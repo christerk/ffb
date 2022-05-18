@@ -94,6 +94,10 @@ public class DialogChangeList extends Dialog {
 			builder.append(renderEntries("Bugfixes", list.getBugfixes()));
 		}
 
+		if (list.hasRemovals()) {
+			builder.append(renderEntries("Removals", list.getRemovals()));
+		}
+
 		return builder.toString();
 	}
 
