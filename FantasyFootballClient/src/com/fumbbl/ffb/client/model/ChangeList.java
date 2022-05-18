@@ -16,6 +16,8 @@ public class ChangeList {
 			.addFeature("Add new test game commands")
 			.addRemoval("Test mode command: pitches")
 			.addRemoval("Test mode command: pitch")
+			.addRemoval("Test mode command: animations")
+			.addRemoval("Test mode command: animation")
 		);
 
 		versions.add(new VersionChangeList("2.8.1")

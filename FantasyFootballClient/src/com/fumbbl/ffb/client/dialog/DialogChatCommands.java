@@ -142,9 +142,6 @@ public class DialogChatCommands extends Dialog {
 			html.append("</tr>\n");
 
 			html.append(commandLine("/action_used &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for your team. Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
-			html.append(commandLine("/animation &lt;name&gt &lt;x&gt; &lt;y&gt;", "plays animation at the given coordinate."));
-			html.append(commandLine("/animations", "lists all available animations."));
-
 			html.append(commandLine("/box &lt;box&gt; &lt;playerlist&gt;", "puts players on your team into a box (rsv, ko, bh, si, rip, ban)."));
 			html.append(commandLine("/card &lt;add|remove&gt; &lt;shortCardName&gt;", "adds or removes card with given name to/from your inducements."));
 			html.append(commandLine("/gameid", "outputs the current game id."));
