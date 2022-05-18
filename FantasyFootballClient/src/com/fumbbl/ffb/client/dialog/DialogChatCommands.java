@@ -176,6 +176,7 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/skill &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on your team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/stat &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on your team to the given value."));
 			html.append(commandLine("/sound &lt;name&gt;", "plays the given sound."));
+			html.append(commandLine("/sounds", "lists all available sounds."));
 			html.append(commandLine("/stun &lt;playerlist&gt;", "stuns players on your team."));
 
 			html.append(commandLine("/turn &lt;turnnr&gt;", "jumps to the turn with the given number."));
