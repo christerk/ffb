@@ -18,12 +18,13 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
 

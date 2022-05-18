@@ -18,6 +18,8 @@ public class ChangeList {
 			.addRemoval("Test mode command: pitch")
 			.addRemoval("Test mode command: animations")
 			.addRemoval("Test mode command: animation")
+			.addBugfix("Remove range ruler from bombardier when cancelling action via right click")
+			.addBugfix("Suppress ending action via right click when throwing intercepted bomb")
 		);
 
 		versions.add(new VersionChangeList("2.8.1")
