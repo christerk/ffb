@@ -14,6 +14,8 @@ public class ChangeList {
 			.addFeature("Add various admin commands to alter game state")
 			.addBehaviorChange("Injury command now can set up to 2 injuries on a player, using an unknown injury type erases them")
 			.addFeature("Add new test game commands")
+			.addRemoval("Test mode command: pitches")
+			.addRemoval("Test mode command: pitch")
 		);
 
 		versions.add(new VersionChangeList("2.8.1")

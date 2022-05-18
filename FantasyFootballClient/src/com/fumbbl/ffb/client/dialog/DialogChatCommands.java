@@ -154,8 +154,6 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/move_player &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on your team to given direction by given distance. Direction can be [north|northwest|west..."));
 			html.append(commandLine("/option &lt;name&gt; &lt;value&gt;", "sets option with given name to given value."));
 			html.append(commandLine("/options", "lists all available options with their current value."));
-			html.append(commandLine("/pitch &lt;name&gt;", "changes the pitch (all weather conditions)."));
-			html.append(commandLine("/pitches", "lists all available pitches."));
 			html.append(commandLine("/prayer &lt;roll&gt; [&lt;playerNr|skillName&gt;]", "adds the prayer for this roll to your team.<br>" +
 				"&lt;playerNumber|skillName&gt; is needed for prayers that require player or skill selection (would show a dialog during the game).<br>" +
 				"For a playerNumber the player with the corresponding roster number gains the prayer effect, if they are eligible for selection.<br>" +
