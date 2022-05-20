@@ -71,6 +71,7 @@ public class UtilClientPlayerDrag {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		boolean initDragAllowed = ((ClientMode.PLAYER == pClient.getMode()) && (player != null)
 				&& game.getTeamHome().hasPlayer(player) && pClient.getClientState().isInitDragAllowed(pCoordinate));
+		System.out.println("InitDragAllowed: " + initDragAllowed);
 		if (initDragAllowed) {
 			if (pBoxMode) {
 				initDragAllowed = (((playerState.getBase() == PlayerState.STANDING) && playerState.isActive())
@@ -80,6 +81,8 @@ public class UtilClientPlayerDrag {
 						|| (playerState.getBase() == PlayerState.BEING_DRAGGED));
 			}
 		}
+		System.out.println("InitDragAllowed: " + initDragAllowed);
+
 		if (initDragAllowed) {
 			clientData.setSelectedPlayer(player);
 			clientData.setDragStartPosition(pCoordinate);
@@ -92,6 +95,10 @@ public class UtilClientPlayerDrag {
 				userInterface.getFieldComponent().refresh();
 			}
 		} else {
+			System.out.println("boxMode: " + pBoxMode);
+			System.out.println("playerState.getBase(): " + playerState.getBase());
+			System.out.println("playerState.isActive(): " + playerState.isActive());
+
 			clientData.setDragStartPosition(null);
 		}
 		System.out.println("Leaving init drag");
