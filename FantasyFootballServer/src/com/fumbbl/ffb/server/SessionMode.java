@@ -1,5 +1,5 @@
 package com.fumbbl.ffb.server;
 
 public enum SessionMode {
-	HOME, AWAY, SPEC
+	HOME, AWAY, SPEC, ADMIN, DEV
 }

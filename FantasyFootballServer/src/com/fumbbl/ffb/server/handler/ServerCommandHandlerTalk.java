@@ -55,6 +55,10 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				sessionMode = SessionMode.HOME;
 			} else if (sessionManager.getSessionOfAwayCoach(gameId) == receivedCommand.getSession()) {
 				sessionMode = SessionMode.AWAY;
+			} else if (sessionManager.isSessionAdmin(receivedCommand.getSession())) {
+				sessionMode = SessionMode.ADMIN;
+			} else if (sessionManager.isSessionDev(receivedCommand.getSession())) {
+				sessionMode = SessionMode.DEV;
 			}
 
 			if (getServer().getMode() == ServerMode.FUMBBL) {
@@ -72,9 +76,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				communication.sendPlayerTalk(gameState, coach, talk);
 			} else {
 				ServerCommandTalk.Mode mode = ServerCommandTalk.Mode.REGULAR;
-				if (sessionManager.isSessionAdmin(receivedCommand.getSession()) && ServerCommandTalk.Mode.STAFF.findIndicator(talk)) {
+				if (sessionMode == SessionMode.ADMIN && ServerCommandTalk.Mode.STAFF.findIndicator(talk)) {
 					mode = ServerCommandTalk.Mode.STAFF; // takes precedence
-				} else if (sessionManager.isSessionDev(receivedCommand.getSession()) && ServerCommandTalk.Mode.DEV.findIndicator(talk)) {
+				} else if (sessionMode == SessionMode.DEV && ServerCommandTalk.Mode.DEV.findIndicator(talk)) {
 					mode = ServerCommandTalk.Mode.DEV;
 				}
 
