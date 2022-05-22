@@ -145,8 +145,7 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/box &lt;box&gt; &lt;playerlist&gt;", "puts players on your team into a box (rsv, ko, bh, si, rip, ban)."));
 			html.append(commandLine("/card &lt;add|remove&gt; &lt;shortCardName&gt;", "adds or removes card with given name to/from your inducements."));
 			html.append(commandLine("/gameid", "outputs the current game id."));
-			html.append(commandLine("/injury &lt;injury&gt; &lt;playerlist&gt;", "gives players on your team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
-				+ "Any other string will remove all injuries from the player."));
+			html.append(commandLine("/injury &lt;injury&gt; &lt;playerlist&gt;", "gives players on your team an injury of that type (ni, -ma, -av, -ag or -st)"));
 			html.append(commandLine("/move_ball &lt;direction&gt; &lt;distance&gt;", "moves ball to given direction by given distance. Direction can be [north|northwest|west..."));
 			html.append(commandLine("/move_player &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on your team to given direction by given distance. Direction can be [north|northwest|west..."));
 			html.append(commandLine("/option &lt;name&gt; &lt;value&gt;", "sets option with given name to given value."));
