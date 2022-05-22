@@ -224,6 +224,7 @@ public abstract class TalkHandler implements IKeyedItem {
 		}
 
 		game.getFieldModel().setBallCoordinate(coordinate);
+		game.getFieldModel().setBallMoving(game.getFieldModel().getPlayer(coordinate) == null);
 		String info = "Set ball to coordinate " + coordinate + ".";
 		server.getCommunication().sendPlayerTalk(gameState, null, info);
 	}
