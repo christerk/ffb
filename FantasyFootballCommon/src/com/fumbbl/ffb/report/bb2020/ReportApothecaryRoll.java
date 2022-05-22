@@ -1,16 +1,23 @@
 package com.fumbbl.ffb.report.bb2020;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
+import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 
@@ -24,17 +31,20 @@ public class ReportApothecaryRoll implements IReport {
 	private PlayerState fPlayerState;
 	private SeriousInjury fSeriousInjury, originalInjury;
 
+	private final Set<CasualtyModifier> casualtyModifiers = new HashSet<>();
+
 	public ReportApothecaryRoll() {
 		super();
 	}
 
 	public ReportApothecaryRoll(String pPlayerId, int[] pCasualtyRoll, PlayerState pPlayerState,
-	                            SeriousInjury pSeriousInjury, SeriousInjury originalInjury) {
+	                            SeriousInjury pSeriousInjury, SeriousInjury originalInjury, Set<CasualtyModifier> casualtyModifiers) {
 		fPlayerId = pPlayerId;
 		fCasualtyRoll = pCasualtyRoll;
 		fPlayerState = pPlayerState;
 		fSeriousInjury = pSeriousInjury;
 		this.originalInjury = originalInjury;
+		this.casualtyModifiers.addAll(casualtyModifiers);
 	}
 
 	public ReportId getId() {
@@ -61,10 +71,13 @@ public class ReportApothecaryRoll implements IReport {
 		return originalInjury;
 	}
 
-	// transformation
+	public Set<CasualtyModifier> getCasualtyModifiers() {
+		return casualtyModifiers;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportApothecaryRoll(getPlayerId(), getCasualtyRoll(), getPlayerState(), getSeriousInjury(), originalInjury);
+		return new ReportApothecaryRoll(getPlayerId(), getCasualtyRoll(), getPlayerState(), getSeriousInjury(), originalInjury, casualtyModifiers);
 	}
 
 	// JSON serialization
@@ -77,6 +90,9 @@ public class ReportApothecaryRoll implements IReport {
 		IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
 		IJsonOption.SERIOUS_INJURY_OLD.addTo(jsonObject, originalInjury);
+		JsonArray casualtyModifiers = new JsonArray();
+		this.casualtyModifiers.forEach(modifier -> casualtyModifiers.add(UtilJson.toJsonValue(modifier)));
+		IJsonOption.CASUALTY_MODIFIERS.addTo(jsonObject, casualtyModifiers);
 		return jsonObject;
 	}
 
@@ -88,6 +104,15 @@ public class ReportApothecaryRoll implements IReport {
 		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
 		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
 		originalInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY_OLD.getFrom(source, jsonObject);
+
+		casualtyModifiers.clear();
+		if (IJsonOption.CASUALTY_MODIFIERS.isDefinedIn(jsonObject)) {
+			CasualtyModifierFactory casualtyModifierFactory = source.getFactory(FactoryType.Factory.CASUALTY_MODIFIER);
+			JsonArray casualtyModifiers = IJsonOption.CASUALTY_MODIFIERS.getFrom(source, jsonObject);
+			casualtyModifiers.values().forEach(value ->
+				this.casualtyModifiers.add((CasualtyModifier) UtilJson.toEnumWithName(casualtyModifierFactory, value))
+			);
+		}
 		return this;
 	}
 

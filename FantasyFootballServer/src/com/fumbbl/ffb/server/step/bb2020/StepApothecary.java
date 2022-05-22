@@ -46,6 +46,8 @@ import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.Collections;
+
 /**
  * Step in any sequence to handle the apothecary. Offers different modes
  * (ATTACKER, CROWDPUSH, DEFENDER) to modify the behavior.
@@ -207,7 +209,7 @@ public class StepApothecary extends AbstractStep {
 						break;
 					case DO_NOT_USE_APOTHECARY:
 						getResult()
-							.addReport(new ReportApothecaryRoll(fInjuryResult.injuryContext().getDefenderId(), null, null, null, null));
+							.addReport(new ReportApothecaryRoll(fInjuryResult.injuryContext().getDefenderId(), null, null, null, null, fInjuryResult.injuryContext().casualtyModifiers));
 						break;
 					case NO_APOTHECARY:
 						if (fShowReport) {
@@ -290,7 +292,7 @@ public class StepApothecary extends AbstractStep {
 			apothecaryChoice = (newInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT);
 			getResult()
 				.addReport(new ReportApothecaryRoll(defender.getId(), newInjuryResult.injuryContext().getCasualtyRoll(),
-					newInjuryResult.injuryContext().getPlayerState(), newInjuryResult.injuryContext().getSeriousInjury(), newInjuryResult.injuryContext().getOriginalSeriousInjury()));
+					newInjuryResult.injuryContext().getPlayerState(), newInjuryResult.injuryContext().getSeriousInjury(), newInjuryResult.injuryContext().getOriginalSeriousInjury(), fInjuryResult.injuryContext().casualtyModifiers));
 			if (apothecaryChoice) {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogApothecaryChoiceParameter(defender.getId(), fInjuryResult.injuryContext().getPlayerState(),

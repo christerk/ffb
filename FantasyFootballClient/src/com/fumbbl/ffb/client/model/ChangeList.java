@@ -21,6 +21,8 @@ public class ChangeList {
 			.addBugfix("Remove range ruler from bombardier when cancelling action via right click")
 			.addBugfix("Suppress ending action via right click when throwing intercepted bomb")
 			.addFeature("Add logging of chat commands on fumbbl side (allows staff to follow conversations in case of a dispute, can not be accessed publicly)")
+			.addBugfix("Failed take root on blitz action did prevent blocking adjacent target")
+			.addBugfix("Display casualty modifiers on apo roll")
 		);
 
 		versions.add(new VersionChangeList("2.8.1")
