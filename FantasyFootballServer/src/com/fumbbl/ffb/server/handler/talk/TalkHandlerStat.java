@@ -11,14 +11,11 @@ import org.eclipse.jetty.websocket.api.Session;
 public abstract class TalkHandlerStat extends TalkHandler {
 
 	public TalkHandlerStat(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
-		super("/stat", 2, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
+		super("/stat", 3, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 
 	@Override
 	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
-		if (commands.length <= 2) {
-			return;
-		}
 		int stat;
 		try {
 			stat = Integer.parseInt(commands[2]);
