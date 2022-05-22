@@ -134,7 +134,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
     JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
     JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
-    JsonBooleanOption REPLAY = new JsonBooleanOption("replay");
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
     JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
@@ -143,13 +142,13 @@ public interface IServerJsonOption extends IJsonOption {
     JsonObjectOption SCATTER_BOUNDS = new JsonObjectOption("scatterBounds");
     JsonIntOption SCATTER_DISTANCE = new JsonIntOption("scatterDistance");
     JsonBooleanOption SECOND_GO_FOR_IT = new JsonBooleanOption("secondGoForIt");
+    JsonStringOption SESSION_MODE = new JsonStringOption("sessionMode");
     JsonFieldCoordinateOption SETUP_PLAYER_COORDINATE = new JsonFieldCoordinateOption("setupPlayerCoordinate");
     JsonStringOption SETUP_PLAYER_ID = new JsonStringOption("setupPlayerId");
     JsonStringArrayOption SHOULD_NOT_STALL = new JsonStringArrayOption("shouldNotStall");
     JsonBooleanOption SHOW_REPORT = new JsonBooleanOption("showReport");
     JsonStringArrayOption STALLERS = new JsonStringArrayOption("stallers");
-    JsonBooleanOption STARTED_AWAY = new JsonBooleanOption("startedAway");
-    JsonBooleanOption STARTED_HOME = new JsonBooleanOption("startedHome");
+
     JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
     JsonStringOption STATUS = new JsonStringOption("status");
     JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", Factory.STEP_ID);
