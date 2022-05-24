@@ -96,8 +96,8 @@ public class DialogChatCommands extends Dialog {
 			html.append("<td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Admin Commands").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
-			html.append(commandLine("/action_used_home &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for the home team. Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
-			html.append(commandLine("/action_used_away &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for the away team. Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
+			html.append(commandLine("/action_used_home &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for the home team.<br/>Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
+			html.append(commandLine("/action_used_away &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for the away team.<br/>Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
 			html.append(commandLine("/box_home &lt;box&gt; &lt;playerlist&gt;", "puts players on home team into a box (rsv, ko, bh, si, rip, ban)."));
 			html.append(commandLine("/box_away &lt;box&gt; &lt;playerlist&gt;", "puts players on away team into a box (rsv, ko, bh, si, rip, ban)."));
 			html.append(commandLine("/injury_home &lt;injury&gt; &lt;playerlist&gt;", "gives players on away team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
@@ -105,8 +105,8 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/injury_away &lt;injury&gt; &lt;playerlist&gt;", "gives players on away team an injury (up to two) of that type (ni, -ma, -av, -ag or -st).<br/>"
 				+ "Any other string will remove all injuries from the player."));
 			html.append(commandLine("/move_ball &lt;direction&gt; &lt;distance&gt;", "moves ball to given direction by given distance. Direction can be [north|northwest|west..."));
-			html.append(commandLine("/move_player_home &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on home team to given direction by given distance. Direction can be [north|northwest|west..."));
-			html.append(commandLine("/move_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team to given direction by given distance. Direction can be [north|northwest|west..."));
+			html.append(commandLine("/move_player_home &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on home team to given direction by given distance.<br/>Direction can be [north|northwest|west..."));
+			html.append(commandLine("/move_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team to given direction by given distance.<br/>Direction can be [north|northwest|west..."));
 			html.append(commandLine("/reset_stack", "reset the internal state to await a new player selection.<br/>" +
 				"Use with care and not during special sequences like kick-off events or dump off."));
 
@@ -141,18 +141,18 @@ public class DialogChatCommands extends Dialog {
 				.append("</td>\n");
 			html.append("</tr>\n");
 
-			html.append(commandLine("/action_used &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for your team. Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
+			html.append(commandLine("/action_used &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for your team.<br/>Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
 			html.append(commandLine("/box &lt;box&gt; &lt;playerlist&gt;", "puts players on your team into a box (rsv, ko, bh, si, rip, ban)."));
 			html.append(commandLine("/card &lt;add|remove&gt; &lt;shortCardName&gt;", "adds or removes card with given name to/from your inducements."));
 			html.append(commandLine("/gameid", "outputs the current game id."));
 			html.append(commandLine("/injury &lt;injury&gt; &lt;playerlist&gt;", "gives players on your team an injury of that type (ni, -ma, -av, -ag or -st)"));
 			html.append(commandLine("/move_ball &lt;direction&gt; &lt;distance&gt;", "moves ball to given direction by given distance. Direction can be [north|northwest|west..."));
-			html.append(commandLine("/move_player &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on your team to given direction by given distance. Direction can be [north|northwest|west..."));
+			html.append(commandLine("/move_player &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on your team to given direction by given distance.<br/>Direction can be [north|northwest|west..."));
 			html.append(commandLine("/option &lt;name&gt; &lt;value&gt;", "sets option with given name to given value."));
 			html.append(commandLine("/options", "lists all available options with their current value."));
 			html.append(commandLine("/prayer &lt;roll&gt; [&lt;playerNr|skillName&gt;]", "adds the prayer for this roll to your team.<br>" +
-				"&lt;playerNumber|skillName&gt; is needed for prayers that require player or skill selection (would show a dialog during the game).<br>" +
-				"For a playerNumber the player with the corresponding roster number gains the prayer effect, if they are eligible for selection.<br>" +
+				"&lt;playerNumber|skillName&gt; is needed for prayers that require player or skill selection<br/>(would show a dialog during the game).<br>" +
+				"For a playerNumber the player with the corresponding roster number gains the prayer effect,<br/>if they are eligible for selection.<br>" +
 				"For the skillName that skill will be assigned to a random player if it is a primary skill.<br>" +
 				"skillName has the same format when adding removing skills<br>" +
 				"Should the prayer, player or the skill not be available for any reason there will be no effect."));
