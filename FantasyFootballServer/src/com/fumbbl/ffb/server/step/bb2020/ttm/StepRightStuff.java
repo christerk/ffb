@@ -173,7 +173,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			}
 			if (successful) {
-				if (passResult == PassResult.ACCURATE) {
+				if (passResult == PassResult.ACCURATE && !kickedPlayer) {
 					GameResult gameResult = getGameState().getGame().getGameResult();
 					TeamResult teamResult = game.getActingTeam() == game.getTeamHome() ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
 					if (game.getThrower() != null) {
