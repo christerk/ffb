@@ -15,6 +15,8 @@ public class ChangeList {
 			.addBugfix("KTM does not generate spp")
 			.addBugfix("Do not increment turn counter if td is scored on a blitz kick-off event")
 			.addBugfix("Secret weapons not ejected when a touchdown is scored during a blitz kick-off event")
+			.addBugfix("Roll for heat after weapons have been ejected")
+			.addBugfix("Roll for KOs after weapons have been ejected")
 
 		);
 
