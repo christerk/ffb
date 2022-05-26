@@ -208,10 +208,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null,
 					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
-				if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon))
-					|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon))) {
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-				}
+				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				// crash landing only happens in empty squares
 				crashLanding = false;
 

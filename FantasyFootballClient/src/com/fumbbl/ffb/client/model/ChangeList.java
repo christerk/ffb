@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.9.1")
+			.addBugfix("TTM landing on a player is always a turn over")
+
+		);
+
 		versions.add(new VersionChangeList("2.9.0")
 			.addFeature("Add various admin commands to alter game state")
 			.addFeature("Add new test game commands")
