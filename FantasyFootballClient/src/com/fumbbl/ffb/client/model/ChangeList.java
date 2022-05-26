@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.9.1")
 			.addBugfix("TTM landing on a player is always a turn over")
 			.addBugfix("KTM does not generate spp")
+			.addBugfix("Do not increment turn counter if td is scored on a blitz kick-off event")
 
 		);
 

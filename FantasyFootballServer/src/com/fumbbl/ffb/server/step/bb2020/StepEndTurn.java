@@ -282,8 +282,6 @@ public class StepEndTurn extends AbstractStep {
 							offTurnTouchDown = game.isHomePlaying();
 						}
 
-						// in the case of a caught kick-off that results in a TD
-						offTurnTouchDown |= (game.getTurnMode() == TurnMode.KICKOFF);
 						game.setHomePlaying(game.getTeamHome().hasPlayer(touchdownPlayer));
 
 						if (offTurnTouchDown) {
