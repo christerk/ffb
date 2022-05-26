@@ -583,7 +583,7 @@ public class StepEndTurn extends AbstractStep {
 
 	private void markPlayedAndSecretWeapons() {
 		Game game = getGameState().getGame();
-		if (game.getTurnMode() == TurnMode.REGULAR) {
+		if (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ) {
 			for (Player<?> player : game.getPlayers()) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
