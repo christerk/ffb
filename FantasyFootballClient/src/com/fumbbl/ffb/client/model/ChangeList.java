@@ -18,7 +18,7 @@ public class ChangeList {
 			.addBugfix("Roll for heat after weapons have been ejected")
 			.addBugfix("Roll for KOs after weapons have been ejected")
 			.addBugfix("No stand up roll for player with MA 2 or less with Jump Up")
-
+			.addBugfix("Ask for special block actions (stab, chainsaw, vomit) on second frenzy block")
 		);
 
 		versions.add(new VersionChangeList("2.9.0")

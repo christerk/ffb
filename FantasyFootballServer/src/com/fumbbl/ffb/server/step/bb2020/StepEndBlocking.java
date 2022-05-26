@@ -196,10 +196,11 @@ public class StepEndBlocking extends AbstractStep {
 				&& UtilPlayer.isNextMovePossible(game, false)) {
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
+				boolean askForBlockKind = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative);
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, true, null));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, true, null, askForBlockKind));
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null));
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null, askForBlockKind));
 				}
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
