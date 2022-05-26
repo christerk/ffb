@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Secret weapons not ejected when a touchdown is scored during a blitz kick-off event")
 			.addBugfix("Roll for heat after weapons have been ejected")
 			.addBugfix("Roll for KOs after weapons have been ejected")
+			.addBugfix("No stand up roll for player with MA 2 or less with Jump Up")
 
 		);
 
