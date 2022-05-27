@@ -112,6 +112,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						fBlockRoll = add(fBlockRoll, addedDie);
 						getGameState().getGame().getActingPlayer().markSkillUsed(skillUseCommand.getSkill());
 						addBlockDie = true;
+						fNrOfDice++;
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						getResult().addReport(new ReportSkillUse(getGameState().getGame().getActingPlayer().getPlayerId(), skillUseCommand.getSkill(), true, SkillUse.ADD_BLOCK_DIE));
 						getResult().addReport(new ReportBlockRoll(getGameState().getGame().getActingTeam().getId(), fBlockRoll, getGameState().getGame().getDefenderId()));
@@ -252,7 +253,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 		Skill addBlockDieSkill = null;
 
-		if (!addBlockDie) {
+		if (!addBlockDie && (fNrOfDice == 1 || fNrOfDice == 2)) {
 			Optional<Skill> foundSKill = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie);
 
 			if (foundSKill.isPresent()) {
