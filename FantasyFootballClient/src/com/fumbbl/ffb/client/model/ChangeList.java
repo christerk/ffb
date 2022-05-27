@@ -10,6 +10,9 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.10.0")
+		);
+
 		versions.add(new VersionChangeList("2.9.1")
 			.addBugfix("TTM landing on a player is always a turn over")
 			.addBugfix("KTM does not generate spp")
