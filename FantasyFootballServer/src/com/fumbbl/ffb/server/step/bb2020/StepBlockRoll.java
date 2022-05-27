@@ -35,6 +35,7 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -67,6 +68,18 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 	public StepId getId() {
 		return StepId.BLOCK_ROLL;
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		super.init(pParameterSet);
+		if (pParameterSet != null) {
+			Arrays.stream(pParameterSet.values()).forEach(stepParameter -> {
+				if (stepParameter.getKey() == StepParameterKey.ADD_BLOCK_DIE) {
+					addBlockDie = (boolean) stepParameter.getValue();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -116,6 +129,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						getResult().addReport(new ReportSkillUse(getGameState().getGame().getActingPlayer().getPlayerId(), skillUseCommand.getSkill(), true, SkillUse.ADD_BLOCK_DIE));
 						getResult().addReport(new ReportBlockRoll(getGameState().getGame().getActingTeam().getId(), fBlockRoll, getGameState().getGame().getDefenderId()));
+						publishParameter(StepParameter.from(StepParameterKey.ADD_BLOCK_DIE, addBlockDie));
 						showBlockRollDialog(false);
 					}
 					break;
@@ -254,7 +268,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		Skill addBlockDieSkill = null;
 
 		if (!addBlockDie && (fNrOfDice == 1 || fNrOfDice == 2)) {
-			Optional<Skill> foundSKill = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie);
+			Optional<Skill> foundSKill = UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie);
 
 			if (foundSKill.isPresent()) {
 				addBlockDieSkill = foundSKill.get();

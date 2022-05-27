@@ -8,6 +8,7 @@ package com.fumbbl.ffb.server.step;
 public enum StepParameterKey {
 
 	ACTING_TEAM, // Boolean
+	ADD_BLOCK_DIE, // Boolean
 	ADMIN_MODE, // Boolean
 	ALLOW_MOVE_AFTER_PASS, // Boolean
 	ALTERNATE_GOTO_LABEL, // String

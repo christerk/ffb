@@ -69,7 +69,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
-	private boolean fUsingStab, usingChainsaw;
+	private boolean fUsingStab, usingChainsaw, addBlockDie;
 	private Boolean usePileDriver;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
@@ -132,6 +132,10 @@ public class StepEndBlocking extends AbstractStep {
 					}
 					consume(parameter);
 					return true;
+				case ADD_BLOCK_DIE:
+					addBlockDie = (boolean) parameter.getValue();
+					consume(parameter);
+					break;
 				default:
 					break;
 			}
@@ -198,9 +202,9 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
 				boolean askForBlockKind = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative);
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, true, null, askForBlockKind));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, true, null, askForBlockKind, addBlockDie));
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null, askForBlockKind));
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null, askForBlockKind, addBlockDie));
 				}
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
@@ -275,6 +279,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, knockedDownPlayers);
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, targetPlayerId);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
+		IServerJsonOption.ADD_BLOCK_DIE.addTo(jsonObject, addBlockDie);
 		return jsonObject;
 	}
 
@@ -289,6 +294,7 @@ public class StepEndBlocking extends AbstractStep {
 		knockedDownPlayers = Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList());
 		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject));
+		addBlockDie = toPrimitive(IServerJsonOption.ADD_BLOCK_DIE.getFrom(source, jsonObject));
 		return this;
 	}
 
