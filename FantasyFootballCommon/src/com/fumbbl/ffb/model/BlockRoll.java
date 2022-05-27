@@ -11,20 +11,21 @@ import com.fumbbl.ffb.factory.ReRollSourceFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.skill.Skill;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class BlockRoll implements IJsonSerializable {
 	private String targetId;
 	private PlayerState oldPlayerState;
-	private boolean successFulDauntless, ownChoice, doubleTargetStrength;
+	private boolean successFulDauntless, ownChoice, doubleTargetStrength, addBlockDie;
 	private int nrOfDice, id, proIndex;
 	private int[] blockRoll, reRollDiceIndexes = new int[0];
 	private int selectedIndex = -1;
 	private final Set<ReRollSource> reRollSources = new HashSet<>();
+	private Skill addDieSkill;
 
 	public BlockRoll() {
 	}
@@ -75,10 +76,6 @@ public class BlockRoll implements IJsonSerializable {
 		this.blockRoll = blockRoll;
 	}
 
-	public void setBlockRoll(Game game, int[] blockRoll) {
-		this.blockRoll = blockRoll;
-	}
-
 	public int getSelectedIndex() {
 		return selectedIndex;
 	}
@@ -101,10 +98,6 @@ public class BlockRoll implements IJsonSerializable {
 
 	public PlayerState getOldPlayerState() {
 		return oldPlayerState;
-	}
-
-	public Set<ReRollSource> getReRollSources() {
-		return reRollSources;
 	}
 
 	public void add(ReRollSource reRollSource) {
@@ -147,19 +140,63 @@ public class BlockRoll implements IJsonSerializable {
 		this.proIndex = proIndex;
 	}
 
+	public boolean isAddBlockDie() {
+		return addBlockDie;
+	}
+
+	public void setAddBlockDie(boolean addBlockDie) {
+		this.addBlockDie = addBlockDie;
+	}
+
+	public Skill getAddDieSkill() {
+		return addDieSkill;
+	}
+
+	public void setAddDieSkill(Skill addDieSkill) {
+		this.addDieSkill = addDieSkill;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
+
 		BlockRoll blockRoll1 = (BlockRoll) o;
-		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice && nrOfDice == blockRoll1.nrOfDice && id == blockRoll1.id && proIndex == blockRoll1.proIndex && selectedIndex == blockRoll1.selectedIndex && Objects.equals(targetId, blockRoll1.targetId) && Objects.equals(oldPlayerState, blockRoll1.oldPlayerState) && Arrays.equals(blockRoll, blockRoll1.blockRoll) && Arrays.equals(reRollDiceIndexes, blockRoll1.reRollDiceIndexes) && Objects.equals(reRollSources, blockRoll1.reRollSources);
+
+		if (successFulDauntless != blockRoll1.successFulDauntless) return false;
+		if (ownChoice != blockRoll1.ownChoice) return false;
+		if (doubleTargetStrength != blockRoll1.doubleTargetStrength) return false;
+		if (addBlockDie != blockRoll1.addBlockDie) return false;
+		if (nrOfDice != blockRoll1.nrOfDice) return false;
+		if (id != blockRoll1.id) return false;
+		if (proIndex != blockRoll1.proIndex) return false;
+		if (selectedIndex != blockRoll1.selectedIndex) return false;
+		if (targetId != null ? !targetId.equals(blockRoll1.targetId) : blockRoll1.targetId != null) return false;
+		if (oldPlayerState != null ? !oldPlayerState.equals(blockRoll1.oldPlayerState) : blockRoll1.oldPlayerState != null)
+			return false;
+		if (!Arrays.equals(blockRoll, blockRoll1.blockRoll)) return false;
+		if (!Arrays.equals(reRollDiceIndexes, blockRoll1.reRollDiceIndexes)) return false;
+		if (!reRollSources.equals(blockRoll1.reRollSources))
+			return false;
+		return addDieSkill != null ? addDieSkill.equals(blockRoll1.addDieSkill) : blockRoll1.addDieSkill == null;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(targetId, oldPlayerState, successFulDauntless, ownChoice, nrOfDice, id, proIndex, selectedIndex, reRollSources);
+		int result = targetId != null ? targetId.hashCode() : 0;
+		result = 31 * result + (oldPlayerState != null ? oldPlayerState.hashCode() : 0);
+		result = 31 * result + (successFulDauntless ? 1 : 0);
+		result = 31 * result + (ownChoice ? 1 : 0);
+		result = 31 * result + (doubleTargetStrength ? 1 : 0);
+		result = 31 * result + (addBlockDie ? 1 : 0);
+		result = 31 * result + nrOfDice;
+		result = 31 * result + id;
+		result = 31 * result + proIndex;
 		result = 31 * result + Arrays.hashCode(blockRoll);
 		result = 31 * result + Arrays.hashCode(reRollDiceIndexes);
+		result = 31 * result + selectedIndex;
+		result = 31 * result + reRollSources.hashCode();
+		result = 31 * result + (addDieSkill != null ? addDieSkill.hashCode() : 0);
 		return result;
 	}
 
@@ -184,6 +221,10 @@ public class BlockRoll implements IJsonSerializable {
 		reRollDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
 		proIndex = IJsonOption.PRO_INDEX.getFrom(source, jsonObject);
 		doubleTargetStrength = toPrimitive(IJsonOption.DOUBLE_TARGET_STRENGTH.getFrom(source, jsonObject));
+		addBlockDie = toPrimitive(IJsonOption.ADD_BLOCK_DIE.getFrom(source, jsonObject));
+		if (IJsonOption.ADD_BLOCK_DIE.isDefinedIn(jsonObject)) {
+			addDieSkill = (Skill) IJsonOption.ADD_BLOCK_DIE_SKILL.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 
@@ -204,6 +245,8 @@ public class BlockRoll implements IJsonSerializable {
 		IJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRollDiceIndexes);
 		IJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
 		IJsonOption.DOUBLE_TARGET_STRENGTH.addTo(jsonObject, doubleTargetStrength);
+		IJsonOption.ADD_BLOCK_DIE.addTo(jsonObject, addBlockDie);
+		IJsonOption.ADD_BLOCK_DIE_SKILL.addTo(jsonObject, addDieSkill);
 		return jsonObject;
 	}
 
