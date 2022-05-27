@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Roll for KOs after weapons have been ejected")
 			.addBugfix("No stand up roll for player with MA 2 or less with Jump Up")
 			.addBugfix("Ask for special block actions (stab, chainsaw, vomit) on second frenzy block")
+			.addBugfix("Specs command did not work")
 		);
 
 		versions.add(new VersionChangeList("2.9.0")
