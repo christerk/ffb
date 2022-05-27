@@ -38,16 +38,13 @@ import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilTeamValue;
 import org.eclipse.jetty.websocket.api.Session;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author Kalimar
@@ -60,9 +57,6 @@ public class GameCache {
 	private RosterCache rosterCache;
 	private TeamCache teamCache; // used in standalone mode only
 
-	private static final String _PITCHES_INI = "pitches.ini";
-	private static final String _PITCH_PROPERTY_PREFIX = "pitch.";
-
 	public GameCache(FantasyFootballServer pServer) {
 		fServer = pServer;
 		fGameStateById = Collections.synchronizedMap(new HashMap<>());
@@ -70,7 +64,6 @@ public class GameCache {
 	}
 
 	public void init() {
-		loadPitchProperties();
 		if (ServerMode.STANDALONE == getServer().getMode()) {
 			rosterCache = new RosterCache();
 			teamCache = new TeamCache();
@@ -250,36 +243,6 @@ public class GameCache {
 
 	public TeamSkeleton getTeamSkeleton(String teamId) {
 		return teamCache.getSkeleton(teamId);
-	}
-
-	public void refresh() {
-		loadPitchProperties();
-	}
-
-	private void loadPitchProperties() {
-		Properties pitchProperties = new Properties();
-		try (BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(_PITCHES_INI))) {
-			// load pitch properties
-			pitchProperties.load(propertyInputStream);
-		} catch (IOException pIoException) {
-			getServer().getDebugLog().logWithOutGameId(pIoException);
-		}
-		// clear old pitch properties
-		for (String serverProperty : getServer().getProperties()) {
-			if (StringTool.isProvided(serverProperty) && serverProperty.startsWith(_PITCH_PROPERTY_PREFIX)) {
-				getServer().removeProperty(serverProperty);
-			}
-		}
-		// add new pitch properties
-		String[] pitchKeys = pitchProperties.keySet().stream().map(o -> (String) o).toArray(String[]::new);
-		for (String pitchKey : pitchKeys) {
-			String pitchUrl = pitchProperties.getProperty(pitchKey);
-			if (!pitchKey.startsWith(_PITCH_PROPERTY_PREFIX)) {
-				getServer().setProperty(_PITCH_PROPERTY_PREFIX + pitchKey, pitchUrl);
-			} else {
-				getServer().setProperty(pitchKey, pitchUrl);
-			}
-		}
 	}
 
 	public void addTeamToGame(GameState pGameState, Team pTeam, boolean pHomeTeam) {

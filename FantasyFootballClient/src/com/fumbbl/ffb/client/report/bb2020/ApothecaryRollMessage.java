@@ -8,9 +8,14 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportApothecaryRoll;
 import com.fumbbl.ffb.util.ArrayTool;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @ReportMessageType(ReportId.APOTHECARY_ROLL)
 @RulesCollection(Rules.BB2020)
@@ -30,6 +35,24 @@ public class ApothecaryRollMessage extends ReportMessageBase<ReportApothecaryRol
 			}
 			status.append(" ]");
 			println(getIndent(), TextStyle.ROLL, status.toString());
+
+			if (!report.getCasualtyModifiers().isEmpty()) {
+				int modifiers = 0;
+				status = new StringBuilder("Rolled ").append(casualtyRoll[0]);
+				List<String> reportStrings = new ArrayList<>();
+				for (CasualtyModifier modifier : report.getCasualtyModifiers()) {
+					reportStrings.add(modifier.reportString());
+					modifiers += modifier.getModifier();
+				}
+				reportStrings.sort(Comparator.naturalOrder());
+				for (String reportString : reportStrings) {
+					status.append(" + ");
+					status.append(reportString);
+				}
+				status.append(" = ").append(casualtyRoll[0] + modifiers);
+				println(getIndent() + 1, TextStyle.NONE, status.toString());
+			}
+
 			PlayerState injury = report.getPlayerState();
 			print(getIndent() + 1, false, player);
 			status = new StringBuilder();

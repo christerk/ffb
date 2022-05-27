@@ -572,7 +572,6 @@ public class AdminServlet extends HttpServlet {
 		AttributesImpl attributes = new AttributesImpl();
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INITIATED, _TIMESTAMP_FORMAT.format(new Date()));
 		UtilXml.addEmptyElement(pHandler, _XML_TAG_REFRESH, attributes);
-		getServer().getGameCache().refresh();
 		return true;
 	}
 
@@ -583,9 +582,7 @@ public class AdminServlet extends HttpServlet {
 			try {
 				String response = PasswordChallenge.createResponse(fLastChallenge, md5Password);
 				isOk = response.equals(pResonse);
-			} catch (NoSuchAlgorithmException pE) {
-				isOk = false;
-			} catch (IOException pE) {
+			} catch (NoSuchAlgorithmException | IOException pE) {
 				isOk = false;
 			}
 		}

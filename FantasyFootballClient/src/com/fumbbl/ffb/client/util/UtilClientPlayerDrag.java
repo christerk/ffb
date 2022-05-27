@@ -63,6 +63,7 @@ public class UtilClientPlayerDrag {
 	}
 
 	private static void initPlayerDragging(FantasyFootballClient pClient, FieldCoordinate pCoordinate, boolean pBoxMode) {
+		System.out.println("Entering init drag");
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
@@ -70,6 +71,7 @@ public class UtilClientPlayerDrag {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		boolean initDragAllowed = ((ClientMode.PLAYER == pClient.getMode()) && (player != null)
 				&& game.getTeamHome().hasPlayer(player) && pClient.getClientState().isInitDragAllowed(pCoordinate));
+		System.out.println("InitDragAllowed: " + initDragAllowed);
 		if (initDragAllowed) {
 			if (pBoxMode) {
 				initDragAllowed = (((playerState.getBase() == PlayerState.STANDING) && playerState.isActive())
@@ -79,6 +81,8 @@ public class UtilClientPlayerDrag {
 						|| (playerState.getBase() == PlayerState.BEING_DRAGGED));
 			}
 		}
+		System.out.println("InitDragAllowed: " + initDragAllowed);
+
 		if (initDragAllowed) {
 			clientData.setSelectedPlayer(player);
 			clientData.setDragStartPosition(pCoordinate);
@@ -91,11 +95,18 @@ public class UtilClientPlayerDrag {
 				userInterface.getFieldComponent().refresh();
 			}
 		} else {
+			System.out.println("boxMode: " + pBoxMode);
+			System.out.println("playerState.getBase(): " + playerState.getBase());
+			System.out.println("playerState.isActive(): " + playerState.isActive());
+
 			clientData.setDragStartPosition(null);
 		}
+		System.out.println("Leaving init drag");
 	}
 
 	public static void mouseDragged(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
+		System.out.println("Entering dragged");
+		System.out.println("Event: " + pMouseEvent);
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
@@ -112,6 +123,7 @@ public class UtilClientPlayerDrag {
 				}
 			}
 		}
+		System.out.println("Leaving dragged");
 	}
 
 	public static void mouseReleased(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
@@ -138,6 +150,7 @@ public class UtilClientPlayerDrag {
 	}
 
 	public static void resetDragging(FantasyFootballClient pClient) {
+		System.out.println("Entering reset drag");
 		Game game = pClient.getGame();
 		for (Player<?> player : game.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -156,6 +169,7 @@ public class UtilClientPlayerDrag {
 		UserInterface userInterface = pClient.getUserInterface();
 		userInterface.getSideBarHome().refresh();
 		userInterface.getFieldComponent().refresh();
+		System.out.println("Leaving reset drag");
 	}
 
 }

@@ -72,7 +72,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 	public void cancelPlayerAction() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		actingPlayer.setGoingForIt(false);
+		actingPlayer.setGoingForIt(true);
 		actingPlayer.setDodging(false);
 
 		switch (actingPlayer.getPlayerAction()) {

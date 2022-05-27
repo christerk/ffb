@@ -100,7 +100,6 @@
 
     <target name="buildStandalone" depends="jar">
     	<copy file="server-standalone.ini" tofile="${build.dir}/server.ini" />
-    	<copy file="pitches-standalone.ini" tofile="${build.dir}/pitches.ini" />
     	<copy todir="${build.dir}/rosters">
     		<fileset dir="rosters" />
     	</copy>
@@ -114,7 +113,6 @@
 	
     <target name="buildFumbblLive" depends="jar">
     	<copy file="server-fumbbl-live.ini" tofile="${build.dir}/server.ini" />
-    	<copy file="pitches-fumbbl-live.ini" tofile="${build.dir}/pitches.ini" />
     	<!--
     	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
 	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
@@ -126,7 +124,6 @@
 
     <target name="buildFumbblTest" depends="jar">
     	<copy file="server-fumbbl-test.ini" tofile="${build.dir}/server.ini" />
-    	<copy file="pitches-fumbbl-test.ini" tofile="${build.dir}/pitches.ini" />
     	<copy todir="${build.dir}/lib">
     		<fileset dir="lib" />
 			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />

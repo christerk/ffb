@@ -239,7 +239,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 			if (doNotUseApo != null) {
 				doNotUseApo.forEach(injuryResult ->
 					getResult().addReport(
-						new ReportApothecaryRoll(injuryResult.injuryContext().getDefenderId(), null, null, null, null))
+						new ReportApothecaryRoll(injuryResult.injuryContext().getDefenderId(), null, null, null, null, injuryResult.injuryContext().casualtyModifiers))
 				);
 			}
 
@@ -384,7 +384,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 			apothecaryChoice = (newInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT);
 			getResult()
 				.addReport(new ReportApothecaryRoll(defender.getId(), newInjuryResult.injuryContext().getCasualtyRoll(),
-					newInjuryResult.injuryContext().getPlayerState(), newInjuryResult.injuryContext().getSeriousInjury(), newInjuryResult.injuryContext().getOriginalSeriousInjury()));
+					newInjuryResult.injuryContext().getPlayerState(), newInjuryResult.injuryContext().getSeriousInjury(), newInjuryResult.injuryContext().getOriginalSeriousInjury(), injuryResult.injuryContext().casualtyModifiers));
 			if (apothecaryChoice) {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogApothecaryChoiceParameter(defender.getId(), injuryResult.injuryContext().getPlayerState(),

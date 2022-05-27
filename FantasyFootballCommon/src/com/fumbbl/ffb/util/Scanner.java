@@ -1,5 +1,11 @@
 package com.fumbbl.ffb.util;
 
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IKeyedItem;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.model.GameOptions;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -10,12 +16,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.IKeyedItem;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.model.GameOptions;
 
 public class Scanner<T extends IKeyedItem> {
 	private final RawScanner<T> rawScanner;
@@ -39,10 +39,10 @@ public class Scanner<T extends IKeyedItem> {
 
 	public Collection<Class<T>> getClassesImplementing(GameOptions options) {
 		return rawScanner.getClassesImplementing().stream().filter(cls ->
-			Arrays.stream(cls.getAnnotations()).anyMatch(annotation ->
-				annotation instanceof RulesCollection
-					&& ((RulesCollection) annotation).value()
-					.matches(options.getRulesVersion())))
+				Arrays.stream(cls.getAnnotations()).anyMatch(annotation ->
+					annotation instanceof RulesCollection
+						&& ((RulesCollection) annotation).value()
+						.matches(options.getRulesVersion())))
 			.collect(Collectors.toSet());
 	}
 
@@ -63,11 +63,12 @@ public class Scanner<T extends IKeyedItem> {
 							Object key = instance.getKey();
 
 							if (result.containsKey(key)) {
-								throw new FantasyFootballException("Duplicate implementation found when scanning: "  + key);
+								throw new FantasyFootballException("Duplicate implementation found when scanning: " + key);
 							}
 
 							result.put(instance.getKey(), instance);
-						} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+						} catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+										 InvocationTargetException e) {
 							throw new FantasyFootballException("Error initializing scanned class.", e);
 						}
 					}
@@ -83,7 +84,7 @@ public class Scanner<T extends IKeyedItem> {
 	public Set<Class<T>> getSubclasses() {
 		return rawScanner.getSubclasses();
 	}
-	
+
 	public Set<Class<T>> getClassesImplementing() {
 		Set<Class<T>> result = new HashSet<>();
 		for (Class<T> cls : rawScanner.getClassesImplementing()) {
@@ -97,4 +98,27 @@ public class Scanner<T extends IKeyedItem> {
 
 	}
 
+	public Set<T> getSubclassInstances() {
+		Set<Class<T>> classes = rawScanner.getSubclasses();
+
+		Map<Object, T> result = new HashMap<>();
+		for (Class<T> cls : classes) {
+
+			try {
+				Constructor<?> ctr = cls.getConstructor();
+				@SuppressWarnings("unchecked")
+				T instance = (T) ctr.newInstance();
+				Object key = instance.getKey();
+
+				if (result.containsKey(key)) {
+					throw new FantasyFootballException("Duplicate implementation found when scanning: " + key);
+				}
+
+				result.put(instance.getKey(), instance);
+			} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+				throw new FantasyFootballException("Error initializing scanned class.", e);
+			}
+		}
+		return new HashSet<>(result.values());
+	}
 }

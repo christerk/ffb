@@ -1,7 +1,9 @@
 package com.fumbbl.ffb.server.util;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -10,10 +12,13 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,20 +35,9 @@ public class UtilServerHttpClient {
 		Logger.getLogger("org.apache.commons.httpclient.HttpMethodBase").setLevel(Level.OFF);
 	}
 
-	public static String decodeHtml(String pSource) {
-		String result = pSource.replaceAll("&amp;", "&");
-		result = result.replaceAll("&nbsp;", " ");
-		return result;
-	}
-
 	public static String fetchPage(String url) throws IOException {
 
-		RequestConfig.Builder requestBuilder = RequestConfig.custom();
-		requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
-		requestBuilder.setRedirectsEnabled(true);
-
-		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-		clientBuilder.setDefaultRequestConfig(requestBuilder.build());
+		HttpClientBuilder clientBuilder = getHttpClientBuilder();
 
 		try (CloseableHttpClient client = clientBuilder.build()) {
 
@@ -61,50 +55,56 @@ public class UtilServerHttpClient {
 
 	public static String postMultipartXml(String url, String challengeResponse, String resultXml) throws IOException {
 
-		RequestConfig.Builder requestBuilder = RequestConfig.custom();
-		requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
-		requestBuilder.setRedirectsEnabled(true);
-
-		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-		clientBuilder.setDefaultRequestConfig(requestBuilder.build());
+		HttpClientBuilder clientBuilder = getHttpClientBuilder();
 
 		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 		entityBuilder.addTextBody("response", challengeResponse);
 		entityBuilder.addBinaryBody("f", resultXml.getBytes(CHARACTER_ENCODING), ContentType.TEXT_XML, "result.xml");
 
+		return post(clientBuilder, url, entityBuilder.build());
+
+	}
+
+	public static String postAuthorizedForm(String url, String challengeResponse, String key, String payload) throws IOException {
+
+		HttpClientBuilder clientBuilder = getHttpClientBuilder();
+
+		List<NameValuePair> params = new ArrayList<>();
+		params.add(new BasicNameValuePair("response", challengeResponse));
+		params.add(new BasicNameValuePair(key, payload));
+
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params);
+		return post(clientBuilder, url, entity);
+	}
+
+	public static String post(String url, File file) throws IOException {
+
+		HttpClientBuilder clientBuilder = getHttpClientBuilder();
+
+		return post(clientBuilder, url, new FileEntity(file));
+
+	}
+
+	private static String post(HttpClientBuilder clientBuilder, String url, HttpEntity entity) throws IOException {
 		try (CloseableHttpClient client = clientBuilder.build()) {
 
 			HttpPost request = new HttpPost(url);
-			request.setEntity(entityBuilder.build());
+			request.setEntity(entity);
 
 			try (CloseableHttpResponse response = client.execute(request)) {
 				return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
 			}
 
 		}
-
 	}
 
-	public static String post(String url, File file) throws IOException {
-
+	private static HttpClientBuilder getHttpClientBuilder() {
 		RequestConfig.Builder requestBuilder = RequestConfig.custom();
 		requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
 		requestBuilder.setRedirectsEnabled(true);
 
 		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 		clientBuilder.setDefaultRequestConfig(requestBuilder.build());
-
-		try (CloseableHttpClient client = clientBuilder.build()) {
-
-			HttpPost request = new HttpPost(url);
-			request.setEntity(new FileEntity(file));
-
-			try (CloseableHttpResponse response = client.execute(request)) {
-				return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
-			}
-
-		}
-
+		return clientBuilder;
 	}
-
 }

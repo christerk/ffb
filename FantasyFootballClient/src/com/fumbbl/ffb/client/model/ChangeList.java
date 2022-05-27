@@ -10,6 +10,20 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.9.0")
+			.addFeature("Add various admin commands to alter game state")
+			.addFeature("Add new test game commands")
+			.addRemoval("Test mode command: pitches")
+			.addRemoval("Test mode command: pitch")
+			.addRemoval("Test mode command: animations")
+			.addRemoval("Test mode command: animation")
+			.addBugfix("Remove range ruler from bombardier when cancelling action via right click")
+			.addBugfix("Suppress ending action via right click when throwing intercepted bomb")
+			.addFeature("Add logging of chat commands on fumbbl side (allows staff to follow conversations in case of a dispute, can not be accessed publicly)")
+			.addBugfix("Failed take root on blitz action did prevent blocking adjacent target")
+			.addBugfix("Display casualty modifiers on apo roll")
+		);
+
 		versions.add(new VersionChangeList("2.8.1")
 			.addBugfix("Potential fix for skipped turns")
 			.addImprovement("Combined icons for rooted with confused/gazed")
