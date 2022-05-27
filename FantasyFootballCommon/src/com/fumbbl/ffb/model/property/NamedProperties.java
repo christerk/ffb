@@ -23,6 +23,7 @@ public class NamedProperties {
 	public static final ISkillProperty becomesImmovable = new NamedProperty("Becomes Immovable");
 	public static final ISkillProperty blocksDuringMove = new NamedProperty("Blocks During Move");
 	public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
+	public static final ISkillProperty canAddBlockDie = new NamedProperty("Can Add Block Die");
 	public static final ISkillProperty canAddStrengthToDodge = new NamedProperty("Can Add Strength To Dodge");
 	public static final ISkillProperty canAddStrengthToPass = new NamedProperty("Can Add Strength To Pass");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");

@@ -3,7 +3,6 @@ package com.fumbbl.ffb.json;
 import com.fumbbl.ffb.FactoryType.Factory;
 
 /**
- *
  * @author Kalimar
  */
 public interface IJsonOption {
@@ -12,6 +11,8 @@ public interface IJsonOption {
 	JsonObjectOption ACTING_PLAYER = new JsonObjectOption("actingPlayer");
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ACTING_PLAYER_WAS_CHANGED = new JsonBooleanOption("actingPlayerWasChanged");
+	JsonBooleanOption ADD_BLOCK_DIE = new JsonBooleanOption("addBlockDie");
+	JsonEnumWithNameOption ADD_BLOCK_DIE_SKILL = new JsonEnumWithNameOption("addBlockDieSkill", Factory.SKILL);
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
 	JsonIntOption AMOUNT = new JsonIntOption("amount");

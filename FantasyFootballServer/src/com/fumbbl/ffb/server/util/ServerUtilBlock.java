@@ -96,11 +96,12 @@ public class ServerUtilBlock {
 	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
 	                                    boolean usingMultiBlock, boolean successfulDauntless) {
 
-		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false);
+		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false, false);
 	}
 
 	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
-	                                    boolean usingMultiBlock, boolean successfulDauntless, boolean doubleTargetStrength) {
+																			boolean usingMultiBlock, boolean successfulDauntless,
+																			boolean doubleTargetStrength, boolean addBlockDie) {
 		int nrOfDice = 0;
 		if ((attacker != null) && (defender != null)) {
 			nrOfDice = 1;
@@ -135,6 +136,10 @@ public class ServerUtilBlock {
 			if (attacker.getTeam() == defender.getTeam()) {
 				// This can happen with Ball & Chain for example.
 				nrOfDice = Math.abs(nrOfDice); // the choice is always for the coach of the attacker
+			}
+
+			if (addBlockDie && (nrOfDice == 2 || nrOfDice == 1)) {
+				nrOfDice++;
 			}
 		}
 		return nrOfDice;
