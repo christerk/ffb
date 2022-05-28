@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.10.0")
+			.addFeature("Gored By The Bull")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")

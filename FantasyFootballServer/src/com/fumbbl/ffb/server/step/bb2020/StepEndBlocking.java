@@ -204,7 +204,7 @@ public class StepEndBlocking extends AbstractStep {
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, true, null, askForBlockKind, addBlockDie));
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null, askForBlockKind, addBlockDie));
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null, askForBlockKind));
 				}
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);

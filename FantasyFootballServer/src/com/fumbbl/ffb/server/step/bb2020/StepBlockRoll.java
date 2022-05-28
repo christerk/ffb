@@ -267,7 +267,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 		Skill addBlockDieSkill = null;
 
-		if (!addBlockDie && (fNrOfDice == 1 || fNrOfDice == 2)) {
+		if (!addBlockDie && actingPlayer.getPlayerAction().isBlitzing() && (fNrOfDice == 1 || fNrOfDice == 2)) {
 			Optional<Skill> foundSKill = UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie);
 
 			if (foundSKill.isPresent()) {
