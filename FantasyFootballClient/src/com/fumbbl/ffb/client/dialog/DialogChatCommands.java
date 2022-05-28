@@ -115,8 +115,8 @@ public class DialogChatCommands extends Dialog {
 
 			html.append(commandLine("/prone_home &lt;playerlist&gt;", "places players on home team prone."));
 			html.append(commandLine("/prone_away &lt;playerlist&gt;", "places players on away team prone."));
-			html.append(commandLine("/set_activated_home &lt;true|false&gt; &lt;playerlist&gt;", "sets players on home team to (not) activated for this turn."));
-			html.append(commandLine("/set_activated_away &lt;true|false&gt; &lt;playerlist&gt;", "sets players on away team to (not) activated for this turn."));
+			html.append(commandLine("/set_activated_home &lt;true|false&gt;  &lt;playerlist&gt;", "sets players on home team to (not) activated for this turn."));
+			html.append(commandLine("/set_activated_away &lt;true|false&gt;  &lt;playerlist&gt;", "sets players on away team to (not) activated for this turn."));
 			html.append(commandLine("/set_ball &lt;x coordinate&gt; &lt;y coordinate&gt;", "moves ball to square defined by coordinate."));
 			html.append(commandLine("/set_player_home &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on home team on square defined by coordinate."));
 			html.append(commandLine("/set_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team on square defined by coordinate."));

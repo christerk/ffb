@@ -24,7 +24,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.report.ReportBlock;
@@ -186,11 +185,11 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
 			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
 			final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
-			final Skill addDieSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);
 
 			state.blockRolls.forEach(roll -> {
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
-				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength(), roll.isAddBlockDie());
+				// TODO
+				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength(), false);
 				roll.setNrOfDice(Math.abs(nrOfDice));
 				roll.setOwnChoice(nrOfDice > 0);
 				roll(roll, false, actingPlayer);
@@ -209,10 +208,6 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				if (consummateAvailable) {
 					roll.add(ReRollSources.CONSUMMATE_PROFESSIONAL);
 				}
-				if (!roll.isAddBlockDie() && roll.isOwnChoice() && (roll.getBlockRoll().length == 1 || roll.getBlockRoll().length == 2)) {
-					roll.setAddDieSkill(addDieSkill);
-				}
-
 				getResult().setSound(SoundId.BLOCK);
 				UtilServerGame.syncGameModel(this);
 			});
@@ -289,7 +284,6 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
 		final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
-		final Skill addDieSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);
 
 		state.blockRolls.forEach(roll -> {
 			if (!teamReRollAvailable) {
@@ -316,10 +310,6 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 			if (!bothDownPresent) {
 				roll.remove(ReRollSources.BRAWLER);
-			}
-
-			if (addDieSkill == null) {
-				roll.setAddDieSkill(null);
 			}
 		});
 
@@ -355,7 +345,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 			}
 		} else {
-			roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
+			roll.setBlockRoll(game, getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 		}
 	}
 
