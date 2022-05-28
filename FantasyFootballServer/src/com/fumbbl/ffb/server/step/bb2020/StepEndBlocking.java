@@ -261,7 +261,20 @@ public class StepEndBlocking extends AbstractStep {
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				} else {
 					game.setDefenderId(null);
-					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));
+					boolean blitzWithMoveLeft = actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilPlayer.isNextMovePossible(game, false);
+
+					if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformaSecondChainsawAttack)
+						&& attackerState.hasTacklezones() && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
+							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true));
+						} else {
+							blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), true));
+						}
+
+					} else {
+
+						endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));
+					}
 				}
 			}
 		}
