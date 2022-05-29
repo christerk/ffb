@@ -27,36 +27,38 @@ public class TalkHandlerEmote extends TalkHandler {
 	@Override
 	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 
+		String coach = server.getSessionManager().getCoachForSession(session);
+
 		switch (commands[0]) {
 			case "/aah":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_AAH);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_AAH);
 				break;
 			case "/boo":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_BOO);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_BOO);
 				break;
 			case "/cheer":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_CHEER);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CHEER);
 				break;
 			case "/clap":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_CLAP);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CLAP);
 				break;
 			case "/crickets":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_CRICKETS);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CRICKETS);
 				break;
 			case "/hurt":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_HURT);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_HURT);
 				break;
 			case "/laugh":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_LAUGH);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_LAUGH);
 				break;
 			case "/ooh":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_OOH);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_OOH);
 				break;
 			case "/shock":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_SHOCK);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_SHOCK);
 				break;
 			case "/stomp":
-				playSoundAfterCooldown(server, gameState, team.getCoach(), SoundId.SPEC_STOMP);
+				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_STOMP);
 				break;
 			default:
 				break;
