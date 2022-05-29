@@ -71,7 +71,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	private Player<?> fPopupMenuPlayer;
 
-	protected ClientState(FantasyFootballClient pClient) {
+	public ClientState(FantasyFootballClient pClient) {
 		fClient = pClient;
 		setClickable(true);
 	}

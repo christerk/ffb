@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
@@ -113,10 +114,13 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw) && usingChainsaw) {
+			if (actingPlayer.getPlayerAction() == PlayerAction.MAXIMUM_CARNAGE) {
+				actingPlayer.markSkillUsed(NamedProperties.canPerformaSecondChainsawAttack);
+			}
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {
 				if ((getReRollSource() == null)
-						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					dropChainsawPlayer = true;
 				}
 			}

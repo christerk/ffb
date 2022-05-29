@@ -265,6 +265,7 @@ public class StepEndBlocking extends AbstractStep {
 
 					if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformaSecondChainsawAttack)
 						&& attackerState.hasTacklezones() && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
 						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true));
 						} else {
