@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.10.0")
 			.addFeature("Gored By The Bull")
 			.addFeature("Maximum Carnage")
+			.addFeature("Wisdom not working on passes")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
