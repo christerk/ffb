@@ -24,7 +24,8 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 
 		sequence.add(StepId.INIT_BLOCKING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()), from(StepParameterKey.USING_STAB, params.isUsingStab()),
-			from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()), from(StepParameterKey.USING_VOMIT, params.isUsingVomit()));
+			from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()), from(StepParameterKey.USING_VOMIT, params.isUsingVomit()),
+			from(StepParameterKey.ASK_FOR_BLOCK_KIND, params.isAskForBlockKind()));
 		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));

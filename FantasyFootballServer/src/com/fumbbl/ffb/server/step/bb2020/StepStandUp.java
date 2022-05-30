@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
@@ -86,7 +87,8 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 		if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved())
 			|| (ReRolledActions.STAND_UP == getReRolledAction())) {
 			game.setConcessionPossible(false);
-			boolean rollStandUp = (actingPlayer.getPlayer().getMovementWithModifiers() < Constant.MINIMUM_MOVE_TO_STAND_UP);
+			boolean rollStandUp = (actingPlayer.getPlayer().getMovementWithModifiers() < Constant.MINIMUM_MOVE_TO_STAND_UP)
+				&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree);
 			if (rollStandUp) {
 				if (ReRolledActions.STAND_UP == getReRolledAction()) {
 					if ((getReRollSource() == null)

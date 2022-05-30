@@ -13,7 +13,7 @@ public class TalkHandlerSpecs extends TalkHandler {
 		super(new HashSet<String>() {{
 			add("/spectators");
 			add("/specs");
-		}}, 0, TalkRequirements.Client.NONE, TalkRequirements.Environment.TEST_GAME);
+		}}, 0, TalkRequirements.Client.NONE, TalkRequirements.Environment.NONE);
 	}
 
 	@Override

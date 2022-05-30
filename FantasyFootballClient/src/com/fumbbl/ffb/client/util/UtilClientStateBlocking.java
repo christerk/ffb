@@ -170,8 +170,8 @@ public class UtilClientStateBlocking {
 		pClientState.showPopupMenuForPlayer(defender);
 	}
 
-	private static void block(ClientState pClientState, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
-	                          boolean usingChainsaw, boolean usingVomit) {
+	public static void block(ClientState pClientState, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
+													 boolean usingChainsaw, boolean usingVomit) {
 		pClientState.getClient().getUserInterface().getFieldComponent().refresh();
 		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit);
 	}

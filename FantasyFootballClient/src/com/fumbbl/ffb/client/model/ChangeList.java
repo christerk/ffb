@@ -10,6 +10,18 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.9.1")
+			.addBugfix("TTM landing on a player is always a turn over")
+			.addBugfix("KTM does not generate spp")
+			.addBugfix("Do not increment turn counter if td is scored on a blitz kick-off event")
+			.addBugfix("Secret weapons not ejected when a touchdown is scored during a blitz kick-off event")
+			.addBugfix("Roll for heat after weapons have been ejected")
+			.addBugfix("Roll for KOs after weapons have been ejected")
+			.addBugfix("No stand up roll for player with MA 2 or less with Jump Up")
+			.addBugfix("Ask for special block actions (stab, chainsaw, vomit) on second frenzy block")
+			.addBugfix("Specs command did not work")
+		);
+
 		versions.add(new VersionChangeList("2.9.0")
 			.addFeature("Add various admin commands to alter game state")
 			.addFeature("Add new test game commands")

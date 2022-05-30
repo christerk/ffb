@@ -235,6 +235,8 @@ public class StepEndTurn extends AbstractStep {
 		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
 		EndGame endGenerator = (EndGame) factory.forName(SequenceGenerator.Type.EndGame.name());
 
+		Player<?> touchdownPlayer = null;
+
 		if (!fWithinSecretWeaponHandling) {
 
 			if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN)
@@ -262,7 +264,6 @@ public class StepEndTurn extends AbstractStep {
 
 				fNextSequencePushed = true;
 
-				Player<?> touchdownPlayer = null;
 				if (fTouchdown) {
 
 					touchdownPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
@@ -282,8 +283,6 @@ public class StepEndTurn extends AbstractStep {
 							offTurnTouchDown = game.isHomePlaying();
 						}
 
-						// in the case of a caught kick-off that results in a TD
-						offTurnTouchDown |= (game.getTurnMode() == TurnMode.KICKOFF);
 						game.setHomePlaying(game.getTeamHome().hasPlayer(touchdownPlayer));
 
 						if (offTurnTouchDown) {
@@ -328,56 +327,6 @@ public class StepEndTurn extends AbstractStep {
 				game.getFieldModel().clearTrackNumbers();
 				game.getFieldModel().clearDiceDecorations();
 
-				List<KnockoutRecovery> knockoutRecoveries = new ArrayList<>();
-				List<HeatExhaustion> heatExhaustions = new ArrayList<>();
-				List<Player<?>> unzappedPlayers = new ArrayList<>();
-				int faintingCount = 0;
-				if (fNewHalf || fTouchdown) {
-					for (Player<?> player : game.getPlayers()) {
-						if (player instanceof ZappedPlayer) {
-							getGameState().getServer().getCommunication().sendUnzapPlayer(getGameState(), (ZappedPlayer) player);
-							Team team = game.findTeam(player);
-							player = ((ZappedPlayer) player).getOriginalPlayer();
-							team.addPlayer(player);
-							unzappedPlayers.add(player);
-							getGameState().removeZappedPlayer(player);
-						}
-						PlayerState playerState = game.getFieldModel().getPlayerState(player);
-						if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
-							KnockoutRecovery knockoutRecovery = recoverKnockout(player);
-							if (knockoutRecovery != null) {
-								knockoutRecoveries.add(knockoutRecovery);
-								if (knockoutRecovery.isRecovering()) {
-									game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-									UtilBox.putPlayerIntoBox(game, player);
-								}
-							}
-						}
-						if (playerState.getBase() == PlayerState.EXHAUSTED) {
-							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-						}
-					}
-
-					if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
-						faintingCount = getGameState().getDiceRoller().rollDice(3);
-						for (Team team : new Team[]{game.getTeamHome(), game.getTeamAway()}) {
-							List<Player<?>> onPitch = Arrays.stream(team.getPlayers()).filter(player -> {
-								FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-								return (playerCoordinate != null) && !playerCoordinate.isBoxCoordinate();
-							}).collect(Collectors.toList());
-							for (int i = 0; i < faintingCount && !onPitch.isEmpty(); i++) {
-								int index = getGameState().getDiceRoller().rollDice(onPitch.size()) - 1;
-								Player<?> player = onPitch.remove(index);
-								PlayerState playerState = game.getFieldModel().getPlayerState(player);
-								game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
-								UtilBox.putPlayerIntoBox(game, player);
-								heatExhaustions.add(new HeatExhaustion(player.getId(), true, 0));
-							}
-						}
-					}
-
-					UtilBox.putAllPlayersIntoBox(game);
-				}
 				if (fNewHalf) {
 					if (game.getHalf() > 2) {
 						fEndGame = true;
@@ -423,12 +372,6 @@ public class StepEndTurn extends AbstractStep {
 						.pushSequence(new SequenceParams(getGameState(), InducementPhase.START_OF_OWN_TURN,
 							game.isHomePlaying()));
 				}
-
-				KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[0]);
-				HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[0]);
-				String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
-				getResult().addReport(
-					new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers, faintingCount));
 
 				if (game.isTurnTimeEnabled()) {
 					UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
@@ -495,6 +438,20 @@ public class StepEndTurn extends AbstractStep {
 				removeUsedSecretWeapons();
 			}
 
+			List<KnockoutRecovery> knockoutRecoveries = new ArrayList<>();
+			List<HeatExhaustion> heatExhaustions = new ArrayList<>();
+			List<Player<?>> unzappedPlayers = new ArrayList<>();
+
+			String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
+			int faintingCount = getFaintingCount(game, knockoutRecoveries, heatExhaustions, unzappedPlayers);
+
+			KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[0]);
+			HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[0]);
+
+			getResult().addReport(
+				new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers, faintingCount));
+
+
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
 
@@ -524,6 +481,57 @@ public class StepEndTurn extends AbstractStep {
 
 		}
 
+	}
+
+	private int getFaintingCount(Game game, List<KnockoutRecovery> knockoutRecoveries, List<HeatExhaustion> heatExhaustions, List<Player<?>> unzappedPlayers) {
+		int faintingCount = 0;
+		if (fNewHalf || fTouchdown) {
+			for (Player<?> player : game.getPlayers()) {
+				if (player instanceof ZappedPlayer) {
+					getGameState().getServer().getCommunication().sendUnzapPlayer(getGameState(), (ZappedPlayer) player);
+					Team team = game.findTeam(player);
+					player = ((ZappedPlayer) player).getOriginalPlayer();
+					team.addPlayer(player);
+					unzappedPlayers.add(player);
+					getGameState().removeZappedPlayer(player);
+				}
+				PlayerState playerState = game.getFieldModel().getPlayerState(player);
+				if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
+					KnockoutRecovery knockoutRecovery = recoverKnockout(player);
+					if (knockoutRecovery != null) {
+						knockoutRecoveries.add(knockoutRecovery);
+						if (knockoutRecovery.isRecovering()) {
+							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+							UtilBox.putPlayerIntoBox(game, player);
+						}
+					}
+				}
+				if (playerState.getBase() == PlayerState.EXHAUSTED) {
+					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+				}
+			}
+
+			if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
+				faintingCount = getGameState().getDiceRoller().rollDice(3);
+				for (Team team : new Team[]{game.getTeamHome(), game.getTeamAway()}) {
+					List<Player<?>> onPitch = Arrays.stream(team.getPlayers()).filter(player -> {
+						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+						return (playerCoordinate != null) && !playerCoordinate.isBoxCoordinate();
+					}).collect(Collectors.toList());
+					for (int i = 0; i < faintingCount && !onPitch.isEmpty(); i++) {
+						int index = getGameState().getDiceRoller().rollDice(onPitch.size()) - 1;
+						Player<?> player = onPitch.remove(index);
+						PlayerState playerState = game.getFieldModel().getPlayerState(player);
+						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
+						UtilBox.putPlayerIntoBox(game, player);
+						heatExhaustions.add(new HeatExhaustion(player.getId(), true, 0));
+					}
+				}
+			}
+
+			UtilBox.putAllPlayersIntoBox(game);
+		}
+		return faintingCount;
 	}
 
 
@@ -585,7 +593,7 @@ public class StepEndTurn extends AbstractStep {
 
 	private void markPlayedAndSecretWeapons() {
 		Game game = getGameState().getGame();
-		if (game.getTurnMode() == TurnMode.REGULAR) {
+		if (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.KICKOFF) {
 			for (Player<?> player : game.getPlayers()) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				PlayerResult playerResult = game.getGameResult().getPlayerResult(player);

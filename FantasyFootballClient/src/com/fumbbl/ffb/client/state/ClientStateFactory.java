@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSynchronousMultiBlock;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateThrowKeg;
@@ -76,6 +77,7 @@ public class ClientStateFactory {
 		register(new ClientStateGazeMove(pClient));
 		register(new ClientStateThrowKeg(pClient));
 		register(new ClientStateRaidingParty(pClient));
+		register(new ClientStateSelectBlockKind(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -321,6 +323,9 @@ public class ClientStateFactory {
 					break;
 				case RAIDING_PARTY:
 					clientStateId = ClientStateId.RAIDING_PARTY;
+					break;
+				case SELECT_BLOCK_KIND:
+					clientStateId = ClientStateId.SELECT_BLOCK_KIND;
 					break;
 				default:
 					break;
