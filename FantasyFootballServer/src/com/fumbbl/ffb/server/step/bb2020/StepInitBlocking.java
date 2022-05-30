@@ -176,6 +176,10 @@ public class StepInitBlocking extends AbstractStep {
 				} else {
 					game.setDefenderId(defender.getId());
 					actingPlayer.setStrength(actingPlayer.getPlayer().getStrengthWithModifiers());
+
+					if (actingPlayer.getPlayerAction() == PlayerAction.MAXIMUM_CARNAGE) {
+						publishParameter(new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, defender.getId()));
+					}
 					PlayerState oldDefenderState = game.getFieldModel().getPlayerState(defender);
 					publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldDefenderState));
 					publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION,

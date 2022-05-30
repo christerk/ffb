@@ -39,6 +39,7 @@ public enum SkillUse implements INamedObject {
 	IGNORE_SENT_OFF("ignoreSentOff", "to not be ejected"),
 	MOVE_OPEN_TEAM_MATE("moveOpenTeamMate", "to move a team-mate"),
 	ADD_BLOCK_DIE("addBlockDie", "to add a block die"),
+	PERFORM_SECOND_CHAINSAW_ATTACK("performSecondChainsawAttack", "to perform a second chainsaw attack"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

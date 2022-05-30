@@ -254,6 +254,9 @@ public class ModelChangeProcessor {
 			case GAME_SET_ID:
 				pGame.setId((Long) pModelChange.getValue());
 				return true;
+			case GAME_SET_LAST_DEFENDER_ID:
+				pGame.setLastDefenderId(pModelChange.getKey());
+				return true;
 			case GAME_SET_PASS_COORDINATE:
 				pGame.setPassCoordinate((FieldCoordinate) pModelChange.getValue());
 				return true;

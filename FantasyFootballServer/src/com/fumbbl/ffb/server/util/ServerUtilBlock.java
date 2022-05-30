@@ -20,13 +20,14 @@ public class ServerUtilBlock {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
 		boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
+		boolean isCarnage = PlayerAction.MAXIMUM_CARNAGE == actingPlayer.getPlayerAction();
 		boolean isBlock = PlayerAction.BLOCK == actingPlayer.getPlayerAction();
 		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction());
 		boolean blocksDuringMove = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksDuringMove);
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
 
 		if ((actingPlayer.getPlayer() != null)
-			&& (blocksDuringMove || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)))) {
+			&& (blocksDuringMove || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)) || isCarnage)) {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
@@ -55,7 +56,7 @@ public class ServerUtilBlock {
 			boolean performsBlitz = targetSelectionState != null && targetSelectionState.isSelected();
 			for (Player<?> pPlayer : pPlayers) {
 				boolean isBystanderDuringBlitz = performsBlitz && !pPlayer.getId().equals(targetSelectionState.getSelectedPlayerId());
-				if (isBystanderDuringBlitz) {
+				if (isBystanderDuringBlitz || pPlayer.getId().equals(pGame.getLastDefenderId())) {
 					continue;
 				}
 				int nrOfDice = 0;

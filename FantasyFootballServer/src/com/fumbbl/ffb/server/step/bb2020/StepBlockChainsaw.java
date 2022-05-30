@@ -7,13 +7,16 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportChainsawRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -32,7 +35,10 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.Optional;
 
 /**
  * Step in block sequence to handle skill CHAINSAW.
@@ -115,7 +121,11 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw) && usingChainsaw) {
 			if (actingPlayer.getPlayerAction() == PlayerAction.MAXIMUM_CARNAGE) {
-				actingPlayer.markSkillUsed(NamedProperties.canPerformaSecondChainsawAttack);
+				Optional<Skill> skillWithProperty = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canPerformaSecondChainsawAttack);
+				if (skillWithProperty.isPresent()) {
+					actingPlayer.markSkillUsed(NamedProperties.canPerformaSecondChainsawAttack);
+					getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillWithProperty.get(), true, SkillUse.PERFORM_SECOND_CHAINSAW_ATTACK));
+				}
 			}
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {

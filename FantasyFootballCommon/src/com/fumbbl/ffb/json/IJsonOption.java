@@ -233,6 +233,7 @@ public interface IJsonOption {
 	JsonArrayOption KNOCKOUT_RECOVERY_ARRAY = new JsonArrayOption("knockoutRecoveryArray");
 	JsonBooleanOption KTM_USED = new JsonBooleanOption("ktmUsed");
 	JsonArrayOption LASTING_INJURIES = new JsonArrayOption("lastingInjuries");
+	JsonStringOption LAST_DEFENDER_ID = new JsonStringOption("lastDefenderId");
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");

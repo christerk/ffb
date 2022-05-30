@@ -41,6 +41,7 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -260,11 +261,14 @@ public class StepEndBlocking extends AbstractStep {
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				} else {
-					game.setDefenderId(null);
 					boolean blitzWithMoveLeft = actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilPlayer.isNextMovePossible(game, false);
+					Player<?>[] opponents = UtilPlayer.findAdjacentBlockablePlayers(game, game.getDefender().getTeam(), game.getFieldModel().getPlayerCoordinate(activePlayer));
+					boolean hasValidOpponent = ArrayTool.isProvided(opponents) && (opponents.length > 1 || opponents[0] != game.getDefender());
 
+					game.setLastDefenderId(game.getDefenderId());
+					game.setDefenderId(null);
 					if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformaSecondChainsawAttack)
-						&& attackerState.hasTacklezones() && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+						&& attackerState.hasTacklezones() && hasValidOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
 						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true));
@@ -274,6 +278,7 @@ public class StepEndBlocking extends AbstractStep {
 
 					} else {
 
+						game.setLastDefenderId(null);
 						endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));
 					}
 				}
