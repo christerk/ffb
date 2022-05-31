@@ -70,7 +70,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
-	private boolean fUsingStab, usingChainsaw, addBlockDie;
+	private boolean fUsingStab, usingChainsaw, addBlockDie, allowSecondBlockAction;
 	private Boolean usePileDriver;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
@@ -137,6 +137,10 @@ public class StepEndBlocking extends AbstractStep {
 					addBlockDie = (boolean) parameter.getValue();
 					consume(parameter);
 					break;
+				case ALLOW_SECOND_BLOCK_ACTION:
+					allowSecondBlockAction = (boolean) parameter.getValue();
+					consume(parameter);
+					break;
 				default:
 					break;
 			}
@@ -194,6 +198,7 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.setGoingForIt(true);
 			}
 
+			String defenderId = game.getDefenderId();
 			if ((unusedPlayerMustMakeSecondBlockSkill != null) && (defenderState != null)
 				&& defenderState.canBeBlocked() && attackerPosition.isAdjacent(defenderPosition)
 				&& attackerState.hasTacklezones() && fDefenderPushed
@@ -203,9 +208,9 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
 				boolean askForBlockKind = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative);
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, true, null, askForBlockKind, addBlockDie));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), defenderId, fUsingStab, true, null, askForBlockKind, addBlockDie));
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab, null, askForBlockKind));
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), defenderId, fUsingStab, null, askForBlockKind));
 				}
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
@@ -263,12 +268,18 @@ public class StepEndBlocking extends AbstractStep {
 				} else {
 					boolean blitzWithMoveLeft = actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilPlayer.isNextMovePossible(game, false);
 					Player<?>[] opponents = UtilPlayer.findAdjacentBlockablePlayers(game, game.getDefender().getTeam(), game.getFieldModel().getPlayerCoordinate(activePlayer));
-					boolean hasValidOpponent = ArrayTool.isProvided(opponents) && (opponents.length > 1 || opponents[0] != game.getDefender());
+					boolean hasValidOpponent = ArrayTool.isProvided(opponents);
+					boolean hasValidOtherOpponent = ArrayTool.isProvided(opponents) && (opponents.length > 1 || opponents[0] != game.getDefender());
 
-					game.setLastDefenderId(game.getDefenderId());
 					game.setDefenderId(null);
-					if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformaSecondChainsawAttack)
-						&& attackerState.hasTacklezones() && hasValidOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+					if (attackerState.hasTacklezones() && allowSecondBlockAction && hasValidOpponent) {
+						allowSecondBlockAction = false;
+						actingPlayer.setHasBlocked(false);
+						//Arrays.stream(actingPlayer.getUsedSkills()).filter(skill -> !skill.isNegativeTrait()).forEach(skill -> actingPlayer.markSkillUsed());
+						blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
+					} else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
+						&& attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+						game.setLastDefenderId(defenderId);
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
 						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true));
@@ -299,6 +310,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, targetPlayerId);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.ADD_BLOCK_DIE.addTo(jsonObject, addBlockDie);
+		IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.addTo(jsonObject, allowSecondBlockAction);
 		return jsonObject;
 	}
 
@@ -314,6 +326,7 @@ public class StepEndBlocking extends AbstractStep {
 		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject));
 		addBlockDie = toPrimitive(IServerJsonOption.ADD_BLOCK_DIE.getFrom(source, jsonObject));
+		allowSecondBlockAction = toPrimitive(IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.getFrom(source, jsonObject));
 		return this;
 	}
 

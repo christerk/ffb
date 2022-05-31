@@ -7,14 +7,14 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class MaximumCarnage extends Skill {
+public class FuryOfTheBloodGod extends Skill {
 
-	public MaximumCarnage() {
-		super("Maximum Carnage", SkillCategory.EXTRAORDINARY, SkillUsageType.ONCE_PER_GAME);
+	public FuryOfTheBloodGod() {
+		super("Fury of the Blood God", SkillCategory.EXTRAORDINARY, SkillUsageType.ONCE_PER_GAME);
 	}
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canPerformSecondChainsawAttack);
+		registerProperty(NamedProperties.canPerformTwoBlocksAfterFailedFury);
 	}
 }

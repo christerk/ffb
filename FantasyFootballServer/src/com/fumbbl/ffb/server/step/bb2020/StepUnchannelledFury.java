@@ -3,8 +3,14 @@ package com.fumbbl.ffb.server.step.bb2020;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -73,6 +79,21 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+		if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+			if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.canPerformTwoBlocksAfterFailedFury)) {
+				ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
+				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
+					useSkillCommand.getSkill(), useSkillCommand.isSkillUsed(), SkillUse.PERFORM_SECOND_TWO_BLOCKS));
+				if (useSkillCommand.isSkillUsed()) {
+					state.status = ActionStatus.SKILL_CHOICE_YES;
+				} else {
+					state.status = ActionStatus.SKILL_CHOICE_NO;
+				}
+			}
+			return StepCommandStatus.EXECUTE_STEP;
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}

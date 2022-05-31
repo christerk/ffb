@@ -11,6 +11,7 @@ public enum StepParameterKey {
 	ADD_BLOCK_DIE, // Boolean
 	ADMIN_MODE, // Boolean
 	ALLOW_MOVE_AFTER_PASS, // Boolean
+	ALLOW_SECOND_BLOCK_ACTION, // Boolean
 	ALTERNATE_GOTO_LABEL, // String
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean

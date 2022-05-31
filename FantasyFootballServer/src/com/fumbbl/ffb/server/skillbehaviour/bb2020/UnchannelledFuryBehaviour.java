@@ -6,11 +6,13 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.server.ActionStatus;
@@ -23,6 +25,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2020.StepUnchannelledFury;
 import com.fumbbl.ffb.server.step.bb2020.StepUnchannelledFury.StepState;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
 import com.fumbbl.ffb.util.UtilCards;
@@ -51,15 +54,32 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
 
+				if (state.status == ActionStatus.SKILL_CHOICE_YES) {
+					actingPlayer.markSkillUsed(NamedProperties.canPerformTwoBlocksAfterFailedFury);
+					step.publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, true));
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+					return false;
+				} else if (state.status == ActionStatus.SKILL_CHOICE_NO) {
+					cancelPlayerAction(step);
+					failed(step, state);
+					return false;
+				}
+
 				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
 					if ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())) {
 						if ((step.getReRollSource() == null)
-								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+							|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doRoll = false;
-							status = ActionStatus.FAILURE;
-							cancelPlayerAction(step);
+							Skill furySkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformTwoBlocksAfterFailedFury);
+							if (furySkill != null && actingPlayer.getPlayerAction() == PlayerAction.BLOCK) {
+								UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), furySkill, 0), true);
+								return false;
+							} else {
+								status = ActionStatus.FAILURE;
+								cancelPlayerAction(step);
+							}
 						}
 					} else {
 						doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
@@ -82,7 +102,13 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 								reRolledAction, minimumRoll, false)) {
 								status = ActionStatus.WAITING_FOR_RE_ROLL;
 							} else {
-								cancelPlayerAction(step);
+								Skill furySkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformTwoBlocksAfterFailedFury);
+								if (furySkill != null && actingPlayer.getPlayerAction() == PlayerAction.BLOCK) {
+									UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), true);
+									return false;
+								} else {
+									cancelPlayerAction(step);
+								}
 							}
 						}
 						boolean reRolled = ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())
@@ -95,12 +121,16 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (status == ActionStatus.FAILURE) {
-						step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+						failed(step, state);
 					}
 				}
 
 				return false;
+			}
+
+			private void failed(StepUnchannelledFury step, StepState state) {
+				step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+				step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 			}
 		});
 	}

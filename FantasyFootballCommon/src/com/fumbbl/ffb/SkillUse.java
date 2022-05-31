@@ -40,6 +40,7 @@ public enum SkillUse implements INamedObject {
 	MOVE_OPEN_TEAM_MATE("moveOpenTeamMate", "to move a team-mate"),
 	ADD_BLOCK_DIE("addBlockDie", "to add a block die"),
 	PERFORM_SECOND_CHAINSAW_ATTACK("performSecondChainsawAttack", "to perform a second chainsaw attack"),
+	PERFORM_SECOND_TWO_BLOCKS("performSecondTwoBlocks", "to perform two block actions"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

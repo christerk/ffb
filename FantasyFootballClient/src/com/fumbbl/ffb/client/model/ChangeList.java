@@ -14,6 +14,7 @@ public class ChangeList {
 			.addFeature("Gored By The Bull")
 			.addFeature("Maximum Carnage")
 			.addFeature("Wisdom not working on passes")
+			.addFeature("Fury of the Blood God")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
