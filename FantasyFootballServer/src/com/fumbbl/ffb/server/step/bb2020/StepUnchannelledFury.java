@@ -92,7 +92,7 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 					state.status = ActionStatus.SKILL_CHOICE_NO;
 				}
 			}
-			return StepCommandStatus.EXECUTE_STEP;
+			commandStatus = StepCommandStatus.EXECUTE_STEP;
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();

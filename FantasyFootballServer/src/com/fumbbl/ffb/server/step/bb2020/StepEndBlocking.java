@@ -277,6 +277,7 @@ public class StepEndBlocking extends AbstractStep {
 						actingPlayer.setHasBlocked(false);
 						//Arrays.stream(actingPlayer.getUsedSkills()).filter(skill -> !skill.isNegativeTrait()).forEach(skill -> actingPlayer.markSkillUsed());
 						blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
+						ServerUtilBlock.updateDiceDecorations(game);
 					} else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
 						&& attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
 						game.setLastDefenderId(defenderId);
