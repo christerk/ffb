@@ -12,6 +12,7 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 		private final String blockDefenderId;
 		private final String multiBlockDefenderId;
 		private final boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, addBlockDie;
+		private boolean publishDefender;
 
 		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, boolean usingVomit) {
 			this(gameState, blockDefenderId, usingStab, usingChainsaw, usingVomit, false, null, false, false);
@@ -52,6 +53,11 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 			this(gameState, null, false, false, false, false, null, false, false);
 		}
 
+		public SequenceParams(GameState gameState, boolean usingChainsaw, boolean publishDefender) {
+			this(gameState, usingChainsaw);
+			this.publishDefender = publishDefender;
+		}
+
 		public String getBlockDefenderId() {
 			return blockDefenderId;
 		}
@@ -82,6 +88,10 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 
 		public boolean isAddBlockDie() {
 			return addBlockDie;
+		}
+
+		public boolean isPublishDefender() {
+			return publishDefender;
 		}
 	}
 }

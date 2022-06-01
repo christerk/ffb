@@ -30,6 +30,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.Block;
@@ -139,7 +140,6 @@ public class StepEndBlocking extends AbstractStep {
 					break;
 				case ALLOW_SECOND_BLOCK_ACTION:
 					allowSecondBlockAction = (boolean) parameter.getValue();
-					consume(parameter);
 					break;
 				default:
 					break;
@@ -211,6 +211,7 @@ public class StepEndBlocking extends AbstractStep {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), defenderId, fUsingStab, true, null, askForBlockKind, addBlockDie));
 				} else {
 					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), defenderId, fUsingStab, null, askForBlockKind));
+					publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, allowSecondBlockAction));
 				}
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
@@ -275,17 +276,17 @@ public class StepEndBlocking extends AbstractStep {
 					if (attackerState.hasTacklezones() && allowSecondBlockAction && hasValidOpponent) {
 						allowSecondBlockAction = false;
 						actingPlayer.setHasBlocked(false);
-						//Arrays.stream(actingPlayer.getUsedSkills()).filter(skill -> !skill.isNegativeTrait()).forEach(skill -> actingPlayer.markSkillUsed());
-						blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
+						actingPlayer.markSkillUnused(NamedProperties.forceSecondBlock);
+						blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), usingChainsaw, true));
 						ServerUtilBlock.updateDiceDecorations(game);
 					} else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
 						&& attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
 						game.setLastDefenderId(defenderId);
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
 						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true));
+							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true, true));
 						} else {
-							blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), true));
+							blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), true, true));
 						}
 
 					} else {
