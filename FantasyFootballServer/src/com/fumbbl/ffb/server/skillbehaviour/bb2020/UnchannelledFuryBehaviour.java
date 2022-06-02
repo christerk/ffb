@@ -104,8 +104,8 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 							} else {
 								Skill furySkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformTwoBlocksAfterFailedFury);
 								if (furySkill != null && actingPlayer.getPlayerAction() == PlayerAction.BLOCK) {
-									UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), true);
-									return false;
+									UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), furySkill, 0), true);
+									status = ActionStatus.WAITING_FOR_SKILL_USE;
 								} else {
 									cancelPlayerAction(step);
 								}

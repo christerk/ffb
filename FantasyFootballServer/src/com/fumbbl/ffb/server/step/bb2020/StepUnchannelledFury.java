@@ -55,13 +55,9 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
 				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 					state.goToLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -110,6 +106,9 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+		if (state.status != null) {
+			IServerJsonOption.STATUS.addTo(jsonObject, state.status.name());
+		}
 		return jsonObject;
 	}
 
@@ -118,6 +117,9 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		if (IServerJsonOption.STATUS.isDefinedIn(jsonObject)) {
+			state.status = ActionStatus.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 
