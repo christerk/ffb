@@ -41,6 +41,7 @@ public enum SkillUse implements INamedObject {
 	ADD_BLOCK_DIE("addBlockDie", "to add a block die"),
 	PERFORM_SECOND_CHAINSAW_ATTACK("performSecondChainsawAttack", "to perform a second chainsaw attack"),
 	PERFORM_SECOND_TWO_BLOCKS("performSecondTwoBlocks", "to perform two block actions"),
+	FORCE_BOMB_EXPLOSION("forceBombExplosion", "to force the bomb to explode"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

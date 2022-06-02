@@ -45,11 +45,13 @@ public class NamedProperties {
 	public static final ISkillProperty canDoubleStrengthAfterDauntless = new NamedProperty("Can Double Strength After Dauntless");
 	public static final ISkillProperty canDropBall = new NamedProperty("Can Drop Ball");
 	public static final ISkillProperty canFollowPlayerLeavingTacklezones = new NamedProperty("Can Follow Player Leaving Tacklezones");
+	public static final ISkillProperty canForceBombExplosion = new NamedProperty("Can Force Bomb Explosion");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
 		private final Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
-				add(PassingDistance.LONG_PASS);
-				add(PassingDistance.LONG_BOMB);
-			}};
+			add(PassingDistance.LONG_PASS);
+			add(PassingDistance.LONG_BOMB);
+		}};
+
 		@Override
 		public boolean appliesToContext(PassContext context) {
 			return longDistances.contains(context.getDistance());

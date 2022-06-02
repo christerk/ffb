@@ -8,15 +8,23 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SpecialEffect;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportBombExplodesAfterCatch;
 import com.fumbbl.ffb.report.ReportBombOutOfBounds;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -31,8 +39,10 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.SpecialEffect.SequenceParams;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +71,7 @@ public final class StepInitBomb extends AbstractStep {
     private FieldCoordinate fBombCoordinate;
     private boolean fBombOutOfBounds;
     private boolean dontDropFumble;
+    private Boolean explodeSkillUsed;
 
     public StepInitBomb(GameState pGameState) {
         super(pGameState);
@@ -123,6 +134,20 @@ public final class StepInitBomb extends AbstractStep {
     @Override
     public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
         StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+        if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+            if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+                ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+                if (clientCommandUseSkill.getSkill().hasSkillProperty(NamedProperties.canForceBombExplosion)) {
+                    explodeSkillUsed = clientCommandUseSkill.isSkillUsed();
+                    getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), clientCommandUseSkill.getSkill(), clientCommandUseSkill.isSkillUsed(), SkillUse.FORCE_BOMB_EXPLOSION));
+                    if (explodeSkillUsed) {
+                        getGameState().getGame().getActingPlayer().markSkillUsed(clientCommandUseSkill.getSkill());
+                    }
+                    commandStatus = StepCommandStatus.EXECUTE_STEP;
+                }
+            }
+        }
+
         if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
             executeStep();
         }
@@ -142,9 +167,24 @@ public final class StepInitBomb extends AbstractStep {
         }
 
         if (fCatcherId != null) {
-            int roll = getGameState().getDiceRoller().rollDice(6);
-            boolean explodes = roll >= 4;
-            getResult().addReport(new ReportBombExplodesAfterCatch(fCatcherId, explodes, roll));
+            ActingPlayer actingPlayer = game.getActingPlayer();
+            Skill explodeSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canForceBombExplosion);
+            if (explodeSkill != null) {
+                if (explodeSkillUsed == null) {
+                    UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), explodeSkill, 0), false);
+                    return;
+                }
+            } else if (explodeSkillUsed == null) {
+                explodeSkillUsed = false;
+            }
+            boolean explodes;
+            if (explodeSkillUsed) {
+                explodes = true;
+            } else {
+                int roll = getGameState().getDiceRoller().rollDice(6);
+                explodes = roll >= 4;
+                getResult().addReport(new ReportBombExplodesAfterCatch(fCatcherId, explodes, roll));
+            }
             if (explodes) {
                 fCatcherId = null;
             }
@@ -208,6 +248,7 @@ public final class StepInitBomb extends AbstractStep {
         IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
         IServerJsonOption.BOMB_COORDINATE.addTo(jsonObject, fBombCoordinate);
         IServerJsonOption.DONT_DROP_FUMBLE.addTo(jsonObject, dontDropFumble);
+        IServerJsonOption.SKILL_USED.addTo(jsonObject, explodeSkillUsed);
         return jsonObject;
     }
 
@@ -220,6 +261,7 @@ public final class StepInitBomb extends AbstractStep {
         fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(source, jsonObject);
         fBombCoordinate = IServerJsonOption.BOMB_COORDINATE.getFrom(source, jsonObject);
         dontDropFumble = toPrimitive(IServerJsonOption.DONT_DROP_FUMBLE.getFrom(source, jsonObject));
+        explodeSkillUsed = IServerJsonOption.SKILL_USED.getFrom(source, jsonObject);
         return this;
     }
 
