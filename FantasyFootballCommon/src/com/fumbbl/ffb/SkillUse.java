@@ -42,6 +42,7 @@ public enum SkillUse implements INamedObject {
 	PERFORM_SECOND_CHAINSAW_ATTACK("performSecondChainsawAttack", "to perform a second chainsaw attack"),
 	PERFORM_SECOND_TWO_BLOCKS("performSecondTwoBlocks", "to perform two block actions"),
 	FORCE_BOMB_EXPLOSION("forceBombExplosion", "to force the bomb to explode"),
+	RE_ROLL_DIRECTION("reRollDirection", "to re-roll the direction roll"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

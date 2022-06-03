@@ -55,6 +55,7 @@ public class ReRolledActions {
 	public static final ReRolledAction ARGUE_THE_CALL = new ReRolledAction("Argue the Call");
 	public static final ReRolledAction OLD_PRO = new ReRolledAction("Old Pro");
 	public static final ReRolledAction THROW_KEG = new ReRolledAction("Throw Keg");
+	public static final ReRolledAction DIRECTION = new ReRolledAction("Direction");
 
 	private final Map<String, ReRolledAction> values;
 

@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Wisdom not working on passes")
 			.addFeature("Fury of the Blood God")
 			.addFeature("Kaboom!")
+			.addFeature("Whirling Dervish")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
