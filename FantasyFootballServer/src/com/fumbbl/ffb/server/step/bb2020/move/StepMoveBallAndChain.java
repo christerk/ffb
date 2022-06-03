@@ -20,6 +20,8 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.report.ReportScatterPlayer;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -181,7 +183,9 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), 0), false);
 						return;
 					}
-					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 0, false)) {
+					boolean askForReRoll = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
+
+					if (askForReRoll && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 0, false)) {
 						return;
 					}
 				}

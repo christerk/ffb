@@ -17,6 +17,7 @@ public class ChangeList {
 			.addFeature("Fury of the Blood God")
 			.addFeature("Kaboom!")
 			.addFeature("Whirling Dervish")
+			.addFeature("Game option: allowBallAndChainReRoll")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
