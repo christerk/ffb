@@ -181,6 +181,9 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), 0), false);
 						return;
 					}
+					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 0, false)) {
+						return;
+					}
 				}
 			}
 			if (!FieldCoordinateBounds.FIELD.isInBounds(fCoordinateTo)) {
