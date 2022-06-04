@@ -13,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import java.awt.Container;
 import java.util.Map;
 
@@ -124,11 +125,13 @@ public class DialogSkillUse extends DialogThreeWayChoice {
 		JPanel boxPanel = new JPanel();
 		boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.X_AXIS));
 		boxPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		boxPanel.add(box);
-		boxPanel.add(Box.createHorizontalStrut(3));
 		boxPanel.add(new JLabel(name));
+		boxPanel.add(Box.createHorizontalStrut(5));
+		boxPanel.add(box);
 
-		contentPane.add(Box.createHorizontalStrut(3));
+		contentPane.add(new JSeparator());
+		boxPanel.add(Box.createVerticalStrut(5));
+		contentPane.add(new JSeparator());
 		contentPane.add(boxPanel);
 
 	}
