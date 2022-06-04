@@ -52,6 +52,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption DROP_THROWN_PLAYER = new JsonBooleanOption("dropThrownPlayer");
     JsonIntOption DODGE_ROLL = new JsonIntOption("dodgeRoll");
     JsonBooleanOption DONT_DROP_FUMBLE = new JsonBooleanOption("dontDropFumble");
+    JsonBooleanOption DO_ROLL = new JsonBooleanOption("doRoll");
     JsonBooleanOption ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS = new JsonBooleanOption("eligibleForSafePairOfHands");
     JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
     JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");
@@ -139,6 +140,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
     JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
+    JsonBooleanOption RE_ROLLING = new JsonBooleanOption("reRolling");
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
     JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
@@ -172,6 +174,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption TOUCHDOWN = new JsonBooleanOption("touchdown");
     JsonBooleanOption USE_ALTERNATE_LABEL = new JsonBooleanOption("useAlternateLabel");
     JsonBooleanOption USE_KICK_CHOICE = new JsonBooleanOption("useKickChoice");
+    JsonBooleanOption USING_BLAST_IT = new JsonBooleanOption("usingBlastIt");
     JsonBooleanOption USING_BREAK_TACKLE = new JsonBooleanOption("usingBreakTackle");
     JsonBooleanOption USING_DIVING_TACKLE = new JsonBooleanOption("usingDivingTackle");
     JsonBooleanOption USING_DODGE = new JsonBooleanOption("usingDodge");

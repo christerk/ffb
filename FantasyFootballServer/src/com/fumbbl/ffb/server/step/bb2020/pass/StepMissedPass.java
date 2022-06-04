@@ -1,12 +1,25 @@
 package com.fumbbl.ffb.server.step.bb2020.pass;
 
-import com.fumbbl.ffb.*;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.report.ReportScatterBall;
+import com.fumbbl.ffb.report.bb2020.ReportEvent;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -14,8 +27,12 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,6 +45,14 @@ import java.util.List;
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepMissedPass extends AbstractStep {
+
+	private final List<Integer> rollList = new ArrayList<>();
+	private FieldCoordinate coordinateStart, coordinateEnd, lastValidCoordinate;
+	private Direction direction;
+
+	private int roll;
+
+	private boolean doRoll, reRolling;
 
 	public StepMissedPass(GameState pGameState) {
 		super(pGameState);
@@ -56,11 +81,7 @@ public class StepMissedPass extends AbstractStep {
 
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		FieldCoordinate coordinateEnd = null;
-		FieldCoordinate lastValidCoordinate = null;
-		List<Integer> rollList = new ArrayList<>();
 		List<Direction> directionList = new ArrayList<>();
-		FieldCoordinate coordinateStart;
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 		if (state.getResult().equals(PassResult.WILDLY_INACCURATE)) {
 			coordinateStart = throwerCoordinate;
@@ -76,14 +97,39 @@ public class StepMissedPass extends AbstractStep {
 			}
 			getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll, false));
 		} else {
-			coordinateStart = game.getPassCoordinate();
+			if (coordinateStart == null) {
+				doRoll = true;
+				coordinateStart = game.getPassCoordinate();
+			}
 			while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
-				int roll = getGameState().getDiceRoller().rollScatterDirection();
+				if (doRoll) {
+					roll = getGameState().getDiceRoller().rollScatterDirection();
+					direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
+					coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
+					lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
+				}
+
+				boolean hasBlastIt = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
+				if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
+					&& (state.getUsingBlastIt() == null || state.getUsingBlastIt() || hasBlastIt)
+					&& !reRolling) {
+					getResult().addReport(new ReportScatterBall(new Direction[]{direction}, new int[]{roll}, false));
+					if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
+						getResult().addReport(new ReportEvent("The ball would land out of bounds!"));
+					}
+
+					game.getFieldModel().setBallCoordinate(coordinateEnd);
+					game.getFieldModel().setBallMoving(true);
+					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.canReRollHmpScatter), 0), false);
+					reRolling = true;
+					return;
+				}
+
+				doRoll = true;
+				reRolling = false;
+
 				rollList.add(roll);
-				Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
 				directionList.add(direction);
-				coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
-				lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
 				coordinateStart = coordinateEnd;
 			}
 			int[] rolls = new int[rollList.size()];
@@ -111,4 +157,35 @@ public class StepMissedPass extends AbstractStep {
 
 	}
 
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.ROLLS.addTo(jsonObject, rollList);
+		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, coordinateStart);
+		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, coordinateEnd);
+		IServerJsonOption.COORDINATE.addTo(jsonObject, lastValidCoordinate);
+		IServerJsonOption.DIRECTION.addTo(jsonObject, direction);
+		IServerJsonOption.ROLL.addTo(jsonObject, roll);
+		IServerJsonOption.DO_ROLL.addTo(jsonObject, doRoll);
+		IServerJsonOption.RE_ROLLING.addTo(jsonObject, reRolling);
+		return jsonObject;
+	}
+
+	@Override
+	public StepMissedPass initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		int[] rolls = IServerJsonOption.ROLLS.getFrom(source, jsonObject);
+		if (ArrayTool.isProvided(rolls)) {
+			Arrays.stream(rolls).forEach(rollList::add);
+		}
+		coordinateStart = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
+		coordinateEnd = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		lastValidCoordinate = IServerJsonOption.COORDINATE.getFrom(source, jsonObject);
+		direction = (Direction) IServerJsonOption.DIRECTION.getFrom(source, jsonObject);
+		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
+		doRoll = toPrimitive(IServerJsonOption.DO_ROLL.getFrom(source, jsonObject));
+		reRolling = toPrimitive(IServerJsonOption.RE_ROLLING.getFrom(source, jsonObject));
+		return this;
+	}
 }
