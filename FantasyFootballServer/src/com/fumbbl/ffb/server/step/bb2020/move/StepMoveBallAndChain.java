@@ -183,41 +183,42 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 					new int[]{scatterRoll}));
 				game.getFieldModel().add(new MoveSquare(fCoordinateTo, 0, 0));
 				if (getReRollSource() == null) {
-					ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, RE_ROLLED_ACTION);
-					if (reRollSource != null) {
-						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), 0), false);
-						return;
-					}
-					boolean askForReRoll = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
+					boolean askForReRoll = true;
 
-					if (askForReRoll) {
-						IDbStatementFactory statementFactory = getGameState().getServer().getDbQueryFactory();
-						DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
-							.getStatement(DbStatementId.USER_SETTINGS_QUERY);
-						userSettingsQuery.execute(game.getActingTeam().getCoach());
-						String reRollSetting = userSettingsQuery.getSettingValue(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+					IDbStatementFactory statementFactory = getGameState().getServer().getDbQueryFactory();
+					DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
+						.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+					userSettingsQuery.execute(game.getActingTeam().getCoach());
+					String reRollSetting = userSettingsQuery.getSettingValue(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
 
-						Player<?> hitPlayer = game.getFieldModel().getPlayer(fCoordinateTo);
+					Player<?> hitPlayer = game.getFieldModel().getPlayer(fCoordinateTo);
 
-						if (StringTool.isProvided(reRollSetting)) {
-							switch (reRollSetting) {
-								case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER:
+					if (StringTool.isProvided(reRollSetting)) {
+						switch (reRollSetting) {
+							case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER:
+								askForReRoll = false;
+								break;
+							case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE:
+								if (hitPlayer == null || hitPlayer.getTeam() != game.getActingTeam()) {
 									askForReRoll = false;
-									break;
-								case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE:
-									if (hitPlayer == null || hitPlayer.getTeam() != game.getActingTeam()) {
-										askForReRoll = false;
-									}
-									break;
-								case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT:
-									if (hitPlayer != null && hitPlayer.getTeam() != game.getActingTeam()) {
-										askForReRoll = false;
-									}
-									break;
-								default:
-									break;
-							}
+								}
+								break;
+							case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT:
+								if (hitPlayer != null && hitPlayer.getTeam() != game.getActingTeam()) {
+									askForReRoll = false;
+								}
+								break;
+							default:
+								break;
 						}
+					}
+					if (askForReRoll) {
+						ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, RE_ROLLED_ACTION);
+						if (reRollSource != null) {
+							UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), 0), false);
+							return;
+						}
+						askForReRoll = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
 						if (askForReRoll && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 0, false)) {
 							return;
