@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,14 +37,18 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', "No", 'N');
 	}
 
+	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty, String menuProperty, String defaultValueKey) {
+		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', null, 0, "No", 'N', menuProperty, defaultValueKey);
+	}
+
 	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
 															String pYesButtonText, int pYesButtonMnemonic, String pNoButtonText, int pNoButtonMnemonic) {
-		this(pClient, pTitle, pMessages, pIconProperty, pYesButtonText, pYesButtonMnemonic, null, 0, pNoButtonText, pNoButtonMnemonic);
+		this(pClient, pTitle, pMessages, pIconProperty, pYesButtonText, pYesButtonMnemonic, null, 0, pNoButtonText, pNoButtonMnemonic, null, null);
 	}
 
 	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
 															String choiceOneText, int choiceOneMnemonic, String choiceTwoText, int choiceTwoMnemonic,
-															String choiceThreeText, int choiceThreeMnemonic) {
+															String choiceThreeText, int choiceThreeMnemonic, String menuProperty, String defaultValueKey) {
 
 		super(pClient, pTitle, false);
 
@@ -113,6 +118,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(infoPanel);
 		getContentPane().add(buttonPanel);
+		addCustomPanel(getContentPane(), menuProperty, defaultValueKey);
 
 		pack();
 		setLocationToCenter();
@@ -170,4 +176,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 	public void keyTyped(KeyEvent pKeyEvent) {
 	}
 
+	protected void addCustomPanel(@SuppressWarnings("unused") Container contentPane, String menuProperty, String defaultValueKey) {
+		// override in subclasses
+	}
 }

@@ -62,6 +62,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -160,6 +162,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final List<Prayer> currentPrayersHome = new ArrayList<>();
 	private final List<Prayer> currentPrayersAway = new ArrayList<>();
+	private final Map<String, JMenu> exposedMenus = new HashMap<>();
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
@@ -363,25 +366,30 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
 		reRollBallAndChainPanelMenu = new JMenu("Ask for Whirling Dervish");
+		exposedMenus.put(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
 		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
 
 		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem("Always");
+		reRollBallAndChainAlwaysMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
 		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
 
 		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem("When not hitting an opponent");
+		reRollBallAndChainNoOpponentMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
 		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
 
 		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem("When hitting Team-mate");
+		reRollBallAndChainTeamMateMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
 		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
 
 		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem("Never");
+		reRollBallAndChainNeverMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
 		reRollBallAndChainNeverMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
@@ -1286,4 +1294,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return Arrays.stream(allCards).collect(Collectors.groupingBy(Card::getType));
 	}
 
+	public String menuName(String menuProperty) {
+		JMenu exposedMenu = exposedMenus.get(menuProperty);
+		return exposedMenu != null ? exposedMenu.getText() : "";
+	}
+
+	public Map<String, String> menuEntries(String menuProperty) {
+		Map<String, String> entries = new LinkedHashMap<>();
+
+		JMenu exposedMenu = exposedMenus.get(menuProperty);
+		if (exposedMenu != null) {
+			for (int i = 0; i < exposedMenu.getItemCount(); i++) {
+				JMenuItem item = exposedMenu.getItem(i);
+				entries.put(item.getName(), item.getText());
+			}
+		}
+
+		return entries;
+	}
 }

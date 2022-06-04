@@ -215,7 +215,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 					if (askForReRoll) {
 						ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, RE_ROLLED_ACTION);
 						if (reRollSource != null) {
-							UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), 0), false);
+							UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), reRollSource.getSkill(game), 0, CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS), false);
 							return;
 						}
 						askForReRoll = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();

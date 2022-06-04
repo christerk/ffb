@@ -127,6 +127,7 @@ public interface IJsonOption {
 	JsonIntOption DEDICATED_FANS_MODIFIER_AWAY = new JsonIntOption("dedicatedFansModifierAway");
 	JsonIntOption DEDICATED_FANS_ROLL = new JsonIntOption("dedicatedFansRoll");
 	JsonIntOption DEDICATED_FANS_RESULT = new JsonIntOption("dedicatedFansResult");
+	JsonStringOption DEFAULT_VALUE_KEY = new JsonStringOption("defaultValueKey");
 	JsonBooleanOption DEFECTING = new JsonBooleanOption("defecting");
 	JsonBooleanArrayOption DEFECTING_ARRAY = new JsonBooleanArrayOption("defectingArray");
 	JsonEnumWithNameOption DEFENDER_ACTION = new JsonEnumWithNameOption("defenderAction", Factory.PLAYER_ACTION);
@@ -144,7 +145,6 @@ public interface IJsonOption {
 	JsonIntOption DISTANCE = new JsonIntOption("distance");
 	JsonIntArrayOption DISTANCE_ROLL = new JsonIntArrayOption("distanceRoll");
 	JsonStringOption DIVISION = new JsonStringOption("division");
-	JsonBooleanOption DODGING = new JsonBooleanOption("dodging");
 	JsonBooleanOption DOUBLE_TARGET_STRENGTH = new JsonBooleanOption("doubleTargetStrength");
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
@@ -247,6 +247,7 @@ public interface IJsonOption {
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
 	JsonIntOption MAX_RE_ROLLS = new JsonIntOption("maxReRolls");
 	JsonIntOption MAX_SELECTS = new JsonIntOption("maxSelects");
+	JsonStringOption MENU_PROPERTY = new JsonStringOption("menuProperty");
 	JsonStringArrayOption MERCENARY_POSTION_IDS = new JsonStringArrayOption("mercenaryPositionIds");
 	JsonStringArrayOption MERCENARY_SKILLS = new JsonStringArrayOption("mercenarySkills");
 	JsonStringOption MESSAGE = new JsonStringOption("message");
