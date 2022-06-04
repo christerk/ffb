@@ -68,7 +68,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Kalimar
  */
 public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener {
@@ -128,6 +127,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
 	private final JRadioButtonMenuItem fRangeGridToggleMenuItem;
 
+	private final JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
+	private final JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
+	private final JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
+	private final JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
+
 	private final JMenu fMissingPlayersMenu;
 
 	private final JMenu fInducementsMenu;
@@ -142,6 +146,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JMenuItem fChatCommandsMenuItem;
 	private final JMenuItem fKeyBindingsMenuItem;
 	private final JMenuItem changeListItem;
+	private final JMenu reRollBallAndChainPanelMenu;
 
 	private IDialog fDialogShown;
 
@@ -300,7 +305,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fAutomoveOffMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOffMenuItem);
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
-		
+
 		ButtonGroup blitzTargetPanelGroup = new ButtonGroup();
 		JMenu blitzTargetPanelMenu = new JMenu("Blitz Target Panel");
 		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_P);
@@ -355,6 +360,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		rightClickEndActionOffMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
+
+		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
+		reRollBallAndChainPanelMenu = new JMenu("Re-Roll Ball & Chain Movement");
+		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
+		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
+
+		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem("Never");
+		reRollBallAndChainNeverMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
+
+		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem("When hitting Team-mate");
+		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
+
+		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem("When not hitting an opponent");
+		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
+
+		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem("Always");
+		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
 
 		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
@@ -549,6 +579,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		rightClickLegacyModeItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickEndActionSetting));
 		rightClickOpensContextMenuItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU.equals(rightClickEndActionSetting));
 
+		String reRollBallAndChainSetting = getClient().getProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+		reRollBallAndChainAlwaysMenuItem.setSelected(true);
+		reRollBallAndChainTeamMateMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE.equals(reRollBallAndChainSetting));
+		reRollBallAndChainNoOpponentMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT.equals(reRollBallAndChainSetting));
+		reRollBallAndChainNeverMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER.equals(reRollBallAndChainSetting));
+
 		String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
 		fDefaultPitchMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(pitchCustomizationSetting));
@@ -579,6 +615,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
 
 		fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
+
+		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
+
+		reRollBallAndChainPanelMenu.setEnabled(askForReRoll);
 
 		updateMissingPlayers();
 		updateInducements();
@@ -685,6 +725,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == rightClickEndActionOffMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainAlwaysMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainTeamMateMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainNoOpponentMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainNeverMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fCustomPitchMenuItem) {
@@ -929,13 +985,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 
 			int currentActiveCardsHomeLength = ArrayTool.isProvided(fCurrentActiveCardsHome) ? fCurrentActiveCardsHome.length
-					: 0;
+				: 0;
 			int currentActiveCardsAwayLength = ArrayTool.isProvided(fCurrentActiveCardsAway) ? fCurrentActiveCardsAway.length
-					: 0;
+				: 0;
 
 			if ((currentActiveCardsHomeLength + currentActiveCardsAwayLength) > 0) {
 				StringBuilder menuText = new StringBuilder()
-						.append(currentActiveCardsHomeLength + currentActiveCardsAwayLength);
+					.append(currentActiveCardsHomeLength + currentActiveCardsAwayLength);
 				if ((currentActiveCardsHomeLength + currentActiveCardsAwayLength) > 1) {
 					menuText.append(" Active Cards");
 				} else {
@@ -956,7 +1012,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		Game game = getClient().getGame();
 		Arrays.sort(pCards, Card.createComparator());
 		Icon cardIcon = new ImageIcon(
-				getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
+			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
 		for (Card card : pCards) {
 			Player<?> player = null;
 			if (card.getTarget().isPlayedOnPlayer()) {
@@ -1136,7 +1192,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				JMenu cardMenu = new JMenu(cardTypeText.toString());
 				pInducementMenu.add(cardMenu);
 				ImageIcon cardIcon = new ImageIcon(
-						userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
+					userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
 				for (Card card : cardList) {
 					if (pInducementSet.isAvailable(card)) {
 						String cardText = "<html>" +

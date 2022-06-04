@@ -2,6 +2,8 @@ package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -27,6 +29,9 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.db.DbStatementId;
+import com.fumbbl.ffb.server.db.IDbStatementFactory;
+import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -185,8 +190,38 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 					}
 					boolean askForReRoll = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
-					if (askForReRoll && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 0, false)) {
-						return;
+					if (askForReRoll) {
+						IDbStatementFactory statementFactory = getGameState().getServer().getDbQueryFactory();
+						DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
+							.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+						userSettingsQuery.execute(game.getActingTeam().getCoach());
+						String reRollSetting = userSettingsQuery.getSettingValue(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+
+						Player<?> hitPlayer = game.getFieldModel().getPlayer(fCoordinateTo);
+
+						if (StringTool.isProvided(reRollSetting)) {
+							switch (reRollSetting) {
+								case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER:
+									askForReRoll = false;
+									break;
+								case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE:
+									if (hitPlayer == null || hitPlayer.getTeam() != game.getActingTeam()) {
+										askForReRoll = false;
+									}
+									break;
+								case CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT:
+									if (hitPlayer != null && hitPlayer.getTeam() != game.getActingTeam()) {
+										askForReRoll = false;
+									}
+									break;
+								default:
+									break;
+							}
+						}
+
+						if (askForReRoll && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 0, false)) {
+							return;
+						}
 					}
 				}
 			}

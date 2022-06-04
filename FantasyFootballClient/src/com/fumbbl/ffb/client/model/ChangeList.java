@@ -17,7 +17,8 @@ public class ChangeList {
 			.addFeature("Fury of the Blood God")
 			.addFeature("Kaboom!")
 			.addFeature("Whirling Dervish")
-			.addFeature("Game option: allowBallAndChainReRoll")
+			.addFeature("Add option to re-roll ball and chain movement (game option: allowBallAndChainReRoll)")
+			.addFeature("Add menu to select re-roll options for ball and chain movement")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
