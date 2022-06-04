@@ -361,30 +361,32 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
 
+		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
+
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
-		reRollBallAndChainPanelMenu = new JMenu("Re-Roll Ball & Chain Movement");
+		reRollBallAndChainPanelMenu = new JMenu(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
 
-		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem("Never");
-		reRollBallAndChainNeverMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
-
-		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem("When hitting Team-mate");
-		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
+		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem("Always");
+		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
 
 		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem("When not hitting an opponent");
 		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
 
-		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem("Always");
-		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
+		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem("When hitting Team-mate");
+		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
+
+		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem("Never");
+		reRollBallAndChainNeverMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
 
 		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
@@ -615,10 +617,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
 
 		fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
-
-		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
-
-		reRollBallAndChainPanelMenu.setEnabled(askForReRoll);
 
 		updateMissingPlayers();
 		updateInducements();
