@@ -11,7 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -118,7 +117,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(infoPanel);
 		getContentPane().add(buttonPanel);
-		addCustomPanel(getContentPane(), menuProperty, defaultValueKey);
+		addMenuPanel(getContentPane(), menuProperty, defaultValueKey);
 
 		pack();
 		setLocationToCenter();
@@ -176,7 +175,4 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 	public void keyTyped(KeyEvent pKeyEvent) {
 	}
 
-	protected void addCustomPanel(@SuppressWarnings("unused") Container contentPane, String menuProperty, String defaultValueKey) {
-		// override in subclasses
-	}
 }
