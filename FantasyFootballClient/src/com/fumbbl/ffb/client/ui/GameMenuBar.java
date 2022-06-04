@@ -361,10 +361,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
 
-		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
-
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
-		reRollBallAndChainPanelMenu = new JMenu(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
+		reRollBallAndChainPanelMenu = new JMenu("Ask for Whirling Dervish");
 		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
 
@@ -623,6 +621,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
+
+		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
+
+		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 
 	}
 
