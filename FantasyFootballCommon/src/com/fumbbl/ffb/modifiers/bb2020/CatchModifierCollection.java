@@ -19,12 +19,14 @@ public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModif
 		add(new CatchModifier("Inaccurate Pass, Deviated Ball or Scatter", 1, ModifierType.REGULAR) {
 			private final Set<CatchScatterThrowInMode> scatter = new HashSet<CatchScatterThrowInMode>() {
 				private static final long serialVersionUID = 6752365907656902172L;
+
 				{
 					add(CatchScatterThrowInMode.CATCH_BOMB);
 					add(CatchScatterThrowInMode.CATCH_SCATTER);
 					add(CatchScatterThrowInMode.CATCH_KICKOFF);
 				}
 			};
+
 			@Override
 			public boolean appliesToContext(Skill skill, CatchContext context) {
 				return super.appliesToContext(skill, context) && scatter.contains(context.getCatchMode());
@@ -50,7 +52,9 @@ public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModif
 		add(new CatchModifier("Blast It!", -1, ModifierType.REGULAR) {
 			@Override
 			public boolean appliesToContext(Skill skill, CatchContext context) {
-				return super.appliesToContext(skill, context);
+				return super.appliesToContext(skill, context) && context.getUsingBlastIt()
+					&& (context.getCatchMode() == CatchScatterThrowInMode.CATCH_SCATTER
+					|| context.getCatchMode() == CatchScatterThrowInMode.CATCH_MISSED_PASS);
 			}
 		});
 	}
