@@ -34,14 +34,23 @@ public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModif
 		add(new CatchModifier("Deflected Pass", 1, ModifierType.REGULAR) {
 			private final Set<CatchScatterThrowInMode> deflected = new HashSet<CatchScatterThrowInMode>() {
 				private static final long serialVersionUID = 5356216477217665429L;
+
 				{
 					add(CatchScatterThrowInMode.DEFLECTED);
 					add(CatchScatterThrowInMode.DEFLECTED_BOMB);
 				}
 			};
+
 			@Override
 			public boolean appliesToContext(Skill skill, CatchContext context) {
 				return super.appliesToContext(skill, context) && deflected.contains(context.getCatchMode());
+			}
+		});
+
+		add(new CatchModifier("Blast It!", -1, ModifierType.REGULAR) {
+			@Override
+			public boolean appliesToContext(Skill skill, CatchContext context) {
+				return super.appliesToContext(skill, context);
 			}
 		});
 	}
