@@ -19,6 +19,7 @@ public class ChangeList {
 			.addFeature("Whirling Dervish")
 			.addFeature("Add option to re-roll ball and chain movement (game option boolean: allowBallAndChainReRoll)")
 			.addFeature("Add menu to select re-roll options for ball and chain movement")
+			.addFeature("Blast It!")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
