@@ -16,5 +16,6 @@ public class BlastIt extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canReRollHmpScatter);
+		registerProperty(NamedProperties.grantsCatchBonusToReceiver);
 	}
 }

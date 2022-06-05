@@ -16,6 +16,7 @@ import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.CatchModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Card;
@@ -69,6 +70,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -104,6 +106,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private final List<String> divingCatchers = new ArrayList<>();
 	private String divingCatchControlTeam;
 	private int roll;
+	private Boolean usingModifyingSkill;
 
 	private transient boolean repeat;
 
@@ -441,7 +444,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "catchBall()");
 
-		state.catcher = game.getPlayerById(fCatcherId);
+		Player<?> catcher = game.getPlayerById(fCatcherId);
+		state.catcher = catcher;
 		if ((state.catcher == null) || state.catcher.hasSkillProperty(NamedProperties.preventCatch)) {
 			return CatchScatterThrowInMode.SCATTER_BALL;
 		}
@@ -487,14 +491,36 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				return null;
 
 			} else {
+				boolean successfulWithBlastIt = false;
+
+				if (getGameState().getPassState() != null) {
+					Boolean usingBlastIt = getGameState().getPassState().getUsingBlastIt();
+
+					if (game.getThrower().hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)
+						&& !toPrimitive(usingBlastIt)) {
+						Set<CatchModifier> catchModifiersWithBlastIt = modifierFactory.findModifiers(new CatchContext(game, state.catcher, fCatchScatterThrowInMode, true));
+						successfulWithBlastIt = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, mechanic.minimumRollCatch(state.catcher, catchModifiersWithBlastIt));
+					}
+				}
+				Optional<Skill> catchSkill = catcher.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.getRerollSource(ReRolledActions.CATCH) != null).findFirst();
+
 				if (getReRolledAction() != ReRolledActions.CATCH) {
 
 					boolean stopProcessing = getGameState().executeStepHooks(this, state);
 					if (state.rerollCatch) {
-						return catchBall();
+						if (successfulWithBlastIt) {
+							UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(fCatcherId, catchSkill.orElse(null),
+								minimumRoll, game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver)), false);
+							return fCatchScatterThrowInMode;
+						} else {
+							return catchBall();
+						}
 					}
 					if (!stopProcessing) {
-						if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), state.catcher, ReRolledActions.CATCH, minimumRoll,
+						if ((successfulWithBlastIt
+							&& UtilServerReRoll.askForReRollIfAvailable(getGameState(), catcher, ReRolledActions.CATCH, 0, false,
+							game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver), null))
+							|| UtilServerReRoll.askForReRollIfAvailable(getGameState(), state.catcher, ReRolledActions.CATCH, minimumRoll,
 							false)) {
 							setReRolledAction(ReRolledActions.CATCH);
 							return fCatchScatterThrowInMode;
@@ -727,6 +753,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		IServerJsonOption.TEAM_ID.addTo(jsonObject, divingCatchControlTeam);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
+		IServerJsonOption.USING_MODIFYING_SKILL.addTo(jsonObject, usingModifyingSkill);
 		return jsonObject;
 	}
 
@@ -751,6 +778,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		if (IServerJsonOption.ROLL.isDefinedIn(jsonObject)) {
 			roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		}
+
+		usingModifyingSkill = IServerJsonOption.USING_MODIFYING_SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 
