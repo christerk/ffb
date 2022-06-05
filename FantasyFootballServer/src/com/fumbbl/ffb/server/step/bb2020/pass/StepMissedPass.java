@@ -147,7 +147,12 @@ public class StepMissedPass extends AbstractStep {
 					lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
 				}
 
-				boolean hasBlastItUnused = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
+				if (reRolling) {
+					game.getFieldModel().clearMoveSquares();
+					game.getFieldModel().setBallCoordinate(coordinateEnd);
+					game.getFieldModel().setBallMoving(true);
+				}
+
 				boolean hasBlastIt = UtilCards.hasSkillWithProperty(game.getActingPlayer().getPlayer(), NamedProperties.canReRollHmpScatter);
 
 				if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
@@ -155,8 +160,6 @@ public class StepMissedPass extends AbstractStep {
 					&& !reRolling && hasBlastIt) {
 
 					reportDirectionRoll();
-					game.getFieldModel().setBallCoordinate(coordinateEnd);
-					game.getFieldModel().setBallMoving(true);
 
 					UtilServerDialog.showDialog(getGameState(),
 						new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.canReRollHmpScatter),
@@ -164,7 +167,7 @@ public class StepMissedPass extends AbstractStep {
 
 					reRolling = true;
 					game.getFieldModel().clearMoveSquares();
-					game.getFieldModel().add(new MoveSquare(coordinateStart, 0, 0));
+					game.getFieldModel().add(new MoveSquare(coordinateEnd, 0, 0));
 					return;
 				}
 
