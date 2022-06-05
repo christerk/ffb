@@ -8,13 +8,13 @@ public class CatchContext implements ModifierContext {
 	private final Player<?> player;
 	private final CatchScatterThrowInMode catchMode;
 	private final Game game;
-	private final Boolean usingBlastIt;
+	private final boolean usingBlastIt;
 
 	public CatchContext(Game game, Player<?> pPlayer, CatchScatterThrowInMode pCatchMode, Boolean usingBlastIt) {
 		this.player = pPlayer;
 		this.catchMode = pCatchMode;
 		this.game = game;
-		this.usingBlastIt = usingBlastIt;
+		this.usingBlastIt = usingBlastIt != null && usingBlastIt;
 	}
 
 	public Game getGame() {
@@ -29,7 +29,7 @@ public class CatchContext implements ModifierContext {
 		return catchMode;
 	}
 
-	public Boolean getUsingBlastIt() {
+	public boolean getUsingBlastIt() {
 		return usingBlastIt;
 	}
 }
