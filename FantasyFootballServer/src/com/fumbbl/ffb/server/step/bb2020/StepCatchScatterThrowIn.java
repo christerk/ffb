@@ -407,6 +407,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				Player<?> divingCatcher = game.getPlayerById(fCatcherId);
 				divingCatchers.remove(fCatcherId);
 				if (getReRollSource() == null) {
+					setReRolledAction(null);
 					Skill skill = divingCatcher.getSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
 					getResult().addReport(
 						new ReportSkillUse(divingCatcher.getId(), skill, true, SkillUse.CATCH_BALL));
