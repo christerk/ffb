@@ -431,6 +431,7 @@ public interface IJsonOption {
 	JsonBooleanOption SETUP_OFFENSE = new JsonBooleanOption("setupOffense");
 	JsonStringOption SHORTHAND = new JsonStringOption("shorthand");
 	JsonBooleanOption SHOW_NAME_IN_REPORT = new JsonBooleanOption("showNameInReport");
+	JsonBooleanOption SHOW_NEVER_USE = new JsonBooleanOption("showNeverUse");
 	JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", Factory.SKILL);
 	JsonArrayOption SKILL_ARRAY = new JsonArrayOption("skillArray");
 	JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");
@@ -438,6 +439,7 @@ public interface IJsonOption {
 	JsonStringOption SKILL_CHOICE_MODE = new JsonStringOption("skillChoiceMode");
 	JsonLegacySkillValuesOption SKILL_DISPLAY_VALUES = new JsonLegacySkillValuesOption("skillDisplayValues");
 	JsonSkillValuesMapOption SKILL_DISPLAY_VALUES_MAP = new JsonSkillValuesMapOption("skillDisplayValuesMap");
+	JsonBooleanOption SKILL_NEVER_USE = new JsonBooleanOption("skillNeverUse");
 	JsonEnumWithNameOption SKILL_USE = new JsonEnumWithNameOption("skillUse", Factory.SKILL_USE);
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");

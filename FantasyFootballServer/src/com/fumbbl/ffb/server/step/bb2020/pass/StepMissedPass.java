@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.server.step.bb2020.pass;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
@@ -11,6 +13,7 @@ import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
+import com.fumbbl.ffb.factory.DirectionFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.PassResult;
@@ -51,6 +54,8 @@ import java.util.List;
 public class StepMissedPass extends AbstractStep {
 
 	private final List<Integer> rollList = new ArrayList<>();
+	private final List<Direction> directionList = new ArrayList<>();
+
 	private FieldCoordinate coordinateStart, coordinateEnd, lastValidCoordinate;
 	private Direction direction;
 
@@ -84,13 +89,18 @@ public class StepMissedPass extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 						if (rollList.size() < 3) {
 							Game game = getGameState().getGame();
-							game.getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(clientCommandUseSkill.getSkill(), game);
 							doRoll = clientCommandUseSkill.isSkillUsed();
+							if (doRoll) {
+								game.getActingPlayer().markSkillUsed(clientCommandUseSkill.getSkill());
+							}
 						}
 						getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), clientCommandUseSkill.getSkill(), doRoll, SkillUse.RE_ROLL_DIRECTION));
 						if (clientCommandUseSkill.isSkillUsed()) {
 							getGameState().getPassState().setUsingBlastIt(true);
+						} else if (clientCommandUseSkill.isNeverUse()) {
+							getGameState().getPassState().setUsingBlastIt(false);
 						}
+
 					}
 					break;
 				default:
@@ -110,7 +120,6 @@ public class StepMissedPass extends AbstractStep {
 
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		List<Direction> directionList = new ArrayList<>();
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 		if (state.getResult().equals(PassResult.WILDLY_INACCURATE)) {
 			coordinateStart = throwerCoordinate;
@@ -140,28 +149,35 @@ public class StepMissedPass extends AbstractStep {
 
 				boolean hasBlastItUnused = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
 				boolean hasBlastIt = UtilCards.hasSkillWithProperty(game.getActingPlayer().getPlayer(), NamedProperties.canReRollHmpScatter);
-				if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
-					&& (state.getUsingBlastIt() == null || state.getUsingBlastIt() || hasBlastItUnused)
-					&& !reRolling && hasBlastIt) {
-					reportDirectionRoll();
 
+				if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
+					&& (state.getUsingBlastIt() == null || state.getUsingBlastIt())
+					&& !reRolling && hasBlastIt) {
+
+					reportDirectionRoll();
 					game.getFieldModel().setBallCoordinate(coordinateEnd);
 					game.getFieldModel().setBallMoving(true);
-					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.canReRollHmpScatter), 0), false);
+
+					UtilServerDialog.showDialog(getGameState(),
+						new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.canReRollHmpScatter),
+							0, state.getUsingBlastIt() == null), false);
+
 					reRolling = true;
+					game.getFieldModel().clearMoveSquares();
 					game.getFieldModel().add(new MoveSquare(coordinateStart, 0, 0));
 					return;
 				}
 
-				if (reRolling) {
+				if (reRolling && doRoll) {
 					reportDirectionRoll();
 				}
+
+				rollList.add(roll);
+				directionList.add(direction);
 
 				doRoll = true;
 				reRolling = false;
 
-				rollList.add(roll);
-				directionList.add(direction);
 				coordinateStart = coordinateEnd;
 			}
 			int[] rolls = new int[rollList.size()];
@@ -171,6 +187,7 @@ public class StepMissedPass extends AbstractStep {
 
 			Direction[] directions = directionList.toArray(new Direction[0]);
 			getResult().addReport(new ReportScatterBall(directions, rolls, false));
+
 		}
 		game.setPassCoordinate(lastValidCoordinate);
 		state.setLandingOutOfBounds(lastValidCoordinate != coordinateEnd);
@@ -185,6 +202,7 @@ public class StepMissedPass extends AbstractStep {
 			game.getFieldModel().setBallCoordinate(lastValidCoordinate);
 			game.getFieldModel().setBallMoving(true);
 		}
+		game.getFieldModel().clearMoveSquares();
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 	}
@@ -207,6 +225,9 @@ public class StepMissedPass extends AbstractStep {
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		IServerJsonOption.DO_ROLL.addTo(jsonObject, doRoll);
 		IServerJsonOption.RE_ROLLING.addTo(jsonObject, reRolling);
+		JsonArray directionArray = new JsonArray();
+		directionList.stream().map(UtilJson::toJsonValue).forEach(directionArray::add);
+		IServerJsonOption.DIRECTION_ARRAY.addTo(jsonObject, directionArray);
 		return jsonObject;
 	}
 
@@ -225,6 +246,11 @@ public class StepMissedPass extends AbstractStep {
 		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		doRoll = toPrimitive(IServerJsonOption.DO_ROLL.getFrom(source, jsonObject));
 		reRolling = toPrimitive(IServerJsonOption.RE_ROLLING.getFrom(source, jsonObject));
+		if (IServerJsonOption.DIRECTION_ARRAY.isDefinedIn(jsonObject)) {
+			IServerJsonOption.DIRECTION_ARRAY.getFrom(source, jsonObject).values().stream()
+				.map(direction -> (Direction) UtilJson.toEnumWithName(source.<DirectionFactory>getFactory(FactoryType.Factory.DIRECTION), direction))
+				.forEach(directionList::add);
+		}
 		return this;
 	}
 }

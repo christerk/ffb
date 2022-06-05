@@ -12,23 +12,29 @@ public class DialogSkillUse extends DialogThreeWayChoice {
 
 	private final DialogSkillUseParameter fDialogParameter;
 
-	public DialogSkillUse(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter, Skill modifyingSkill) {
+	public DialogSkillUse(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter, String secondChoice, char mnemonic) {
 		super(pClient, "Use a skill", createMessages(pDialogParameter), null,
-			pDialogParameter.getSkill().getName(), 'S', modifyingSkill.getName(), 'M',
-			"None", 'N', pDialogParameter.getMenuProperty(), pDialogParameter.getDefaultValueKey());
+			pDialogParameter.getSkill().getName(), 'S', secondChoice, mnemonic,
+			pDialogParameter.getModifyingSkill() == null ? "No" : "None", 'N',
+			pDialogParameter.getMenuProperty(), pDialogParameter.getDefaultValueKey());
 		fDialogParameter = pDialogParameter;
 	}
 
 	public DialogSkillUse(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter) {
-		super(pClient, "Use a skill", createMessages(pDialogParameter), null, pDialogParameter.getMenuProperty(), pDialogParameter.getDefaultValueKey());
+		super(pClient, "Use a skill", createMessages(pDialogParameter), null, pDialogParameter.getMenuProperty(),
+			pDialogParameter.getDefaultValueKey());
 		fDialogParameter = pDialogParameter;
 	}
 
 	public static DialogSkillUse create(FantasyFootballClient pClient, DialogSkillUseParameter pDialogParameter) {
 		if (pDialogParameter.getModifyingSkill() == null) {
+			if (pDialogParameter.isShowNeverUse()) {
+				return new DialogSkillUse(pClient, pDialogParameter, "Not for this action", 'a');
+			}
+
 			return new DialogSkillUse(pClient, pDialogParameter);
 		}
-		return new DialogSkillUse(pClient, pDialogParameter, pDialogParameter.getModifyingSkill());
+		return new DialogSkillUse(pClient, pDialogParameter, pDialogParameter.getModifyingSkill().getName(), 'M');
 	}
 
 	public DialogId getId() {
