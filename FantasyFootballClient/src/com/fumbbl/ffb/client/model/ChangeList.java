@@ -20,6 +20,7 @@ public class ChangeList {
 			.addFeature("Add option to re-roll ball and chain movement (game option boolean: allowBallAndChainReRoll)")
 			.addFeature("Add menu to select re-roll options for ball and chain movement")
 			.addFeature("Blast It!")
+			.addImprovement("If only one Diving Catcher is selected in total, no second dialog is shown")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")

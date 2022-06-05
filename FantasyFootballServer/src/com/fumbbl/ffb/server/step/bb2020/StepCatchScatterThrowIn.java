@@ -103,8 +103,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private DivingCatchPhase phase = DivingCatchPhase.ASK_HOME;
 	private final List<String> divingCatchers = new ArrayList<>();
 	private String divingCatchControlTeam;
-
 	private int roll;
+
+	private transient boolean repeat;
 
 	public StepCatchScatterThrowIn(GameState pGameState) {
 		super(pGameState);
@@ -174,6 +175,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void repeat() {
+		super.repeat();
+		executeStep();
 	}
 
 	@SuppressWarnings("fallthrough")
@@ -328,6 +335,11 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		if ((getReRolledAction() != null) || (game.getDialogParameter() != null)) {
 			getResult().setNextAction(StepAction.CONTINUE);
 		} else {
+			if (repeat) {
+				repeat = false;
+				getResult().setNextAction(StepAction.REPEAT);
+				return;
+			}
 			// repeat this step until it is finished
 			if (fCatchScatterThrowInMode != null) {
 				getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "pushCurrentStepOnStack()");
@@ -411,8 +423,13 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			if (divingCatchers.isEmpty()) {
 				return CatchScatterThrowInMode.SCATTER_BALL;
 			}
-			UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(divingCatchControlTeam,
-				PlayerChoiceMode.DIVING_CATCH, divingCatchers.toArray(new String[0]), null, 1, 1), !game.getActingTeam().getId().equals(divingCatchControlTeam));
+			if (divingCatchers.size() == 1) {
+				repeat = true;
+				fCatcherId = divingCatchers.get(0);
+			} else {
+				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(divingCatchControlTeam,
+					PlayerChoiceMode.DIVING_CATCH, divingCatchers.toArray(new String[0]), null, 1, 1), !game.getActingTeam().getId().equals(divingCatchControlTeam));
+			}
 
 		}
 		return fCatchScatterThrowInMode;
