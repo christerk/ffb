@@ -5,17 +5,21 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.report.ReportScatterBall;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportEvent;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -71,6 +75,31 @@ public class StepMissedPass extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (clientCommandUseSkill.getSkill().hasSkillProperty(NamedProperties.canReRollHmpScatter)) {
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+						if (rollList.size() < 3) {
+							Game game = getGameState().getGame();
+							game.getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(clientCommandUseSkill.getSkill(), game);
+							doRoll = clientCommandUseSkill.isSkillUsed();
+						}
+						getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), clientCommandUseSkill.getSkill(), doRoll, SkillUse.RE_ROLL_DIRECTION));
+						if (clientCommandUseSkill.isSkillUsed()) {
+							getGameState().getPassState().setUsingBlastIt(true);
+						}
+					}
+					break;
+				default:
+					break;
+			}
+
+
+		}
+
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -109,20 +138,23 @@ public class StepMissedPass extends AbstractStep {
 					lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
 				}
 
-				boolean hasBlastIt = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
+				boolean hasBlastItUnused = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
+				boolean hasBlastIt = UtilCards.hasSkillWithProperty(game.getActingPlayer().getPlayer(), NamedProperties.canReRollHmpScatter);
 				if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
-					&& (state.getUsingBlastIt() == null || state.getUsingBlastIt() || hasBlastIt)
-					&& !reRolling) {
-					getResult().addReport(new ReportScatterBall(new Direction[]{direction}, new int[]{roll}, false));
-					if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
-						getResult().addReport(new ReportEvent("The ball would land out of bounds!"));
-					}
+					&& (state.getUsingBlastIt() == null || state.getUsingBlastIt() || hasBlastItUnused)
+					&& !reRolling && hasBlastIt) {
+					reportDirectionRoll();
 
 					game.getFieldModel().setBallCoordinate(coordinateEnd);
 					game.getFieldModel().setBallMoving(true);
 					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.canReRollHmpScatter), 0), false);
 					reRolling = true;
+					game.getFieldModel().add(new MoveSquare(coordinateStart, 0, 0));
 					return;
+				}
+
+				if (reRolling) {
+					reportDirectionRoll();
 				}
 
 				doRoll = true;
@@ -155,6 +187,13 @@ public class StepMissedPass extends AbstractStep {
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
+	}
+
+	private void reportDirectionRoll() {
+		getResult().addReport(new ReportScatterBall(new Direction[]{direction}, new int[]{roll}, false));
+		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
+			getResult().addReport(new ReportEvent("The ball would land out of bounds!"));
+		}
 	}
 
 	@Override

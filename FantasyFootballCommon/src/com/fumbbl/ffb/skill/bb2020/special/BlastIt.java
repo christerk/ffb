@@ -13,7 +13,7 @@ import com.fumbbl.ffb.modifiers.ModifierType;
 public class BlastIt extends Skill {
 
 	public BlastIt() {
-		super("Blast It", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
+		super("Blast It!", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
 	}
 
 	@Override
