@@ -104,6 +104,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private final List<String> divingCatchers = new ArrayList<>();
 	private String divingCatchControlTeam;
 
+	private int roll;
+
 	public StepCatchScatterThrowIn(GameState pGameState) {
 		super(pGameState);
 		state = new StepState();
@@ -441,7 +443,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			Set<CatchModifier> catchModifiers = modifierFactory.findModifiers(new CatchContext(game, state.catcher, fCatchScatterThrowInMode, passState != null ? passState.getUsingBlastIt() : null));
 			int minimumRoll = mechanic.minimumRollCatch(state.catcher, catchModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
-			int roll = getGameState().getDiceRoller().rollSkill();
+			roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			getResult().addReport(new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRolled,
 				catchModifiers.toArray(new CatchModifier[0]), fCatchScatterThrowInMode.isBomb()));
@@ -706,6 +708,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
 		IServerJsonOption.TEAM_ID.addTo(jsonObject, divingCatchControlTeam);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
+		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		return jsonObject;
 	}
 
@@ -726,6 +729,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		phase = DivingCatchPhase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
 		divingCatchControlTeam = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		divingCatchers.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList()));
+
+		if (IServerJsonOption.ROLL.isDefinedIn(jsonObject)) {
+			roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 
