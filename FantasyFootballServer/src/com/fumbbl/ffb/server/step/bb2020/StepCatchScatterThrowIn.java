@@ -526,6 +526,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 							return fCatchScatterThrowInMode;
 						}
 					}
+				} else if (successfulWithBlastIt) {
+					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver),
+						0), false);
+					return fCatchScatterThrowInMode;
 				}
 			}
 
