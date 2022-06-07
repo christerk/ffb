@@ -154,10 +154,11 @@ public class StepMissedPass extends AbstractStep {
 				}
 
 				boolean hasBlastIt = UtilCards.hasSkillWithProperty(game.getActingPlayer().getPlayer(), NamedProperties.canReRollHmpScatter);
+				boolean hasUnusedBlastIt = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
 
 				if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
-					&& (state.getUsingBlastIt() == null || state.getUsingBlastIt())
-					&& !reRolling && hasBlastIt) {
+					&& ((hasUnusedBlastIt && state.getUsingBlastIt() == null) || (hasBlastIt && toPrimitive(state.getUsingBlastIt())))
+					&& !reRolling) {
 
 					reportDirectionRoll();
 
