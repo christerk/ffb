@@ -539,7 +539,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				if (getGameState().getPassState() != null && game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS) {
 					Boolean usingBlastIt = getGameState().getPassState().getUsingBlastIt();
 
-					if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.grantsCatchBonusToReceiver) || toPrimitive(usingBlastIt)) {
+					if ((UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.grantsCatchBonusToReceiver) && usingBlastIt == null) || toPrimitive(usingBlastIt)) {
 						Set<CatchModifier> catchModifiersWithBlastIt = modifierFactory.findModifiers(new CatchContext(game, state.catcher, fCatchScatterThrowInMode, true));
 						successfulWithBlastIt = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, mechanic.minimumRollCatch(state.catcher, catchModifiersWithBlastIt));
 					}
@@ -585,6 +585,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			} else {
 				game.getFieldModel().setBallCoordinate(catcherCoordinate);
 				game.getFieldModel().setBallMoving(true);
+				if (getGameState().getPassState() != null) {
+					getGameState().getPassState().setUsingBlastIt(false);
+				}
 			}
 		}
 		return CatchScatterThrowInMode.FAILED_CATCH;
