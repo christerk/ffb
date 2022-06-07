@@ -54,7 +54,8 @@ public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModif
 			public boolean appliesToContext(Skill skill, CatchContext context) {
 				return super.appliesToContext(skill, context) && context.getUsingBlastIt()
 					&& context.getGame().getActingTeam().hasPlayer(context.getPlayer())
-					&& context.getCatchMode() == CatchScatterThrowInMode.CATCH_SCATTER;
+					&& (context.getCatchMode() == CatchScatterThrowInMode.CATCH_SCATTER
+					|| context.getCatchMode() == CatchScatterThrowInMode.CATCH_MISSED_PASS);
 			}
 		});
 	}
