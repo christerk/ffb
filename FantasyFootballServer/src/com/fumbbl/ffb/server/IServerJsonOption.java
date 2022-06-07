@@ -60,6 +60,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption END_INDUCEMENT_PHASE = new JsonBooleanOption("endInducementPhase");
     JsonBooleanOption END_KICKOFF = new JsonBooleanOption("endKickoff");
     JsonBooleanOption END_TURN = new JsonBooleanOption("endTurn");
+    JsonBooleanOption EVALUATE = new JsonBooleanOption("evaluate");
     JsonStringArrayOption FAN_INTERACTION = new JsonStringArrayOption("fanInteraction");
     JsonBooleanOption FEED_ON_PLAYER_CHOICE = new JsonBooleanOption("feedOnPlayerChoice");
     JsonBooleanOption FEEDING_ALLOWED = new JsonBooleanOption("feedingAllowed");

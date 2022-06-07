@@ -43,6 +43,8 @@ public enum SkillUse implements INamedObject {
 	PERFORM_SECOND_TWO_BLOCKS("performSecondTwoBlocks", "to perform two block actions"),
 	FORCE_BOMB_EXPLOSION("forceBombExplosion", "to force the bomb to explode"),
 	RE_ROLL_DIRECTION("reRollDirection", "to re-roll the direction roll"),
+	GRANT_CATCH_BONUS("grantCatchBonus", "to grant %g team-mate a catch bonus"),
+	RE_ROLL_CATCH("reRollCatch", "to re-roll the catch roll"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

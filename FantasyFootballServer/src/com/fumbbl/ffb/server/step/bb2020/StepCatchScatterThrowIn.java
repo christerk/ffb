@@ -8,9 +8,9 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
@@ -25,6 +25,7 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
@@ -38,6 +39,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportCatchRoll;
+import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.ReportThrowIn;
@@ -66,6 +68,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
@@ -102,12 +105,13 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private FieldCoordinateBounds fScatterBounds;
 	private CatchScatterThrowInMode fCatchScatterThrowInMode;
 	private FieldCoordinate fThrowInCoordinate;
-	private boolean fBombMode;
+	private boolean fBombMode, evaluate;
 	private DivingCatchPhase phase = DivingCatchPhase.ASK_HOME;
 	private final List<String> divingCatchers = new ArrayList<>();
 	private String divingCatchControlTeam;
 	private int roll;
 	private Boolean usingModifyingSkill;
+	private ReportList reports = new ReportList();
 
 	private transient boolean repeat;
 
@@ -130,10 +134,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_PLAYER_CHOICE:
 					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-					Game game = getGameState().getGame();
 					List<String> selected = Arrays.stream(playerChoiceCommand.getPlayerIds()).collect(Collectors.toList());
 					switch (phase) {
 						case ASK_HOME:
@@ -158,26 +162,29 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					break;
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					PassState passState = getGameState().getPassState();
+					ActingPlayer actingPlayer = game.getActingPlayer();
 					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)) {
-						PassState passState = getGameState().getPassState();
-						Player<?> thrower = getGameState().getGame().getThrower();
-						if (passState != null && thrower != null) {
-							setReRolledAction(null);
+						if (passState != null) {
 							passState.setUsingBlastIt(commandUseSkill.isSkillUsed());
 							if (commandUseSkill.isSkillUsed()) {
-								thrower.markUsed(thrower.getSkillWithProperty(NamedProperties.canGrantSkillsToTeamMates), getGameState().getGame());
+								evaluate = true;
+								actingPlayer.markSkillUsed(commandUseSkill.getSkill());
 							}
+							setReRollSource(null);
+							reports.add(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), commandUseSkill.isSkillUsed(), SkillUse.GRANT_CATCH_BONUS));
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
-					} else if (commandUseSkill.isSkillUsed()) {
-						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerGame)) {
-							setReRolledAction(commandUseSkill.getReRolledAction());
-							setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						} else if (commandUseSkill.getSkill().getRerollSource(getReRolledAction()) != null) {
+					} else if (commandUseSkill.getSkill().getRerollSource(getReRolledAction()) != null) {
+						if (commandUseSkill.isSkillUsed()) {
 							setReRollSource(commandUseSkill.getSkill().getRerollSource(getReRolledAction()));
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						} else if (passState != null) {
+							setReRollSource(null);
+							passState.setUsingBlastIt(false);
+							reports.add(new ReportSkillUse(fCatcherId, commandUseSkill.getSkill(), commandUseSkill.isSkillUsed(), SkillUse.RE_ROLL_CATCH));
+							reports.add(new ReportSkillUse(actingPlayer.getPlayerId(), UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.grantsCatchBonusToReceiver), commandUseSkill.isSkillUsed(), SkillUse.GRANT_CATCH_BONUS));
 						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				default:
@@ -219,6 +226,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	@SuppressWarnings("fallthrough")
 	private void executeStep() {
 		getResult().reset();
+		Arrays.stream(reports.getReports()).forEach(report -> getResult().addReport(report));
+		reports.clear();
+
 		Game game = getGameState().getGame();
 		UtilServerDialog.hideDialog(getGameState());
 
@@ -488,17 +498,20 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			}
 		}
 
-		if (doRoll) {
+		if (doRoll || evaluate) {
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			CatchModifierFactory modifierFactory = game.getFactory(Factory.CATCH_MODIFIER);
 			PassState passState = getGameState().getPassState();
 			Set<CatchModifier> catchModifiers = modifierFactory.findModifiers(new CatchContext(game, state.catcher, fCatchScatterThrowInMode, passState != null ? passState.getUsingBlastIt() : null));
 			int minimumRoll = mechanic.minimumRollCatch(state.catcher, catchModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
-			roll = getGameState().getDiceRoller().rollSkill();
+			if (doRoll) {
+				roll = getGameState().getDiceRoller().rollSkill();
+			}
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			getResult().addReport(new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRolled,
+			getResult().addReport(new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRolled || evaluate,
 				catchModifiers.toArray(new CatchModifier[0]), fCatchScatterThrowInMode.isBomb()));
+			evaluate = false;
 
 			if (successful) {
 
@@ -523,7 +536,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			} else {
 				boolean successfulWithBlastIt = false;
 
-				if (getGameState().getPassState() != null) {
+				if (getGameState().getPassState() != null && game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS) {
 					Boolean usingBlastIt = getGameState().getPassState().getUsingBlastIt();
 
 					if (game.getThrower().hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)
@@ -788,6 +801,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		IServerJsonOption.USING_MODIFYING_SKILL.addTo(jsonObject, usingModifyingSkill);
+		IServerJsonOption.EVALUATE.addTo(jsonObject, evaluate);
+		IServerJsonOption.REPORT_LIST.addTo(jsonObject, reports.toJsonValue());
 		return jsonObject;
 	}
 
@@ -814,6 +829,11 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 
 		usingModifyingSkill = IServerJsonOption.USING_MODIFYING_SKILL.getFrom(source, jsonObject);
+		evaluate = toPrimitive(IServerJsonOption.EVALUATE.getFrom(source, jsonObject));
+
+		if (IServerJsonOption.REPORT_LIST.isDefinedIn(jsonObject)) {
+			reports = new ReportList().initFrom(source, IServerJsonOption.REPORT_LIST.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 
