@@ -10,6 +10,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
@@ -32,8 +33,8 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.CatchContext;
 import com.fumbbl.ffb.modifiers.CatchModifier;
-import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportCatchRoll;
@@ -129,32 +130,61 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
-				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-				Game game = getGameState().getGame();
-				List<String> selected = Arrays.stream(playerChoiceCommand.getPlayerIds()).collect(Collectors.toList());
-				switch (phase) {
-					case ASK_HOME:
-						divingCatchers.addAll(selected);
-						phase = DivingCatchPhase.ASK_AWAY;
-						if (!selected.isEmpty()) {
-							divingCatchControlTeam = game.getTeamHome().getId();
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_PLAYER_CHOICE:
+					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+					Game game = getGameState().getGame();
+					List<String> selected = Arrays.stream(playerChoiceCommand.getPlayerIds()).collect(Collectors.toList());
+					switch (phase) {
+						case ASK_HOME:
+							divingCatchers.addAll(selected);
+							phase = DivingCatchPhase.ASK_AWAY;
+							if (!selected.isEmpty()) {
+								divingCatchControlTeam = game.getTeamHome().getId();
+							}
+							break;
+						case ASK_AWAY:
+							divingCatchers.addAll(selected);
+							phase = DivingCatchPhase.PROCESS;
+							if (!selected.isEmpty()) {
+								divingCatchControlTeam = divingCatchControlTeam == null ? game.getTeamAway().getId() : game.getActingTeam().getId();
+							}
+							break;
+						default:
+							fCatcherId = selected.get(0);
+							break;
+					}
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)) {
+						PassState passState = getGameState().getPassState();
+						Player<?> thrower = getGameState().getGame().getThrower();
+						if (passState != null && thrower != null) {
+							setReRolledAction(null);
+							passState.setUsingBlastIt(commandUseSkill.isSkillUsed());
+							if (commandUseSkill.isSkillUsed()) {
+								thrower.markUsed(thrower.getSkillWithProperty(NamedProperties.canGrantSkillsToTeamMates), getGameState().getGame());
+							}
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
-						break;
-					case ASK_AWAY:
-						divingCatchers.addAll(selected);
-						phase = DivingCatchPhase.PROCESS;
-						if (!selected.isEmpty()) {
-							divingCatchControlTeam = divingCatchControlTeam == null ? game.getTeamAway().getId() : game.getActingTeam().getId();
+					} else if (commandUseSkill.isSkillUsed()) {
+						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerGame)) {
+							setReRolledAction(commandUseSkill.getReRolledAction());
+							setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						} else if (commandUseSkill.getSkill().getRerollSource(getReRolledAction()) != null) {
+							setReRollSource(commandUseSkill.getSkill().getRerollSource(getReRolledAction()));
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
-						break;
-					default:
-						fCatcherId = selected.get(0);
-						break;
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
+
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}

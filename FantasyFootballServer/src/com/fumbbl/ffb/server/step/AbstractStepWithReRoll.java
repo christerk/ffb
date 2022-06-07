@@ -17,7 +17,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -58,26 +57,10 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 					break;
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)) {
-						PassState passState = getGameState().getPassState();
-						Player<?> thrower = getGameState().getGame().getThrower();
-						if (passState != null && thrower != null) {
-							setReRolledAction(null);
-							passState.setUsingBlastIt(commandUseSkill.isSkillUsed());
-							if (commandUseSkill.isSkillUsed()) {
-								thrower.markUsed(thrower.getSkillWithProperty(NamedProperties.canGrantSkillsToTeamMates), getGameState().getGame());
-							}
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						}
-					} else if (commandUseSkill.isSkillUsed()) {
-						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerGame)) {
-							setReRolledAction(commandUseSkill.getReRolledAction());
-							setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						} else if (commandUseSkill.getSkill().getRerollSource(getReRolledAction()) != null) {
-							setReRollSource(commandUseSkill.getSkill().getRerollSource(getReRolledAction()));
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						}
+					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerGame)) {
+						setReRolledAction(commandUseSkill.getReRolledAction());
+						setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				default:
