@@ -19,6 +19,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.report.ReportScatterBall;
@@ -82,29 +83,25 @@ public class StepMissedPass extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_USE_SKILL:
-					ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-					if (clientCommandUseSkill.getSkill().hasSkillProperty(NamedProperties.canReRollHmpScatter)) {
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-						if (rollList.size() < 3) {
-							Game game = getGameState().getGame();
-							doRoll = clientCommandUseSkill.isSkillUsed();
-							if (doRoll) {
-								game.getActingPlayer().markSkillUsed(clientCommandUseSkill.getSkill());
-							}
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+				ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+				if (clientCommandUseSkill.getSkill().hasSkillProperty(NamedProperties.canReRollHmpScatter)) {
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					if (rollList.size() < 3) {
+						Game game = getGameState().getGame();
+						doRoll = clientCommandUseSkill.isSkillUsed();
+						if (doRoll) {
+							game.getActingPlayer().markSkillUsed(clientCommandUseSkill.getSkill());
 						}
-						getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), clientCommandUseSkill.getSkill(), doRoll, SkillUse.RE_ROLL_DIRECTION));
-						if (clientCommandUseSkill.isSkillUsed()) {
-							getGameState().getPassState().setUsingBlastIt(true);
-						} else if (clientCommandUseSkill.isNeverUse()) {
-							getGameState().getPassState().setUsingBlastIt(false);
-						}
-
 					}
-					break;
-				default:
-					break;
+					getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), clientCommandUseSkill.getSkill(), doRoll, SkillUse.RE_ROLL_DIRECTION));
+					if (clientCommandUseSkill.isSkillUsed()) {
+						getGameState().getPassState().setUsingBlastIt(true);
+					} else if (clientCommandUseSkill.isNeverUse()) {
+						getGameState().getPassState().setUsingBlastIt(false);
+					}
+
+				}
 			}
 
 
