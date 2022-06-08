@@ -669,6 +669,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		game.getFieldModel().setBallCoordinate(ballCoordinateEnd);
 		game.getFieldModel().setBallMoving(true);
 
+		if (getGameState().getPassState() != null) {
+			getGameState().getPassState().setUsingBlastIt(false);
+		}
+
 		if (fScatterBounds.isInBounds(ballCoordinateEnd)) {
 			Player<?> player = game.getFieldModel().getPlayer(ballCoordinateEnd);
 			if (player != null) {
