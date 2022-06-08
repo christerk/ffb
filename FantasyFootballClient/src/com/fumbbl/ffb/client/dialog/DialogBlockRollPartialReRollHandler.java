@@ -74,26 +74,30 @@ public class DialogBlockRollPartialReRollHandler extends DialogHandler {
 			DialogBlockRollPartialReRoll blockRollDialog = (DialogBlockRollPartialReRoll) pDialog;
 			ClientCommunication communication = getClient().getCommunication();
 			if (game.getTeamHome().getId().equals(fDialogParameter.getChoosingTeamId())) {
-				BlockRoll blockRoll = new BlockRoll();
-				blockRoll.setBlockRoll(fDialogParameter.getBlockRoll());
-				blockRoll.setNrOfDice(Math.abs(fDialogParameter.getNrOfDice()));
-				blockRoll.setOwnChoice(fDialogParameter.getNrOfDice() >= 0);
-				blockRoll.setSelectedIndex(blockRollDialog.getDiceIndex());
-				clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
-				if (blockRoll.needsSelection()) {
-					if (blockRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
-						communication.sendUseBrawler(null);
-					} else if (blockRollDialog.getReRollSource() == ReRollSources.PRO) {
-						communication.sendUseProReRollForBlock(blockRollDialog.getProIndex());
-					} else if (blockRollDialog.getReRollSource() == ReRollSources.CONSUMMATE_PROFESSIONAL) {
-						communication.sendUseConsummateReRollForBlock(blockRollDialog.getProIndex());
-					} else {
-						communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
-					}
+				if (blockRollDialog.getAddBlockDieSkill() != null) {
+					communication.sendUseSkill(blockRollDialog.getAddBlockDieSkill(), true, game.getActingPlayer().getPlayerId());
 				} else {
-					communication.sendBlockChoice(blockRollDialog.getDiceIndex());
+					BlockRoll blockRoll = new BlockRoll();
+					blockRoll.setBlockRoll(fDialogParameter.getBlockRoll());
+					blockRoll.setNrOfDice(Math.abs(fDialogParameter.getNrOfDice()));
+					blockRoll.setOwnChoice(fDialogParameter.getNrOfDice() >= 0);
+					blockRoll.setSelectedIndex(blockRollDialog.getDiceIndex());
+					clientData.setBlockDiceResult(Collections.singletonList(blockRoll));
+					if (blockRoll.needsSelection()) {
+						if (blockRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
+							communication.sendUseBrawler(null);
+						} else if (blockRollDialog.getReRollSource() == ReRollSources.PRO) {
+							communication.sendUseProReRollForBlock(blockRollDialog.getProIndex());
+						} else if (blockRollDialog.getReRollSource() == ReRollSources.CONSUMMATE_PROFESSIONAL) {
+							communication.sendUseConsummateReRollForBlock(blockRollDialog.getProIndex());
+						} else {
+							communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
+						}
+					} else {
+						communication.sendBlockChoice(blockRollDialog.getDiceIndex());
+					}
+					userInterface.refreshSideBars();
 				}
-				userInterface.refreshSideBars();
 			}
 		}
 	}

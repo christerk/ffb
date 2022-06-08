@@ -123,6 +123,13 @@ public class UtilServerReRoll {
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
 																								int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill) {
+
+		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, modificationSkill, reRollSkill, null, null);
+	}
+
+	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
+																								int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill,
+																								String menuProperty, String defaultValueKey) {
 		boolean dialogShown = false;
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {
@@ -142,7 +149,7 @@ public class UtilServerReRoll {
 				String playerId = player.getId();
 				UtilServerDialog.showDialog(gameState,
 					new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble,
-						reRollSkill, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null, modificationSkill),
+						reRollSkill, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null, modificationSkill, menuProperty, defaultValueKey),
 					!actingTeam.hasPlayer(player));
 			}
 		}

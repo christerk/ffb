@@ -55,6 +55,9 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_MARK_SKILL_USED:
 				pGame.getActingPlayer().markSkillUsed((Skill) pModelChange.getValue());
 				return true;
+			case ACTING_PLAYER_MARK_SKILL_UNUSED:
+				pGame.getActingPlayer().markSkillUnused((Skill) pModelChange.getValue());
+				return true;
 			case ACTING_PLAYER_SET_CURRENT_MOVE:
 				pGame.getActingPlayer().setCurrentMove((Integer) pModelChange.getValue());
 				return true;
@@ -253,6 +256,9 @@ public class ModelChangeProcessor {
 				return true;
 			case GAME_SET_ID:
 				pGame.setId((Long) pModelChange.getValue());
+				return true;
+			case GAME_SET_LAST_DEFENDER_ID:
+				pGame.setLastDefenderId(pModelChange.getKey());
 				return true;
 			case GAME_SET_PASS_COORDINATE:
 				pGame.setPassCoordinate((FieldCoordinate) pModelChange.getValue());

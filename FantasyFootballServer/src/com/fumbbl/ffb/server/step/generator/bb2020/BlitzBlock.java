@@ -25,7 +25,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.INIT_BLOCKING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()), from(StepParameterKey.USING_STAB, params.isUsingStab()),
 			from(StepParameterKey.USING_CHAINSAW, params.isUsingChainsaw()), from(StepParameterKey.USING_VOMIT, params.isUsingVomit()),
-			from(StepParameterKey.ASK_FOR_BLOCK_KIND, params.isAskForBlockKind()));
+			from(StepParameterKey.ASK_FOR_BLOCK_KIND, params.isAskForBlockKind()), from(StepParameterKey.PUBLISH_DEFENDER, params.isPublishDefender()));
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		if (params.isFrenzyBlock()) {
 			sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
@@ -39,7 +39,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.PROJECTILE_VOMIT, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
-		sequence.add(StepId.BLOCK_ROLL);
+		sequence.add(StepId.BLOCK_ROLL, from(StepParameterKey.ADD_BLOCK_DIE, params.isAddBlockDie()));
 		sequence.add(StepId.BLOCK_CHOICE, from(StepParameterKey.GOTO_LABEL_ON_DODGE, IStepLabel.DODGE_BLOCK),
 			from(StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT, IStepLabel.JUGGERNAUT),
 			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK));

@@ -161,6 +161,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(infoPanel);
 		getContentPane().add(buttonPanel);
+		addMenuPanel(getContentPane(), pDialogParameter.getMenuProperty(), pDialogParameter.getDefaultValueKey());
 
 		pack();
 		setLocationToCenter();

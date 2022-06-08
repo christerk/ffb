@@ -51,7 +51,7 @@ public class StepInitBlocking extends AbstractStep {
 	private String fMultiBlockDefenderId;
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
-	private boolean askForBlockKind;
+	private boolean askForBlockKind, publishDefender;
 
 	public StepInitBlocking(GameState pGameState) {
 		super(pGameState);
@@ -93,6 +93,10 @@ public class StepInitBlocking extends AbstractStep {
 					// optional
 					case ASK_FOR_BLOCK_KIND:
 						askForBlockKind = (boolean) parameter.getValue();
+						break;
+					// optional
+					case PUBLISH_DEFENDER:
+						publishDefender = (boolean) parameter.getValue();
 						break;
 					default:
 						break;
@@ -176,6 +180,10 @@ public class StepInitBlocking extends AbstractStep {
 				} else {
 					game.setDefenderId(defender.getId());
 					actingPlayer.setStrength(actingPlayer.getPlayer().getStrengthWithModifiers());
+
+					if (publishDefender) {
+						publishParameter(new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, defender.getId()));
+					}
 					PlayerState oldDefenderState = game.getFieldModel().getPlayerState(defender);
 					publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldDefenderState));
 					publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION,
@@ -208,6 +216,7 @@ public class StepInitBlocking extends AbstractStep {
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IServerJsonOption.ASK_FOR_BLOCK_KIND.addTo(jsonObject, askForBlockKind);
+		IServerJsonOption.PUBLISH_DEFENDER.addTo(jsonObject, publishDefender);
 		return jsonObject;
 	}
 
@@ -224,6 +233,7 @@ public class StepInitBlocking extends AbstractStep {
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(source, jsonObject);
 		askForBlockKind = toPrimitive(IServerJsonOption.ASK_FOR_BLOCK_KIND.getFrom(source, jsonObject));
+		publishDefender = toPrimitive(IServerJsonOption.PUBLISH_DEFENDER.getFrom(source, jsonObject));
 		return this;
 	}
 

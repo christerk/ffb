@@ -10,6 +10,20 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.10.0")
+			.addFeature("Gored By The Bull")
+			.addFeature("Maximum Carnage")
+			.addBugfix("Wisdom not working on passes")
+			.addFeature("Fury of the Blood God")
+			.addFeature("Kaboom!")
+			.addFeature("Whirling Dervish")
+			.addFeature("Add option to re-roll ball and chain movement (game option boolean: allowBallAndChainReRoll)")
+			.addFeature("Add menu to select re-roll options for ball and chain movement")
+			.addFeature("Blast It!")
+			.addImprovement("If only one Diving Catcher is selected in total, no second dialog is shown")
+			.addBugfix("When several Diving Catchers tried to catch the ball and the first failed while using a re-roll there was no roll for the second player")
+		);
+
 		versions.add(new VersionChangeList("2.9.1")
 			.addBugfix("TTM landing on a player is always a turn over")
 			.addBugfix("KTM does not generate spp")

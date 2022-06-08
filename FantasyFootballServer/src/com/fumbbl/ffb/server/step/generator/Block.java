@@ -12,6 +12,7 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 		private final String blockDefenderId;
 		private final String multiBlockDefenderId;
 		private final boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind;
+		private boolean publishDefender;
 
 		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, boolean usingVomit) {
 			this(gameState, blockDefenderId, usingStab, usingChainsaw, usingVomit, false, null, false);
@@ -49,6 +50,11 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 			this(gameState, null, false, usingChainsaw, false, false, null, false);
 		}
 
+		public SequenceParams(GameState gameState, boolean usingChainsaw, boolean publishDefender) {
+			this(gameState, usingChainsaw);
+			this.publishDefender = publishDefender;
+		}
+
 		public String getBlockDefenderId() {
 			return blockDefenderId;
 		}
@@ -75,6 +81,10 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 
 		public boolean isAskForBlockKind() {
 			return askForBlockKind;
+		}
+
+		public boolean isPublishDefender() {
+			return publishDefender;
 		}
 	}
 }

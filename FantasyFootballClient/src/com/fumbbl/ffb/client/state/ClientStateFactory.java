@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateMaximumCarnage;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
@@ -78,6 +79,7 @@ public class ClientStateFactory {
 		register(new ClientStateThrowKeg(pClient));
 		register(new ClientStateRaidingParty(pClient));
 		register(new ClientStateSelectBlockKind(pClient));
+		register(new ClientStateMaximumCarnage(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -198,6 +200,9 @@ public class ClientStateFactory {
 									break;
 								case THROW_KEG:
 									clientStateId = ClientStateId.THROW_KEG;
+									break;
+								case MAXIMUM_CARNAGE:
+									clientStateId = ClientStateId.MAXIMUM_CARNAGE;
 									break;
 								default:
 									break;

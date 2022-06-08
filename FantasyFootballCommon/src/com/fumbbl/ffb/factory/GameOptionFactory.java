@@ -248,6 +248,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Stalling check is disabled")
 					.setMessageTrue("Stalling check is enabled");
+			case ALLOW_BALL_AND_CHAIN_RE_ROLL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Can't re-roll Ball & Chain movement")
+					.setMessageTrue("Can re-roll Ball & Chain movement");
 			default:
 				return null;
 		}

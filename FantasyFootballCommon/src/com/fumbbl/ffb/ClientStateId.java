@@ -15,7 +15,7 @@ public enum ClientStateId implements INamedObject {
 	PASS_BLOCK("passBlock"), BOMB("bomb"), ILLEGAL_SUBSTITUTION("illegalSubstitution"), GAZE_MOVE("gazeMove"),
 	SELECT_BLITZ_TARGET("selectBlitzTarget"), SELECT_GAZE_TARGET("selectGazeTarget"), SYNCHRONOUS_MULTI_BLOCK("synchronousMultiBlock"),
 	PLACE_BALL("safePairOfHands"), SOLID_DEFENCE("solidDefence"), KICK_TEAM_MATE_THROW("kickTeamMateThrow"), THROW_KEG("throwKeg"),
-	RAIDING_PARTY("raidingParty"), SELECT_BLOCK_KIND("selectBlockKind");
+	RAIDING_PARTY("raidingParty"), SELECT_BLOCK_KIND("selectBlockKind"), MAXIMUM_CARNAGE("maximumCarnage");
 
 	private final String fName;
 

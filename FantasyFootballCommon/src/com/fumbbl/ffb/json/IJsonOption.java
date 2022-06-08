@@ -3,7 +3,6 @@ package com.fumbbl.ffb.json;
 import com.fumbbl.ffb.FactoryType.Factory;
 
 /**
- *
  * @author Kalimar
  */
 public interface IJsonOption {
@@ -12,6 +11,8 @@ public interface IJsonOption {
 	JsonObjectOption ACTING_PLAYER = new JsonObjectOption("actingPlayer");
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ACTING_PLAYER_WAS_CHANGED = new JsonBooleanOption("actingPlayerWasChanged");
+	JsonBooleanOption ADD_BLOCK_DIE = new JsonBooleanOption("addBlockDie");
+	JsonEnumWithNameOption ADD_BLOCK_DIE_SKILL = new JsonEnumWithNameOption("addBlockDieSkill", Factory.SKILL);
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
 	JsonIntOption AMOUNT = new JsonIntOption("amount");
@@ -126,6 +127,7 @@ public interface IJsonOption {
 	JsonIntOption DEDICATED_FANS_MODIFIER_AWAY = new JsonIntOption("dedicatedFansModifierAway");
 	JsonIntOption DEDICATED_FANS_ROLL = new JsonIntOption("dedicatedFansRoll");
 	JsonIntOption DEDICATED_FANS_RESULT = new JsonIntOption("dedicatedFansResult");
+	JsonStringOption DEFAULT_VALUE_KEY = new JsonStringOption("defaultValueKey");
 	JsonBooleanOption DEFECTING = new JsonBooleanOption("defecting");
 	JsonBooleanArrayOption DEFECTING_ARRAY = new JsonBooleanArrayOption("defectingArray");
 	JsonEnumWithNameOption DEFENDER_ACTION = new JsonEnumWithNameOption("defenderAction", Factory.PLAYER_ACTION);
@@ -143,7 +145,6 @@ public interface IJsonOption {
 	JsonIntOption DISTANCE = new JsonIntOption("distance");
 	JsonIntArrayOption DISTANCE_ROLL = new JsonIntArrayOption("distanceRoll");
 	JsonStringOption DIVISION = new JsonStringOption("division");
-	JsonBooleanOption DODGING = new JsonBooleanOption("dodging");
 	JsonBooleanOption DOUBLE_TARGET_STRENGTH = new JsonBooleanOption("doubleTargetStrength");
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
@@ -232,6 +233,7 @@ public interface IJsonOption {
 	JsonArrayOption KNOCKOUT_RECOVERY_ARRAY = new JsonArrayOption("knockoutRecoveryArray");
 	JsonBooleanOption KTM_USED = new JsonBooleanOption("ktmUsed");
 	JsonArrayOption LASTING_INJURIES = new JsonArrayOption("lastingInjuries");
+	JsonStringOption LAST_DEFENDER_ID = new JsonStringOption("lastDefenderId");
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
@@ -245,6 +247,7 @@ public interface IJsonOption {
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
 	JsonIntOption MAX_RE_ROLLS = new JsonIntOption("maxReRolls");
 	JsonIntOption MAX_SELECTS = new JsonIntOption("maxSelects");
+	JsonStringOption MENU_PROPERTY = new JsonStringOption("menuProperty");
 	JsonStringArrayOption MERCENARY_POSTION_IDS = new JsonStringArrayOption("mercenaryPositionIds");
 	JsonStringArrayOption MERCENARY_SKILLS = new JsonStringArrayOption("mercenarySkills");
 	JsonStringOption MESSAGE = new JsonStringOption("message");
@@ -428,6 +431,7 @@ public interface IJsonOption {
 	JsonBooleanOption SETUP_OFFENSE = new JsonBooleanOption("setupOffense");
 	JsonStringOption SHORTHAND = new JsonStringOption("shorthand");
 	JsonBooleanOption SHOW_NAME_IN_REPORT = new JsonBooleanOption("showNameInReport");
+	JsonBooleanOption SHOW_NEVER_USE = new JsonBooleanOption("showNeverUse");
 	JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", Factory.SKILL);
 	JsonArrayOption SKILL_ARRAY = new JsonArrayOption("skillArray");
 	JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");
@@ -435,6 +439,7 @@ public interface IJsonOption {
 	JsonStringOption SKILL_CHOICE_MODE = new JsonStringOption("skillChoiceMode");
 	JsonLegacySkillValuesOption SKILL_DISPLAY_VALUES = new JsonLegacySkillValuesOption("skillDisplayValues");
 	JsonSkillValuesMapOption SKILL_DISPLAY_VALUES_MAP = new JsonSkillValuesMapOption("skillDisplayValuesMap");
+	JsonBooleanOption SKILL_NEVER_USE = new JsonBooleanOption("skillNeverUse");
 	JsonEnumWithNameOption SKILL_USE = new JsonEnumWithNameOption("skillUse", Factory.SKILL_USE);
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");

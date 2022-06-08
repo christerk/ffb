@@ -13,23 +13,40 @@ import com.fumbbl.ffb.model.skill.Skill;
  */
 public class DialogSkillUseParameter implements IDialogParameter {
 
-	private String fPlayerId;
+	private String fPlayerId, menuProperty, defaultValueKey;
 	private Skill fSkill, modifyingSkill;
 	private int fMinimumRoll;
+	private boolean showNeverUse;
 
 	public DialogSkillUseParameter() {
 		super();
 	}
 
 	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll) {
-		this(pPlayerId, pSkill, pMinimumRoll, null);
+		this(pPlayerId, pSkill, pMinimumRoll, null, null, null, false);
+	}
+
+	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, String menuProperty, String defaultValueKey) {
+		this(pPlayerId, pSkill, pMinimumRoll, null, menuProperty, defaultValueKey, false);
 	}
 
 	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, Skill modifyingSkill) {
+		this(pPlayerId, pSkill, pMinimumRoll, modifyingSkill, null, null, false);
+	}
+
+	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, boolean showNeverUse) {
+		this(pPlayerId, pSkill, pMinimumRoll, null, null, null, showNeverUse);
+	}
+
+	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, Skill modifyingSkill,
+																 String menuProperty, String defaultValueKey, boolean showNeverUse) {
 		fPlayerId = pPlayerId;
 		fSkill = pSkill;
 		fMinimumRoll = pMinimumRoll;
 		this.modifyingSkill = modifyingSkill;
+		this.menuProperty = menuProperty;
+		this.defaultValueKey = defaultValueKey;
+		this.showNeverUse = showNeverUse;
 	}
 
 	public DialogId getId() {
@@ -51,10 +68,23 @@ public class DialogSkillUseParameter implements IDialogParameter {
 	public Skill getModifyingSkill() {
 		return modifyingSkill;
 	}
+
+	public String getMenuProperty() {
+		return menuProperty;
+	}
+
+	public String getDefaultValueKey() {
+		return defaultValueKey;
+	}
+
+	public boolean isShowNeverUse() {
+		return showNeverUse;
+	}
 // transformation
 
 	public IDialogParameter transform() {
-		return new DialogSkillUseParameter(getPlayerId(), getSkill(), getMinimumRoll(), modifyingSkill);
+		return new DialogSkillUseParameter(getPlayerId(), getSkill(), getMinimumRoll(), modifyingSkill, menuProperty,
+			defaultValueKey, showNeverUse);
 	}
 
 	// JSON serialization
@@ -66,6 +96,9 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		IJsonOption.SKILL.addTo(jsonObject, fSkill);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.MODIFYING_SKILL.addTo(jsonObject, modifyingSkill);
+		IJsonOption.MENU_PROPERTY.addTo(jsonObject, menuProperty);
+		IJsonOption.DEFAULT_VALUE_KEY.addTo(jsonObject, defaultValueKey);
+		IJsonOption.SHOW_NEVER_USE.addTo(jsonObject, showNeverUse);
 		return jsonObject;
 	}
 
@@ -76,6 +109,9 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
 		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
+		menuProperty = IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject);
+		defaultValueKey = IJsonOption.DEFAULT_VALUE_KEY.getFrom(source, jsonObject);
+		showNeverUse = IJsonOption.SHOW_NEVER_USE.getFrom(source, jsonObject);
 		return this;
 	}
 
