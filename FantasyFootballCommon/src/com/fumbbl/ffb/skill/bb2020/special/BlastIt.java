@@ -18,11 +18,4 @@ public class BlastIt extends Skill {
 		registerProperty(NamedProperties.canReRollHmpScatter);
 		registerProperty(NamedProperties.grantsCatchBonusToReceiver);
 	}
-
-	@Override
-	public String[] getSkillUseDescription() {
-		return new String[]{
-			"This only re-rolls this scatter.",
-			"You will be prompted again for remaining scatters."};
-	}
 }
