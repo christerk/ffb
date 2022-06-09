@@ -23,8 +23,10 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.BlockTarget;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
@@ -102,7 +104,9 @@ import com.fumbbl.ffb.net.commands.ServerCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Kalimar
@@ -248,7 +252,11 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendEndTurn(TurnMode turnMode) {
-		send(new ClientCommandEndTurn(turnMode));
+		send(new ClientCommandEndTurn(turnMode, null));
+	}
+
+	public void sendEndTurn(TurnMode turnMode, Team team, FieldModel fieldModel) {
+		send(new ClientCommandEndTurn(turnMode, playerCoordinates(team, fieldModel)));
 	}
 
 	public void sendConfirm() {
@@ -537,4 +545,16 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		return fClient;
 	}
 
+	private Map<String, FieldCoordinate> playerCoordinates(Team team, FieldModel fieldModel) {
+		Map<String, FieldCoordinate> playerCoordinates = new HashMap<>();
+		for (Player<?> player : team.getPlayers()) {
+			FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(player);
+			PlayerState playerState = fieldModel.getPlayerState(player);
+			if (!coordinate.isBoxCoordinate() || (!playerState.isCasualty() && playerState.getBase() != PlayerState.KNOCKED_OUT && playerState.getBase() != PlayerState.BANNED)) {
+				playerCoordinates.put(player.getId(), coordinate);
+			}
+		}
+
+		return playerCoordinates;
+	}
 }
