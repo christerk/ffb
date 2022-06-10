@@ -252,6 +252,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Can't re-roll Ball & Chain movement")
 					.setMessageTrue("Can re-roll Ball & Chain movement");
+			case END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Hitting a player with ttm is no turnover unless hitting a team-mate")
+					.setMessageTrue("Hitting any player with ttm is a turnover");
 			default:
 				return null;
 		}

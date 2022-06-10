@@ -17,7 +17,7 @@ public class ChangeList {
 			.addFeature("Fury of the Blood God")
 			.addFeature("Kaboom!")
 			.addFeature("Whirling Dervish")
-			.addFeature("Add option to re-roll ball and chain movement (game option boolean: allowBallAndChainReRoll)")
+			.addFeature("Add game option to re-roll ball and chain movement (game option boolean: allowBallAndChainReRoll)")
 			.addFeature("Add menu to select re-roll options for ball and chain movement")
 			.addFeature("Blast It!")
 			.addImprovement("If only one Diving Catcher is selected in total, no second dialog is shown")
@@ -26,6 +26,7 @@ public class ChangeList {
 			.addBugfix("To mitigate the setup bug where client and server state weren't in sync the client now sends all player positions at the end of setup, swarming and solid defence phases")
 			.addBehaviorChange("Due to the fix for the setup bug it can happen that opponent players are suddenly moved when the opponent ends his setup")
 			.addBugfix("Turn counter in player results was also incremented during kick-off")
+			.addFeature("Add game option to prevent turn over when hitting opponent with ttm (game option boolean: endTurnWhenHittingAnyPlayerWithTtm)")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
