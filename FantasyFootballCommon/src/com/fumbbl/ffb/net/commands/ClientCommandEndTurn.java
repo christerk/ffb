@@ -36,6 +36,10 @@ public class ClientCommandEndTurn extends ClientCommand {
 		return turnMode;
 	}
 
+	public Map<String, FieldCoordinate> getPlayerCoordinates() {
+		return playerCoordinates;
+	}
+
 	public NetCommandId getId() {
 		return NetCommandId.CLIENT_END_TURN;
 	}

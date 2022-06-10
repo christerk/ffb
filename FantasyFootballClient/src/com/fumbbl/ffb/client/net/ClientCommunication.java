@@ -101,6 +101,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
 import com.fumbbl.ffb.net.commands.ServerCommand;
+import com.fumbbl.ffb.util.StateValidator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -546,12 +547,11 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	private Map<String, FieldCoordinate> playerCoordinates(Team team, FieldModel fieldModel) {
+		StateValidator validator = new StateValidator();
 		Map<String, FieldCoordinate> playerCoordinates = new HashMap<>();
 		for (Player<?> player : team.getPlayers()) {
-			FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(player);
-			PlayerState playerState = fieldModel.getPlayerState(player);
-			if (!coordinate.isBoxCoordinate() || (!playerState.isCasualty() && playerState.getBase() != PlayerState.KNOCKED_OUT && playerState.getBase() != PlayerState.BANNED)) {
-				playerCoordinates.put(player.getId(), coordinate);
+			if (validator.canBeMovedDuringSetUp(player, fieldModel)) {
+				playerCoordinates.put(player.getId(), fieldModel.getPlayerCoordinate(player));
 			}
 		}
 

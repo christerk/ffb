@@ -22,7 +22,9 @@ public class ChangeList {
 			.addFeature("Blast It!")
 			.addImprovement("If only one Diving Catcher is selected in total, no second dialog is shown")
 			.addBugfix("When several Diving Catchers tried to catch the ball and the first failed while using a re-roll there was no roll for the second player")
-			.addBugfix("No choice to use dodge skill when being pushed over the LoS during first turn after kick-off when the kick resulted in a touchback")
+			.addBugfix("No choice to use dodge skill when being pushed over the LoS during first turn after kick-off when the kick resulted in a touch back")
+			.addBugfix("To mitigate the setup bug where client and server state weren't in sync the client now sends all player positions at the end of setup, swarming and solid defence phases")
+			.addBehaviorChange("Due to the fix for the setup bug it can happen that opponent players are suddenly moved when the opponent ends his setup")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
