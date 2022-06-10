@@ -605,9 +605,11 @@ public class StepEndTurn extends AbstractStep {
 					if (hasSecretWeapon) {
 						playerResult.setHasUsedSecretWeapon(true);
 					}
-					if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(player))
-						|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(player))) {
-						playerResult.setTurnsPlayed(playerResult.getTurnsPlayed() + 1);
+					if (game.getTurnMode() == TurnMode.REGULAR) {
+						if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(player))
+							|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(player))) {
+							playerResult.setTurnsPlayed(playerResult.getTurnsPlayed() + 1);
+						}
 					}
 				}
 			}

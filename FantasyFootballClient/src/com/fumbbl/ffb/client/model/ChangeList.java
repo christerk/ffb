@@ -25,6 +25,7 @@ public class ChangeList {
 			.addBugfix("No choice to use dodge skill when being pushed over the LoS during first turn after kick-off when the kick resulted in a touch back")
 			.addBugfix("To mitigate the setup bug where client and server state weren't in sync the client now sends all player positions at the end of setup, swarming and solid defence phases")
 			.addBehaviorChange("Due to the fix for the setup bug it can happen that opponent players are suddenly moved when the opponent ends his setup")
+			.addBugfix("Turn counter in player results was also incremented during kick-off")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
