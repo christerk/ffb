@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBehaviorChange("Due to the fix for the setup bug it can happen that opponent players are suddenly moved when the opponent ends his setup")
 			.addBugfix("Turn counter in player results was also incremented during kick-off")
 			.addFeature("Add game option to prevent turn over when hitting opponent with ttm (game option boolean: endTurnWhenHittingAnyPlayerWithTtm)")
+			.addFeature("Add game option to allow fixed swoop distance: swoopDistance")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")

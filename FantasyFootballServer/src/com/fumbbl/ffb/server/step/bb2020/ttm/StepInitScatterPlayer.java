@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.report.bb2020.ReportSwoopPlayer;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -271,7 +272,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	}
 
 	private UtilThrowTeamMateSequence.ScatterResult swoop(FieldCoordinate throwerCoordinate, Direction direction) {
-		int distanceRoll = getGameState().getDiceRoller().rollDice(3);
+		GameOptionInt distance = (GameOptionInt) getGameState().getGame().getOptions().getOptionWithDefault(GameOptionId.SWOOP_DISTANCE);
+
+		int distanceRoll = distance.getValue() == 0 ?getGameState().getDiceRoller().rollDice(3) : distance.getValue();
 		FieldCoordinate coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
 		FieldCoordinate lastValidCoordinate = coordinateEnd;
 		int validDistance = distanceRoll;

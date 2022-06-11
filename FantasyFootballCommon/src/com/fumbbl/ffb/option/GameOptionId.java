@@ -62,7 +62,7 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_WIZARDS_COST("inducementWizardsCost"), INDUCEMENT_WIZARDS_MAX("inducementWizardsMax"),
 
 	ENABLE_STALLING_CHECK("enableStallingCheck"), ALLOW_BALL_AND_CHAIN_RE_ROLL("allowBallAndChainReRoll"),
-	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"),
+	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"), SWOOP_DISTANCE("swoopDistance"),
 
 	PITCH_URL("pitchUrl");
 

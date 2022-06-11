@@ -256,6 +256,8 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Hitting a player with ttm is no turnover unless hitting a team-mate")
 					.setMessageTrue("Hitting any player with ttm is a turnover");
+			case SWOOP_DISTANCE:
+				return new GameOptionInt(pOptionId).setDefault(0).setMessage("Swoop players will fly exactly $1 squares.");
 			default:
 				return null;
 		}
