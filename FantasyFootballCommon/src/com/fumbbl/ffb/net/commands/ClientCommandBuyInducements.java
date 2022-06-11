@@ -25,9 +25,9 @@ public class ClientCommandBuyInducements extends ClientCommand {
 	private String fTeamId;
 	private int fAvailableGold;
 	private InducementSet fInducementSet;
-	private List<String> fStarPlayerPositionIds;
-	private List<String> fMercenaryPositionIds;
-	private List<Skill> fMercenarySkills;
+	private final List<String> fStarPlayerPositionIds;
+	private final List<String> fMercenaryPositionIds;
+	private final List<Skill> fMercenarySkills;
 
 	public ClientCommandBuyInducements() {
 		fStarPlayerPositionIds = new ArrayList<>();
@@ -66,7 +66,7 @@ public class ClientCommandBuyInducements extends ClientCommand {
 	}
 
 	public String[] getStarPlayerPositionIds() {
-		return fStarPlayerPositionIds.toArray(new String[fStarPlayerPositionIds.size()]);
+		return fStarPlayerPositionIds.toArray(new String[0]);
 	}
 
 	public int getNrOfStarPlayerPositions() {
@@ -87,11 +87,11 @@ public class ClientCommandBuyInducements extends ClientCommand {
 	}
 
 	public String[] getMercenaryPositionIds() {
-		return fMercenaryPositionIds.toArray(new String[fMercenaryPositionIds.size()]);
+		return fMercenaryPositionIds.toArray(new String[0]);
 	}
 
 	public Skill[] getMercenarySkills() {
-		return fMercenarySkills.toArray(new Skill[fMercenarySkills.size()]);
+		return fMercenarySkills.toArray(new Skill[0]);
 	}
 
 	public int getAvailableGold() {
@@ -135,7 +135,7 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSTION_IDS.getFrom(source, jsonObject);
 		String[] mercenarySkillNames = IJsonOption.MERCENARY_SKILLS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(mercenaryPositionIds) && StringTool.isProvided(mercenarySkillNames)) {
-			SkillFactory skillFactory = source.<SkillFactory>getFactory(Factory.SKILL);
+			SkillFactory skillFactory = source.getFactory(Factory.SKILL);
 			for (int i = 0; i < mercenaryPositionIds.length; i++) {
 				addMercenaryPosition(mercenaryPositionIds[i], skillFactory.forName(mercenarySkillNames[i]));
 			}

@@ -29,6 +29,7 @@ public class ChangeList {
 			.addFeature("New game option to prevent turn over when hitting opponent with ttm (game option boolean: endTurnWhenHittingAnyPlayerWithTtm)")
 			.addFeature("New game option to allow fixed swoop distance: swoopDistance")
 			.addFeature("New game option to allow ball and chain use special block actions: allowSpecialBlocksWithBallAndChain")
+			.addFeature("Temp Agency Cheerleaders")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")

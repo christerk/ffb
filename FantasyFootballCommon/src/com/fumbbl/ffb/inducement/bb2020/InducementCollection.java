@@ -60,6 +60,20 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				return super.availability(team, options);
 			}
 		});
+		add(new InducementType("tempCheerleader", "Temp Agency Cheerleaders", "Temp Agency Cheerleader", "Temp Agency Cheerleaders",
+			GameOptionId.INDUCEMENT_TEMP_CHEERLEADER_MAX, GameOptionId.INDUCEMENT_TEMP_CHEERLEADER_COST, Usage.ADD_CHEERLEADER) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				int availability = super.availability(team, options);
+
+				if (availability > 0) {
+					availability -= team.getCheerleaders();
+					availability = Math.max(0, availability);
+				}
+
+				return availability;
+			}
+		});
 	}};
 
 	protected Set<InducementType> getSubTypes() {

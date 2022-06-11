@@ -13,11 +13,13 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Inducement;
+import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
@@ -76,6 +78,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -424,8 +427,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		int rollAway = getGameState().getDiceRoller().rollDice(6);
 		int totalAway = rollAway;
 
-		totalHome += game.getTeamHome().getCheerleaders();
-		totalAway += game.getTeamAway().getCheerleaders();
+		totalHome += game.getTeamHome().getCheerleaders() + game.getTurnDataHome().getInducementSet().value(Usage.ADD_CHEERLEADER);
+		totalAway += game.getTeamAway().getCheerleaders() + game.getTurnDataAway().getInducementSet().value(Usage.ADD_CHEERLEADER);
 
 		InducementSet inducementsHome = game.getTurnDataHome().getInducementSet();
 		InducementSet inducementsAway = game.getTurnDataAway().getInducementSet();

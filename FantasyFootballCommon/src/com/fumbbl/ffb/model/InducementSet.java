@@ -262,6 +262,11 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		fStarPlayerPositionIds.add(pStarPlayerPositionId);
 	}
 
+	public int value(Usage usage) {
+		return getInducementTypes().stream().filter(type -> type.getUsage() == usage)
+			.findFirst().map(inducementType -> get(inducementType).getValue()).orElse(0);
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, Object pValue) {

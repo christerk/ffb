@@ -262,6 +262,12 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Ball and Chain always performs regular blocks")
 					.setMessageFalse("Ball and Chain may use special block actions");
+			case INDUCEMENT_TEMP_CHEERLEADER_COST:
+				return new GameOptionInt(pOptionId).setDefault(20000)
+					.setMessage("Temp Agency Cheerleaders cost $1 gps each");
+			case INDUCEMENT_TEMP_CHEERLEADER_MAX:
+				return new GameOptionInt(pOptionId).setDefault(16)
+					.setMessage("Coaches may hire Temp Agency Cheerleaders until a max of $1 cheerleaders");
 			default:
 				return null;
 		}
