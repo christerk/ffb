@@ -76,6 +76,22 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				return availability;
 			}
 		});
+
+		add(new InducementType("partTimeCoach", "Part-time Assistant Coaches", "Part-time Assistant Coach", "Part-time Assistant Coaches",
+			GameOptionId.INDUCEMENT_PART_TIME_COACH_MAX, GameOptionId.INDUCEMENT_PART_TIME_COACH_COST, Usage.ADD_COACH) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				int availability = super.availability(team, options);
+
+				if (availability > 0) {
+					int max = ((GameOptionInt) options.getOptionWithDefault(GameOptionId.INDUCEMENT_PART_TIME_COACH_TOTAL_MAX)).getValue() - team.getAssistantCoaches();
+
+					availability = Math.min(Math.max(max, 0), availability);
+				}
+
+				return availability;
+			}
+		});
 	}};
 
 	protected Set<InducementType> getSubTypes() {

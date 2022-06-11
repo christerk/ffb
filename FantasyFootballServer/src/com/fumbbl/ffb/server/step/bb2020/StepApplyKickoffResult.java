@@ -384,8 +384,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		int rollAway = getGameState().getDiceRoller().rollDice(6);
 		int totalAway = rollAway;
 
-		totalHome += game.getTeamHome().getAssistantCoaches();
-		totalAway += game.getTeamAway().getAssistantCoaches();
+		totalHome += game.getTeamHome().getAssistantCoaches() + game.getTurnDataHome().getInducementSet().value(Usage.ADD_COACH);
+		totalAway += game.getTeamAway().getAssistantCoaches() + game.getTurnDataAway().getInducementSet().value(Usage.ADD_COACH);
 
 		TurnData turnDataHome = game.getTurnDataHome();
 		TurnData turnDataAway = game.getTurnDataAway();

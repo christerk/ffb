@@ -271,6 +271,15 @@ public class GameOptionFactory {
 			case INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX:
 				return new GameOptionInt(pOptionId).setDefault(16)
 					.setMessage("Coaches may hire Temp Agency Cheerleaders until a max of $1 cheerleaders");
+			case INDUCEMENT_PART_TIME_COACH_COST:
+				return new GameOptionInt(pOptionId).setDefault(20000)
+					.setMessage("Part-time Assistant Coaches cost $1 gps each");
+			case INDUCEMENT_PART_TIME_COACH_MAX:
+				return new GameOptionInt(pOptionId).setDefault(3)
+					.setMessage("Coaches may hire $1 Part-time Assistant Coaches");
+			case INDUCEMENT_PART_TIME_COACH_TOTAL_MAX:
+				return new GameOptionInt(pOptionId).setDefault(9)
+					.setMessage("Coaches may hire Part-time Assistant Coaches until a max of $1 assistant coaches");
 			default:
 				return null;
 		}

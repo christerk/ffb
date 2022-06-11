@@ -30,6 +30,7 @@ public class ChangeList {
 			.addFeature("New game option to allow fixed swoop distance: swoopDistance")
 			.addFeature("New game option to allow ball and chain use special block actions: allowSpecialBlocksWithBallAndChain")
 			.addFeature("Temp Agency Cheerleaders")
+			.addFeature("Part-time Assistant Coaches")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
