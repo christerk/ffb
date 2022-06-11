@@ -258,6 +258,10 @@ public class GameOptionFactory {
 					.setMessageTrue("Hitting any player with ttm is a turnover");
 			case SWOOP_DISTANCE:
 				return new GameOptionInt(pOptionId).setDefault(0).setMessage("Swoop players will fly exactly $1 squares.");
+			case ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Ball and Chain always performs regular blocks")
+					.setMessageFalse("Ball and Chain may use special block actions");
 			default:
 				return null;
 		}
