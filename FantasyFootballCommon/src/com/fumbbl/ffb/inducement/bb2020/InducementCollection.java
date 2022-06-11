@@ -8,6 +8,7 @@ import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.GameOptionInt;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -67,8 +68,9 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				int availability = super.availability(team, options);
 
 				if (availability > 0) {
-					availability -= team.getCheerleaders();
-					availability = Math.max(0, availability);
+					int max = ((GameOptionInt) options.getOptionWithDefault(GameOptionId.INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX)).getValue() - team.getCheerleaders();
+
+					availability = Math.min(Math.max(max, 0), availability);
 				}
 
 				return availability;

@@ -266,6 +266,9 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(20000)
 					.setMessage("Temp Agency Cheerleaders cost $1 gps each");
 			case INDUCEMENT_TEMP_CHEERLEADER_MAX:
+				return new GameOptionInt(pOptionId).setDefault(4)
+					.setMessage("Coaches may hire $1 Temp Agency Cheerleaders");
+			case INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX:
 				return new GameOptionInt(pOptionId).setDefault(16)
 					.setMessage("Coaches may hire Temp Agency Cheerleaders until a max of $1 cheerleaders");
 			default:
