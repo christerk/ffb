@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  */
 public class DialogUseInducement extends Dialog implements ActionListener {
@@ -37,7 +36,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	private InducementType fInducement;
 	private Card fCard;
 
-	private JButton fButtonWizard;
+	private JButton fButtonWizard, weatherMageButton;
 	private final JButton fButtonContinue;
 	private final Map<Card, JButton> fButtonPerCard;
 
@@ -105,6 +104,25 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		}
 
+		if (inducementSet.stream().anyMatch(type -> type.hasUsage(Usage.CHANGE_WEATHER))) {
+
+			JPanel panelWizard = new JPanel();
+			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
+			String buttonText = "<html>" +
+				"<b>Weather Mage</b>" +
+				"<br>Influence Weather" +
+				"</html>";
+			weatherMageButton = new JButton(buttonText);
+			weatherMageButton.setHorizontalAlignment(SwingConstants.LEFT);
+			weatherMageButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+			weatherMageButton.addActionListener(this);
+			panelWizard.add(weatherMageButton);
+
+			panelMain.add(panelWizard);
+			panelMain.add(Box.createVerticalStrut(5));
+
+		}
+
 		JPanel panelContinue = new JPanel();
 		panelContinue.setLayout(new BoxLayout(panelContinue, BoxLayout.X_AXIS));
 		fButtonContinue = new JButton("Continue");
@@ -133,6 +151,10 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 		if (pActionEvent.getSource() == fButtonWizard) {
 			fInducement = ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
 				.allTypes().stream().filter(type -> type.hasUsage(Usage.SPELL)).findFirst().orElse(null);
+		}
+		if (pActionEvent.getSource() == weatherMageButton) {
+			fInducement = ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
+				.allTypes().stream().filter(type -> type.hasUsage(Usage.CHANGE_WEATHER)).findFirst().orElse(null);
 		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {

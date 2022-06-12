@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.GameStatus;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -61,6 +62,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private PassState passState;
 	private BlitzTurnState blitzTurnState;
 	private PrayerState prayerState = new PrayerState();
+	private ActiveEffects activeEffects = new ActiveEffects();
 
 	private enum StepExecutionMode {
 		Start, HandleCommand
@@ -319,6 +321,22 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	public PrayerState getPrayerState() {
 		return prayerState;
 	}
+
+	public void replaceWeather(Weather weather) {
+		activeEffects.setOldWeather(getGame().getFieldModel().getWeather());
+		activeEffects.setSkipRestoreWeather(true);
+		getGame().getFieldModel().setWeather(weather);
+	}
+
+	public void restoreWeather() {
+		if (activeEffects.isSkipRestoreWeather()) {
+			activeEffects.setSkipRestoreWeather(false);
+		} else if (activeEffects.getOldWeather() != null) {
+			getGame().getFieldModel().setWeather(activeEffects.getOldWeather());
+			activeEffects.setOldWeather(null);
+		}
+	}
+
 // JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -361,6 +379,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (prayerState != null) {
 			IServerJsonOption.PRAYER_STATE.addTo(jsonObject, prayerState.toJsonValue());
 		}
+
+		IServerJsonOption.ACTIVE_EFFECTS.addTo(jsonObject, activeEffects.toJsonValue());
 		return jsonObject;
 	}
 
@@ -419,6 +439,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		JsonObject prayerStateObject = IServerJsonOption.PRAYER_STATE.getFrom(source, jsonObject);
 		if (prayerStateObject != null) {
 			prayerState = new PrayerState().initFrom(source, prayerStateObject);
+		}
+
+		if (IServerJsonOption.ACTIVE_EFFECTS.isDefinedIn(jsonObject)) {
+			activeEffects = new ActiveEffects().initFrom(source, IServerJsonOption.ACTIVE_EFFECTS.getFrom(source, jsonObject));
 		}
 		return this;
 	}

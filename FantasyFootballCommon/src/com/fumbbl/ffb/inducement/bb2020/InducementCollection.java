@@ -102,6 +102,10 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				return team.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION);
 			}
 		});
+
+		add(new InducementType("weatherMage", "Weather Mage", "Weather Mage", "Weather Mages",
+			GameOptionId.INDUCEMENT_WEATHER_MAGE_MAX, GameOptionId.INDUCEMENT_WEATHER_MAGE_COST, null, false,
+			null, Usage.CHANGE_WEATHER));
 	}};
 
 	protected Set<InducementType> getSubTypes() {

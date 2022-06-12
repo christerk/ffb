@@ -447,6 +447,7 @@ public interface IJsonOption {
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
 	JsonStringListMapOption SKILLS_GRANTED_BY = new JsonStringListMapOption("skillsGrantedBy");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
+	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);

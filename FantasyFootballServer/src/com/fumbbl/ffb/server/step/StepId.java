@@ -166,6 +166,7 @@ public enum StepId implements INamedObject {
 	TOUCHBACK("touchback"), // phase.kickoff
 	UNCHANNELLED_FURY("unchannelledFury"), // action.common
 	WEATHER("weather"), // game.start
+	WEATHER_MAGE("weatherMage"), // phase.inducement
 	WILD_ANIMAL("wildAnimal"), // action.common
 	WINNINGS("winnings"), // game.end
 	WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf"), // action.special
