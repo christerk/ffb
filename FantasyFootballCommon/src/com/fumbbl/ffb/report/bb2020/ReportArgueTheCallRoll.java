@@ -21,18 +21,21 @@ public class ReportArgueTheCallRoll implements IReport {
 	private boolean fCoachBanned;
 	private boolean staysOnPitch, friendsWithRef;
 	private int fRoll;
+	private int biasedRefs;
 
 	public ReportArgueTheCallRoll() {
 		super();
 	}
 
-	public ReportArgueTheCallRoll(String playerId, boolean successful, boolean coachBanned, int roll, boolean staysOnPitch, boolean friendsWithRef) {
+	public ReportArgueTheCallRoll(String playerId, boolean successful, boolean coachBanned, int roll, boolean staysOnPitch,
+																boolean friendsWithRef, int biasedRefs) {
 		fPlayerId = playerId;
 		fSuccessful = successful;
 		fCoachBanned = coachBanned;
 		fRoll = roll;
 		this.staysOnPitch = staysOnPitch;
 		this.friendsWithRef = friendsWithRef;
+		this.biasedRefs = biasedRefs;
 	}
 
 	public ReportId getId() {
@@ -63,10 +66,13 @@ public class ReportArgueTheCallRoll implements IReport {
 		return friendsWithRef;
 	}
 
-	// transformation
+	public int getBiasedRefs() {
+		return biasedRefs;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportArgueTheCallRoll(getPlayerId(), isSuccessful(), isCoachBanned(), getRoll(), staysOnPitch, friendsWithRef);
+		return new ReportArgueTheCallRoll(getPlayerId(), isSuccessful(), isCoachBanned(), getRoll(), staysOnPitch, friendsWithRef, biasedRefs);
 	}
 
 	// JSON serialization
@@ -80,6 +86,7 @@ public class ReportArgueTheCallRoll implements IReport {
 		IJsonOption.ROLL.addTo(jsonObject, fRoll);
 		IJsonOption.STAYS_ON_PITCH.addTo(jsonObject, staysOnPitch);
 		IJsonOption.FRIENDS_WITH_REF.addTo(jsonObject, friendsWithRef);
+		IJsonOption.BIASED_REFS.addTo(jsonObject, biasedRefs);
 		return jsonObject;
 	}
 
@@ -92,6 +99,7 @@ public class ReportArgueTheCallRoll implements IReport {
 		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
 		staysOnPitch = IJsonOption.STAYS_ON_PITCH.getFrom(source, jsonObject);
 		friendsWithRef = IJsonOption.FRIENDS_WITH_REF.getFrom(source, jsonObject);
+		biasedRefs = IJsonOption.BIASED_REFS.getFrom(source, jsonObject);
 		return this;
 	}
 

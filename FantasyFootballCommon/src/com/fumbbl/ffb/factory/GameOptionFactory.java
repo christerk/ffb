@@ -229,7 +229,7 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 groups of Riotous Rookies.");
 			case INDUCEMENT_RIOTOUS_ROOKIES_COST:
 				return new GameOptionInt(pOptionId).setDefault(100000)
-					.setMessage("Groups of Riotous Rookies can be purchased for $1 gps each.");
+					.setMessage("Groups of Riotous Rookies can be hired for $1 gps each.");
 			case INDUCEMENT_PRAYERS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Prayers cost $1 gps each.");
@@ -280,6 +280,14 @@ public class GameOptionFactory {
 			case INDUCEMENT_PART_TIME_COACH_TOTAL_MAX:
 				return new GameOptionInt(pOptionId).setDefault(9)
 					.setMessage("Coaches may hire Part-time Assistant Coaches until a max of $1 assistant coaches");
+			case INDUCEMENT_BIASED_REF_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 Biased Refs.");
+			case INDUCEMENT_BIASED_REF_COST:
+				return new GameOptionInt(pOptionId).setDefault(120000)
+					.setMessage("Biased Refs can be hired for $1 gps each.");
+			case INDUCEMENT_BIASED_REF_REDUCED_COST:
+				return new GameOptionInt(pOptionId).setDefault(80000)
+					.setMessage("Biased Ref for reduced price can be purchased for $1 gps each.");
 			default:
 				return null;
 		}

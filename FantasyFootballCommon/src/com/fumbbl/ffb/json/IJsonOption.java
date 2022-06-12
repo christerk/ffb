@@ -46,6 +46,7 @@ public interface IJsonOption {
 	JsonBooleanOption BALL_MOVING = new JsonBooleanOption("ballMoving");
 	JsonBooleanArrayOption BAN_ARRAY = new JsonBooleanArrayOption("banArray");
 	JsonStringOption BALL_ACTION = new JsonStringOption("ballAction");
+	JsonIntOption BIASED_REFS = new JsonIntOption("biasedRefs");
 	JsonStringOption BASE_ICON_PATH = new JsonStringOption("baseIconPath");
 	JsonObjectOption BLITZ_STATE = new JsonObjectOption("blitzState");
 	JsonStringOption BLITZ_STATUS = new JsonStringOption("blitzStatus");

@@ -60,6 +60,7 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_RIOTOUS_ROOKIES_COST("inducementRiotousRookiesCost"),
 	INDUCEMENT_RIOTOUS_ROOKIES_MAX("inducementRiotousRookiesMax"), INDUCEMENT_STARS_MAX("inducementStarsMax"),
 	INDUCEMENT_WIZARDS_COST("inducementWizardsCost"), INDUCEMENT_WIZARDS_MAX("inducementWizardsMax"),
+	INDUCEMENT_BIASED_REF_COST("inducementBiasedRefCost"), INDUCEMENT_BIASED_REF_REDUCED_COST("inducementBiasedRefReducedCost"), INDUCEMENT_BIASED_REF_MAX("inducementBiasedRefMax"),
 	INDUCEMENT_TEMP_CHEERLEADER_MAX("inducementTempCheerleaderMax"), INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX("inducementTempCheerleaderTotalMax"), INDUCEMENT_TEMP_CHEERLEADER_COST("inducementTempCheerleaderCost"),
 	INDUCEMENT_PART_TIME_COACH_MAX("inducementPartTimeCoachMax"), INDUCEMENT_PART_TIME_COACH_TOTAL_MAX("inducementPartTimeCoachTotalMax"), INDUCEMENT_PART_TIME_COACH_COST("inducementPartTimeCoachCost"),
 	ENABLE_STALLING_CHECK("enableStallingCheck"), ALLOW_BALL_AND_CHAIN_RE_ROLL("allowBallAndChainReRoll"),

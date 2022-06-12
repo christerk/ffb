@@ -190,11 +190,15 @@ public class StepBribes extends AbstractStepWithReRoll {
 	private boolean rollArgue(Game game, ActingPlayer actingPlayer, InducementSet inducementSet, boolean friendsWithTheRef, Optional<InducementType> briberyReRoll) {
 		int roll = getGameState().getDiceRoller().rollArgueTheCall();
 		int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
+
+		int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);
+		modifiedRoll += biasedRefBonus;
+
 		fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
 		boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
 		getResult().addReport(
-			new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef));
-		boolean couldReRoll = roll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
+			new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef, biasedRefBonus));
+		boolean couldReRoll = modifiedRoll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
 			&& briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get());
 		if (couldReRoll && coachBanned) {
 			useBriberyReRoll(game, inducementSet, briberyReRoll.get());

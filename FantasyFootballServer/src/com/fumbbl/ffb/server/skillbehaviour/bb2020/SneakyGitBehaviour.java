@@ -5,14 +5,17 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
+import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.report.bb2020.ReportBiasedRef;
 import com.fumbbl.ffb.report.bb2020.ReportReferee;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
@@ -33,7 +36,7 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepEjectPlayer step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+																								 ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -47,7 +50,7 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 
 				SendToBoxReason reason = state.officiousRef ? SendToBoxReason.OFFICIOUS_REF : SendToBoxReason.FOUL_BAN;
 				if (UtilCards.hasSkill(actingPlayer, skill)
-						&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
+					&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
 						playerState.changeBase(PlayerState.KNOCKED_OUT));
 					attackerResult.setSendToBoxReason(reason);
@@ -68,14 +71,14 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepReferee step,
-					StepReferee.StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+																								 StepReferee.StepState state,
+																								 ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
 			public boolean handleExecuteStepHook(StepReferee step,
-					StepReferee.StepState state) {
+																					 StepReferee.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean refereeSpotsFoul = false;
@@ -83,7 +86,7 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 					|| state.injuryResultDefender.injuryContext().isArmorBroken()
 					|| ((UtilCards.hasSkill(actingPlayer, skill) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
 					int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
-					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]) && !UtilCards.hasSkill(actingPlayer, skill);//Sneaky Git no longer gets sent off on AV roll
+					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]) && !UtilCards.hasSkill(actingPlayer, skill);
 				}
 				if (!refereeSpotsFoul && state.injuryResultDefender.injuryContext().isArmorBroken()) {
 					int[] injuryRoll = state.injuryResultDefender.injuryContext().getInjuryRoll();
@@ -92,6 +95,21 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				boolean underScrutiny = step.getGameState().getPrayerState().isUnderScrutiny(actingPlayer.getPlayer().getTeam());
 				refereeSpotsFoul |= underScrutiny;
 				step.getResult().addReport(new ReportReferee(refereeSpotsFoul, underScrutiny));
+
+				if (!refereeSpotsFoul) {
+					InducementSet opponentInducementSet = game.isHomePlaying() ? game.getTurnDataAway().getInducementSet() : game.getTurnDataHome().getInducementSet();
+					for (int i = 0; i < opponentInducementSet.value(Usage.SPOT_FOUL); i++) {
+						int roll = step.getGameState().getDiceRoller().rollSkill();
+						refereeSpotsFoul = roll > 4;
+
+						step.getResult().addReport(new ReportBiasedRef(roll, refereeSpotsFoul));
+
+						if (refereeSpotsFoul) {
+							break;
+						}
+					}
+				}
+
 				if (refereeSpotsFoul) {
 					step.getResult().setSound(SoundId.WHISTLE);
 					step.getResult().setNextAction(StepAction.NEXT_STEP);

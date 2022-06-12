@@ -92,6 +92,16 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				return availability;
 			}
 		});
+
+		add(new InducementType("biasedRef", "Biased Referee", "Biased Referee", "Biased Referees",
+			GameOptionId.INDUCEMENT_BIASED_REF_MAX, GameOptionId.INDUCEMENT_BIASED_REF_COST, GameOptionId.INDUCEMENT_BIASED_REF_REDUCED_COST, true,
+			IIconProperty.RESOURCE_BIASED_REF, Usage.ADD_TO_ARGUE_ROLL, Usage.SPOT_FOUL) {
+
+			@Override
+			protected boolean useReducedCostId(Team team) {
+				return team.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION);
+			}
+		});
 	}};
 
 	protected Set<InducementType> getSubTypes() {

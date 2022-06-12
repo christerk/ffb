@@ -708,14 +708,17 @@ public class StepEndTurn extends AbstractStep {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
 					int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
 
+					int biasedRefBonus = turnData.getInducementSet().value(Usage.ADD_TO_ARGUE_ROLL);
+					modifiedRoll += biasedRefBonus;
+
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
 					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
-					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false, friendsWithTheRef));
+					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false, friendsWithTheRef, biasedRefBonus));
 					if (successful) {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);
 					}
-					boolean canBeReRolled = roll == 1 && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
+					boolean canBeReRolled = modifiedRoll == 1 && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
 
 					if (canBeReRolled && coachBanned) {
 						reRollArgue(pTeam, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
