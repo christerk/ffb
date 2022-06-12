@@ -46,7 +46,7 @@ public class DialogUseIgorHandler extends DialogHandler {
 		if (testDialogHasId(pDialog, DialogId.USE_IGOR)) {
 			DialogUseIgor igorDialog = (DialogUseIgor) pDialog;
 			((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
-				.filter(type -> type.getUsage() == Usage.REGENERATION).findFirst().ifPresent(type -> {
+				.filter(type -> type.getUsages() == Usage.REGENERATION).findFirst().ifPresent(type -> {
 				if (igorDialog.isChoiceYes()) {
 					getClient().getCommunication().sendUseInducement(type, igorDialog.getPlayerId());
 				} else {

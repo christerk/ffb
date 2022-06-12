@@ -161,7 +161,7 @@ public final class StepBuyInducements extends AbstractStep {
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS)) {
 			if (UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
 				Optional<InducementType> starType = ((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-					.allTypes().stream().filter(type -> type.getUsage() == Usage.STAR).findFirst();
+					.allTypes().stream().filter(type -> type.hasUsage(Usage.STAR)).findFirst();
 				if (starType.isPresent() && game.getTeamHome().getInducementSet() != null) {
 					game.getTurnDataHome().getInducementSet().add(game.getTeamHome().getInducementSet());
 					String[] starPlayerPositionIds = game.getTeamHome().getInducementSet().getStarPlayerPositionIds();
@@ -227,7 +227,7 @@ public final class StepBuyInducements extends AbstractStep {
 			: game.getTurnDataAway().getInducementSet();
 		int nrOfInducements = 0, nrOfStars = 0, nrOfMercenaries = 0;
 		for (Inducement inducement : inducementSet.getInducements()) {
-			switch (inducement.getType().getUsage()) {
+			switch (inducement.getType().getUsages()) {
 				case STAR:
 					nrOfStars = inducement.getValue();
 					break;
@@ -316,7 +316,7 @@ public final class StepBuyInducements extends AbstractStep {
 
 	private void removeStarPlayerInducements(TurnData pTurnData, int pRemoved) {
 		pTurnData.getInducementSet().getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().getUsage() == Usage.STAR).map(Map.Entry::getValue).findFirst()
+			.filter(entry -> entry.getKey().getUsages() == Usage.STAR).map(Map.Entry::getValue).findFirst()
 			.ifPresent(starPlayerInducement -> {
 				starPlayerInducement.setValue(starPlayerInducement.getValue() - pRemoved);
 				if (starPlayerInducement.getValue() <= 0) {

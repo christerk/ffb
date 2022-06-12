@@ -215,7 +215,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			phase = Phase.DONE;
 		} else if (UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
 			Optional<InducementType> starType = ((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-				.allTypes().stream().filter(type -> type.getUsage() == Usage.STAR).findFirst();
+				.allTypes().stream().filter(type -> type.getUsages() == Usage.STAR).findFirst();
 			if (starType.isPresent() && game.getTeamHome().getInducementSet() != null) {
 				game.getTurnDataHome().getInducementSet().add(game.getTeamHome().getInducementSet());
 				String[] starPlayerPositionIds = game.getTeamHome().getInducementSet().getStarPlayerPositionIds();
@@ -420,7 +420,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 	private void removeStarPlayerInducements(TurnData pTurnData, int pRemoved) {
 		pTurnData.getInducementSet().getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().getUsage() == Usage.STAR).map(Map.Entry::getValue).findFirst()
+			.filter(entry -> entry.getKey().getUsages() == Usage.STAR).map(Map.Entry::getValue).findFirst()
 			.ifPresent(starPlayerInducement -> {
 				starPlayerInducement.setValue(starPlayerInducement.getValue() - pRemoved);
 				if (starPlayerInducement.getValue() <= 0) {
@@ -569,7 +569,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
 
-		inducementTypeFactory.allTypes().stream().filter(type -> type.getUsage() == Usage.REROLL_ARGUE).findFirst()
+		inducementTypeFactory.allTypes().stream().filter(type -> type.getUsages() == Usage.REROLL_ARGUE).findFirst()
 			.ifPresent(inducementType -> {
 
 				if (teamHome.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
@@ -592,7 +592,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			: game.getTurnDataAway().getInducementSet();
 		int nrOfInducements = 0, nrOfStars = 0, nrOfMercenaries = 0;
 		for (Inducement inducement : inducementSet.getInducements()) {
-			switch (inducement.getType().getUsage()) {
+			switch (inducement.getType().getUsages()) {
 				case STAR:
 					nrOfStars = inducement.getValue();
 					break;

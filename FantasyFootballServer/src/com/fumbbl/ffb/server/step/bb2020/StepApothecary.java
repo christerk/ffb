@@ -46,8 +46,6 @@ import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.util.Collections;
-
 /**
  * Step in any sequence to handle the apothecary. Offers different modes
  * (ATTACKER, CROWDPUSH, DEFENDER) to modify the behavior.
@@ -126,7 +124,7 @@ public class StepApothecary extends AbstractStep {
 					break;
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (inducementCommand.getInducementType().getUsage() == Usage.REGENERATION) {
+					if (inducementCommand.getInducementType().getUsages() == Usage.REGENERATION) {
 						if ((fInjuryResult != null)
 							&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)) {
 							if (inducementCommand.hasPlayerId(fInjuryResult.injuryContext().getDefenderId())) {
@@ -228,7 +226,7 @@ public class StepApothecary extends AbstractStep {
 					case USE_IGOR:
 						Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
 						InducementSet inducementSetIgor = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REGENERATION)
+						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.getUsages() == Usage.REGENERATION)
 							.findFirst().ifPresent(type -> {
 							UtilServerInducementUse.useInducement(getGameState(), team, type, 1);
 							getResult().addReport(new ReportInducement(team.getId(), type, 0));
@@ -248,7 +246,7 @@ public class StepApothecary extends AbstractStep {
 								InducementSet inducementSet = game.getTeamHome().hasPlayer(player)
 									? game.getTurnDataHome().getInducementSet()
 									: game.getTurnDataAway().getInducementSet();
-								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream().anyMatch(type -> type.getUsage() == Usage.REGENERATION
+								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream().anyMatch(type -> type.getUsages() == Usage.REGENERATION
 									&& inducementSet.hasUsesLeft(type));
 									if (hasInducement && player.getPlayerType() != PlayerType.STAR && player.getPlayerType() != PlayerType.MERCENARY) {
 										game.setDialogParameter(new DialogUseIgorParameter(player.getId()));

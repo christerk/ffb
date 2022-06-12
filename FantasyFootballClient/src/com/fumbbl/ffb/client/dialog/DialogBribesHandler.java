@@ -62,7 +62,7 @@ public class DialogBribesHandler extends DialogHandler {
 		hideDialog();
 		Game game = getClient().getGame();
 		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
-			.filter(type -> type.getUsage() == Usage.AVOID_BAN).findFirst().ifPresent(type -> {
+			.filter(type -> type.getUsages() == Usage.AVOID_BAN).findFirst().ifPresent(type -> {
 			if (testDialogHasId(pDialog, DialogId.BRIBES)) {
 				DialogBribes bribesDialog = (DialogBribes) pDialog;
 				DialogBribesParameter dialogBribesParameter = (DialogBribesParameter) game.getDialogParameter();

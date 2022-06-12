@@ -250,7 +250,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 			Team team = game.getTeamById(teamId);
 			InducementSet inducementSet = getTurnData().getInducementSet();
-			Optional<InducementType> regenerationType = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REGENERATION).findFirst();
+			Optional<InducementType> regenerationType = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsages() == Usage.REGENERATION).findFirst();
 
 			boolean hasRegenerationInducement = regenerationType.isPresent() && inducementSet.hasUsesLeft(regenerationType.get());
 

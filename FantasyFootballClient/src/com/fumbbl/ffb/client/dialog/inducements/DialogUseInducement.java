@@ -86,7 +86,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			}
 		}
 
-		if (inducementSet.stream().anyMatch(type -> type.getUsage() == Usage.SPELL)) {
+		if (inducementSet.stream().anyMatch(type -> type.getUsages() == Usage.SPELL)) {
 
 			JPanel panelWizard = new JPanel();
 			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
@@ -132,7 +132,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 		fInducement = null;
 		if (pActionEvent.getSource() == fButtonWizard) {
 			fInducement = ((InducementTypeFactory)getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-				.allTypes().stream().filter(type -> type.getUsage() == Usage.SPELL).findFirst().orElse(null);
+				.allTypes().stream().filter(type -> type.getUsages() == Usage.SPELL).findFirst().orElse(null);
 		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {

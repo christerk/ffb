@@ -146,7 +146,7 @@ public final class StepWizard extends AbstractStep {
 			InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 
 			inducementSet.getInducementMapping().keySet().stream()
-				.filter(inducementType -> inducementType.getUsage() == Usage.SPELL
+				.filter(inducementType -> inducementType.getUsages() == Usage.SPELL
 					&& inducementType.effects().contains(fWizardSpell)).findFirst().ifPresent(type -> {
 
 				UtilServerInducementUse.useInducement(getGameState(), team, type, 1);

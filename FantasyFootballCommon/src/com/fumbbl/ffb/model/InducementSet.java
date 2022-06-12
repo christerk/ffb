@@ -244,7 +244,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	public int totalInducements() {
 		int total = 0;
 		for (Inducement inducement : getInducements()) {
-			if (!Usage.EXCLUDE_FROM_COUNT.contains(inducement.getType().getUsage())) {
+			if (!Usage.EXCLUDE_FROM_COUNT.contains(inducement.getType().getUsages())) {
 				total += inducement.getValue();
 			}
 		}
@@ -263,7 +263,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public int value(Usage usage) {
-		return getInducementTypes().stream().filter(type -> type.getUsage() == usage)
+		return getInducementTypes().stream().filter(type -> type.hasUsage(usage))
 			.findFirst().map(inducementType -> get(inducementType).getValue()).orElse(0);
 	}
 

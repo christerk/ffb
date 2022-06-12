@@ -215,16 +215,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	private void handleGetTheRef() {
 		Game game = getGameState().getGame();
-		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
+		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream().filter(type -> type.getUsages() == Usage.AVOID_BAN)
 			.findFirst().ifPresent(bribesType -> {
 				InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
-				Inducement bribesHome = inducementSetHome.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+				Inducement bribesHome = inducementSetHome.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsages() == bribesType.getUsages())
 					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
 				bribesHome.setValue(bribesHome.getValue() + 1);
 				inducementSetHome.addInducement(bribesHome);
 
 				InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
-				Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == bribesType.getUsage())
+				Inducement bribesAway = inducementSetAway.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsages() == bribesType.getUsages())
 					.findFirst().map(Map.Entry::getValue).orElse(new Inducement(bribesType, 0));
 				bribesAway.setValue(bribesAway.getValue() + 1);
 				inducementSetAway.addInducement(bribesAway);

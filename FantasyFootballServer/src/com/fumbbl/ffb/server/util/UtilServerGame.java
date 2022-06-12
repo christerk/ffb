@@ -290,7 +290,7 @@ public class UtilServerGame {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setApothecaries(team.getApothecaries());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.APOTHECARY)
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasSingleUsage(Usage.APOTHECARY))
 			.findFirst().ifPresent(entry -> {
 				Inducement wanderingApothecaries = entry.getValue();
 				if (wanderingApothecaries.getValue() > 0) {
@@ -307,7 +307,7 @@ public class UtilServerGame {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setReRolls(team.getReRolls());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.REROLL)
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.REROLL))
 			.findFirst().ifPresent(entry -> {
 				Inducement extraTraining = entry.getValue();
 				if (extraTraining.getValue() > 0) {
@@ -325,7 +325,7 @@ public class UtilServerGame {
 		InducementSet inducementSet = pHomeTeam ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
 		inducementSet.getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().getUsage() == Usage.STEAL_REROLL
+			.filter(entry -> entry.getKey().hasUsage(Usage.STEAL_REROLL)
 				&& entry.getValue().getValue() > 0).findFirst().ifPresent(entry -> {
 				Inducement masterChef = entry.getValue();
 				for (int i = 0; i < masterChef.getValue(); i++) {

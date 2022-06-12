@@ -20,7 +20,7 @@ public class InducementMessage extends ReportMessageBase<ReportInducement> {
 				print(getIndent(), TextStyle.AWAY, game.getTeamAway().getName());
 			}
 			StringBuilder status = new StringBuilder();
-			switch (pReport.getInducementType().getUsage()) {
+			switch (pReport.getInducementType().getUsages()) {
 				case REROLL:
 					print(getIndent(), " use ");
 					print(getIndent(), TextStyle.BOLD, "Extra Team Training");
