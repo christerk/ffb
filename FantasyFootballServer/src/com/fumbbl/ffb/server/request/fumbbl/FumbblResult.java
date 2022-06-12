@@ -224,7 +224,7 @@ public class FumbblResult implements IXmlWriteable {
 
 			List<Inducement> inducements = new ArrayList<>();
 			for (Inducement inducement : pInducementSet.getInducements()) {
-				if (!Usage.EXCLUDE_FROM_RESULT.contains(inducement.getType().getUsages())) {
+				if (!Usage.EXCLUDE_FROM_RESULT.containsAll(inducement.getType().getUsages())) {
 					inducements.add(inducement);
 				}
 			}

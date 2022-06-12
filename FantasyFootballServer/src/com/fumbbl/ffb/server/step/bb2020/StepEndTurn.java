@@ -150,7 +150,7 @@ public class StepEndTurn extends AbstractStep {
 			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(team);
 			TurnData turnData = team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
 			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet()
-				.stream().filter(key -> key.getUsages() == Usage.REROLL_ARGUE).findFirst();
+				.stream().filter(key -> key.hasUsage(Usage.REROLL_ARGUE)).findFirst();
 			boolean canUseReRoll = briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
 
 			switch (pReceivedCommand.getId()) {
@@ -187,7 +187,7 @@ public class StepEndTurn extends AbstractStep {
 					break;
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (inducementCommand.getInducementType().getUsages() == Usage.AVOID_BAN) {
+					if (inducementCommand.getInducementType().hasUsage(Usage.AVOID_BAN)) {
 						fWithinSecretWeaponHandling = true;
 						if (!useSecretWeaponBribes(team, inducementCommand.getPlayerIds())) {
 							if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
@@ -670,7 +670,7 @@ public class StepEndTurn extends AbstractStep {
 			InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome())
 				? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
-			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsages() == Usage.KNOCKOUT_RECOVERY).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
+			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.KNOCKOUT_RECOVERY)).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
 			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserKegValue);
 			return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue);
 		} else {
@@ -700,7 +700,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 		if (ArrayTool.isProvided(pPlayerIds)) {
 			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet().stream()
-				.filter(inducement -> inducement.getUsages() == Usage.REROLL_ARGUE).findFirst();
+				.filter(inducement -> inducement.hasUsage(Usage.REROLL_ARGUE)).findFirst();
 
 			for (String playerId : pPlayerIds) {
 				Player<?> player = pTeam.getPlayerById(playerId);
@@ -740,7 +740,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
-		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsages() == Usage.AVOID_BAN).findFirst();
+		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
 
 		if (bribesType.isPresent() && ArrayTool.isProvided(pPlayerIds)
 			&& UtilServerInducementUse.useInducement(getGameState(), pTeam, bribesType.get(), pPlayerIds.length)) {
@@ -825,7 +825,7 @@ public class StepEndTurn extends AbstractStep {
 		if (playerIds.size() > 0) {
 			InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
-			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsages() == Usage.AVOID_BAN).findFirst();
+			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
 			if (bribesType.isPresent() && inducementSet.hasUsesLeft(bribesType.get())) {
 				Inducement bribes = inducementSet.get(bribesType.get());
 				DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), bribes.getUsesLeft());

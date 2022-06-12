@@ -50,17 +50,17 @@ public class StepRiotousRookies extends AbstractStep {
 	private void hireRiotousRookies(TurnData turnData, Team team) {
 		GameMechanic mechanic = (GameMechanic) getGameState().getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		turnData.getInducementSet().getInducementMapping().keySet().stream()
-			.filter(type -> type.getUsages() == Usage.ADD_LINEMEN).findFirst().ifPresent(inducementType -> {
-			int value = turnData.getInducementSet().getInducementMapping().get(inducementType).getValue();
-			int rookieCounter = 0;
-			for (int j = 0; j < value; j++) {
-				int[] rookiesRoll = getGameState().getDiceRoller().rollRiotousRookies();
-				int rookies = rookiesRoll[0] + rookiesRoll[1] + 1;
-				RosterPosition position = mechanic.riotousRookiesPosition(team.getRoster());
-				if (position != null) {
-					for (int i = 0; i < rookies; i++) {
-						riotousPlayer(getGameState().getGame(), team, i + rookieCounter, position);
-					}
+			.filter(type -> type.hasUsage(Usage.ADD_LINEMEN)).findFirst().ifPresent(inducementType -> {
+				int value = turnData.getInducementSet().getInducementMapping().get(inducementType).getValue();
+				int rookieCounter = 0;
+				for (int j = 0; j < value; j++) {
+					int[] rookiesRoll = getGameState().getDiceRoller().rollRiotousRookies();
+					int rookies = rookiesRoll[0] + rookiesRoll[1] + 1;
+					RosterPosition position = mechanic.riotousRookiesPosition(team.getRoster());
+					if (position != null) {
+						for (int i = 0; i < rookies; i++) {
+							riotousPlayer(getGameState().getGame(), team, i + rookieCounter, position);
+						}
 					getResult().addReport(new ReportRiotousRookies(rookiesRoll, rookies, team.getId()));
 				}
 				rookieCounter += rookies;

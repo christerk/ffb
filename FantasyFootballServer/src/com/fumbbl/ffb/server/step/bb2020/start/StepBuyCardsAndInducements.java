@@ -75,6 +75,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -215,7 +216,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			phase = Phase.DONE;
 		} else if (UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
 			Optional<InducementType> starType = ((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-				.allTypes().stream().filter(type -> type.getUsages() == Usage.STAR).findFirst();
+				.allTypes().stream().filter(type -> type.hasUsage(Usage.STAR)).findFirst();
 			if (starType.isPresent() && game.getTeamHome().getInducementSet() != null) {
 				game.getTurnDataHome().getInducementSet().add(game.getTeamHome().getInducementSet());
 				String[] starPlayerPositionIds = game.getTeamHome().getInducementSet().getStarPlayerPositionIds();
@@ -420,7 +421,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 	private void removeStarPlayerInducements(TurnData pTurnData, int pRemoved) {
 		pTurnData.getInducementSet().getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().getUsages() == Usage.STAR).map(Map.Entry::getValue).findFirst()
+			.filter(entry -> entry.getKey().hasUsage(Usage.STAR)).map(Map.Entry::getValue).findFirst()
 			.ifPresent(starPlayerInducement -> {
 				starPlayerInducement.setValue(starPlayerInducement.getValue() - pRemoved);
 				if (starPlayerInducement.getValue() <= 0) {
@@ -569,7 +570,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
 
-		inducementTypeFactory.allTypes().stream().filter(type -> type.getUsages() == Usage.REROLL_ARGUE).findFirst()
+		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.REROLL_ARGUE)).findFirst()
 			.ifPresent(inducementType -> {
 
 				if (teamHome.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
@@ -592,16 +593,13 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			: game.getTurnDataAway().getInducementSet();
 		int nrOfInducements = 0, nrOfStars = 0, nrOfMercenaries = 0;
 		for (Inducement inducement : inducementSet.getInducements()) {
-			switch (inducement.getType().getUsages()) {
-				case STAR:
-					nrOfStars = inducement.getValue();
-					break;
-				case LONER:
-					nrOfMercenaries = inducement.getValue();
-					break;
-				default:
-					nrOfInducements += inducement.getValue();
-					break;
+			Set<Usage> usages = inducement.getType().getUsages();
+			if (usages.contains(Usage.STAR)) {
+				nrOfStars = inducement.getValue();
+			} else if (usages.contains(Usage.LONER)) {
+				nrOfMercenaries = inducement.getValue();
+			} else {
+				nrOfInducements += inducement.getValue();
 			}
 		}
 		return new ReportCardsAndInducementsBought(pTeam.getId(), inducementSet.getAllCards().length, nrOfInducements, nrOfStars, nrOfMercenaries, gold, newTv);

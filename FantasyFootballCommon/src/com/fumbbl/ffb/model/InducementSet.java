@@ -244,7 +244,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	public int totalInducements() {
 		int total = 0;
 		for (Inducement inducement : getInducements()) {
-			if (!Usage.EXCLUDE_FROM_COUNT.contains(inducement.getType().getUsages())) {
+			if (!Usage.EXCLUDE_FROM_COUNT.containsAll(inducement.getType().getUsages())) {
 				total += inducement.getValue();
 			}
 		}

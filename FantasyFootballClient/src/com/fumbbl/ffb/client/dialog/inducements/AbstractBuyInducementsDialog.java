@@ -128,7 +128,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		leftPanel.add(Box.createVerticalStrut(10));
 
 		((InducementTypeFactory) gameOptions.getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
-			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.contains(type.getUsages()))
+			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.containsAll(type.getUsages()))
 			.forEach(type -> createPanel(type, leftPanel, verticalStrut, gameOptions));
 
 		leftPanel.add(Box.createVerticalGlue());
@@ -363,13 +363,13 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			}
 		}
 		InducementTypeFactory factory = getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
-		factory.allTypes().stream().filter(type -> type.getUsages() == Usage.STAR).findFirst().ifPresent(type -> {
+		factory.allTypes().stream().filter(type -> type.hasUsage(Usage.STAR)).findFirst().ifPresent(type -> {
 			String[] starPlayerIds = getSelectedStarPlayerIds();
 			if (starPlayerIds.length > 0) {
 				indSet.addInducement(new Inducement(type, starPlayerIds.length));
 			}
 		});
-		factory.allTypes().stream().filter(type -> type.getUsages() == Usage.LONER).findFirst().ifPresent(type -> {
+		factory.allTypes().stream().filter(type -> type.hasUsage(Usage.LONER)).findFirst().ifPresent(type -> {
 			String[] mercenaryIds = getSelectedMercenaryIds();
 			if (mercenaryIds.length > 0) {
 				indSet.addInducement(new Inducement(type, mercenaryIds.length));

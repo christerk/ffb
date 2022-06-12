@@ -124,7 +124,7 @@ public class StepEndTurn extends AbstractStep {
 				break;
 			case CLIENT_USE_INDUCEMENT:
 				ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-				if (inducementCommand.getInducementType().getUsages() == Usage.AVOID_BAN) {
+				if (inducementCommand.getInducementType().hasUsage(Usage.AVOID_BAN)) {
 					fWithinSecretWeaponHandling = true;
 					if (!useSecretWeaponBribes(team, inducementCommand.getPlayerIds())) {
 						if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
@@ -492,9 +492,9 @@ public class StepEndTurn extends AbstractStep {
 			int recoveryRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
 			Game game = getGameState().getGame();
 			InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome())
-					? game.getTurnDataHome().getInducementSet()
-					: game.getTurnDataAway().getInducementSet();
-			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsages() == Usage.KNOCKOUT_RECOVERY).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
+				? game.getTurnDataHome().getInducementSet()
+				: game.getTurnDataAway().getInducementSet();
+			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.KNOCKOUT_RECOVERY)).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
 			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserKegValue);
 			return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue);
 		} else {
@@ -558,8 +558,8 @@ public class StepEndTurn extends AbstractStep {
 			fBribesChoiceAway = ArrayTool.isProvided(pPlayerIds);
 		}
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
-				: game.getTurnDataAway().getInducementSet();
-		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsages() == Usage.AVOID_BAN).findFirst();
+			: game.getTurnDataAway().getInducementSet();
+		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
 
 		if (bribesType.isPresent() && ArrayTool.isProvided(pPlayerIds)
 				&& UtilServerInducementUse.useInducement(getGameState(), pTeam, bribesType.get(), pPlayerIds.length)) {
@@ -609,8 +609,8 @@ public class StepEndTurn extends AbstractStep {
 		List<String> playerIds = getPlayerIds(team, game);
 		if (playerIds.size() > 0) {
 			InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet()
-					: game.getTurnDataAway().getInducementSet();
-			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsages() == Usage.AVOID_BAN).findFirst();
+				: game.getTurnDataAway().getInducementSet();
+			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
 			if (bribesType.isPresent() && inducementSet.hasUsesLeft(bribesType.get())) {
 				Inducement bribes = inducementSet.get(bribesType.get());
 				DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), bribes.getUsesLeft());
