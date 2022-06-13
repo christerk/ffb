@@ -69,6 +69,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
 import com.fumbbl.ffb.net.commands.ClientCommandRequestVersion;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
+import com.fumbbl.ffb.net.commands.ClientCommandSelectWeather;
 import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSetMarker;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
@@ -378,10 +379,6 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseInducement(pInducement, pPlayerId));
 	}
 
-	public void sendUseInducement(Card pCard, String pPlayerId) {
-		send(new ClientCommandUseInducement(pCard, pPlayerId));
-	}
-
 	public void sendUseInducement(InducementType pInducement, String[] pPlayerIds) {
 		send(new ClientCommandUseInducement(pInducement, pPlayerIds));
 	}
@@ -540,6 +537,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendThrowKeg(Player<?> player) {
 		send(new ClientCommandThrowKeg(player.getId()));
+	}
+
+	public void sendSelectedWeather(int modifier, String weatherName) {
+		send(new ClientCommandSelectWeather(modifier, weatherName));
 	}
 
 	public FantasyFootballClient getClient() {

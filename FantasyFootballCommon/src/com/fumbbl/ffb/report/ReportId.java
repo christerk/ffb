@@ -56,7 +56,7 @@ public enum ReportId implements INamedObject {
 	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
 	RAIDING_PARTY("raidingParty"), EVENT("event"),
 	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll"),
-	BIASED_REF("biasedRef");
+	BIASED_REF("biasedRef"), WEATHER_MAGE_ROLL("weatherMageRoll");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)

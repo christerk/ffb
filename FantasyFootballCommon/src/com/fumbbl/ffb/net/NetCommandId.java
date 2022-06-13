@@ -142,7 +142,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler"),
 	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie"),
 	CLIENT_PRAYER_SELECTION("clientPrayerSelection"), CLIENT_USE_TEAM_MATES_WISDOM("clientUseTeamMatesWisdom"),
-	CLIENT_THROW_KEG("clientThrowKeg");
+	CLIENT_THROW_KEG("clientThrowKeg"), CLIENT_SELECT_WEATHER("clientSelectWeather");
 
 	private final String fName;
 

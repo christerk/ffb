@@ -554,6 +554,7 @@ public interface IJsonOption {
 	JsonBooleanOption WAITING_FOR_OPPONENT = new JsonBooleanOption("waitingForOpponent");
 	JsonIntOption WANDERING_APOTHECARIES = new JsonIntOption("wanderingApothecaries");
 	JsonEnumWithNameOption WEATHER = new JsonEnumWithNameOption("weather", Factory.WEATHER);
+	JsonIntegerMapOption WEATHER_OPTIONS = new JsonIntegerMapOption("weatherOptions");
 	JsonIntArrayOption WEATHER_ROLL = new JsonIntArrayOption("weatherRoll");
 	JsonIntOption WINNINGS = new JsonIntOption("winnings");
 	JsonIntOption WINNINGS_AWAY = new JsonIntOption("winningsAway");

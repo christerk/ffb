@@ -48,11 +48,15 @@ public class DiceInterpreter {
 
 	public Weather interpretRollWeather(int[] roll) {
 		int total = roll[0] + roll[1];
+		return interpretWeather(total);
+	}
+
+	public Weather interpretWeather(int total) {
 		switch (total) {
-		case 2:
-			return Weather.SWELTERING_HEAT;
-		case 3:
-			return Weather.VERY_SUNNY;
+			case 2:
+				return Weather.SWELTERING_HEAT;
+			case 3:
+				return Weather.VERY_SUNNY;
 			case 11:
 				return Weather.POURING_RAIN;
 			case 12:

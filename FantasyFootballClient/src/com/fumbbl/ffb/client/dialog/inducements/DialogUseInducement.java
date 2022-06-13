@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ *
  * @author Kalimar
  */
 public class DialogUseInducement extends Dialog implements ActionListener {

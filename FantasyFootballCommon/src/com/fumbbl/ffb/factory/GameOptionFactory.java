@@ -293,7 +293,7 @@ public class GameOptionFactory {
 			case INDUCEMENT_WEATHER_MAGE_COST:
 				return new GameOptionInt(pOptionId).setDefault(30000)
 					.setMessage("Weather Mages can be hired for $1 gps each.");
-			default:
+				default:
 				return null;
 		}
 	}
