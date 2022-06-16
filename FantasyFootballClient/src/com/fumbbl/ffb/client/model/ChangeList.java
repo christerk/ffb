@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.10.1")
+			.addBugfix("Some games were unable to restart")
+		);
+
 		versions.add(new VersionChangeList("2.10.0")
 			.addFeature("Gored By The Bull")
 			.addFeature("Maximum Carnage")
