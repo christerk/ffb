@@ -111,7 +111,9 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
 		menuProperty = IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject);
 		defaultValueKey = IJsonOption.DEFAULT_VALUE_KEY.getFrom(source, jsonObject);
-		showNeverUse = IJsonOption.SHOW_NEVER_USE.getFrom(source, jsonObject);
+		if (IJsonOption.SHOW_NEVER_USE.isDefinedIn(jsonObject)) {
+			showNeverUse = IJsonOption.SHOW_NEVER_USE.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 
