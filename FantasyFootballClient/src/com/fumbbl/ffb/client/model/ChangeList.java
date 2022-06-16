@@ -30,6 +30,8 @@ public class ChangeList {
 			.addFeature("New game option to allow fixed swoop distance: swoopDistance")
 			.addFeature("New game option to allow ball and chain use special block actions: allowSpecialBlocksWithBallAndChain")
 			.addBehaviorChange("Removed card panel from inducement dialog")
+			.addBugfix("Ball & Chain is placed prone after using Pile Driver")
+			.addBugfix("Prevent Pile Driver from Ball & Chain against prone/stunned players")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")

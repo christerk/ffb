@@ -46,7 +46,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 				boolean hasSkill = UtilCards.hasSkill(state.defender, skill);
 				if (playerState.isRooted()) {
 					state.standingFirm.put(state.defender.getId(), true);
-				} else if ((playerState.isProne() || playerState.isStunned()) || ((state.oldDefenderState != null) && (state.oldDefenderState.isProne() || state.oldDefenderState.isStunned()))) {
+				} else if ((playerState.isProneOrStunned() || playerState.isStunned()) || ((state.oldDefenderState != null) && (state.oldDefenderState.isProneOrStunned() || state.oldDefenderState.isStunned()))) {
 					state.standingFirm.put(state.defender.getId(), false);
 				} else if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && cancellingSkill != null
 					&& hasSkill && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())

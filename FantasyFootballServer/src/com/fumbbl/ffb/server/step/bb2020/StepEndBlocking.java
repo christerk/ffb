@@ -75,6 +75,7 @@ public class StepEndBlocking extends AbstractStep {
 	private Boolean usePileDriver;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
+	private PlayerState oldDefenderState;
 
 	public StepEndBlocking(GameState pGameState) {
 		super(pGameState);
@@ -140,6 +141,9 @@ public class StepEndBlocking extends AbstractStep {
 					break;
 				case ALLOW_SECOND_BLOCK_ACTION:
 					allowSecondBlockAction = (boolean) parameter.getValue();
+					break;
+				case OLD_DEFENDER_STATE:
+					oldDefenderState = (PlayerState) parameter.getValue();
 					break;
 				default:
 					break;
@@ -229,7 +233,8 @@ public class StepEndBlocking extends AbstractStep {
 
 				PlayerState playerState = fieldModel.getPlayerState(activePlayer);
 
-				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
+				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING
+					&& activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock) && !oldDefenderState.isProneOrStunned();
 
 				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty()
 					|| (game.getTurnData().isFoulUsed() && !activePlayer.hasSkillProperty(NamedProperties.allowsAdditionalFoul))

@@ -190,7 +190,7 @@ public class StepEndMoving extends AbstractStep {
 			boolean enabled = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN)).isEnabled();
 			if (enabled) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(game.getPlayerById(fBlockDefenderId));
-				askForBlockKind = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && !playerState.isStunned() && !playerState.isProne();
+				askForBlockKind = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && !playerState.isStunned() && !playerState.isProneOrStunned();
 				if (askForBlockKind) {
 					game.setDefenderId(fBlockDefenderId);
 				}

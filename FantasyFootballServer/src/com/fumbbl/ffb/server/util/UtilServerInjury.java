@@ -207,7 +207,7 @@ public class UtilServerInjury {
 		Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
 
 		if (game.getActingTeam().hasPlayer(attacker)
-			&& !game.getFieldModel().getPlayerState(attacker).isProne()
+			&& !game.getFieldModel().getPlayerState(attacker).isProneOrStunned()
 			&& pInjuryResult.injuryContext().isCasualty()
 			&& UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingCas)) {
 			TurnData turnData = game.getTurnData();

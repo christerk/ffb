@@ -83,6 +83,6 @@ public class JumpMechanic extends com.fumbbl.ffb.mechanics.JumpMechanic {
 			.filter(Objects::nonNull)
 			.map(game.getFieldModel()::getPlayerState)
 			.filter(Objects::nonNull)
-			.anyMatch(state -> state.isStunned() || state.isProne());
+			.anyMatch(state -> state.isStunned() || state.isProneOrStunned());
 	}
 }

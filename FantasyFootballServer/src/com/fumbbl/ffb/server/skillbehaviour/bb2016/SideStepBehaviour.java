@@ -50,10 +50,10 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 					&& UtilCards.hasSkill(state.defender, skill)
 					&& !(cancellingSkill != null && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
 					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender)))
-					&& !playerState.isProne() && ((state.oldDefenderState == null) || !state.oldDefenderState.isProne())) {
+					&& !playerState.isProneOrStunned() && ((state.oldDefenderState == null) || !state.oldDefenderState.isProneOrStunned())) {
 					if (!state.sideStepping.containsKey(state.defender.getId())) {
 						UtilServerDialog.showDialog(step.getGameState(),
-								new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
+							new DialogSkillUseParameter(state.defender.getId(), skill, 0), true);
 					} else {
 						if (state.sideStepping.get(state.defender.getId())) {
 							state.pushbackMode = PushbackMode.SIDE_STEP;
