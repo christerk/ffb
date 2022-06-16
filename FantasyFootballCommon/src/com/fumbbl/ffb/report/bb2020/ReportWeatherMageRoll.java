@@ -10,9 +10,6 @@ import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
-/**
- * @author Kalimar
- */
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportWeatherMageRoll implements IReport {
 

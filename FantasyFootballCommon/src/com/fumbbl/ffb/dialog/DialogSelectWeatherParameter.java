@@ -18,6 +18,9 @@ public class DialogSelectWeatherParameter implements IDialogParameter {
 		return DialogId.SELECT_WEATHER;
 	}
 
+	public DialogSelectWeatherParameter() {
+	}
+
 	public DialogSelectWeatherParameter(Map<String, Integer> options) {
 		this.options = options;
 	}

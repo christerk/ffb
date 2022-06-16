@@ -148,6 +148,7 @@ public interface IJsonOption {
 	JsonStringOption DIVISION = new JsonStringOption("division");
 	JsonBooleanOption DOUBLE_TARGET_STRENGTH = new JsonBooleanOption("doubleTargetStrength");
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
+	JsonStringOption EFFECT = new JsonStringOption("effect");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption ESCAPED = new JsonBooleanOption("escaped");
 	JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
@@ -290,6 +291,7 @@ public interface IJsonOption {
 	JsonBooleanOption NURGLES_ROT = new JsonBooleanOption("nurglesRot");
 	JsonBooleanOption OFFICIOUS_REF = new JsonBooleanOption("officiousRef");
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
+	JsonEnumWithNameOption OLD_WEATHER = new JsonEnumWithNameOption("oldWeather", Factory.WEATHER);
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
 	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");

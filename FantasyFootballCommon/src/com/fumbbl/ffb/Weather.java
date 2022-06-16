@@ -2,8 +2,7 @@ package com.fumbbl.ffb;
 
 public enum Weather implements INamedObject {
 
-	SWELTERING_HEAT("Sweltering Heat", "heat"
-	),
+	SWELTERING_HEAT("Sweltering Heat", "heat"),
 	VERY_SUNNY("Very Sunny", "sunny"),
 	NICE("Nice Weather", "nice"),
 	POURING_RAIN("Pouring Rain", "rain"),

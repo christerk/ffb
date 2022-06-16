@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -11,10 +11,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 /**
  * 
@@ -25,8 +24,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 	public static final int OK_DIALOG = 1;
 	public static final int CANCEL_DIALOG = 2;
 
-	private JButton fButton;
-	private int fOptionType;
+	private final int fOptionType;
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String pMessage, int pOptionType) {
 		this(pClient, pTitle, new String[] { pMessage }, pOptionType, false, null);
@@ -48,6 +46,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 		super(pClient, pTitle, false);
 		fOptionType = pOptionType;
 
+		JButton fButton;
 		if (getOptionType() == OK_DIALOG) {
 			fButton = new JButton("Ok");
 		} else {

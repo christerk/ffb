@@ -39,6 +39,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
 import com.fumbbl.ffb.net.commands.ClientCommandRequestVersion;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
+import com.fumbbl.ffb.net.commands.ClientCommandSelectWeather;
 import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSetMarker;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
@@ -337,6 +338,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseTeamMatesWisdom();
 			case CLIENT_THROW_KEG:
 				return new ClientCommandThrowKeg();
+			case CLIENT_SELECT_WEATHER:
+				return new ClientCommandSelectWeather();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

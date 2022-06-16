@@ -1,11 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.mechanics.GameMechanic;
-import com.fumbbl.ffb.mechanics.Mechanic;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -33,13 +30,12 @@ public class DialogSelectWeather extends Dialog {
 		panelText.add(new JLabel("Choose new weather"));
 
 		JPanel panelButtons = new JPanel();
-		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
+		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.Y_AXIS));
 
 		panelButtons.add(Box.createHorizontalGlue());
-		GameMechanic mechanic = (GameMechanic) getClient().getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
 		weatherOptions.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
-			JButton button = new JButton(entry.getValue() + ": " + mechanic.weatherDescription(Weather.valueOf(entry.getKey())));
+			JButton button = new JButton(entry.getValue() + ": " + Weather.valueOf(entry.getKey()).getName());
 			panelButtons.add(button);
 			button.addActionListener(e -> {
 				modifier = entry.getValue();

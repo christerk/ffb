@@ -322,10 +322,13 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return prayerState;
 	}
 
-	public void replaceWeather(Weather weather) {
-		activeEffects.setOldWeather(getGame().getFieldModel().getWeather());
+	public Weather replaceWeather(Weather weather) {
+		if (activeEffects.getOldWeather() == null) {
+			activeEffects.setOldWeather(getGame().getFieldModel().getWeather());
+		}
 		activeEffects.setSkipRestoreWeather(true);
 		getGame().getFieldModel().setWeather(weather);
+		return activeEffects.getOldWeather();
 	}
 
 	public void restoreWeather() {
