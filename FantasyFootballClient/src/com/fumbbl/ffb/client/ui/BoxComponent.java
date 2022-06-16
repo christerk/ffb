@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener {
@@ -44,8 +43,6 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	public static final int MAX_BOX_ELEMENTS = 30;
 	public static final int FIELD_SQUARE_SIZE = 39;
-
-	public static final int BOX_TITLE_OFFSET = 16;
 
 	private static final Font _BOX_FONT = new Font("Sans Serif", Font.BOLD, 12);
 
@@ -111,24 +108,24 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		}
 	}
 
-	private void drawPlayers() {
+	private synchronized void drawPlayers() {
 		fBoxSlots.clear();
 		int yPosition = 0;
 		if (BoxType.RESERVES == fOpenBox) {
 			yPosition = drawPlayersInBox(getSideBar().isHomeSide() ? FieldCoordinate.RSV_HOME_X : FieldCoordinate.RSV_AWAY_X,
-					yPosition);
+				yPosition);
 		}
 		if (BoxType.OUT == fOpenBox) {
 			yPosition = drawPlayersInBox(getSideBar().isHomeSide() ? FieldCoordinate.KO_HOME_X : FieldCoordinate.KO_AWAY_X,
-					yPosition);
+				yPosition);
 			yPosition = drawPlayersInBox(getSideBar().isHomeSide() ? FieldCoordinate.BH_HOME_X : FieldCoordinate.BH_AWAY_X,
-					yPosition);
+				yPosition);
 			yPosition = drawPlayersInBox(getSideBar().isHomeSide() ? FieldCoordinate.SI_HOME_X : FieldCoordinate.SI_AWAY_X,
-					yPosition);
+				yPosition);
 			yPosition = drawPlayersInBox(getSideBar().isHomeSide() ? FieldCoordinate.RIP_HOME_X : FieldCoordinate.RIP_AWAY_X,
-					yPosition);
-			yPosition = drawPlayersInBox(getSideBar().isHomeSide() ? FieldCoordinate.BAN_HOME_X : FieldCoordinate.BAN_AWAY_X,
-					yPosition);
+				yPosition);
+			drawPlayersInBox(getSideBar().isHomeSide() ? FieldCoordinate.BAN_HOME_X : FieldCoordinate.BAN_AWAY_X,
+				yPosition);
 			// yPosition = drawPlayersInBox(getSideBar().isHomeSide() ?
 			// FieldCoordinate.MNG_HOME_X : FieldCoordinate.MNG_AWAY_X, yPosition);
 		}
@@ -146,7 +143,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				int locationX = (y % 3) * FIELD_SQUARE_SIZE;
 				int locationY = yPos + (row * FIELD_SQUARE_SIZE);
 				BoxSlot boxSlot = new BoxSlot(new Rectangle(locationX, locationY, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE),
-						boxState);
+					boxState);
 				boxSlot.setPlayer(player);
 				fBoxSlots.add(boxSlot);
 				drawBoxSlot(boxSlot);
@@ -158,7 +155,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		return yPos;
 	}
 
-	public String getToolTipText(MouseEvent pMouseEvent) {
+	public synchronized String getToolTipText(MouseEvent pMouseEvent) {
 		Game game = getSideBar().getClient().getGame();
 		for (BoxSlot boxSlot : fBoxSlots) {
 			if (boxSlot.getLocation().contains(pMouseEvent.getPoint())) {
@@ -242,7 +239,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		}
 	}
 
-	public BoxSlot findSlot(Point pPoint) {
+	public synchronized BoxSlot findSlot(Point pPoint) {
 		for (BoxSlot slot : fBoxSlots) {
 			if (slot.getLocation().contains(pPoint)) {
 				return slot;
@@ -253,27 +250,29 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	private PlayerState findPlayerStateForXCoordinate(int pXCoordinate) {
 		switch (pXCoordinate) {
-		case FieldCoordinate.RSV_HOME_X:
-		case FieldCoordinate.RSV_AWAY_X:
-			return new PlayerState(PlayerState.RESERVE);
-		case FieldCoordinate.KO_HOME_X:
-		case FieldCoordinate.KO_AWAY_X:
-			return new PlayerState(PlayerState.KNOCKED_OUT);
-		case FieldCoordinate.BH_HOME_X:
-		case FieldCoordinate.BH_AWAY_X:
-			return new PlayerState(PlayerState.BADLY_HURT);
-		case FieldCoordinate.SI_HOME_X:
-		case FieldCoordinate.SI_AWAY_X:
-			return new PlayerState(PlayerState.SERIOUS_INJURY);
-		case FieldCoordinate.RIP_HOME_X:
-		case FieldCoordinate.RIP_AWAY_X:
-			return new PlayerState(PlayerState.RIP);
-		case FieldCoordinate.BAN_HOME_X:
-		case FieldCoordinate.BAN_AWAY_X:
-			return new PlayerState(PlayerState.BANNED);
-		case FieldCoordinate.MNG_HOME_X:
-		case FieldCoordinate.MNG_AWAY_X:
-			return new PlayerState(PlayerState.MISSING);
+			case FieldCoordinate.RSV_HOME_X:
+			case FieldCoordinate.RSV_AWAY_X:
+				return new PlayerState(PlayerState.RESERVE);
+			case FieldCoordinate.KO_HOME_X:
+			case FieldCoordinate.KO_AWAY_X:
+				return new PlayerState(PlayerState.KNOCKED_OUT);
+			case FieldCoordinate.BH_HOME_X:
+			case FieldCoordinate.BH_AWAY_X:
+				return new PlayerState(PlayerState.BADLY_HURT);
+			case FieldCoordinate.SI_HOME_X:
+			case FieldCoordinate.SI_AWAY_X:
+				return new PlayerState(PlayerState.SERIOUS_INJURY);
+			case FieldCoordinate.RIP_HOME_X:
+			case FieldCoordinate.RIP_AWAY_X:
+				return new PlayerState(PlayerState.RIP);
+			case FieldCoordinate.BAN_HOME_X:
+			case FieldCoordinate.BAN_AWAY_X:
+				return new PlayerState(PlayerState.BANNED);
+			case FieldCoordinate.MNG_HOME_X:
+			case FieldCoordinate.MNG_AWAY_X:
+				return new PlayerState(PlayerState.MISSING);
+			default:
+				break;
 		}
 		return null;
 	}
@@ -283,24 +282,26 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		if (pPlayerState != null) {
 			String title = null;
 			switch (pPlayerState.getBase()) {
-			case PlayerState.RESERVE:
-				title = "Reserve";
-				break;
-			case PlayerState.KNOCKED_OUT:
-				title = "Knocked Out";
-				break;
-			case PlayerState.BADLY_HURT:
-				title = "Badly Hurt";
-				break;
-			case PlayerState.SERIOUS_INJURY:
-				title = "Seriously Injured";
-				break;
-			case PlayerState.RIP:
-				title = "Killed";
-				break;
-			case PlayerState.BANNED:
-				title = "Banned";
-				break;
+				case PlayerState.RESERVE:
+					title = "Reserve";
+					break;
+				case PlayerState.KNOCKED_OUT:
+					title = "Knocked Out";
+					break;
+				case PlayerState.BADLY_HURT:
+					title = "Badly Hurt";
+					break;
+				case PlayerState.SERIOUS_INJURY:
+					title = "Seriously Injured";
+					break;
+				case PlayerState.RIP:
+					title = "Killed";
+					break;
+				case PlayerState.BANNED:
+					title = "Banned";
+					break;
+				default:
+					break;
 			}
 			if (title != null) {
 				Graphics2D g2d = fImage.createGraphics();
