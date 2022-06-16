@@ -199,7 +199,7 @@ public class PlayerState {
             && !isHypnotized());
     }
 
-    public boolean isProne() {
+    public boolean isProneOrStunned() {
         return ((PRONE == getBase()) || (STUNNED == getBase()));
     }
 

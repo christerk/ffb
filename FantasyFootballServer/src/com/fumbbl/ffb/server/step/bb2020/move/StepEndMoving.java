@@ -5,13 +5,13 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.property.NamedProperty;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.server.GameState;
@@ -189,7 +189,8 @@ public class StepEndMoving extends AbstractStep {
 			boolean askForBlockKind = false;
 			boolean enabled = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN)).isEnabled();
 			if (enabled) {
-				askForBlockKind = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative);
+				PlayerState playerState = game.getFieldModel().getPlayerState(game.getPlayerById(fBlockDefenderId));
+				askForBlockKind = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && !playerState.isStunned() && !playerState.isProneOrStunned();
 				if (askForBlockKind) {
 					game.setDefenderId(fBlockDefenderId);
 				}

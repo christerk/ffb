@@ -107,7 +107,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						if (state.oldDefenderState != null) {
 							if (state.oldDefenderState.isStunned()) {
 								injuryType = new InjuryTypeBlockStunned();
-							} else if (state.oldDefenderState.isProne()) {
+							} else if (state.oldDefenderState.isProneOrStunned()) {
 								injuryType = new InjuryTypeBlockProne();
 							}
 						}
@@ -153,17 +153,17 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 					}
 					// end turn if dropping a player of your own team
 					if ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING)
-							&& (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam())
-							&& (state.oldDefenderState != null) && !state.oldDefenderState.isProne()) {
+						&& (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam())
+						&& (state.oldDefenderState != null) && !state.oldDefenderState.isProneOrStunned()) {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
 					if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING)
-							&& (attackerCoordinate != null)) {
+						&& (attackerCoordinate != null)) {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 						step.publishParameters(
-								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
+							UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
-								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+							game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 						if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
 							boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);

@@ -111,7 +111,7 @@ public final class StepSpecialEffect extends AbstractStep {
 		if (player != null) {
 
 			PlayerState state = game.getFieldModel().getPlayerState(player);
-			boolean isStanding = !state.isProne() && !state.isStunned();
+			boolean isStanding = !state.isProneOrStunned() && !state.isStunned();
 			boolean isActive = state.isActive();
 
 			boolean successful = true;
@@ -156,7 +156,7 @@ public final class StepSpecialEffect extends AbstractStep {
 						new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
 					StepParameterSet parameterSet = UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true);
 					PlayerState newState = game.getFieldModel().getPlayerState(player);
-					if (!player.getId().equalsIgnoreCase(getGameState().getPassState().getOriginalBombardier()) && newState.isProne()) {
+					if (!player.getId().equalsIgnoreCase(getGameState().getPassState().getOriginalBombardier()) && newState.isProneOrStunned()) {
 						game.getFieldModel().setPlayerState(player, newState.changeActive(isActive));
 					}
 					if (suppressEndTurn) {

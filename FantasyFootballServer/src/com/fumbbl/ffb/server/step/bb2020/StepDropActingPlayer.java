@@ -34,7 +34,7 @@ public class StepDropActingPlayer extends AbstractStep {
 		FieldCoordinate coordinate = game.getFieldModel().getPlayerCoordinate(player);
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		if (FieldCoordinateBounds.FIELD.isInBounds(coordinate) && playerState.getBase() != PlayerState.STUNNED) {
-			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.ATTACKER, true));
+			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.DROPPED_BY_OWN_SKILL, true));
 		}
 
 		getResult().setNextAction(StepAction.NEXT_STEP);

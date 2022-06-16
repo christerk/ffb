@@ -78,6 +78,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 	private String fGotoLabelOnFallDown;
 	private FieldCoordinate fCoordinateFrom;
 	private FieldCoordinate fCoordinateTo;
+	private FieldCoordinate originalCoordinateTo;
 	private Direction playerScatter;
 
 	public StepMoveBallAndChain(GameState pGameState) {
@@ -123,6 +124,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 					return true;
 				case COORDINATE_TO:
 					fCoordinateTo = (FieldCoordinate) parameter.getValue();
+					originalCoordinateTo = fCoordinateTo;
 					return true;
 				default:
 					break;
@@ -169,11 +171,11 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			boolean doRoll = playerScatter == null || (getReRollSource() != null && UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()));
 			if (doRoll) {
 				int scatterRoll = getGameState().getDiceRoller().rollThrowInDirection();
-				if (fCoordinateFrom.getX() < fCoordinateTo.getX()) {
+				if (fCoordinateFrom.getX() < originalCoordinateTo.getX()) {
 					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.EAST, scatterRoll);
-				} else if (fCoordinateFrom.getX() > fCoordinateTo.getX()) {
+				} else if (fCoordinateFrom.getX() > originalCoordinateTo.getX()) {
 					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.WEST, scatterRoll);
-				} else if (fCoordinateFrom.getY() < fCoordinateTo.getY()) {
+				} else if (fCoordinateFrom.getY() < originalCoordinateTo.getY()) {
 					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.SOUTH, scatterRoll);
 				} else { // coordinateFrom.getY() > coordinateTo.getY()
 					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
@@ -258,6 +260,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, fCoordinateTo);
 		IServerJsonOption.DIRECTION.addTo(jsonObject, playerScatter);
+		IServerJsonOption.COORDINATE.addTo(jsonObject, originalCoordinateTo);
 		return jsonObject;
 	}
 
@@ -272,6 +275,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 		if (IServerJsonOption.DIRECTION.isDefinedIn(jsonObject)) {
 			playerScatter = (Direction) IServerJsonOption.DIRECTION.getFrom(source, jsonObject);
 		}
+		originalCoordinateTo = IServerJsonOption.COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 

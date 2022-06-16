@@ -28,7 +28,7 @@ public class ChopBlockHandler extends CardHandler {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
-		return playerState.isActive() && !playerState.isProne()
+		return playerState.isActive() && !playerState.isProneOrStunned()
 			&& (UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, playerCoordinate).length > 0);
 	}
 }

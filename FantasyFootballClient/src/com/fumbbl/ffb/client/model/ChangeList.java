@@ -16,6 +16,10 @@ public class ChangeList {
 			.addFeature("Biased Referee")
 		);
 
+		versions.add(new VersionChangeList("2.10.1")
+			.addBugfix("Some games were unable to restart")
+		);
+
 		versions.add(new VersionChangeList("2.10.0")
 			.addFeature("Gored By The Bull")
 			.addFeature("Maximum Carnage")
@@ -35,6 +39,9 @@ public class ChangeList {
 			.addFeature("New game option to prevent turn over when hitting opponent with ttm (game option boolean: endTurnWhenHittingAnyPlayerWithTtm)")
 			.addFeature("New game option to allow fixed swoop distance: swoopDistance")
 			.addFeature("New game option to allow ball and chain use special block actions: allowSpecialBlocksWithBallAndChain")
+			.addBehaviorChange("Removed card panel from inducement dialog")
+			.addBugfix("Ball & Chain is placed prone after using Pile Driver")
+			.addBugfix("Prevent Pile Driver from Ball & Chain against prone/stunned players")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
