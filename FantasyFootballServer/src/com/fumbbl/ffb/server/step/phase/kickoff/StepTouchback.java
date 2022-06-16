@@ -119,7 +119,7 @@ public final class StepTouchback extends AbstractStep {
 					publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_KICKOFF));
 				}
-				game.setTurnMode(TurnMode.REGULAR);
+				game.setTurnMode(TurnMode.KICKOFF);
 			}
 
 		}

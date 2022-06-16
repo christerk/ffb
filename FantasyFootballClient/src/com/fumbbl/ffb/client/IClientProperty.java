@@ -1,10 +1,11 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.CommonProperty;
+
 /**
- * 
  * @author Kalimar
  */
-public interface IClientProperty {
+public interface IClientProperty extends CommonProperty {
 
 	String SERVER_HOST = "server.host";
 	String SERVER_PORT = "server.port";
@@ -82,5 +83,5 @@ public interface IClientProperty {
 		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_CHATLOG, SETTING_RIGHT_CLICK_END_ACTION,
 		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
 		SETTING_PITCH_MARKINGS, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,
-		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT};
+		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT, SETTING_RE_ROLL_BALL_AND_CHAIN};
 }

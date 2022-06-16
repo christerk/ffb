@@ -29,12 +29,13 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepSwoop step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+																								 ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
 			public boolean handleExecuteStepHook(StepSwoop step, StepState state) {
+
 				GameState gameState = step.getGameState();
 				Game game = gameState.getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();

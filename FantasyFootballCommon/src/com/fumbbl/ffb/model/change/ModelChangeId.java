@@ -5,12 +5,13 @@ import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.factory.IFactorySource;
 
 /**
- * 
  * @author Kalimar
  */
 public enum ModelChangeId implements INamedObject {
 
 	ACTING_PLAYER_MARK_SKILL_USED("actingPlayerMarkSkillUsed", ModelChangeDataType.SKILL),
+	ACTING_PLAYER_MARK_SKILL_UNUSED("actingPlayerMarkSkillUnused", ModelChangeDataType.SKILL),
+
 	ACTING_PLAYER_SET_CURRENT_MOVE("actingPlayerSetCurrentMove", ModelChangeDataType.INTEGER),
 	ACTING_PLAYER_SET_DODGING("actingPlayerSetDodging", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_GOING_FOR_IT("actingPlayerSetGoingForIt", ModelChangeDataType.BOOLEAN),
@@ -78,6 +79,7 @@ public enum ModelChangeId implements INamedObject {
 	GAME_SET_HOME_FIRST_OFFENSE("gameSetHomeFirstOffense", ModelChangeDataType.BOOLEAN),
 	GAME_SET_HOME_PLAYING("gameSetHomePlaying", ModelChangeDataType.BOOLEAN),
 	GAME_SET_ID("gameSetId", ModelChangeDataType.LONG),
+	GAME_SET_LAST_DEFENDER_ID("gameSetLastDefenderId", ModelChangeDataType.STRING),
 	GAME_SET_LAST_TURN_MODE("gameSetLastTurnMode", ModelChangeDataType.TURN_MODE),
 	GAME_SET_PASS_COORDINATE("gameSetPassCoordinate", ModelChangeDataType.FIELD_COORDINATE),
 	GAME_SET_SCHEDULED("gameSetScheduled", ModelChangeDataType.DATE),

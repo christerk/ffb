@@ -38,6 +38,13 @@ public enum SkillUse implements INamedObject {
 	GAIN_GRANTED_SKILL("gainGrantedSkill", "to gain a skill for this turn"),
 	IGNORE_SENT_OFF("ignoreSentOff", "to not be ejected"),
 	MOVE_OPEN_TEAM_MATE("moveOpenTeamMate", "to move a team-mate"),
+	ADD_BLOCK_DIE("addBlockDie", "to add a block die"),
+	PERFORM_SECOND_CHAINSAW_ATTACK("performSecondChainsawAttack", "to perform a second chainsaw attack"),
+	PERFORM_SECOND_TWO_BLOCKS("performSecondTwoBlocks", "to perform two block actions"),
+	FORCE_BOMB_EXPLOSION("forceBombExplosion", "to force the bomb to explode"),
+	RE_ROLL_DIRECTION("reRollDirection", "to re-roll the direction roll"),
+	GRANT_CATCH_BONUS("grantCatchBonus", "to grant %g team-mate a catch bonus"),
+	RE_ROLL_CATCH("reRollCatch", "to re-roll the catch roll"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

@@ -27,7 +27,9 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -441,7 +443,7 @@ public class ClientStateSelect extends ClientState {
 			&& mechanic.isBombActionAllowed(game.getTurnMode())
 			&& !game.getTurnData().isBombUsed()
 			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& !playerState.isProne()
+			&& !playerState.isProneOrStunned()
 			&& pPlayer.hasSkillProperty(NamedProperties.enableThrowBombAction));
 	}
 

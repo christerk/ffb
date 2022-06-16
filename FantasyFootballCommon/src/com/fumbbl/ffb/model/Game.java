@@ -46,7 +46,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private boolean fHomeFirstOffense;
 	private boolean fSetupOffense;
 	private boolean fWaitingForOpponent;
-	private String fDefenderId;
+	private String fDefenderId, lastDefenderId;
 	private PlayerAction fDefenderAction;
 	private String fThrowerId;
 	private PlayerAction fThrowerAction;
@@ -261,6 +261,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		setTimeoutPossible(false);
 		setTimeoutEnforced(false);
 		setConcessionPossible(true);
+		setLastDefenderId(null);
 	}
 
 	public TurnData getTurnData() {
@@ -361,6 +362,18 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		}
 		fDefenderId = pDefenderId;
 		notifyObservers(ModelChangeId.GAME_SET_DEFENDER_ID, fDefenderId, null);
+	}
+
+	public String getLastDefenderId() {
+		return lastDefenderId;
+	}
+
+	public void setLastDefenderId(String pDefenderId) {
+		if (StringTool.isEqual(pDefenderId, lastDefenderId)) {
+			return;
+		}
+		lastDefenderId = pDefenderId;
+		notifyObservers(ModelChangeId.GAME_SET_LAST_DEFENDER_ID, lastDefenderId, null);
 	}
 
 	public String getDefenderId() {
@@ -658,6 +671,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		IJsonOption.TURN_MODE.addTo(jsonObject, fTurnMode);
 		IJsonOption.LAST_TURN_MODE.addTo(jsonObject, fLastTurnMode);
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
+		IJsonOption.LAST_DEFENDER_ID.addTo(jsonObject, lastDefenderId);
 		IJsonOption.DEFENDER_ACTION.addTo(jsonObject, fDefenderAction);
 		IJsonOption.PASS_COORDINATE.addTo(jsonObject, fPassCoordinate);
 		IJsonOption.THROWER_ID.addTo(jsonObject, fThrowerId);
@@ -743,6 +757,9 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		Boolean concededValue = IJsonOption.CONCEDED_LEGALLY.getFrom(source, jsonObject);
 		concededLegally = concededValue != null && concededValue;
 
+		if (IJsonOption.LAST_DEFENDER_ID.isDefinedIn(jsonObject)) {
+			lastDefenderId = IJsonOption.LAST_DEFENDER_ID.getFrom(source, jsonObject);
+		}
 		return this;
 
 	}

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.move;
+package com.fumbbl.ffb.server.step.bb2016.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -51,7 +51,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepMoveBallAndChain extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

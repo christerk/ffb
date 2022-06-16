@@ -8,9 +8,9 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.skill.Skill;
 
 /**
- *
  * @author Kalimar
  */
 public class DialogSkillUseHandler extends DialogHandler {
@@ -38,7 +38,7 @@ public class DialogSkillUseHandler extends DialogHandler {
 			} else {
 				StringBuilder message = new StringBuilder();
 				String skillName = (dialogSkillUseParameter.getSkill() != null) ? dialogSkillUseParameter.getSkill().getName()
-						: null;
+					: null;
 				message.append("Waiting for coach to use ").append(skillName);
 				if (dialogSkillUseParameter.getMinimumRoll() > 0) {
 					message.append(" (").append(dialogSkillUseParameter.getMinimumRoll()).append("+ to succeed)");
@@ -56,9 +56,23 @@ public class DialogSkillUseHandler extends DialogHandler {
 		if (testDialogHasId(pDialog, DialogId.SKILL_USE)) {
 			DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
 			String playerId = ((DialogSkillUseParameter) getClient().getGame().getDialogParameter()).getPlayerId();
-			getClient().getCommunication().sendUseSkill(
-				skillUseDialog.isChoiceTwo() ? skillUseDialog.getModiyingSkill() : skillUseDialog.getSkill(),
-				skillUseDialog.isChoiceOne() || skillUseDialog.isChoiceTwo(), playerId);
+
+			Skill usedSkill = skillUseDialog.getSkill();
+			boolean use = false;
+			boolean useNever = false;
+
+			if (skillUseDialog.isChoiceOne()) {
+				use = true;
+			} else if (skillUseDialog.isChoiceTwo()) {
+				if (skillUseDialog.getModifyingSkill() != null) {
+					usedSkill = skillUseDialog.getModifyingSkill();
+					use = true;
+				} else {
+					useNever = true;
+				}
+			}
+
+			getClient().getCommunication().sendUseSkill(usedSkill, use, playerId, useNever);
 		}
 	}
 

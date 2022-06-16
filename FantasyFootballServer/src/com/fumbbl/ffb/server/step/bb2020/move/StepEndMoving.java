@@ -5,11 +5,15 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -182,8 +186,17 @@ public class StepEndMoving extends AbstractStep {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 			// block defender set by ball and chain
 		} else if (StringTool.isProvided(fBlockDefenderId)) {
+			boolean askForBlockKind = false;
+			boolean enabled = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN)).isEnabled();
+			if (enabled) {
+				PlayerState playerState = game.getFieldModel().getPlayerState(game.getPlayerById(fBlockDefenderId));
+				askForBlockKind = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && !playerState.isStunned() && !playerState.isProneOrStunned();
+				if (askForBlockKind) {
+					game.setDefenderId(fBlockDefenderId);
+				}
+			}
 			((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-				.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, false, null));
+				.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, false, null, askForBlockKind));
 			// this may happen on a failed TAKE_ROOT roll
 		} else if (StringTool.isProvided(actingPlayer.getPlayerId()) && (actingPlayer.getPlayerAction() != null)
 			&& !actingPlayer.getPlayerAction().isMoving() && !(actingPlayer.getPlayerAction() == PlayerAction.PASS

@@ -132,11 +132,11 @@ public class StepFollowup extends AbstractStep {
 			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 
 			Skill skillPreventsFollowingUp = game.getDefender().getSkillWithProperty(NamedProperties.preventOpponentFollowingUp);
-			if (skillPreventsFollowingUp != null && !defenderState.isProne()
-					&& !((oldDefenderState != null) && oldDefenderState.isProne())) {
+			if (skillPreventsFollowingUp != null && !defenderState.isProneOrStunned()
+				&& !((oldDefenderState != null) && oldDefenderState.isProneOrStunned())) {
 				boolean cancelSkillUsed = false;
 				Skill skillCancelsSkillPreventingFollow = UtilCards.getSkillCancelling(actingPlayer.getPlayer(),
-						skillPreventsFollowingUp);
+					skillPreventsFollowingUp);
 				if (usingSkillPreventingFollowUp == null) {
 					if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction() || (PlayerAction.MOVE == actingPlayer.getPlayerAction() && actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksDuringMove))) && skillCancelsSkillPreventingFollow != null) {
 						usingSkillPreventingFollowUp = false;

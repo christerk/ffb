@@ -120,7 +120,7 @@ public class ClientStateSetup extends ClientState {
 			sideBarHome.closeBox();
 		}
 		UtilClientPlayerDrag.resetDragging(getClient());
-		getClient().getCommunication().sendEndTurn(useTurnMode() ? getClient().getGame().getTurnMode() : null);
+		getClient().getCommunication().sendEndTurn(useTurnMode() ? getClient().getGame().getTurnMode() : null, getClient().getGame().getTeamHome(), getClient().getGame().getFieldModel());
 	}
 
 	protected boolean useTurnMode() {

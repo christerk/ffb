@@ -1,10 +1,11 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.CommonPropertyValue;
+
 /**
- * 
  * @author Kalimar
  */
-public interface IClientPropertyValue {
+public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_SOUND_ON = "soundOn";
 	String SETTING_SOUND_MUTE_SPECTATORS = "muteSpectators";

@@ -26,6 +26,7 @@ public class ReRollSources {
 	public static final ReRollSource LORD_OF_CHAOS = new ReRollSource("Lord of Chaos");
 	public static final ReRollSource CONSUMMATE_PROFESSIONAL = new ReRollSource("Consummate Professional");
 	public static final ReRollSource PUMP_UP_THE_CROWD = new ReRollSource("Pump up the Crowd");
+	public static final ReRollSource WHIRLING_DERVISH = new ReRollSource("Whirling Dervish");
 
 	private final Map<String, ReRollSource> values;
 

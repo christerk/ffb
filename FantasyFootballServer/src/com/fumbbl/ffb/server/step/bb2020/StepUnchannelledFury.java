@@ -3,8 +3,14 @@ package com.fumbbl.ffb.server.step.bb2020;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -49,13 +55,9 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
 				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 					state.goToLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -73,6 +75,21 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+		if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+			if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.canPerformTwoBlocksAfterFailedFury)) {
+				ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
+				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
+					useSkillCommand.getSkill(), useSkillCommand.isSkillUsed(), SkillUse.PERFORM_SECOND_TWO_BLOCKS));
+				if (useSkillCommand.isSkillUsed()) {
+					state.status = ActionStatus.SKILL_CHOICE_YES;
+				} else {
+					state.status = ActionStatus.SKILL_CHOICE_NO;
+				}
+			}
+			commandStatus = StepCommandStatus.EXECUTE_STEP;
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -89,6 +106,9 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+		if (state.status != null) {
+			IServerJsonOption.STATUS.addTo(jsonObject, state.status.name());
+		}
 		return jsonObject;
 	}
 
@@ -97,6 +117,9 @@ public class StepUnchannelledFury extends AbstractStepWithReRoll {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		if (IServerJsonOption.STATUS.isDefinedIn(jsonObject)) {
+			state.status = ActionStatus.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 

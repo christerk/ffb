@@ -30,6 +30,7 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
@@ -192,6 +193,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 						fEndKickoff = true;
 						if (TurnMode.QUICK_SNAP == getGameState().getGame().getTurnMode()) {
 							endQuickSnap(getGameState().getGame());
+						} else if (TurnMode.SOLID_DEFENCE == getGameState().getGame().getTurnMode()) {
+							setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

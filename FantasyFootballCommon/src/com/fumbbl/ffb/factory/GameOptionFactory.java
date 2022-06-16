@@ -248,6 +248,20 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Stalling check is disabled")
 					.setMessageTrue("Stalling check is enabled");
+			case ALLOW_BALL_AND_CHAIN_RE_ROLL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Can't re-roll Ball & Chain movement")
+					.setMessageTrue("Can re-roll Ball & Chain movement");
+			case END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Hitting a player with ttm is no turnover unless hitting a team-mate")
+					.setMessageTrue("Hitting any player with ttm is a turnover");
+			case SWOOP_DISTANCE:
+				return new GameOptionInt(pOptionId).setDefault(0).setMessage("Swoop players will fly exactly $1 squares.");
+			case ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Ball and Chain always performs regular blocks")
+					.setMessageFalse("Ball and Chain may use special block actions");
 			default:
 				return null;
 		}

@@ -8,8 +8,10 @@ package com.fumbbl.ffb.server.step;
 public enum StepParameterKey {
 
 	ACTING_TEAM, // Boolean
+	ADD_BLOCK_DIE, // Boolean
 	ADMIN_MODE, // Boolean
 	ALLOW_MOVE_AFTER_PASS, // Boolean
+	ALLOW_SECOND_BLOCK_ACTION, // Boolean
 	ALTERNATE_GOTO_LABEL, // String
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
@@ -106,6 +108,7 @@ public enum StepParameterKey {
 	PLAYER_ID_DAUNTLESS_SUCCESS, // String
 	PLAYER_WAS_PUSHED, // Boolean
 	PRAYER_ROLL, // Integer
+	PUBLISH_DEFENDER, // Boolean
 	ATTACKER_POISONED, // Boolean
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean

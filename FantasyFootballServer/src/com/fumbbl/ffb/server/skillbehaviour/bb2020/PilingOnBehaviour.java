@@ -113,7 +113,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						if (state.oldDefenderState != null) {
 							if (state.oldDefenderState.isStunned()) {
 								injuryType = new InjuryTypeBlockStunned();
-							} else if (state.oldDefenderState.isProne()) {
+							} else if (state.oldDefenderState.isProneOrStunned()) {
 								injuryType = new InjuryTypeBlockProne();
 							}
 						}
@@ -157,7 +157,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 					// end turn if dropping a player of your own team
 					boolean droppedOwnTeam = ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING)
 						&& (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam())
-						&& (state.oldDefenderState != null) && !state.oldDefenderState.isProne());
+						&& (state.oldDefenderState != null) && !state.oldDefenderState.isProneOrStunned());
 
 					if (state.injuryResultDefender != null) {
 						step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,

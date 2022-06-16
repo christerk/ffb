@@ -170,6 +170,24 @@ public class ActingPlayer implements IJsonSerializable {
 		markSkillUsed(skill);
 	}
 
+	public void markSkillUnused(Skill pSkill) {
+		if ((pSkill == null) || !isSkillUsed(pSkill)) {
+			return;
+		}
+		fUsedSkills.remove(pSkill);
+
+		if (pSkill.getSkillUsageType().isTrackOutsideActivation()) {
+			getPlayer().markUnused(pSkill, getGame());
+		} else {
+			notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, pSkill);
+		}
+	}
+
+	public void markSkillUnused(ISkillProperty property) {
+		Skill skill = getPlayer().getSkillWithProperty(property);
+		markSkillUnused(skill);
+	}
+
 	public String getRace() {
 		if (getPlayer() != null) {
 			return getPlayer().getRace();

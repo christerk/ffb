@@ -154,7 +154,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		JPanel horizontalMainPanel = new JPanel();
 		horizontalMainPanel.setLayout(new BoxLayout(horizontalMainPanel, BoxLayout.X_AXIS));
 		horizontalMainPanel.add(buildInducementPanel(gameOptions));
-		horizontalMainPanel.add(panelCards);
+		// disable cards for now
+		//	horizontalMainPanel.add(panelCards);
 		return horizontalMainPanel;
 	}
 
@@ -189,8 +190,9 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private void showDialog() {
 		super.okButton.setEnabled(true);
-		dynamicPanel.removeAll();
-		dynamicPanel.add(addCardPanel);
+		// disable cards for now
+		//dynamicPanel.removeAll();
+		//dynamicPanel.add(addCardPanel);
 		getContentPane().validate();
 		pack();
 	}

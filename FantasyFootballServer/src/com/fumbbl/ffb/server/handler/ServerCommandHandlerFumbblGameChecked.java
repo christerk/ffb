@@ -47,7 +47,6 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 		Team home = inflateIfNeeded(gameState.getGame().getTeamHome(), gameState);
 		Team away = inflateIfNeeded(gameState.getGame().getTeamAway(), gameState);
-		gameState.getGame().teamsAreInflated();
 
 		if (home == null || away == null) {
 			return false;
@@ -64,6 +63,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 		getServer().getGameCache().addTeamToGame(gameState, home, true);
 		getServer().getGameCache().addTeamToGame(gameState, away, false);
+		gameState.getGame().teamsAreInflated();
 
 		UtilServerStartGame.startGame(gameState);
 		return true;

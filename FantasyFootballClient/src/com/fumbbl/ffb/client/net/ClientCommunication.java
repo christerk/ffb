@@ -23,8 +23,10 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.BlockTarget;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
@@ -99,10 +101,13 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
 import com.fumbbl.ffb.net.commands.ServerCommand;
+import com.fumbbl.ffb.util.StateValidator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Kalimar
@@ -248,7 +253,11 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendEndTurn(TurnMode turnMode) {
-		send(new ClientCommandEndTurn(turnMode));
+		send(new ClientCommandEndTurn(turnMode, null));
+	}
+
+	public void sendEndTurn(TurnMode turnMode, Team team, FieldModel fieldModel) {
+		send(new ClientCommandEndTurn(turnMode, playerCoordinates(team, fieldModel)));
 	}
 
 	public void sendConfirm() {
@@ -309,8 +318,17 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId, ReRolledAction reRolledAction) {
-		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId, reRolledAction));
+		sendUseSkill(pSkill, pSkillUsed, playerId, reRolledAction, false);
 	}
+
+	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId, ReRolledAction reRolledAction, boolean neverUse) {
+		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId, reRolledAction, neverUse));
+	}
+
+	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId, boolean neverUse) {
+		sendUseSkill(pSkill, pSkillUsed, playerId, null, neverUse);
+	}
+
 
 	public void sendUseWisdom() {
 		send(new ClientCommandUseTeamMatesWisdom());
@@ -528,4 +546,15 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		return fClient;
 	}
 
+	private Map<String, FieldCoordinate> playerCoordinates(Team team, FieldModel fieldModel) {
+		StateValidator validator = new StateValidator();
+		Map<String, FieldCoordinate> playerCoordinates = new HashMap<>();
+		for (Player<?> player : team.getPlayers()) {
+			if (validator.canBeMovedDuringSetUp(player, fieldModel)) {
+				playerCoordinates.put(player.getId(), fieldModel.getPlayerCoordinate(player));
+			}
+		}
+
+		return playerCoordinates;
+	}
 }

@@ -23,6 +23,7 @@ public class NamedProperties {
 	public static final ISkillProperty becomesImmovable = new NamedProperty("Becomes Immovable");
 	public static final ISkillProperty blocksDuringMove = new NamedProperty("Blocks During Move");
 	public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
+	public static final ISkillProperty canAddBlockDie = new NamedProperty("Can Add Block Die");
 	public static final ISkillProperty canAddStrengthToDodge = new NamedProperty("Can Add Strength To Dodge");
 	public static final ISkillProperty canAddStrengthToPass = new NamedProperty("Can Add Strength To Pass");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
@@ -44,11 +45,13 @@ public class NamedProperties {
 	public static final ISkillProperty canDoubleStrengthAfterDauntless = new NamedProperty("Can Double Strength After Dauntless");
 	public static final ISkillProperty canDropBall = new NamedProperty("Can Drop Ball");
 	public static final ISkillProperty canFollowPlayerLeavingTacklezones = new NamedProperty("Can Follow Player Leaving Tacklezones");
+	public static final ISkillProperty canForceBombExplosion = new NamedProperty("Can Force Bomb Explosion");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
 		private final Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
-				add(PassingDistance.LONG_PASS);
-				add(PassingDistance.LONG_BOMB);
-			}};
+			add(PassingDistance.LONG_PASS);
+			add(PassingDistance.LONG_BOMB);
+		}};
+
 		@Override
 		public boolean appliesToContext(PassContext context) {
 			return longDistances.contains(context.getDistance());
@@ -73,9 +76,11 @@ public class NamedProperties {
 	public static final ISkillProperty canMoveWhenOpponentPasses = new NamedProperty("Can Move When Opponent Passes");
 	public static final ISkillProperty canPassToAnySquare = new NamedProperty("Can Pass To Any Square");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlock = new NamedProperty(
-			"Can Perform Armour Roll Instead Of Block");
+		"Can Perform Armour Roll Instead Of Block");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlockThatMightFail = new NamedProperty(
 		"Can Perform Armour Roll Instead Of Block That Might Fail");
+	public static final ISkillProperty canPerformSecondChainsawAttack = new NamedProperty("Can Perform Second Chainsaw Attack");
+	public static final ISkillProperty canPerformTwoBlocksAfterFailedFury = new NamedProperty("Can Perform Two Blocks After Failed Fury");
 	public static final ISkillProperty canPlaceBallWhenKnockedDownOrPlacedProne = new NamedProperty("Can Place Ball When Knocked Down Or Placed Prone");
 	public static final ISkillProperty canPushBackToAnySquare = new NamedProperty("Can Push Back To Any Square");
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
@@ -83,6 +88,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
 	public static final ISkillProperty canRerollBothDowns = new NamedProperty("Can Reroll Both Downs");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
+	public static final ISkillProperty canReRollHmpScatter = new NamedProperty("Can ReRoll Hmp Scatter");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
 	public static final ISkillProperty canRerollSingleDieOncePerGame = new NamedProperty("Can Reroll Single Die Once Per Game");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
@@ -115,6 +121,7 @@ public class NamedProperties {
 	public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
+	public static final ISkillProperty grantsCatchBonusToReceiver = new NamedProperty("Grants Catch Bonus To Receiver");
 	public static final ISkillProperty grantsTeamReRollWhenCausingCas = new NamedProperty("Grants Team Re-Roll When Causing Cas");
 	public static final ISkillProperty grantsTeamReRollWhenOnPitch = new NamedProperty(
 		"Grants Team Re-Roll When On Pitch");

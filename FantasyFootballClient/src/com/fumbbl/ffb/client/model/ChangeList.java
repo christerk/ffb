@@ -10,6 +10,30 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.10.0")
+			.addFeature("Gored By The Bull")
+			.addFeature("Maximum Carnage")
+			.addBugfix("Wisdom not working on passes")
+			.addFeature("Fury of the Blood God")
+			.addFeature("Kaboom!")
+			.addFeature("Whirling Dervish")
+			.addFeature("New game option to re-roll ball and chain movement (game option boolean: allowBallAndChainReRoll)")
+			.addFeature("Add menu to select re-roll options for ball and chain movement")
+			.addFeature("Blast It!")
+			.addImprovement("If only one Diving Catcher is selected in total, no second dialog is shown")
+			.addBugfix("When several Diving Catchers tried to catch the ball and the first failed while using a re-roll there was no roll for the second player")
+			.addBugfix("No choice to use dodge skill when being pushed over the LoS during first turn after kick-off when the kick resulted in a touch back")
+			.addBugfix("To mitigate the setup bug where client and server state weren't in sync the client now sends all player positions at the end of setup, swarming and solid defence phases")
+			.addBehaviorChange("Due to the fix for the setup bug it can happen that opponent players are suddenly moved when the opponent ends his setup")
+			.addBugfix("Turn counter in player results was also incremented during kick-off")
+			.addFeature("New game option to prevent turn over when hitting opponent with ttm (game option boolean: endTurnWhenHittingAnyPlayerWithTtm)")
+			.addFeature("New game option to allow fixed swoop distance: swoopDistance")
+			.addFeature("New game option to allow ball and chain use special block actions: allowSpecialBlocksWithBallAndChain")
+			.addBehaviorChange("Removed card panel from inducement dialog")
+			.addBugfix("Ball & Chain is placed prone after using Pile Driver")
+			.addBugfix("Prevent Pile Driver from Ball & Chain against prone/stunned players")
+		);
+
 		versions.add(new VersionChangeList("2.9.1")
 			.addBugfix("TTM landing on a player is always a turn over")
 			.addBugfix("KTM does not generate spp")

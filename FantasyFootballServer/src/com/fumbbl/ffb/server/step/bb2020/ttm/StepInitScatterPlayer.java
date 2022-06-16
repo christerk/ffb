@@ -13,6 +13,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.report.bb2020.ReportSwoopPlayer;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -208,8 +211,11 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null,
 					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
-				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-				// crash landing only happens in empty squares
+				GameOptionBoolean alwaysTurnOver = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM);
+				if (alwaysTurnOver.isEnabled() || ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon))
+					|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon)))) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				}        // crash landing only happens in empty squares
 				crashLanding = false;
 
 				// continue loop in end step
@@ -266,7 +272,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	}
 
 	private UtilThrowTeamMateSequence.ScatterResult swoop(FieldCoordinate throwerCoordinate, Direction direction) {
-		int distanceRoll = getGameState().getDiceRoller().rollDice(3);
+		GameOptionInt distance = (GameOptionInt) getGameState().getGame().getOptions().getOptionWithDefault(GameOptionId.SWOOP_DISTANCE);
+
+		int distanceRoll = distance.getValue() == 0 ?getGameState().getDiceRoller().rollDice(3) : distance.getValue();
 		FieldCoordinate coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
 		FieldCoordinate lastValidCoordinate = coordinateEnd;
 		int validDistance = distanceRoll;
