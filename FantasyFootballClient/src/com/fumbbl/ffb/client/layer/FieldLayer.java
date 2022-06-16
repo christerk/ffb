@@ -1,14 +1,14 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.client.FantasyFootballClient;
 
 /**
  * 
@@ -24,8 +24,8 @@ public abstract class FieldLayer {
 	public static final int FIELD_IMAGE_OFFSET_CENTER_X = 15;
 	public static final int FIELD_IMAGE_OFFSET_CENTER_Y = 15;
 
-	private FantasyFootballClient fClient;
-	private BufferedImage fImage;
+	private final FantasyFootballClient fClient;
+	private final BufferedImage fImage;
 	private Rectangle fUpdatedArea;
 
 	public FieldLayer(FantasyFootballClient pClient) {
@@ -38,7 +38,7 @@ public abstract class FieldLayer {
 		return fImage;
 	}
 
-	public Rectangle fetchUpdatedArea() {
+	public synchronized Rectangle fetchUpdatedArea() {
 		Rectangle updatedArea = fUpdatedArea;
 		fUpdatedArea = null;
 		return updatedArea;
@@ -124,7 +124,7 @@ public abstract class FieldLayer {
 		}
 	}
 
-	protected void addUpdatedArea(Rectangle pRectangle) {
+	protected synchronized void addUpdatedArea(Rectangle pRectangle) {
 		if (fUpdatedArea != null) {
 			fUpdatedArea.add(pRectangle);
 		} else {
