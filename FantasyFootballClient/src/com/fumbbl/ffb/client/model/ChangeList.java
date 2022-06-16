@@ -10,6 +10,12 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.11.0")
+			.addFeature("Temp Agency Cheerleaders")
+			.addFeature("Part-time Assistant Coaches")
+			.addFeature("Biased Referee")
+		);
+
 		versions.add(new VersionChangeList("2.10.0")
 			.addFeature("Gored By The Bull")
 			.addFeature("Maximum Carnage")
@@ -29,9 +35,6 @@ public class ChangeList {
 			.addFeature("New game option to prevent turn over when hitting opponent with ttm (game option boolean: endTurnWhenHittingAnyPlayerWithTtm)")
 			.addFeature("New game option to allow fixed swoop distance: swoopDistance")
 			.addFeature("New game option to allow ball and chain use special block actions: allowSpecialBlocksWithBallAndChain")
-			.addFeature("Temp Agency Cheerleaders")
-			.addFeature("Part-time Assistant Coaches")
-			.addFeature("Biased Referee")
 		);
 
 		versions.add(new VersionChangeList("2.9.1")
