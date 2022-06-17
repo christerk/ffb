@@ -33,11 +33,11 @@ public class DecoratingCommandAdapter implements CommandAdapter {
 
 		String[] commandParts = command.split(TEAM_DELIM);
 
-		if (commandParts.length != 2) {
+		if (commandParts.length < 2) {
 			throw new FantasyFootballException("Unsupported format for command: " + command);
 		}
 
-		switch (commandParts[1].toLowerCase()) {
+		switch (commandParts[commandParts.length - 1].toLowerCase()) {
 			case HOME:
 				return game.getTeamHome();
 			case AWAY:
