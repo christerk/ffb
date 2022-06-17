@@ -334,14 +334,12 @@ public class StepEndTurn extends AbstractStep {
 						GameResult gameResult = game.getGameResult();
 						if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
 							&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
-							UtilServerGame.startHalf(this, game.getHalf() + 1);
 							kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
 							fRemoveUsedSecretWeapons = true;
 						} else {
 							fEndGame = true;
 						}
 					} else {
-						UtilServerGame.startHalf(this, game.getHalf() + 1);
 						kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), false));
 						fRemoveUsedSecretWeapons = true;
 					}
@@ -451,17 +449,24 @@ public class StepEndTurn extends AbstractStep {
 			getResult().addReport(
 				new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers, faintingCount));
 
-
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
 
-			if (fNewHalf) {
-				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
-			}
 			if (fNewHalf || fTouchdown) {
+				UtilServerGame.updatePlayerStateDependentProperties(this);
 				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
 				removeReRollsLastingForDrive(true);
 				removeReRollsLastingForDrive(false);
+			}
+
+			if (fNewHalf) {
+				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
+				GameResult gameResult = game.getGameResult();
+				boolean drawWithOvertime = UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
+					&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore());
+				if (game.getHalf() == 1 || (game.getHalf() == 2 && drawWithOvertime)) {
+					UtilServerGame.startHalf(this, game.getHalf() + 1);
+				}
 			}
 
 			game.startTurn();
@@ -659,7 +664,6 @@ public class StepEndTurn extends AbstractStep {
 				}
 			}
 		}
-		UtilServerGame.updatePlayerStateDependentProperties(this);
 	}
 
 	private KnockoutRecovery recoverKnockout(Player<?> pPlayer) {
