@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.11.0")
 			.addBugfix("Add synchronization on client side (suspect for setup bug)")
 			.addBugfix("Leader state was not set properly at end of drives")
+			.addBugfix("Further attempt for setup bug mitigation, setting proper player state when syncing player positions")
 		);
 
 		versions.add(new VersionChangeList("2.10.1")
