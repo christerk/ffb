@@ -10,8 +10,13 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.11.0")
+			.addBugfix("Add synchronization on client side (suspect for setup bug)")
+		);
+
 		versions.add(new VersionChangeList("2.10.1")
 			.addBugfix("Some games were unable to restart")
+			.addBugfix("FA fail with Frenzy caused games to break")
 		);
 
 		versions.add(new VersionChangeList("2.10.0")
