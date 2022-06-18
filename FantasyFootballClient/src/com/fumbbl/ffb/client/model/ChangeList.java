@@ -10,7 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.11.0")
+		versions.add(new VersionChangeList("2.12.0")
 			.addFeature("Temp Agency Cheerleaders")
 			.addFeature("Part-time Assistant Coaches")
 			.addFeature("Biased Referee")
