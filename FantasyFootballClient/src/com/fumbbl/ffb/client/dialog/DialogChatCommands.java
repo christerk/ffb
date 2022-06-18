@@ -107,8 +107,8 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/move_ball &lt;direction&gt; &lt;distance&gt;", "moves ball to given direction by given distance. Direction can be [north|northwest|west..."));
 			html.append(commandLine("/move_player_home &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on home team to given direction by given distance.<br/>Direction can be [north|northwest|west..."));
 			html.append(commandLine("/move_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team to given direction by given distance.<br/>Direction can be [north|northwest|west..."));
-			html.append(commandLine("/reset_stack", "reset the internal state to await a new player selection.<br/>" +
-				"Use with care and not during special sequences like kick-off events or dump off."));
+			html.append(commandLine("/reset_state", "reset the internal state to await a new player selection.<br/>" +
+				"Use with care."));
 
 			html.append(commandLine("/playing_home", "sets home team as playing team."));
 			html.append(commandLine("/playing_away", "sets away team as playing team."));
