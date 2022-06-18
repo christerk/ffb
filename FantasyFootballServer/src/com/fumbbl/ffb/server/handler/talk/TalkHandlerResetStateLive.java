@@ -55,8 +55,8 @@ public class TalkHandlerResetStateLive extends TalkHandler {
 			}
 			game.getFieldModel().setTargetSelectionState(null);
 		}
-		server.getCommunication().sendPlayerTalk(gameState, null, "Reset done:\n\t- Acting player" +
-			"\n\t- Player action\n\t- Step stack cleared and init sequence pushed\n\t- TurnMode set to regular\n\t- Last TurnMode deleted" +
-			"\n\t- New PassState set\n\t- Target selection reset (blitz and gaze)\n\t- Blitz turn data deleted");
+		server.getCommunication().sendPlayerTalk(gameState, null, "Reset done:\n  - Acting player" +
+			"\n  - Player action\n  - Step stack cleared and init sequence pushed\n  - TurnMode set to regular\n  - Last TurnMode deleted" +
+			"\n  - New PassState set\n  - Target selection reset (blitz and gaze)\n  - Blitz turn data deleted");
 	}
 }
