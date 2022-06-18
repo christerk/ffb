@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Fixed some admin commands")
 			.addFeature("Add standup command for admins and test mode")
 			.addFeature("Add turnMode command for admins and test mode")
+			.addImprovement("After selecting a player for high kick clicking the player again puts them back to the original square")
 		);
 
 		versions.add(new VersionChangeList("2.10.1")

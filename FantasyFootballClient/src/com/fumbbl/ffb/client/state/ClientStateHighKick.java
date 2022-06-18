@@ -43,6 +43,9 @@ public class ClientStateHighKick extends ClientState {
 				}
 				fOldCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 				getClient().getCommunication().sendSetupPlayer(pPlayer, game.getFieldModel().getBallCoordinate());
+			} else {
+				getClient().getCommunication().sendSetupPlayer(pPlayer, fOldCoordinate);
+				fOldCoordinate = null;
 			}
 		}
 	}
