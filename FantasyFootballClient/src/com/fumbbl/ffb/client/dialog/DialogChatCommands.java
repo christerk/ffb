@@ -131,6 +131,10 @@ public class DialogChatCommands extends Dialog {
 
 			html.append(commandLine("/turn_home &lt;turnnr&gt;", "jumps to the turn with the given number for home team."));
 			html.append(commandLine("/turn_away &lt;turnnr&gt;", "jumps to the turn with the given number for away team."));
+			html.append(commandLine("/turn_mode [&lt;turnMode&gt;] [&lt;lastTurnMode&gt;]", "changes turnMode and lastTurnMode to given values.<br/>" +
+				"If no value is given all available turnModes and current values are returned.<br/>" +
+				"If only one value is given lastTurnMode is set to null." +
+				"If an invalid value is given it is ignored."));
 			html.append(commandLine("/weather &lt;shortname&gt;", "changes the weather to nice, sunny, rain, heat or blizzard."));
 
 			html.append("</table>\n");

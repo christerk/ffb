@@ -14,8 +14,9 @@ public class ChangeList {
 			.addBugfix("Add synchronization on client side (suspect for setup bug)")
 			.addBugfix("Leader state was not set properly at end of drives")
 			.addBugfix("Further attempt for setup bug mitigation, setting proper player state when syncing player positions")
-			.addBugfix("Fixed some admin commands for moving players")
+			.addBugfix("Fixed some admin commands")
 			.addFeature("Add standup command for admins and test mode")
+			.addFeature("Add turnMode command for admins and test mode")
 		);
 
 		versions.add(new VersionChangeList("2.10.1")
