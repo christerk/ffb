@@ -138,7 +138,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		return layerEnhancements;
 	}
 
-	public void refresh() {
+	public synchronized void refresh() {
 
 		Rectangle updatedArea = combineRectangles(new Rectangle[]{getLayerField().fetchUpdatedArea(),
 			getLayerTeamLogo().fetchUpdatedArea(), getLayerEnhancements().fetchUpdatedArea(),
@@ -153,7 +153,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	}
 
-	public void refresh(Rectangle pUpdatedArea) {
+	public synchronized void refresh(Rectangle pUpdatedArea) {
 
 		Graphics2D g2d = fImage.createGraphics();
 
@@ -186,7 +186,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	}
 
-	public void update(ModelChange pModelChange) {
+	public synchronized void update(ModelChange pModelChange) {
 		if ((pModelChange == null) || (pModelChange.getChangeId() == null)) {
 			return;
 		}
@@ -290,7 +290,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		}
 	}
 
-	public void init() {
+	public synchronized void init() {
 		Game game = getClient().getGame();
 		game.addObserver(this);
 		initPlayerCoordinates();
@@ -316,12 +316,12 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	private Rectangle combineRectangles(Rectangle[] pRectangles) {
 		Rectangle result = null;
-		for (int i = 0; i < pRectangles.length; i++) {
-			if (pRectangles[i] != null) {
+		for (Rectangle pRectangle : pRectangles) {
+			if (pRectangle != null) {
 				if (result != null) {
-					result.add(pRectangles[i]);
+					result.add(pRectangle);
 				} else {
-					result = pRectangles[i];
+					result = pRectangle;
 				}
 			}
 		}

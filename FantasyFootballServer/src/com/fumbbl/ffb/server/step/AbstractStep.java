@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogConcedeGameParameter;
@@ -323,6 +324,8 @@ public abstract class AbstractStep implements IStep {
 					coordinate = coordinate.transform();
 				}
 				fieldModel.setPlayerCoordinate(player, coordinate);
+				int playerStateBase = coordinate.isBoxCoordinate() ? PlayerState.RESERVE : PlayerState.STANDING;
+				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(playerStateBase));
 			}
 		}
 	}

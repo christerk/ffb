@@ -1,7 +1,8 @@
 package com.fumbbl.ffb;
 
+import java.util.Arrays;
+
 /**
- *
  * @author Kalimar
  */
 public enum TurnMode implements INamedObject {
@@ -46,5 +47,9 @@ public enum TurnMode implements INamedObject {
 
 	public boolean isCheckForActivePlayers() {
 		return checkForActivePlayers;
+	}
+
+	public static TurnMode forName(String name) {
+		return Arrays.stream(values()).filter(turnMode -> turnMode.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
 }
