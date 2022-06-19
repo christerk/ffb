@@ -452,6 +452,8 @@ public class StepEndTurn extends AbstractStep {
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
 
+			getGameState().restoreWeather();
+
 			if (fNewHalf || fTouchdown) {
 				UtilServerGame.updatePlayerStateDependentProperties(this);
 				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
