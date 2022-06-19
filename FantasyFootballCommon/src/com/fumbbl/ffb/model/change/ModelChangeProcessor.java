@@ -514,6 +514,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_WANDERING_APOTHECARIES:
 				getTurnData(pGame, isHomeData(pModelChange)).setWanderingApothecaries((Integer) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_PLAGUE_DOCTORS:
+				getTurnData(pGame, isHomeData(pModelChange)).setPlagueDoctors((Integer) pModelChange.getValue());
+				return true;
 		}
 
 		return false;
@@ -607,6 +610,9 @@ public class ModelChangeProcessor {
 				return new ModelChange(pModelChange.getChangeId(), isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME,
 					pModelChange.getValue());
 
+			default:
+				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), pModelChange.getValue());
+
 			case TEAM_RESULT_SET_CONCEDED:
 			case TEAM_RESULT_SET_DEDICATED_FANS_MODIFIER:
 			case TEAM_RESULT_SET_FAME:
@@ -625,6 +631,7 @@ public class ModelChangeProcessor {
 			case TEAM_RESULT_SET_FAN_FACTOR:
 			case TEAM_RESULT_SET_WINNINGS:
 			case TURN_DATA_SET_APOTHECARIES:
+			case TURN_DATA_SET_PLAGUE_DOCTORS:
 			case TURN_DATA_SET_WANDERING_APOTHECARIES:
 			case TURN_DATA_SET_BLITZ_USED:
 			case TURN_DATA_SET_BOMB_USED:
@@ -644,9 +651,6 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_COACH_BANNED:
 				return new ModelChange(pModelChange.getChangeId(), isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME,
 					pModelChange.getValue());
-
-			default:
-				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), pModelChange.getValue());
 
 		}
 

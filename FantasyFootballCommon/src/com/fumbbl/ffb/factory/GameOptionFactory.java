@@ -139,6 +139,10 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Mortuary Assistants can be purchased for $1 gps each.");
 			case INDUCEMENT_MORTUARY_ASSISTANTS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Mortuary Assistant(s).");
+			case INDUCEMENT_PLAGUE_DOCTORS_COST:
+				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Plague Doctors can be purchased for $1 gps each.");
+			case INDUCEMENT_PLAGUE_DOCTORS_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Plague Doctor(s).");
 			case INDUCEMENT_KEGS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Bloodweiser Kegs can be purchased for $1 gps each.");

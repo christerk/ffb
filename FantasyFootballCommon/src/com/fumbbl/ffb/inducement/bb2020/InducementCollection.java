@@ -51,6 +51,17 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
+		add(new InducementType("plagueDoctor", "Plague Doctor", "Plague Doctor", "Plague Doctors", GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_MAX,
+			GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_COST, null, true, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION, Usage.APOTHECARY_JOURNEYMEN) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				if (!team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE)) {
+					return 0;
+				}
+				return super.availability(team, options);
+			}
+		});
+
 		add(new InducementType("riotousRookies", "Riotous Rookies", "Riotous Rookies", "Riotous Rookies",
 			GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX, GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_COST, Usage.ADD_LINEMEN) {
 			@Override

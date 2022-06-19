@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.ApothecaryStatus;
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
@@ -270,11 +271,10 @@ public class StepApothecary extends AbstractStep {
 	private boolean rollApothecary() {
 		Game game = getGameState().getGame();
 		Player<?> defender = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
-		boolean requiresWanderingApothecary = defender.isJourneyman() || defender.getPlayerType() == PlayerType.MERCENARY;
 		if (game.getTeamHome().hasPlayer(defender)) {
-			game.getTurnDataHome().useApothecary(requiresWanderingApothecary);
+			game.getTurnDataHome().useApothecary(ApothecaryType.forPlayer(game, defender));
 		} else {
-			game.getTurnDataAway().useApothecary(requiresWanderingApothecary);
+			game.getTurnDataAway().useApothecary(ApothecaryType.forPlayer(game, defender));
 		}
 		boolean apothecaryChoice = ((fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT)
 			&& (fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.KNOCKED_OUT));

@@ -16,13 +16,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogApothecaryChoice extends Dialog implements ActionListener {
 
-	private JButton fButtonInjuryOld;
-	private JButton fButtonInjuryNew;
+	private final JButton fButtonInjuryOld;
+	private final JButton fButtonInjuryNew;
 
 	private boolean fChoiceNewInjury;
 

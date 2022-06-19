@@ -22,6 +22,7 @@ public interface IJsonOption {
 	JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
 	JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
 	JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
+	JsonStringOption APOTHECARY_TYPE = new JsonStringOption("apothecaryType");
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
@@ -310,6 +311,7 @@ public interface IJsonOption {
 	JsonIntOption PETTY_CASH_FROM_TV_DIFF = new JsonIntOption("pettyCashFromTvDiff");
 	JsonIntOption PETTY_CASH_TRANSFERRED = new JsonIntOption("pettyCashTransferred");
 	JsonIntOption PETTY_CASH_USED = new JsonIntOption("pettyCashUsed");
+	JsonIntOption PLAGUE_DOCTORS = new JsonIntOption("plagueDoctors");
 	JsonObjectOption PLAYER = new JsonObjectOption("player");
 	JsonEnumWithNameOption PLAYER_ACTION = new JsonEnumWithNameOption("playerAction", Factory.PLAYER_ACTION);
 	JsonArrayOption PLAYER_ARRAY = new JsonArrayOption("playerArray");

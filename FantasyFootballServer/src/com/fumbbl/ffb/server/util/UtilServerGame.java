@@ -300,6 +300,14 @@ public class UtilServerGame {
 						new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
 				}
 			});
+
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.APOTHECARY_JOURNEYMEN))
+			.findFirst().ifPresent(entry -> {
+				Inducement plagueDoctors = entry.getValue();
+				if (plagueDoctors.getValue() > 0) {
+					turnData.setPlagueDoctors(plagueDoctors.getValue());
+				}
+			});
 	}
 
 	private static void addReRolls(IStep pStep, boolean pHomeTeam) {
