@@ -221,7 +221,7 @@ public final class StepEndPassing extends AbstractStep {
 					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 				} else {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
-					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.PASS_MOVE, actingPlayer.isJumping());
+					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.MOVE, actingPlayer.isJumping());
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				}

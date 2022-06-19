@@ -18,6 +18,7 @@ public class ChangeList {
 			.addFeature("Add standup command for admins and test mode")
 			.addFeature("Add turnMode command for admins and test mode")
 			.addImprovement("After selecting a player for high kick clicking the player again puts them back to the original square")
+			.addBugfix("Double clicking the receiver when performing a quick pass with running pass caused two passes to be thrown")
 		);
 
 		versions.add(new VersionChangeList("2.10.1")
