@@ -39,7 +39,6 @@ import com.fumbbl.ffb.server.step.generator.EndGame;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
-import com.fumbbl.ffb.util.StateValidator;
 
 import java.util.List;
 import java.util.Map;
@@ -311,14 +310,14 @@ public abstract class AbstractStep implements IStep {
 	}
 
 	protected void setPlayerCoordinates(Map<String, FieldCoordinate> playerCoordinates) {
-		StateValidator validator = new StateValidator();
 		Game game = getGameState().getGame();
 		FieldModel fieldModel = game.getFieldModel();
 
 		for (Map.Entry<String, FieldCoordinate> entry : playerCoordinates.entrySet()) {
 			Player<?> player = game.getPlayerById(entry.getKey());
+			PlayerState playerState = fieldModel.getPlayerState(player);
 
-			if (validator.canBeMovedDuringSetUp(player, fieldModel)) {
+			if (playerState.canBeMovedDuringSetup()) {
 				FieldCoordinate coordinate = entry.getValue();
 				if (game.getTeamAway().hasPlayer(player)) {
 					coordinate = coordinate.transform();

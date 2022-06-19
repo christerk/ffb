@@ -265,7 +265,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean isLegalConcession(Game game, Team team) {
 		return game.getTurnMode() == TurnMode.SETUP && Arrays.stream(team.getPlayers())
 			.map(player -> game.getFieldModel().getPlayerState(player))
-			.filter(PlayerState::canBeSetUp)
+			.filter(PlayerState::canBeSetUpNextDrive)
 			.count() <= 3;
 	}
 

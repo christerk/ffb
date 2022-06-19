@@ -42,7 +42,7 @@ public class UtilKickoffSequence {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		for (Player<?> player : team.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			if (playerState.canBeSetUp()) {
+			if (playerState.canBeSetUpNextDrive()) {
 				availablePlayers++;
 			}
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
