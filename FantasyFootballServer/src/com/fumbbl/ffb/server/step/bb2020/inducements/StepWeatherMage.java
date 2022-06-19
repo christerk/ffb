@@ -4,6 +4,9 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogInformationOkayParameter;
 import com.fumbbl.ffb.dialog.DialogSelectWeatherParameter;
+import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectWeather;
 import com.fumbbl.ffb.report.bb2020.ReportWeatherMageResult;
 import com.fumbbl.ffb.report.bb2020.ReportWeatherMageRoll;
@@ -15,6 +18,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +69,7 @@ public class StepWeatherMage extends AbstractStep {
 	}
 
 	private void executeStep() {
+		useMage();
 		int[] roll = getGameState().getDiceRoller().rollWeather();
 		int sum = roll[0] + roll[1];
 		Weather weather = DiceInterpreter.getInstance().interpretWeather(sum);
@@ -114,5 +119,13 @@ public class StepWeatherMage extends AbstractStep {
 	private void replaceWeather(Weather weather, int modifier, ReportWeatherMageResult.Effect effect) {
 		Weather oldWeather = getGameState().replaceWeather(weather);
 		getResult().addReport(new ReportWeatherMageResult(modifier, weather, effect, oldWeather));
+	}
+
+	private void useMage() {
+		Game game = getGameState().getGame();
+		InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+		inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.CHANGE_WEATHER)).findFirst().ifPresent(
+			type -> UtilServerInducementUse.useInducement(type, 1, inducementSet)
+		);
 	}
 }

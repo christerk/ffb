@@ -8,16 +8,21 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerInducementUse {
 
 	public static boolean useInducement(GameState pGameState, Team pTeam, InducementType pInducementType, int pNrOfUses) {
-		Inducement inducement = null;
+		Inducement inducement;
 		Game game = pGameState.getGame();
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
-				: game.getTurnDataAway().getInducementSet();
+			: game.getTurnDataAway().getInducementSet();
+		return useInducement(pInducementType, pNrOfUses, inducementSet);
+	}
+
+	public static boolean useInducement(InducementType pInducementType, int pNrOfUses, InducementSet inducementSet) {
+		Inducement inducement;
 		inducement = inducementSet.get(pInducementType);
 		if (inducement != null) {
 			if ((inducement.getValue() - inducement.getUses()) >= pNrOfUses) {
