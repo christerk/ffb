@@ -201,6 +201,12 @@ public class DialogManager {
 					case SELECT_WEATHER:
 						setDialogHandler(new DialogSelectWeatherHandler(getClient()));
 						break;
+					case USE_MORTUARY_ASSISTANT:
+						setDialogHandler(new DialogUseMortuaryAssistantHandler(getClient()));
+						break;
+					case USE_MORTUARY_ASSISTANTS:
+						setDialogHandler(new DialogUseMortuaryAssistantsHandler(getClient()));
+						break;
 					default:
 						break;
 				}

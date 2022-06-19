@@ -1,8 +1,10 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.report.ReportId;
@@ -10,7 +12,7 @@ import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.INDUCEMENT)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class InducementMessage extends ReportMessageBase<ReportInducement> {
 
 	@Override

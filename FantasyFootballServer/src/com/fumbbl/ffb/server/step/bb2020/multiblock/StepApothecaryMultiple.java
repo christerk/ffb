@@ -13,7 +13,7 @@ import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecariesParameter;
-import com.fumbbl.ffb.dialog.DialogUseIgorsParameter;
+import com.fumbbl.ffb.dialog.DialogUseMortuaryAssistantsParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
@@ -307,7 +307,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 						injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury));
 					});
 
-					UtilServerDialog.showDialog(getGameState(), new DialogUseIgorsParameter(teamId, injuryDescriptions, remainingApos()), true);
+					UtilServerDialog.showDialog(getGameState(), new DialogUseMortuaryAssistantsParameter(teamId, injuryDescriptions, remainingApos()), true);
 					return;
 				}
 			}

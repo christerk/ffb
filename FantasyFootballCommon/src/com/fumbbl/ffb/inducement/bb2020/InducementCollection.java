@@ -40,8 +40,8 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
-		add(new InducementType("mortuaryAssistant", "Mortuary Assistant", "Mortuary Assistant", "Mortuary Assistants", GameOptionId.INDUCEMENT_IGORS_MAX,
-			GameOptionId.INDUCEMENT_IGORS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
+		add(new InducementType("mortuaryAssistant", "Mortuary Assistant", "Mortuary Assistant", "Mortuary Assistants", GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_MAX,
+			GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
 			@Override
 			public int availability(Team team, GameOptions options) {
 				if (!team.getSpecialRules().contains(SpecialRule.SYLVANIAN_SPOTLIGHT)) {

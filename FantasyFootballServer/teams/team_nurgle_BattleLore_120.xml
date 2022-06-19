@@ -15,6 +15,7 @@
     <division>[X]</division>
     <baseIconPath>http://localhost:2224/icons/</baseIconPath>
     <specialRules>
+        <rule>Sylvanian Spotlight</rule>
         <rule>Favoured of Nurgle</rule>
     </specialRules>
 

@@ -119,6 +119,10 @@ public class DialogParameterFactory {
                 return new DialogSelectWeatherParameter();
             case INFORMATION_OKAY:
                 return new DialogInformationOkayParameter();
+            case USE_MORTUARY_ASSISTANT:
+                return new DialogUseMortuaryAssistantParameter();
+            case USE_MORTUARY_ASSISTANTS:
+                return new DialogUseMortuaryAssistantsParameter();
             default:
                 return null;
         }

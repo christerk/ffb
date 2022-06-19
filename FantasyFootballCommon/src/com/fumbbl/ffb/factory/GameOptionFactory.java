@@ -135,6 +135,10 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Igors can be purchased for $1 gps each.");
 			case INDUCEMENT_IGORS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Igor(s).");
+			case INDUCEMENT_MORTUARY_ASSISTANTS_COST:
+				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Mortuary Assistants can be purchased for $1 gps each.");
+			case INDUCEMENT_MORTUARY_ASSISTANTS_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Mortuary Assistant(s).");
 			case INDUCEMENT_KEGS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Bloodweiser Kegs can be purchased for $1 gps each.");

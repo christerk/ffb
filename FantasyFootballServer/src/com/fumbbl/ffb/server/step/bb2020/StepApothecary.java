@@ -12,7 +12,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecaryParameter;
-import com.fumbbl.ffb.dialog.DialogUseIgorParameter;
+import com.fumbbl.ffb.dialog.DialogUseMortuaryAssistantParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
@@ -249,7 +249,7 @@ public class StepApothecary extends AbstractStep {
 								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream().anyMatch(type -> type.hasUsage(Usage.REGENERATION)
 									&& inducementSet.hasUsesLeft(type));
 									if (hasInducement && player.getPlayerType() != PlayerType.STAR && player.getPlayerType() != PlayerType.MERCENARY) {
-										game.setDialogParameter(new DialogUseIgorParameter(player.getId()));
+										game.setDialogParameter(new DialogUseMortuaryAssistantParameter(player.getId()));
 										fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
 										doNextStep = false;
 									}

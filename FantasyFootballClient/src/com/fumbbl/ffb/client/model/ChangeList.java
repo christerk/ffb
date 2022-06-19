@@ -14,6 +14,8 @@ public class ChangeList {
 			.addFeature("Temp Agency Cheerleaders")
 			.addFeature("Part-time Assistant Coaches")
 			.addFeature("Biased Referee")
+			.addFeature("Weather Mage")
+			.addImprovement("Rename Igors to Mortuary Assistants in dialogs and game options")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")
