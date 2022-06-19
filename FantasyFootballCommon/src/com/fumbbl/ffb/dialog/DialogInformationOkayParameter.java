@@ -11,17 +11,19 @@ public class DialogInformationOkayParameter implements IDialogParameter {
 
 	private String title;
 	private String[] messages;
+	private boolean confirm;
 
 	public DialogInformationOkayParameter() {
 	}
 
-	public DialogInformationOkayParameter(String title, String message) {
-		this(title, new String[]{message});
+	public DialogInformationOkayParameter(String title, String message, boolean confirm) {
+		this(title, new String[]{message}, confirm);
 	}
 
-	public DialogInformationOkayParameter(String title, String[] messages) {
+	public DialogInformationOkayParameter(String title, String[] messages, boolean confirm) {
 		this.title = title;
 		this.messages = messages;
+		this.confirm = confirm;
 	}
 
 	public String getTitle() {
@@ -36,10 +38,13 @@ public class DialogInformationOkayParameter implements IDialogParameter {
 		return DialogId.INFORMATION_OKAY;
 	}
 
-	// transformation
+	public boolean isConfirm() {
+		return confirm;
+	}
+// transformation
 
 	public IDialogParameter transform() {
-		return new DialogInformationOkayParameter(title, messages);
+		return new DialogInformationOkayParameter(title, messages, confirm);
 	}
 
 	// JSON serialization
@@ -49,6 +54,7 @@ public class DialogInformationOkayParameter implements IDialogParameter {
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.MESSAGE_ARRAY.addTo(jsonObject, messages);
 		IJsonOption.TEXT.addTo(jsonObject, title);
+		IJsonOption.CONFIRM.addTo(jsonObject, confirm);
 		return jsonObject;
 	}
 
@@ -57,6 +63,7 @@ public class DialogInformationOkayParameter implements IDialogParameter {
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
 		title = IJsonOption.TEXT.getFrom(source, jsonObject);
 		messages = IJsonOption.MESSAGE_ARRAY.getFrom(source, jsonObject);
+		confirm = IJsonOption.CONFIRM.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -115,6 +115,7 @@ public interface IJsonOption {
 	JsonBooleanOption CONCEDED_LEGALLY = new JsonBooleanOption("concededLegally");
 	JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");
 	JsonBooleanOption CONCESSION_POSSIBLE = new JsonBooleanOption("concessionPossible");
+	JsonBooleanOption CONFIRM = new JsonBooleanOption("confirm");
 	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", Factory.SKILL);
 	JsonBooleanOption CONSUMMATE_OPTION = new JsonBooleanOption("consummateOption");
 	JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");

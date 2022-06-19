@@ -1,7 +1,9 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogInformationOkayParameter;
 import com.fumbbl.ffb.model.Game;
 
@@ -26,6 +28,12 @@ public class DialogInformationOkayHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
+		IDialogParameter dialogParameter = getClient().getGame().getDialogParameter();
+		if (dialogParameter.getId() == DialogId.INFORMATION_OKAY) {
+			if (((DialogInformationOkayParameter) dialogParameter).isConfirm()) {
+				getClient().getCommunication().sendConfirm();
+			}
+		}
 	}
 
 }

@@ -2,8 +2,8 @@ package com.fumbbl.ffb.server.step.bb2020.inducements;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.dialog.DialogInformationOkayParameter;
 import com.fumbbl.ffb.dialog.DialogSelectWeatherParameter;
-import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectWeather;
 import com.fumbbl.ffb.report.bb2020.ReportWeatherMageResult;
 import com.fumbbl.ffb.report.bb2020.ReportWeatherMageRoll;
@@ -45,14 +45,22 @@ public class StepWeatherMage extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			if (pReceivedCommand.getId() == NetCommandId.CLIENT_SELECT_WEATHER) {
-				ClientCommandSelectWeather clientCommandSelectWeather = (ClientCommandSelectWeather) pReceivedCommand.getCommand();
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_SELECT_WEATHER:
+					ClientCommandSelectWeather clientCommandSelectWeather = (ClientCommandSelectWeather) pReceivedCommand.getCommand();
 
-				replaceWeather(Weather.valueOf(clientCommandSelectWeather.getWeatherName()), clientCommandSelectWeather.getModifier(), ReportWeatherMageResult.Effect.CHANGED);
-				commandStatus = StepCommandStatus.SKIP_STEP;
+					replaceWeather(Weather.valueOf(clientCommandSelectWeather.getWeatherName()), clientCommandSelectWeather.getModifier(), ReportWeatherMageResult.Effect.CHANGED);
+					getResult().setNextAction(StepAction.NEXT_STEP);
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					break;
+				case CLIENT_CONFIRM:
+					getResult().setNextAction(StepAction.NEXT_STEP);
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					break;
+				default:
+					break;
 			}
 		}
-
 		return commandStatus;
 	}
 
@@ -81,9 +89,12 @@ public class StepWeatherMage extends AbstractStep {
 
 				if (newWeather != oldWeather) {
 					replaceWeather(newWeather, weatherOptions.get(newWeatherString.get()), ReportWeatherMageResult.Effect.NO_CHOICE);
+					UtilServerDialog.showDialog(getGameState(), new DialogInformationOkayParameter(DIALOG_TITLE,
+						"Weather changed to " + newWeather.getName() + ".", true), false);
 				} else {
 					getResult().addReport(new ReportWeatherMageResult(0, newWeather, ReportWeatherMageResult.Effect.NO_CHANGE, newWeather));
-					getResult().setNextAction(StepAction.NEXT_STEP);
+					UtilServerDialog.showDialog(getGameState(), new DialogInformationOkayParameter(DIALOG_TITLE,
+						"The weather did not change.", true), false);
 				}
 
 			} else {
@@ -102,7 +113,6 @@ public class StepWeatherMage extends AbstractStep {
 
 	private void replaceWeather(Weather weather, int modifier, ReportWeatherMageResult.Effect effect) {
 		Weather oldWeather = getGameState().replaceWeather(weather);
-		getResult().setNextAction(StepAction.NEXT_STEP);
 		getResult().addReport(new ReportWeatherMageResult(modifier, weather, effect, oldWeather));
 	}
 }

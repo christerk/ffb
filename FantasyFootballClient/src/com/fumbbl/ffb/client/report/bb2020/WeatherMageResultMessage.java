@@ -29,8 +29,8 @@ public class WeatherMageResultMessage extends ReportMessageBase<ReportWeatherMag
 				reportChangedWeather(report, mechanic);
 				break;
 			default:
-				reportChangedWeather(report, mechanic);
 				println(getIndent() + 1, TextStyle.EXPLANATION, "There was only one option");
+				reportChangedWeather(report, mechanic);
 		}
 	}
 
