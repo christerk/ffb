@@ -4,11 +4,14 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Map;
@@ -25,20 +28,45 @@ public class DialogSelectWeather extends Dialog {
 
 		super(pClient, "Select Weather", false);
 
-		JPanel panelText = new JPanel();
-		panelText.setLayout(new BoxLayout(panelText, BoxLayout.X_AXIS));
-		panelText.add(new JLabel("Choose new weather"));
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		JPanel panelButtons = new JPanel();
-		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.Y_AXIS));
+		JPanel textPanel = new JPanel();
+		JLabel title = new JLabel("Choose new weather");
+		title.setHorizontalAlignment(SwingConstants.CENTER);
+		title.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+		textPanel.setAlignmentX(CENTER_ALIGNMENT);
+		textPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+		textPanel.add(title);
 
-		panelButtons.add(Box.createHorizontalGlue());
+		panel.add(textPanel);
+		panel.add(Box.createVerticalStrut(5));
+
+		panel.setAlignmentX(CENTER_ALIGNMENT);
+
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		weatherOptions.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
-			JButton button = new JButton(entry.getValue() + ": " + Weather.valueOf(entry.getKey()).getName());
-			panelButtons.add(button);
+			Integer value = entry.getValue();
+			String formattedValue = value >= 0 ? "+" + value : value.toString();
+			JLabel label = new JLabel();
+			label.setText(formattedValue);
+			label.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+
+			JButton button = new JButton(Weather.valueOf(entry.getKey()).getName());
+			button.setHorizontalAlignment(SwingConstants.CENTER);
+			button.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+
+			JPanel entryPanel = new JPanel();
+			entryPanel.setLayout(new BoxLayout(entryPanel, BoxLayout.X_AXIS));
+			entryPanel.add(label);
+			entryPanel.add(Box.createHorizontalStrut(3));
+			entryPanel.add(button);
+			panel.add(entryPanel);
+
 			button.addActionListener(e -> {
-				modifier = entry.getValue();
+				modifier = value;
 				weatherName = entry.getKey();
 				if (getCloseListener() != null) {
 					getCloseListener().dialogClosed(this);
@@ -55,7 +83,7 @@ public class DialogSelectWeather extends Dialog {
 
 				@Override
 				public void keyReleased(KeyEvent e) {
-					modifier = entry.getValue();
+					modifier = value;
 					weatherName = entry.getKey();
 					if (getCloseListener() != null) {
 						getCloseListener().dialogClosed(DialogSelectWeather.this);
@@ -64,14 +92,8 @@ public class DialogSelectWeather extends Dialog {
 			});
 		});
 
-		panelButtons.add(Box.createHorizontalGlue());
-
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		getContentPane().add(Box.createVerticalStrut(5));
-		getContentPane().add(panelText);
-		getContentPane().add(Box.createVerticalStrut(5));
-		getContentPane().add(panelButtons);
-
+		getContentPane().add(panel);
 		pack();
 		setLocationToCenter();
 

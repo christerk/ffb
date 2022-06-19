@@ -111,7 +111,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
 			String buttonText = "<html>" +
 				"<b>Weather Mage</b>" +
-				"<br>Influence Weather" +
+				"<br>Roll for weather" +
 				"</html>";
 			weatherMageButton = new JButton(buttonText);
 			weatherMageButton.setHorizontalAlignment(SwingConstants.LEFT);

@@ -2,7 +2,6 @@ package com.fumbbl.ffb.server.step.bb2020.inducements;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.dialog.DialogInformationOkayParameter;
 import com.fumbbl.ffb.dialog.DialogSelectWeatherParameter;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectWeather;
@@ -82,13 +81,9 @@ public class StepWeatherMage extends AbstractStep {
 
 				if (newWeather != oldWeather) {
 					replaceWeather(newWeather, weatherOptions.get(newWeatherString.get()), ReportWeatherMageResult.Effect.NO_CHOICE);
-					UtilServerDialog.showDialog(getGameState(), new DialogInformationOkayParameter(DIALOG_TITLE,
-						"Weather changed to " + newWeather.getName() + "."), false);
 				} else {
 					getResult().addReport(new ReportWeatherMageResult(0, newWeather, ReportWeatherMageResult.Effect.NO_CHANGE, newWeather));
 					getResult().setNextAction(StepAction.NEXT_STEP);
-					UtilServerDialog.showDialog(getGameState(), new DialogInformationOkayParameter(DIALOG_TITLE,
-						"The weather did not change."), false);
 				}
 
 			} else {

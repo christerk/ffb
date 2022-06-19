@@ -37,7 +37,7 @@ public class WeatherMageResultMessage extends ReportMessageBase<ReportWeatherMag
 	private void reportChangedWeather(ReportWeatherMageResult report, GameMechanic mechanic) {
 		println(getIndent() + 1, TextStyle.NONE, "The weather is changed to " + report.getNewWeather().getName()
 			+ ". It will return to " + report.getOldWeather().getName() + " at the end of your "
-			+ (game.isHomePlaying() ? "" : "opponent's ") + "turn");
+			+ (game.isHomePlaying() ? "opponent's " : "") + "turn");
 		println(getIndent() + 1, TextStyle.EXPLANATION, mechanic.weatherDescription(report.getNewWeather()));
 
 	}
