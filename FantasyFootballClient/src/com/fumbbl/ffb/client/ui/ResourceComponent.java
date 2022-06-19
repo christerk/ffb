@@ -204,7 +204,10 @@ public class ResourceComponent extends JPanel {
 				fRefreshNecessary |= (inducementValues.get(type) != null ? (newValue != inducementValues.get(type)) : newValue > 0);
 				inducementValues.put(type, newValue);
 				if (newValue > 0) {
-					ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
+					ResourceSlot slot = Arrays.stream(fSlots).limit(slotIndex.get())
+						.filter(existingSlot -> existingSlot.getIconProperty().equalsIgnoreCase(type.getSlotIconProperty()))
+						.findFirst()
+						.orElse(fSlots[slotIndex.getAndIncrement()]);
 					slot.add(new ResourceValue(newValue, type.getSingular(), type.getPlural()));
 					slot.setIconProperty(type.getSlotIconProperty());
 				}

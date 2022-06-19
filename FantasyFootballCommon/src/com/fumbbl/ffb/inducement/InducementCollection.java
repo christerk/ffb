@@ -40,7 +40,7 @@ public abstract class InducementCollection implements IKeyedItem {
 		add(new InducementType("mercenaries", "Mercenaries", "Mercenary", "Mercenaries", null, null, Usage.LONER));
 
 		add(new InducementType("wizard", "Wizard", "Wizard", "Wizards", GameOptionId.INDUCEMENT_WIZARDS_MAX,
-			GameOptionId.INDUCEMENT_WIZARDS_COST, null, false, IIconProperty.RESOURCE_WIZARD, Usage.SPELL) {
+			GameOptionId.INDUCEMENT_WIZARDS_COST, null, true, IIconProperty.RESOURCE_WIZARD, Usage.SPELL) {
 			@Override
 			public int availability(Team team, GameOptions options) {
 				IGameOption wizardOption = options.getOptionWithDefault(getMaxId());
