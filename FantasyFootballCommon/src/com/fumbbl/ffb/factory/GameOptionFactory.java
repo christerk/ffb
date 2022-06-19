@@ -288,8 +288,8 @@ public class GameOptionFactory {
 			case INDUCEMENT_BIASED_REF_REDUCED_COST:
 				return new GameOptionInt(pOptionId).setDefault(80000)
 					.setMessage("Biased Ref for reduced price can be purchased for $1 gps each.");
-			case INDUCEMENT_WEATHER_MAGE_MAX: // TODO reset default
-				return new GameOptionInt(pOptionId).setDefault(10).setMessage("Coaches my hire $1 Weather Mages.");
+			case INDUCEMENT_WEATHER_MAGE_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 Weather Mages.");
 			case INDUCEMENT_WEATHER_MAGE_COST:
 				return new GameOptionInt(pOptionId).setDefault(30000)
 					.setMessage("Weather Mages can be hired for $1 gps each.");
