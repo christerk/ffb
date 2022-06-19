@@ -5,16 +5,19 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Kalimar
@@ -28,42 +31,46 @@ public class DialogSelectWeather extends Dialog {
 
 		super(pClient, "Select Weather", false);
 
+		GridBagConstraints constraints = new GridBagConstraints();
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setLayout(new GridBagLayout());
 
-		JPanel textPanel = new JPanel();
-		JLabel title = new JLabel("Choose new weather");
+		JLabel title = new JLabel("<html><b>Select roll modifier</b></html>");
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		title.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
-		textPanel.setAlignmentX(CENTER_ALIGNMENT);
-		textPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
-		textPanel.add(title);
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.gridwidth = 2;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.insets = new Insets(0, 0, 10, 0);
 
-		panel.add(textPanel);
-		panel.add(Box.createVerticalStrut(5));
-
-		panel.setAlignmentX(CENTER_ALIGNMENT);
-
+		panel.add(title, constraints);
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		AtomicInteger row = new AtomicInteger(1);
+		constraints.gridwidth = 1;
+		Insets buttonInsets = new Insets(0, 0, 0, 5);
+
 
 		weatherOptions.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
 			Integer value = entry.getValue();
 			String formattedValue = value >= 0 ? "+" + value : value.toString();
 			JLabel label = new JLabel();
-			label.setText(formattedValue);
+			label.setText(Weather.valueOf(entry.getKey()).getName());
 			label.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 
-			JButton button = new JButton(Weather.valueOf(entry.getKey()).getName());
+			JButton button = new JButton(formattedValue);
 			button.setHorizontalAlignment(SwingConstants.CENTER);
 			button.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 
-			JPanel entryPanel = new JPanel();
-			entryPanel.setLayout(new BoxLayout(entryPanel, BoxLayout.X_AXIS));
-			entryPanel.add(label);
-			entryPanel.add(Box.createHorizontalStrut(3));
-			entryPanel.add(button);
-			panel.add(entryPanel);
+			constraints.gridx = 0;
+			constraints.gridy = row.getAndIncrement();
+			constraints.insets = buttonInsets;
+			panel.add(button, constraints);
+			constraints.gridx = 1;
+			constraints.insets = new Insets(0, 0, 0, 0);
+			panel.add(label, constraints);
 
 			button.addActionListener(e -> {
 				modifier = value;
