@@ -172,7 +172,7 @@ public class GameOptionFactory {
 					.setMessage("A minimum of $1 players must be set up on the line of scrimmage.");
 			case MVP_NOMINATIONS:
 				return new GameOptionInt(pOptionId).setDefault(0)
-					.setMessage("$1 players may be nominated to receice the MVP award.");
+					.setMessage("$1 players may be nominated to receive the MVP award.");
 			case OVERTIME:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Game will go into overtime if there is a draw after 2nd half.");
