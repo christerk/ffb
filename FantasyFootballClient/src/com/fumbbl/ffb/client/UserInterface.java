@@ -189,7 +189,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		getGameMenuBar().refresh();
 	}
 
-	public void init(GameOptions gameOptions) {
+	public synchronized void init(GameOptions gameOptions) {
 
 		getStatusReport().init(gameOptions);
 		getSideBarHome().init();

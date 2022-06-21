@@ -189,14 +189,18 @@ public class PlayerState {
         return (RIP == getBase());
     }
 
-    public boolean canBeSetUp() {
+    public boolean canBeSetUpNextDrive() {
         return ((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase()) || (STUNNED == getBase())
-            || (RESERVE == getBase()) || (FALLING == getBase()) || (HIT_ON_GROUND == getBase()) || (BLOCKED == getBase()));
+          || (RESERVE == getBase()) || (FALLING == getBase()) || (HIT_ON_GROUND == getBase()) || (BLOCKED == getBase()));
+    }
+
+    public boolean canBeMovedDuringSetup() {
+        return STANDING == getBase() || RESERVE == getBase();
     }
 
     public boolean hasTacklezones() {
         return (((STANDING == getBase()) || (MOVING == getBase()) || (BLOCKED == getBase())) && !isConfused()
-            && !isHypnotized());
+          && !isHypnotized());
     }
 
     public boolean isProneOrStunned() {

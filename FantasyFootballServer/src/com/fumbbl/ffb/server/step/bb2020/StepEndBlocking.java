@@ -276,7 +276,9 @@ public class StepEndBlocking extends AbstractStep {
 					Player<?>[] opponents = null;
 					if (game.getDefender() != null) {
 						opponents = UtilPlayer.findAdjacentBlockablePlayers(game, game.getDefender().getTeam(), game.getFieldModel().getPlayerCoordinate(activePlayer));
-					}					boolean hasValidOpponent = ArrayTool.isProvided(opponents);
+					}
+
+					boolean hasValidOpponent = ArrayTool.isProvided(opponents);
 					boolean hasValidOtherOpponent = ArrayTool.isProvided(opponents) && (opponents.length > 1 || opponents[0] != game.getDefender());
 
 					game.setDefenderId(null);

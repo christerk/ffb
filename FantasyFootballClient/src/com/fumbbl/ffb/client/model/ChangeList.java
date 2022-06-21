@@ -10,8 +10,20 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.11.0")
+			.addBugfix("Add synchronization on client side (suspect for setup bug)")
+			.addBugfix("Leader state was not set properly at end of drives")
+			.addBugfix("Further attempt for setup bug mitigation, setting proper player state when syncing player positions")
+			.addBugfix("Fixed some admin commands")
+			.addFeature("Add standup command for admins and test mode")
+			.addFeature("Add turnMode command for admins and test mode")
+			.addImprovement("After selecting a player for high kick clicking the player again puts them back to the original square")
+			.addBugfix("Double clicking the receiver when performing a quick pass with running pass caused two passes to be thrown")
+		);
+
 		versions.add(new VersionChangeList("2.10.1")
 			.addBugfix("Some games were unable to restart")
+			.addBugfix("FA fail with Frenzy caused games to break")
 		);
 
 		versions.add(new VersionChangeList("2.10.0")

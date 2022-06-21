@@ -6,6 +6,7 @@ import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
@@ -197,21 +198,35 @@ public abstract class TalkHandler implements IKeyedItem {
 
 	protected void movePlayerToCoordinate(FantasyFootballServer server, GameState gameState, Player<?> player, FieldCoordinate coordinate) {
 		Game game = gameState.getGame();
+		FieldModel fieldModel = game.getFieldModel();
+
 		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinate)) {
 			String info = "Coordinate " + coordinate + " is not on the pitch.";
 			server.getCommunication().sendPlayerTalk(gameState, null, info);
 			return;
 		}
 
-		Player<?> occupyingPlayer = game.getFieldModel().getPlayer(coordinate);
+		Player<?> occupyingPlayer = fieldModel.getPlayer(coordinate);
 		if (occupyingPlayer != null) {
 			String info = "Coordinate " + coordinate + " already occupied by " + occupyingPlayer.getName() + ".";
 			server.getCommunication().sendPlayerTalk(gameState, null, info);
 
 		} else {
-			game.getFieldModel().setPlayerCoordinate(player, coordinate);
+			fieldModel.setPlayerCoordinate(player, coordinate);
 			String info = "Set player " + player.getName() + " to coordinate " + coordinate + ".";
 			server.getCommunication().sendPlayerTalk(gameState, null, info);
+			PlayerState playerState = fieldModel.getPlayerState(player);
+			int playerStateBase = playerState.getBase();
+			if (coordinate.isBoxCoordinate()) {
+				playerStateBase = PlayerState.RESERVE;
+				info = "Set playerState of " + player.getName() + " to RESERVE.";
+				server.getCommunication().sendPlayerTalk(gameState, null, info);
+			} else if (playerStateBase == PlayerState.RESERVE) {
+				info = "Set playerState of " + player.getName() + " to STANDING.";
+				server.getCommunication().sendPlayerTalk(gameState, null, info);
+				playerStateBase = PlayerState.STANDING;
+			}
+			fieldModel.setPlayerState(player, playerState.changeBase(playerStateBase));
 		}
 	}
 

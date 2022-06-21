@@ -107,8 +107,8 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/move_ball &lt;direction&gt; &lt;distance&gt;", "moves ball to given direction by given distance. Direction can be [north|northwest|west..."));
 			html.append(commandLine("/move_player_home &lt;player nr&gt; &lt;direction&gt; &lt;distance&gt;", "sets player on home team to given direction by given distance.<br/>Direction can be [north|northwest|west..."));
 			html.append(commandLine("/move_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team to given direction by given distance.<br/>Direction can be [north|northwest|west..."));
-			html.append(commandLine("/reset_stack", "reset the internal state to await a new player selection.<br/>" +
-				"Use with care and not during special sequences like kick-off events or dump off."));
+			html.append(commandLine("/reset_state", "reset the internal state to await a new player selection.<br/>" +
+				"Use with care."));
 
 			html.append(commandLine("/playing_home", "sets home team as playing team."));
 			html.append(commandLine("/playing_away", "sets away team as playing team."));
@@ -122,6 +122,8 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/set_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team on square defined by coordinate."));
 			html.append(commandLine("/skill_home &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on home team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/skill_away &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on away team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
+			html.append(commandLine("/standup_home &lt;playerlist&gt;", "stands players on the home team up."));
+			html.append(commandLine("/standup_away &lt;playerlist&gt;", "stands players on the away team up."));
 			html.append(commandLine("/stat_home &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on home team to the given value."));
 			html.append(commandLine("/stat_away &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on away team to the given value."));
 			html.append(commandLine("/stun_home &lt;playerlist&gt;", "stuns players on home team."));
@@ -129,6 +131,10 @@ public class DialogChatCommands extends Dialog {
 
 			html.append(commandLine("/turn_home &lt;turnnr&gt;", "jumps to the turn with the given number for home team."));
 			html.append(commandLine("/turn_away &lt;turnnr&gt;", "jumps to the turn with the given number for away team."));
+			html.append(commandLine("/turn_mode [&lt;turnMode&gt;] [&lt;lastTurnMode&gt;]", "changes turnMode and lastTurnMode to given values.<br/>" +
+				"If no value is given all available turnModes and current values are returned.<br/>" +
+				"If only one value is given lastTurnMode is set to null." +
+				"If an invalid value is given it is ignored."));
 			html.append(commandLine("/weather &lt;shortname&gt;", "changes the weather to nice, sunny, rain, heat or blizzard."));
 
 			html.append("</table>\n");
@@ -170,6 +176,7 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/set_ball &lt;x coordinate&gt; &lt;y coordinate&gt;", "moves ball to square defined by coordinate."));
 			html.append(commandLine("/set_player &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on your team on square defined by coordinate."));
 			html.append(commandLine("/skill &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on your team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
+			html.append(commandLine("/standup &lt;playerlist&gt;", "stands players on your team up."));
 			html.append(commandLine("/stat &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on your team to the given value."));
 			html.append(commandLine("/sound &lt;name&gt;", "plays the given sound."));
 			html.append(commandLine("/sounds", "lists all available sounds."));
