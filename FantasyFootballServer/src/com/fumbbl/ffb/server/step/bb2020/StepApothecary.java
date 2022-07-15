@@ -185,15 +185,18 @@ public class StepApothecary extends AbstractStep {
 			UtilServerDialog.hideDialog(getGameState());
 			boolean doNextStep = true;
 			Game game = getGameState().getGame();
+			String defenderId = fInjuryResult.injuryContext().getDefenderId();
 			if (fInjuryResult.injuryContext().getApothecaryStatus() != null) {
 				switch (fInjuryResult.injuryContext().getApothecaryStatus()) {
 					case DO_REQUEST:
 						if (fShowReport) {
 							fInjuryResult.report(this);
 						}
+						ApothecaryType apothecaryType = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId));
 						UtilServerDialog.showDialog(getGameState(),
-							new DialogUseApothecaryParameter(fInjuryResult.injuryContext().getDefenderId(),
-								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury()),
+							new DialogUseApothecaryParameter(defenderId,
+								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(),
+								apothecaryType),
 							true);
 						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
 						doNextStep = false;
@@ -208,7 +211,7 @@ public class StepApothecary extends AbstractStep {
 						break;
 					case DO_NOT_USE_APOTHECARY:
 						getResult()
-							.addReport(new ReportApothecaryRoll(fInjuryResult.injuryContext().getDefenderId(), null, null, null, null, fInjuryResult.injuryContext().casualtyModifiers));
+							.addReport(new ReportApothecaryRoll(defenderId, null, null, null, null, fInjuryResult.injuryContext().casualtyModifiers));
 						break;
 					case NO_APOTHECARY:
 						if (fShowReport) {
@@ -220,7 +223,7 @@ public class StepApothecary extends AbstractStep {
 				}
 			}
 			if (doNextStep) {
-				Player<?> player = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
+				Player<?> player = game.getPlayerById(defenderId);
 				switch (fInjuryResult.injuryContext().getApothecaryStatus()) {
 					case DO_NOT_USE_IGOR:
 						break;

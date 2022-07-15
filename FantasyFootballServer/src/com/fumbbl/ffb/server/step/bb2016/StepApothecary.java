@@ -192,7 +192,7 @@ public class StepApothecary extends AbstractStep {
 						}
 						UtilServerDialog.showDialog(getGameState(),
 							new DialogUseApothecaryParameter(fInjuryResult.injuryContext().getDefenderId(),
-								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury()),
+								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(), null),
 							true);
 						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
 						doNextStep = false;

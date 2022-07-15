@@ -2,6 +2,7 @@ package com.fumbbl.ffb;
 
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.ZappedPlayer;
 
 public enum ApothecaryType {
@@ -18,11 +19,11 @@ public enum ApothecaryType {
 			return null;
 		}
 
-		boolean teamHasWanderingApo = (game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getWanderingApothecaries() > 0)
-			|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getWanderingApothecaries() > 0);
+		TurnData turnData = game.getTeamHome().hasPlayer(defender) ? game.getTurnDataHome() : game.getTurnDataAway();
 
-		boolean teamHasPlagueDoctor = (game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getPlagueDoctors() > 0)
-			|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getPlagueDoctors() > 0);
+		boolean teamHasWanderingApo = turnData.getWanderingApothecaries() > 0;
+
+		boolean teamHasPlagueDoctor = turnData.getPlagueDoctors() > 0;
 
 		if (defender.getPlayerType() == PlayerType.MERCENARY) {
 			if (teamHasWanderingApo) {
@@ -37,9 +38,12 @@ public enum ApothecaryType {
 			if (teamHasPlagueDoctor) {
 				return PLAGUE;
 			}
-		} else if ((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
-			|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0)) {
+		} else if (turnData.getApothecaries() > turnData.getWanderingApothecaries()) {
 			return TEAM;
+		} else if (teamHasWanderingApo) {
+			return WANDERING;
+		} else if (teamHasPlagueDoctor) {
+			return PLAGUE;
 		}
 
 		return null;

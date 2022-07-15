@@ -2,6 +2,7 @@ package com.fumbbl.ffb.dialog;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
@@ -18,15 +19,17 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 	private String fPlayerId;
 	private PlayerState fPlayerState;
 	private SeriousInjury fSeriousInjury;
+	private ApothecaryType apothecaryType;
 
 	public DialogUseApothecaryParameter() {
 		super();
 	}
 
-	public DialogUseApothecaryParameter(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
+	public DialogUseApothecaryParameter(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, ApothecaryType apothecaryType) {
 		fPlayerId = pPlayerId;
 		fPlayerState = pPlayerState;
 		fSeriousInjury = pSeriousInjury;
+		this.apothecaryType = apothecaryType;
 	}
 
 	public DialogId getId() {
@@ -45,10 +48,14 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 		return fSeriousInjury;
 	}
 
+	public ApothecaryType getApothecaryType() {
+		return apothecaryType;
+	}
+
 	// transformation
 
 	public IDialogParameter transform() {
-		return new DialogUseApothecaryParameter(getPlayerId(), getPlayerState(), getSeriousInjury());
+		return new DialogUseApothecaryParameter(getPlayerId(), getPlayerState(), getSeriousInjury(), apothecaryType);
 	}
 
 	// JSON serialization
@@ -59,6 +66,9 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
 		IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+		if (apothecaryType != null) {
+			IJsonOption.APOTHECARY_TYPE.addTo(jsonObject, apothecaryType.name());
+		}
 		return jsonObject;
 	}
 
@@ -68,6 +78,9 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
 		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
+		if (IJsonOption.APOTHECARY_TYPE.isDefinedIn(jsonObject)) {
+			apothecaryType = ApothecaryType.valueOf(IJsonOption.APOTHECARY_TYPE.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 

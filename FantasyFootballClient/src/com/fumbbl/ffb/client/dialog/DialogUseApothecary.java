@@ -41,7 +41,8 @@ public class DialogUseApothecary extends DialogThreeWayChoice {
 				injuryMessage.append(pDialogParameter.getPlayerState().getDescription());
 			}
 			messages[0] = injuryMessage.toString();
-			messages[1] = "Do you want to use your Apothecary?";
+			String description = pDialogParameter.getApothecaryType() != null ? " (" + pDialogParameter.getApothecaryType().getName() + ")" : "";
+			messages[1] = "Do you want to use your Apothecary" + description + "?";
 		}
 		return messages;
 	}
