@@ -15,6 +15,7 @@ import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecaryParameter;
 import com.fumbbl.ffb.dialog.DialogUseMortuaryAssistantParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -46,6 +47,8 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
+
+import java.util.Comparator;
 
 /**
  * Step in any sequence to handle the apothecary. Offers different modes
@@ -230,15 +233,15 @@ public class StepApothecary extends AbstractStep {
 					case USE_IGOR:
 						Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
 						InducementSet inducementSetIgor = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REGENERATION))
-							.findFirst().ifPresent(type -> {
-							UtilServerInducementUse.useInducement(getGameState(), team, type, 1);
-							getResult().addReport(new ReportInducement(team.getId(), type, 0));
-							boolean success = UtilServerInjury.handleRegeneration(this, player);
-							if (success) {
-								curePoison();
-							}
-						});
+						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSetIgor.hasUsesLeft(type))
+							.min(Comparator.comparingInt(InducementType::getPriority)).ifPresent(type -> {
+								UtilServerInducementUse.useInducement(getGameState(), team, type, 1);
+								getResult().addReport(new ReportInducement(team.getId(), type, 0));
+								boolean success = UtilServerInjury.handleRegeneration(this, player);
+								if (success) {
+									curePoison();
+								}
+							});
 						break;
 					default:
 						fInjuryResult.applyTo(this);
@@ -252,11 +255,11 @@ public class StepApothecary extends AbstractStep {
 									: game.getTurnDataAway().getInducementSet();
 								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream().anyMatch(type -> type.hasUsage(Usage.REGENERATION)
 									&& inducementSet.hasUsesLeft(type));
-									if (hasInducement && player.getPlayerType() != PlayerType.STAR && player.getPlayerType() != PlayerType.MERCENARY) {
-										game.setDialogParameter(new DialogUseMortuaryAssistantParameter(player.getId()));
-										fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
-										doNextStep = false;
-									}
+								if (hasInducement && player.getPlayerType() != PlayerType.STAR && player.getPlayerType() != PlayerType.MERCENARY) {
+									game.setDialogParameter(new DialogUseMortuaryAssistantParameter(player.getId()));
+									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
+									doNextStep = false;
+								}
 							} else {
 								curePoison();
 							}

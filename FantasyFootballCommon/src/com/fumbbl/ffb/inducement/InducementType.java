@@ -18,24 +18,32 @@ public class InducementType implements INamedObject {
 	private final String fName, fDescription, fSingular, fPlural, slotIconProperty;
 	private final GameOptionId maxId, costId, reducedCostId;
 	private final boolean usesGenericSlot;
+	private final int priority;
 	private final Set<Usage> usages = new HashSet<>();
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	                      GameOptionId costId, String slotIconProperty, Usage usages) {
+												GameOptionId costId, String slotIconProperty, Usage usages) {
 		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, true, slotIconProperty, usages);
 	}
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	                       GameOptionId costId) {
+												GameOptionId costId) {
 		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, false, null, Usage.UNSPECIFIC);
 	}
+
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	               GameOptionId costId, Usage usages) {
+												GameOptionId costId, Usage usages) {
 		this(pName, pDescription, pSingular, pPlural, maxId, costId, costId, false, null, usages);
 	}
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-	               GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, String slotIconProperty, Usage... usages) {
+												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, String slotIconProperty, Usage... usages) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, reducedCostId, usesGenericSlot, slotIconProperty, 0, usages);
+	}
+
+	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
+												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, String slotIconProperty,
+												int priority, Usage... usages) {
 		fName = pName;
 		fDescription = pDescription;
 		fSingular = pSingular;
@@ -48,6 +56,7 @@ public class InducementType implements INamedObject {
 			this.usages.addAll(Arrays.asList(usages));
 		}
 		this.slotIconProperty = slotIconProperty;
+		this.priority = priority;
 	}
 
 	public String getDescription() {
@@ -120,4 +129,7 @@ public class InducementType implements INamedObject {
 		return Collections.emptySet();
 	}
 
+	public int getPriority() {
+		return priority;
+	}
 }

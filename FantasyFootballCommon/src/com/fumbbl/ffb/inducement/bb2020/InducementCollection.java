@@ -41,7 +41,7 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 		});
 
 		add(new InducementType("mortuaryAssistant", "Mortuary Assistant", "Mortuary Assistant", "Mortuary Assistants", GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_MAX,
-			GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
+			GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_COST, GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_COST, true, IIconProperty.RESOURCE_IGOR, 1, Usage.REGENERATION) {
 			@Override
 			public int availability(Team team, GameOptions options) {
 				if (!team.getSpecialRules().contains(SpecialRule.SYLVANIAN_SPOTLIGHT)) {
@@ -52,7 +52,7 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 		});
 
 		add(new InducementType("plagueDoctor", "Plague Doctor", "Plague Doctor", "Plague Doctors", GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_MAX,
-			GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_COST, null, true, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION, Usage.APOTHECARY_JOURNEYMEN) {
+			GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_COST, GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_COST, true, IIconProperty.RESOURCE_IGOR, 2, Usage.REGENERATION, Usage.APOTHECARY_JOURNEYMEN) {
 			@Override
 			public int availability(Team team, GameOptions options) {
 				if (!team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE)) {
