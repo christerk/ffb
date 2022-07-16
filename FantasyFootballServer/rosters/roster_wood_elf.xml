@@ -4,9 +4,38 @@
 
 	<name>Wood Elf</name>
 	<type>Regular</type>
-	<reRollCost>50000</reRollCost>	
-	<maxReRolls>8</maxReRolls>	
-	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
+	<reRollCost>50000</reRollCost>
+	<maxReRolls>8</maxReRolls>
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
+
+
+	<position id="47520">
+		<race>Special</race>
+		<quantity>1</quantity>
+		<name>Josef Bugman</name>
+		<shorthand>JB</shorthand>
+		<type>Infamous Staff</type>
+		<gender>male</gender>
+		<cost>100000</cost>
+		<movement>5</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<passing>6</passing>
+		<armour>9</armour>
+		<undead>false</undead>
+		<thrall>false</thrall>
+		<portrait>i/694537</portrait>
+		<iconSet size="1" mimeType="image/png">i/694538.png</iconSet>
+		<skillList>
+			<skill>Bugman's XXXXXX</skill>
+			<skill>Keen Player</skill>
+			<skill value="5">Loner</skill>
+			<skill>Tackle</skill>
+			<skill>Thick Skull</skill>
+			<skill>Wrestle</skill>
+		</skillList>
+		<skillCategoryList/>
+	</position>
 
 	<position id="woodelf.treeman">
 		<quantity>1</quantity>
