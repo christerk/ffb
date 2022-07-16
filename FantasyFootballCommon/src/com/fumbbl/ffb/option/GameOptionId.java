@@ -61,6 +61,7 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE("inducementPrayersUseLeagueTable"), INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG("inducementPrayersAvailableForUnderdog"),
 	INDUCEMENT_RIOTOUS_ROOKIES_COST("inducementRiotousRookiesCost"),
 	INDUCEMENT_RIOTOUS_ROOKIES_MAX("inducementRiotousRookiesMax"), INDUCEMENT_STARS_MAX("inducementStarsMax"),
+	INDUCEMENT_STAFF_MAX("inducementStaffMax"),
 	INDUCEMENT_WIZARDS_COST("inducementWizardsCost"), INDUCEMENT_WIZARDS_MAX("inducementWizardsMax"),
 	INDUCEMENT_BIASED_REF_COST("inducementBiasedRefCost"), INDUCEMENT_BIASED_REF_REDUCED_COST("inducementBiasedRefReducedCost"), INDUCEMENT_BIASED_REF_MAX("inducementBiasedRefMax"),
 	INDUCEMENT_TEMP_CHEERLEADER_MAX("inducementTempCheerleaderMax"), INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX("inducementTempCheerleaderTotalMax"), INDUCEMENT_TEMP_CHEERLEADER_COST("inducementTempCheerleaderCost"),
