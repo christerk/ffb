@@ -39,6 +39,9 @@ public class GameOptionFactory {
 			case ALLOW_STAR_ON_BOTH_TEAMS:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("A star player may play for both teams.");
+			case ALLOW_STAFF_ON_BOTH_TEAMS:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("An Infamous Staff member may be hired by both teams.");
 			case ARGUE_THE_CALL:
 				return new GameOptionBoolean(pOptionId).setDefault(true).setMessageFalse("Calls may not be argued.");
 			case CARDS_DESPERATE_MEASURE_COST:

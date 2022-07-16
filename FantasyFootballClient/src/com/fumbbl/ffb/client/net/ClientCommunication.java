@@ -465,9 +465,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet,
-	                               String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {
+																 String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills,
+																 String[] staffPositionIds) {
 		send(new ClientCommandBuyInducements(pTeamId, pAvailableGold, pInducementSet, pStarPlayerPositionIds,
-			pMercenaryPositionIds, pMercenarySkills));
+			pMercenaryPositionIds, pMercenarySkills, staffPositionIds));
 	}
 
 	public void sendBuyCard(CardType pType) {

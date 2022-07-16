@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -46,6 +47,10 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	protected int mercSkillCost;
 	private JTable fTableStarPlayers;
 	private StarPlayerTableModel fTableModelStarPlayers;
+
+	private JTable tableInfamousStaff;
+	private InfamousStaffTableModel tableModelInfamousStaff;
+
 	private JTable fTableMercenaries;
 	private MercenaryTableModel fTableModelMercenaries;
 	private final Set<DropDownPanel> fPanels = new HashSet<>();
@@ -149,37 +154,16 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		if (maxStars > 0) {
 
 			fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
-			fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			fTableStarPlayers.getSelectionModel().addListSelectionListener(pE -> {
-				if (!pE.getValueIsAdjusting()) {
-					int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
-					if (selectedRowIndex >= 0) {
-						getClient().getClientData()
-							.setSelectedPlayer((Player<?>) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
-						getClient().getUserInterface().refreshSideBars();
-					}
-				}
-			});
-			DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
-			rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
-			fTableStarPlayers.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
-			fTableStarPlayers.getColumnModel().getColumn(0).setPreferredWidth(30);
-			fTableStarPlayers.getColumnModel().getColumn(1).setPreferredWidth(50);
-			fTableStarPlayers.getColumnModel().getColumn(2).setPreferredWidth(270);
-			fTableStarPlayers.getColumnModel().getColumn(3).setPreferredWidth(100);
-			fTableStarPlayers.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
-			fTableStarPlayers.setPreferredScrollableViewportSize(new Dimension(350, 148));
-			JScrollPane scrollPaneStarPlayer = new JScrollPane(fTableStarPlayers);
+			configureTable(rightPanel, fTableStarPlayers, fTableModelStarPlayers, "Star Players (varying Gold 0-" + maxStars + "):", 148);
+		}
 
-			JPanel starLabel = new JPanel();
-			starLabel.setLayout(new BoxLayout(starLabel, BoxLayout.X_AXIS));
-			starLabel.add(new JLabel("Star Players (varying Gold 0-2):"));
-			starLabel.add(Box.createHorizontalGlue());
+		tableModelInfamousStaff = new InfamousStaffTableModel(this, gameOptions);
+		int maxStaff = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STAFF_MAX)).getValue();
 
-			rightPanel.add(starLabel);
+		if (maxStaff > 0) {
 			rightPanel.add(Box.createVerticalStrut(10));
-			rightPanel.add(scrollPaneStarPlayer);
-			rightPanel.add(Box.createVerticalGlue());
+			tableInfamousStaff = new InfamousStaffTable(tableModelInfamousStaff);
+			configureTable(rightPanel, tableInfamousStaff, tableModelInfamousStaff, "Infamous Coaching Staff (varying Gold 0-" + maxStaff + "):", 55);
 		}
 
 		fTableModelMercenaries = new MercenaryTableModel(this, gameOptions);
@@ -226,9 +210,43 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	}
 
+	private void configureTable(JPanel rightPanel, JTable playerTable, AbstractTableModel tableModel, String label, int height) {
+		playerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		playerTable.getSelectionModel().addListSelectionListener(pE -> {
+			if (!pE.getValueIsAdjusting()) {
+				int selectedRowIndex = playerTable.getSelectionModel().getLeadSelectionIndex();
+				if (selectedRowIndex >= 0) {
+					getClient().getClientData()
+						.setSelectedPlayer((Player<?>) tableModel.getValueAt(selectedRowIndex, 4));
+					getClient().getUserInterface().refreshSideBars();
+				}
+			}
+		});
+		DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
+		rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		playerTable.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
+		playerTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+		playerTable.getColumnModel().getColumn(1).setPreferredWidth(50);
+		playerTable.getColumnModel().getColumn(2).setPreferredWidth(270);
+		playerTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+		playerTable.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
+		playerTable.setPreferredScrollableViewportSize(new Dimension(350, height));
+		JScrollPane scrollPane = new JScrollPane(playerTable);
+
+		JPanel labelPanel = new JPanel();
+		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
+		labelPanel.add(new JLabel(label));
+		labelPanel.add(Box.createHorizontalGlue());
+
+		rightPanel.add(labelPanel);
+		rightPanel.add(Box.createVerticalStrut(10));
+		rightPanel.add(scrollPane);
+		rightPanel.add(Box.createVerticalGlue());
+	}
+
 
 	private void createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut,
-	                         GameOptions gameOptions) {
+													 GameOptions gameOptions) {
 		int maxCount = pInducementType.availability(fTeam, gameOptions);
 		if (maxCount <= 0) {
 			return;
@@ -264,6 +282,11 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 				cost += ((Player<?>) fTableModelStarPlayers.getValueAt(i, 4)).getPosition().getCost();
 			}
 		}
+		for (int i = 0; i < tableModelInfamousStaff.getRowCount(); i++) {
+			if ((Boolean) tableModelInfamousStaff.getValueAt(i, 0)) {
+				cost += ((Player<?>) tableModelInfamousStaff.getValueAt(i, 4)).getPosition().getCost();
+			}
+		}
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
 				cost += ((Player<?>) fTableModelMercenaries.getValueAt(i, 5)).getPosition().getCost();
@@ -284,6 +307,9 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	protected void resetPanels() {
 		for (int i = 0; i < fTableStarPlayers.getRowCount(); i++) {
 			fTableModelStarPlayers.setValueAt(false, i, 0);
+		}
+		for (int i = 0; i < tableInfamousStaff.getRowCount(); i++) {
+			tableModelInfamousStaff.setValueAt(false, i, 0);
 		}
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			fTableModelMercenaries.setValueAt(false, i, 0);
@@ -319,6 +345,19 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			}
 		}
 		return starPlayerPositionIds.toArray(new String[0]);
+	}
+
+	public String[] getSelectedStaffIds() {
+		List<String> staffIds = new ArrayList<>();
+		if (tableModelInfamousStaff != null) {
+			for (int i = 0; i < tableModelInfamousStaff.getRowCount(); i++) {
+				if ((Boolean) tableModelInfamousStaff.getValueAt(i, 0)) {
+					Player<?> starPlayer = (Player<?>) tableModelInfamousStaff.getValueAt(i, 4);
+					staffIds.add(starPlayer.getPositionId());
+				}
+			}
+		}
+		return staffIds.toArray(new String[0]);
 	}
 
 	public String[] getSelectedMercenaryIds() {
@@ -367,6 +406,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			String[] starPlayerIds = getSelectedStarPlayerIds();
 			if (starPlayerIds.length > 0) {
 				indSet.addInducement(new Inducement(type, starPlayerIds.length));
+			}
+		});
+		factory.allTypes().stream().filter(type -> type.hasUsage(Usage.STAFF)).findFirst().ifPresent(type -> {
+			String[] staffIds = getSelectedStaffIds();
+			if (staffIds.length > 0) {
+				indSet.addInducement(new Inducement(type, staffIds.length));
 			}
 		});
 		factory.allTypes().stream().filter(type -> type.hasUsage(Usage.LONER)).findFirst().ifPresent(type -> {

@@ -463,9 +463,10 @@ public interface IJsonOption {
 	JsonIntOption SPECTATORS_AWAY = new JsonIntOption("spectatorsAway");
 	JsonIntOption SPECTATORS_HOME = new JsonIntOption("spectatorsHome");
 	JsonIntOption SPIRALLING_EXPENSES = new JsonIntOption("spirallingExpenses");
+	JsonStringArrayOption STAFF_POSITION_IDS = new JsonStringArrayOption("staffPositionIds");
 	JsonBooleanOption STANDING_UP = new JsonBooleanOption("standingUp");
 	JsonStringOption STAR_PLAYER_NAME = new JsonStringOption("starPlayerName");
-	JsonStringArrayOption STAR_PLAYER_POSTION_IDS = new JsonStringArrayOption("starPlayerPositionIds");
+	JsonStringArrayOption STAR_PLAYER_POSITION_IDS = new JsonStringArrayOption("starPlayerPositionIds");
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonObjectOption STAT_BASED_ROLL_MODIFIER = new JsonObjectOption("statBasedRollModifier");

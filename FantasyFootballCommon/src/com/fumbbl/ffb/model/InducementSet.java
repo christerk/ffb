@@ -391,7 +391,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.CARDS_DEACTIVATED.addTo(jsonObject, cardsDeactivated);
 		String[] starPlayerPositionIds = getStarPlayerPositionIds();
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
-			IJsonOption.STAR_PLAYER_POSTION_IDS.addTo(jsonObject, starPlayerPositionIds);
+			IJsonOption.STAR_PLAYER_POSITION_IDS.addTo(jsonObject, starPlayerPositionIds);
 		}
 
 		IJsonOption.PRAYERS.addTo(jsonObject, prayers.stream().map(Prayer::getName).collect(Collectors.toList()));
@@ -427,7 +427,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 				fCardsDeactivated.add(cardFactory.forName(cardName));
 			}
 		}
-		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(source, jsonObject);
+		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSITION_IDS.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
 			fStarPlayerPositionIds.addAll(Arrays.asList(starPlayerPositionIds));
 		}

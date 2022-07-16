@@ -1,8 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.Factory;
@@ -16,6 +13,10 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -28,15 +29,17 @@ public class ClientCommandBuyInducements extends ClientCommand {
 	private final List<String> fStarPlayerPositionIds;
 	private final List<String> fMercenaryPositionIds;
 	private final List<Skill> fMercenarySkills;
+	private final List<String> staffPositionIds;
 
 	public ClientCommandBuyInducements() {
 		fStarPlayerPositionIds = new ArrayList<>();
 		fMercenaryPositionIds = new ArrayList<>();
 		fMercenarySkills = new ArrayList<>();
+		staffPositionIds = new ArrayList<>();
 	}
 
 	public ClientCommandBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet,
-			String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {
+																		 String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills, String[] staffPositionIds) {
 		this();
 		fTeamId = pTeamId;
 		fAvailableGold = pAvailableGold;
@@ -50,6 +53,9 @@ public class ClientCommandBuyInducements extends ClientCommand {
 			for (int i = 0; i < pMercenaryPositionIds.length; i++) {
 				addMercenaryPosition(pMercenaryPositionIds[i], pMercenarySkills[i]);
 			}
+		}
+		if (ArrayTool.isProvided(staffPositionIds)) {
+			this.staffPositionIds.addAll(Arrays.asList(staffPositionIds));
 		}
 	}
 
@@ -98,7 +104,10 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		return fAvailableGold;
 	}
 
-	// JSON serialization
+	public List<String> getStaffPositionIds() {
+		return staffPositionIds;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
@@ -106,7 +115,7 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		if (fInducementSet != null) {
 			IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
 		}
-		IJsonOption.STAR_PLAYER_POSTION_IDS.addTo(jsonObject, fStarPlayerPositionIds);
+		IJsonOption.STAR_PLAYER_POSITION_IDS.addTo(jsonObject, fStarPlayerPositionIds);
 		IJsonOption.AVAILABLE_GOLD.addTo(jsonObject, fAvailableGold);
 		IJsonOption.MERCENARY_POSTION_IDS.addTo(jsonObject, fMercenaryPositionIds);
 		String[] mercenarySkillNames = new String[fMercenarySkills.size()];
@@ -115,6 +124,7 @@ public class ClientCommandBuyInducements extends ClientCommand {
 			mercenarySkillNames[i] = (skill != null) ? skill.getName() : "";
 		}
 		IJsonOption.MERCENARY_SKILLS.addTo(jsonObject, mercenarySkillNames);
+		IJsonOption.STAFF_POSITION_IDS.addTo(jsonObject, staffPositionIds);
 		return jsonObject;
 	}
 
@@ -127,10 +137,15 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		if (inducementSetObject != null) {
 			fInducementSet.initFrom(source, inducementSetObject);
 		}
-		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(source, jsonObject);
+		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSITION_IDS.getFrom(source, jsonObject);
 		for (String positionId : starPlayerPositionIds) {
 			addStarPlayerPositionId(positionId);
 		}
+
+		if (IJsonOption.STAFF_POSITION_IDS.isDefinedIn(jsonObject)) {
+			staffPositionIds.addAll(Arrays.asList(IJsonOption.STAFF_POSITION_IDS.getFrom(source, jsonObject)));
+		}
+
 		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(source, jsonObject);
 		String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSTION_IDS.getFrom(source, jsonObject);
 		String[] mercenarySkillNames = IJsonOption.MERCENARY_SKILLS.getFrom(source, jsonObject);

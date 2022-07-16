@@ -18,7 +18,9 @@ public enum GameOptionId implements INamedObject {
 	MAX_PLAYERS_ON_FIELD("maxPlayersOnField"), MAX_PLAYERS_IN_WIDE_ZONE("maxPlayersInWideZone"),
 	MIN_PLAYERS_ON_LOS("minPlayersOnLos"),
 
-	ALLOW_STAR_ON_BOTH_TEAMS("allowStarOnBothTeams"), FORCE_TREASURY_TO_PETTY_CASH("forceTreasuryToPettyCash"),
+	ALLOW_STAR_ON_BOTH_TEAMS("allowStarOnBothTeams"),
+	ALLOW_STAFF_ON_BOTH_TEAMS("allowStaffOnBothTeams"),
+	FORCE_TREASURY_TO_PETTY_CASH("forceTreasuryToPettyCash"),
 	USE_PREDEFINED_INDUCEMENTS("usePredefinedInducements"),
 
 	ALLOW_KTM_REROLL("allowKtmReroll"), CLAW_DOES_NOT_STACK("clawDoesNotStack"), FOUL_BONUS("foulBonus"),
