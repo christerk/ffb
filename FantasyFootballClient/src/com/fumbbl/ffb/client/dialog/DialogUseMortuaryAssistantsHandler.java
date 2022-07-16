@@ -39,14 +39,14 @@ public class DialogUseMortuaryAssistantsHandler extends DialogHandler {
 						playerIds.add(injuryDescription.getPlayerId());
 						descriptions.add(injuryDescription.getSeriousInjury() != null ? injuryDescription.getSeriousInjury().getDescription() : injuryDescription.getPlayerState().getDescription());
 					});
-					setDialog(new DialogPlayerChoice(getClient(), "Select players to use a mortuary assistant for",
+					setDialog(new DialogPlayerChoice(getClient(), "Select players to use a Mortuary Assistant (or Plague Doctor) for",
 						playerIds.toArray(new String[0]), descriptions.toArray(new String[0]), 0, dialogParameter.getMaxMortuaryAssistants(), null, false));
 				}
 
 				getDialog().showDialog(this);
 
 			} else {
-				showStatus("Mortuary Assistant", "Waiting for coach to use mortuary assistants.", StatusType.WAITING);
+				showStatus("Mortuary Assistant", "Waiting for coach to use Mortuary Assistants (or Plague Doctors).", StatusType.WAITING);
 			}
 
 		}

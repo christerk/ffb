@@ -48,7 +48,9 @@ public class InjuryDescription implements IJsonSerializable {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.PLAYER_STATE.addTo(jsonObject, playerState);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, seriousInjury);
-		IJsonOption.APOTHECARY_TYPE.addTo(jsonObject, apothecaryType.name());
+		if (apothecaryType != null) {
+			IJsonOption.APOTHECARY_TYPE.addTo(jsonObject, apothecaryType.name());
+		}
 		return jsonObject;
 	}
 

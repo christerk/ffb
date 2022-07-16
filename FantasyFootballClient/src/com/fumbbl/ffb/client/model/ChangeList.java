@@ -17,6 +17,7 @@ public class ChangeList {
 			.addFeature("Weather Mage")
 			.addImprovement("Rename Igors to Mortuary Assistants in dialogs and game options")
 			.addImprovement("Apo dialogs now state which apo will be used")
+			.addFeature("Plague Doctor")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")

@@ -40,7 +40,7 @@ public class InducementMessage extends ReportMessageBase<ReportInducement> {
 				println(getIndent(), status.toString());
 			} else if (inducementType.hasUsage(Usage.REGENERATION)) {
 				print(getIndent(), " use ");
-				print(getIndent(), TextStyle.BOLD, "Mortuary Assistant");
+				print(getIndent(), TextStyle.BOLD, inducementType.getDescription());
 				println(getIndent(), " to re-roll the failed Regeneration.");
 			}
 		}

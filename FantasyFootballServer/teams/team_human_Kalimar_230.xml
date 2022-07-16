@@ -18,6 +18,10 @@
 	<treasury>500000</treasury>
 	<baseIconPath>http://localhost:2224/icons/</baseIconPath>
 	<logo>teamlogos/human.gif</logo>
+	<specialRules>
+		<rule>Sylvanian Spotlight</rule>
+		<rule>Favoured of Nurgle</rule>
+	</specialRules>
 
 	<player nr="1" id="teamHumanKalimar1">
 		<name>Blitzer1</name>
@@ -181,40 +185,40 @@
 		<positionId>human.lineman</positionId>
 		<skillList></skillList>
 	</player>
-  
-	<player nr="13" id="teamHumanKalimar13">
-		<name>Lineman5</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList></skillList>
-	</player>
+	<!--
+      <player nr="13" id="teamHumanKalimar13">
+          <name>Lineman5</name>
+          <gender>male</gender>
+          <positionId>human.lineman</positionId>
+          <skillList></skillList>
+      </player>
 
-	<player nr="14" id="teamHumanKalimar14">
-		<name>Lineman6</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList></skillList>
-	</player>
+      <player nr="14" id="teamHumanKalimar14">
+          <name>Lineman6</name>
+          <gender>male</gender>
+          <positionId>human.lineman</positionId>
+          <skillList></skillList>
+      </player>
 
-	<player nr="15" id="teamHumanKalimar15">
-		<name>Lineman7</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList>
-			<skill>Kick</skill>
-			<skill>Kick-Off Return</skill>
-		</skillList>
-		<playerStatistics currentSpps="6" />
-	</player>
+      <player nr="15" id="teamHumanKalimar15">
+          <name>Lineman7</name>
+          <gender>male</gender>
+          <positionId>human.lineman</positionId>
+          <skillList>
+              <skill>Kick</skill>
+              <skill>Kick-Off Return</skill>
+          </skillList>
+          <playerStatistics currentSpps="6" />
+      </player>
 
-	<player nr="16" id="teamHumanKalimar16">
-		<name>Lineman8</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<injuryList>
-			<injury recovering="true">Fractured Leg (MNG)</injury>
-		</injuryList>
-		<skillList></skillList>
-	</player>
-
+      <player nr="16" id="teamHumanKalimar16">
+          <name>Lineman8</name>
+          <gender>male</gender>
+          <positionId>human.lineman</positionId>
+          <injuryList>
+              <injury recovering="true">Fractured Leg (MNG)</injury>
+          </injuryList>
+          <skillList></skillList>
+      </player>
+  -->
 </team>
