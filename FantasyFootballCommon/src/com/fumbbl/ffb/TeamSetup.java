@@ -108,7 +108,7 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
 		for (Player<?> player : team.getPlayers()) {
 			FieldCoordinate playerCoordinate = getCoordinate(player.getNr());
 			PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
-			if (playerState.canBeSetUp()) {
+			if (playerState.canBeSetUpNextDrive()) {
 				if (playerCoordinate != null) {
 					pGame.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true));
 					if (homeSetup) {

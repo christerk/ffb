@@ -249,7 +249,7 @@ public class ResourceComponent extends JPanel {
 		refresh();
 	}
 
-	public void refresh() {
+	public synchronized void refresh() {
 		Game game = getSideBar().getClient().getGame();
 		if (game.getHalf() > 0) {
 			updateSlots();

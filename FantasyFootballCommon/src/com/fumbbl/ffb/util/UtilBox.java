@@ -14,41 +14,12 @@ import java.util.List;
  */
 public class UtilBox {
 
-	public static PlayerState findPlayerStateForCoordinate(FieldCoordinate pCoordinate) {
-		if ((pCoordinate != null) && pCoordinate.isBoxCoordinate()) {
-			switch (pCoordinate.getX()) {
-				case FieldCoordinate.RSV_HOME_X:
-				case FieldCoordinate.RSV_AWAY_X:
-					return new PlayerState(PlayerState.RESERVE);
-				case FieldCoordinate.KO_HOME_X:
-				case FieldCoordinate.KO_AWAY_X:
-					return new PlayerState(PlayerState.KNOCKED_OUT);
-				case FieldCoordinate.BH_HOME_X:
-				case FieldCoordinate.BH_AWAY_X:
-					return new PlayerState(PlayerState.BADLY_HURT);
-				case FieldCoordinate.SI_HOME_X:
-				case FieldCoordinate.SI_AWAY_X:
-					return new PlayerState(PlayerState.SERIOUS_INJURY);
-				case FieldCoordinate.RIP_HOME_X:
-				case FieldCoordinate.RIP_AWAY_X:
-					return new PlayerState(PlayerState.RIP);
-				case FieldCoordinate.MNG_HOME_X:
-				case FieldCoordinate.MNG_AWAY_X:
-					return new PlayerState(PlayerState.MISSING);
-				case FieldCoordinate.BAN_HOME_X:
-				case FieldCoordinate.BAN_AWAY_X:
-					return new PlayerState(PlayerState.BANNED);
-			}
-		}
-		return null;
-	}
-
 	public static void putAllPlayersIntoBox(Game pGame) {
 		refreshBoxes(pGame);
 		if (pGame != null) {
 			for (Player<?> player : pGame.getPlayers()) {
 				PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
-				if (playerState.canBeSetUp()) {
+				if (playerState.canBeSetUpNextDrive()) {
 					pGame.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
 					putPlayerIntoBox(pGame, player);
 				}

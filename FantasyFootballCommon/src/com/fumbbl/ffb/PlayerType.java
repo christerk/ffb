@@ -6,7 +6,8 @@ package com.fumbbl.ffb;
 public enum PlayerType implements INamedObject {
 
 	REGULAR("Regular"), BIG_GUY("Big Guy"), STAR("Star"), IRREGULAR("Irregular"),
-	RIOTOUS_ROOKIE("RiotousRookie"), RAISED_FROM_DEAD("RaisedFromDead"), MERCENARY("Mercenary"), PLAGUE_RIDDEN("PlagueRidden");
+	RIOTOUS_ROOKIE("RiotousRookie"), RAISED_FROM_DEAD("RaisedFromDead"), MERCENARY("Mercenary"),
+	PLAGUE_RIDDEN("PlagueRidden"), INFAMOUS_STAFF("Infamous Staff");
 
 	private final String fName;
 
