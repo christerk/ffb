@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.step.generator.BlitzMove;
 import com.fumbbl.ffb.server.step.generator.Block;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Foul;
+import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.RadingParty;
@@ -384,6 +385,10 @@ public final class StepEndSelecting extends AbstractStep {
 			case THROW_KEG:
 				ThrowKeg throwKegGenerator = (ThrowKeg) factory.forName(SequenceGenerator.Type.ThrowKeg.name());
 				throwKegGenerator.pushSequence(new ThrowKeg.SequenceParams(getGameState(), targetPlayerId));
+				break;
+			case LOOK_INTO_MY_EYES:
+				LookIntoMyEyes lookIntoMyEyes = (LookIntoMyEyes) factory.forName(SequenceGenerator.Type.LookIntoMyEyes.name());
+				lookIntoMyEyes.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");

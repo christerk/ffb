@@ -88,6 +88,7 @@ public enum StepId implements INamedObject {
 	INIT_FEEDING("initFeeding"), // action.end
 	INIT_FOULING("initFouling"), // action.foul
 	INIT_INDUCEMENT("initInducement"), // phase.inducement
+	INIT_LOOK_INTO_MY_EYES("initLookIntoMyEyes"), // action.special
 	INIT_KICKOFF("initKickoff"), // phase.kickoff
 	INIT_MOVING("initMoving"), // action.move
 	INIT_PASSING("initPassing"), // action.pass
@@ -107,6 +108,7 @@ public enum StepId implements INamedObject {
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff
 	KICKOFF_RETURN("kickoffReturn"), // phase.kickoff
 	KICKOFF_SCATTER_ROLL("kickoffScatterRoll"), // phase.kickoff
+	LOOK_INTO_MY_EYES("lookIntoMyEyes"), // action.special
 	MISSED_PASS("missedPass"), // action.pass
 	MOVE("move"), // action.move
 	MOVE_BALL_AND_CHAIN("moveBallAndChain"), // action.move

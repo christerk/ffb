@@ -19,6 +19,7 @@ public class ChangeList {
 			.addImprovement("Apo dialogs now state which apo will be used")
 			.addFeature("Plague Doctor")
 			.addFeature("Josef Bugman")
+			.addFeature("Look Into My Eyes")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")

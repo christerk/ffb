@@ -153,15 +153,14 @@ public class ActingPlayer implements IJsonSerializable {
 	}
 
 	public void markSkillUsed(Skill pSkill) {
-		if ((pSkill == null) || isSkillUsed(pSkill)) {
+		if ((pSkill == null) || fUsedSkills.contains(pSkill)) {
 			return;
 		}
 		fUsedSkills.add(pSkill);
+		notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, pSkill);
 
-		if (pSkill.getSkillUsageType().isTrackOutsideActivation()) {
+		if (pSkill.getSkillUsageType().isTrackOutsideActivation() && !getPlayer().isUsed(pSkill)) {
 			getPlayer().markUsed(pSkill, getGame());
-		} else {
-			notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, pSkill);
 		}
 	}
 

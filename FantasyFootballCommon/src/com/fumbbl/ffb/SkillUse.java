@@ -45,6 +45,7 @@ public enum SkillUse implements INamedObject {
 	RE_ROLL_DIRECTION("reRollDirection", "to re-roll the direction roll"),
 	GRANT_CATCH_BONUS("grantCatchBonus", "to grant %g team-mate a catch bonus"),
 	RE_ROLL_CATCH("reRollCatch", "to re-roll the catch roll"),
+	LOOK_INTO_MY_EYES("lookIntoMyEyes", "to steal the ball from %g opponent"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;
