@@ -37,6 +37,7 @@ import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
@@ -644,6 +645,19 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				if (teamAway.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
 					game.getTurnDataAway().getInducementSet().addInducement(new Inducement(inducementType, 1));
 					getResult().addReport(new ReportBriberyAndCorruptionReRoll(teamAway.getId(), BriberyAndCorruptionAction.ADDED));
+				}
+
+			});
+
+		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.REROLL_ONES_ON_KOS)).findFirst()
+			.ifPresent(inducementType -> {
+
+				if (Arrays.stream(game.getTeamHome().getPlayers()).anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
+					game.getTurnDataHome().getInducementSet().addInducement(new Inducement(inducementType, 1));
+				}
+
+				if (Arrays.stream(game.getTeamAway().getPlayers()).anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
+					game.getTurnDataAway().getInducementSet().addInducement(new Inducement(inducementType, 1));
 				}
 
 			});

@@ -117,6 +117,10 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 		add(new InducementType("weatherMage", "Weather Mage", "Weather Mage", "Weather Mages",
 			GameOptionId.INDUCEMENT_WEATHER_MAGE_MAX, GameOptionId.INDUCEMENT_WEATHER_MAGE_COST, null, true,
 			IIconProperty.RESOURCE_WIZARD, Usage.CHANGE_WEATHER));
+
+		add(new InducementType("infamousStaff", "Infamous Coaching Staff", "Infamous Coaching Staff", "Infamous Coaching Staff", GameOptionId.INDUCEMENT_STAFF_MAX, null, Usage.STAFF));
+
+		add(new InducementType("bugmansXXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", GameOptionId.INDUCEMENT_STAFF_MAX, null, null, true, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.REROLL_ONES_ON_KOS));
 	}};
 
 	protected Set<InducementType> getSubTypes() {

@@ -493,10 +493,11 @@ public class StepEndTurn extends AbstractStep {
 	private int getFaintingCount(Game game, List<KnockoutRecovery> knockoutRecoveries, List<HeatExhaustion> heatExhaustions, List<Player<?>> unzappedPlayers) {
 		int faintingCount = 0;
 		if (fNewHalf || fTouchdown) {
+
 			for (Player<?> player : game.getPlayers()) {
+				Team team = game.findTeam(player);
 				if (player instanceof ZappedPlayer) {
 					getGameState().getServer().getCommunication().sendUnzapPlayer(getGameState(), (ZappedPlayer) player);
-					Team team = game.findTeam(player);
 					player = ((ZappedPlayer) player).getOriginalPlayer();
 					team.addPlayer(player);
 					unzappedPlayers.add(player);
@@ -504,10 +505,12 @@ public class StepEndTurn extends AbstractStep {
 				}
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
-					KnockoutRecovery knockoutRecovery = recoverKnockout(player);
-					if (knockoutRecovery != null) {
-						knockoutRecoveries.add(knockoutRecovery);
-						if (knockoutRecovery.isRecovering()) {
+					InducementType reRollKOsInducement = (team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway()).getInducementSet().forUsage(Usage.REROLL_ONES_ON_KOS);
+					List<KnockoutRecovery> playerRecoveries = new ArrayList<>();
+					recoverKnockout(player, reRollKOsInducement, playerRecoveries);
+					if (!playerRecoveries.isEmpty()) {
+						knockoutRecoveries.addAll(playerRecoveries);
+						if (playerRecoveries.stream().anyMatch(KnockoutRecovery::isRecovering)) {
 							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
 							UtilBox.putPlayerIntoBox(game, player);
 						}
@@ -668,7 +671,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 	}
 
-	private KnockoutRecovery recoverKnockout(Player<?> pPlayer) {
+	private void recoverKnockout(Player<?> pPlayer, InducementType reRollKOsInducement, List<KnockoutRecovery> playerRecoveries) {
 		if (pPlayer != null) {
 			String playerId = pPlayer.getId();
 			int recoveryRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
@@ -678,9 +681,11 @@ public class StepEndTurn extends AbstractStep {
 				: game.getTurnDataAway().getInducementSet();
 			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.KNOCKOUT_RECOVERY)).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
 			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserKegValue);
-			return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue);
-		} else {
-			return null;
+			boolean willBeReRolled = recoveryRoll == 1 && reRollKOsInducement != null;
+			playerRecoveries.add(new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue, willBeReRolled ? reRollKOsInducement.getDescription() : null));
+			if (willBeReRolled) {
+				recoverKnockout(pPlayer, null, playerRecoveries);
+			}
 		}
 	}
 

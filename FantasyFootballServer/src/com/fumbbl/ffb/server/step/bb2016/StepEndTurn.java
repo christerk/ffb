@@ -496,7 +496,7 @@ public class StepEndTurn extends AbstractStep {
 				: game.getTurnDataAway().getInducementSet();
 			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.KNOCKOUT_RECOVERY)).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
 			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserKegValue);
-			return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue);
+			return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue, null);
 		} else {
 			return null;
 		}

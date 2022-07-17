@@ -37,8 +37,6 @@ public abstract class InducementCollection implements IKeyedItem {
 
 		add(new InducementType("starPlayers", "Star Players", "Star Player", "Star Players", GameOptionId.INDUCEMENT_STARS_MAX, null, Usage.STAR));
 
-		add(new InducementType("infamousStaff", "Infamous Coaching Staff", "Infamous Coaching Staff", "Infamous Coaching Staff", GameOptionId.INDUCEMENT_STAFF_MAX, null, Usage.STAFF));
-
 		add(new InducementType("mercenaries", "Mercenaries", "Mercenary", "Mercenaries", null, null, Usage.LONER));
 
 		add(new InducementType("wizard", "Wizard", "Wizard", "Wizards", GameOptionId.INDUCEMENT_WIZARDS_MAX,

@@ -190,6 +190,9 @@ public class UtilServerStartGame {
 			GameOptionInt rookies = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX);
 			rookies.setValue(9);
 			//game.getOptions().addOption(rookies);
+			GameOptionBoolean staff = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_STAFF_ON_BOTH_TEAMS);
+			staff.setValue(true);
+			//	game.getOptions().addOption(staff);
 		}
 	}
 

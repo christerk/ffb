@@ -36,7 +36,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Kalimar
  */
 public class InducementSet implements IXmlSerializable, IJsonSerializable {
@@ -265,6 +264,11 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	public int value(Usage usage) {
 		return getInducementTypes().stream().filter(type -> type.hasUsage(usage))
 			.findFirst().map(inducementType -> get(inducementType).getValue()).orElse(0);
+	}
+
+	public InducementType forUsage(Usage usage) {
+		return getInducementTypes().stream().filter(inducement -> inducement.hasUsage(usage))
+			.findFirst().orElse(null);
 	}
 
 	// change tracking
