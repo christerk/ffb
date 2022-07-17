@@ -41,6 +41,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -139,6 +140,27 @@ public class UtilServerGame {
 		updatePlayerStateDependentProperties(pStep);
 		resetSpecialSkillsAtHalfTime(game);
 
+	}
+
+	public static void prepareForSetup(Game game) {
+		prepareForSetup(game, game.getTeamHome());
+		prepareForSetup(game, game.getTeamAway());
+	}
+
+	private static void prepareForSetup(Game game, Team team) {
+		Map<Boolean, List<Player<?>>> groupedPlayers = Arrays.stream(team.getPlayers()).filter(player -> game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE)
+			.collect(Collectors.groupingBy(player -> player.hasSkillProperty(NamedProperties.canJoinTeamIfLessThanEleven)));
+		List<Player<?>> players = groupedPlayers.get(false);
+		List<Player<?>> keenPlayers = groupedPlayers.get(true);
+		if (keenPlayers != null && !keenPlayers.isEmpty()) {
+			if (players != null && players.size() >= 11) {
+				keenPlayers.stream().filter(player -> game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE)
+					.forEach(player -> {
+						PlayerState playerState = game.getFieldModel().getPlayerState(player);
+						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
+					});
+			}
+		}
 	}
 
 	private static void resetLeaderState(Game pGame) {

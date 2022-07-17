@@ -192,7 +192,7 @@ public class UtilServerStartGame {
 			//game.getOptions().addOption(rookies);
 			GameOptionBoolean staff = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_STAFF_ON_BOTH_TEAMS);
 			staff.setValue(true);
-			//	game.getOptions().addOption(staff);
+			game.getOptions().addOption(staff);
 		}
 	}
 

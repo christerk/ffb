@@ -459,6 +459,7 @@ public class StepEndTurn extends AbstractStep {
 				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
 				removeReRollsLastingForDrive(true);
 				removeReRollsLastingForDrive(false);
+				UtilServerGame.prepareForSetup(game);
 			}
 
 			if (fNewHalf) {
