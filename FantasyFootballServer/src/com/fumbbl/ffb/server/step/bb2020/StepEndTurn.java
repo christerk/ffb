@@ -517,7 +517,7 @@ public class StepEndTurn extends AbstractStep {
 						}
 					}
 				}
-				if (playerState.getBase() == PlayerState.EXHAUSTED) {
+				if (playerState.getBase() == PlayerState.EXHAUSTED || playerState.getBase() == PlayerState.SETUP_PREVENTED) {
 					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
 				}
 			}

@@ -157,7 +157,7 @@ public class UtilServerGame {
 				keenPlayers.stream().filter(player -> game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE)
 					.forEach(player -> {
 						PlayerState playerState = game.getFieldModel().getPlayerState(player);
-						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
+						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.SETUP_PREVENTED));
 					});
 			}
 		}

@@ -27,6 +27,7 @@ public class PlayerState {
     public static final int HIT_BY_FIREBALL = 0x00011; // used for bloodSpots only
     public static final int HIT_BY_LIGHTNING = 0x00012; // used for bloodSpots only
     public static final int HIT_BY_BOMB = 0x00013; // used for bloodSpots only
+    public static final int SETUP_PREVENTED = 0x00014;
 
     private static final int _BIT_ACTIVE = 0x00100;
     private static final int _BIT_CONFUSED = 0x00200;
@@ -47,16 +48,17 @@ public class PlayerState {
         0x00000, // KNOCKED_OUT
         0x00000, // BADLY_HURT
         0x00000, // SERIOUS_INJURY
-        0x00000, // RIP
-        0x00000, // RESERVE
-        0x00000, // MISSING
-        0xfff00, // FALLING
-        0xfff00, // BLOCKED
-        0x00000, // BANNED
-        0xfff00, // EXHAUSTED
-        0xfff00, // BEING_DRAGGED
-        0xfff00, // PICKED_UP
-        0xfff00, // HIT_ON_GROUND
+      0x00000, // RIP
+      0x00000, // RESERVE
+      0x00000, // MISSING
+      0xfff00, // FALLING
+      0xfff00, // BLOCKED
+      0x00000, // BANNED
+      0xfff00, // EXHAUSTED
+      0xfff00, // BEING_DRAGGED
+      0xfff00, // PICKED_UP
+      0xfff00, // HIT_ON_GROUND
+      0xfff00, // SETUP_PREVENTED
     };
 
     public static List<Integer> REMOVED_FROM_PLAY = new ArrayList<Integer>() {{
@@ -273,6 +275,8 @@ public class PlayerState {
                 return "has been picked up";
             case HIT_ON_GROUND:
                 return "was hit while on the ground";
+            case SETUP_PREVENTED:
+                return "can not be set up";
             default:
                 return null;
         }
@@ -316,6 +320,8 @@ public class PlayerState {
                 return "Picked Up";
             case HIT_ON_GROUND:
                 return "Hit on the ground";
+            case SETUP_PREVENTED:
+                return "Can't be set up";
             default:
                 return null;
         }

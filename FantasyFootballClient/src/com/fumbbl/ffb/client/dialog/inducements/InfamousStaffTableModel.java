@@ -23,7 +23,7 @@ public class InfamousStaffTableModel extends AbstractTableModel {
 	private final Object[][] fRowData;
 	private final AbstractBuyInducementsDialog fDialog;
 	private int fNrOfCheckedRows;
-	private int maxStaff;
+	private final int maxStaff;
 
 	public InfamousStaffTableModel(AbstractBuyInducementsDialog pDialog, GameOptions gameOptions) {
 		fDialog = pDialog;
@@ -66,17 +66,12 @@ public class InfamousStaffTableModel extends AbstractTableModel {
 		return boughtStaff;
 	}
 
-	public void setMaxNrOfStaff(int amount) {
-		maxStaff = amount;
-	}
-
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
 		if (pColumnIndex == 0) {
 			Player<?> player = (Player<?>) fRowData[pRowIndex][4];
 			int cost = player.getPosition().getCost();
 			if ((Boolean) pValue) {
-				if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < maxStaff)
-					&& (fDialog.getFreeSlotsInRoster() > 0)) {
+				if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < maxStaff)) {
 					fRowData[pRowIndex][pColumnIndex] = pValue;
 					fireTableCellUpdated(pRowIndex, pColumnIndex);
 					fDialog.recalculateGold();
