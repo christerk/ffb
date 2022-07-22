@@ -49,10 +49,14 @@ public class DialogUseApothecaryHandler extends DialogHandler {
 			ApothecaryType apothecaryType = null;
 			boolean used = false;
 			if (apothecaryDialog.isChoiceOne()) {
-				apothecaryType = parameter.getApothecaryTypes().get(0);
+				if (!parameter.getApothecaryTypes().isEmpty()) {
+					apothecaryType = parameter.getApothecaryTypes().get(0);
+				}
 				used = true;
 			} else if (apothecaryDialog.isChoiceTwo()) {
-				apothecaryType = parameter.getApothecaryTypes().get(1);
+				if (!parameter.getApothecaryTypes().isEmpty()) {
+					apothecaryType = parameter.getApothecaryTypes().get(1);
+				}
 				used = true;
 			}
 
