@@ -123,7 +123,7 @@ public class UtilServerInjury {
 				if (!pInjuryType.canUseApo() || (injuryContext.isKnockedOut()
 					&& pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-				} else if (gameMechanic.canUseApo(game, pDefender)) {
+				} else if (gameMechanic.canUseApo(game, pDefender, injuryContext.getPlayerState())) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 				} else {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);

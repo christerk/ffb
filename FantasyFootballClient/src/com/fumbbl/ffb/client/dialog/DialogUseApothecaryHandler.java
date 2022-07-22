@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -29,7 +30,7 @@ public class DialogUseApothecaryHandler extends DialogHandler {
 			Player<?> player = game.getPlayerById(dialogUseApothecaryParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && getClient().getGame().getTeamHome().hasPlayer(player)) {
-				setDialog(new DialogUseApothecary(getClient(), dialogUseApothecaryParameter));
+				setDialog(DialogUseApothecary.create(getClient(), dialogUseApothecaryParameter));
 				getDialog().showDialog(this);
 
 			} else {
@@ -44,7 +45,18 @@ public class DialogUseApothecaryHandler extends DialogHandler {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.USE_APOTHECARY)) {
 			DialogUseApothecary apothecaryDialog = (DialogUseApothecary) pDialog;
-			getClient().getCommunication().sendUseApothecary(apothecaryDialog.getPlayerId(), apothecaryDialog.isChoiceYes());
+			DialogUseApothecaryParameter parameter = apothecaryDialog.getDialogParameter();
+			ApothecaryType apothecaryType = null;
+			boolean used = false;
+			if (apothecaryDialog.isChoiceOne()) {
+				apothecaryType = parameter.getApothecaryTypes().get(0);
+				used = true;
+			} else if (apothecaryDialog.isChoiceTwo()) {
+				apothecaryType = parameter.getApothecaryTypes().get(1);
+				used = true;
+			}
+
+			getClient().getCommunication().sendUseApothecary(apothecaryDialog.getPlayerId(), used, apothecaryType);
 		}
 	}
 

@@ -10,6 +10,12 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 
  * @author Kalimar
@@ -19,17 +25,21 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 	private String fPlayerId;
 	private PlayerState fPlayerState;
 	private SeriousInjury fSeriousInjury;
-	private ApothecaryType apothecaryType;
+	private List<ApothecaryType> apothecaryTypes = new ArrayList<>();
 
 	public DialogUseApothecaryParameter() {
 		super();
 	}
 
-	public DialogUseApothecaryParameter(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, ApothecaryType apothecaryType) {
+	public DialogUseApothecaryParameter(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
+		this(pPlayerId, pPlayerState, pSeriousInjury, Collections.emptyList());
+	}
+
+	public DialogUseApothecaryParameter(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, List<ApothecaryType> apothecaryTypes) {
 		fPlayerId = pPlayerId;
 		fPlayerState = pPlayerState;
 		fSeriousInjury = pSeriousInjury;
-		this.apothecaryType = apothecaryType;
+		this.apothecaryTypes = apothecaryTypes;
 	}
 
 	public DialogId getId() {
@@ -48,14 +58,14 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 		return fSeriousInjury;
 	}
 
-	public ApothecaryType getApothecaryType() {
-		return apothecaryType;
+	public List<ApothecaryType> getApothecaryTypes() {
+		return apothecaryTypes;
 	}
 
 	// transformation
 
 	public IDialogParameter transform() {
-		return new DialogUseApothecaryParameter(getPlayerId(), getPlayerState(), getSeriousInjury(), apothecaryType);
+		return new DialogUseApothecaryParameter(getPlayerId(), getPlayerState(), getSeriousInjury(), apothecaryTypes);
 	}
 
 	// JSON serialization
@@ -66,9 +76,7 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
 		IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
-		if (apothecaryType != null) {
-			IJsonOption.APOTHECARY_TYPE.addTo(jsonObject, apothecaryType.name());
-		}
+		IJsonOption.APOTHECARY_TYPES.addTo(jsonObject, apothecaryTypes.stream().map(ApothecaryType::name).collect(Collectors.toList()));
 		return jsonObject;
 	}
 
@@ -78,8 +86,8 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
 		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
-		if (IJsonOption.APOTHECARY_TYPE.isDefinedIn(jsonObject)) {
-			apothecaryType = ApothecaryType.valueOf(IJsonOption.APOTHECARY_TYPE.getFrom(source, jsonObject));
+		if (IJsonOption.APOTHECARY_TYPES.isDefinedIn(jsonObject)) {
+			apothecaryTypes.addAll(Arrays.stream(IJsonOption.APOTHECARY_TYPES.getFrom(source, jsonObject)).map(ApothecaryType::valueOf).collect(Collectors.toList()));
 		}
 		return this;
 	}

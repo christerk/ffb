@@ -5,6 +5,9 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.ZappedPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum ApothecaryType {
 	TEAM("Team Apothecary"), WANDERING("Wandering Apothecary"), PLAGUE("Plague Doctor");
 
@@ -14,39 +17,44 @@ public enum ApothecaryType {
 		this.name = name;
 	}
 
-	public static ApothecaryType forPlayer(Game game, Player<?> defender) {
+	public static List<ApothecaryType> forPlayer(Game game, Player<?> defender, PlayerState playerState) {
+		List<ApothecaryType> validTypes = new ArrayList<>();
 		if (defender instanceof ZappedPlayer || defender.getPlayerType() == PlayerType.STAR) {
-			return null;
+			return validTypes;
 		}
 
 		TurnData turnData = game.getTeamHome().hasPlayer(defender) ? game.getTurnDataHome() : game.getTurnDataAway();
 
 		boolean teamHasWanderingApo = turnData.getWanderingApothecaries() > 0;
 
-		boolean teamHasPlagueDoctor = turnData.getPlagueDoctors() > 0;
+		boolean teamCanUsePlagueDoctor = turnData.getPlagueDoctors() > 0 && playerState.getBase() == PlayerState.KNOCKED_OUT;
 
 		if (defender.getPlayerType() == PlayerType.MERCENARY) {
 			if (teamHasWanderingApo) {
-				return WANDERING;
+				validTypes.add(WANDERING);
 			}
 		} else if (defender.isJourneyman()) {
 
 			if (teamHasWanderingApo) {
-				return WANDERING;
+				validTypes.add(WANDERING);
 			}
 
-			if (teamHasPlagueDoctor) {
-				return PLAGUE;
+			if (teamCanUsePlagueDoctor) {
+				validTypes.add(PLAGUE);
 			}
-		} else if (turnData.getApothecaries() > turnData.getWanderingApothecaries()) {
-			return TEAM;
-		} else if (teamHasWanderingApo) {
-			return WANDERING;
-		} else if (teamHasPlagueDoctor) {
-			return PLAGUE;
+		} else {
+			if (turnData.getApothecaries() > turnData.getWanderingApothecaries()) {
+				validTypes.add(TEAM);
+			} else if (teamHasWanderingApo) {
+				validTypes.add(WANDERING);
+			}
+
+			if (teamCanUsePlagueDoctor) {
+				validTypes.add(PLAGUE);
+			}
 		}
 
-		return null;
+		return validTypes;
 	}
 
 	public String getName() {

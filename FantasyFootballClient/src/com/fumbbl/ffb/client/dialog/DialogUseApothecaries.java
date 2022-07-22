@@ -28,6 +28,7 @@ public class DialogUseApothecaries extends Dialog {
 	public static final Color HIGHLIGHT = Color.lightGray;
 	private final DialogUseApothecariesParameter dialogParameter;
 	private String selectedPlayer;
+	private ApothecaryType apothecaryType;
 
 	public DialogUseApothecaries(FantasyFootballClient pClient, DialogUseApothecariesParameter parameter) {
 
@@ -76,8 +77,7 @@ public class DialogUseApothecaries extends Dialog {
 			textPanel.setAlignmentX(CENTER_ALIGNMENT);
 			textPanel.setBackground(HIGHLIGHT);
 			String injury = injuryDescription.getSeriousInjury() != null ? injuryDescription.getSeriousInjury().getDescription() : injuryDescription.getPlayerState().getDescription();
-			Arrays.stream(new String[]{"<html>" + player.getName() + " suffered " + injury + "</html>",
-					"<html>You can use a " + injuryDescription.getApothecaryType().getName() + " on " + player.getPlayerGender().getDative() + ".</html>"})
+			Arrays.stream(new String[]{"<html>" + player.getName() + " suffered " + injury + "</html>"})
 				.map(JLabel::new).forEach(label -> {
 					label.setHorizontalAlignment(SwingConstants.CENTER);
 					textPanel.add(label);
@@ -91,7 +91,9 @@ public class DialogUseApothecaries extends Dialog {
 			buttonPanel.add(Box.createHorizontalGlue());
 			buttonPanel.setBackground(HIGHLIGHT);
 
-			buttonPanel.add(createButton(playerId, injuryDescription.getApothecaryType(), index == 0 ? 'A' : 'p'));
+			for (ApothecaryType apothecaryType : injuryDescription.getApothecaryTypes()) {
+				buttonPanel.add(createButton(playerId, apothecaryType, apothecaryType.getName().charAt(index)));
+			}
 			buttonPanel.add(Box.createHorizontalGlue());
 
 			targetPanel.add(Box.createVerticalStrut(3));
@@ -132,19 +134,20 @@ public class DialogUseApothecaries extends Dialog {
 
 	private JButton createButton(String target, ApothecaryType apothecaryType, char mnemonic) {
 		JButton button = new JButton("Use Apothecary (" + apothecaryType.getName() + ")");
-		button.addActionListener(e -> handleUserInteraction(target));
+		button.addActionListener(e -> handleUserInteraction(target, apothecaryType));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override
 			protected void handleKey() {
-				handleUserInteraction(target);
+				handleUserInteraction(target, apothecaryType);
 			}
 		});
 		button.setMnemonic((int) mnemonic);
 		return button;
 	}
 
-	private void handleUserInteraction(String target) {
+	private void handleUserInteraction(String target, ApothecaryType apothecaryType) {
 		selectedPlayer = target;
+		this.apothecaryType = apothecaryType;
 		close();
 	}
 
@@ -160,6 +163,10 @@ public class DialogUseApothecaries extends Dialog {
 
 	public String getSelectedPlayer() {
 		return selectedPlayer;
+	}
+
+	public ApothecaryType getApothecaryType() {
+		return apothecaryType;
 	}
 
 	public DialogUseApothecariesParameter getDialogParameter() {

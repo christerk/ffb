@@ -8,7 +8,7 @@
 	<rosterId>human.lrb6</rosterId>
 	<reRolls>5</reRolls>
 	<fanFactor>6</fanFactor>
-	<apothecaries>2</apothecaries>
+	<apothecaries>0</apothecaries>
 	<cheerleaders>3</cheerleaders>
 	<assistantCoaches>4</assistantCoaches>
 	<teamRating>100</teamRating>
@@ -38,6 +38,7 @@
 			<injury>Broken Neck (-1 AG)</injury>
 		</injuryList>
 		<playerStatistics currentSpps="16" />
+		<status>journeyman</status>
 	</player>
 
 	<player nr="2" id="teamHumanKalimar2">

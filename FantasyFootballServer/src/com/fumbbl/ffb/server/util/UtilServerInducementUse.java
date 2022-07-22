@@ -14,7 +14,6 @@ import com.fumbbl.ffb.server.GameState;
 public class UtilServerInducementUse {
 
 	public static boolean useInducement(GameState pGameState, Team pTeam, InducementType pInducementType, int pNrOfUses) {
-		Inducement inducement;
 		Game game = pGameState.getGame();
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();

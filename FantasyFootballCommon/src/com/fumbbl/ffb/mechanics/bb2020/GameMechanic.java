@@ -305,8 +305,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canUseApo(Game game, Player<?> defender) {
-		return ApothecaryType.forPlayer(game, defender) != null;
+	public boolean canUseApo(Game game, Player<?> defender, PlayerState playerState) {
+		return !ApothecaryType.forPlayer(game, defender, playerState).isEmpty();
 	}
 
 	@Override

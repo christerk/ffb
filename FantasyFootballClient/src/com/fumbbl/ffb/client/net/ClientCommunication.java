@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.net;
 
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.ConcedeGameStatus;
 import com.fumbbl.ffb.FantasyFootballException;
@@ -424,8 +425,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 			pTeamSetup.getCoordinates()));
 	}
 
-	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed) {
-		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed));
+	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType) {
+		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType));
 	}
 
 	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, PlayerState oldPlayerState) {

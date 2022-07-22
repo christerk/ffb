@@ -10,21 +10,26 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class InjuryDescription implements IJsonSerializable {
 	private String playerId;
 	private PlayerState playerState;
 	private SeriousInjury seriousInjury;
 
-	private ApothecaryType apothecaryType = ApothecaryType.TEAM;
+	private List<ApothecaryType> apothecaryTypes = new ArrayList<>();
 
 	public InjuryDescription() {
 	}
 
-	public InjuryDescription(String playerId, PlayerState playerState, SeriousInjury seriousInjury, ApothecaryType apothecaryType) {
+	public InjuryDescription(String playerId, PlayerState playerState, SeriousInjury seriousInjury, List<ApothecaryType> apothecaryTypes) {
 		this.playerId = playerId;
 		this.playerState = playerState;
 		this.seriousInjury = seriousInjury;
-		this.apothecaryType = apothecaryType;
+		this.apothecaryTypes = apothecaryTypes;
 	}
 
 	public String getPlayerId() {
@@ -39,8 +44,8 @@ public class InjuryDescription implements IJsonSerializable {
 		return seriousInjury;
 	}
 
-	public ApothecaryType getApothecaryType() {
-		return apothecaryType;
+	public List<ApothecaryType> getApothecaryTypes() {
+		return apothecaryTypes;
 	}
 
 	public JsonObject toJsonValue() {
@@ -48,9 +53,7 @@ public class InjuryDescription implements IJsonSerializable {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.PLAYER_STATE.addTo(jsonObject, playerState);
 		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, seriousInjury);
-		if (apothecaryType != null) {
-			IJsonOption.APOTHECARY_TYPE.addTo(jsonObject, apothecaryType.name());
-		}
+		IJsonOption.APOTHECARY_TYPES.addTo(jsonObject, apothecaryTypes.stream().map(ApothecaryType::name).collect(Collectors.toList()));
 		return jsonObject;
 	}
 
@@ -59,8 +62,8 @@ public class InjuryDescription implements IJsonSerializable {
 		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		playerState = IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
 		seriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
-		if (IJsonOption.APOTHECARY_TYPE.isDefinedIn(jsonObject)) {
-			apothecaryType = ApothecaryType.valueOf(IJsonOption.APOTHECARY_TYPE.getFrom(source, jsonObject));
+		if (IJsonOption.APOTHECARY_TYPES.isDefinedIn(jsonObject)) {
+			apothecaryTypes.addAll(Arrays.stream(IJsonOption.APOTHECARY_TYPES.getFrom(source, jsonObject)).map(ApothecaryType::valueOf).collect(Collectors.toList()));
 		}
 		return this;
 	}

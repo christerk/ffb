@@ -23,6 +23,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
@@ -49,6 +50,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Step in any sequence to handle the apothecary. Offers different modes
@@ -71,6 +73,7 @@ public class StepApothecary extends AbstractStep {
 	private boolean fShowReport;
 	private boolean fDefenderPoisoned;
 	private boolean fAttackerPoisoned;
+	private ApothecaryType apothecaryType;
 
 	public StepApothecary(GameState pGameState) {
 		super(pGameState);
@@ -123,6 +126,7 @@ public class StepApothecary extends AbstractStep {
 						fInjuryResult.injuryContext()
 							.setApothecaryStatus(useApothecaryCommand.isApothecaryUsed() ? ApothecaryStatus.USE_APOTHECARY
 								: ApothecaryStatus.DO_NOT_USE_APOTHECARY);
+						apothecaryType = useApothecaryCommand.getApothecaryType();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -195,11 +199,11 @@ public class StepApothecary extends AbstractStep {
 						if (fShowReport) {
 							fInjuryResult.report(this);
 						}
-						ApothecaryType apothecaryType = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId));
+						List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId), fInjuryResult.injuryContext().getPlayerState());
 						UtilServerDialog.showDialog(getGameState(),
 							new DialogUseApothecaryParameter(defenderId,
 								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(),
-								apothecaryType),
+								apothecaryTypes),
 							true);
 						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
 						doNextStep = false;
@@ -232,7 +236,8 @@ public class StepApothecary extends AbstractStep {
 						break;
 					case USE_IGOR:
 						Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
-						InducementSet inducementSetIgor = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+						TurnData turnData = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome() : game.getTurnDataAway();
+						InducementSet inducementSetIgor = turnData.getInducementSet();
 						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSetIgor.hasUsesLeft(type))
 							.min(Comparator.comparingInt(InducementType::getPriority)).ifPresent(type -> {
 								UtilServerInducementUse.useInducement(getGameState(), team, type, 1);
@@ -240,6 +245,9 @@ public class StepApothecary extends AbstractStep {
 								boolean success = UtilServerInjury.handleRegeneration(this, player);
 								if (success) {
 									curePoison();
+								}
+								if (type.hasUsage(Usage.APOTHECARY_JOURNEYMEN) && turnData.getPlagueDoctors() > 0) {
+									turnData.setPlagueDoctors(turnData.getPlagueDoctors() - 1);
 								}
 							});
 						break;
@@ -274,13 +282,25 @@ public class StepApothecary extends AbstractStep {
 		}
 	}
 
+	private void useApo(TurnData turnData, ApothecaryType apothecaryType) {
+		turnData.useApothecary(apothecaryType);
+		if (apothecaryType == ApothecaryType.PLAGUE) {
+			turnData.getInducementSet().getInducementTypes().stream()
+				.filter(inducementType -> inducementType.hasUsage(Usage.REGENERATION) && inducementType.hasUsage(Usage.APOTHECARY_JOURNEYMEN) && turnData.getInducementSet().hasUsesLeft(inducementType))
+				.findFirst().ifPresent(inducementType -> UtilServerInducementUse.useInducement(inducementType, 1, turnData.getInducementSet()));
+		}
+	}
+
 	private boolean rollApothecary() {
 		Game game = getGameState().getGame();
 		Player<?> defender = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
+		if (apothecaryType == null) {
+			apothecaryType = ApothecaryType.forPlayer(game, defender, fInjuryResult.injuryContext().getPlayerState()).get(0);
+		}
 		if (game.getTeamHome().hasPlayer(defender)) {
-			game.getTurnDataHome().useApothecary(ApothecaryType.forPlayer(game, defender));
+			useApo(game.getTurnDataHome(), apothecaryType);
 		} else {
-			game.getTurnDataAway().useApothecary(ApothecaryType.forPlayer(game, defender));
+			useApo(game.getTurnDataAway(), apothecaryType);
 		}
 		boolean apothecaryChoice = ((fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT)
 			&& (fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.KNOCKED_OUT));
@@ -353,6 +373,9 @@ public class StepApothecary extends AbstractStep {
 			IServerJsonOption.INJURY_RESULT.addTo(jsonObject, fInjuryResult.toJsonValue());
 		}
 		IServerJsonOption.SHOW_REPORT.addTo(jsonObject, fShowReport);
+		if (apothecaryType != null) {
+			IServerJsonOption.APOTHECARY_TYPE.addTo(jsonObject, apothecaryType.name());
+		}
 		return jsonObject;
 	}
 
@@ -366,6 +389,9 @@ public class StepApothecary extends AbstractStep {
 			fInjuryResult = new InjuryResult().initFrom(source, injuryResultObject);
 		}
 		fShowReport = IServerJsonOption.SHOW_REPORT.getFrom(source, jsonObject);
+		if (IServerJsonOption.APOTHECARY_TYPE.isDefinedIn(jsonObject)) {
+			apothecaryType = ApothecaryType.valueOf(IServerJsonOption.APOTHECARY_TYPE.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 

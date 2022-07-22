@@ -53,6 +53,7 @@ import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -143,10 +144,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 										newStatus = ApothecaryStatus.USE_APOTHECARY;
 
 										Player<?> defender = game.getPlayerById(injuryResult.injuryContext().getDefenderId());
+										ApothecaryType apothecaryType = useApothecaryCommand.getApothecaryType();
 										if (game.getTeamHome().hasPlayer(defender)) {
-											game.getTurnDataHome().useApothecary(ApothecaryType.forPlayer(game, defender));
+											useApo(game.getTurnDataHome(), apothecaryType);
 										} else {
-											game.getTurnDataAway().useApothecary(ApothecaryType.forPlayer(game, defender));
+											useApo(game.getTurnDataAway(), apothecaryType);
 										}
 									}
 								} else {
@@ -227,10 +229,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 					injuryResult.report(this);
 					UtilServerGame.syncGameModel(this);
 					InjuryContext injuryContext = injuryResult.injuryContext();
-					ApothecaryType apothecaryType = ApothecaryType.forPlayer(game, game.getPlayerById(injuryContext.fDefenderId));
-					if (remainingApos > 0 && apothecaryType != null) {
+					List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(injuryContext.fDefenderId), injuryContext.getPlayerState());
+					if (remainingApos > 0 && !apothecaryTypes.isEmpty()) {
 						injuryContext.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
-						injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury, apothecaryType));
+						injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury, apothecaryTypes));
 					} else {
 						injuryContext.setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_APOTHECARY);
 					}
@@ -290,6 +292,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 					&& usesLeft > 0) {
 					InducementType inducementType = regenerationTypes.get(0);
 					UtilServerInducementUse.useInducement(getGameState(), team, inducementType, 1);
+					if (inducementType.hasUsage(Usage.APOTHECARY_JOURNEYMEN) && getTurnData().getPlagueDoctors() > 0) {
+						getTurnData().setPlagueDoctors(getTurnData().getPlagueDoctors() - 1);
+					}
 					usesLeft--;
 
 					if (!inducementSet.hasUsesLeft(inducementType)) {
@@ -332,7 +337,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 					List<InjuryDescription> injuryDescriptions = new ArrayList<>();
 					regenerationToReRoll.forEach(injuryResult -> {
 						InjuryContext injuryContext = injuryResult.injuryContext();
-						injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury, null));
+						injuryDescriptions.add(new InjuryDescription(injuryContext.getDefenderId(), injuryContext.getPlayerState(), injuryContext.fSeriousInjury, Collections.emptyList()));
 					});
 
 					UtilServerDialog.showDialog(getGameState(), new DialogUseMortuaryAssistantsParameter(teamId, injuryDescriptions, Math.min(usesLeft, injuryDescriptions.size())), true);
@@ -371,6 +376,15 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 			getResult().setNextAction(StepAction.NEXT_STEP);
 
+		}
+	}
+
+	private void useApo(TurnData turnData, ApothecaryType apothecaryType) {
+		turnData.useApothecary(apothecaryType);
+		if (apothecaryType == ApothecaryType.PLAGUE) {
+			turnData.getInducementSet().getInducementTypes().stream()
+				.filter(inducementType -> inducementType.hasUsage(Usage.REGENERATION) && inducementType.hasUsage(Usage.APOTHECARY_JOURNEYMEN) && turnData.getInducementSet().hasUsesLeft(inducementType))
+				.findFirst().ifPresent(inducementType -> UtilServerInducementUse.useInducement(inducementType, 1, turnData.getInducementSet()));
 		}
 	}
 

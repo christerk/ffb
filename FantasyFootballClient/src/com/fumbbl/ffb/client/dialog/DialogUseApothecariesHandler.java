@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
@@ -31,7 +32,8 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 
 				if (dialogParameter.getInjuryDescriptions().size() == 1) {
 					InjuryDescription description = dialogParameter.getInjuryDescriptions().get(0);
-					setDialog(new DialogUseApothecary(getClient(), new DialogUseApothecaryParameter(description.getPlayerId(), description.getPlayerState(), description.getSeriousInjury(), description.getApothecaryType())));
+					setDialog(DialogUseApothecary.create(getClient(), new DialogUseApothecaryParameter(description.getPlayerId(), description.getPlayerState(), description.getSeriousInjury(),
+						description.getApothecaryTypes())));
 
 				} else {
 					setDialog(new DialogUseApothecaries(getClient(), dialogParameter));
@@ -53,18 +55,26 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 		List<InjuryDescription> allInjuries = dialogParameter.getInjuryDescriptions();
 
 		String playerId = null;
+		ApothecaryType apothecaryType = null;
 
 		if (testDialogHasId(pDialog, DialogId.USE_APOTHECARY)) {
 			DialogUseApothecary dialog = (DialogUseApothecary) pDialog;
 			if (dialog.isChoiceYes()) {
-				playerId = allInjuries.get(0).getPlayerId();
+				InjuryDescription injuryDescription = allInjuries.get(0);
+				playerId = injuryDescription.getPlayerId();
+				if (dialog.isChoiceOne()) {
+					apothecaryType = injuryDescription.getApothecaryTypes().get(0);
+				} else if (dialog.isChoiceTwo()) {
+					apothecaryType = injuryDescription.getApothecaryTypes().get(1);
+				}
 			}
 		} else if (testDialogHasId(pDialog, DialogId.USE_APOTHECARIES)) {
 			DialogUseApothecaries useApothecaries = (DialogUseApothecaries) pDialog;
 			playerId = useApothecaries.getSelectedPlayer();
+			apothecaryType = useApothecaries.getApothecaryType();
 		}
 		if (StringTool.isProvided(playerId)) {
-			getClient().getCommunication().sendUseApothecary(playerId, true);
+			getClient().getCommunication().sendUseApothecary(playerId, true, apothecaryType);
 		} else {
 			getClient().getCommunication().sendUseApothecaries(Collections.emptyList());
 		}
