@@ -20,6 +20,7 @@ public class ChangeList {
 			.addFeature("Plague Doctor")
 			.addFeature("Josef Bugman")
 			.addFeature("Look Into My Eyes")
+			.addBugfix("Multi Block from player with Pile Driver caused games to crash")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")

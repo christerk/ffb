@@ -38,7 +38,6 @@ public class StepMultipleBlockFork extends AbstractStep {
 		add(StepParameterKey.BLOCK_RESULT);
 		add(StepParameterKey.DICE_INDEX);
 		add(StepParameterKey.NR_OF_DICE);
-		add(StepParameterKey.OLD_DEFENDER_STATE);
 		add(StepParameterKey.STARTING_PUSHBACK_SQUARE);
 		add(StepParameterKey.DEFENDER_PUSHED);
 		add(StepParameterKey.FOLLOWUP_CHOICE);
