@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -50,6 +51,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean fSufferingBloodLust;
 	private boolean fSufferingAnimosity;
 	private boolean wasProne;
+	private PlayerState oldPlayerState;
 	private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
 	private final transient Game fGame;
@@ -67,6 +69,7 @@ public class ActingPlayer implements IJsonSerializable {
 		if (StringTool.isEqual(pPlayerId, fPlayerId)) {
 			return;
 		}
+		oldPlayerState = null;
 		fPlayerId = pPlayerId;
 		fUsedSkills.clear();
 		fCurrentMove = 0;
@@ -299,6 +302,18 @@ public class ActingPlayer implements IJsonSerializable {
 		return fStandingUp;
 	}
 
+	public PlayerState getOldPlayerState() {
+		return oldPlayerState;
+	}
+
+	public void setOldPlayerState(PlayerState oldPlayerState) {
+		if (this.oldPlayerState != null && oldPlayerState != null) {
+			return;
+		}
+		this.oldPlayerState = oldPlayerState;
+		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_OLD_PLAYER_STATE, oldPlayerState);
+	}
+
 	public void setSufferingBloodLust(boolean pSufferingBloodLust) {
 		if (pSufferingBloodLust == fSufferingBloodLust) {
 			return;
@@ -433,6 +448,7 @@ public class ActingPlayer implements IJsonSerializable {
 		}
 		IJsonOption.USED_SKILLS.addTo(jsonObject, usedSkillsArray);
 		IJsonOption.SKILLS_GRANTED_BY.addTo(jsonObject, skillsGrantedBy);
+		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -463,6 +479,7 @@ public class ActingPlayer implements IJsonSerializable {
 			skillsGrantedBy.clear();
 			skillsGrantedBy.putAll(IJsonOption.SKILLS_GRANTED_BY.getFrom(source, jsonObject));
 		}
+		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		return this;
 	}
 

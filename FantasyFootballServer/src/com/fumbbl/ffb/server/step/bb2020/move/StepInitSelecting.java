@@ -144,10 +144,6 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.GAZE_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
-						} else if (actingPlayerCommand.getPlayerAction() == PlayerAction.LOOK_INTO_MY_EYES) {
-							fDispatchPlayerAction = PlayerAction.LOOK_INTO_MY_EYES;
-							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
-							forceGotoOnDispatch = true;
 						} else {
 							if (actingPlayerCommand.getPlayerAction() == PlayerAction.THROW_BOMB) {
 								getGameState().getPassState().setOriginalBombardier(actingPlayerCommand.getPlayerId());
@@ -358,11 +354,11 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.RAIDING_PARTY;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
-						}/* else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStealBallFromOpponent)) {
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStealBallFromOpponent)) {
 							fDispatchPlayerAction = PlayerAction.LOOK_INTO_MY_EYES;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
-						}*/
+						}
 					}
 					break;
 				case CLIENT_USE_TEAM_MATES_WISDOM:

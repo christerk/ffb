@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -161,6 +162,12 @@ public class ClientStateFoul extends ClientStateMove {
 					if (isRaidingPartyAvailable(actingPlayer)) {
 						Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
 						getClient().getCommunication().sendUseSkill(raidingSkill, true, pPlayer.getId());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+					if (isLookIntoMyEyesAvailable(pPlayer)) {
+						UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
+							.ifPresent(lookSkill -> getClient().getCommunication().sendUseSkill(lookSkill, true, pPlayer.getId()));
 					}
 					break;
 				default:

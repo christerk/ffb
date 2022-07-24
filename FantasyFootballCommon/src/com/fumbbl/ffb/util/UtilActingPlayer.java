@@ -71,6 +71,7 @@ public class UtilActingPlayer {
 				changed = true;
 				actingPlayer.setPlayer(newPlayer);
 				PlayerState oldState = pGame.getFieldModel().getPlayerState(newPlayer);
+				actingPlayer.setOldPlayerState(oldState);
 				actingPlayer.setStandingUp(oldState.getBase() == PlayerState.PRONE);
 				// show acting player as moving
 				fieldModel.setPlayerState(newPlayer, oldState.changeBase(PlayerState.MOVING));

@@ -23,6 +23,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import javax.swing.ImageIcon;
@@ -175,7 +176,9 @@ public class ClientStateBomb extends ClientState {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			menuItemList.add(createLookIntoMyEyesItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
@@ -228,6 +231,12 @@ public class ClientStateBomb extends ClientState {
 					communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
 				}
 				break;
+			case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+				if (isLookIntoMyEyesAvailable(pPlayer)) {
+					UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
+						.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
+				}
+				break;
 			default:
 				break;
 		}
@@ -256,6 +265,9 @@ public class ClientStateBomb extends ClientState {
 				return true;
 			case PLAYER_ACTION_RAIDING_PARTY:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				return true;
+			case PLAYER_ACTION_LOOK_INTO_MY_EYES:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey);

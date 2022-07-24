@@ -20,6 +20,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -159,6 +160,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case PLAYER_ACTION_RAIDING_PARTY:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 					break;
+				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+					break;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -212,6 +216,12 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 						getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+					if (isLookIntoMyEyesAvailable(player)) {
+						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
+							.ifPresent(lookSkill -> getClient().getCommunication().sendUseSkill(lookSkill, true, player.getId()));
+					}
+					break;
 				default:
 					break;
 			}
@@ -242,7 +252,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			menuItemList.add(createLookIntoMyEyesItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

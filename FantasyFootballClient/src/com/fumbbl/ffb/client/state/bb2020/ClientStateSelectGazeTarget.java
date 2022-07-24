@@ -17,6 +17,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -37,8 +38,12 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer.equals(actingPlayer.getPlayer())
-			&& (isTreacherousAvailable(actingPlayer) || isWisdomAvailable(actingPlayer) || isRaidingPartyAvailable(actingPlayer))) {
+		if (pPlayer.equals(actingPlayer.getPlayer()) && (
+			isTreacherousAvailable(actingPlayer)
+				|| isWisdomAvailable(actingPlayer)
+				|| isRaidingPartyAvailable(actingPlayer)
+				|| isLookIntoMyEyesAvailable(actingPlayer)
+		)) {
 			createAndShowPopupMenuForActingPlayer();
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (isValidGazeTarget(game, pPlayer))) {
 			getClient().getCommunication().sendTargetSelected(pPlayer.getId());
@@ -108,7 +113,9 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			menuItemList.add(createLookIntoMyEyesItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -133,6 +140,9 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 				break;
 			case PLAYER_ACTION_RAIDING_PARTY:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				break;
+			case PLAYER_ACTION_LOOK_INTO_MY_EYES:
+				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 				break;
 			default:
 				actionHandled = false;
@@ -163,6 +173,12 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 					if (isRaidingPartyAvailable(player)) {
 						Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
 						getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+					if (isLookIntoMyEyesAvailable(player)) {
+						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
+							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, player.getId()));
 					}
 					break;
 				default:

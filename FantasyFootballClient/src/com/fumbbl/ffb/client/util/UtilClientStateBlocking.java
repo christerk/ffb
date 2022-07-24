@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -104,6 +105,10 @@ public class UtilClientStateBlocking {
 				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
 					Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
 					pClientState.getClient().getCommunication().sendUseSkill(raidingSkill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+					UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
+						.ifPresent(lookSkill -> pClientState.getClient().getCommunication().sendUseSkill(lookSkill, true, pPlayer.getId()));
 					break;
 				default:
 					break;

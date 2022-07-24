@@ -9,6 +9,7 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.dialog.DialogInformationOkayParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -27,9 +28,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -38,7 +41,8 @@ import com.fumbbl.ffb.util.UtilCards;
 public class StepLookIntoMyEyes extends AbstractStepWithReRoll {
 
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.LOOK_INTO_MY_EYES;
-	private boolean endPlayerAction, endTurn;
+	private boolean endPlayerAction, endTurn, pushSelect;
+	private String gotoOnEnd;
 
 	public StepLookIntoMyEyes(GameState pGameState) {
 		super(pGameState);
@@ -58,6 +62,25 @@ public class StepLookIntoMyEyes extends AbstractStepWithReRoll {
 		}
 
 		return status;
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+					// mandatory
+					case PUSH_SELECT:
+						pushSelect = (boolean) parameter.getValue();
+						break;
+					case GOTO_LABEL_ON_END:
+						gotoOnEnd = (String) parameter.getValue();
+						break;
+					default:
+						break;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -117,7 +140,6 @@ public class StepLookIntoMyEyes extends AbstractStepWithReRoll {
 						getResult().setSound(SoundId.PICKUP);
 						leave(actingPlayer, skill, true, false);
 					} else if (getReRolledAction() != null || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), player, RE_ROLLED_ACTION, 2, false)) {
-						getResult().setSound(SoundId.QUESTION);
 						leave(actingPlayer, skill, false, false);
 					}
 				} else {
@@ -133,12 +155,53 @@ public class StepLookIntoMyEyes extends AbstractStepWithReRoll {
 		actingPlayer.markSkillUsed(skill);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		if (endPlayerAction || endTurn) {
+			cancelPlayerAction();
 			EndPlayerAction endActionGenerator = (EndPlayerAction) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR).forName(SequenceGenerator.Type.EndPlayerAction.name());
 			endActionGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, endPlayerAction, endTurn));
 		} else {
+			UtilServerDialog.showDialog(getGameState(), new DialogInformationOkayParameter("Look Into My Eyes", "Look Into My Eyes failed, you may continue your action", false), false);
+			if (pushSelect) {
+				Select generator = (Select) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR).forName(SequenceGenerator.Type.Select.name());
+				generator.pushSequence(new Select.SequenceParams(getGameState(), true));
+			}
+		}
+	}
 
-			Select generator = (Select) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR).forName(SequenceGenerator.Type.Select.name());
-			generator.pushSequence(new Select.SequenceParams(getGameState(), true));
+	private void cancelPlayerAction() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		switch (actingPlayer.getPlayerAction()) {
+			case BLITZ:
+			case BLITZ_MOVE:
+				game.getTurnData().setBlitzUsed(true);
+				getGameState().getStepStack().clear();
+				game.setTurnMode(game.getLastTurnMode());
+				break;
+			case GAZE:
+			case GAZE_MOVE:
+				getGameState().getStepStack().clear();
+				game.setTurnMode(game.getLastTurnMode());
+				break;
+			case THROW_KEG:
+				getGameState().getStepStack().clear();
+				game.setTurnMode(game.getLastTurnMode());
+				break;
+			case KICK_TEAM_MATE:
+			case KICK_TEAM_MATE_MOVE:
+				game.getTurnData().setKtmUsed(true);
+				break;
+			case THROW_TEAM_MATE:
+			case THROW_TEAM_MATE_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
+			case FOUL:
+			case FOUL_MOVE:
+				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
+					game.getTurnData().setFoulUsed(true);
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -147,6 +210,7 @@ public class StepLookIntoMyEyes extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, gotoOnEnd);
 		return jsonObject;
 	}
 
@@ -156,6 +220,7 @@ public class StepLookIntoMyEyes extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		gotoOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		return this;
 	}
 }

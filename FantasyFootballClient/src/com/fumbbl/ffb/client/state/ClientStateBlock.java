@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStateBlock extends ClientState {
@@ -47,7 +46,7 @@ public class ClientStateBlock extends ClientState {
 				createAndShowPopupMenuForBlockingPlayer();
 			} else if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 				getClient().getCommunication().sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.BLITZ_MOVE,
-						actingPlayer.isJumping());
+					actingPlayer.isJumping());
 			} else {
 				createAndShowPopupMenuForBlockingPlayer();
 //        getClient().getCommunication().sendActingPlayer(null, null, false);
@@ -79,18 +78,21 @@ public class ClientStateBlock extends ClientState {
 		if (actingPlayer.isSufferingBloodLust()) {
 			boolean actionHandled = true;
 			switch (pActionKey) {
-			case PLAYER_SELECT:
-				createAndShowPopupMenuForBlockingPlayer();
-				break;
-			case PLAYER_ACTION_MOVE:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_MOVE);
-				break;
-			case PLAYER_ACTION_END_MOVE:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
-				break;
-			default:
-				actionHandled = false;
-				break;
+				case PLAYER_SELECT:
+					createAndShowPopupMenuForBlockingPlayer();
+					break;
+				case PLAYER_ACTION_MOVE:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_MOVE);
+					break;
+				case PLAYER_ACTION_END_MOVE:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
+					break;
+				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+					break;
+				default:
+					actionHandled = false;
+					break;
 			}
 			return actionHandled;
 		} else {
@@ -111,15 +113,15 @@ public class ClientStateBlock extends ClientState {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_END_MOVE:
-				getClient().getCommunication().sendActingPlayer(null, null, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_MOVE:
-				getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
-				break;
-			default:
-				UtilClientStateBlocking.menuItemSelected(this, pPlayer, pMenuKey);
-				break;
+				case IPlayerPopupMenuKeys.KEY_END_MOVE:
+					getClient().getCommunication().sendActingPlayer(null, null, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_MOVE:
+					getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
+					break;
+				default:
+					UtilClientStateBlocking.menuItemSelected(this, pPlayer, pMenuKey);
+					break;
 			}
 		}
 	}
@@ -133,7 +135,7 @@ public class ClientStateBlock extends ClientState {
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
 		if (actingPlayer.isSufferingBloodLust()) {
 			JMenuItem moveAction = new JMenuItem("Move",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
@@ -149,7 +151,9 @@ public class ClientStateBlock extends ClientState {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			menuItemList.add(createLookIntoMyEyesItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

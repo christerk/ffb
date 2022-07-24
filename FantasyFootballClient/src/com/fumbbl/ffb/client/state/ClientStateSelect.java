@@ -31,7 +31,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -150,12 +149,6 @@ public class ClientStateSelect extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH:
 					if (isBeerBarrelBashAvailable(pPlayer)) {
 						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_KEG, false);
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
-					if (isLookIntoMyEyesAvailable(pPlayer)) {
-						UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
-							.ifPresent(lookSkill -> communication.sendActingPlayer(pPlayer, PlayerAction.LOOK_INTO_MY_EYES, false));
 					}
 					break;
 				default:
@@ -283,13 +276,6 @@ public class ClientStateSelect extends ClientState {
 			beerBashItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH, 0));
 			menuItemList.add(beerBashItem);
 		}
-		if (isLookIntoMyEyesAvailable(pPlayer)) {
-			JMenuItem lookItem = new JMenuItem("Look Into My Eyes",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES)));
-			lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
-			lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
-			menuItemList.add(lookItem);
-		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem("Recover from Confusion & End Move",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
@@ -324,14 +310,6 @@ public class ClientStateSelect extends ClientState {
 			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 			showPopupMenuForPlayer(pPlayer);
 		}
-	}
-
-	private boolean isLookIntoMyEyesAvailable(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		return UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
-			&& game.getFieldModel().getPlayerState(pPlayer).hasTacklezones()
-			&& Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(pPlayer.getTeam()), game.getFieldModel().getPlayerCoordinate(pPlayer)))
-			.anyMatch(player -> UtilPlayer.hasBall(game, player));
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
@@ -406,9 +384,6 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_BEER_BARREL_BASH:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH);
-				break;
-			case PLAYER_ACTION_LOOK_INTO_MY_EYES:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 				break;
 			default:
 				actionHandled = false;

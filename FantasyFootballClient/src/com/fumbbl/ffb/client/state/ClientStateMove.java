@@ -28,6 +28,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -145,6 +146,7 @@ public class ClientStateMove extends ClientState {
 				|| isTreacherousAvailable(actingPlayer)
 				|| isWisdomAvailable(actingPlayer)
 				|| isRaidingPartyAvailable(actingPlayer)
+				|| isLookIntoMyEyesAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -243,6 +245,12 @@ public class ClientStateMove extends ClientState {
 						communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+					if (isLookIntoMyEyesAvailable(pPlayer)) {
+						UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
+							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
+					}
+					break;
 				default:
 					break;
 			}
@@ -327,6 +335,9 @@ public class ClientStateMove extends ClientState {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			menuItemList.add(createLookIntoMyEyesItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -376,6 +387,9 @@ public class ClientStateMove extends ClientState {
 					break;
 				case PLAYER_ACTION_RAIDING_PARTY:
 					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+					break;
+				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
+					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 					break;
 				default:
 					actionHandled = false;

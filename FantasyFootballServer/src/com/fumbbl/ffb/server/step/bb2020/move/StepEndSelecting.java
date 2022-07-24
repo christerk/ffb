@@ -388,7 +388,7 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case LOOK_INTO_MY_EYES:
 				LookIntoMyEyes lookIntoMyEyes = (LookIntoMyEyes) factory.forName(SequenceGenerator.Type.LookIntoMyEyes.name());
-				lookIntoMyEyes.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+				lookIntoMyEyes.pushSequence(new LookIntoMyEyes.SequenceParams(getGameState(), true, null));
 				break;
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");

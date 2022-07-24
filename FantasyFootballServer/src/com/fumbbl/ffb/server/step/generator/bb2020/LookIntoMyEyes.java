@@ -37,7 +37,7 @@ public class LookIntoMyEyes extends com.fumbbl.ffb.server.step.generator.LookInt
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.INIT_LOOK_INTO_MY_EYES);
 		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
-		sequence.add(StepId.LOOK_INTO_MY_EYES, IStepLabel.END);
+		sequence.add(StepId.LOOK_INTO_MY_EYES, IStepLabel.END, from(StepParameterKey.PUSH_SELECT, params.isPushSelect()), from(StepParameterKey.GOTO_LABEL_ON_END, params.getGotoOnEnd()));
 
 		gameState.getStepStack().push(sequence.getSequence());
 	}
