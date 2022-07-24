@@ -21,6 +21,7 @@ public class ChangeList {
 			.addFeature("Josef Bugman")
 			.addFeature("Look Into My Eyes")
 			.addBugfix("Multi Block from player with Pile Driver caused games to crash")
+			.addBugfix("Failed interception caught by moving team did cause a turn over")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")

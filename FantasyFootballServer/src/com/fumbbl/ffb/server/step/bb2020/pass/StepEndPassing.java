@@ -205,9 +205,8 @@ public final class StepEndPassing extends AbstractStep {
 				} else {
 					catcherResult.setDeflections(catcherResult.getDeflections() + 1);
 				}
-			} else {
-				catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 			}
+			catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 			if (game.getThrower() == actingPlayer.getPlayer()) {
 				fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
 					|| (catcher == null)
