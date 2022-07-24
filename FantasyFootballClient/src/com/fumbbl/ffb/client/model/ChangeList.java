@@ -22,6 +22,7 @@ public class ChangeList {
 			.addFeature("Look Into My Eyes")
 			.addBugfix("Multi Block from player with Pile Driver caused games to crash")
 			.addBugfix("Failed interception caught by moving team did cause a turn over")
+			.addBugfix("Mercenaries could not use Regeneration")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")
