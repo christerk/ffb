@@ -14,7 +14,7 @@
     <teamStrength>103</teamStrength>
     <division>[X]</division>
     <baseIconPath>http://localhost:2224/icons/</baseIconPath>
-    <treasury>500000</treasury>
+    <treasury>5000000</treasury>
     <specialRules>
         <rule>Sylvanian Spotlight</rule>
         <rule>Favoured of Nurgle</rule>

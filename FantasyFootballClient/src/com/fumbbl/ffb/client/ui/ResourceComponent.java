@@ -214,7 +214,7 @@ public class ResourceComponent extends JPanel {
 					ResourceSlot slot = Arrays.stream(fSlots).limit(slotIndex.get())
 						.filter(existingSlot -> existingSlot.getIconProperty().equalsIgnoreCase(type.getSlotIconProperty()))
 						.findFirst()
-						.orElse(fSlots[slotIndex.getAndIncrement()]);
+						.orElseGet(() -> fSlots[slotIndex.getAndIncrement()]);
 					slot.add(new ResourceValue(newValue, type.getSingular(), type.getPlural()));
 					slot.setIconProperty(type.getSlotIconProperty());
 				}

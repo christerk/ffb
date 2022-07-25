@@ -13,6 +13,7 @@
     <currentTeamValue>100</currentTeamValue>
     <teamStrength>113</teamStrength>
     <division>[X]</division>
+    <treasury>5000000</treasury>
 
     <player nr="1" id="teamWoodElfKalimar1">
         <name>Wardancer1</name>
