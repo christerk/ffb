@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Failed interception caught by moving team did cause a turn over")
 			.addBugfix("Mercenaries could not use Regeneration")
 			.addBugfix("Could not leap during gaze action")
+			.addBugfix("Stat reducing injuries where capped at 2")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")

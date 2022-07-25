@@ -37,4 +37,6 @@ public abstract class StatsMechanic implements Mechanic {
 	public abstract PlayerStatLimit limit(PlayerStatKey key);
 
 	public abstract int applyLastingInjury(int startingValue, PlayerStatKey key);
+
+	public abstract boolean statCanBeReducedByInjury(int originalValue, int currentValue);
 }

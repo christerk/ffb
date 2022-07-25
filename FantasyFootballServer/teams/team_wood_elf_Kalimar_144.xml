@@ -24,6 +24,7 @@
         </skillList>
         <injuryList>
             <injury>Smashed Hip (-MA)</injury>
+            <injury>Smashed Hip (-MA)</injury>
             <injury>Serious Concussion (-AV)</injury>
             <injury>Broken Neck (-AG)</injury>
             <injury>Smashed Collar Bone (-ST)</injury>
@@ -37,6 +38,7 @@
             <injury>Broken Neck (-AG)</injury>
             <injury>Smashed Collar Bone (-ST)</injury>
             <injury>Head Injury (-AV)</injury>
+            <injury>Smashed Knee (-MA)</injury>
             <injury>Smashed Knee (-MA)</injury>
             <injury>Neck Injury (-AG)</injury>
             <injury>Dislocated Shoulder (-ST)</injury>
