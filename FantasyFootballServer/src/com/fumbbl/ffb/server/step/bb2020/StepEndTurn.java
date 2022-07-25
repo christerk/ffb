@@ -595,7 +595,7 @@ public class StepEndTurn extends AbstractStep {
 				turnData.setReRollsPumpUpTheCrowdOneDrive(0);
 				getResult().addReport(new ReportPumpUpTheCrowdReRollsLost(teamId, reRollsPumpUpTheCrowd));
 			}
-			if (!fNewHalf || getGameState().getGame().getHalf() > 2) {
+			if (!fNewHalf || getGameState().getGame().getHalf() > 1) {
 				turnData.setReRolls(Math.max(turnData.getReRolls() - (reRollsBrilliantCoaching + reRollsPumpUpTheCrowd), 0));
 			}
 		}
