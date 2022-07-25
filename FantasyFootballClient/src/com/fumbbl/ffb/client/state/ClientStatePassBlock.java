@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStatePassBlock extends ClientStateMove {
@@ -67,18 +66,20 @@ public class ClientStatePassBlock extends ClientStateMove {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_JUMP:
-				if ((actingPlayer.getPlayer() != null)
-						&& isJumpAvailableAsNextMove(game, actingPlayer,false)) {
-					communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_MOVE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_END_MOVE:
-				communication.sendActingPlayer(null, null, false);
-				break;
+				case IPlayerPopupMenuKeys.KEY_JUMP:
+					if ((actingPlayer.getPlayer() != null)
+						&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+						communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_MOVE:
+					communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_END_MOVE:
+					communication.sendActingPlayer(null, null, false);
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -91,22 +92,22 @@ public class ClientStatePassBlock extends ClientStateMove {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
 			JMenuItem moveAction = new JMenuItem("Move Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
 		}
 		if ((actingPlayer.getPlayer() != null)
-				&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+			&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem("Don't Jump",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
 			} else {
 				JMenuItem jumpAction = new JMenuItem("Jump",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
@@ -124,7 +125,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 			}
 			if (endMoveActionLabel != null) {
 				JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 				endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 				endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 				menuItemList.add(endMoveAction);
@@ -143,40 +144,40 @@ public class ClientStatePassBlock extends ClientStateMove {
 		UserInterface userInterface = getClient().getUserInterface();
 		Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
 		switch (pActionKey) {
-		case PLAYER_SELECT:
-			if (selectedPlayer != null) {
-				createAndShowPopupMenuForPlayer(selectedPlayer);
-			}
-			break;
-		case PLAYER_CYCLE_RIGHT:
-			selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, true);
-			if (selectedPlayer != null) {
-				hideSelectSquare();
-				FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
-				showSelectSquare(selectedCoordinate);
-				getClient().getClientData().setSelectedPlayer(selectedPlayer);
-				userInterface.refreshSideBars();
-			}
-			break;
-		case PLAYER_CYCLE_LEFT:
-			selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, false);
-			if (selectedPlayer != null) {
-				hideSelectSquare();
-				FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
-				showSelectSquare(selectedCoordinate);
-				getClient().getClientData().setSelectedPlayer(selectedPlayer);
-				userInterface.refreshSideBars();
-			}
-			break;
-		case PLAYER_ACTION_MOVE:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
-			break;
-		case PLAYER_ACTION_JUMP:
-			menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_JUMP);
-			break;
-		default:
-			actionHandled = false;
-			break;
+			case PLAYER_SELECT:
+				if (selectedPlayer != null) {
+					createAndShowPopupMenuForPlayer(selectedPlayer);
+				}
+				break;
+			case PLAYER_CYCLE_RIGHT:
+				selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, true);
+				if (selectedPlayer != null) {
+					hideSelectSquare();
+					FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
+					showSelectSquare(selectedCoordinate);
+					getClient().getClientData().setSelectedPlayer(selectedPlayer);
+					userInterface.refreshSideBars();
+				}
+				break;
+			case PLAYER_CYCLE_LEFT:
+				selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, false);
+				if (selectedPlayer != null) {
+					hideSelectSquare();
+					FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
+					showSelectSquare(selectedCoordinate);
+					getClient().getClientData().setSelectedPlayer(selectedPlayer);
+					userInterface.refreshSideBars();
+				}
+				break;
+			case PLAYER_ACTION_MOVE:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
+				break;
+			case PLAYER_ACTION_JUMP:
+				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_JUMP);
+				break;
+			default:
+				actionHandled = false;
+				break;
 		}
 		return actionHandled;
 	}
