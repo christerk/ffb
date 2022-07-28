@@ -58,7 +58,7 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate,
-	                                                               Skill pSkill, boolean pCheckAbleToMove) {
+																																 Skill pSkill, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
@@ -76,7 +76,7 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, FieldCoordinate pCenterCoordinate,
-	                                                                  ISkillProperty pProperty, boolean pCheckAbleToMove) {
+																																		ISkillProperty pProperty, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
@@ -146,7 +146,7 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentPlayersWithTacklezones(Game pGame, Team pTeam, FieldCoordinate pCoordinate,
-	                                                             boolean pWithStartCoordinate) {
+																															 boolean pWithStartCoordinate) {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
@@ -273,7 +273,15 @@ public class UtilPlayer {
 		GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
 		Set<String> enhancementsToRemove = mechanic.enhancementsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
+		Set<String> enhancementsToRemoveWhenNotSettingActive = mechanic.enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(pGame.getFactory(FactoryType.Factory.SKILL));
 		for (Player<?> player : players) {
+			boolean playerOnTeamFromLastTurn = player.getTeam() != pGame.getTeamHome() && pGame.isHomePlaying();
+			boolean setActive = playerOnTeamFromLastTurn || !player.hasSkillProperty(NamedProperties.hasToMissTurn);
+
+			if (!setActive) {
+				enhancementsToRemoveWhenNotSettingActive.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(player, enhancement));
+			}
+
 			enhancementsToRemove.forEach(enhancement -> pGame.getFieldModel().removeSkillEnhancements(player, enhancement));
 			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN, pGame);
 			player.resetUsedSkills(SkillUsageType.ONCE_PER_TURN_BY_TEAM_MATE, pGame);
@@ -284,11 +292,11 @@ public class UtilPlayer {
 				case PlayerState.MOVING:
 				case PlayerState.FALLING:
 				case PlayerState.HIT_ON_GROUND:
-					newPlayerState = oldPlayerState.changeBase(PlayerState.STANDING).changeActive(true);
+					newPlayerState = oldPlayerState.changeBase(PlayerState.STANDING).changeActive(setActive);
 					break;
 				case PlayerState.PRONE:
 				case PlayerState.STANDING:
-					newPlayerState = oldPlayerState.changeActive(true);
+					newPlayerState = oldPlayerState.changeActive(setActive);
 					break;
 				case PlayerState.STUNNED:
 					if ((pGame.isHomePlaying() && pGame.getTeamHome().hasPlayer(player))

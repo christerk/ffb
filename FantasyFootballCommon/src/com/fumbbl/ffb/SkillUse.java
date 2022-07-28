@@ -46,6 +46,7 @@ public enum SkillUse implements INamedObject {
 	GRANT_CATCH_BONUS("grantCatchBonus", "to grant %g team-mate a catch bonus"),
 	RE_ROLL_CATCH("reRollCatch", "to re-roll the catch roll"),
 	LOOK_INTO_MY_EYES("lookIntoMyEyes", "to steal the ball from %g opponent"),
+	MAKE_OPPONENT_MISS_TURN("makeOpponentMissTurn", "to make an opponent player miss a turn"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

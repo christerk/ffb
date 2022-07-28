@@ -57,7 +57,7 @@ public enum ReportId implements INamedObject {
 	RAIDING_PARTY("raidingParty"), EVENT("event"),
 	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll"),
 	BIASED_REF("biasedRef"), WEATHER_MAGE_ROLL("weatherMageRoll"), WEATHER_MAGE_RESULT("weatherMageResult"),
-	LOOK_INTO_MY_EYES_ROLL("lookIntoMyEyesRoll");
+	LOOK_INTO_MY_EYES_ROLL("lookIntoMyEyesRoll"), BALEFUL_HEX("balefulHex");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)

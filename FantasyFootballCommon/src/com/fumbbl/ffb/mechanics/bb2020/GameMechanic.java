@@ -334,4 +334,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		return Constant.getEnhancementSkillsToRemoveAtEndOfTurn(skillFactory);
 	}
 
+	@Override
+	public Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory) {
+		return Constant.getEnhancementSkillsToRemoveAtEndOfTurnWhenNotSettingActive(skillFactory);
+	}
 }

@@ -105,4 +105,7 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract String weatherDescription(Weather weather);
 
 	public abstract Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory);
+
+	public abstract Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory);
+
 }

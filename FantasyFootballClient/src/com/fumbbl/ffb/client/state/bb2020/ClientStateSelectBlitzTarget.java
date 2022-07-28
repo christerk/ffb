@@ -43,6 +43,7 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 			isTreacherousAvailable(actingPlayer)
 				|| isWisdomAvailable(actingPlayer)
 				|| isRaidingPartyAvailable(actingPlayer)
+				|| isBalefulHexAvailable(actingPlayer)
 				|| isLookIntoMyEyesAvailable(actingPlayer)
 		)) {
 			createAndShowPopupMenuForActingPlayer();
@@ -108,6 +109,9 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		if (isLookIntoMyEyesAvailable(actingPlayer)) {
 			menuItemList.add(createLookIntoMyEyesItem(iconCache));
 		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			menuItemList.add(createBalefulHexItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -117,25 +121,29 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		Player<?> player = actingPlayer.getPlayer();
 		switch (pActionKey) {
 			case PLAYER_SELECT:
 				createAndShowPopupMenuForActingPlayer();
 				break;
 			case PLAYER_ACTION_END_MOVE:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 				break;
 			case PLAYER_ACTION_TREACHEROUS:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 				break;
 			case PLAYER_ACTION_WISDOM:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_WISDOM);
 				break;
 			case PLAYER_ACTION_RAIDING_PARTY:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 				break;
 			case PLAYER_ACTION_LOOK_INTO_MY_EYES:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 				break;
+			case PLAYER_ACTION_BALEFUL_HEX:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+				return true;
 			default:
 				actionHandled = false;
 				break;
@@ -171,6 +179,12 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 					if (isLookIntoMyEyesAvailable(player)) {
 						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
 							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, player.getId()));
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
+					if (isBalefulHexAvailable(player)) {
+						Skill balefulSkill = player.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+						communication.sendUseSkill(balefulSkill, true, player.getId());
 					}
 					break;
 				default:

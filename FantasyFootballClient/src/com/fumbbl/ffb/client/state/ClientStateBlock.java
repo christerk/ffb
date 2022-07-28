@@ -154,6 +154,9 @@ public class ClientStateBlock extends ClientState {
 		if (isLookIntoMyEyesAvailable(actingPlayer)) {
 			menuItemList.add(createLookIntoMyEyesItem(iconCache));
 		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			menuItemList.add(createBalefulHexItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

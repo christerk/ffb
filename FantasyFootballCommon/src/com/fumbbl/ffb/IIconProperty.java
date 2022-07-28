@@ -168,6 +168,7 @@ public interface IIconProperty {
 	String ACTION_BEER_BARREL_BASH = "action.beerBarrelBash";
 	String ACTION_RAIDING_PARTY = "action.raidingParty";
 	String ACTION_LOOK_INTO_MY_EYES = "action.lookIntoMyEyes";
+	String ACTION_BALEFUL_HEX = "action.balefulHex";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

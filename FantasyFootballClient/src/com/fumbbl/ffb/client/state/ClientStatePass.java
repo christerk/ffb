@@ -248,7 +248,9 @@ public class ClientStatePass extends ClientStateMove {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-
+		if (isBalefulHexAvailable(actingPlayer)) {
+			menuItemList.add(createBalefulHexItem(iconCache));
+		}
 		addEndActionLabel(iconCache, menuItemList, actingPlayer);
 
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));

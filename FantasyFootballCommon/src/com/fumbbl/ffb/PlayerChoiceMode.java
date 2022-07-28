@@ -12,7 +12,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
 	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true),
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
-	RAIDING_PARTY("raidingParty", false);
+	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -106,6 +106,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case RAIDING_PARTY:
 				header.append("Select the player to move");
 				break;
+			case BALEFUL_HEX:
+				header.append("Select opponent to miss a turn");
+				break;
 			default:
 				break;
 		}
@@ -175,6 +178,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case RAIDING_PARTY:
 				title.append("Raiding Party");
 				break;
+			case BALEFUL_HEX:
+				title.append("Baleful Hex");
+				break;
 			default:
 				break;
 		}
@@ -243,6 +249,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case RAIDING_PARTY:
 				message.append("Waiting for coach to select player to move");
+				break;
+			case BALEFUL_HEX:
+				message.append("Waiting for coach to select player to miss a turn");
 				break;
 			default:
 				break;

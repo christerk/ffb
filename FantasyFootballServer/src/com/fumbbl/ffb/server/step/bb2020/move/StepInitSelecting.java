@@ -358,6 +358,10 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.LOOK_INTO_MY_EYES;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeOpponentMissTurn)) {
+							fDispatchPlayerAction = PlayerAction.BALEFUL_HEX;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
 						}
 					}
 					break;

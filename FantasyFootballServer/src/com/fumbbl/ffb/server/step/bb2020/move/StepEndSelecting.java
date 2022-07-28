@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.BlitzMove;
 import com.fumbbl.ffb.server.step.generator.Block;
@@ -390,6 +391,13 @@ public final class StepEndSelecting extends AbstractStep {
 				LookIntoMyEyes lookIntoMyEyes = (LookIntoMyEyes) factory.forName(SequenceGenerator.Type.LookIntoMyEyes.name());
 				lookIntoMyEyes.pushSequence(new LookIntoMyEyes.SequenceParams(getGameState(), true, null));
 				break;
+			case BALEFUL_HEX:
+				selectGenerator.pushSequence(selectParams);
+				BalefulHex.SequenceParams balefulParams = new BalefulHex.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
+				BalefulHex balefulGenerator = (BalefulHex) factory.forName(SequenceGenerator.Type.BalefulHex.name());
+				balefulGenerator.pushSequence(balefulParams);
+				break;
+
 			default:
 				throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
 		}

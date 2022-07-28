@@ -126,6 +126,9 @@ public class ClientStateThrowKeg extends ClientState {
 		if (isLookIntoMyEyesAvailable(actingPlayer)) {
 			menuItemList.add(createLookIntoMyEyesItem(iconCache));
 		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			menuItemList.add(createBalefulHexItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
@@ -147,19 +150,25 @@ public class ClientStateThrowKeg extends ClientState {
 				break;
 			case IPlayerPopupMenuKeys.KEY_WISDOM:
 				if (isWisdomAvailable(player)) {
-					getClient().getCommunication().sendUseWisdom();
+					communication.sendUseWisdom();
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
 				if (isRaidingPartyAvailable(player)) {
 					Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-					getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
+					communication.sendUseSkill(raidingSkill, true, player.getId());
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
 				if (isLookIntoMyEyesAvailable(player)) {
 					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
 						.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, player.getId()));
+				}
+				break;
+			case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
+				if (isBalefulHexAvailable(player)) {
+					Skill balefulSkill = player.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+					communication.sendUseSkill(balefulSkill, true, player.getId());
 				}
 				break;
 			default:
@@ -187,6 +196,9 @@ public class ClientStateThrowKeg extends ClientState {
 				return true;
 			case PLAYER_ACTION_LOOK_INTO_MY_EYES:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+				return true;
+			case PLAYER_ACTION_BALEFUL_HEX:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey);

@@ -25,6 +25,7 @@ public class ChangeList {
 			.addBugfix("Mercenaries could not use Regeneration")
 			.addBugfix("Could not leap during gaze action")
 			.addBugfix("Stat reducing injuries where capped at 2")
+			.addFeature("Baleful Hex")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")

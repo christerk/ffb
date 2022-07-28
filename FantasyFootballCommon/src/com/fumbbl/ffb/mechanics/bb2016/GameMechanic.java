@@ -295,4 +295,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
 		return Collections.emptySet();
 	}
+
+	@Override
+	public Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory) {
+		return Collections.emptySet();
+	}
 }

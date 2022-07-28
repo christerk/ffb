@@ -438,4 +438,29 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
 		return lookItem;
 	}
+
+	protected boolean isBalefulHexAvailable(ActingPlayer player) {
+		return !player.hasActed() && isBalefulHexAvailable(player.getPlayer());
+	}
+
+	protected boolean isBalefulHexAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canMakeOpponentMissTurn)
+			&& Arrays.stream(game.getOtherTeam(game.getActingTeam()).getPlayers()).anyMatch(
+			opponent -> fieldModel.getPlayerCoordinate(opponent).distanceInSteps(playerCoordinate) <= 5
+		);
+	}
+
+	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Baleful Hex",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
+		return menuItem;
+	}
+
 }

@@ -147,6 +147,7 @@ public class ClientStateMove extends ClientState {
 				|| isWisdomAvailable(actingPlayer)
 				|| isRaidingPartyAvailable(actingPlayer)
 				|| isLookIntoMyEyesAvailable(actingPlayer)
+				|| isBalefulHexAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -251,6 +252,12 @@ public class ClientStateMove extends ClientState {
 							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
+					if (isBalefulHexAvailable(actingPlayer)) {
+						Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+						communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -338,6 +345,9 @@ public class ClientStateMove extends ClientState {
 		if (isLookIntoMyEyesAvailable(actingPlayer)) {
 			menuItemList.add(createLookIntoMyEyesItem(iconCache));
 		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			menuItemList.add(createBalefulHexItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -346,7 +356,8 @@ public class ClientStateMove extends ClientState {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		Player<?> player = actingPlayer.getPlayer();
+		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 		FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition, pActionKey);
 		if (moveCoordinate != null) {
 			MoveSquare[] moveSquares = game.getFieldModel().getMoveSquares();
@@ -362,35 +373,38 @@ public class ClientStateMove extends ClientState {
 					createAndShowPopupMenuForActingPlayer();
 					break;
 				case PLAYER_ACTION_HAND_OVER:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_HAND_OVER);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_HAND_OVER);
 					break;
 				case PLAYER_ACTION_PASS:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_PASS);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_PASS);
 					break;
 				case PLAYER_ACTION_JUMP:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_JUMP);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_JUMP);
 					break;
 				case PLAYER_ACTION_END_MOVE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 					break;
 				case PLAYER_ACTION_GAZE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_GAZE);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_GAZE);
 					break;
 				case PLAYER_ACTION_FUMBLEROOSKIE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
 					break;
 				case PLAYER_ACTION_TREACHEROUS:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 					break;
 				case PLAYER_ACTION_WISDOM:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_WISDOM);
 					break;
 				case PLAYER_ACTION_RAIDING_PARTY:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 					break;
 				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 					break;
+				case PLAYER_ACTION_BALEFUL_HEX:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+					return true;
 				default:
 					actionHandled = false;
 					break;
@@ -461,7 +475,7 @@ public class ClientStateMove extends ClientState {
 	}
 
 	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,
-								  ActingPlayer actingPlayer) {
+																	ActingPlayer actingPlayer) {
 		String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
 		if (actingPlayer != null
 			&& actingPlayer.getPlayerAction() != null

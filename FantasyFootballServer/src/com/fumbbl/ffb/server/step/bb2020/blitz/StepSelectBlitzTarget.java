@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
 import com.fumbbl.ffb.server.step.generator.Sequence;
@@ -111,6 +112,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 							RaidingParty generator = (RaidingParty) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
 								.forName(SequenceGenerator.Type.RaidingParty.name());
 							generator.pushSequence(new RaidingParty.SequenceParams(getGameState(), IStepLabel.SELECT));
+							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeOpponentMissTurn)) {
+							getGameState().pushCurrentStepOnStack();
+							BalefulHex generator = (BalefulHex) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.BalefulHex.name());
+							generator.pushSequence(new BalefulHex.SequenceParams(getGameState(), IStepLabel.SELECT));
 							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStealBallFromOpponent)) {
 							getGameState().pushCurrentStepOnStack();

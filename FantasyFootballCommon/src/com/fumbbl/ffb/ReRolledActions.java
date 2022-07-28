@@ -57,6 +57,7 @@ public class ReRolledActions {
 	public static final ReRolledAction THROW_KEG = new ReRolledAction("Throw Keg");
 	public static final ReRolledAction DIRECTION = new ReRolledAction("Direction");
 	public static final ReRolledAction LOOK_INTO_MY_EYES = new ReRolledAction("Look Into My Eyes");
+	public static final ReRolledAction BALEFUL_HEX = new ReRolledAction("Baleful Hex");
 
 	private final Map<String, ReRolledAction> values;
 

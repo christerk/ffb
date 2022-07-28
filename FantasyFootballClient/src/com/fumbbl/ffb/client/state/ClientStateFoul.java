@@ -170,6 +170,12 @@ public class ClientStateFoul extends ClientStateMove {
 							.ifPresent(lookSkill -> getClient().getCommunication().sendUseSkill(lookSkill, true, pPlayer.getId()));
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
+					if (isBalefulHexAvailable(actingPlayer)) {
+						Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+						getClient().getCommunication().sendUseSkill(balefulSkill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
