@@ -321,8 +321,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 							&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
 							&& injuryResult.injuryContext().getInjuryType().canUseApo()
 							// roll regen before checking for player type, as mercs and stars can use their regen skill
-							&& player.getPlayerType() != PlayerType.STAR
 							&& !UtilServerInjury.handleRegeneration(this, player, playerState)
+							&& player.getPlayerType() != PlayerType.STAR
 							&& player.getPlayerType() != PlayerType.MERCENARY) {
 							injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
 							regenerationFailedResults.add(injuryResult);
