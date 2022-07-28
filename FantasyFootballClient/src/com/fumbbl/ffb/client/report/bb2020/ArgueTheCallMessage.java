@@ -34,7 +34,6 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 			if (biasedRefs > 1) {
 				builder.append("s");
 			}
-			minimumRoll -= biasedRefs;
 		}
 
 		String modifiers = builder.toString();
