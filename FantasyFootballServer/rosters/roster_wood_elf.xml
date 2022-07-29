@@ -8,7 +8,62 @@
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 
-
+	<position id="39459">
+		<race>Special</race>
+		<quantity>1</quantity>
+		<name>Grak</name>
+		<shorthand>Gr</shorthand>
+		<type>Star</type>
+		<gender>male</gender>
+		<cost>250000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>4</agility>
+		<passing>4</passing>
+		<armour>10</armour>
+		<teamWithPositionId>39460</teamWithPositionId>
+		<undead>false</undead>
+		<thrall>false</thrall>
+		<portrait>i/674104</portrait>
+		<iconSet size="1" mimeType="image/gif">i/674105.gif</iconSet>
+		<skillList>
+			<skill>Bone Head</skill>
+			<skill>Kick Team-mate</skill>
+			<skill value="4">Loner</skill>
+			<skill value="1">Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Two for One</skill>
+		</skillList>
+		<skillCategoryList/>
+	</position>
+	<position id="39460">
+		<race>Special</race>
+		<quantity>1</quantity>
+		<name>Crumbleberry</name>
+		<shorthand>Cr</shorthand>
+		<type>Star</type>
+		<gender>male</gender>
+		<cost>0</cost>
+		<movement>5</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<passing>6</passing>
+		<armour>7</armour>
+		<teamWithPositionId>39459</teamWithPositionId>
+		<undead>false</undead>
+		<thrall>false</thrall>
+		<portrait>i/674107</portrait>
+		<iconSet size="1" mimeType="image/gif">i/674106.gif</iconSet>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill value="4">Loner</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+			<skill>Sure Hands</skill>
+			<skill>Two for One</skill>
+		</skillList>
+		<skillCategoryList/>
+	</position>
 	<position id="47520">
 		<race>Special</race>
 		<quantity>1</quantity>

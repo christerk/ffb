@@ -26,6 +26,7 @@ public class ChangeList {
 			.addBugfix("Could not leap during gaze action")
 			.addBugfix("Stat reducing injuries where capped at 2")
 			.addFeature("Baleful Hex")
+			.addBugfix("Two For One triggered repeatedly in some situations")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")

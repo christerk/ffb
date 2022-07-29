@@ -231,7 +231,7 @@ public class UtilServerGame {
 						if (partnerRemovedFromPlay && partner.get().hasActiveEnhancement(skill)) {
 							removePartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
 
-						} else if (!partner.get().hasActiveEnhancement(skill)) {
+						} else if (!partnerRemovedFromPlay && !partner.get().hasActiveEnhancement(skill)) {
 							addPartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
 						}
 					} else {
@@ -242,7 +242,7 @@ public class UtilServerGame {
 						if (partnerRemovedFromPlay && !currentPlayer.hasActiveEnhancement(skill)) {
 							addPartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
 
-						} else if (currentPlayer.hasActiveEnhancement(skill)) {
+						} else if (!partnerRemovedFromPlay && currentPlayer.hasActiveEnhancement(skill)) {
 							removePartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
 						}
 					}
