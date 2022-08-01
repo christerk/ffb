@@ -32,7 +32,9 @@ public class ActiveEffects implements IJsonSerializable {
 	public ActiveEffects initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		oldWeather = (Weather) IServerJsonOption.WEATHER.getFrom(source, jsonObject);
-		skipRestoreWeather = IServerJsonOption.SKIP_RESTORE_WEATHER.getFrom(source, jsonObject);
+		if (IServerJsonOption.SKIP_RESTORE_WEATHER.isDefinedIn(jsonObject)) {
+			skipRestoreWeather = IServerJsonOption.SKIP_RESTORE_WEATHER.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 
@@ -40,6 +42,7 @@ public class ActiveEffects implements IJsonSerializable {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.WEATHER.addTo(jsonObject, oldWeather);
+		IServerJsonOption.SKIP_RESTORE_WEATHER.addTo(jsonObject, skipRestoreWeather);
 		return jsonObject;
 	}
 }
