@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("Stat reducing injuries where capped at 2")
 			.addFeature("Baleful Hex")
 			.addBugfix("Two For One triggered repeatedly in some situations")
+			.addBugfix("Old replays did not load")
 		);
 
 		versions.add(new VersionChangeList("2.11.0")
