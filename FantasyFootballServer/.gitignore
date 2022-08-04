@@ -3,4 +3,4 @@ build/
 /target/
 server-candlejack.ini
 
-lib/aws-java-sdk-1.12.272.jar
+lib/aws-java-sdk-*.jar
