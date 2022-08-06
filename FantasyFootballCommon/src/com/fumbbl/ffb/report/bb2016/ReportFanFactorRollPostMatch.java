@@ -12,7 +12,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 import com.fumbbl.ffb.stats.DieBase;
 import com.fumbbl.ffb.stats.DieStat;
-import com.fumbbl.ffb.stats.SingleDiceStat;
+import com.fumbbl.ffb.stats.DicePoolStat;
 import com.fumbbl.ffb.stats.TeamMapping;
 
 import java.util.Arrays;
@@ -94,7 +94,7 @@ public class ReportFanFactorRollPostMatch implements IReport {
 
 	@Override
 	public void addStats(Game game, List<DieStat<?>> diceStats) {
-		diceStats.add(new SingleDiceStat(DieBase.D6, TeamMapping.TEAM, game.getTeamHome().getId(), Arrays.stream(fFanFactorRollHome).boxed().collect(Collectors.toList()), false));
-		diceStats.add(new SingleDiceStat(DieBase.D6, TeamMapping.TEAM, game.getTeamAway().getId(), Arrays.stream(fFanFactorRollAway).boxed().collect(Collectors.toList()), false));
+		diceStats.add(new DicePoolStat(DieBase.D6, TeamMapping.TEAM, game.getTeamHome().getId(), Arrays.stream(fFanFactorRollHome).boxed().collect(Collectors.toList()), false));
+		diceStats.add(new DicePoolStat(DieBase.D6, TeamMapping.TEAM, game.getTeamAway().getId(), Arrays.stream(fFanFactorRollAway).boxed().collect(Collectors.toList()), false));
 	}
 }

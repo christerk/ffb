@@ -14,7 +14,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 import com.fumbbl.ffb.stats.DieBase;
 import com.fumbbl.ffb.stats.DieStat;
-import com.fumbbl.ffb.stats.SingleDiceStat;
+import com.fumbbl.ffb.stats.DicePoolStat;
 import com.fumbbl.ffb.stats.TeamMapping;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -96,7 +96,7 @@ public class ReportApothecaryRoll implements IReport {
 	@Override
 	public void addStats(Game game, List<DieStat<?>> diceStats) {
 		if (ArrayTool.isProvided(fCasualtyRoll)) {
-			diceStats.add(new SingleDiceStat(DieBase.D6, TeamMapping.OPPONENT_TEAM_FOR_PLAYER, fPlayerId, Collections.singletonList(fCasualtyRoll[0])));
+			diceStats.add(new DicePoolStat(DieBase.D6, TeamMapping.OPPONENT_TEAM_FOR_PLAYER, fPlayerId, Collections.singletonList(fCasualtyRoll[0])));
 		}
 	}
 }

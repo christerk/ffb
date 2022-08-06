@@ -8,7 +8,6 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
@@ -72,5 +71,4 @@ public class ReportBlockRoll implements IReport {
 		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
-
 }
