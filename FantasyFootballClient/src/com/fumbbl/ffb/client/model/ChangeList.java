@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.13.0")
+			.addFeature("Adjustments for dice stats")
+		);
+
 		versions.add(new VersionChangeList("2.12.0")
 			.addFeature("Temp Agency Cheerleaders")
 			.addFeature("Part-time Assistant Coaches")
