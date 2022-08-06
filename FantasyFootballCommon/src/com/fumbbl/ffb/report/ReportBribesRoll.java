@@ -9,7 +9,6 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.stats.DieBase;
 import com.fumbbl.ffb.stats.DieStat;
-import com.fumbbl.ffb.stats.DicePoolStat;
 import com.fumbbl.ffb.stats.SingleDieStat;
 import com.fumbbl.ffb.stats.TeamMapping;
 
@@ -80,6 +79,6 @@ public class ReportBribesRoll implements IReport {
 
 	@Override
 	public void addStats(Game game, List<DieStat<?>> diceStats) {
-		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, fPlayerId, fRoll, 2, getId()));
+		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, fPlayerId, fRoll, 2, getId(), fSuccessful));
 	}
 }
