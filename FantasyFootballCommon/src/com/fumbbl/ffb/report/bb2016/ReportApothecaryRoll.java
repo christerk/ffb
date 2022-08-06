@@ -8,9 +8,18 @@ import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDiceStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+import com.fumbbl.ffb.util.ArrayTool;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -84,4 +93,10 @@ public class ReportApothecaryRoll implements IReport {
 		return this;
 	}
 
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		if (ArrayTool.isProvided(fCasualtyRoll)) {
+			diceStats.add(new SingleDiceStat(DieBase.D6, TeamMapping.OPPONENT_TEAM_FOR_PLAYER, fPlayerId, Collections.singletonList(fCasualtyRoll[0])));
+		}
+	}
 }
