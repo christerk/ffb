@@ -107,8 +107,8 @@ public class BackupServlet extends HttpServlet {
 		UtilXml.startElement(handler, _XML_TAG_BACKUP);
 
 		boolean isOk = true;
-		String challenge = new StringBuilder().append(fServer.getProperty(IServerProperty.BACKUP_SALT))
-			.append(System.currentTimeMillis()).toString();
+		String challenge = fServer.getProperty(IServerProperty.BACKUP_SALT) +
+			System.currentTimeMillis();
 		try {
 			fLastChallenge = PasswordChallenge.toHexString(PasswordChallenge.md5Encode(challenge.getBytes()));
 		} catch (NoSuchAlgorithmException pE) {
@@ -274,6 +274,14 @@ public class BackupServlet extends HttpServlet {
 
 
 	private GameState loadFromS3(long gameId) {
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "S3 settings:");
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_BASE_PATH + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_BASE_PATH));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_REGION + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_REGION));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_PROFILE + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_PROFILE));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_BUCKET + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_BUCKET));
+		ProfileCredentialsProvider profileCredentialsProvider = new ProfileCredentialsProvider(fServer.getProperty(IServerProperty.BACKUP_S3_PROFILE));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Key Id: " + profileCredentialsProvider.getCredentials().getAWSAccessKeyId());
+
 		String basePath = fServer.getProperty(IServerProperty.BACKUP_S3_BASE_PATH);
 		if (!basePath.endsWith("/")) {
 			basePath += "/";
@@ -281,14 +289,19 @@ public class BackupServlet extends HttpServlet {
 		String fileName = basePath + UtilBackup.calculateFolderPathForGame(fServer, String.valueOf(gameId));
 		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay path on S3: " + fileName);
 		AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(fServer.getProperty(IServerProperty.BACKUP_S3_REGION))
-			.withCredentials(new ProfileCredentialsProvider(fServer.getProperty(IServerProperty.BACKUP_S3_PROFILE))).build();
+			.withCredentials(profileCredentialsProvider).build();
 
 		byte[] buffer = new byte[1024];
 		int buffer_size;
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Getting object");
+		S3Object s3Replay = null;
+		S3ObjectInputStream s3Stream = null;
+		ByteArrayOutputStream byteArrayOutputStream = null;
+		try {
+			s3Replay = s3.getObject(fServer.getProperty(IServerProperty.BACKUP_S3_BUCKET), fileName);
+			s3Stream = s3Replay.getObjectContent();
+			byteArrayOutputStream = new ByteArrayOutputStream();
 
-		try (S3Object s3Replay = s3.getObject(fServer.getProperty(IServerProperty.BACKUP_S3_BUCKET), fileName);
-				 S3ObjectInputStream s3Stream = s3Replay.getObjectContent();
-				 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Content-Length:" + s3Replay.getObjectMetadata().getContentLength());
 			while ((buffer_size = s3Stream.read(buffer)) > 0) {
 				byteArrayOutputStream.write(buffer, 0, buffer_size);
@@ -299,6 +312,30 @@ public class BackupServlet extends HttpServlet {
 		} catch (Exception e) {
 			fServer.getDebugLog().log(gameId, e);
 			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, e.getMessage());
+		} finally {
+			if (byteArrayOutputStream != null) {
+				try {
+					byteArrayOutputStream.close();
+				} catch (IOException e) {
+					fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Could not close bytearray stream");
+				}
+			}
+
+			if (s3Stream != null) {
+				try {
+					s3Stream.close();
+				} catch (IOException e) {
+					fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Could not close s3 stream");
+				}
+			}
+
+			if (s3Replay != null) {
+				try {
+					s3Replay.close();
+				} catch (IOException e) {
+					fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Could not close s3 object");
+				}
+			}
 		}
 		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Returning null from S3");
 		return null;
