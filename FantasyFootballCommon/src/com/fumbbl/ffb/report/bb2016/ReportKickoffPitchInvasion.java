@@ -6,13 +6,19 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DicePoolStat;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -159,4 +165,9 @@ public class ReportKickoffPitchInvasion implements IReport {
 		return this;
 	}
 
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new DicePoolStat(DieBase.D6, TeamMapping.TEAM, game.getTeamAway().getId(), fRollsHome.stream().filter(roll -> roll > 0).collect(Collectors.toList()), false));
+		diceStats.add(new DicePoolStat(DieBase.D6, TeamMapping.TEAM, game.getTeamHome().getId(), fRollsAway.stream().filter(roll -> roll > 0).collect(Collectors.toList()), false));
+	}
 }

@@ -9,7 +9,11 @@ public class SingleDieStat extends DieStat<Integer> {
 	private final boolean successful;
 
 	public SingleDieStat(DieBase base, TeamMapping mapping, String id, Integer value, int minimumRoll, ReportId reportId, boolean successful) {
-		super(base, mapping, id, value);
+		this(base, mapping, id, value, minimumRoll, reportId, successful, true);
+	}
+
+	public SingleDieStat(DieBase base, TeamMapping mapping, String id, Integer value, int minimumRoll, ReportId reportId, boolean successful, boolean duringGame) {
+		super(base, mapping, id, value, duringGame);
 		this.minimumRoll = minimumRoll;
 		this.reportId = reportId;
 		this.successful = successful;

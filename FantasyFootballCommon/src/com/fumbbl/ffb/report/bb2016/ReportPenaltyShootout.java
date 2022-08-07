@@ -6,9 +6,16 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.List;
 
 /**
  * 
@@ -81,4 +88,9 @@ public class ReportPenaltyShootout implements IReport {
 		return this;
 	}
 
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.TEAM, game.getTeamHome().getId(), fRollHome, 0, getId(), false, false));
+		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.TEAM, game.getTeamAway().getId(), fRollAway, 0, getId(), false, false));
+	}
 }

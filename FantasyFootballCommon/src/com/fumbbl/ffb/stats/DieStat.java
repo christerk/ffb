@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.stats;
 
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+
+import java.util.Optional;
 
 public abstract class DieStat<T> {
 	private final DieBase base;
@@ -38,5 +41,13 @@ public abstract class DieStat<T> {
 	@SuppressWarnings("unused")
 	public boolean isDuringGame() {
 		return duringGame;
+	}
+
+	@SuppressWarnings("unused")
+	public Optional<Player<?>> getPlayer(Game game) {
+		if (mapping == TeamMapping.TEAM_FOR_PLAYER || mapping == TeamMapping.OPPONENT_TEAM_FOR_PLAYER) {
+			return Optional.ofNullable(game.getPlayerById(id));
+		}
+		return Optional.empty();
 	}
 }
