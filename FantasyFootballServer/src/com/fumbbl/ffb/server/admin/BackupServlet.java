@@ -288,8 +288,16 @@ public class BackupServlet extends HttpServlet {
 		}
 		String fileName = basePath + UtilBackup.calculateFolderPathForGame(fServer, String.valueOf(gameId));
 		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay path on S3: " + fileName);
-		AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(fServer.getProperty(IServerProperty.BACKUP_S3_REGION))
-			.withCredentials(profileCredentialsProvider).build();
+		AmazonS3 s3;
+		try {
+			s3 = AmazonS3ClientBuilder.standard().withRegion(fServer.getProperty(IServerProperty.BACKUP_S3_REGION))
+				.withCredentials(profileCredentialsProvider).build();
+		} catch (Throwable t) {
+			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Something went terribly wrong");
+			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, t.getMessage());
+			fServer.getDebugLog().log(IServerLogLevel.WARN, t);
+			return null;
+		}
 
 		byte[] buffer = new byte[1024];
 		int buffer_size;
