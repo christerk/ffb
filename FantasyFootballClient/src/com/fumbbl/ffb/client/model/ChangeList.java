@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.13.0")
 			.addFeature("Adjustments for dice stats")
+			.addBugfix("Prevent duplicate adding of temporary effects")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

@@ -271,7 +271,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract Set<String> getEnhancementSources();
 
 	public boolean hasActiveEnhancement(Skill skill) {
-		return getEnhancementSources().contains(skill.getName());
+		return hasActiveEnhancement(skill.getName());
+	}
+
+	public boolean hasActiveEnhancement(String name) {
+		return getEnhancementSources().contains(name);
 	}
 
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
@@ -317,10 +321,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	public void addEnhancement(String name, TemporaryEnhancements enhancements, SkillFactory factory) {
-		addTemporaryModifiers(name, enhancements.getModifiers());
-		addTemporaryProperties(name, enhancements.getProperties());
-		addTemporarySkills(name, enhancements.getSkills().stream().map(scwv -> new SkillWithValue(factory.forClass(scwv.getSkill()), scwv.getValue().orElse(null))).collect(Collectors.toSet()));
-
+		if (!hasActiveEnhancement(name)) {
+			addTemporaryModifiers(name, enhancements.getModifiers());
+			addTemporaryProperties(name, enhancements.getProperties());
+			addTemporarySkills(name, enhancements.getSkills().stream().map(scwv -> new SkillWithValue(factory.forClass(scwv.getSkill()), scwv.getValue().orElse(null))).collect(Collectors.toSet()));
+		}
 	}
 
 	public String getSource(ISkillProperty property) {
