@@ -18,12 +18,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.UtilXml;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import zmq.Ctx;
-import zmq.Msg;
-import zmq.SocketBase;
-import zmq.ZMQ;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,7 +67,7 @@ public class BackupServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse)
-		throws ServletException, IOException {
+		throws IOException {
 
 		String command = pRequest.getPathInfo();
 		if ((command != null) && (command.length() > 1) && command.startsWith("/")) {
@@ -80,7 +75,7 @@ public class BackupServlet extends HttpServlet {
 		}
 
 		if (CHALLENGE.equals(command)) {
-			executeChallenge(pRequest, pResponse);
+			executeChallenge(pResponse);
 		}
 
 		if (LOAD.equals(command)) {
@@ -93,7 +88,7 @@ public class BackupServlet extends HttpServlet {
 
 	}
 
-	private void executeChallenge(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
+	private void executeChallenge(HttpServletResponse pResponse) throws IOException {
 
 		pResponse.setContentType("text/xml;charset=UTF-8");
 
@@ -107,8 +102,8 @@ public class BackupServlet extends HttpServlet {
 		UtilXml.startElement(handler, _XML_TAG_BACKUP);
 
 		boolean isOk = true;
-		String challenge = new StringBuilder().append(fServer.getProperty(IServerProperty.BACKUP_SALT))
-			.append(System.currentTimeMillis()).toString();
+		String challenge = fServer.getProperty(IServerProperty.BACKUP_SALT) +
+			System.currentTimeMillis();
 		try {
 			fLastChallenge = PasswordChallenge.toHexString(PasswordChallenge.md5Encode(challenge.getBytes()));
 		} catch (NoSuchAlgorithmException pE) {
@@ -139,9 +134,7 @@ public class BackupServlet extends HttpServlet {
 			try {
 				String response = PasswordChallenge.createResponse(fLastChallenge, md5Password);
 				isOk = response.equals(pResonse);
-			} catch (NoSuchAlgorithmException pE) {
-				isOk = false;
-			} catch (IOException pE) {
+			} catch (NoSuchAlgorithmException | IOException pE) {
 				isOk = false;
 			}
 		}
@@ -228,18 +221,12 @@ public class BackupServlet extends HttpServlet {
 				((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
 				((BufferedOutputStream) out).flush();
 
-				// getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay size " +
-				// StringTool.formatThousands(gzippedJson.length) + " gzipped.");
-
 			} else {
 
 				out = new BufferedWriter(pResponse.getWriter());
 				String jsonString = gameState.toJsonValue().toString();
 				((BufferedWriter) out).write(jsonString);
 				((BufferedWriter) out).flush();
-
-				// getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay size " +
-				// StringTool.formatThousands(jsonString.length()) + " unzipped.");
 
 			}
 
@@ -313,80 +300,6 @@ public class BackupServlet extends HttpServlet {
 			}
 		}
 		return 0;
-	}
-
-	private GameState loadFromFumbblBackupService(long gameId) {
-
-		// Prepare a JSON request to fetch a replay
-		String json = String.format("{ \"cmd\": \"get\", \"replayId\":%d }", gameId);
-		Msg request = new Msg(json.getBytes());
-
-		byte[] data = null;
-		String msgType = null;
-		SocketBase socket = null;
-		try {
-
-			// Set up ZeroMQ connection
-			Ctx ctx = ZMQ.init(1);
-			socket = ZMQ.socket(ctx, ZMQ.ZMQ_REQ);
-			ZMQ.setSocketOption(socket, ZMQ.ZMQ_RCVTIMEO, 5000);
-
-			socket.connect(fServer.getProperty(IServerProperty.FUMBBL_BACKUP_SERVICE));
-
-			// Send the request over the ZeroMQ socket
-			socket.send(request, 0);
-
-			// Receive response
-			Msg response = socket.recv(0);
-
-			if (response == null) {
-				throw new Exception("Backup file not available.");
-			}
-
-			data = response.data();
-
-			if (data.length < 100) {
-				msgType = new String(data);
-			} else {
-				throw new Exception("Protocol violation. Message type frame too large.");
-			}
-
-			if (response.hasMore()) {
-				// Fetch data frame
-				data = socket.recv(0).data();
-			} else {
-				throw new Exception("Protocol violation. No payload frame available.");
-			}
-
-		} catch (Exception e) {
-			fServer.getDebugLog().log(gameId, e);
-			data = null;
-		} finally {
-			// Make sure we close the socket to not leak resources.
-			if (socket != null) {
-				socket.close();
-			}
-		}
-
-		if (data != null) {
-			if ("DATA".equals(msgType)) {
-				try {
-					GameState gameState = new GameState(fServer);
-					gameState.initFrom(gameState.getGame().getRules(), UtilJson.gunzip(data));
-					return gameState;
-				} catch (IOException ioE) {
-					fServer.getDebugLog().log(gameId, ioE);
-				}
-			} else {
-				// Deal with the error in some way..
-				// the "data" variable should have a JSON encoded error message structure at
-				// this point.
-				fServer.getDebugLog().log(IServerLogLevel.ERROR, gameId, new String(data));
-			}
-		}
-
-		return null;
-
 	}
 
 }
