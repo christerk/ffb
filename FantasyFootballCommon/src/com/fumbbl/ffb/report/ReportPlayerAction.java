@@ -9,11 +9,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportPlayerAction implements IReport {
+public class ReportPlayerAction extends NoDiceReport {
 
 	private String fActingPlayerId;
 	private PlayerAction fPlayerAction;

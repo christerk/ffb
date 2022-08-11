@@ -8,14 +8,14 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportSecretWeaponBan implements IReport {
+public class ReportSecretWeaponBan extends NoDiceReport {
 
 	private final List<String> fPlayerIds;
 	private final List<Integer> fRolls;
@@ -32,7 +32,7 @@ public class ReportSecretWeaponBan implements IReport {
 	}
 
 	public String[] getPlayerIds() {
-		return fPlayerIds.toArray(new String[fPlayerIds.size()]);
+		return fPlayerIds.toArray(new String[0]);
 	}
 
 	public int[] getRolls() {
@@ -59,9 +59,7 @@ public class ReportSecretWeaponBan implements IReport {
 
 	private void addPlayerIds(String[] pPlayerIds) {
 		if (pPlayerIds != null) {
-			for (String playerId : pPlayerIds) {
-				fPlayerIds.add(playerId);
-			}
+			Collections.addAll(fPlayerIds, pPlayerIds);
 		}
 	}
 

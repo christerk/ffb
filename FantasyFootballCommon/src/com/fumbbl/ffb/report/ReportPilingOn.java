@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportPilingOn implements IReport {
+public class ReportPilingOn extends NoDiceReport {
 
 	private String fPlayerId;
 	private boolean fUsed;

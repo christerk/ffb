@@ -8,11 +8,12 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.NoDiceReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class ReportRaidingParty implements IReport {
+public class ReportRaidingParty extends NoDiceReport {
 
 	private String playerId, otherPlayerId;
 	private Direction direction;

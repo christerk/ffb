@@ -6,6 +6,11 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -81,7 +86,7 @@ public class ReportDefectingPlayers implements IReport {
 	}
 
 	public String[] getPlayerIds() {
-		return fPlayerIds.toArray(new String[fPlayerIds.size()]);
+		return fPlayerIds.toArray(new String[0]);
 	}
 
 	private void addPlayerId(String pPlayerId) {
@@ -102,6 +107,13 @@ public class ReportDefectingPlayers implements IReport {
 
 	public ReportDefectingPlayers transform(IFactorySource source) {
 		return new ReportDefectingPlayers(getPlayerIds(), getRolls(), getDefectings());
+	}
+
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		for (int i = 0; i < fPlayerIds.size(); i++) {
+			diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, fPlayerIds.get(i), fRolls.get(i), 4, getId(), !fDefectings.get(i)));
+		}
 	}
 
 	// JSON serialization

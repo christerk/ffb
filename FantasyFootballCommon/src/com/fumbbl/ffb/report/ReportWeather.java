@@ -9,11 +9,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportWeather implements IReport {
+public class ReportWeather extends NoDiceReport {
 
 	private Weather fWeather;
 	private int[] fWeatherRoll;

@@ -9,7 +9,7 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportLeader implements IReport {
+public class ReportLeader extends NoDiceReport {
 
 	private String fTeamId;
 	private LeaderState fLeaderState;

@@ -8,11 +8,12 @@ import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.NoDiceReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class ReportBriberyAndCorruptionReRoll implements IReport {
+public class ReportBriberyAndCorruptionReRoll extends NoDiceReport {
 
 	private String teamId;
 	private BriberyAndCorruptionAction action;

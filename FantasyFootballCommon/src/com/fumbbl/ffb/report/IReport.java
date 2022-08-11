@@ -33,7 +33,5 @@ public interface IReport extends IJsonSerializable, INamedObject {
 		return diceStats;
 	}
 
-	default void addStats(Game game, List<DieStat<?>> diceStats) {
-
-	}
+	void addStats(Game game, List<DieStat<?>> diceStats);
 }

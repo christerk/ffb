@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportFumbblResultUpload implements IReport {
+public class ReportFumbblResultUpload extends NoDiceReport {
 
 	private boolean fSuccessful;
 	private String fUploadStatus;

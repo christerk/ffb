@@ -9,11 +9,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportThrowIn implements IReport {
+public class ReportThrowIn extends NoDiceReport {
 
 	private Direction fDirection;
 	private int fDirectionRoll;

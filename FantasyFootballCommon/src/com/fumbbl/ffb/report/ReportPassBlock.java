@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportPassBlock implements IReport {
+public class ReportPassBlock extends NoDiceReport {
 
 	private String fTeamId;
 	private boolean fPassBlockAvailable;

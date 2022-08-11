@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportRaiseDead implements IReport {
+public class ReportRaiseDead extends NoDiceReport {
 
 	private String fPlayerId;
 	private boolean fNurglesRot;

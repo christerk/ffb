@@ -6,9 +6,16 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.List;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportThrownKeg implements IReport {
@@ -80,5 +87,10 @@ public class ReportThrownKeg implements IReport {
 	@Override
 	public IReport transform(IFactorySource source) {
 		return new ReportThrownKeg(playerId, targetPlayerId, roll, success, fumble);
+	}
+
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, playerId, roll, 3, getId(), roll >= 3));
 	}
 }

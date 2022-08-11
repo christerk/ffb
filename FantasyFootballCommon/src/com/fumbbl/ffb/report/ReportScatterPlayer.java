@@ -17,11 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportScatterPlayer implements IReport {
+public class ReportScatterPlayer extends NoDiceReport {
 
 	private FieldCoordinate fStartCoordinate;
 	private FieldCoordinate fEndCoordinate;

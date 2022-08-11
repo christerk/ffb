@@ -6,6 +6,13 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.List;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportBombExplodesAfterCatch implements IReport {
@@ -50,6 +57,11 @@ public class ReportBombExplodesAfterCatch implements IReport {
 	@Override
 	public IReport transform(IFactorySource source) {
 		return new ReportBombExplodesAfterCatch(catcherId, explodes, roll);
+	}
+
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.OPPONENT_TEAM_FOR_PLAYER, catcherId, roll, 4, getId(), explodes));
 	}
 
 	public String getCatcherId() {

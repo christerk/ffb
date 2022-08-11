@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportFoul implements IReport {
+public class ReportFoul extends NoDiceReport {
 
 	private String fDefenderId;
 
