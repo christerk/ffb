@@ -82,8 +82,12 @@ public class ReportDedicatedFans implements IReport {
 	public void addStats(Game game, List<DieStat<?>> diceStats) {
 		DieBase homeBase = game.getTeamHome().getId().equals(concededTeam) ? DieBase.D3 : DieBase.D6;
 		DieBase awayBase = game.getTeamAway().getId().equals(concededTeam) ? DieBase.D3 : DieBase.D6;
-		diceStats.add(new DicePoolStat(homeBase, TeamMapping.TEAM, game.getTeamHome().getId(), Collections.singletonList(rollHome), false));
-		diceStats.add(new DicePoolStat(awayBase, TeamMapping.TEAM, game.getTeamAway().getId(), Collections.singletonList(rollAway), false));
+		if (rollHome > 0) {
+			diceStats.add(new DicePoolStat(homeBase, TeamMapping.TEAM, game.getTeamHome().getId(), Collections.singletonList(rollHome), false));
+		}
+		if (rollAway > 0) {
+			diceStats.add(new DicePoolStat(awayBase, TeamMapping.TEAM, game.getTeamAway().getId(), Collections.singletonList(rollAway), false));
+		}
 	}
 
 	// JSON serialization
