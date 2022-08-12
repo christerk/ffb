@@ -63,7 +63,6 @@ public class UtilClientPlayerDrag {
 	}
 
 	private static void initPlayerDragging(FantasyFootballClient pClient, FieldCoordinate pCoordinate, boolean pBoxMode) {
-		System.out.println("Entering init drag");
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
@@ -71,7 +70,6 @@ public class UtilClientPlayerDrag {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		boolean initDragAllowed = ((ClientMode.PLAYER == pClient.getMode()) && (player != null)
 				&& game.getTeamHome().hasPlayer(player) && pClient.getClientState().isInitDragAllowed(pCoordinate));
-		System.out.println("InitDragAllowed: " + initDragAllowed);
 		if (initDragAllowed) {
 			if (pBoxMode) {
 				initDragAllowed = (((playerState.getBase() == PlayerState.STANDING) && playerState.isActive())
@@ -81,7 +79,6 @@ public class UtilClientPlayerDrag {
 						|| (playerState.getBase() == PlayerState.BEING_DRAGGED));
 			}
 		}
-		System.out.println("InitDragAllowed: " + initDragAllowed);
 
 		if (initDragAllowed) {
 			clientData.setSelectedPlayer(player);
@@ -95,18 +92,11 @@ public class UtilClientPlayerDrag {
 				userInterface.getFieldComponent().refresh();
 			}
 		} else {
-			System.out.println("boxMode: " + pBoxMode);
-			System.out.println("playerState.getBase(): " + playerState.getBase());
-			System.out.println("playerState.isActive(): " + playerState.isActive());
-
 			clientData.setDragStartPosition(null);
 		}
-		System.out.println("Leaving init drag");
 	}
 
 	public static void mouseDragged(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
-		System.out.println("Entering dragged");
-		System.out.println("Event: " + pMouseEvent);
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
@@ -123,34 +113,24 @@ public class UtilClientPlayerDrag {
 				}
 			}
 		}
-		System.out.println("Leaving dragged");
 	}
 
-	public static void mouseReleased(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
+	public static void mouseReleased(FantasyFootballClient pClient) {
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		if ((clientData.getSelectedPlayer() != null) && (clientData.getDragStartPosition() != null)
 			&& (clientData.getDragEndPosition() != null)) {
 			if (pClient.getClientState().isDropAllowed(clientData.getDragEndPosition())) {
-				System.out.println("Util: Sending setup command: " + clientData.getSelectedPlayer().getId());
 				pClient.getCommunication().sendSetupPlayer(clientData.getSelectedPlayer(), clientData.getDragEndPosition());
 			} else {
-				System.out.println("Util: Resetting player: " + clientData.getSelectedPlayer().getId());
 				game.getFieldModel().setPlayerCoordinate(clientData.getSelectedPlayer(), clientData.getDragStartPosition());
 			}
-		} else {
-			System.out.println("Util: Ignoring released event");
-			System.out.println("Player is " + (clientData.getSelectedPlayer() != null ? clientData.getSelectedPlayer().getId() : "null"));
-			System.out.println("DragStart is " + (clientData.getDragStartPosition() != null ? clientData.getDragStartPosition() : "null"));
-			System.out.println("DragEnd is " + (clientData.getDragEndPosition() != null ? clientData.getDragEndPosition() : "null"));
 		}
-		System.out.println("Event: " + pMouseEvent);
 		resetDragging(pClient);
 		clientData.clear();
 	}
 
 	public static void resetDragging(FantasyFootballClient pClient) {
-		System.out.println("Entering reset drag");
 		Game game = pClient.getGame();
 		for (Player<?> player : game.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -169,7 +149,6 @@ public class UtilClientPlayerDrag {
 		UserInterface userInterface = pClient.getUserInterface();
 		userInterface.getSideBarHome().refresh();
 		userInterface.getFieldComponent().refresh();
-		System.out.println("Leaving reset drag");
 	}
 
 }

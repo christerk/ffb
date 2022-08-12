@@ -255,7 +255,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void updatePosition(RosterPosition pPosition, boolean updateStats, IFactorySource factorySource, long gameId) {
-		factorySource.logDebug(gameId, "Entering updatePosition for player: " + this.getId());
 		fPosition = pPosition;
 		if (fPosition != null) {
 			setPositionId(fPosition.getId());
@@ -264,10 +263,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 			}
 			fIconSetIndex = pPosition.findNextIconSetIndex();
 			if (!updateStats) {
-				factorySource.logDebug(gameId, "Player " + fId + ": Not applying anything"
-					+ " - MA: " + getMovementWithModifiers() + " ST: " + getStrengthWithModifiers() + " AG: " + getAgilityWithModifiers()
-					+ " PA: " + getPassingWithModifiers() + " AV: " + getArmourWithModifiers());
-				factorySource.logDebug(gameId, "Leaving updatePosition because of updateStats flag for player: " + this.getId());
 				return;
 			}
 			setMovement(fPosition.getMovement());
@@ -326,7 +321,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 				}
 			}
 		}
-		factorySource.logDebug(gameId, "Leaving updatePosition for player: " + this.getId());
 	}
 
 	@Override
@@ -700,21 +694,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		for (Skill skill: fSkills) {
 			ISkillBehaviour<? extends Skill> behaviour = skill.getSkillBehaviour();
 			if (behaviour != null) {
-				if (behaviour.getPlayerModifiers().isEmpty()) {
-					factorySource.logDebug(gameId, "No player modifiers found for behavior " + behaviour.getClass().getCanonicalName());
-				}
-				behaviour.getPlayerModifiers().forEach(playerModifier -> {
-						factorySource.logDebug(gameId, "Player " + fId + ": Before applying " + playerModifier.getClass().getCanonicalName()
-							+ " - MA: " + getMovementWithModifiers() + " ST: " + getStrengthWithModifiers() + " AG: " + getAgilityWithModifiers()
-							+ " PA: " + getPassingWithModifiers() + " AV: " + getArmourWithModifiers());
-						playerModifier.apply(this);
-
-						factorySource.logDebug(gameId, "Player " + fId + ": After  applying " + playerModifier.getClass().getCanonicalName()
-							+ " - MA: " + getMovementWithModifiers() + " ST: " + getStrengthWithModifiers() + " AG: " + getAgilityWithModifiers()
-							+ " PA: " + getPassingWithModifiers() + " AV: " + getArmourWithModifiers());
-				});
-			} else {
-				factorySource.logDebug(gameId, "No behaviour found for skill " + skill.getClass().getCanonicalName());
+				behaviour.getPlayerModifiers().forEach(playerModifier -> playerModifier.apply(this));
 			}
 		}
 	}
