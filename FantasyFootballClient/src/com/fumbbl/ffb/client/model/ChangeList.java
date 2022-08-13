@@ -14,6 +14,7 @@ public class ChangeList {
 			.addImprovement("Adjustments for dice stats")
 			.addImprovement("Cleanups")
 			.addBugfix("Prevent duplicate adding of temporary effects")
+			.addBugfix("Ball did not bounce after hit from Beer Barrel Bash!")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

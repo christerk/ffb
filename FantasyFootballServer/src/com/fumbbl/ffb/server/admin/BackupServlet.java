@@ -193,9 +193,6 @@ public class BackupServlet extends HttpServlet {
 		String acceptEncoding = pRequest.getHeader("Accept-Encoding");
 		boolean doGzip = StringTool.isProvided(acceptEncoding) && acceptEncoding.contains("gzip");
 
-		// fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, doGzip ? "Requesting
-		// gzipped replay." : "Requesting plain replay.");
-
 		pResponse.setContentType("application/json;charset=UTF-8");
 
 		Closeable out = null;
