@@ -22,6 +22,8 @@ public interface IJsonOption {
 	JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
 	JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", Factory.APOTHECARY_MODE);
 	JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", Factory.APOTHECARY_STATUS);
+	JsonStringOption APOTHECARY_TYPE = new JsonStringOption("apothecaryType");
+	JsonStringArrayOption APOTHECARY_TYPES = new JsonStringArrayOption("apothecaryTypes");
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
@@ -46,6 +48,7 @@ public interface IJsonOption {
 	JsonBooleanOption BALL_MOVING = new JsonBooleanOption("ballMoving");
 	JsonBooleanArrayOption BAN_ARRAY = new JsonBooleanArrayOption("banArray");
 	JsonStringOption BALL_ACTION = new JsonStringOption("ballAction");
+	JsonIntOption BIASED_REFS = new JsonIntOption("biasedRefs");
 	JsonStringOption BASE_ICON_PATH = new JsonStringOption("baseIconPath");
 	JsonObjectOption BLITZ_STATE = new JsonObjectOption("blitzState");
 	JsonStringOption BLITZ_STATUS = new JsonStringOption("blitzStatus");
@@ -114,6 +117,7 @@ public interface IJsonOption {
 	JsonBooleanOption CONCEDED_LEGALLY = new JsonBooleanOption("concededLegally");
 	JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");
 	JsonBooleanOption CONCESSION_POSSIBLE = new JsonBooleanOption("concessionPossible");
+	JsonBooleanOption CONFIRM = new JsonBooleanOption("confirm");
 	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", Factory.SKILL);
 	JsonBooleanOption CONSUMMATE_OPTION = new JsonBooleanOption("consummateOption");
 	JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
@@ -147,6 +151,7 @@ public interface IJsonOption {
 	JsonStringOption DIVISION = new JsonStringOption("division");
 	JsonBooleanOption DOUBLE_TARGET_STRENGTH = new JsonBooleanOption("doubleTargetStrength");
 	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
+	JsonStringOption EFFECT = new JsonStringOption("effect");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption ESCAPED = new JsonBooleanOption("escaped");
 	JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
@@ -289,6 +294,7 @@ public interface IJsonOption {
 	JsonBooleanOption NURGLES_ROT = new JsonBooleanOption("nurglesRot");
 	JsonBooleanOption OFFICIOUS_REF = new JsonBooleanOption("officiousRef");
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
+	JsonEnumWithNameOption OLD_WEATHER = new JsonEnumWithNameOption("oldWeather", Factory.WEATHER);
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
 	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
@@ -306,6 +312,7 @@ public interface IJsonOption {
 	JsonIntOption PETTY_CASH_FROM_TV_DIFF = new JsonIntOption("pettyCashFromTvDiff");
 	JsonIntOption PETTY_CASH_TRANSFERRED = new JsonIntOption("pettyCashTransferred");
 	JsonIntOption PETTY_CASH_USED = new JsonIntOption("pettyCashUsed");
+	JsonIntOption PLAGUE_DOCTORS = new JsonIntOption("plagueDoctors");
 	JsonObjectOption PLAYER = new JsonObjectOption("player");
 	JsonEnumWithNameOption PLAYER_ACTION = new JsonEnumWithNameOption("playerAction", Factory.PLAYER_ACTION);
 	JsonArrayOption PLAYER_ARRAY = new JsonArrayOption("playerArray");
@@ -361,6 +368,7 @@ public interface IJsonOption {
 	JsonStringOption RACE = new JsonStringOption("race");
 	JsonIntOption RAISED_DEAD = new JsonIntOption("raisedDead");
 	JsonStringOption RAISED_POSITION_ID = new JsonStringOption("raisedPositionId");
+	JsonStringOption REASON = new JsonStringOption("reason");
 	JsonBooleanOption RECEIVE_CHOICE = new JsonBooleanOption("receiveChoice");
 	JsonBooleanOption RECOVERING = new JsonBooleanOption("recovering");
 	JsonEnumWithNameOption RECOVERING_INJURY = new JsonEnumWithNameOption("recoveringInjury", Factory.SERIOUS_INJURY);
@@ -446,6 +454,7 @@ public interface IJsonOption {
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
 	JsonStringListMapOption SKILLS_GRANTED_BY = new JsonStringListMapOption("skillsGrantedBy");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
+	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
@@ -456,9 +465,10 @@ public interface IJsonOption {
 	JsonIntOption SPECTATORS_AWAY = new JsonIntOption("spectatorsAway");
 	JsonIntOption SPECTATORS_HOME = new JsonIntOption("spectatorsHome");
 	JsonIntOption SPIRALLING_EXPENSES = new JsonIntOption("spirallingExpenses");
+	JsonStringArrayOption STAFF_POSITION_IDS = new JsonStringArrayOption("staffPositionIds");
 	JsonBooleanOption STANDING_UP = new JsonBooleanOption("standingUp");
 	JsonStringOption STAR_PLAYER_NAME = new JsonStringOption("starPlayerName");
-	JsonStringArrayOption STAR_PLAYER_POSTION_IDS = new JsonStringArrayOption("starPlayerPositionIds");
+	JsonStringArrayOption STAR_PLAYER_POSITION_IDS = new JsonStringArrayOption("starPlayerPositionIds");
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonObjectOption STAT_BASED_ROLL_MODIFIER = new JsonObjectOption("statBasedRollModifier");
@@ -552,6 +562,7 @@ public interface IJsonOption {
 	JsonBooleanOption WAITING_FOR_OPPONENT = new JsonBooleanOption("waitingForOpponent");
 	JsonIntOption WANDERING_APOTHECARIES = new JsonIntOption("wanderingApothecaries");
 	JsonEnumWithNameOption WEATHER = new JsonEnumWithNameOption("weather", Factory.WEATHER);
+	JsonIntegerMapOption WEATHER_OPTIONS = new JsonIntegerMapOption("weatherOptions");
 	JsonIntArrayOption WEATHER_ROLL = new JsonIntArrayOption("weatherRoll");
 	JsonIntOption WINNINGS = new JsonIntOption("winnings");
 	JsonIntOption WINNINGS_AWAY = new JsonIntOption("winningsAway");

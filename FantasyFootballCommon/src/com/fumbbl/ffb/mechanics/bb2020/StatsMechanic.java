@@ -64,4 +64,9 @@ public class StatsMechanic extends com.fumbbl.ffb.mechanics.StatsMechanic {
 				return Math.max(startingValue - 1, limit.getMin());
 		}
 	}
+
+	@Override
+	public boolean statCanBeReducedByInjury(int originalValue, int currentValue) {
+		return true;
+	}
 }

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.List;
 
@@ -43,6 +44,9 @@ public class TurnEndMessage extends ReportMessageBase<ReportTurnEnd> {
 					println(getIndent() + 1, " is regaining consciousness.");
 				} else {
 					println(getIndent() + 1, " stays unconscious.");
+				}
+				if (StringTool.isProvided(knockoutRecovery.getReRollReason())) {
+					println(getIndent() + 2, TextStyle.EXPLANATION, "Recovery is re-rolled using " + knockoutRecovery.getReRollReason());
 				}
 			}
 		}

@@ -19,9 +19,25 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 		StringBuilder status = new StringBuilder();
 		status.append("Argue the Call Roll [ ").append(report.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
+		int minimumRoll = 6;
 		if (report.isFriendsWithRef()) {
 			println(getIndent() + 1, TextStyle.EXPLANATION, "Being friends with the ref allows argue to succeed on 5+.");
+			minimumRoll = 5;
 		}
+
+		int biasedRefs = report.getBiasedRefs();
+		StringBuilder builder = new StringBuilder();
+		if (biasedRefs > 0) {
+
+			builder.append(" + ").append(biasedRefs).append(" Biased Referee");
+
+			if (biasedRefs > 1) {
+				builder.append("s");
+			}
+		}
+
+		String modifiers = builder.toString();
+
 		if (report.isSuccessful()) {
 			print(getIndent() + 1, TextStyle.NONE, "The ref refrains from banning ");
 			print(getIndent() + 1, false, player);
@@ -33,10 +49,12 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 				status.append(" is sent to the reserve instead.");
 			}
 			println(getIndent() + 1, TextStyle.NONE, status.toString());
+			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Succeeded on a roll of " + report.getRoll() + " (Roll" + modifiers + " >= " + minimumRoll + ")");
 		} else {
 			print(getIndent() + 1, TextStyle.NONE, "The ref bans ");
 			print(getIndent() + 1, false, player);
 			println(getIndent() + 1, TextStyle.NONE, " from the game.");
+			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Would have succeeded on a roll of " + report.getRoll() + " (Roll" + modifiers + " >= " + minimumRoll + ")");
 		}
 		if (report.isCoachBanned()) {
 			print(getIndent() + 1, TextStyle.NONE, "Coach ");
@@ -48,5 +66,4 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 			println(getIndent() + 1, TextStyle.NONE, " is also banned from the game.");
 		}
 	}
-
 }

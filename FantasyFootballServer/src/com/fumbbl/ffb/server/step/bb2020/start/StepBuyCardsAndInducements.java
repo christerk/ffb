@@ -37,6 +37,7 @@ import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
@@ -46,11 +47,11 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDoubleHiredStarPlayer;
 import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportCardsAndInducementsBought;
+import com.fumbbl.ffb.report.bb2020.ReportDoubleHiredStaff;
 import com.fumbbl.ffb.server.CardDeck;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.db.DbTransaction;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -75,6 +76,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -153,10 +155,11 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		if (game.getTeamHome().getId().equals(buyInducementsCommand.getTeamId())) {
 			game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet());
 			int starCost = addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
+			int staffCost = addStaff(game.getTeamHome(), buyInducementsCommand.getStaffPositionIds());
 			int mercCost = addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(),
 				buyInducementsCommand.getMercenarySkills());
 			int inducementCost = inducementCosts(game.getTeamHome(), buyInducementsCommand.getInducementSet());
-			usedInducementGoldHome = starCost + mercCost + inducementCost;
+			usedInducementGoldHome = starCost + mercCost + inducementCost + staffCost;
 			if (usedInducementGoldHome > availableInducementGoldHome) {
 				int cardCost = cardCost(game.getTurnDataHome().getInducementSet());
 				throw new FantasyFootballException("Team " + game.getTeamHome().getName() + " with id "
@@ -166,10 +169,11 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		} else {
 			game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet());
 			int starCost = addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
+			int staffCost = addStaff(game.getTeamAway(), buyInducementsCommand.getStaffPositionIds());
 			int mercCost = addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(),
 				buyInducementsCommand.getMercenarySkills());
 			int inducementCost = inducementCosts(game.getTeamAway(), buyInducementsCommand.getInducementSet());
-			usedInducementGoldAway = starCost + mercCost + inducementCost;
+			usedInducementGoldAway = starCost + mercCost + inducementCost + staffCost;
 			if (usedInducementGoldAway > availableInducementGoldAway) {
 				int cardCost = cardCost(game.getTurnDataAway().getInducementSet());
 				throw new FantasyFootballException("Team " + game.getTeamAway().getName() + " with id "
@@ -215,7 +219,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			phase = Phase.DONE;
 		} else if (UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
 			Optional<InducementType> starType = ((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-				.allTypes().stream().filter(type -> type.getUsage() == Usage.STAR).findFirst();
+				.allTypes().stream().filter(type -> type.hasUsage(Usage.STAR)).findFirst();
 			if (starType.isPresent() && game.getTeamHome().getInducementSet() != null) {
 				game.getTurnDataHome().getInducementSet().add(game.getTeamHome().getInducementSet());
 				String[] starPlayerPositionIds = game.getTeamHome().getInducementSet().getStarPlayerPositionIds();
@@ -418,15 +422,15 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		return sum;
 	}
 
-	private void removeStarPlayerInducements(TurnData pTurnData, int pRemoved) {
+	private void removeDuplicatePlayerInducements(TurnData pTurnData, int pRemoved, Usage usage) {
 		pTurnData.getInducementSet().getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().getUsage() == Usage.STAR).map(Map.Entry::getValue).findFirst()
-			.ifPresent(starPlayerInducement -> {
-				starPlayerInducement.setValue(starPlayerInducement.getValue() - pRemoved);
-				if (starPlayerInducement.getValue() <= 0) {
-					pTurnData.getInducementSet().removeInducement(starPlayerInducement);
+			.filter(entry -> entry.getKey().hasUsage(usage)).map(Map.Entry::getValue).findFirst()
+			.ifPresent(inducement -> {
+				inducement.setValue(inducement.getValue() - pRemoved);
+				if (inducement.getValue() <= 0) {
+					pTurnData.getInducementSet().removeInducement(inducement);
 				} else {
-					pTurnData.getInducementSet().addInducement(starPlayerInducement);
+					pTurnData.getInducementSet().addInducement(inducement);
 				}
 			});
 	}
@@ -473,16 +477,77 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			}
 
 			if (removedPlayerList.size() > 0) {
-				removeStarPlayerInducements(game.getTurnDataHome(), removedPlayerList.size());
-				removeStarPlayerInducements(game.getTurnDataAway(), removedPlayerList.size());
-				DbTransaction transaction = new DbTransaction();
+				removeDuplicatePlayerInducements(game.getTurnDataHome(), removedPlayerList.size(), Usage.STAR);
+				removeDuplicatePlayerInducements(game.getTurnDataAway(), removedPlayerList.size(), Usage.STAR);
 				for (Player<?> player : removedPlayerList) {
 					server.getCommunication().sendRemovePlayer(getGameState(), player.getId());
 					otherTeam.removePlayer(player);
 					game.getFieldModel().remove(player);
 					getResult().addReport(new ReportDoubleHiredStarPlayer(player.getName()));
 				}
-				server.getDbUpdater().add(transaction);
+			}
+
+			if (addedPlayerList.size() > 0) {
+				RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
+				UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
+			}
+
+		}
+
+		return sum;
+
+	}
+
+	private int addStaff(Team pTeam, List<String> pPositionIds) {
+		int sum = 0;
+		if (!pPositionIds.isEmpty()) {
+
+			Roster roster = pTeam.getRoster();
+			Game game = getGameState().getGame();
+			FantasyFootballServer server = getGameState().getServer();
+
+			Map<String, Player<?>> otherTeamStaffByName = new HashMap<>();
+			Team otherTeam = (game.getTeamHome() == pTeam) ? game.getTeamAway() : game.getTeamHome();
+			for (Player<?> otherPlayer : otherTeam.getPlayers()) {
+				if (otherPlayer.getPlayerType() == PlayerType.INFAMOUS_STAFF) {
+					otherTeamStaffByName.put(otherPlayer.getName(), otherPlayer);
+				}
+			}
+
+			List<RosterPlayer> addedPlayerList = new ArrayList<>();
+			List<RosterPlayer> removedPlayerList = new ArrayList<>();
+			for (String pPositionId : pPositionIds) {
+				RosterPosition position = roster.getPositionById(pPositionId);
+				sum += position.getCost();
+				Player<?> otherTeamStaff = otherTeamStaffByName.get(position.getName());
+				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_STAFF_ON_BOTH_TEAMS)
+					&& (otherTeamStaff != null)) {
+					if (otherTeamStaff instanceof RosterPlayer) {
+						removedPlayerList.add((RosterPlayer) otherTeamStaff);
+					}
+				} else {
+					RosterPlayer staff = new RosterPlayer();
+					addedPlayerList.add(staff);
+					staff.setId(pTeam.getId() + "I" + addedPlayerList.size());
+					staff.updatePosition(position, game.getRules(), game.getId());
+					staff.setName(position.getName());
+					staff.setNr(pTeam.getMaxPlayerNr() + 1);
+					staff.setGender(position.getGender());
+					pTeam.addPlayer(staff);
+					game.getFieldModel().setPlayerState(staff, new PlayerState(PlayerState.RESERVE));
+					UtilBox.putPlayerIntoBox(game, staff);
+				}
+			}
+
+			if (removedPlayerList.size() > 0) {
+				removeDuplicatePlayerInducements(game.getTurnDataHome(), removedPlayerList.size(), Usage.STAFF);
+				removeDuplicatePlayerInducements(game.getTurnDataAway(), removedPlayerList.size(), Usage.STAFF);
+				for (Player<?> player : removedPlayerList) {
+					server.getCommunication().sendRemovePlayer(getGameState(), player.getId());
+					otherTeam.removePlayer(player);
+					game.getFieldModel().remove(player);
+					getResult().addReport(new ReportDoubleHiredStaff(player.getName()));
+				}
 			}
 
 			if (addedPlayerList.size() > 0) {
@@ -569,7 +634,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
 
-		inducementTypeFactory.allTypes().stream().filter(type -> type.getUsage() == Usage.REROLL_ARGUE).findFirst()
+		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.REROLL_ARGUE)).findFirst()
 			.ifPresent(inducementType -> {
 
 				if (teamHome.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION)) {
@@ -583,6 +648,19 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 
 			});
+
+		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.REROLL_ONES_ON_KOS)).findFirst()
+			.ifPresent(inducementType -> {
+
+				if (Arrays.stream(game.getTeamHome().getPlayers()).anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
+					game.getTurnDataHome().getInducementSet().addInducement(new Inducement(inducementType, 1));
+				}
+
+				if (Arrays.stream(game.getTeamAway().getPlayers()).anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
+					game.getTurnDataAway().getInducementSet().addInducement(new Inducement(inducementType, 1));
+				}
+
+			});
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
@@ -592,16 +670,13 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			: game.getTurnDataAway().getInducementSet();
 		int nrOfInducements = 0, nrOfStars = 0, nrOfMercenaries = 0;
 		for (Inducement inducement : inducementSet.getInducements()) {
-			switch (inducement.getType().getUsage()) {
-				case STAR:
-					nrOfStars = inducement.getValue();
-					break;
-				case LONER:
-					nrOfMercenaries = inducement.getValue();
-					break;
-				default:
-					nrOfInducements += inducement.getValue();
-					break;
+			Set<Usage> usages = inducement.getType().getUsages();
+			if (usages.contains(Usage.STAR)) {
+				nrOfStars = inducement.getValue();
+			} else if (usages.contains(Usage.LONER)) {
+				nrOfMercenaries = inducement.getValue();
+			} else {
+				nrOfInducements += inducement.getValue();
 			}
 		}
 		return new ReportCardsAndInducementsBought(pTeam.getId(), inducementSet.getAllCards().length, nrOfInducements, nrOfStars, nrOfMercenaries, gold, newTv);

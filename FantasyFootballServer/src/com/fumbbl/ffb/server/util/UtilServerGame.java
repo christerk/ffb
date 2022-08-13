@@ -41,6 +41,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -141,6 +142,27 @@ public class UtilServerGame {
 
 	}
 
+	public static void prepareForSetup(Game game) {
+		prepareForSetup(game, game.getTeamHome());
+		prepareForSetup(game, game.getTeamAway());
+	}
+
+	private static void prepareForSetup(Game game, Team team) {
+		Map<Boolean, List<Player<?>>> groupedPlayers = Arrays.stream(team.getPlayers()).filter(player -> game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE)
+			.collect(Collectors.groupingBy(player -> player.hasSkillProperty(NamedProperties.canJoinTeamIfLessThanEleven)));
+		List<Player<?>> players = groupedPlayers.get(false);
+		List<Player<?>> keenPlayers = groupedPlayers.get(true);
+		if (keenPlayers != null && !keenPlayers.isEmpty()) {
+			if (players != null && players.size() >= 11) {
+				keenPlayers.stream().filter(player -> game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE)
+					.forEach(player -> {
+						PlayerState playerState = game.getFieldModel().getPlayerState(player);
+						game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.SETUP_PREVENTED));
+					});
+			}
+		}
+	}
+
 	private static void resetLeaderState(Game pGame) {
 		if (pGame.getHalf() <= 2) {
 			pGame.getTurnDataHome().setLeaderState(LeaderState.NONE);
@@ -209,7 +231,7 @@ public class UtilServerGame {
 						if (partnerRemovedFromPlay && partner.get().hasActiveEnhancement(skill)) {
 							removePartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
 
-						} else if (!partner.get().hasActiveEnhancement(skill)) {
+						} else if (!partnerRemovedFromPlay && !partner.get().hasActiveEnhancement(skill)) {
 							addPartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
 						}
 					} else {
@@ -220,7 +242,7 @@ public class UtilServerGame {
 						if (partnerRemovedFromPlay && !currentPlayer.hasActiveEnhancement(skill)) {
 							addPartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
 
-						} else if (currentPlayer.hasActiveEnhancement(skill)) {
+						} else if (!partnerRemovedFromPlay && currentPlayer.hasActiveEnhancement(skill)) {
 							removePartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
 						}
 					}
@@ -290,7 +312,7 @@ public class UtilServerGame {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setApothecaries(team.getApothecaries());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.APOTHECARY)
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasSingleUsage(Usage.APOTHECARY))
 			.findFirst().ifPresent(entry -> {
 				Inducement wanderingApothecaries = entry.getValue();
 				if (wanderingApothecaries.getValue() > 0) {
@@ -300,6 +322,14 @@ public class UtilServerGame {
 						new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
 				}
 			});
+
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.APOTHECARY_JOURNEYMEN))
+			.findFirst().ifPresent(entry -> {
+				Inducement plagueDoctors = entry.getValue();
+				if (plagueDoctors.getValue() > 0) {
+					turnData.setPlagueDoctors(plagueDoctors.getValue());
+				}
+			});
 	}
 
 	private static void addReRolls(IStep pStep, boolean pHomeTeam) {
@@ -307,7 +337,7 @@ public class UtilServerGame {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setReRolls(team.getReRolls());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.REROLL)
+		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.REROLL))
 			.findFirst().ifPresent(entry -> {
 				Inducement extraTraining = entry.getValue();
 				if (extraTraining.getValue() > 0) {
@@ -325,7 +355,7 @@ public class UtilServerGame {
 		InducementSet inducementSet = pHomeTeam ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
 		inducementSet.getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().getUsage() == Usage.STEAL_REROLL
+			.filter(entry -> entry.getKey().hasUsage(Usage.STEAL_REROLL)
 				&& entry.getValue().getValue() > 0).findFirst().ifPresent(entry -> {
 				Inducement masterChef = entry.getValue();
 				for (int i = 0; i < masterChef.getValue(); i++) {

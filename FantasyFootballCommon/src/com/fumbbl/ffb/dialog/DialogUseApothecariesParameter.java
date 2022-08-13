@@ -17,16 +17,14 @@ public class DialogUseApothecariesParameter implements IDialogParameter {
 
 	private String teamId;
 	private List<InjuryDescription> injuryDescriptions = new ArrayList<>();
-	private int maxApos;
 
 	public DialogUseApothecariesParameter() {
 		super();
 	}
 
-	public DialogUseApothecariesParameter(String teamId, List<InjuryDescription> injuryDescriptions, int maxApos) {
+	public DialogUseApothecariesParameter(String teamId, List<InjuryDescription> injuryDescriptions) {
 		this.teamId = teamId;
 		this.injuryDescriptions = injuryDescriptions;
-		this.maxApos = maxApos;
 	}
 
 	public DialogId getId() {
@@ -41,13 +39,10 @@ public class DialogUseApothecariesParameter implements IDialogParameter {
 		return teamId;
 	}
 
-	public int getMaxApos() {
-		return maxApos;
-	}
 	// transformation
 
 	public IDialogParameter transform() {
-		return new DialogUseApothecariesParameter(teamId, injuryDescriptions, maxApos);
+		return new DialogUseApothecariesParameter(teamId, injuryDescriptions);
 	}
 
 	// JSON serialization
@@ -59,7 +54,6 @@ public class DialogUseApothecariesParameter implements IDialogParameter {
 		injuryDescriptions.stream().map(InjuryDescription::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.INJURY_DESCRIPTIONS.addTo(jsonObject, jsonArray);
 		IJsonOption.TEAM_ID.addTo(jsonObject, teamId);
-		IJsonOption.MAX_SELECTS.addTo(jsonObject, maxApos);
 		return jsonObject;
 	}
 
@@ -71,7 +65,6 @@ public class DialogUseApothecariesParameter implements IDialogParameter {
 			injuryDescriptions.addAll(jsonArray.values().stream().map(value -> new InjuryDescription().initFrom(source, value)).collect(Collectors.toList()));
 		}
 		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
-		maxApos = IJsonOption.MAX_SELECTS.getFrom(source, jsonObject);
 		return this;
 	}
 

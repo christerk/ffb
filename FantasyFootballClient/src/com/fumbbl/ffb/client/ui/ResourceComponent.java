@@ -41,7 +41,7 @@ public class ResourceComponent extends JPanel {
 	private final SideBarComponent fSideBar;
 	private final BufferedImage fImage;
 	private boolean fRefreshNecessary;
-	private int fNrOfSlots, fCurrentReRolls, fCurrentApothecaries, fCurrentCards, currentPrayers, currentSingleUseReRolls;
+	private int fNrOfSlots, fCurrentReRolls, fCurrentApothecaries, fCurrentCards, currentPrayers, currentSingleUseReRolls, currentPlagueDoctors;
 	private final ResourceSlot[] fSlots;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
@@ -186,10 +186,17 @@ public class ResourceComponent extends JPanel {
 		}
 
 		fRefreshNecessary |= (turnData.getApothecaries() != fCurrentApothecaries);
+		fRefreshNecessary |= turnData.getPlagueDoctors() != currentPlagueDoctors;
 		fCurrentApothecaries = turnData.getApothecaries();
-		if (turnData.getApothecaries() > 0) {
+		currentPlagueDoctors = turnData.getPlagueDoctors();
+		if (fCurrentApothecaries + currentPlagueDoctors > 0) {
 			ResourceSlot apothecarySlot = fSlots[slotIndex.getAndIncrement()];
-			apothecarySlot.add(new ResourceValue(fCurrentApothecaries, "Apothecary", "Apothecaries"));
+			if (fCurrentApothecaries > 0) {
+				apothecarySlot.add(new ResourceValue(fCurrentApothecaries, "Apothecary", "Apothecaries"));
+			}
+			if (currentPlagueDoctors > 0) {
+				apothecarySlot.add(new ResourceValue(currentPlagueDoctors, "Plague Doctor", "Plague Doctors"));
+			}
 			apothecarySlot.setIconProperty(IIconProperty.RESOURCE_APOTHECARY);
 		}
 
@@ -204,7 +211,10 @@ public class ResourceComponent extends JPanel {
 				fRefreshNecessary |= (inducementValues.get(type) != null ? (newValue != inducementValues.get(type)) : newValue > 0);
 				inducementValues.put(type, newValue);
 				if (newValue > 0) {
-					ResourceSlot slot = fSlots[slotIndex.getAndIncrement()];
+					ResourceSlot slot = Arrays.stream(fSlots).limit(slotIndex.get())
+						.filter(existingSlot -> existingSlot.getIconProperty().equalsIgnoreCase(type.getSlotIconProperty()))
+						.findFirst()
+						.orElseGet(() -> fSlots[slotIndex.getAndIncrement()]);
 					slot.add(new ResourceValue(newValue, type.getSingular(), type.getPlural()));
 					slot.setIconProperty(type.getSlotIconProperty());
 				}

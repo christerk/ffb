@@ -15,6 +15,7 @@ public enum StepId implements INamedObject {
 	APOTHECARY_MULTIPLE("apothecaryMultiple"), // action.multiBlock 2020
 	APPLY_KICKOFF_RESULT("applyKickoffResult"), // phase.kickoff
 	ASSIGN_TOUCHDOWNS("assignTouchdowns"), // game.end
+	BALEFUL_HEX("balefulHex"), // action.special
 	BLITZ_TURN("blitzTurn"), // phase.kickoff
 	BLOCK_BALL_AND_CHAIN("blockBallAndChain"), // action.block
 	BLOCK_CHAINSAW("blockChainsaw"), // action.block
@@ -88,6 +89,7 @@ public enum StepId implements INamedObject {
 	INIT_FEEDING("initFeeding"), // action.end
 	INIT_FOULING("initFouling"), // action.foul
 	INIT_INDUCEMENT("initInducement"), // phase.inducement
+	INIT_LOOK_INTO_MY_EYES("initLookIntoMyEyes"), // action.special
 	INIT_KICKOFF("initKickoff"), // phase.kickoff
 	INIT_MOVING("initMoving"), // action.move
 	INIT_PASSING("initPassing"), // action.pass
@@ -107,6 +109,7 @@ public enum StepId implements INamedObject {
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff
 	KICKOFF_RETURN("kickoffReturn"), // phase.kickoff
 	KICKOFF_SCATTER_ROLL("kickoffScatterRoll"), // phase.kickoff
+	LOOK_INTO_MY_EYES("lookIntoMyEyes"), // action.special
 	MISSED_PASS("missedPass"), // action.pass
 	MOVE("move"), // action.move
 	MOVE_BALL_AND_CHAIN("moveBallAndChain"), // action.move
@@ -166,6 +169,7 @@ public enum StepId implements INamedObject {
 	TOUCHBACK("touchback"), // phase.kickoff
 	UNCHANNELLED_FURY("unchannelledFury"), // action.common
 	WEATHER("weather"), // game.start
+	WEATHER_MAGE("weatherMage"), // phase.inducement
 	WILD_ANIMAL("wildAnimal"), // action.common
 	WINNINGS("winnings"), // game.end
 	WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf"), // action.special

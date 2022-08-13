@@ -35,6 +35,7 @@ public class UtilBox {
 			switch (playerState.getBase()) {
 				case PlayerState.RESERVE:
 				case PlayerState.EXHAUSTED:
+				case PlayerState.SETUP_PREVENTED:
 					boxX = homePlayer ? FieldCoordinate.RSV_HOME_X : FieldCoordinate.RSV_AWAY_X;
 					break;
 				case PlayerState.KNOCKED_OUT:

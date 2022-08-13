@@ -140,7 +140,7 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
-						} else if (actingPlayerCommand.getPlayerAction() == PlayerAction.GAZE_MOVE) {
+						} else if (actingPlayerCommand.getPlayerAction() == PlayerAction.GAZE_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.GAZE_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
@@ -352,6 +352,14 @@ public final class StepInitSelecting extends AbstractStep {
 							forceGotoOnDispatch = true;
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMoveOpenTeamMate)) {
 							fDispatchPlayerAction = PlayerAction.RAIDING_PARTY;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canStealBallFromOpponent)) {
+							fDispatchPlayerAction = PlayerAction.LOOK_INTO_MY_EYES;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeOpponentMissTurn)) {
+							fDispatchPlayerAction = PlayerAction.BALEFUL_HEX;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
 						}

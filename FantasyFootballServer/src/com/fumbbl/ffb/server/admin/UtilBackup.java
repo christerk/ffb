@@ -1,12 +1,5 @@
 package com.fumbbl.ffb.server.admin;
 
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -14,8 +7,15 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilBackup {
@@ -25,8 +25,13 @@ public class UtilBackup {
 			return null;
 		}
 		String gameIdString = Long.toString(pGameId);
+		String pathName = pServer.getProperty(IServerProperty.BACKUP_DIR) + "/" +
+			calculateFolderPathForGame(pServer, gameIdString);
+		return new File(pathName);
+	}
+
+	public static String calculateFolderPathForGame(FantasyFootballServer pServer, String gameIdString) {
 		StringBuilder pathName = new StringBuilder();
-		pathName.append(pServer.getProperty(IServerProperty.BACKUP_DIR)).append("/");
 		int index = 0;
 		for (int i = 7; i > 3; i--) {
 			if (gameIdString.length() < i) {
@@ -37,7 +42,7 @@ public class UtilBackup {
 			pathName.append("/");
 		}
 		pathName.append(gameIdString).append(".").append(pServer.getProperty(IServerProperty.BACKUP_EXTENSION));
-		return new File(pathName.toString());
+		return pathName.toString();
 	}
 
 	public static boolean save(GameState pGameState) {

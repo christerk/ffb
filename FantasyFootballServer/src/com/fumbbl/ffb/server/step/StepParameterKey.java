@@ -109,6 +109,7 @@ public enum StepParameterKey {
 	PLAYER_WAS_PUSHED, // Boolean
 	PRAYER_ROLL, // Integer
 	PUBLISH_DEFENDER, // Boolean
+	PUSH_SELECT, // Boolean
 	ATTACKER_POISONED, // Boolean
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean

@@ -1,11 +1,6 @@
 package com.fumbbl.ffb.server.request;
 
-import java.io.IOException;
-
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.eclipsesource.json.JsonValue;
-import com.eclipsesource.json.ParseException;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.net.ServerStatus;
@@ -18,6 +13,7 @@ import com.fumbbl.ffb.server.net.commands.InternalServerCommandReplayLoaded;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
+import org.eclipse.jetty.websocket.api.Session;
 
 /**
  * 
@@ -73,7 +69,7 @@ public class ServerRequestLoadReplay extends ServerRequest {
 					gameState.initFrom(gameState.getGame().getRules(), jsonValue);
 				}
 			}
-		} catch (ParseException | IOException parseException) {
+		} catch (Exception parseException) {
 			server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", parseException));
 			return;
 		}

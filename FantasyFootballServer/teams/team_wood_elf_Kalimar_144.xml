@@ -13,6 +13,7 @@
     <currentTeamValue>100</currentTeamValue>
     <teamStrength>113</teamStrength>
     <division>[X]</division>
+    <treasury>5000000</treasury>
 
     <player nr="1" id="teamWoodElfKalimar1">
         <name>Wardancer1</name>
@@ -22,6 +23,7 @@
             <skill>Strip Ball</skill>
         </skillList>
         <injuryList>
+            <injury>Smashed Hip (-MA)</injury>
             <injury>Smashed Hip (-MA)</injury>
             <injury>Serious Concussion (-AV)</injury>
             <injury>Broken Neck (-AG)</injury>
@@ -36,6 +38,7 @@
             <injury>Broken Neck (-AG)</injury>
             <injury>Smashed Collar Bone (-ST)</injury>
             <injury>Head Injury (-AV)</injury>
+            <injury>Smashed Knee (-MA)</injury>
             <injury>Smashed Knee (-MA)</injury>
             <injury>Neck Injury (-AG)</injury>
             <injury>Dislocated Shoulder (-ST)</injury>

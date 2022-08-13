@@ -72,13 +72,9 @@ public final class StepWizard extends AbstractStep {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-					// mandatory
-					case HOME_TEAM:
-						fHomeTeam = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-						break;
-					default:
-						break;
+				// mandatory
+				if (parameter.getKey() == StepParameterKey.HOME_TEAM) {
+					fHomeTeam = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 				}
 			}
 		}
@@ -146,7 +142,7 @@ public final class StepWizard extends AbstractStep {
 			InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 
 			inducementSet.getInducementMapping().keySet().stream()
-				.filter(inducementType -> inducementType.getUsage() == Usage.SPELL
+				.filter(inducementType -> inducementType.hasUsage(Usage.SPELL)
 					&& inducementType.effects().contains(fWizardSpell)).findFirst().ifPresent(type -> {
 
 				UtilServerInducementUse.useInducement(getGameState(), team, type, 1);

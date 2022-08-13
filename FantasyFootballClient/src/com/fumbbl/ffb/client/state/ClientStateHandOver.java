@@ -153,7 +153,9 @@ public class ClientStateHandOver extends ClientStateMove {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-
+		if (isBalefulHexAvailable(actingPlayer)) {
+			menuItemList.add(createBalefulHexItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 

@@ -135,12 +135,12 @@ public final class StepInitInducement extends AbstractStep {
 			} else {
 				leaveStep(true);
 			}
-		} else if (fInducementType != null && Usage.SPELL == fInducementType.getUsage()) {
-			((Wizard)factory.forName(SequenceGenerator.Type.Wizard.name()))
+		} else if (fInducementType != null && fInducementType.hasUsage(Usage.SPELL)) {
+			((Wizard) factory.forName(SequenceGenerator.Type.Wizard.name()))
 				.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 			leaveStep(false);
 		} else if (fCard != null) {
-			((com.fumbbl.ffb.server.step.generator.common.Card)factory.forName(SequenceGenerator.Type.Card.name()))
+			((com.fumbbl.ffb.server.step.generator.common.Card) factory.forName(SequenceGenerator.Type.Card.name()))
 				.pushSequence(new SequenceParams(getGameState(), fCard, fHomeTeam));
 			leaveStep(false);
 		} else {
@@ -160,7 +160,7 @@ public final class StepInitInducement extends AbstractStep {
 		Game game = getGameState().getGame();
 		TurnData turnData = fHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		Set<InducementType> availableTypes = turnData.getInducementSet().getInducementTypes().stream()
-			.filter(type -> type.getUsage() == Usage.SPELL && turnData.getInducementSet().hasUsesLeft(type))
+			.filter(type -> type.hasUsage(Usage.SPELL) && turnData.getInducementSet().hasUsesLeft(type))
 			.collect(Collectors.toSet());
 		if ((InducementPhase.END_OF_OWN_TURN == fInducementPhase && !fTouchdownOrEndOfHalf) || InducementPhase.START_OF_OWN_TURN == fInducementPhase) {
 			useableInducements.addAll(availableTypes);

@@ -72,6 +72,10 @@ public interface IServerProperty {
 	String BACKUP_URL_CHALLENGE = "backup.url.challenge";
 	String BACKUP_URL_LOAD = "backup.url.load";
 	String BACKUP_URL_SAVE = "backup.url.save";
+	String BACKUP_S3_PROFILE = "backup.s3.profile";
+	String BACKUP_S3_REGION = "backup.s3.region";
+	String BACKUP_S3_BUCKET = "backup.s3.bucket";
+	String BACKUP_S3_BASE_PATH = "backup.s3.basePath";
 
 	String DB_DRIVER = "db.driver";
 	String DB_URL = "db.url";

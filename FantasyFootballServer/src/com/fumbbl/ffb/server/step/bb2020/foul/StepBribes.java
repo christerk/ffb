@@ -105,7 +105,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 					break;
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (inducementCommand.getInducementType().getUsage() == Usage.AVOID_BAN) {
+					if (inducementCommand.getInducementType().hasUsage(Usage.AVOID_BAN)) {
 						fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
 						fBribeSuccessful = null;
 					}
@@ -131,7 +131,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 		if ((fBribesChoice != null) && fBribesChoice && (fBribeSuccessful == null)) {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-			inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
+			inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN))
 				.findFirst().ifPresent(type -> {
 					if (UtilServerInducementUse.useInducement(getGameState(), team, type, 1)) {
 						int roll = getGameState().getDiceRoller().rollBribes();
@@ -156,7 +156,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 			&& (getReRolledAction() != ReRolledActions.ARGUE_THE_CALL || getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION)) {
 
 			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-			Optional<InducementType> briberyReRoll = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.REROLL_ARGUE)
+			Optional<InducementType> briberyReRoll = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REROLL_ARGUE))
 				.findFirst();
 
 			if (getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION) {
@@ -190,11 +190,15 @@ public class StepBribes extends AbstractStepWithReRoll {
 	private boolean rollArgue(Game game, ActingPlayer actingPlayer, InducementSet inducementSet, boolean friendsWithTheRef, Optional<InducementType> briberyReRoll) {
 		int roll = getGameState().getDiceRoller().rollArgueTheCall();
 		int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
+
+		int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);
+		modifiedRoll += biasedRefBonus;
+
 		fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
 		boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
 		getResult().addReport(
-			new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef));
-		boolean couldReRoll = roll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
+			new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef, biasedRefBonus));
+		boolean couldReRoll = modifiedRoll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
 			&& briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get());
 		if (couldReRoll && coachBanned) {
 			useBriberyReRoll(game, inducementSet, briberyReRoll.get());
@@ -222,7 +226,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		InducementSet inducementSet = game.getTurnData().getInducementSet();
 		if (inducementSet.getInducementMapping().entrySet().stream()
-			.anyMatch(entry -> entry.getKey().getUsage() == Usage.AVOID_BAN && inducementSet.hasUsesLeft(entry.getKey()))) {
+			.anyMatch(entry -> entry.getKey().hasUsage(Usage.AVOID_BAN) && inducementSet.hasUsesLeft(entry.getKey()))) {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), 1);
 			dialogParameter.addPlayerId(actingPlayer.getPlayerId());

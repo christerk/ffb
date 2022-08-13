@@ -10,6 +10,26 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.12.0")
+			.addFeature("Temp Agency Cheerleaders")
+			.addFeature("Part-time Assistant Coaches")
+			.addFeature("Biased Referee")
+			.addFeature("Weather Mage")
+			.addImprovement("Rename Igors to Mortuary Assistants in dialogs and game options")
+			.addImprovement("Apo dialogs now state which apo will be used")
+			.addFeature("Plague Doctor")
+			.addFeature("Josef Bugman")
+			.addFeature("Look Into My Eyes")
+			.addBugfix("Multi Block from player with Pile Driver caused games to crash")
+			.addBugfix("Failed interception caught by moving team did cause a turn over")
+			.addBugfix("Mercenaries could not use Regeneration")
+			.addBugfix("Could not leap during gaze action")
+			.addBugfix("Stat reducing injuries where capped at 2")
+			.addFeature("Baleful Hex")
+			.addBugfix("Two For One triggered repeatedly in some situations")
+			.addBugfix("Old replays did not load")
+		);
+
 		versions.add(new VersionChangeList("2.11.0")
 			.addBugfix("Add synchronization on client side (suspect for setup bug)")
 			.addBugfix("Leader state was not set properly at end of drives")

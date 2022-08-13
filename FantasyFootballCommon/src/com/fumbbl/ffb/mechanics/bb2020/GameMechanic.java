@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
@@ -23,7 +24,6 @@ import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 
@@ -305,18 +305,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canUseApo(Game game, Player<?> defender) {
-		if (defender instanceof ZappedPlayer || defender.getPlayerType() == PlayerType.STAR) {
-			return false;
-		}
-
-		if (defender.getPlayerType() == PlayerType.MERCENARY || defender.isJourneyman()) {
-			return ((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getWanderingApothecaries() > 0)
-				|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getWanderingApothecaries() > 0));
-		}
-
-		return ((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
-			|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0));
+	public boolean canUseApo(Game game, Player<?> defender, PlayerState playerState) {
+		return !ApothecaryType.forPlayer(game, defender, playerState).isEmpty();
 	}
 
 	@Override
@@ -344,4 +334,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		return Constant.getEnhancementSkillsToRemoveAtEndOfTurn(skillFactory);
 	}
 
+	@Override
+	public Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory) {
+		return Constant.getEnhancementSkillsToRemoveAtEndOfTurnWhenNotSettingActive(skillFactory);
+	}
 }

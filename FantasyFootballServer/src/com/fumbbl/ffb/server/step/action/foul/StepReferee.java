@@ -31,9 +31,18 @@ import com.fumbbl.ffb.util.StringTool;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StepReferee extends AbstractStep {
 
-	public class StepState {
-		public String gotoLabelOnEnd;
-		public InjuryResult injuryResultDefender;
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_END) {
+					state.gotoLabelOnEnd = (String) parameter.getValue();
+				}
+			}
+		}
+		if (!StringTool.isProvided(state.gotoLabelOnEnd)) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+		}
 	}
 
 	private final StepState state;
@@ -49,39 +58,23 @@ public class StepReferee extends AbstractStep {
 	}
 
 	@Override
-	public void init(StepParameterSet pParameterSet) {
-		if (pParameterSet != null) {
-			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-				case GOTO_LABEL_ON_END:
-					state.gotoLabelOnEnd = (String) parameter.getValue();
-					break;
-				default:
-					break;
-				}
-			}
-		}
-		if (!StringTool.isProvided(state.gotoLabelOnEnd)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-		}
-	}
-
-	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
-			switch (parameter.getKey()) {
-			case INJURY_RESULT:
+			if (parameter.getKey() == StepParameterKey.INJURY_RESULT) {
 				InjuryResult injuryResult = (InjuryResult) parameter.getValue();
 				if ((injuryResult != null) && (injuryResult.injuryContext().getApothecaryMode() == ApothecaryMode.DEFENDER)) {
 					state.injuryResultDefender = injuryResult;
 					return true;
 				}
 				return false;
-			default:
-				break;
 			}
 		}
 		return false;
+	}
+
+	public static class StepState {
+		public String gotoLabelOnEnd;
+		public InjuryResult injuryResultDefender;
 	}
 
 	@Override

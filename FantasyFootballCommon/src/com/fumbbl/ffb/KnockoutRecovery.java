@@ -17,16 +17,18 @@ public class KnockoutRecovery implements IJsonSerializable {
 	private boolean fRecovering;
 	private int fRoll;
 	private int fBloodweiserBabes;
+	private String reRollReason;
 
 	public KnockoutRecovery() {
 		super();
 	}
 
-	public KnockoutRecovery(String pPlayerId, boolean pRecovering, int pRoll, int pBloodweiserBabes) {
+	public KnockoutRecovery(String pPlayerId, boolean pRecovering, int pRoll, int pBloodweiserBabes, String reRollReason) {
 		fPlayerId = pPlayerId;
 		fRecovering = pRecovering;
 		fRoll = pRoll;
 		fBloodweiserBabes = pBloodweiserBabes;
+		this.reRollReason = reRollReason;
 	}
 
 	public String getPlayerId() {
@@ -45,7 +47,10 @@ public class KnockoutRecovery implements IJsonSerializable {
 		return fBloodweiserBabes;
 	}
 
-	// JSON serialization
+	public String getReRollReason() {
+		return reRollReason;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
@@ -53,6 +58,7 @@ public class KnockoutRecovery implements IJsonSerializable {
 		IJsonOption.RECOVERING.addTo(jsonObject, fRecovering);
 		IJsonOption.ROLL.addTo(jsonObject, fRoll);
 		IJsonOption.BLOODWEISER_KEGS.addTo(jsonObject, fBloodweiserBabes);
+		IJsonOption.REASON.addTo(jsonObject, reRollReason);
 		return jsonObject;
 	}
 
@@ -62,6 +68,7 @@ public class KnockoutRecovery implements IJsonSerializable {
 		fRecovering = IJsonOption.RECOVERING.getFrom(source, jsonObject);
 		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
 		fBloodweiserBabes = IJsonOption.BLOODWEISER_KEGS.getFrom(source, jsonObject);
+		reRollReason = IJsonOption.REASON.getFrom(source, jsonObject);
 		return this;
 	}
 

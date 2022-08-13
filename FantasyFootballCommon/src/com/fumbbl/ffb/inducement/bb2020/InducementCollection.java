@@ -8,6 +8,7 @@ import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.GameOptionInt;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,11 +40,22 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
-		add(new InducementType("mortuaryAssistant", "Mortuary Assistant", "Mortuary Assistant", "Mortuary Assistants", GameOptionId.INDUCEMENT_IGORS_MAX,
-			GameOptionId.INDUCEMENT_IGORS_COST, IIconProperty.RESOURCE_IGOR, Usage.REGENERATION) {
+		add(new InducementType("mortuaryAssistant", "Mortuary Assistant", "Mortuary Assistant", "Mortuary Assistants", GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_MAX,
+			GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_COST, GameOptionId.INDUCEMENT_MORTUARY_ASSISTANTS_COST, true, IIconProperty.RESOURCE_IGOR, 1, Usage.REGENERATION) {
 			@Override
 			public int availability(Team team, GameOptions options) {
 				if (!team.getSpecialRules().contains(SpecialRule.SYLVANIAN_SPOTLIGHT)) {
+					return 0;
+				}
+				return super.availability(team, options);
+			}
+		});
+
+		add(new InducementType("plagueDoctor", "Plague Doctor", "Plague Doctor", "Plague Doctors", GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_MAX,
+			GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_COST, GameOptionId.INDUCEMENT_PLAGUE_DOCTORS_COST, true, IIconProperty.RESOURCE_IGOR, 2, Usage.REGENERATION, Usage.APOTHECARY_JOURNEYMEN) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				if (!team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE)) {
 					return 0;
 				}
 				return super.availability(team, options);
@@ -60,6 +72,55 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				return super.availability(team, options);
 			}
 		});
+		add(new InducementType("tempCheerleader", "Temp Agency Cheerleaders", "Temp Agency Cheerleader", "Temp Agency Cheerleaders",
+			GameOptionId.INDUCEMENT_TEMP_CHEERLEADER_MAX, GameOptionId.INDUCEMENT_TEMP_CHEERLEADER_COST, Usage.ADD_CHEERLEADER) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				int availability = super.availability(team, options);
+
+				if (availability > 0) {
+					int max = ((GameOptionInt) options.getOptionWithDefault(GameOptionId.INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX)).getValue() - team.getCheerleaders();
+
+					availability = Math.min(Math.max(max, 0), availability);
+				}
+
+				return availability;
+			}
+		});
+
+		add(new InducementType("partTimeCoach", "Part-time Assistant Coaches", "Part-time Assistant Coach", "Part-time Assistant Coaches",
+			GameOptionId.INDUCEMENT_PART_TIME_COACH_MAX, GameOptionId.INDUCEMENT_PART_TIME_COACH_COST, Usage.ADD_COACH) {
+			@Override
+			public int availability(Team team, GameOptions options) {
+				int availability = super.availability(team, options);
+
+				if (availability > 0) {
+					int max = ((GameOptionInt) options.getOptionWithDefault(GameOptionId.INDUCEMENT_PART_TIME_COACH_TOTAL_MAX)).getValue() - team.getAssistantCoaches();
+
+					availability = Math.min(Math.max(max, 0), availability);
+				}
+
+				return availability;
+			}
+		});
+
+		add(new InducementType("biasedRef", "Biased Referee", "Biased Referee", "Biased Referees",
+			GameOptionId.INDUCEMENT_BIASED_REF_MAX, GameOptionId.INDUCEMENT_BIASED_REF_COST, GameOptionId.INDUCEMENT_BIASED_REF_REDUCED_COST, true,
+			IIconProperty.RESOURCE_BIASED_REF, Usage.ADD_TO_ARGUE_ROLL, Usage.SPOT_FOUL) {
+
+			@Override
+			protected boolean useReducedCostId(Team team) {
+				return team.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION);
+			}
+		});
+
+		add(new InducementType("weatherMage", "Weather Mage", "Weather Mage", "Weather Mages",
+			GameOptionId.INDUCEMENT_WEATHER_MAGE_MAX, GameOptionId.INDUCEMENT_WEATHER_MAGE_COST, null, true,
+			IIconProperty.RESOURCE_WIZARD, Usage.CHANGE_WEATHER));
+
+		add(new InducementType("infamousStaff", "Infamous Coaching Staff", "Infamous Coaching Staff", "Infamous Coaching Staff", GameOptionId.INDUCEMENT_STAFF_MAX, null, Usage.STAFF));
+
+		add(new InducementType("bugmansXXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", GameOptionId.INDUCEMENT_STAFF_MAX, null, null, true, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.REROLL_ONES_ON_KOS));
 	}};
 
 	protected Set<InducementType> getSubTypes() {

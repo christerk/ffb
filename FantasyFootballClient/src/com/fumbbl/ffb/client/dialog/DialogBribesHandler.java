@@ -62,17 +62,17 @@ public class DialogBribesHandler extends DialogHandler {
 		hideDialog();
 		Game game = getClient().getGame();
 		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
-			.filter(type -> type.getUsage() == Usage.AVOID_BAN).findFirst().ifPresent(type -> {
-			if (testDialogHasId(pDialog, DialogId.BRIBES)) {
-				DialogBribes bribesDialog = (DialogBribes) pDialog;
-				DialogBribesParameter dialogBribesParameter = (DialogBribesParameter) game.getDialogParameter();
-				String playerId = bribesDialog.isChoiceYes() ? dialogBribesParameter.getPlayerIds()[0] : null;
-				getClient().getCommunication().sendUseInducement(type, playerId);
-			}
-			if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
-				DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-				Player<?>[] selectedPlayers = playerChoiceDialog.getSelectedPlayers();
-				String[] selectedPlayerIds = new String[selectedPlayers.length];
+			.filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst().ifPresent(type -> {
+				if (testDialogHasId(pDialog, DialogId.BRIBES)) {
+					DialogBribes bribesDialog = (DialogBribes) pDialog;
+					DialogBribesParameter dialogBribesParameter = (DialogBribesParameter) game.getDialogParameter();
+					String playerId = bribesDialog.isChoiceYes() ? dialogBribesParameter.getPlayerIds()[0] : null;
+					getClient().getCommunication().sendUseInducement(type, playerId);
+				}
+				if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
+					DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
+					Player<?>[] selectedPlayers = playerChoiceDialog.getSelectedPlayers();
+					String[] selectedPlayerIds = new String[selectedPlayers.length];
 				for (int i = 0; i < selectedPlayerIds.length; i++) {
 					selectedPlayerIds[i] = selectedPlayers[i].getId();
 				}

@@ -1,5 +1,10 @@
 package com.fumbbl.ffb.server.admin;
 
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.json.UtilJson;
@@ -7,7 +12,6 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.IServerProperty;
-import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.request.ServerRequestSaveReplay;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -26,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.sax.TransformerHandler;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -67,7 +72,7 @@ public class BackupServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 
 		String command = pRequest.getPathInfo();
 		if ((command != null) && (command.length() > 1) && command.startsWith("/")) {
@@ -102,8 +107,8 @@ public class BackupServlet extends HttpServlet {
 		UtilXml.startElement(handler, _XML_TAG_BACKUP);
 
 		boolean isOk = true;
-		String challenge = new StringBuilder().append(fServer.getProperty(IServerProperty.BACKUP_SALT))
-				.append(System.currentTimeMillis()).toString();
+		String challenge = fServer.getProperty(IServerProperty.BACKUP_SALT) +
+			System.currentTimeMillis();
 		try {
 			fLastChallenge = PasswordChallenge.toHexString(PasswordChallenge.md5Encode(challenge.getBytes()));
 		} catch (NoSuchAlgorithmException pE) {
@@ -217,13 +222,11 @@ public class BackupServlet extends HttpServlet {
 				byte[] gzippedJson = UtilJson.gzip(gameState.toJsonValue());
 
 				String logMessage = "Compressing json " + gameState.toJsonValue().toString().length() + " --> "
-						+ gzippedJson.length;
+					+ gzippedJson.length;
 				fServer.getDebugLog().log(IServerLogLevel.DEBUG, gameId, logMessage);
 
-				if (gzippedJson != null) {
-					((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
-					((BufferedOutputStream) out).flush();
-				}
+				((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
+				((BufferedOutputStream) out).flush();
 
 				// getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay size " +
 				// StringTool.formatThousands(gzippedJson.length) + " gzipped.");
@@ -260,14 +263,90 @@ public class BackupServlet extends HttpServlet {
 				fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay loaded from database.");
 			}
 		}
-		if ((gameState == null) && (getServer().getMode() == ServerMode.FUMBBL)) {
-			// fallback in fumbbl mode
-			gameState = loadFromFumbblBackupService(gameId);
+		if ((gameState == null)) {
+			gameState = loadFromS3(gameId);
 			if (gameState != null) {
-				fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay loaded from fumbbl backup service.");
+				fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay loaded from s3 bucket.");
 			}
 		}
 		return gameState;
+	}
+
+
+	private GameState loadFromS3(long gameId) {
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "S3 settings:");
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_BASE_PATH + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_BASE_PATH));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_REGION + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_REGION));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_PROFILE + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_PROFILE));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, IServerProperty.BACKUP_S3_BUCKET + ": " + fServer.getProperty(IServerProperty.BACKUP_S3_BUCKET));
+		ProfileCredentialsProvider profileCredentialsProvider = new ProfileCredentialsProvider(fServer.getProperty(IServerProperty.BACKUP_S3_PROFILE));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Key Id: " + profileCredentialsProvider.getCredentials().getAWSAccessKeyId());
+
+		String basePath = fServer.getProperty(IServerProperty.BACKUP_S3_BASE_PATH);
+		if (!basePath.endsWith("/")) {
+			basePath += "/";
+		}
+		String fileName = basePath + UtilBackup.calculateFolderPathForGame(fServer, String.valueOf(gameId));
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay path on S3: " + fileName);
+		AmazonS3 s3;
+		try {
+			s3 = AmazonS3ClientBuilder.standard().withRegion(fServer.getProperty(IServerProperty.BACKUP_S3_REGION))
+				.withCredentials(profileCredentialsProvider).build();
+		} catch (Throwable t) {
+			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Something went terribly wrong");
+			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, t.getMessage());
+			fServer.getDebugLog().log(IServerLogLevel.WARN, t);
+			return null;
+		}
+
+		byte[] buffer = new byte[1024];
+		int buffer_size;
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Getting object");
+		S3Object s3Replay = null;
+		S3ObjectInputStream s3Stream = null;
+		ByteArrayOutputStream byteArrayOutputStream = null;
+		try {
+			s3Replay = s3.getObject(fServer.getProperty(IServerProperty.BACKUP_S3_BUCKET), fileName);
+			s3Stream = s3Replay.getObjectContent();
+			byteArrayOutputStream = new ByteArrayOutputStream();
+
+			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Content-Length:" + s3Replay.getObjectMetadata().getContentLength());
+			while ((buffer_size = s3Stream.read(buffer)) > 0) {
+				byteArrayOutputStream.write(buffer, 0, buffer_size);
+			}
+			GameState gameState = new GameState(fServer);
+			gameState.initFrom(gameState.getGame().getRules(), UtilJson.gunzip(byteArrayOutputStream.toByteArray()));
+			return gameState;
+		} catch (Exception e) {
+			fServer.getDebugLog().log(gameId, e);
+			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, e.getMessage());
+		} finally {
+			if (byteArrayOutputStream != null) {
+				try {
+					byteArrayOutputStream.close();
+				} catch (IOException e) {
+					fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Could not close bytearray stream");
+				}
+			}
+
+			if (s3Stream != null) {
+				try {
+					s3Stream.close();
+				} catch (IOException e) {
+					fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Could not close s3 stream");
+				}
+			}
+
+			if (s3Replay != null) {
+				try {
+					s3Replay.close();
+				} catch (IOException e) {
+					fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Could not close s3 object");
+				}
+			}
+		}
+		fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Returning null from S3");
+		return null;
 	}
 
 	private long parseGameId(String pGameStateId) {

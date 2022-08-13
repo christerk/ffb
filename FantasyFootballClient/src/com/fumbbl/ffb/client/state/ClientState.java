@@ -417,4 +417,50 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;
 	}
+
+	protected boolean isLookIntoMyEyesAvailable(ActingPlayer actingPlayer) {
+		PlayerState oldPlayerState = actingPlayer.getOldPlayerState();
+		boolean hadTackleZone = oldPlayerState != null && oldPlayerState.hasTacklezones();
+		return !actingPlayer.hasActed() && hadTackleZone && isLookIntoMyEyesAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isLookIntoMyEyesAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
+			&& Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(player.getTeam()), game.getFieldModel().getPlayerCoordinate(player)))
+			.anyMatch(opponent -> UtilPlayer.hasBall(game, opponent));
+	}
+
+	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
+		JMenuItem lookItem = new JMenuItem("Look Into My Eyes",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES)));
+		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
+		return lookItem;
+	}
+
+	protected boolean isBalefulHexAvailable(ActingPlayer player) {
+		return !player.hasActed() && isBalefulHexAvailable(player.getPlayer());
+	}
+
+	protected boolean isBalefulHexAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canMakeOpponentMissTurn)
+			&& Arrays.stream(game.getOtherTeam(game.getActingTeam()).getPlayers()).anyMatch(
+			opponent -> fieldModel.getPlayerCoordinate(opponent).distanceInSteps(playerCoordinate) <= 5
+		);
+	}
+
+	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Baleful Hex",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
+		return menuItem;
+	}
+
 }

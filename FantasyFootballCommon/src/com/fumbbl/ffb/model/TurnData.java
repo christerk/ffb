@@ -2,6 +2,7 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -26,6 +27,7 @@ public class TurnData implements IJsonSerializable {
 	private int reRollsPumpUpTheCrowdOneDrive;
 	private int fApothecaries;
 	private int wanderingApothecaries;
+	private int plagueDoctors;
 	private boolean fBlitzUsed;
 	private boolean fFoulUsed;
 	private boolean fReRollUsed;
@@ -255,6 +257,18 @@ public class TurnData implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TURN_DATA_SET_WANDERING_APOTHECARIES, wanderingApothecaries);
 	}
 
+	public int getPlagueDoctors() {
+		return plagueDoctors;
+	}
+
+	public void setPlagueDoctors(int plagueDoctors) {
+		if (plagueDoctors == this.plagueDoctors) {
+			return;
+		}
+
+		this.plagueDoctors = plagueDoctors;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_PLAGUE_DOCTORS, plagueDoctors);
+	}
 
 	public boolean isHomeData() {
 		return fHomeData;
@@ -273,11 +287,16 @@ public class TurnData implements IJsonSerializable {
 	}
 
 	public void useApothecary() {
-		useApothecary(false);
+		useApothecary(ApothecaryType.TEAM);
 	}
 
-	public void useApothecary(boolean wandering) {
-		if ((fApothecaries <= wanderingApothecaries || wandering) && wanderingApothecaries > 0) {
+	public void useApothecary(ApothecaryType apothecaryType) {
+		if (apothecaryType == ApothecaryType.PLAGUE && plagueDoctors > 0) {
+			setPlagueDoctors(plagueDoctors - 1);
+			return;
+		}
+
+		if ((fApothecaries <= wanderingApothecaries || apothecaryType == ApothecaryType.WANDERING) && wanderingApothecaries > 0) {
 			setWanderingApothecaries(wanderingApothecaries - 1);
 		}
 
@@ -361,6 +380,7 @@ public class TurnData implements IJsonSerializable {
 		}
 		IJsonOption.WANDERING_APOTHECARIES.addTo(jsonObject, wanderingApothecaries);
 		IJsonOption.RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE.addTo(jsonObject, reRollsPumpUpTheCrowdOneDrive);
+		IJsonOption.PLAGUE_DOCTORS.addTo(jsonObject, plagueDoctors);
 		return jsonObject;
 	}
 
@@ -391,6 +411,7 @@ public class TurnData implements IJsonSerializable {
 		fInducementSet.initFrom(source, IJsonOption.INDUCEMENT_SET.getFrom(source, jsonObject));
 
 		wanderingApothecaries = IJsonOption.WANDERING_APOTHECARIES.getFrom(source, jsonObject);
+		plagueDoctors = IJsonOption.PLAGUE_DOCTORS.getFrom(source, jsonObject);
 		return this;
 	}
 

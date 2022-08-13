@@ -196,6 +196,7 @@ public class PlayerIconFactory {
 					break;
 				case PlayerState.EXHAUSTED:
 				case PlayerState.STUNNED:
+				case PlayerState.SETUP_PREVENTED:
 					decorationProperty2 = IIconProperty.DECORATION_STUNNED;
 					break;
 				case PlayerState.BLOCKED:

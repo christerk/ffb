@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.bb2020.inducements;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -133,9 +133,12 @@ public final class StepInitInducement extends AbstractStep {
 			} else {
 				leaveStep(true);
 			}
-		} else if (fInducementType != null && Usage.SPELL == fInducementType.getUsage()) {
+		} else if (fInducementType != null && fInducementType.hasUsage(Usage.SPELL)) {
 			((Wizard) factory.forName(SequenceGenerator.Type.Wizard.name()))
 				.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+			leaveStep(false);
+		} else if (fInducementType != null && fInducementType.hasUsage(Usage.CHANGE_WEATHER)) {
+			getGameState().getStepStack().push(new StepWeatherMage(getGameState()));
 			leaveStep(false);
 		} else if (fCard != null) {
 			((com.fumbbl.ffb.server.step.generator.common.Card) factory.forName(SequenceGenerator.Type.Card.name()))
@@ -157,15 +160,20 @@ public final class StepInitInducement extends AbstractStep {
 		Set<InducementType> useableInducements = new HashSet<>();
 		Game game = getGameState().getGame();
 		TurnData turnData = fHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
-		Set<InducementType> availableTypes = turnData.getInducementSet().getInducementTypes().stream()
-			.filter(type -> type.getUsage() == Usage.SPELL && turnData.getInducementSet().hasUsesLeft(type))
-			.collect(Collectors.toSet());
 		if ((InducementPhase.END_OF_OWN_TURN == fInducementPhase || InducementPhase.END_OF_OPPONENT_TURN == fInducementPhase) && !fTouchdownOrEndOfHalf) {
+			Set<InducementType> availableTypes = turnData.getInducementSet().getInducementTypes().stream()
+				.filter(type -> type.hasUsage(Usage.SPELL) && turnData.getInducementSet().hasUsesLeft(type))
+				.collect(Collectors.toSet());
 			game.setTurnMode(TurnMode.BETWEEN_TURNS);
 			useableInducements.addAll(availableTypes);
 			if (InducementPhase.END_OF_OPPONENT_TURN == fInducementPhase && fHomeTeam != game.isHomePlaying()) {
 				game.setHomePlaying(!game.isHomePlaying());
 			}
+		} else if (InducementPhase.START_OF_OWN_TURN == fInducementPhase) {
+			Set<InducementType> availableTypes = turnData.getInducementSet().getInducementTypes().stream()
+				.filter(type -> type.hasUsage(Usage.CHANGE_WEATHER) && turnData.getInducementSet().hasUsesLeft(type))
+				.collect(Collectors.toSet());
+			useableInducements.addAll(availableTypes);
 		}
 		return useableInducements.toArray(new InducementType[0]);
 	}

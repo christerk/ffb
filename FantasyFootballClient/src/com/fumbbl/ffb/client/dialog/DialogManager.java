@@ -195,6 +195,18 @@ public class DialogManager {
 					case CONFIRM_END_ACTION:
 						setDialogHandler(new DialogConfirmEndActionHandler(getClient()));
 						break;
+					case INFORMATION_OKAY:
+						setDialogHandler(new DialogInformationOkayHandler(getClient()));
+						break;
+					case SELECT_WEATHER:
+						setDialogHandler(new DialogSelectWeatherHandler(getClient()));
+						break;
+					case USE_MORTUARY_ASSISTANT:
+						setDialogHandler(new DialogUseMortuaryAssistantHandler(getClient()));
+						break;
+					case USE_MORTUARY_ASSISTANTS:
+						setDialogHandler(new DialogUseMortuaryAssistantsHandler(getClient()));
+						break;
 					default:
 						break;
 				}

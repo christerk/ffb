@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
@@ -20,6 +21,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -125,6 +127,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		Player<?> player = actingPlayer.getPlayer();
 		if (actingPlayer.isSufferingBloodLust()) {
 			boolean actionHandled = true;
 			switch (pActionKey) {
@@ -132,10 +135,10 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 					createAndShowPopupMenuForBlockingPlayer();
 					break;
 				case PLAYER_ACTION_MOVE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_MOVE);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_MOVE);
 					break;
 				case PLAYER_ACTION_END_MOVE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 					break;
 				default:
 					actionHandled = false;
@@ -145,22 +148,28 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		} else {
 			switch (pActionKey) {
 				case PLAYER_ACTION_TREACHEROUS:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 					break;
 				case PLAYER_ACTION_WISDOM:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_WISDOM);
 					break;
 				case PLAYER_ACTION_BLOCK:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BLOCK);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLOCK);
 					break;
 				case PLAYER_ACTION_STAB:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_STAB);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_STAB);
 					break;
 				case PLAYER_ACTION_RAIDING_PARTY:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 					break;
+				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+					break;
+				case PLAYER_ACTION_BALEFUL_HEX:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+					return true;
 				default:
-					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
 						pActionKey);
 					Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
@@ -183,11 +192,12 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 
 	protected void menuItemSelected(Player<?> player, int pMenuKey) {
 		if (player != null) {
+			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
-					selectedPlayers.keySet().forEach(id -> getClient().getCommunication().sendUnsetBlockTarget(id));
+					selectedPlayers.keySet().forEach(id -> communication.sendUnsetBlockTarget(id));
 					selectedPlayers.clear();
-					getClient().getCommunication().sendActingPlayer(null, null, false);
+					communication.sendActingPlayer(null, null, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_BLOCK:
 					selectPlayer(player, BlockKind.BLOCK);
@@ -198,18 +208,30 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					if (isTreacherousAvailable(player)) {
 						Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-						getClient().getCommunication().sendUseSkill(skill, true, player.getId());
+						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
 					if (isWisdomAvailable(player)) {
-						getClient().getCommunication().sendUseWisdom();
+						communication.sendUseWisdom();
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
 					if (isRaidingPartyAvailable(player)) {
 						Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-						getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
+						communication.sendUseSkill(raidingSkill, true, player.getId());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+					if (isLookIntoMyEyesAvailable(player)) {
+						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
+							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, player.getId()));
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
+					if (isBalefulHexAvailable(player)) {
+						Skill balefulSkill = player.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+						communication.sendUseSkill(balefulSkill, true, player.getId());
 					}
 					break;
 				default:
@@ -242,7 +264,12 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		if (isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			menuItemList.add(createLookIntoMyEyesItem(iconCache));
+		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			menuItemList.add(createBalefulHexItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

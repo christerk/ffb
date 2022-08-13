@@ -42,12 +42,13 @@ public class UtilKickoffSequence {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		for (Player<?> player : team.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			if (playerState.canBeSetUpNextDrive()) {
+			// Keen Players are available but have to be removed from the count to not trigger setup checks as they do not have to be fielded
+			if (playerState.canBeSetUpNextDrive() && !player.hasSkillProperty(NamedProperties.canJoinTeamIfLessThanEleven)) {
 				availablePlayers++;
 			}
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			if ((pHomeTeam && FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate))
-					|| (!pHomeTeam && FieldCoordinateBounds.HALF_AWAY.isInBounds(playerCoordinate))) {
+				|| (!pHomeTeam && FieldCoordinateBounds.HALF_AWAY.isInBounds(playerCoordinate))) {
 				if (player.hasSkillProperty(NamedProperties.canSneakExtraPlayersOntoPitch)) {
 					swarmersOnField++;
 				} else {
@@ -79,11 +80,11 @@ public class UtilKickoffSequence {
 		}
 		if ((allPlayersOnField < maxPlayersOnField) && (availablePlayers >= maxPlayersOnField)) {
 			messageList.add("You placed " + allPlayersOnField + " Players on the field. You have to put " + maxPlayersOnField
-					+ " players on the field.");
+				+ " players on the field (except Keen Players).");
 		} else {
 			if ((allPlayersOnField < maxPlayersOnField) && (allPlayersOnField < availablePlayers)) {
 				messageList.add(
-						"You placed " + allPlayersOnField + " Players on the field. You have to put all players on the field.");
+					"You placed " + allPlayersOnField + " Players on the field. You have to put all players (except Keen Players) on the field.");
 			}
 		}
 		int maxPlayersInWideZone = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_IN_WIDE_ZONE);

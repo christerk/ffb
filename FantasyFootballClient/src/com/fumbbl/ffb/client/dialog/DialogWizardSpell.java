@@ -154,7 +154,7 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 			? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
 		return inducementSet.getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().getUsage() == Usage.SPELL && entry.getValue().getUsesLeft() > 0)
+			.filter(entry -> entry.getKey().hasUsage(Usage.SPELL) && entry.getValue().getUsesLeft() > 0)
 			.flatMap(entry -> entry.getKey().effects().stream()).anyMatch(specialEffect -> specialEffect == effect);
 
 	}

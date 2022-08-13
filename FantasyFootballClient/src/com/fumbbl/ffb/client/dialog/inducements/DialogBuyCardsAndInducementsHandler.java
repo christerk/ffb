@@ -44,9 +44,9 @@ public class DialogBuyCardsAndInducementsHandler extends DialogHandler {
 		if (testDialogHasId(pDialog, DialogId.BUY_CARDS_AND_INDUCEMENTS)) {
 			DialogBuyCardsAndInducements buyInducementsDialog = (DialogBuyCardsAndInducements) pDialog;
 			getClient().getCommunication().sendBuyInducements(buyInducementsDialog.getTeamId(),
-					buyInducementsDialog.getAvailableGold(), buyInducementsDialog.getSelectedInducements(),
-					buyInducementsDialog.getSelectedStarPlayerIds(), buyInducementsDialog.getSelectedMercenaryIds(),
-					buyInducementsDialog.getSelectedMercenarySkills());
+				buyInducementsDialog.getAvailableGold(), buyInducementsDialog.getSelectedInducements(),
+				buyInducementsDialog.getSelectedStarPlayerIds(), buyInducementsDialog.getSelectedMercenaryIds(),
+				buyInducementsDialog.getSelectedMercenarySkills(), buyInducementsDialog.getSelectedStaffIds());
 		}
 	}
 

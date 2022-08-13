@@ -155,6 +155,7 @@ public class ClientStateSelect extends ClientState {
 					break;
 			}
 		}
+
 	}
 
 	private void createAndShowPopupMenuForPlayer(Player<?> pPlayer) {

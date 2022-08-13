@@ -150,7 +150,7 @@ public class StepEndTurn extends AbstractStep {
 			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(team);
 			TurnData turnData = team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
 			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet()
-				.stream().filter(key -> key.getUsage() == Usage.REROLL_ARGUE).findFirst();
+				.stream().filter(key -> key.hasUsage(Usage.REROLL_ARGUE)).findFirst();
 			boolean canUseReRoll = briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
 
 			switch (pReceivedCommand.getId()) {
@@ -187,7 +187,7 @@ public class StepEndTurn extends AbstractStep {
 					break;
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (inducementCommand.getInducementType().getUsage() == Usage.AVOID_BAN) {
+					if (inducementCommand.getInducementType().hasUsage(Usage.AVOID_BAN)) {
 						fWithinSecretWeaponHandling = true;
 						if (!useSecretWeaponBribes(team, inducementCommand.getPlayerIds())) {
 							if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
@@ -452,11 +452,14 @@ public class StepEndTurn extends AbstractStep {
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
 
+			getGameState().restoreWeather();
+
 			if (fNewHalf || fTouchdown) {
 				UtilServerGame.updatePlayerStateDependentProperties(this);
 				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
 				removeReRollsLastingForDrive(true);
 				removeReRollsLastingForDrive(false);
+				UtilServerGame.prepareForSetup(game);
 			}
 
 			if (fNewHalf) {
@@ -491,10 +494,11 @@ public class StepEndTurn extends AbstractStep {
 	private int getFaintingCount(Game game, List<KnockoutRecovery> knockoutRecoveries, List<HeatExhaustion> heatExhaustions, List<Player<?>> unzappedPlayers) {
 		int faintingCount = 0;
 		if (fNewHalf || fTouchdown) {
+
 			for (Player<?> player : game.getPlayers()) {
+				Team team = game.findTeam(player);
 				if (player instanceof ZappedPlayer) {
 					getGameState().getServer().getCommunication().sendUnzapPlayer(getGameState(), (ZappedPlayer) player);
-					Team team = game.findTeam(player);
 					player = ((ZappedPlayer) player).getOriginalPlayer();
 					team.addPlayer(player);
 					unzappedPlayers.add(player);
@@ -502,16 +506,18 @@ public class StepEndTurn extends AbstractStep {
 				}
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
-					KnockoutRecovery knockoutRecovery = recoverKnockout(player);
-					if (knockoutRecovery != null) {
-						knockoutRecoveries.add(knockoutRecovery);
-						if (knockoutRecovery.isRecovering()) {
+					InducementType reRollKOsInducement = (team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway()).getInducementSet().forUsage(Usage.REROLL_ONES_ON_KOS);
+					List<KnockoutRecovery> playerRecoveries = new ArrayList<>();
+					recoverKnockout(player, reRollKOsInducement, playerRecoveries);
+					if (!playerRecoveries.isEmpty()) {
+						knockoutRecoveries.addAll(playerRecoveries);
+						if (playerRecoveries.stream().anyMatch(KnockoutRecovery::isRecovering)) {
 							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
 							UtilBox.putPlayerIntoBox(game, player);
 						}
 					}
 				}
-				if (playerState.getBase() == PlayerState.EXHAUSTED) {
+				if (playerState.getBase() == PlayerState.EXHAUSTED || playerState.getBase() == PlayerState.SETUP_PREVENTED) {
 					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
 				}
 			}
@@ -589,7 +595,7 @@ public class StepEndTurn extends AbstractStep {
 				turnData.setReRollsPumpUpTheCrowdOneDrive(0);
 				getResult().addReport(new ReportPumpUpTheCrowdReRollsLost(teamId, reRollsPumpUpTheCrowd));
 			}
-			if (!fNewHalf || getGameState().getGame().getHalf() > 2) {
+			if (!fNewHalf || getGameState().getGame().getHalf() > 1) {
 				turnData.setReRolls(Math.max(turnData.getReRolls() - (reRollsBrilliantCoaching + reRollsPumpUpTheCrowd), 0));
 			}
 		}
@@ -666,7 +672,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 	}
 
-	private KnockoutRecovery recoverKnockout(Player<?> pPlayer) {
+	private void recoverKnockout(Player<?> pPlayer, InducementType reRollKOsInducement, List<KnockoutRecovery> playerRecoveries) {
 		if (pPlayer != null) {
 			String playerId = pPlayer.getId();
 			int recoveryRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
@@ -674,11 +680,13 @@ public class StepEndTurn extends AbstractStep {
 			InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome())
 				? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
-			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().getUsage() == Usage.KNOCKOUT_RECOVERY).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
+			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.KNOCKOUT_RECOVERY)).map(entry -> entry.getValue().getValue()).findFirst().orElse(0);
 			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserKegValue);
-			return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue);
-		} else {
-			return null;
+			boolean willBeReRolled = recoveryRoll == 1 && reRollKOsInducement != null;
+			playerRecoveries.add(new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue, willBeReRolled ? reRollKOsInducement.getDescription() : null));
+			if (willBeReRolled) {
+				recoverKnockout(pPlayer, null, playerRecoveries);
+			}
 		}
 	}
 
@@ -704,7 +712,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 		if (ArrayTool.isProvided(pPlayerIds)) {
 			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet().stream()
-				.filter(inducement -> inducement.getUsage() == Usage.REROLL_ARGUE).findFirst();
+				.filter(inducement -> inducement.hasUsage(Usage.REROLL_ARGUE)).findFirst();
 
 			for (String playerId : pPlayerIds) {
 				Player<?> player = pTeam.getPlayerById(playerId);
@@ -712,14 +720,17 @@ public class StepEndTurn extends AbstractStep {
 					int roll = getGameState().getDiceRoller().rollArgueTheCall();
 					int modifiedRoll = friendsWithTheRef && roll > 1 ? roll + 1 : roll;
 
+					int biasedRefBonus = turnData.getInducementSet().value(Usage.ADD_TO_ARGUE_ROLL);
+					modifiedRoll += biasedRefBonus;
+
 					boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
 					boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
-					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false, friendsWithTheRef));
+					getResult().addReport(new ReportArgueTheCallRoll(player.getId(), successful, coachBanned, roll, false, friendsWithTheRef, biasedRefBonus));
 					if (successful) {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);
 					}
-					boolean canBeReRolled = roll == 1 && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
+					boolean canBeReRolled = modifiedRoll == 1 && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
 
 					if (canBeReRolled && coachBanned) {
 						reRollArgue(pTeam, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
@@ -744,7 +755,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
-		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN).findFirst();
+		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
 
 		if (bribesType.isPresent() && ArrayTool.isProvided(pPlayerIds)
 			&& UtilServerInducementUse.useInducement(getGameState(), pTeam, bribesType.get(), pPlayerIds.length)) {
@@ -829,7 +840,7 @@ public class StepEndTurn extends AbstractStep {
 		if (playerIds.size() > 0) {
 			InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
-			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN).findFirst();
+			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
 			if (bribesType.isPresent() && inducementSet.hasUsesLeft(bribesType.get())) {
 				Inducement bribes = inducementSet.get(bribesType.get());
 				DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), bribes.getUsesLeft());

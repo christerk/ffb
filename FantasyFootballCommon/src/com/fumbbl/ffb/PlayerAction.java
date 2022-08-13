@@ -20,7 +20,8 @@ public enum PlayerAction implements INamedObject {
 	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, "starts a Kick Team-mate action"), KICK_TEAM_MATE("kickTeamMate", 31, null),
 	TREACHEROUS("treacherous", 32, null), WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", 33, null),
 	THROW_KEG("throwKey", 34, "readies a beer keg"), RAIDING_PARTY("raidingParty", 35, null),
-	MAXIMUM_CARNAGE("maximumCarnage", 36, null);
+	MAXIMUM_CARNAGE("maximumCarnage", 36, null), LOOK_INTO_MY_EYES("lookIntoMyEyes", 37, "tries to steal the ball"),
+	BALEFUL_HEX("balefulHex", 38, null);
 
 	private final String fName;
 	private final int fType;

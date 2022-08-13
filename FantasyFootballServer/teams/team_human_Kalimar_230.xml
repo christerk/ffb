@@ -2,219 +2,222 @@
 
 <team id="teamHumanKalimar">
 
-	<coach>Kalimar</coach>
-	<name>Kalimar's Humans</name>
-	<race>Human</race>
-	<rosterId>human.lrb6</rosterId>
-	<reRolls>5</reRolls>
-	<fanFactor>6</fanFactor>
-	<apothecaries>2</apothecaries>
-	<cheerleaders>3</cheerleaders>
-	<assistantCoaches>4</assistantCoaches>
-	<teamRating>100</teamRating>
-	<currentTeamValue>100</currentTeamValue>
-	<teamStrength>102</teamStrength>
-	<division>[X]</division>
-	<treasury>500000</treasury>
-	<baseIconPath>http://localhost:2224/icons/</baseIconPath>
-	<logo>teamlogos/human.gif</logo>
+    <coach>Kalimar</coach>
+    <name>Kalimar's Humans</name>
+    <race>Human</race>
+    <rosterId>human.lrb6</rosterId>
+    <reRolls>5</reRolls>
+    <fanFactor>6</fanFactor>
+    <apothecaries>0</apothecaries>
+    <cheerleaders>3</cheerleaders>
+    <assistantCoaches>4</assistantCoaches>
+    <teamRating>100</teamRating>
+    <currentTeamValue>100</currentTeamValue>
+    <teamStrength>102</teamStrength>
+    <division>[X]</division>
+    <treasury>500000</treasury>
+    <baseIconPath>http://localhost:2224/icons/</baseIconPath>
+    <logo>teamlogos/human.gif</logo>
+    <specialRules>
+        <rule>Sylvanian Spotlight</rule>
+        <rule>Favoured of Nurgle</rule>
+    </specialRules>
 
-	<player nr="1" id="teamHumanKalimar1">
-		<name>Blitzer1</name>
-		<gender>male</gender>
-		<positionId>human.blitzer</positionId>
-		<skillList>
-			<skill>Guard</skill>
-			<skill>Mighty Blow</skill>
-			<skill>Piling On</skill>
-			<skill>Claw</skill>
-			<skill>Claws</skill>
-		</skillList>
-		<injuryList>
-			<injury>Broken Neck (-1 AG)</injury>
-		</injuryList>
-		<playerStatistics currentSpps="16" />
-	</player>
+    <player nr="1" id="teamHumanKalimar1">
+        <name>Blitzer1</name>
+        <gender>male</gender>
+        <positionId>human.blitzer</positionId>
+        <skillList>
+            <skill>Guard</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Piling On</skill>
+            <skill>Claw</skill>
+            <skill>Claws</skill>
+        </skillList>
+        <injuryList>
+            <injury>Broken Neck (-1 AG)</injury>
+        </injuryList>
+        <playerStatistics currentSpps="16"/>
+        <status>journeyman</status>
+    </player>
 
-	<player nr="2" id="teamHumanKalimar2">
-		<name>Blitzer2</name>
-		<gender>male</gender>
-		<positionId>human.blitzer</positionId>
-		<skillList>
-			<skill>Guard</skill>
-			<skill>Mighty Blow</skill>
-			<skill>Piling On</skill>
-			<skill>Claw</skill>
-			<skill>Claws</skill>
-			<skill>+ST</skill>
-		</skillList>
-		<injuryList>
-			<injury>Serious Injury (NI)</injury>
-		</injuryList>
-		<playerStatistics currentSpps="31" />
-	</player>
+    <player nr="2" id="teamHumanKalimar2">
+        <name>Blitzer2</name>
+        <gender>male</gender>
+        <positionId>human.blitzer</positionId>
+        <skillList>
+            <skill>Guard</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Piling On</skill>
+            <skill>Claw</skill>
+            <skill>Claws</skill>
+            <skill>+ST</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Injury (NI)</injury>
+        </injuryList>
+        <playerStatistics currentSpps="31"/>
+    </player>
 
-	<player nr="3" id="teamHumanKalimar3">
-		<name>Blitzer3</name>
-		<gender>male</gender>
-		<positionId>human.blitzer</positionId>
-		<skillList>
-			<skill>Tackle</skill>
-			<skill>Mighty Blow</skill>
-			<skill>Piling On</skill>
-			<skill>Claw</skill>
-			<skill>Claws</skill>
-			<skill>Shadowing</skill>
-			<skill>Pro</skill>
-			<skill>+MA</skill>
-		</skillList>
-		<injuryList>
-			<injury>Serious Injury (NI)</injury>
-			<injury>Serious Injury (NI)</injury>
-			<injury>Serious Injury (NI)</injury>
-			<injury>Serious Injury (NI)</injury>
-		</injuryList>
-		<playerStatistics currentSpps="76" />
-	</player>
+    <player nr="3" id="teamHumanKalimar3">
+        <name>Blitzer3</name>
+        <gender>male</gender>
+        <positionId>human.blitzer</positionId>
+        <skillList>
+            <skill>Tackle</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Piling On</skill>
+            <skill>Claw</skill>
+            <skill>Claws</skill>
+            <skill>Shadowing</skill>
+            <skill>Pro</skill>
+            <skill>+MA</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Serious Injury (NI)</injury>
+        </injuryList>
+        <playerStatistics currentSpps="76"/>
+    </player>
 
-	<player nr="4" id="teamHumanKalimar4">
-		<name>Blitzer4</name>
-		<gender>male</gender>
-		<positionId>human.blitzer</positionId>
-		<skillList>
-			<skill>Tackle</skill>
-			<skill>Mighty Blow</skill>
-			<skill>Piling On</skill>
-			<skill>Claw</skill>
-			<skill>Claws</skill>
-			<skill>Shadowing</skill>
-			<skill>Pro</skill>
-		</skillList>
-		<injuryList>
-			<injury>Smashed Knee (NI)</injury>
-		</injuryList>
-		<playerStatistics currentSpps="51" />
-	</player>
+    <player nr="4" id="teamHumanKalimar4">
+        <name>Blitzer4</name>
+        <gender>male</gender>
+        <positionId>human.blitzer</positionId>
+        <skillList>
+            <skill>Tackle</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Piling On</skill>
+            <skill>Claw</skill>
+            <skill>Claws</skill>
+            <skill>Shadowing</skill>
+            <skill>Pro</skill>
+        </skillList>
+        <injuryList>
+            <injury>Smashed Knee (NI)</injury>
+        </injuryList>
+        <playerStatistics currentSpps="51"/>
+    </player>
 
-	<player nr="5" id="teamHumanKalimar5">
-		<name>Thrower1</name>
-		<gender>male</gender>
-		<positionId>human.thrower</positionId>
-		<skillList>
-			<skill>Strong Arm</skill>
-			<skill>Accurate</skill>
-			<skill>Kick-Off Return</skill>
-			<skill>Hail Mary Pass</skill>
-		</skillList>
-		<playerStatistics currentSpps="16" />
-	</player>
-	
-	<player nr="6" id="teamHumanKalimar6">
-		<name>Catcher1</name>
-		<gender>male</gender>
-		<positionId>human.catcher</positionId>
-		<skillList>
-			<skill>Sure Feet</skill>
-			<skill>Sprint</skill>
-			<skill>Side Step</skill>
-			<skill>Diving Tackle</skill>
-		</skillList>
-		<playerStatistics currentSpps="51" />
-	</player>
-	
-	<player nr="7" id="teamHumanKalimar7">
-		<name>Catcher2</name>
-		<gender>male</gender>
-		<positionId>human.catcher</positionId>
-		<skillList>
-			<skill>Sure Feet</skill>
-			<skill>Sprint</skill>
-			<skill>Side Step</skill>
-			<skill>Diving Tackle</skill>
-		</skillList>
-		<playerStatistics currentSpps="51" />
-	</player>
-	
-	<player nr="8" id="teamHumanKalimar8">
-		<name>Lineman1</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList></skillList>
-	</player>
+    <player nr="5" id="teamHumanKalimar5">
+        <name>Thrower1</name>
+        <gender>male</gender>
+        <positionId>human.thrower</positionId>
+        <skillList>
+            <skill>Strong Arm</skill>
+            <skill>Accurate</skill>
+            <skill>Kick-Off Return</skill>
+            <skill>Hail Mary Pass</skill>
+        </skillList>
+        <playerStatistics currentSpps="16"/>
+    </player>
 
-	<player nr="9" id="teamHumanKalimar9">
-		<name>Ogre</name>
-		<gender>male</gender>
-		<positionId>human.ogre</positionId>
-		<skillList>
-			<skill>Pro</skill>
-			<skill>Guard</skill>
-			<skill>Break Tackle</skill>
-			<skill>Multiple Block</skill>
-		</skillList>
-		<playerStatistics currentSpps="31" />
-	</player>
+    <player nr="6" id="teamHumanKalimar6">
+        <name>Catcher1</name>
+        <gender>male</gender>
+        <positionId>human.catcher</positionId>
+        <skillList>
+            <skill>Sure Feet</skill>
+            <skill>Sprint</skill>
+            <skill>Side Step</skill>
+            <skill>Diving Tackle</skill>
+        </skillList>
+        <playerStatistics currentSpps="51"/>
+    </player>
 
-	<player nr="10" id="teamHumanKalimar10">
-		<name>Lineman2</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList>
-			<skill>Jump Up</skill>
-		</skillList>
-		<playerStatistics currentSpps="6" />
-	</player>
+    <player nr="7" id="teamHumanKalimar7">
+        <name>Catcher2</name>
+        <gender>male</gender>
+        <positionId>human.catcher</positionId>
+        <skillList>
+            <skill>Sure Feet</skill>
+            <skill>Sprint</skill>
+            <skill>Side Step</skill>
+            <skill>Diving Tackle</skill>
+        </skillList>
+        <playerStatistics currentSpps="51"/>
+    </player>
 
-	<player nr="11" id="teamHumanKalimar11">
-		<name>Lineman3</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList>
-			<skill>Jump Up</skill>
-		</skillList>
-		<playerStatistics currentSpps="6" />
-	</player>
+    <player nr="8" id="teamHumanKalimar8">
+        <name>Lineman1</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <skillList></skillList>
+    </player>
 
-	<player nr="12" id="teamHumanKalimar12">
-		<name>Lineman4</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList></skillList>
-	</player>
-  
-	<player nr="13" id="teamHumanKalimar13">
-		<name>Lineman5</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList></skillList>
-	</player>
+    <player nr="9" id="teamHumanKalimar9">
+        <name>Ogre</name>
+        <gender>male</gender>
+        <positionId>human.ogre</positionId>
+        <skillList>
+            <skill>Pro</skill>
+            <skill>Guard</skill>
+            <skill>Break Tackle</skill>
+            <skill>Multiple Block</skill>
+        </skillList>
+        <playerStatistics currentSpps="31"/>
+    </player>
 
-	<player nr="14" id="teamHumanKalimar14">
-		<name>Lineman6</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList></skillList>
-	</player>
+    <player nr="10" id="teamHumanKalimar10">
+        <name>Lineman2</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <skillList>
+            <skill>Jump Up</skill>
+        </skillList>
+        <playerStatistics currentSpps="6"/>
+    </player>
 
-	<player nr="15" id="teamHumanKalimar15">
-		<name>Lineman7</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<skillList>
-			<skill>Kick</skill>
-			<skill>Kick-Off Return</skill>
-		</skillList>
-		<playerStatistics currentSpps="6" />
-	</player>
+    <player nr="11" id="teamHumanKalimar11">
+        <name>Lineman3</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <skillList>
+            <skill>Jump Up</skill>
+        </skillList>
+        <playerStatistics currentSpps="6"/>
+    </player>
 
-	<player nr="16" id="teamHumanKalimar16">
-		<name>Lineman8</name>
-		<gender>male</gender>
-		<positionId>human.lineman</positionId>
-		<injuryList>
-			<injury recovering="true">Fractured Leg (MNG)</injury>
-		</injuryList>
-		<skillList></skillList>
-	</player>
+    <player nr="12" id="teamHumanKalimar12">
+        <name>Lineman4</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <skillList></skillList>
+    </player>
+    <player nr="13" id="teamHumanKalimar13">
+        <name>Lineman5</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <skillList></skillList>
+    </player>
 
+    <player nr="14" id="teamHumanKalimar14">
+        <name>Lineman6</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <skillList></skillList>
+    </player>
+
+    <player nr="15" id="teamHumanKalimar15">
+        <name>Lineman7</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <skillList>
+            <skill>Kick</skill>
+            <skill>Kick-Off Return</skill>
+        </skillList>
+        <playerStatistics currentSpps="6"/>
+    </player>
+
+    <player nr="16" id="teamHumanKalimar16">
+        <name>Lineman8</name>
+        <gender>male</gender>
+        <positionId>human.lineman</positionId>
+        <injuryList>
+            <injury recovering="true">Fractured Leg (MNG)</injury>
+        </injuryList>
+        <skillList></skillList>
+    </player>
 </team>

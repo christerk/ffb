@@ -39,6 +39,9 @@ public class GameOptionFactory {
 			case ALLOW_STAR_ON_BOTH_TEAMS:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("A star player may play for both teams.");
+			case ALLOW_STAFF_ON_BOTH_TEAMS:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("An Infamous Staff member may be hired by both teams.");
 			case ARGUE_THE_CALL:
 				return new GameOptionBoolean(pOptionId).setDefault(true).setMessageFalse("Calls may not be argued.");
 			case CARDS_DESPERATE_MEASURE_COST:
@@ -135,6 +138,14 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Igors can be purchased for $1 gps each.");
 			case INDUCEMENT_IGORS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Igor(s).");
+			case INDUCEMENT_MORTUARY_ASSISTANTS_COST:
+				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Mortuary Assistants can be purchased for $1 gps each.");
+			case INDUCEMENT_MORTUARY_ASSISTANTS_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Mortuary Assistant(s).");
+			case INDUCEMENT_PLAGUE_DOCTORS_COST:
+				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Plague Doctors can be purchased for $1 gps each.");
+			case INDUCEMENT_PLAGUE_DOCTORS_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Plague Doctor(s).");
 			case INDUCEMENT_KEGS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Bloodweiser Kegs can be purchased for $1 gps each.");
@@ -153,6 +164,8 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Rerolls can be purchased for $1 gps each.");
 			case INDUCEMENT_EXTRA_TRAINING_MAX:
 				return new GameOptionInt(pOptionId).setDefault(4).setMessage("Coaches may purchase up to $1 reroll(s).");
+			case INDUCEMENT_STAFF_MAX:
+				return new GameOptionInt(pOptionId).setDefault(2).setMessage("Coaches may purchase up to $1 infamous coaching staff member(s).");
 			case INDUCEMENT_STARS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(2).setMessage("Coaches may purchase up to $1 star(s).");
 			case INDUCEMENT_WIZARDS_COST:
@@ -229,7 +242,7 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 groups of Riotous Rookies.");
 			case INDUCEMENT_RIOTOUS_ROOKIES_COST:
 				return new GameOptionInt(pOptionId).setDefault(100000)
-					.setMessage("Groups of Riotous Rookies can be purchased for $1 gps each.");
+					.setMessage("Groups of Riotous Rookies can be hired for $1 gps each.");
 			case INDUCEMENT_PRAYERS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Prayers cost $1 gps each.");
@@ -262,6 +275,37 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Ball and Chain always performs regular blocks")
 					.setMessageFalse("Ball and Chain may use special block actions");
+			case INDUCEMENT_TEMP_CHEERLEADER_COST:
+				return new GameOptionInt(pOptionId).setDefault(20000)
+					.setMessage("Temp Agency Cheerleaders cost $1 gps each");
+			case INDUCEMENT_TEMP_CHEERLEADER_MAX:
+				return new GameOptionInt(pOptionId).setDefault(4)
+					.setMessage("Coaches may hire $1 Temp Agency Cheerleaders");
+			case INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX:
+				return new GameOptionInt(pOptionId).setDefault(16)
+					.setMessage("Coaches may hire Temp Agency Cheerleaders until a max of $1 cheerleaders");
+			case INDUCEMENT_PART_TIME_COACH_COST:
+				return new GameOptionInt(pOptionId).setDefault(20000)
+					.setMessage("Part-time Assistant Coaches cost $1 gps each");
+			case INDUCEMENT_PART_TIME_COACH_MAX:
+				return new GameOptionInt(pOptionId).setDefault(3)
+					.setMessage("Coaches may hire $1 Part-time Assistant Coaches");
+			case INDUCEMENT_PART_TIME_COACH_TOTAL_MAX:
+				return new GameOptionInt(pOptionId).setDefault(9)
+					.setMessage("Coaches may hire Part-time Assistant Coaches until a max of $1 assistant coaches");
+			case INDUCEMENT_BIASED_REF_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 Biased Refs.");
+			case INDUCEMENT_BIASED_REF_COST:
+				return new GameOptionInt(pOptionId).setDefault(120000)
+					.setMessage("Biased Refs can be hired for $1 gps each.");
+			case INDUCEMENT_BIASED_REF_REDUCED_COST:
+				return new GameOptionInt(pOptionId).setDefault(80000)
+					.setMessage("Biased Ref for reduced price can be purchased for $1 gps each.");
+			case INDUCEMENT_WEATHER_MAGE_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 Weather Mages.");
+			case INDUCEMENT_WEATHER_MAGE_COST:
+				return new GameOptionInt(pOptionId).setDefault(30000)
+					.setMessage("Weather Mages can be hired for $1 gps each.");
 			default:
 				return null;
 		}

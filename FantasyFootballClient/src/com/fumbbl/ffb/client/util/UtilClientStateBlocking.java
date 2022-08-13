@@ -6,6 +6,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -15,6 +16,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
@@ -32,37 +34,42 @@ public class UtilClientStateBlocking {
 		boolean actionHandled;
 		Game game = pClientState.getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		Player<?> player = actingPlayer.getPlayer();
 		switch (pActionKey) {
 			case PLAYER_ACTION_BLOCK:
-				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BLOCK);
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BLOCK);
 				actionHandled = true;
 				break;
 			case PLAYER_ACTION_STAB:
-				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_STAB);
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_STAB);
 				actionHandled = true;
 				break;
 			case PLAYER_ACTION_CHAINSAW:
-				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_CHAINSAW);
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_CHAINSAW);
 				actionHandled = true;
 				break;
 			case PLAYER_ACTION_PROJECTILE_VOMIT:
-				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 				actionHandled = true;
 				break;
 			case PLAYER_ACTION_TREACHEROUS:
-				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 				actionHandled = true;
 				break;
 			case PLAYER_ACTION_WISDOM:
-				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_WISDOM);
 				actionHandled = true;
 				break;
 			case PLAYER_ACTION_RAIDING_PARTY:
-				menuItemSelected(pClientState, actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_BALEFUL_HEX:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 				actionHandled = true;
 				break;
 			default:
-				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
 					pActionKey);
 				Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
@@ -77,6 +84,7 @@ public class UtilClientStateBlocking {
 		if (pPlayer != null) {
 			Game game = pClientState.getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
+			ClientCommunication communication = pClientState.getClient().getCommunication();
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_BLOCK:
 					handled = true;
@@ -96,14 +104,22 @@ public class UtilClientStateBlocking {
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					pClientState.getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
+					communication.sendUseSkill(skill, true, pPlayer.getId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					pClientState.getClient().getCommunication().sendUseWisdom();
+					communication.sendUseWisdom();
 					break;
 				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
 					Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-					pClientState.getClient().getCommunication().sendUseSkill(raidingSkill, true, pPlayer.getId());
+					communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
+					UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
+						.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
+					break;
+				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
+					Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+					communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
 					break;
 				default:
 					break;

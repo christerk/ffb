@@ -98,6 +98,7 @@ public interface IIconProperty {
 	String RESOURCE_WIZARD = "resource.wizard";
 	String RESOURCE_COUNTER_SPRITE = "resource.counter.sprite";
 	String RESOURCE_RE_ROLL_ARGUE = "resource.reRoll.argue";
+	String RESOURCE_BIASED_REF = "resource.biased.ref";
 
 	// Dice
 	String DICE_BLOCK_1 = "dice.block.1";
@@ -166,6 +167,8 @@ public interface IIconProperty {
 	String ACTION_WISDOM = "action.wisdom";
 	String ACTION_BEER_BARREL_BASH = "action.beerBarrelBash";
 	String ACTION_RAIDING_PARTY = "action.raidingParty";
+	String ACTION_LOOK_INTO_MY_EYES = "action.lookIntoMyEyes";
+	String ACTION_BALEFUL_HEX = "action.balefulHex";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

@@ -36,7 +36,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Kalimar
  */
 public class InducementSet implements IXmlSerializable, IJsonSerializable {
@@ -244,7 +243,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	public int totalInducements() {
 		int total = 0;
 		for (Inducement inducement : getInducements()) {
-			if (!Usage.EXCLUDE_FROM_COUNT.contains(inducement.getType().getUsage())) {
+			if (!Usage.EXCLUDE_FROM_COUNT.containsAll(inducement.getType().getUsages())) {
 				total += inducement.getValue();
 			}
 		}
@@ -260,6 +259,16 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	// no change tracking (Fumbbl communication only)
 	public void addStarPlayerPositionId(String pStarPlayerPositionId) {
 		fStarPlayerPositionIds.add(pStarPlayerPositionId);
+	}
+
+	public int value(Usage usage) {
+		return getInducementTypes().stream().filter(type -> type.hasUsage(usage))
+			.findFirst().map(inducementType -> get(inducementType).getValue()).orElse(0);
+	}
+
+	public InducementType forUsage(Usage usage) {
+		return getInducementTypes().stream().filter(inducement -> inducement.hasUsage(usage))
+			.findFirst().orElse(null);
 	}
 
 	// change tracking
@@ -386,7 +395,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		IJsonOption.CARDS_DEACTIVATED.addTo(jsonObject, cardsDeactivated);
 		String[] starPlayerPositionIds = getStarPlayerPositionIds();
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
-			IJsonOption.STAR_PLAYER_POSTION_IDS.addTo(jsonObject, starPlayerPositionIds);
+			IJsonOption.STAR_PLAYER_POSITION_IDS.addTo(jsonObject, starPlayerPositionIds);
 		}
 
 		IJsonOption.PRAYERS.addTo(jsonObject, prayers.stream().map(Prayer::getName).collect(Collectors.toList()));
@@ -422,7 +431,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 				fCardsDeactivated.add(cardFactory.forName(cardName));
 			}
 		}
-		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(source, jsonObject);
+		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSITION_IDS.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
 			fStarPlayerPositionIds.addAll(Arrays.asList(starPlayerPositionIds));
 		}

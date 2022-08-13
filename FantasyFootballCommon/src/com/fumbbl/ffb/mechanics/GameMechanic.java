@@ -100,9 +100,12 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract PlayerType raisedNurgleType();
 
-	public abstract boolean canUseApo(Game game, Player<?> defender);
+	public abstract boolean canUseApo(Game game, Player<?> defender, PlayerState playerState);
 
 	public abstract String weatherDescription(Weather weather);
 
 	public abstract Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory);
+
+	public abstract Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory);
+
 }

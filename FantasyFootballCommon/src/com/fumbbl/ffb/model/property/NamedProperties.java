@@ -63,11 +63,13 @@ public class NamedProperties {
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
 	public static final ISkillProperty canGrantSkillsToTeamMates = new NamedProperty("Can Grant Skills to Team-Mates");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
+	public static final ISkillProperty canJoinTeamIfLessThanEleven = new NamedProperty("Can Join Team If Less Than Eleven");
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
 	public static final ISkillProperty canThrowKeg = new NamedProperty("Can Throw Keg");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Can Make Extra GFI");
 	public static final ISkillProperty canMakeAnExtraGfiOnce = new NamedProperty("Can Make Extra GFI Once");
+	public static final ISkillProperty canMakeOpponentMissTurn = new NamedProperty("Can Make Opponent Miss Turn");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");
 	public static final ISkillProperty canMoveAfterQuickPass = new NamedProperty("Can Move After Quick Pass");
 	public static final ISkillProperty canMoveDuringKickOffScatter = new NamedProperty(
@@ -89,6 +91,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRerollBothDowns = new NamedProperty("Can Reroll Both Downs");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
 	public static final ISkillProperty canReRollHmpScatter = new NamedProperty("Can ReRoll Hmp Scatter");
+	public static final ISkillProperty canReRollOnesOnKORecovery = new NamedProperty("Can Re-Roll Ones On KO Recovery");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
 	public static final ISkillProperty canRerollSingleDieOncePerGame = new NamedProperty("Can Reroll Single Die Once Per Game");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
@@ -99,6 +102,7 @@ public class NamedProperties {
 	public static final ISkillProperty canStabTeamMateForBall = new NamedProperty("Can Stab Team Mate For Ball");
 	public static final ISkillProperty canStandUpForFree = new NamedProperty("Can Stand Up For Free");
 	public static final ISkillProperty canStandUpTeamMates = new NamedProperty("Can Stand Up Team-Mates");
+	public static final ISkillProperty canStealBallFromOpponent = new NamedProperty("Can Steal Ball From Opponent");
 	public static final ISkillProperty canTakeDownPlayersWithHimOnBothDown = new NamedProperty("Can Take Down Players With Him On Both Down");
 	public static final ISkillProperty canThrowTeamMates = new NamedProperty("Can Throw Team Mates");
 	public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
@@ -127,6 +131,7 @@ public class NamedProperties {
 		"Grants Team Re-Roll When On Pitch");
 	public static final ISkillProperty grantsSingleUseTeamRerollWhenOnPitch = new NamedProperty(
 		"Grants Single Use Team Reroll When On Pitch");
+	public static final ISkillProperty hasToMissTurn = new NamedProperty("Has To Miss Turn");
 	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");
 	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");

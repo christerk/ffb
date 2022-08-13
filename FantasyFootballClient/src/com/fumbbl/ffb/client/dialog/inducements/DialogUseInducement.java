@@ -37,7 +37,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	private InducementType fInducement;
 	private Card fCard;
 
-	private JButton fButtonWizard;
+	private JButton fButtonWizard, weatherMageButton;
 	private final JButton fButtonContinue;
 	private final Map<Card, JButton> fButtonPerCard;
 
@@ -86,7 +86,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			}
 		}
 
-		if (inducementSet.stream().anyMatch(type -> type.getUsage() == Usage.SPELL)) {
+		if (inducementSet.stream().anyMatch(type -> type.hasUsage(Usage.SPELL))) {
 
 			JPanel panelWizard = new JPanel();
 			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
@@ -99,6 +99,25 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			fButtonWizard.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			fButtonWizard.addActionListener(this);
 			panelWizard.add(fButtonWizard);
+
+			panelMain.add(panelWizard);
+			panelMain.add(Box.createVerticalStrut(5));
+
+		}
+
+		if (inducementSet.stream().anyMatch(type -> type.hasUsage(Usage.CHANGE_WEATHER))) {
+
+			JPanel panelWizard = new JPanel();
+			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
+			String buttonText = "<html>" +
+				"<b>Weather Mage</b>" +
+				"<br>Roll for weather" +
+				"</html>";
+			weatherMageButton = new JButton(buttonText);
+			weatherMageButton.setHorizontalAlignment(SwingConstants.LEFT);
+			weatherMageButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+			weatherMageButton.addActionListener(this);
+			panelWizard.add(weatherMageButton);
 
 			panelMain.add(panelWizard);
 			panelMain.add(Box.createVerticalStrut(5));
@@ -131,8 +150,12 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	public void actionPerformed(ActionEvent pActionEvent) {
 		fInducement = null;
 		if (pActionEvent.getSource() == fButtonWizard) {
-			fInducement = ((InducementTypeFactory)getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-				.allTypes().stream().filter(type -> type.getUsage() == Usage.SPELL).findFirst().orElse(null);
+			fInducement = ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
+				.allTypes().stream().filter(type -> type.hasUsage(Usage.SPELL)).findFirst().orElse(null);
+		}
+		if (pActionEvent.getSource() == weatherMageButton) {
+			fInducement = ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
+				.allTypes().stream().filter(type -> type.hasUsage(Usage.CHANGE_WEATHER)).findFirst().orElse(null);
 		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {

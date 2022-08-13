@@ -96,7 +96,7 @@ public class StepBribes extends AbstractStep {
 					break;
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (inducementCommand.getInducementType().getUsage() == Usage.AVOID_BAN) {
+					if (inducementCommand.getInducementType().hasUsage(Usage.AVOID_BAN)) {
 						fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
 						fBribeSuccessful = null;
 					}
@@ -122,7 +122,7 @@ public class StepBribes extends AbstractStep {
 		if ((fBribesChoice != null) && fBribesChoice && (fBribeSuccessful == null)) {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-			inducementSet.getInducementMapping().keySet().stream().filter(type -> type.getUsage() == Usage.AVOID_BAN)
+			inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN))
 				.findFirst().ifPresent(type -> {
 				if (UtilServerInducementUse.useInducement(getGameState(), team, type, 1)) {
 					int roll = getGameState().getDiceRoller().rollBribes();
@@ -167,7 +167,7 @@ public class StepBribes extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		InducementSet inducementSet = game.getTurnData().getInducementSet();
 		if (inducementSet.getInducementMapping().entrySet().stream()
-			.anyMatch(entry -> entry.getKey().getUsage() == Usage.AVOID_BAN && inducementSet.hasUsesLeft(entry.getKey()))) {
+			.anyMatch(entry -> entry.getKey().hasUsage(Usage.AVOID_BAN) && inducementSet.hasUsesLeft(entry.getKey()))) {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), 1);
 			dialogParameter.addPlayerId(actingPlayer.getPlayerId());

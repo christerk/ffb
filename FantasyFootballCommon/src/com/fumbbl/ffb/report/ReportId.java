@@ -36,7 +36,7 @@ public enum ReportId implements INamedObject {
 	INDUCEMENT("inducement"), PILING_ON("pilingOn"), CHAINSAW_ROLL("chainsawRoll"), LEADER("leader"),
 	SECRET_WEAPON_BAN("secretWeaponBan"), BLOOD_LUST_ROLL("bloodLustRoll"), HYPNOTIC_GAZE_ROLL("hypnoticGazeRoll"),
 	BITE_SPECTATOR("biteSpectator"), ANIMOSITY_ROLL("animosityRoll"), RAISE_DEAD("raiseDead"), BLOCK_ROLL("blockRoll"),
-	PENALTY_SHOOTOUT("penaltyShootout"), DOUBLE_HIRED_STAR_PLAYER("doubleHiredStarPlayer"),
+	PENALTY_SHOOTOUT("penaltyShootout"), DOUBLE_HIRED_STAR_PLAYER("doubleHiredStarPlayer"), DOUBLE_HIRED_STAFF("doubleHiredStaff"),
 	SPELL_EFFECT_ROLL("spellEffectRoll"), WIZARD_USE("wizardUse"), GAME_OPTIONS("gameOptions"), // only for conversion
 	PASS_BLOCK("passBlock"), NO_PLAYERS_TO_FIELD("noPlayersToField"), PLAY_CARD("playCard"),
 	CARD_DEACTIVATED("cardDeactivated"), BOMB_OUT_OF_BOUNDS("bombOutOfBounds"), PETTY_CASH("pettyCash"), FREE_PETTY_CASH("freePettyCash"),
@@ -55,7 +55,9 @@ public enum ReportId implements INamedObject {
 	SKILL_WASTED("skillWasted"), TWO_FOR_ONE("twoForOne"),
 	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
 	RAIDING_PARTY("raidingParty"), EVENT("event"),
-	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll");
+	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll"),
+	BIASED_REF("biasedRef"), WEATHER_MAGE_ROLL("weatherMageRoll"), WEATHER_MAGE_RESULT("weatherMageResult"),
+	LOOK_INTO_MY_EYES_ROLL("lookIntoMyEyesRoll"), BALEFUL_HEX("balefulHex");
 
 	// obsolete: 50 (spiralling expenses)
 	// obsolete: 71 (game options)

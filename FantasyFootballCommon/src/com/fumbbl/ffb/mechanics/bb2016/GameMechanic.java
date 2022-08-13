@@ -265,7 +265,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean canUseApo(Game game, Player<?> defender) {
+	public boolean canUseApo(Game game, Player<?> defender, PlayerState playerState) {
 		return defender.getPlayerType() != PlayerType.STAR &&
 			((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
 				|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0));
@@ -293,6 +293,11 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory) {
 		return Collections.emptySet();
 	}
 }

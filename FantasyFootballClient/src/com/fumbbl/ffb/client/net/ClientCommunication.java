@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.net;
 
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.ConcedeGameStatus;
 import com.fumbbl.ffb.FantasyFootballException;
@@ -69,6 +70,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
 import com.fumbbl.ffb.net.commands.ClientCommandRequestVersion;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
+import com.fumbbl.ffb.net.commands.ClientCommandSelectWeather;
 import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandSetMarker;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
@@ -377,10 +379,6 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseInducement(pInducement, pPlayerId));
 	}
 
-	public void sendUseInducement(Card pCard, String pPlayerId) {
-		send(new ClientCommandUseInducement(pCard, pPlayerId));
-	}
-
 	public void sendUseInducement(InducementType pInducement, String[] pPlayerIds) {
 		send(new ClientCommandUseInducement(pInducement, pPlayerIds));
 	}
@@ -427,8 +425,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 			pTeamSetup.getCoordinates()));
 	}
 
-	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed) {
-		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed));
+	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType) {
+		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType));
 	}
 
 	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, PlayerState oldPlayerState) {
@@ -468,9 +466,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet,
-	                               String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {
+																 String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills,
+																 String[] staffPositionIds) {
 		send(new ClientCommandBuyInducements(pTeamId, pAvailableGold, pInducementSet, pStarPlayerPositionIds,
-			pMercenaryPositionIds, pMercenarySkills));
+			pMercenaryPositionIds, pMercenarySkills, staffPositionIds));
 	}
 
 	public void sendBuyCard(CardType pType) {
@@ -539,6 +538,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendThrowKeg(Player<?> player) {
 		send(new ClientCommandThrowKeg(player.getId()));
+	}
+
+	public void sendSelectedWeather(int modifier, String weatherName) {
+		send(new ClientCommandSelectWeather(modifier, weatherName));
 	}
 
 	public FantasyFootballClient getClient() {
