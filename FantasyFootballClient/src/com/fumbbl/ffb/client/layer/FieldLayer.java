@@ -2,9 +2,11 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 
 import java.awt.AlphaComposite;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
@@ -18,9 +20,6 @@ public abstract class FieldLayer {
 
 	public static final int FIELD_SQUARE_SIZE = 30;
 
-	public static final int FIELD_IMAGE_WIDTH = 782;
-	public static final int FIELD_IMAGE_HEIGHT = 452;
-
 	public static final int FIELD_IMAGE_OFFSET_CENTER_X = 15;
 	public static final int FIELD_IMAGE_OFFSET_CENTER_Y = 15;
 
@@ -28,9 +27,10 @@ public abstract class FieldLayer {
 	private final BufferedImage fImage;
 	private Rectangle fUpdatedArea;
 
-	public FieldLayer(FantasyFootballClient pClient) {
+	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
-		fImage = new BufferedImage(FIELD_IMAGE_WIDTH, FIELD_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		fImage = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
 		addUpdatedArea(new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight()));
 	}
 

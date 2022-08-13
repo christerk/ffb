@@ -1,12 +1,10 @@
 package com.fumbbl.ffb.client.layer;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
@@ -15,14 +13,16 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
 /**
- *
  * @author Kalimar
  */
 public class FieldLayerPlayers extends FieldLayer {
 
-	public FieldLayerPlayers(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void refresh(FieldCoordinateBounds pBounds) {

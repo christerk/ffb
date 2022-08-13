@@ -10,7 +10,6 @@ import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.layer.FieldLayerBloodspots;
 import com.fumbbl.ffb.client.layer.FieldLayerEnhancements;
 import com.fumbbl.ffb.client.layer.FieldLayerMarker;
@@ -65,26 +64,25 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private FieldCoordinate fBombCoordinate;
 	private final Map<String, FieldCoordinate> fCoordinateByPlayerId;
 
-	public FieldComponent(FantasyFootballClient pClient) {
+	public FieldComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 
 		fClient = pClient;
-		fLayerField = new FieldLayerPitch(pClient);
-		fLayerTeamLogo = new FieldLayerTeamLogo(pClient);
-		fLayerBloodspots = new FieldLayerBloodspots(pClient);
-		fLayerRangeGrid = new FieldLayerRangeGrid(pClient);
-		fLayerMarker = new FieldLayerMarker(pClient);
-		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient);
-		fLayerPlayers = new FieldLayerPlayers(pClient);
-		fLayerOverPlayers = new FieldLayerOverPlayers(pClient);
-		fLayerRangeRuler = new FieldLayerRangeRuler(pClient);
-		layerEnhancements = new FieldLayerEnhancements(pClient);
+		fLayerField = new FieldLayerPitch(pClient, dimensionProvider);
+		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, dimensionProvider);
+		fLayerBloodspots = new FieldLayerBloodspots(pClient, dimensionProvider);
+		fLayerRangeGrid = new FieldLayerRangeGrid(pClient, dimensionProvider);
+		fLayerMarker = new FieldLayerMarker(pClient, dimensionProvider);
+		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient, dimensionProvider);
+		fLayerPlayers = new FieldLayerPlayers(pClient, dimensionProvider);
+		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, dimensionProvider);
+		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, dimensionProvider);
+		layerEnhancements = new FieldLayerEnhancements(pClient, dimensionProvider);
 
 		fCoordinateByPlayerId = new HashMap<>();
 
-		fImage = new BufferedImage(FieldLayer.FIELD_IMAGE_WIDTH, FieldLayer.FIELD_IMAGE_HEIGHT,
-			BufferedImage.TYPE_INT_ARGB);
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
-		Dimension size = new Dimension(FieldLayer.FIELD_IMAGE_WIDTH, FieldLayer.FIELD_IMAGE_HEIGHT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

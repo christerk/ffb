@@ -1,5 +1,20 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.MoveSquare;
+import com.fumbbl.ffb.PushbackSquare;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -8,20 +23,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PushbackSquare;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 
 /**
  *
@@ -37,8 +38,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private FieldCoordinate fMarkerCoordinate;
 
-	public FieldLayerOverPlayers(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerOverPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void removeThrownPlayer() {

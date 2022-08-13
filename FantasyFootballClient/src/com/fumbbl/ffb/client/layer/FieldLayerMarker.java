@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldMarker;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -18,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class FieldLayerMarker extends FieldLayer {
@@ -27,8 +27,8 @@ public class FieldLayerMarker extends FieldLayer {
 
 	private final Map<FieldCoordinate, Rectangle> fFieldMarkerBounds;
 
-	public FieldLayerMarker(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerMarker(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 		fFieldMarkerBounds = new HashMap<>();
 	}
 

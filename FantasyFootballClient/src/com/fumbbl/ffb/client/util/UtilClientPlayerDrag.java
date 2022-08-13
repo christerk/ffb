@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayer;
@@ -11,6 +12,7 @@ import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 
 /**
@@ -21,14 +23,15 @@ public class UtilClientPlayerDrag {
 
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
+		Dimension fieldDimension = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD);
 		FieldCoordinate coordinate;
 		if (pBoxMode) {
 			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
 			if ((coordinate == null) && (pMouseEvent.getX() >= BoxComponent.WIDTH)) {
-				coordinate = getFieldFieldCoordinate(pMouseEvent.getX() - BoxComponent.WIDTH, pMouseEvent.getY());
+				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - BoxComponent.WIDTH, pMouseEvent.getY());
 			}
 		} else {
-			coordinate = getFieldFieldCoordinate(pMouseEvent.getX(), pMouseEvent.getY());
+			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY());
 			if ((coordinate == null) && (pMouseEvent.getX() < 0)) {
 				coordinate = getBoxFieldCoordinate(pClient, BoxComponent.WIDTH + pMouseEvent.getX(), pMouseEvent.getY());
 			}
@@ -36,9 +39,9 @@ public class UtilClientPlayerDrag {
 		return coordinate;
 	}
 
-	private static FieldCoordinate getFieldFieldCoordinate(int pMouseX, int pMouseY) {
-		if ((pMouseX >= 0) && (pMouseX < FieldLayer.FIELD_IMAGE_WIDTH) && (pMouseY >= 0)
-			&& (pMouseY < FieldLayer.FIELD_IMAGE_HEIGHT)) {
+	private static FieldCoordinate getFieldFieldCoordinate(Dimension fieldDimension, int pMouseX, int pMouseY) {
+		if ((pMouseX >= 0) && (pMouseX < fieldDimension.width) && (pMouseY >= 0)
+			&& (pMouseY < fieldDimension.height)) {
 			return new FieldCoordinate((pMouseX / FieldLayer.FIELD_SQUARE_SIZE), (pMouseY / FieldLayer.FIELD_SQUARE_SIZE));
 		} else {
 			return null;

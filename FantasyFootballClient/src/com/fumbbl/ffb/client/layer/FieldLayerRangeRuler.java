@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -52,8 +53,8 @@ public class FieldLayerRangeRuler extends FieldLayer {
 	private FieldCoordinate fSelectSquareCoordinate;
 	private FieldCoordinate[] fMarkedCoordinates;
 
-	public FieldLayerRangeRuler(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerRangeRuler(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void drawRangeRuler(RangeRuler pRangeRuler) {

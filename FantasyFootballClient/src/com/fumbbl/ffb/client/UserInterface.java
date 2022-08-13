@@ -51,6 +51,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final PlayerIconFactory fPlayerIconFactory;
 	private final MouseEntropySource fMouseEntropySource;
 
+	private final DimensionProvider dimensionProvider;
+
 	public UserInterface(FantasyFootballClient pClient) {
 
 		fClient = pClient;
@@ -61,53 +63,18 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDialogManager = new DialogManager(getClient());
 		setGameMenuBar(new GameMenuBar(getClient()));
 		setGameTitle(new GameTitle());
-
-		fFieldComponent = new FieldComponent(getClient());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
 
-		JPanel fieldPanel = new JPanel();
-		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
-		fieldPanel.add(fFieldComponent);
-		// fieldPanel.setBorder(BorderFactory.createEmptyBorder(2, 1, 1, 1));
-
+		dimensionProvider = new DimensionProvider();
+		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
 		fLog = new LogComponent(getClient());
 		fChat = new ChatComponent(getClient());
-
-		JPanel logChatPanel = new JPanel();
-		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
-		logChatPanel.add(getLog());
-		logChatPanel.add(Box.createHorizontalStrut(2));
-		logChatPanel.add(getChat());
-		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
 		fScoreBar = new ScoreBarComponent(getClient());
-
-		JPanel panelCenter = new JPanel();
-		panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-		panelCenter.add(fieldPanel);
-		panelCenter.add(getScoreBar());
-		panelCenter.add(logChatPanel);
-
 		fSideBarHome = new SideBarComponent(getClient(), true);
-		JPanel panelHome = new JPanel();
-		panelHome.setLayout(new BoxLayout(panelHome, BoxLayout.Y_AXIS));
-		panelHome.add(fSideBarHome);
-		// panelHome.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
-
 		fSideBarAway = new SideBarComponent(getClient(), false);
-		JPanel panelAway = new JPanel();
-		panelAway.setLayout(new BoxLayout(panelAway, BoxLayout.Y_AXIS));
-		panelAway.add(fSideBarAway);
-		// panelAway.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 
-		JPanel panelContent = new JPanel();
-		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
-		panelContent.add(panelHome);
-		// panelContent.add(Box.createHorizontalStrut(1));
-		panelContent.add(panelCenter);
-		// panelContent.add(Box.createHorizontalStrut(1));
-		panelContent.add(panelAway);
+		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
 
 		fDesktop = new JDesktopPane();
 		panelContent.setSize(panelContent.getPreferredSize());
@@ -126,6 +93,72 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		getChat().requestChatInputFocus();
 
+	}
+
+	private JPanel landscapeContent() {
+		JPanel fieldPanel = new JPanel();
+		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
+		fieldPanel.add(fFieldComponent);
+
+		JPanel logChatPanel = new JPanel();
+		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
+		logChatPanel.add(getLog());
+		logChatPanel.add(Box.createHorizontalStrut(2));
+		logChatPanel.add(getChat());
+		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+		JPanel panelCenter = new JPanel();
+		panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+		panelCenter.add(fieldPanel);
+		panelCenter.add(getScoreBar());
+		panelCenter.add(logChatPanel);
+
+		JPanel panelMain = new JPanel();
+		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
+		panelMain.add(createSideBarPanel(fSideBarHome));
+		panelMain.add(panelCenter);
+		panelMain.add(createSideBarPanel(fSideBarAway));
+
+		return panelMain;
+	}
+
+	private JPanel createSideBarPanel(SideBarComponent fSideBarHome) {
+		JPanel panelHome = new JPanel();
+		panelHome.setLayout(new BoxLayout(panelHome, BoxLayout.Y_AXIS));
+		panelHome.add(fSideBarHome);
+		return panelHome;
+	}
+
+	private JPanel portraitContent() {
+		JPanel fieldPanel = new JPanel();
+		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
+		fieldPanel.add(fFieldComponent);
+
+
+		JPanel logChatPanel = new JPanel();
+		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
+		logChatPanel.add(getLog());
+		logChatPanel.add(Box.createHorizontalStrut(2));
+		logChatPanel.add(getChat());
+		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+		JPanel panelMain = new JPanel();
+		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
+		panelMain.add(createSideBarPanel(fSideBarHome));
+		panelMain.add(fieldPanel);
+		panelMain.add(createSideBarPanel(fSideBarAway));
+
+		JPanel panelContent = new JPanel();
+		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.Y_AXIS));
+		panelContent.add(panelMain);
+		panelContent.add(getScoreBar());
+		panelContent.add(logChatPanel);
+
+		return panelContent;
+	}
+
+	public DimensionProvider getDimensionProvider() {
+		return dimensionProvider;
 	}
 
 	public FieldComponent getFieldComponent() {

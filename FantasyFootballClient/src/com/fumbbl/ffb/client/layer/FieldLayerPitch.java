@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.FieldModel;
@@ -16,13 +17,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- * 
  * @author Kalimar
  */
 public class FieldLayerPitch extends FieldLayer {
 
-	public FieldLayerPitch(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerPitch(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void drawWeather(Weather pWeather) {

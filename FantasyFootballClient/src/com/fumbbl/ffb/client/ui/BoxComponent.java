@@ -4,10 +4,10 @@ import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
@@ -202,7 +202,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? 5 : FieldLayer.FIELD_IMAGE_WIDTH - 135;
+					int x = getSideBar().isHomeSide() ? 5 : getSideBar().getClient().getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD).width - 135;
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
 					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}

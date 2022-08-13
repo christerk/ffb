@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -13,15 +14,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 /**
- * 
  * @author Kalimar
  */
 public class FieldLayerRangeGrid extends FieldLayer {
 
 	private FieldCoordinate fCenterCoordinate;
 
-	public FieldLayerRangeGrid(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerRangeGrid(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public boolean drawRangeGrid(FieldCoordinate pCenterCoordinate, boolean pThrowTeamMate) {

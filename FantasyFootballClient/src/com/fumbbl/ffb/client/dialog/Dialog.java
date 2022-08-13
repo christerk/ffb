@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -76,7 +76,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		Dimension dialogSize = getSize();
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		// Dimension menuBarSize = getClient().getGameMenuBar().getSize();
-		setLocation((frameSize.width - dialogSize.width) / 2, (FieldLayer.FIELD_IMAGE_HEIGHT - dialogSize.height) / 2);
+		setLocation((frameSize.width - dialogSize.width) / 2, (fClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD).height - dialogSize.height) / 2);
 	}
 
 	public void mouseEntered(MouseEvent pMouseEvent) {

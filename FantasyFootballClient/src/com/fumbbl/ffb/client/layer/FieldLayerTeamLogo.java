@@ -1,14 +1,7 @@
 package com.fumbbl.ffb.client.layer;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.IClientPropertyValue;
@@ -17,14 +10,22 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+
 /**
- * 
  * @author Kalimar
  */
 public class FieldLayerTeamLogo extends FieldLayer {
 
-	public FieldLayerTeamLogo(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerTeamLogo(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void drawDistanceMarkers() {
@@ -67,6 +68,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
 	private void drawTeamLogo(Team pTeam, boolean pHomeTeam) {
 		if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
+			Dimension fieldDimension = getClient().getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD);
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam));
 			if (teamLogo != null) {
@@ -74,13 +76,13 @@ public class FieldLayerTeamLogo extends FieldLayer {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				int x, y;
 				if (pHomeTeam) {
-					x = (FIELD_IMAGE_WIDTH / 4) - (teamLogo.getWidth() / 2) + (FIELD_SQUARE_SIZE / 2);
+					x = (fieldDimension.width / 4) - (teamLogo.getWidth() / 2) + (FIELD_SQUARE_SIZE / 2);
 				} else {
-					x = (3 * (FIELD_IMAGE_WIDTH / 4)) - (teamLogo.getWidth() / 2) - (FIELD_SQUARE_SIZE / 2);
+					x = (3 * (fieldDimension.width / 4)) - (teamLogo.getWidth() / 2) - (FIELD_SQUARE_SIZE / 2);
 				}
-				y = (FIELD_IMAGE_HEIGHT / 2) - (teamLogo.getHeight() / 2);
-				g2d.setClip(pHomeTeam ? FIELD_SQUARE_SIZE : FIELD_IMAGE_WIDTH / 2, 0,
-						(FIELD_IMAGE_WIDTH / 2) - FIELD_SQUARE_SIZE, FIELD_IMAGE_HEIGHT);
+				y = (fieldDimension.height / 2) - (teamLogo.getHeight() / 2);
+				g2d.setClip(pHomeTeam ? FIELD_SQUARE_SIZE : fieldDimension.width / 2, 0,
+					(fieldDimension.width / 2) - FIELD_SQUARE_SIZE, fieldDimension.height);
 				g2d.drawImage(teamLogo, x, y, null);
 				g2d.dispose();
 			}

@@ -1,5 +1,13 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.TrackNumber;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.util.ArrayTool;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -7,23 +15,15 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.TrackNumber;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.util.ArrayTool;
-
 /**
- * 
  * @author Kalimar
  */
 public class FieldLayerUnderPlayers extends FieldLayer {
 
 	private FieldCoordinate[] fMovePath;
 
-	public FieldLayerUnderPlayers(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerUnderPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void drawTrackNumber(TrackNumber pTrackNumber) {
