@@ -7,15 +7,15 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.NoDiceReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class ReportPenaltyShootout implements IReport {
+public class ReportPenaltyShootout extends NoDiceReport {
 
 	private int rollHome, rollAway, scoreHome, scoreAway;
 	private String rollCount, winningTeam;

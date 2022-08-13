@@ -10,11 +10,11 @@ import com.fumbbl.ffb.json.UtilJson;
 /**
  * This report is no longer used, it remains for compatibility with older
  * versions. Will be removed in a later version.
- * 
+ *
  * @author Georg Seipler
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportGameOptions implements IReport {
+public class ReportGameOptions extends NoDiceReport {
 
 	private boolean fOvertime;
 	private int fTurntime;

@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportCoinThrow implements IReport {
+public class ReportCoinThrow extends NoDiceReport {
 
 	private boolean fCoinThrowHeads;
 	private String fCoach;

@@ -13,7 +13,7 @@ import com.fumbbl.ffb.json.UtilJson;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportPassDeviate implements IReport {
+public class ReportPassDeviate extends NoDiceReport {
 
 	private FieldCoordinate fBallCoordinateEnd;
 	private Direction fScatterDirection;

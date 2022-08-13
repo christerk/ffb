@@ -10,11 +10,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportCardEffectRoll implements IReport {
+public class ReportCardEffectRoll extends NoDiceReport {
 
 	private Card fCard;
 	private CardEffect fCardEffect;

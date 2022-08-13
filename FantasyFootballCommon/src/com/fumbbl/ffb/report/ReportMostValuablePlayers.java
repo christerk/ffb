@@ -13,11 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportMostValuablePlayers implements IReport {
+public class ReportMostValuablePlayers extends NoDiceReport {
 
 	private final List<String> fPlayerIdsHome;
 	private final List<String> fPlayerIdsAway;

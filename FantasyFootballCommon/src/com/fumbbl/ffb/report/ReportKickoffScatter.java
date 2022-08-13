@@ -10,11 +10,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportKickoffScatter implements IReport {
+public class ReportKickoffScatter extends NoDiceReport {
 
 	private FieldCoordinate fBallCoordinateEnd;
 	private Direction fScatterDirection;

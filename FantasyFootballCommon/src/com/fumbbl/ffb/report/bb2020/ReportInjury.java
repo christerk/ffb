@@ -21,6 +21,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.NoDiceReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
@@ -35,7 +36,7 @@ import java.util.Set;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
+public class ReportInjury extends NoDiceReport implements com.fumbbl.ffb.report.ReportInjury {
 
 	private String fAttackerId;
 	private String fDefenderId;
@@ -61,11 +62,11 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		casualtyModifiers = new HashSet<>();
 	}
 
-	private ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
-	                     int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
-	                     SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
-	                     PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers,
-	                     SeriousInjury originalInjury, SkipInjuryParts skip) {
+	public ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
+											int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
+											SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
+											PlayerState pInjuryDecay, String pAttackerId, Set<CasualtyModifier> casualtyModifiers,
+											SeriousInjury originalInjury, SkipInjuryParts skip) {
 		this();
 		init(pDefenderId, pInjuryType, pArmorBroken, pArmorModifiers, pArmorRoll, pInjuryModifiers, pInjuryRoll, pCasualtyRoll,
 			pSeriousInjury, pCasualtyRollDecay, pSeriousInjuryDecay, pInjury, pInjuryDecay, pAttackerId, casualtyModifiers, originalInjury, skip);

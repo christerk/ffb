@@ -10,9 +10,8 @@ import com.fumbbl.ffb.util.ArrayTool;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  *
@@ -50,23 +49,15 @@ public class UtilBackup {
 			return false;
 		}
 		File backupFile = findBackupFile(pGameState.getServer(), pGameState.getId());
+		//noinspection ResultOfMethodCallIgnored
 		backupFile.getParentFile().mkdirs();
-		BufferedOutputStream out = null;
-		try {
-			out = new BufferedOutputStream(new FileOutputStream(backupFile));
+		try (BufferedOutputStream out = new BufferedOutputStream(Files.newOutputStream(backupFile.toPath()))) {
 			out.write(UtilJson.gzip(pGameState.toJsonValue()));
 		} catch (IOException pIoException) {
 			pGameState.getServer().getDebugLog().log(pGameState.getId(), pIoException);
 			return false;
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException pIoException2) {
-					// nothing to be done here
-				}
-			}
 		}
+		// nothing to be done here
 		return true;
 	}
 
@@ -79,22 +70,13 @@ public class UtilBackup {
 			return null;
 		}
 		byte[] gzippedJson = new byte[(int) backupFile.length()];
-		DataInputStream in = null;
-		try {
-			in = new DataInputStream(new FileInputStream(backupFile));
+		try (DataInputStream in = new DataInputStream(Files.newInputStream(backupFile.toPath()))) {
 			in.readFully(gzippedJson);
 		} catch (IOException pIoException) {
 			pServer.getDebugLog().log(pGameId, pIoException);
 			return null;
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException pIoException2) {
-					// nothing to be done here
-				}
-			}
 		}
+		// nothing to be done here
 		return gzippedJson;
 	}
 

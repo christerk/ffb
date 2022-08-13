@@ -6,6 +6,14 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.stats.DicePoolStat;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.Collections;
+import java.util.List;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportSwarmingRoll implements IReport {
@@ -74,5 +82,10 @@ public class ReportSwarmingRoll implements IReport {
 		IJsonOption.SWARMING_PLAYER_ROLL.addTo(jsonObject, roll);
 		IJsonOption.SWARMING_PLAYER_LIMIT.addTo(jsonObject, limit);
 		return jsonObject;
+	}
+
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new DicePoolStat(DieBase.D3, TeamMapping.TEAM, teamId, Collections.singletonList(roll), false));
 	}
 }

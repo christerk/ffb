@@ -6,9 +6,17 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DicePoolStat;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -45,6 +53,11 @@ public class ReportOfficiousRefRoll implements IReport {
 
 	public IReport transform(IFactorySource source) {
 		return new ReportOfficiousRefRoll(roll, playerId);
+	}
+
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new DicePoolStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, playerId, Collections.singletonList(roll)));
 	}
 
 	// JSON serialization

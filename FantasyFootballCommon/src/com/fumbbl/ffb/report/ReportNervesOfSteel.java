@@ -8,12 +8,13 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportNervesOfSteel implements IReport {
+public class ReportNervesOfSteel extends NoDiceReport {
 
 	public String playerId;
 	public String ballAction;
 
-	public ReportNervesOfSteel(){}
+	public ReportNervesOfSteel() {
+	}
 
 	public ReportNervesOfSteel(String playerId, String doWithTheBall) {
 		this.playerId = playerId;

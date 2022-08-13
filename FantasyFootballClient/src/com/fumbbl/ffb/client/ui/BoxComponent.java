@@ -208,12 +208,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				}
 			} else {
 				if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-					System.out.println("BoxComponent: Release event handled");
-					System.out.println("Event: " + pMouseEvent);
-					UtilClientPlayerDrag.mouseReleased(getSideBar().getClient(), pMouseEvent, true);
-				} else {
-					System.out.println("BoxComponent: Release event ignored");
-					System.out.println("Event: " + pMouseEvent);
+					UtilClientPlayerDrag.mouseReleased(getSideBar().getClient());
 				}
 			}
 		}

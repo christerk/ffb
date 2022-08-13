@@ -13,6 +13,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.NoDiceReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
@@ -20,11 +21,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class ReportApothecaryRoll implements IReport {
+public class ReportApothecaryRoll extends NoDiceReport {
 
 	private String fPlayerId;
 	private int[] fCasualtyRoll;

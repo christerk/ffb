@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportReceiveChoice implements IReport {
+public class ReportReceiveChoice extends NoDiceReport {
 
 	private String fTeamId;
 	private boolean fReceiveChoice;
