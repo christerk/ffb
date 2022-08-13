@@ -12,8 +12,13 @@ public class DimensionProvider {
 
 	public DimensionProvider() {
 		portraitDimensions.put(Component.FIELD, new Dimension(452, 782));
-
 		landscapeDimensions.put(Component.FIELD, new Dimension(782, 452));
+		portraitDimensions.put(Component.CHAT, new Dimension(389, 153));
+		landscapeDimensions.put(Component.CHAT, new Dimension(389, 226));
+		portraitDimensions.put(Component.LOG, new Dimension(389, 153));
+		landscapeDimensions.put(Component.LOG, new Dimension(389, 226));
+		portraitDimensions.put(Component.REPLAY_CONTROL, new Dimension(389, 26));
+		landscapeDimensions.put(Component.REPLAY_CONTROL, new Dimension(389, 26));
 	}
 
 	public Dimension dimension(Component component) {
@@ -29,6 +34,6 @@ public class DimensionProvider {
 	}
 
 	public enum Component {
-		FIELD, CHAT_LOG
+		FIELD, CHAT, LOG, REPLAY_CONTROL
 	}
 }

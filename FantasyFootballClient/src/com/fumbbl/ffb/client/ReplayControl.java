@@ -1,5 +1,9 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.IIconProperty;
+
+import javax.swing.JPanel;
+import javax.swing.event.MouseInputListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -11,37 +15,106 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
-import javax.swing.event.MouseInputListener;
-
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.ui.ChatComponent;
-
 /**
- * 
  * @author Kalimar
  */
 public class ReplayControl extends JPanel implements MouseInputListener {
 
-	public static final int HEIGHT = 26;
-	public static final int WIDTH = ChatComponent.WIDTH;
-
 	private static final int _ICON_WIDTH = 36;
 	private static final int _ICON_GAP = 10;
+
+	private final FantasyFootballClient fClient;
+	private final BufferedImage fImage;
+	private final ReplayButton fButtonSkipBackward;
+	private boolean fActive;
+	private final ReplayButton fButtonFastBackward;
+	private final ReplayButton fButtonPlayBackward;
+	private final ReplayButton fButtonPause;
+	private final ReplayButton fButtonPlayForward;
+	private final ReplayButton fButtonFastForward;
+	private final ReplayButton fButtonSkipForward;
+	private final Dimension size;
+
+	public ReplayControl(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+
+		fClient = pClient;
+		size = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_CONTROL);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+
+		setLayout(null);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
+
+		fButtonPause = new ReplayButton(new Point(-(_ICON_WIDTH / 2), 1), IIconProperty.REPLAY_PAUSE,
+			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED);
+		fButtonPlayBackward = new ReplayButton(new Point(fButtonPause.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
+			IIconProperty.REPLAY_PLAY_BACKWARD, IIconProperty.REPLAY_PLAY_BACKWARD_ACTIVE,
+			IIconProperty.REPLAY_PLAY_BACKWARD_SELECTED);
+		fButtonFastBackward = new ReplayButton(new Point(fButtonPlayBackward.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
+			IIconProperty.REPLAY_FAST_BACKWARD, IIconProperty.REPLAY_FAST_BACKWARD_ACTIVE,
+			IIconProperty.REPLAY_FAST_BACKWARD_SELECTED);
+		fButtonSkipBackward = new ReplayButton(new Point(fButtonFastBackward.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
+			IIconProperty.REPLAY_SKIP_BACKWARD, IIconProperty.REPLAY_SKIP_BACKWARD_ACTIVE,
+			IIconProperty.REPLAY_SKIP_BACKWARD_SELECTED);
+		fButtonPlayForward = new ReplayButton(new Point(fButtonPause.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
+			IIconProperty.REPLAY_PLAY_FORWARD, IIconProperty.REPLAY_PLAY_FORWARD_ACTIVE,
+			IIconProperty.REPLAY_PLAY_FORWARD_SELECTED);
+		fButtonFastForward = new ReplayButton(new Point(fButtonPlayForward.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
+			IIconProperty.REPLAY_FAST_FORWARD, IIconProperty.REPLAY_FAST_FORWARD_ACTIVE,
+			IIconProperty.REPLAY_FAST_FORWARD_SELECTED);
+		fButtonSkipForward = new ReplayButton(new Point(fButtonFastForward.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
+			IIconProperty.REPLAY_SKIP_FORWARD, IIconProperty.REPLAY_SKIP_FORWARD_ACTIVE,
+			IIconProperty.REPLAY_SKIP_FORWARD_SELECTED);
+
+		addMouseListener(this);
+		addMouseMotionListener(this);
+
+	}
+
+	private void refresh() {
+		ClientReplayer replayer = getClient().getReplayer();
+		Graphics2D g2d = fImage.createGraphics();
+		g2d.setPaint(new GradientPaint(0, 0, Color.WHITE, size.width / 2, 0, new Color(128, 128, 128), false));
+		g2d.fillRect(0, 0, size.width / 2, size.height);
+		g2d.setPaint(new GradientPaint(size.width / 2, 0, new Color(128, 128, 128), size.width, 0, Color.WHITE, false));
+		g2d.fillRect(size.width / 2, 0, size.width, size.height);
+		if (replayer.isRunning()) {
+			g2d.setColor(Color.BLACK);
+			g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
+			String speed = ((replayer.getReplaySpeed() > 0) ? replayer.getReplaySpeed() : "0.5") +
+				"x";
+			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(speed, g2d);
+			if (replayer.isReplayDirectionForward()) {
+				g2d.drawString(speed, size.width - (int) bounds.getWidth() - 7, 18);
+			} else {
+				g2d.drawString(speed, 7, 18);
+			}
+		}
+		fButtonSkipBackward.draw(g2d);
+		fButtonFastBackward.draw(g2d);
+		fButtonPlayBackward.draw(g2d);
+		fButtonPause.draw(g2d);
+		fButtonPlayForward.draw(g2d);
+		fButtonFastForward.draw(g2d);
+		fButtonSkipForward.draw(g2d);
+		g2d.dispose();
+		repaint();
+	}
 
 	private class ReplayButton {
 
 		private boolean fActive;
 		private boolean fSelected;
 
-		private String fIconProperty;
-		private String fIconPropertyActive;
-		private String fIconPropertySelected;
+		private final String fIconProperty;
+		private final String fIconPropertyActive;
+		private final String fIconPropertySelected;
 
-		private Point fPosition;
+		private final Point fPosition;
 
 		public ReplayButton(Point pPosition, String pIconProperty, String pIconPropertyActive,
-				String pIconPropertySelected) {
+												String pIconPropertySelected) {
 			fPosition = pPosition;
 			fIconProperty = pIconProperty;
 			fIconPropertyActive = pIconPropertyActive;
@@ -99,7 +172,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 
 		public boolean isMouseOver(MouseEvent pMouseEvent) {
 			return ((pMouseEvent.getX() >= (fPosition.x - (_ICON_GAP / 2)))
-					&& (pMouseEvent.getX() < (fPosition.x + _ICON_WIDTH + (_ICON_GAP / 2))));
+				&& (pMouseEvent.getX() < (fPosition.x + _ICON_WIDTH + (_ICON_GAP / 2))));
 		}
 
 		public boolean activateOnMouseOver(MouseEvent pMouseEvent) {
@@ -113,86 +186,6 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 			return changed;
 		}
 
-	}
-
-	private FantasyFootballClient fClient;
-
-	private BufferedImage fImage;
-	private boolean fActive;
-
-	private ReplayButton fButtonSkipBackward;
-	private ReplayButton fButtonFastBackward;
-	private ReplayButton fButtonPlayBackward;
-	private ReplayButton fButtonPause;
-	private ReplayButton fButtonPlayForward;
-	private ReplayButton fButtonFastForward;
-	private ReplayButton fButtonSkipForward;
-
-	public ReplayControl(FantasyFootballClient pClient) {
-
-		fClient = pClient;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-
-		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
-
-		fButtonPause = new ReplayButton(new Point((WIDTH / 2) - (_ICON_WIDTH / 2), 1), IIconProperty.REPLAY_PAUSE,
-				IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED);
-		fButtonPlayBackward = new ReplayButton(new Point(fButtonPause.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
-				IIconProperty.REPLAY_PLAY_BACKWARD, IIconProperty.REPLAY_PLAY_BACKWARD_ACTIVE,
-				IIconProperty.REPLAY_PLAY_BACKWARD_SELECTED);
-		fButtonFastBackward = new ReplayButton(new Point(fButtonPlayBackward.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
-				IIconProperty.REPLAY_FAST_BACKWARD, IIconProperty.REPLAY_FAST_BACKWARD_ACTIVE,
-				IIconProperty.REPLAY_FAST_BACKWARD_SELECTED);
-		fButtonSkipBackward = new ReplayButton(new Point(fButtonFastBackward.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
-				IIconProperty.REPLAY_SKIP_BACKWARD, IIconProperty.REPLAY_SKIP_BACKWARD_ACTIVE,
-				IIconProperty.REPLAY_SKIP_BACKWARD_SELECTED);
-		fButtonPlayForward = new ReplayButton(new Point(fButtonPause.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
-				IIconProperty.REPLAY_PLAY_FORWARD, IIconProperty.REPLAY_PLAY_FORWARD_ACTIVE,
-				IIconProperty.REPLAY_PLAY_FORWARD_SELECTED);
-		fButtonFastForward = new ReplayButton(new Point(fButtonPlayForward.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
-				IIconProperty.REPLAY_FAST_FORWARD, IIconProperty.REPLAY_FAST_FORWARD_ACTIVE,
-				IIconProperty.REPLAY_FAST_FORWARD_SELECTED);
-		fButtonSkipForward = new ReplayButton(new Point(fButtonFastForward.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
-				IIconProperty.REPLAY_SKIP_FORWARD, IIconProperty.REPLAY_SKIP_FORWARD_ACTIVE,
-				IIconProperty.REPLAY_SKIP_FORWARD_SELECTED);
-
-		addMouseListener(this);
-		addMouseMotionListener(this);
-
-	}
-
-	private void refresh() {
-		ClientReplayer replayer = getClient().getReplayer();
-		Graphics2D g2d = fImage.createGraphics();
-		g2d.setPaint(new GradientPaint(0, 0, Color.WHITE, WIDTH / 2, 0, new Color(128, 128, 128), false));
-		g2d.fillRect(0, 0, WIDTH / 2, HEIGHT);
-		g2d.setPaint(new GradientPaint(WIDTH / 2, 0, new Color(128, 128, 128), WIDTH, 0, Color.WHITE, false));
-		g2d.fillRect(WIDTH / 2, 0, WIDTH, HEIGHT);
-		if (replayer.isRunning()) {
-			g2d.setColor(Color.BLACK);
-			g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
-			String speed = new StringBuilder().append((replayer.getReplaySpeed() > 0) ? replayer.getReplaySpeed() : "0.5")
-					.append("x").toString();
-			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(speed, g2d);
-			if (replayer.isReplayDirectionForward()) {
-				g2d.drawString(speed, WIDTH - (int) bounds.getWidth() - 7, 18);
-			} else {
-				g2d.drawString(speed, 7, 18);
-			}
-		}
-		fButtonSkipBackward.draw(g2d);
-		fButtonFastBackward.draw(g2d);
-		fButtonPlayBackward.draw(g2d);
-		fButtonPause.draw(g2d);
-		fButtonPlayForward.draw(g2d);
-		fButtonFastForward.draw(g2d);
-		fButtonSkipForward.draw(g2d);
-		g2d.dispose();
-		repaint();
 	}
 
 	protected void paintComponent(Graphics pGraphics) {

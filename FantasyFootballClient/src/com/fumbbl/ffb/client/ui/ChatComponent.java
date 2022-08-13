@@ -1,9 +1,16 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.client.ActionKeyGroup;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ParagraphStyle;
+import com.fumbbl.ffb.client.ReplayControl;
+import com.fumbbl.ffb.client.TextStyle;
+
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -11,42 +18,29 @@ import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import com.fumbbl.ffb.client.ActionKeyGroup;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.ReplayControl;
-import com.fumbbl.ffb.client.TextStyle;
-
 /**
- * 
  * @author Kalimar
  */
 public class ChatComponent extends JPanel implements MouseMotionListener {
 
-	public static final int WIDTH = 389;
-	public static final int HEIGHT = 226;
-
 	private static final int _MAX_CHAT_LENGTH = 512;
 	private static final int _MAX_INPUT_LOG_SIZE = 100;
 
-	private ChatLogScrollPane fChatScrollPane;
-	private ChatLogTextPane fChatTextPane;
-	private JTextField fChatInputField;
-	private ReplayControl fReplayControl;
+	private final ChatLogScrollPane fChatScrollPane;
+	private final ChatLogTextPane fChatTextPane;
+	private final JTextField fChatInputField;
+	private final ReplayControl fReplayControl;
 	private boolean fReplayShown;
 
-	private List<String> fInputLog;
+	private final List<String> fInputLog;
 	private int fInputLogPosition;
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
-	public ChatComponent(FantasyFootballClient pClient) {
+	public ChatComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 
 		fClient = pClient;
-		fInputLog = new LinkedList<String>();
+		fInputLog = new LinkedList<>();
 		fInputLogPosition = -1;
 
 		fChatTextPane = new ChatLogTextPane();
@@ -57,25 +51,23 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.PLAYER_ACTIONS);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.TURN_ACTIONS);
 
-		fChatInputField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String talk = fChatInputField.getText();
-				if (talk != null) {
-					talk = talk.trim();
-					if (talk.length() > _MAX_CHAT_LENGTH) {
-						talk = talk.substring(0, _MAX_CHAT_LENGTH);
-					}
-					if (talk.length() > 0) {
-						getClient().getCommunication().sendTalk(talk);
-						fInputLog.add(talk);
-						if (fInputLog.size() > _MAX_INPUT_LOG_SIZE) {
-							fInputLog.remove(0);
-						}
-						fInputLogPosition = fInputLog.size();
-					}
+		fChatInputField.addActionListener(e -> {
+			String talk = fChatInputField.getText();
+			if (talk != null) {
+				talk = talk.trim();
+				if (talk.length() > _MAX_CHAT_LENGTH) {
+					talk = talk.substring(0, _MAX_CHAT_LENGTH);
 				}
-				fChatInputField.setText("");
+				if (talk.length() > 0) {
+					getClient().getCommunication().sendTalk(talk);
+					fInputLog.add(talk);
+					if (fInputLog.size() > _MAX_INPUT_LOG_SIZE) {
+						fInputLog.remove(0);
+					}
+					fInputLogPosition = fInputLog.size();
+				}
 			}
+			fChatInputField.setText("");
 		});
 
 		fChatInputField.addKeyListener(new KeyAdapter() {
@@ -104,7 +96,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		add(fChatScrollPane, BorderLayout.CENTER);
 		add(fChatInputField, BorderLayout.SOUTH);
 
-		Dimension size = new Dimension(WIDTH, HEIGHT);
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
@@ -114,7 +106,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatInputField.addMouseMotionListener(this);
 
 		fReplayShown = false;
-		fReplayControl = new ReplayControl(getClient());
+		fReplayControl = new ReplayControl(getClient(), dimensionProvider);
 
 	}
 

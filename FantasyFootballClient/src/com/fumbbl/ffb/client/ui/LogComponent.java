@@ -1,5 +1,14 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.client.ActionKeyGroup;
+import com.fumbbl.ffb.client.ClientReplayer;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ParagraphStyle;
+import com.fumbbl.ffb.client.TextStyle;
+
+import javax.swing.JPanel;
+import javax.swing.text.BadLocationException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -7,41 +16,29 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JPanel;
-import javax.swing.text.BadLocationException;
-
-import com.fumbbl.ffb.client.ActionKeyGroup;
-import com.fumbbl.ffb.client.ClientReplayer;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.TextStyle;
-
 /**
- *
  * @author Kalimar
  */
 public class LogComponent extends JPanel implements MouseMotionListener, IReplayMouseListener {
 
-	public static final int WIDTH = 389;
-	public static final int HEIGHT = 226;
 
-	private ChatLogScrollPane fLogScrollPane;
-	private ChatLogTextPane fLogTextPane;
+	private final ChatLogScrollPane fLogScrollPane;
+	private final ChatLogTextPane fLogTextPane;
 
-	private Map<Integer, CommandHighlightArea> fCommandHighlightAreaByCommandNr;
+	private final Map<Integer, CommandHighlightArea> fCommandHighlightAreaByCommandNr;
 	private CommandHighlightArea fCurrentCommandHighlight;
 	private int fMinimumCommandNr;
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
-	public LogComponent(FantasyFootballClient pClient) {
+	public LogComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
 		fLogTextPane = new ChatLogTextPane();
 		fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
 		setLayout(new BorderLayout());
 		add(fLogScrollPane, BorderLayout.CENTER);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.LOG);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
@@ -108,13 +105,13 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		if (highlightShown) {
 			try {
 				((CommandHighlighter) fLogTextPane.getHighlighter()).changeHighlight(highlightArea.getStartPosition(),
-						highlightArea.getEndPosition());
+					highlightArea.getEndPosition());
 				if (pShowEnd) {
 					fLogTextPane.setCaretPosition(highlightArea.getEndPosition());
 				} else {
 					fLogTextPane.setCaretPosition(Math.max(highlightArea.getStartPosition() - 1, 0));
 				}
-			} catch (BadLocationException e) {
+			} catch (BadLocationException ignored) {
 			}
 		}
 		return highlightShown;
@@ -123,10 +120,10 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	public int findCommandNr(int pPosition) {
 		int commandNr = -1;
 		CommandHighlightArea[] highlights = fCommandHighlightAreaByCommandNr.values()
-				.toArray(new CommandHighlightArea[fCommandHighlightAreaByCommandNr.size()]);
-		for (int i = 0; i < highlights.length; i++) {
-			if ((pPosition >= highlights[i].getStartPosition()) && (pPosition <= highlights[i].getEndPosition())) {
-				commandNr = highlights[i].getCommandNr();
+			.toArray(new CommandHighlightArea[0]);
+		for (CommandHighlightArea highlight : highlights) {
+			if ((pPosition >= highlight.getStartPosition()) && (pPosition <= highlight.getEndPosition())) {
+				commandNr = highlight.getCommandNr();
 				break;
 			}
 		}
@@ -136,7 +133,7 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	public void hideHighlight() {
 		try {
 			((CommandHighlighter) fLogTextPane.getHighlighter()).changeHighlight(0, 0);
-		} catch (BadLocationException e) {
+		} catch (BadLocationException ignored) {
 		}
 	}
 
