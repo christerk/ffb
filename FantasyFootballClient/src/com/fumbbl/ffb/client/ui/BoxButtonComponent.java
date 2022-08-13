@@ -42,9 +42,10 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private BoxType fOpenBox;
 	private BoxType fSelectedBox;
 
+	private final Dimension size;
 	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
+		size = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		fButtonLocations = new HashMap<>();
 		if (getSideBar().isHomeSide()) {
@@ -99,7 +100,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 		} else {
 			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE);
 		}
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 

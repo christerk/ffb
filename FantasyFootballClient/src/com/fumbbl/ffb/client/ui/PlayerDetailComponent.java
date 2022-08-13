@@ -104,7 +104,7 @@ public class PlayerDetailComponent extends JPanel {
 		} else {
 			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
 		}
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		if (fPlayer != null) {
 			BufferedImage overlay;
 			Game game = getSideBar().getClient().getGame();
@@ -113,7 +113,7 @@ public class PlayerDetailComponent extends JPanel {
 			} else {
 				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_BLUE);
 			}
-			g2d.drawImage(overlay, 0, 0, null);
+			g2d.drawImage(overlay, 0, 0, size.width, size.height, null);
 		}
 		g2d.dispose();
 	}

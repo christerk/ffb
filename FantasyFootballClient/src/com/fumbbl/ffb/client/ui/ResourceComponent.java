@@ -45,9 +45,10 @@ public class ResourceComponent extends JPanel {
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
+	private final Dimension size;
 	public ResourceComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.RESOURCE);
+		size = dimensionProvider.dimension(DimensionProvider.Component.RESOURCE);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		fSlots = createResourceSlots();
 		fRefreshNecessary = true;
@@ -105,7 +106,7 @@ public class ResourceComponent extends JPanel {
 		} else {
 			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_BLUE);
 		}
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 

@@ -122,7 +122,7 @@ public class TurnDiceStatusComponent extends JPanel
 		} else {
 			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE);
 		}
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 

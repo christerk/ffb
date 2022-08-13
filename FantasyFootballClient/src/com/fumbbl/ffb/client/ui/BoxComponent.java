@@ -78,7 +78,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 		BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX);
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 
