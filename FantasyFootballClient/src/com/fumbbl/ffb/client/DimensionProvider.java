@@ -26,19 +26,19 @@ public class DimensionProvider {
 		portraitDimensions.put(Component.REPLAY_CONTROL, new Dimension(389, 26));
 		landscapeDimensions.put(Component.REPLAY_CONTROL, new Dimension(389, 26));
 
-		portraitDimensions.put(Component.TURN_DICE_STATUS, new Dimension(SIDEBAR_WIDTH_P, 92));
+		portraitDimensions.put(Component.TURN_DICE_STATUS, new Dimension(SIDEBAR_WIDTH_P, 101));
 		landscapeDimensions.put(Component.TURN_DICE_STATUS, new Dimension(SIDEBAR_WIDTH_L, 92));
 
-		portraitDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_P, 168));
+		portraitDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_P, 185));
 		landscapeDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_L, 168));
 
-		portraitDimensions.put(Component.BOX_BUTTON, new Dimension(SIDEBAR_WIDTH_P, 22));
+		portraitDimensions.put(Component.BOX_BUTTON, new Dimension(SIDEBAR_WIDTH_P, 24));
 		landscapeDimensions.put(Component.BOX_BUTTON, new Dimension(SIDEBAR_WIDTH_L, 22));
 
-		portraitDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_P, 430));
+		portraitDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_P, 472));
 		landscapeDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_L, 430));
 
-		portraitDimensions.put(Component.PLAYER_DETAIL, new Dimension(SIDEBAR_WIDTH_P, 430));
+		portraitDimensions.put(Component.PLAYER_DETAIL, new Dimension(SIDEBAR_WIDTH_P, 472));
 		landscapeDimensions.put(Component.PLAYER_DETAIL, new Dimension(SIDEBAR_WIDTH_L, 430));
 
 		portraitDimensions.put(Component.SIDEBAR, new Dimension(SIDEBAR_WIDTH_P, sidebarHeight(portraitDimensions)));
