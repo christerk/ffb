@@ -6,6 +6,7 @@ import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
@@ -51,9 +52,6 @@ import java.util.List;
 public class TurnDiceStatusComponent extends JPanel
 		implements MouseListener, MouseMotionListener, IDialogCloseListener {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 92;
-
 	private static final String _LABEL_END_TURN = "End Turn";
 	private static final String _LABEL_END_SETUP = "End Setup";
 	private static final String _LABEL_CONTINUE = "Continue";
@@ -66,7 +64,6 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final Font _DICE_FONT = new Font("Sans Serif", Font.BOLD, 11);
 	private static final Font _STATUS_TITLE_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font _STATUS_MESSAGE_FONT = new Font("Sans Serif", Font.PLAIN, 12);
-	private static final int _STATUS_TEXT_WIDTH = WIDTH - 10;
 
 	private final SideBarComponent fSideBar;
 	private final BufferedImage fImage;
@@ -93,11 +90,13 @@ public class TurnDiceStatusComponent extends JPanel
 	private boolean fRefreshNecessary;
 	private boolean buttonEnabled = true;
 
-	public TurnDiceStatusComponent(SideBarComponent pSideBar) {
+	private final Dimension size;
+
+	public TurnDiceStatusComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		size = dimensionProvider.dimension(DimensionProvider.Component.TURN_DICE_STATUS);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
@@ -108,6 +107,10 @@ public class TurnDiceStatusComponent extends JPanel
 
 	public SideBarComponent getSideBar() {
 		return fSideBar;
+	}
+
+	private int statusTextWidth() {
+		return size.width - 10;
 	}
 
 	private void drawBackground() {
@@ -180,7 +183,7 @@ public class TurnDiceStatusComponent extends JPanel
 			g2d.setColor(Color.BLACK);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D bounds = metrics.getStringBounds(pButtonText, g2d);
-			int x = ((WIDTH - (int) bounds.getWidth()) / 2);
+			int x = ((size.width - (int) bounds.getWidth()) / 2);
 			int y = ((_BUTTON_AREA.height + metrics.getHeight()) / 2) - metrics.getDescent();
 			g2d.drawString(pButtonText, x, y);
 			g2d.dispose();
@@ -226,15 +229,15 @@ public class TurnDiceStatusComponent extends JPanel
 			final AttributedString attStr = new AttributedString(fStatusMessage);
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
 			final LineBreakMeasurer measurer = new LineBreakMeasurer(attStr.getIterator(),
-					new FontRenderContext(null, false, false));
-			TextLayout layoutLine = measurer.nextLayout(_STATUS_TEXT_WIDTH);
+				new FontRenderContext(null, false, false));
+			TextLayout layoutLine = measurer.nextLayout(statusTextWidth());
 			while (layoutLine != null) {
 				layoutLine.draw(g2d, x, y);
 				y += fontMetrics.getHeight();
 				if (y <= 3 * fontMetrics.getHeight()) {
-					layoutLine = measurer.nextLayout(_STATUS_TEXT_WIDTH);
+					layoutLine = measurer.nextLayout(statusTextWidth());
 				} else {
-					layoutLine = measurer.nextLayout(_STATUS_TEXT_WIDTH - 20); // hourglass icon
+					layoutLine = measurer.nextLayout(statusTextWidth() - 20); // hourglass icon
 				}
 			}
 			g2d.dispose();
@@ -269,7 +272,7 @@ public class TurnDiceStatusComponent extends JPanel
 				FontMetrics fontMetrics = g2d.getFontMetrics();
 				String opponentsChoice = "Opponent's choice";
 				y += 38 + fontMetrics.getAscent();
-				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, WIDTH);
+				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, size.width);
 				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
 			} else {
 				y += 38;

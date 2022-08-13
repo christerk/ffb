@@ -9,6 +9,7 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
@@ -56,9 +57,6 @@ import java.util.stream.Collectors;
  */
 public class PlayerDetailComponent extends JPanel {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 430;
-
 	private static final int _PORTRAIT_WIDTH = 121;
 	private static final int _PORTRAIT_HEIGHT = 147;
 
@@ -84,11 +82,13 @@ public class PlayerDetailComponent extends JPanel {
 	private final BufferedImage fImage;
 	private boolean fRefreshNecessary;
 
-	public PlayerDetailComponent(SideBarComponent pSideBar) {
+	private final Dimension size;
+
+	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		size = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_DETAIL);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
@@ -128,11 +128,11 @@ public class PlayerDetailComponent extends JPanel {
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
 			final LineBreakMeasurer measurer = new LineBreakMeasurer(attStr.getIterator(),
 				new FontRenderContext(null, false, true));
-			TextLayout layoutLine1 = measurer.nextLayout(WIDTH - (2 * x));
+			TextLayout layoutLine1 = measurer.nextLayout(size.width - (2 * x));
 			if (layoutLine1 != null) {
 				int yLine1 = y + fontMetrics.getHeight() - fontMetrics.getDescent();
 				int yLine2 = yLine1 + fontMetrics.getHeight() - 1;
-				TextLayout layoutLine2 = measurer.nextLayout(WIDTH - (2 * x));
+				TextLayout layoutLine2 = measurer.nextLayout(size.width - (2 * x));
 				if (layoutLine2 != null) {
 					drawShadowedLayout(g2d, layoutLine1, x, yLine1);
 					drawShadowedLayout(g2d, layoutLine2, x, yLine2);

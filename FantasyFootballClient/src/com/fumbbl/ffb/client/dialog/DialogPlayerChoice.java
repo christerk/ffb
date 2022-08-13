@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.layer.FieldLayer;
-import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Player;
 
@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -102,7 +103,8 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		pack();
 
 		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
-			int x = SideBarComponent.WIDTH + ((playerCoordinate.getX() + 1) * FieldLayer.FIELD_SQUARE_SIZE);
+			Dimension sidebarSize = client.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.SIDEBAR);
+			int x = sidebarSize.width + ((playerCoordinate.getX() + 1) * FieldLayer.FIELD_SQUARE_SIZE);
 			int y = (playerCoordinate.getY() + 1) * FieldLayer.FIELD_SQUARE_SIZE;
 			setLocation(x, y);
 		} else {

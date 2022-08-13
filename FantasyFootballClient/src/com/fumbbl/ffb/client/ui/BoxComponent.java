@@ -38,9 +38,6 @@ import java.util.List;
  */
 public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 430;
-
 	public static final int MAX_BOX_ELEMENTS = 30;
 	public static final int FIELD_SQUARE_SIZE = 39;
 
@@ -48,16 +45,17 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	private final SideBarComponent fSideBar;
 	private final BufferedImage fImage;
+	private final Dimension size;
 	private BoxType fOpenBox;
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
 
-	public BoxComponent(SideBarComponent pSideBar) {
+	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		size = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		fBoxSlots = new ArrayList<>();
 		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
@@ -303,16 +301,16 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				g2d.setFont(_BOX_FONT);
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D bounds = metrics.getStringBounds(title, g2d);
-				int x = ((WIDTH - (int) bounds.getWidth()) / 2);
+				int x = ((size.width - (int) bounds.getWidth()) / 2);
 				int y = pYPosition + metrics.getAscent() + 2;
 				UtilClientGraphics.drawShadowedText(g2d, title, x, y);
 				y = pYPosition + ((int) bounds.getHeight() / 2) + 3;
 				g2d.setColor(Color.WHITE);
 				g2d.drawLine(2, y, x - 4, y);
-				g2d.drawLine(x + (int) bounds.getWidth() + 4, y, WIDTH - 3, y);
+				g2d.drawLine(x + (int) bounds.getWidth() + 4, y, size.width - 3, y);
 				g2d.setColor(Color.BLACK);
 				g2d.drawLine(2, y + 1, x - 4, y + 1);
-				g2d.drawLine(x + (int) bounds.getWidth() + 4, y + 1, WIDTH - 3, y + 1);
+				g2d.drawLine(x + (int) bounds.getWidth() + 4, y + 1, size.width - 3, y + 1);
 				height = (int) bounds.getHeight() + 4;
 				if (height > fMaxTitleOffset) {
 					fMaxTitleOffset = height;

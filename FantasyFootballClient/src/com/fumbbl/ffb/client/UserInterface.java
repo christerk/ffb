@@ -71,8 +71,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fLog = new LogComponent(getClient(), dimensionProvider);
 		fChat = new ChatComponent(getClient(), dimensionProvider);
 		fScoreBar = new ScoreBarComponent(getClient());
-		fSideBarHome = new SideBarComponent(getClient(), true);
-		fSideBarAway = new SideBarComponent(getClient(), false);
+		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider);
+		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider);
 
 		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
 

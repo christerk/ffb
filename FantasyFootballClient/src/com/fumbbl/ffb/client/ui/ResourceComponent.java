@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
@@ -32,8 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ResourceComponent extends JPanel {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 168; // 256
 	private static final int _SLOT_HEIGHT = 40;
 	private static final int _SLOT_WIDTH = 46;
 	private static final int COUNTER_SIZE = 15;
@@ -46,13 +45,13 @@ public class ResourceComponent extends JPanel {
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
-	public ResourceComponent(SideBarComponent pSideBar) {
+	public ResourceComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.RESOURCE);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		fSlots = createResourceSlots();
 		fRefreshNecessary = true;
 		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

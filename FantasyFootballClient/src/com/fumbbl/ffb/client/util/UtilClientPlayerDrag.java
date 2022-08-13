@@ -24,16 +24,17 @@ public class UtilClientPlayerDrag {
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
 		Dimension fieldDimension = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD);
+		Dimension boxComponentSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.BOX);
 		FieldCoordinate coordinate;
 		if (pBoxMode) {
 			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
-			if ((coordinate == null) && (pMouseEvent.getX() >= BoxComponent.WIDTH)) {
-				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - BoxComponent.WIDTH, pMouseEvent.getY());
+			if ((coordinate == null) && (pMouseEvent.getX() >= boxComponentSize.width)) {
+				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - boxComponentSize.width, pMouseEvent.getY());
 			}
 		} else {
 			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY());
 			if ((coordinate == null) && (pMouseEvent.getX() < 0)) {
-				coordinate = getBoxFieldCoordinate(pClient, BoxComponent.WIDTH + pMouseEvent.getX(), pMouseEvent.getY());
+				coordinate = getBoxFieldCoordinate(pClient, boxComponentSize.width + pMouseEvent.getX(), pMouseEvent.getY());
 			}
 		}
 		return coordinate;
@@ -49,10 +50,11 @@ public class UtilClientPlayerDrag {
 	}
 
 	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY) {
-		if ((pMouseX >= 0) && (pMouseX < BoxComponent.WIDTH) && (pMouseY >= 0) && (pMouseY < BoxComponent.HEIGHT)) {
+		Dimension boxComponentSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.BOX);
+		if ((pMouseX >= 0) && (pMouseX < boxComponentSize.width) && (pMouseY >= 0) && (pMouseY < boxComponentSize.width)) {
 			int boxTitleOffset = pClient.getUserInterface().getSideBarHome().getBoxComponent().getMaxTitleOffset();
 			int y = (((pMouseY - boxTitleOffset) / BoxComponent.FIELD_SQUARE_SIZE) * 3)
-					+ (pMouseX / BoxComponent.FIELD_SQUARE_SIZE);
+				+ (pMouseX / BoxComponent.FIELD_SQUARE_SIZE);
 			if ((y >= 0) && (y < BoxComponent.MAX_BOX_ELEMENTS)) {
 				return new FieldCoordinate(FieldCoordinate.RSV_HOME_X, y);
 			}
