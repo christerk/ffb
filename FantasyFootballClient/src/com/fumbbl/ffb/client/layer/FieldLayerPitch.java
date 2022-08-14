@@ -65,20 +65,34 @@ public class FieldLayerPitch extends FieldLayer {
 			Graphics2D g2d = getGraphicsWithFontAndColor();
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D teamNameBounds = metrics.getStringBounds(teamNameHome, g2d);
-			int translateX = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
-			int translateY = (int) ((getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
-			g2d.translate(translateX, translateY);
-			g2d.rotate(-Math.PI / 2.0);
+			int translateX;
+			int translateY;
+			if (dimensionProvider.isPortrait()) {
+				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
+				translateY = (int) ((25.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				g2d.translate(translateX, translateY);
+			} else {
+				translateX = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) ((getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
+				g2d.translate(translateX, translateY);
+				g2d.rotate(-Math.PI / 2.0);
+			}
 			g2d.drawString(teamNameHome, 0, 0);
 			g2d.dispose();
 
 			g2d = getGraphicsWithFontAndColor();
 			metrics = g2d.getFontMetrics();
 			teamNameBounds = metrics.getStringBounds(teamNameAway, g2d);
-			translateX = (int) ((25.0 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
-			translateY = (int) ((getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
-			g2d.translate(translateX, translateY);
-			g2d.rotate(Math.PI / 2.0);
+			if (dimensionProvider.isPortrait()) {
+				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
+				translateY = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				g2d.translate(translateX, translateY);
+			} else {
+				translateX = (int) ((25.0 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) ((getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
+				g2d.translate(translateX, translateY);
+				g2d.rotate(Math.PI / 2.0);
+			}
 			g2d.drawString(teamNameAway, 0, 0);
 			g2d.dispose();
 
