@@ -24,13 +24,18 @@ public abstract class FieldLayer {
 	public static final int FIELD_IMAGE_OFFSET_CENTER_Y = 15;
 
 	private final FantasyFootballClient fClient;
-	private final BufferedImage fImage;
+	protected final BufferedImage fImage;
 	private Rectangle fUpdatedArea;
+
+	protected Dimension size;
+
+	protected DimensionProvider dimensionProvider;
 
 	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
-		Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
-		fImage = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
+		this.dimensionProvider = dimensionProvider;
+		size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		addUpdatedArea(new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight()));
 	}
 

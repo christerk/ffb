@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -30,10 +31,24 @@ public class FieldLayerPitch extends FieldLayer {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather);
 			if (fieldImage != null) {
-				draw(fieldImage, 0, 0, 1.0f);
+				drawPitch(fieldImage);
 			}
 			drawTeamNames();
 		}
+	}
+
+	protected void drawPitch(BufferedImage pImage) {
+		Graphics2D g2d = fImage.createGraphics();
+		if (dimensionProvider.isPortrait()) {
+			g2d.translate(0, size.height);
+			g2d.rotate(-Math.PI / 2);
+		}
+
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
+		g2d.drawImage(pImage, 0, 0, null);
+		g2d.dispose();
+		Rectangle updatedArea = new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
+		addUpdatedArea(updatedArea);
 	}
 
 	private void drawTeamNames() {
