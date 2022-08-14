@@ -11,9 +11,11 @@ public class DimensionProvider {
 	private static final int SIDEBAR_WIDTH_P = 165;
 	private final Map<Component, Dimension> portraitDimensions = new HashMap<>();
 	private final Map<Component, Dimension> landscapeDimensions = new HashMap<>();
-	private boolean portrait = true;
+	private boolean portrait = false;
 
-	public DimensionProvider() {
+	public DimensionProvider(boolean portrait) {
+		this.portrait = portrait;
+
 		portraitDimensions.put(Component.FIELD, new Dimension(452, 782));
 		landscapeDimensions.put(Component.FIELD, new Dimension(782, 452));
 

@@ -66,7 +66,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
 
-		dimensionProvider = new DimensionProvider();
+		dimensionProvider = new DimensionProvider(pClient.getParameters().isPortrait());
 		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
 		fLog = new LogComponent(getClient(), dimensionProvider);
 		fChat = new ChatComponent(getClient(), dimensionProvider);
