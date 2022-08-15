@@ -56,8 +56,6 @@ import java.util.Set;
  */
 public abstract class ClientState implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
 
-	public static final int FIELD_SQUARE_SIZE = 30;
-
 	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
