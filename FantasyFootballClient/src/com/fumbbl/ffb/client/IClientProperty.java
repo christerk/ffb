@@ -25,6 +25,7 @@ public interface IClientProperty extends CommonProperty {
 	String SETTING_TEAM_LOGOS = "setting.pitch.teamLogos";
 	String SETTING_PITCH_WEATHER = "setting.pitch.weather";
 	String SETTING_RANGEGRID = "setting.rangegrid";
+	String SETTING_PITCH_ORIENTATION = "setting.pitch.orientation";
 
 	String SETTING_LAST_CHANGE_LOG_FINGERPRINT = "setting.lastChangeLogFingerPrint";
 
@@ -81,7 +82,7 @@ public interface IClientProperty extends CommonProperty {
 	String KEY_MENU_SETUP_SAVE = "key.menu.setup.save";
 
 
-	String[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE,
+	String[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
 		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_CHATLOG, SETTING_RIGHT_CLICK_END_ACTION,
 		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
 		SETTING_PITCH_MARKINGS, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,

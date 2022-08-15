@@ -12,6 +12,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.ClientReplayer;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.IClientPropertyValue;
@@ -118,6 +119,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
 	private final JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
+
+	private final JRadioButtonMenuItem pitchLandscapeMenuItem;
+	private final JRadioButtonMenuItem pitchPortraitMenuItem;
 
 	private final JRadioButtonMenuItem fTeamLogoBothMenuItem;
 	private final JRadioButtonMenuItem fTeamLogoOwnMenuItem;
@@ -435,6 +439,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		tdDistanceGroup.add(fPitchMarkingsOffMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOffMenuItem);
 
+		JMenu orientationMenu = new JMenu("Pitch Orientation");
+		orientationMenu.setMnemonic(KeyEvent.VK_O);
+		fPitchMenu.add(orientationMenu);
+
+		ButtonGroup orientationGroup = new ButtonGroup();
+
+		pitchLandscapeMenuItem = new JRadioButtonMenuItem("Landscape");
+		pitchLandscapeMenuItem.addActionListener(this);
+		orientationGroup.add(pitchLandscapeMenuItem);
+		orientationMenu.add(pitchLandscapeMenuItem);
+
+		pitchPortraitMenuItem = new JRadioButtonMenuItem("Portrait");
+		pitchPortraitMenuItem.addActionListener(this);
+		orientationGroup.add(pitchPortraitMenuItem);
+		orientationMenu.add(pitchPortraitMenuItem);
+
 		JMenu fTeamLogoMenu = new JMenu("Team Logo");
 		fTeamLogoMenu.setMnemonic(KeyEvent.VK_T);
 		fPitchMenu.add(fTeamLogoMenu);
@@ -602,6 +622,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fPitchMarkingsOffMenuItem.setSelected(true);
 		fPitchMarkingsOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ON.equals(pitchMarkingsSetting));
 
+		String orientationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION);
+		pitchLandscapeMenuItem.setSelected(true);
+		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(orientationSetting));
+
 		String teamLogosSetting = getClient().getProperty(IClientProperty.SETTING_TEAM_LOGOS);
 		fTeamLogoBothMenuItem.setSelected(true);
 		fTeamLogoOwnMenuItem.setSelected(IClientPropertyValue.SETTING_TEAM_LOGOS_OWN.equals(teamLogosSetting));
@@ -629,6 +653,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
+		updateOrientation();
 
 		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
@@ -771,6 +796,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(IClientProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_ON);
 			getClient().saveUserSettings(true);
 		}
+		if (source == pitchLandscapeMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_LANDSCAPE);
+			getClient().saveUserSettings(true);
+		}
+		if (source == pitchPortraitMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
+			getClient().saveUserSettings(true);
+		}
 		if (source == fTeamLogoBothMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
 			getClient().saveUserSettings(true);
@@ -850,6 +883,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		fDialogShown = pDialog;
 		fDialogShown.showDialog(this);
+	}
+
+	public void updateOrientation() {
+
+		boolean portrait = IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION));
+		if (getClient() != null && getClient().getUserInterface() != null) {
+			DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
+			if (dimensionProvider != null && portrait != dimensionProvider.isPortrait()) {
+				dimensionProvider.setPortrait(portrait);
+				getClient().getUserInterface().initComponents(true);
+			}
+		}
 	}
 
 	public void updateGameOptions() {

@@ -30,23 +30,22 @@ import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * 
  * @author Kalimar
  */
 public class UserInterface extends JFrame implements WindowListener, IDialogCloseListener {
 
 	private final FantasyFootballClient fClient;
-	private final FieldComponent fFieldComponent;
+	private FieldComponent fFieldComponent;
 	private final StatusReport fStatusReport;
-	private final SideBarComponent fSideBarHome;
-	private final SideBarComponent fSideBarAway;
+	private SideBarComponent fSideBarHome;
+	private SideBarComponent fSideBarAway;
 	private final IconCache fIconCache;
 	private final SoundEngine fSoundEngine;
-	private final ScoreBarComponent fScoreBar;
-	private final LogComponent fLog;
-	private final ChatComponent fChat;
+	private ScoreBarComponent fScoreBar;
+	private LogComponent fLog;
+	private ChatComponent fChat;
 	private final DialogManager fDialogManager;
-	private final JDesktopPane fDesktop;
+	private JDesktopPane fDesktop;
 	private GameTitle fGameTitle;
 	private final PlayerIconFactory fPlayerIconFactory;
 	private final MouseEntropySource fMouseEntropySource;
@@ -55,6 +54,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public UserInterface(FantasyFootballClient pClient) {
 
+		fDesktop = null;
 		fClient = pClient;
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
@@ -65,34 +65,42 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
+		fMouseEntropySource = new MouseEntropySource(this);
 
 		dimensionProvider = new DimensionProvider(pClient.getParameters().isPortrait());
+
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(this);
+		setResizable(false);
+
+		initComponents(false);
+
+		getChat().requestChatInputFocus();
+
+	}
+
+	public void initComponents(boolean callInit) {
+		if (fDesktop != null) {
+			getContentPane().remove(fDesktop);
+		}
 		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
 		fLog = new LogComponent(getClient(), dimensionProvider);
 		fChat = new ChatComponent(getClient(), dimensionProvider);
 		fScoreBar = new ScoreBarComponent(getClient());
 		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider);
 		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider);
-
-		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
-
 		fDesktop = new JDesktopPane();
+		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
 		panelContent.setSize(panelContent.getPreferredSize());
 		fDesktop.add(panelContent, -1);
 		fDesktop.setPreferredSize(panelContent.getPreferredSize());
 
-		fMouseEntropySource = new MouseEntropySource(this);
-
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
-
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(this);
-		setResizable(false);
-
 		pack();
 
-		getChat().requestChatInputFocus();
-
+		if (callInit && getClient() != null && getClient().getGame() != null && getClient().getGame().getOptions() != null) {
+			init(getClient().getGame().getOptions());
+		}
 	}
 
 	private JPanel landscapeContent() {
