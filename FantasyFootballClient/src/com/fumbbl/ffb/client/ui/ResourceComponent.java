@@ -38,25 +38,29 @@ public class ResourceComponent extends JPanel {
 	private static final int COUNTER_SIZE = 15;
 
 	private final SideBarComponent fSideBar;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 	private boolean fRefreshNecessary;
 	private int fNrOfSlots, fCurrentReRolls, fCurrentApothecaries, fCurrentCards, currentPrayers, currentSingleUseReRolls, currentPlagueDoctors;
 	private final ResourceSlot[] fSlots;
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
-	private final Dimension size;
+	private Dimension size;
+
 	public ResourceComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		size = dimensionProvider.dimension(DimensionProvider.Component.RESOURCE);
-		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		fSlots = createResourceSlots();
 		fRefreshNecessary = true;
+		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		size = dimensionProvider.dimension(DimensionProvider.Component.RESOURCE);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
 	private ResourceSlot[] createResourceSlots() {

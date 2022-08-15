@@ -38,16 +38,24 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private final Map<BoxType, Rectangle> fButtonLocations;
 
 	private final SideBarComponent fSideBar;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 	private BoxType fOpenBox;
 	private BoxType fSelectedBox;
 
-	private final Dimension size;
+	private Dimension size;
+
 	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
+		fButtonLocations = new HashMap<>();
+		fOpenBox = null;
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
 		size = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
-		fButtonLocations = new HashMap<>();
 		if (getSideBar().isHomeSide()) {
 			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
 			fButtonLocations.put(BoxType.OUT,
@@ -57,14 +65,11 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 			fButtonLocations.put(BoxType.RESERVES,
 				new Rectangle((size.width / 2) + 1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
 		}
+
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		fOpenBox = null;
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
 	public void closeBox() {

@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 public abstract class FieldLayer {
 
 	private final FantasyFootballClient fClient;
-	protected final BufferedImage fImage;
+	protected BufferedImage fImage;
 	private Rectangle fUpdatedArea;
 
 	protected Dimension size;
@@ -29,6 +29,9 @@ public abstract class FieldLayer {
 	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
 		size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		addUpdatedArea(new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight()));

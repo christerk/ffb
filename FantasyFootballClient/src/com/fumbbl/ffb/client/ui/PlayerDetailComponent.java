@@ -79,20 +79,23 @@ public class PlayerDetailComponent extends JPanel {
 
 	private final SideBarComponent fSideBar;
 	private Player<?> fPlayer;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 	private boolean fRefreshNecessary;
 
-	private final Dimension size;
+	private Dimension size;
 
 	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
+		fRefreshNecessary = true;
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
 		size = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_DETAIL);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		fRefreshNecessary = true;
 	}
 
 	private void drawBackground() {

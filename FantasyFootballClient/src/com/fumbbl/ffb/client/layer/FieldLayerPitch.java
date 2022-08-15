@@ -114,8 +114,13 @@ public class FieldLayerPitch extends FieldLayer {
 		clear(true);
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		if (fieldModel != null) {
-			drawWeather(fieldModel.getWeather());
+			Weather weather = fieldModel.getWeather();
+			if (weather != null) {
+				drawWeather(weather);
+				return;
+			}
 		}
+		drawWeather(Weather.INTRO);
 	}
 
 }

@@ -66,7 +66,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final Font _STATUS_MESSAGE_FONT = new Font("Sans Serif", Font.PLAIN, 12);
 
 	private final SideBarComponent fSideBar;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 
 	private boolean fEndTurnButtonShown;
 	private boolean fTimeoutButtonShown;
@@ -90,19 +90,22 @@ public class TurnDiceStatusComponent extends JPanel
 	private boolean fRefreshNecessary;
 	private boolean buttonEnabled = true;
 
-	private final Dimension size;
+	private Dimension size;
 
 	public TurnDiceStatusComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		fRefreshNecessary = true;
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
 		size = dimensionProvider.dimension(DimensionProvider.Component.TURN_DICE_STATUS);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		fRefreshNecessary = true;
 	}
 
 	public SideBarComponent getSideBar() {

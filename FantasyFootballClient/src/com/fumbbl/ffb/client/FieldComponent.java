@@ -57,7 +57,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private final FieldLayerOverPlayers fLayerOverPlayers;
 	private final FieldLayerRangeRuler fLayerRangeRuler;
 	private final FieldLayerEnhancements layerEnhancements;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 
 	// we need to keep some old model values for a redraw (if those get set to null)
 	private FieldCoordinate fBallCoordinate;
@@ -80,19 +80,34 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 		fCoordinateByPlayerId = new HashMap<>();
 
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
-		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
-
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
-
 		addMouseListener(this);
 		addMouseMotionListener(this);
 
 		ToolTipManager.sharedInstance().registerComponent(this);
 
 		refresh();
+
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+
+		fLayerField.initLayout(dimensionProvider);
+		fLayerTeamLogo.initLayout(dimensionProvider);
+		fLayerBloodspots.initLayout(dimensionProvider);
+		fLayerRangeGrid.initLayout(dimensionProvider);
+		fLayerMarker.initLayout(dimensionProvider);
+		fLayerUnderPlayers.initLayout(dimensionProvider);
+		fLayerPlayers.initLayout(dimensionProvider);
+		fLayerOverPlayers.initLayout(dimensionProvider);
+		fLayerRangeRuler.initLayout(dimensionProvider);
+		layerEnhancements.initLayout(dimensionProvider);
+
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 
 	}
 

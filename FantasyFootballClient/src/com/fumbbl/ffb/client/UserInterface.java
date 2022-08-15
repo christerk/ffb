@@ -15,6 +15,7 @@ import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameOptions;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -35,15 +36,15 @@ import java.lang.reflect.InvocationTargetException;
 public class UserInterface extends JFrame implements WindowListener, IDialogCloseListener {
 
 	private final FantasyFootballClient fClient;
-	private FieldComponent fFieldComponent;
+	private final FieldComponent fFieldComponent;
 	private final StatusReport fStatusReport;
-	private SideBarComponent fSideBarHome;
-	private SideBarComponent fSideBarAway;
+	private final SideBarComponent fSideBarHome;
+	private final SideBarComponent fSideBarAway;
 	private final IconCache fIconCache;
 	private final SoundEngine fSoundEngine;
-	private ScoreBarComponent fScoreBar;
-	private LogComponent fLog;
-	private ChatComponent fChat;
+	private final ScoreBarComponent fScoreBar;
+	private final LogComponent fLog;
+	private final ChatComponent fChat;
 	private final DialogManager fDialogManager;
 	private JDesktopPane fDesktop;
 	private GameTitle fGameTitle;
@@ -73,6 +74,13 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		addWindowListener(this);
 		setResizable(false);
 
+		fScoreBar = new ScoreBarComponent(getClient());
+		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
+		fLog = new LogComponent(getClient(), dimensionProvider);
+		fChat = new ChatComponent(getClient(), dimensionProvider);
+		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider);
+		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider);
+
 		initComponents(false);
 
 		getChat().requestChatInputFocus();
@@ -83,23 +91,25 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		if (fDesktop != null) {
 			getContentPane().remove(fDesktop);
 		}
-		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
-		fLog = new LogComponent(getClient(), dimensionProvider);
-		fChat = new ChatComponent(getClient(), dimensionProvider);
-		fScoreBar = new ScoreBarComponent(getClient());
-		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider);
-		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider);
 		fDesktop = new JDesktopPane();
+
+		fFieldComponent.initLayout(dimensionProvider);
+		fLog.initLayout(dimensionProvider);
+		fChat.initLayout(dimensionProvider);
+		fSideBarHome.initLayout(dimensionProvider);
+		fSideBarAway.initLayout(dimensionProvider);
+
 		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
 		panelContent.setSize(panelContent.getPreferredSize());
+
 		fDesktop.add(panelContent, -1);
 		fDesktop.setPreferredSize(panelContent.getPreferredSize());
 
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
 		pack();
 
-		if (callInit && getClient() != null && getClient().getGame() != null && getClient().getGame().getOptions() != null) {
-			init(getClient().getGame().getOptions());
+		if (callInit) {
+			init(null);
 		}
 	}
 
@@ -232,7 +242,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public synchronized void init(GameOptions gameOptions) {
 
-		getStatusReport().init(gameOptions);
+		if (gameOptions != null && ArrayTool.isProvided(gameOptions.getOptions())) {
+			getStatusReport().init(gameOptions);
+		}
 		getSideBarHome().init();
 		getSideBarAway().init();
 		getScoreBar().init();

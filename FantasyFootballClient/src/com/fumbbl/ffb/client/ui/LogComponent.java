@@ -38,14 +38,18 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
 		setLayout(new BorderLayout());
 		add(fLogScrollPane, BorderLayout.CENTER);
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.LOG);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
+
 		fLogTextPane.setHighlighter(new CommandHighlighter());
 		fLogTextPane.addMouseMotionListener(this);
 		fLogScrollPane.addMouseMotionListener(this);
 		fCommandHighlightAreaByCommandNr = new HashMap<>();
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.LOG);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {

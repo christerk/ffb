@@ -96,11 +96,6 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		add(fChatScrollPane, BorderLayout.CENTER);
 		add(fChatInputField, BorderLayout.SOUTH);
 
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
-
 		fChatTextPane.addMouseMotionListener(this);
 		fChatScrollPane.addMouseMotionListener(this);
 		fChatInputField.addMouseMotionListener(this);
@@ -108,6 +103,13 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fReplayShown = false;
 		fReplayControl = new ReplayControl(getClient(), dimensionProvider);
 
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {

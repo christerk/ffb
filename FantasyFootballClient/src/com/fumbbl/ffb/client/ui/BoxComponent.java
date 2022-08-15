@@ -44,25 +44,28 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private static final Font _BOX_FONT = new Font("Sans Serif", Font.BOLD, 12);
 
 	private final SideBarComponent fSideBar;
-	private final BufferedImage fImage;
-	private final Dimension size;
+	private BufferedImage fImage;
+	private Dimension size;
 	private BoxType fOpenBox;
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
 
 	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		size = dimensionProvider.dimension(DimensionProvider.Component.BOX);
-		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		fBoxSlots = new ArrayList<>();
-		setLayout(null);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
 		fOpenBox = null;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		size = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+		setLayout(null);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
 	public void closeBox() {
