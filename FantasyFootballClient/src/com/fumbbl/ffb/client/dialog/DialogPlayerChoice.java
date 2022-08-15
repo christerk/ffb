@@ -102,9 +102,15 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		pack();
 
 		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
+			int offsetX = 1, offsetY = 1;
 			DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+
+			if (dimensionProvider.isPortrait()) {
+				offsetX = -1;
+			}
+
 			Dimension sidebarSize = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
-			Dimension onPitch = dimensionProvider.mapToLocal(playerCoordinate.getX() + 1, playerCoordinate.getY() + 1, false);
+			Dimension onPitch = dimensionProvider.mapToLocal(playerCoordinate.getX() + offsetX, playerCoordinate.getY() + offsetY, false);
 			int x = sidebarSize.width + onPitch.width;
 			int y = onPitch.height;
 			setLocation(x, y);

@@ -207,8 +207,14 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			if (pMouseEvent.isShiftDown()) {
 				hideSelectSquare();
 				if (player != null) {
+					int offsetX = 1, offsetY = 1;
 					DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
-					Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + 1, coordinate.getY() + 1, false);
+
+					if (dimensionProvider.isPortrait()) {
+						offsetX = -1;
+					}
+
+					Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 					UtilClientMarker.showMarkerPopup(getClient(), player, dimension.width, dimension.height);
 
 				} else {
@@ -251,8 +257,13 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			FieldCoordinate coordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(fPopupMenuPlayer);
 			if (coordinate != null) {
 				hideSelectSquare();
+				int offsetX = 1, offsetY = 1;
 				DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
-				Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + 1, coordinate.getY() + 1, false);
+
+				if (dimensionProvider.isPortrait()) {
+					offsetX = -1;
+				}
+				Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 				fPopupMenu.show(fClient.getUserInterface().getFieldComponent(), dimension.width, dimension.height);
 			}
 		}
