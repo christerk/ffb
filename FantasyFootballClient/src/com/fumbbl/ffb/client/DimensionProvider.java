@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 
 import java.awt.Dimension;
@@ -101,6 +102,31 @@ public class DimensionProvider {
 		}
 		return new Dimension(x * fieldSquareSize + offset, y * fieldSquareSize + offset);
 
+	}
+
+	public Direction mapToLocal(Direction direction) {
+		if (portrait) {
+			switch (direction) {
+				case NORTHEAST:
+					return Direction.NORTHWEST;
+				case EAST:
+					return Direction.NORTH;
+				case SOUTHEAST:
+					return Direction.NORTHEAST;
+				case SOUTHWEST:
+					return Direction.SOUTHEAST;
+				case WEST:
+					return Direction.SOUTH;
+				case NORTHWEST:
+					return Direction.SOUTHWEST;
+				case NORTH:
+					return Direction.WEST;
+				case SOUTH:
+					return Direction.EAST;
+			}
+		}
+
+		return direction;
 	}
 
 	public enum Component {

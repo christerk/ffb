@@ -42,7 +42,7 @@ public class ScatterBallMessage extends ReportMessageBase<ReportScatterBall> {
 				if (i > 0) {
 					status.append(", ");
 				}
-				status.append(directions[i].getName());
+				status.append(mapToLocal(directions[i]).getName());
 			}
 			println(getIndent(), TextStyle.ROLL, status.toString());
 		}

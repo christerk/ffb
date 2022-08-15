@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
@@ -71,7 +72,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if (pPushbackSquare != null) {
 			clear(pPushbackSquare.getCoordinate(), true);
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage pushbackIcon = iconCache.getIcon(pPushbackSquare);
+			Direction localDirection = dimensionProvider.mapToLocal(pPushbackSquare.getDirection());
+			BufferedImage pushbackIcon = iconCache.getPushbackIcon(localDirection, pPushbackSquare.isSelected());
 			draw(pushbackIcon, pPushbackSquare.getCoordinate(), 1.0f);
 		}
 	}

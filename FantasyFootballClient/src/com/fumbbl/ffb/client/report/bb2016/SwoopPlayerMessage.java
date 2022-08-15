@@ -36,7 +36,7 @@ public class SwoopPlayerMessage extends ReportMessageBase<ReportSwoopPlayer> {
   				if (i > 0) {
   					status.append(", ");
   				}
-  				status.append(directions[i].getName());
+  				status.append(mapToLocal(directions[i]).getName());
   			}
   			println(getIndent(), TextStyle.ROLL, status.toString());
   			status = new StringBuilder();

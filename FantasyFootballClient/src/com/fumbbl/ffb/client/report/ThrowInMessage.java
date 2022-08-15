@@ -18,8 +18,8 @@ public class ThrowInMessage extends ReportMessageBase<ReportThrowIn> {
   		Direction direction = report.getDirection();
   		if ((distanceRoll != null) && (distanceRoll.length > 1) && (direction != null)) {
   			StringBuilder status = new StringBuilder();
-  			status.append("Throw In Direction Roll [ ").append(directionRoll).append(" ] ").append(direction.getName());
-  			println(getIndent(), TextStyle.ROLL, status.toString());
+  			status.append("Throw In Direction Roll [ ").append(directionRoll).append(" ] ").append(mapToLocal(direction).getName());
+				println(getIndent(), TextStyle.ROLL, status.toString());
   			status = new StringBuilder();
   			status.append("Throw In Distance Roll [ ").append(distanceRoll[0]).append(" ][ ").append(distanceRoll[1])
   				.append(" ]");
@@ -27,8 +27,8 @@ public class ThrowInMessage extends ReportMessageBase<ReportThrowIn> {
   			println(getIndent() + 1, "The fans throw the ball back onto the pitch.");
   			status = new StringBuilder();
   			int distance = distanceRoll[0] + distanceRoll[1];
-  			status.append("It lands ").append(distance).append(" squares ").append(direction.getName());
-  			println(getIndent() + 1, status.toString());
+				status.append("It lands ").append(distance).append(" squares ").append(mapToLocal(direction).getName());
+				println(getIndent() + 1, status.toString());
   		}
     }
 }

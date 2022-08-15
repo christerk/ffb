@@ -13,7 +13,7 @@ public class PlaceBallDirectionMessage extends ReportMessageBase<ReportPlaceBall
 	@Override
 	protected void render(ReportPlaceBallDirection report) {
 		print(getIndent(), false, game.getPlayerById(report.getPlayerId()));
-		String builder = " places the ball " + report.getDirection().getName() +
+		String builder = " places the ball " + mapToLocal(report.getDirection()).getName() +
 			".";
 		println(getIndent(), TextStyle.NONE, builder);
 	}
