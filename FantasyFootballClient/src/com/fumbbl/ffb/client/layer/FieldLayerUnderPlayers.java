@@ -71,7 +71,7 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 			g2d.setFont(new Font("Sans Serif", Font.BOLD, 15));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D numberBounds = metrics.getStringBounds(numberString, g2d);
-			Dimension dimension = dimensionProvider.map(pCoordinate, true);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
 			int baselineX = dimension.width - (int) (numberBounds.getWidth() / 2) + 1;
 			int baselineY = dimension.height + (int) (numberBounds.getHeight() / 2) - 2;
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));

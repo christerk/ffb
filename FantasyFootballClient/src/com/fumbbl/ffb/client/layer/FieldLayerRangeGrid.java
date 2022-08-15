@@ -59,7 +59,7 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = dimensionProvider.map(pCoordinate);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
 			int x = dimension.width;
 			int y = dimension.height;
 			Rectangle bounds = new Rectangle(x + 1, y + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
@@ -69,9 +69,4 @@ public class FieldLayerRangeGrid extends FieldLayer {
 			g2d.dispose();
 		}
 	}
-
-	public FieldCoordinate getCenterCoordinate() {
-		return fCenterCoordinate;
-	}
-
 }

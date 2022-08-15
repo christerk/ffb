@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.model.Game;
@@ -16,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
+import java.awt.Dimension;
 
 /**
  * @author Kalimar
@@ -60,10 +62,11 @@ public class UtilClientMarker {
 			boolean persistMarker = ClientMode.PLAYER == pClient.getMode();
 			FieldMarker fieldMarker = persistMarker ? game.getFieldModel().getFieldMarker(pCoordinate) : game.getFieldModel().getTransientFieldMarker(pCoordinate);
 			String markerText = (fieldMarker != null) ? fieldMarker.getHomeText() : null;
-			int x = (pCoordinate.getX() + 1) * _FIELD_SQUARE_SIZE;
-			int y = (pCoordinate.getY() + 1) * _FIELD_SQUARE_SIZE;
+			DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate.getX(), pCoordinate.getY(), false);
+
 			final JTextField markerField = createMarkerPopup(pClient.getUserInterface().getFieldComponent(), markerPopupMenu,
-				"Mark Field", StringTool.print(markerText), x, y);
+				"Mark Field", StringTool.print(markerText), dimension.width, dimension.height);
 			markerField.addActionListener(pActionEvent -> {
 				String text = StringTool.print(markerField.getText());
 				if (persistMarker) {

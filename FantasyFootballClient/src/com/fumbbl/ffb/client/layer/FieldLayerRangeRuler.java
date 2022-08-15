@@ -74,9 +74,9 @@ public class FieldLayerRangeRuler extends FieldLayer {
 			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 				pRangeRuler.getTargetCoordinate(), false);
 			if (passingDistance != null) {
-				Dimension startDimension = dimensionProvider.map(throwerCoordinate, true);
+				Dimension startDimension = dimensionProvider.mapToLocal(throwerCoordinate, true);
 				Point startCenter = new Point(startDimension.width, startDimension.height);
-				Dimension endDimension = dimensionProvider.map(pRangeRuler.getTargetCoordinate(), true);
+				Dimension endDimension = dimensionProvider.mapToLocal(pRangeRuler.getTargetCoordinate(), true);
 				Point endCenter = new Point(endDimension.width, endDimension.height);
 
 				int lengthY = startCenter.y - endCenter.y;
@@ -194,7 +194,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor, Color border) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = dimensionProvider.map(pCoordinate);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
 			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize());
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);

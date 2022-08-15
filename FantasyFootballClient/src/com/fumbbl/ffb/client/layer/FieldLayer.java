@@ -105,12 +105,12 @@ public abstract class FieldLayer {
 	}
 
 	protected int findCenteredIconUpperLeftX(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		Dimension dimension = dimensionProvider.map(pCoordinate, true);
+		Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
 		return dimension.width - (pImage.getWidth() / 2);
 	}
 
 	protected int findCenteredIconUpperLeftY(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		Dimension dimension = dimensionProvider.map(pCoordinate, true);
+		Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
 		return dimension.height - (pImage.getHeight() / 2);
 	}
 
@@ -120,7 +120,7 @@ public abstract class FieldLayer {
 
 	public void clear(FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = dimensionProvider.map(pCoordinate);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
 			int fieldX = dimension.width;
 			int fieldY = dimension.height;
 			clear(fieldX, fieldY, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize(), pUpdateArea);

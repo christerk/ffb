@@ -125,8 +125,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				clear(pMoveSquare.getCoordinate(), true);
 			}
 
-			Dimension dimensionWithOffset = dimensionProvider.map(pMoveSquare.getCoordinate(), true);
-			Dimension dimension = dimensionProvider.map(pMoveSquare.getCoordinate());
+			Dimension dimensionWithOffset = dimensionProvider.mapToLocal(pMoveSquare.getCoordinate(), true);
+			Dimension dimension = dimensionProvider.mapToLocal(pMoveSquare.getCoordinate());
 			int x = dimension.width + 2;
 			int y = dimension.height + 2;
 			Graphics2D g2d = getImage().createGraphics();
@@ -208,7 +208,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
 			fMarkerCoordinate = pMarkerCoordinate;
 			clear(fMarkerCoordinate, true);
-			Dimension dimension = dimensionProvider.map(fMarkerCoordinate);
+			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage spellIcon = iconCache.getIconByProperty(iconProperty);
@@ -231,7 +231,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
 			fMarkerCoordinate = pMarkerCoordinate;
 			clear(fMarkerCoordinate, true);
-			Dimension dimension = dimensionProvider.map(fMarkerCoordinate);
+			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage fireballIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL);
@@ -268,7 +268,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if (pCoordinate != null) {
 			clear(pCoordinate, true);
-			Dimension dimension = dimensionProvider.map(fMarkerCoordinate);
+			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
 			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);

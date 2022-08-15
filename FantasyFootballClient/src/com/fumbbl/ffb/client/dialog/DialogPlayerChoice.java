@@ -104,7 +104,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
 			DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
 			Dimension sidebarSize = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
-			Dimension onPitch = dimensionProvider.map(playerCoordinate.getX() + 1, playerCoordinate.getY() + 1, false);
+			Dimension onPitch = dimensionProvider.mapToLocal(playerCoordinate.getX() + 1, playerCoordinate.getY() + 1, false);
 			int x = sidebarSize.width + onPitch.width;
 			int y = onPitch.height;
 			setLocation(x, y);

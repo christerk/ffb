@@ -76,7 +76,7 @@ public class DimensionProvider {
 			.map(dimensions::get).mapToDouble(Dimension::getHeight).sum();
 	}
 
-	public FieldCoordinate normalize(FieldCoordinate fieldCoordinate) {
+	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {
 		if (portrait) {
 			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
 		}
@@ -84,15 +84,15 @@ public class DimensionProvider {
 		return fieldCoordinate;
 	}
 
-	public Dimension map(FieldCoordinate fieldCoordinate) {
-		return map(fieldCoordinate, false);
+	public Dimension mapToLocal(FieldCoordinate fieldCoordinate) {
+		return mapToLocal(fieldCoordinate, false);
 	}
 
-	public Dimension map(FieldCoordinate fieldCoordinate, boolean addImageOffset) {
-		return map(fieldCoordinate.getX(), fieldCoordinate.getY(), addImageOffset);
+	public Dimension mapToLocal(FieldCoordinate fieldCoordinate, boolean addImageOffset) {
+		return mapToLocal(fieldCoordinate.getX(), fieldCoordinate.getY(), addImageOffset);
 	}
 
-	public Dimension map(int x, int y, boolean addImageOffset) {
+	public Dimension mapToLocal(int x, int y, boolean addImageOffset) {
 		int offset = addImageOffset ? fieldSquareSize / 2 : 0;
 
 
