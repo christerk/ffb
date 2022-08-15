@@ -67,12 +67,13 @@ public class FieldLayerPitch extends FieldLayer {
 			Rectangle2D teamNameBounds = metrics.getStringBounds(teamNameHome, g2d);
 			int translateX;
 			int translateY;
+			int squareSize = dimensionProvider.fieldSquareSize();
 			if (dimensionProvider.isPortrait()) {
 				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
-				translateY = (int) ((25.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) ((25.5 * squareSize) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
-				translateX = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateX = (int) ((0.5 * squareSize) + (teamNameBounds.getHeight() / 2)) - 4;
 				translateY = (int) ((getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(-Math.PI / 2.0);
@@ -85,10 +86,10 @@ public class FieldLayerPitch extends FieldLayer {
 			teamNameBounds = metrics.getStringBounds(teamNameAway, g2d);
 			if (dimensionProvider.isPortrait()) {
 				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
-				translateY = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) ((0.5 * squareSize) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
-				translateX = (int) ((25.0 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateX = (int) ((25.0 * squareSize) + (teamNameBounds.getHeight() / 2)) - 4;
 				translateY = (int) ((getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(Math.PI / 2.0);

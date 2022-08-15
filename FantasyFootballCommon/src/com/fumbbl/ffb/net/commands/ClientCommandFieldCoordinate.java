@@ -42,7 +42,7 @@ public class ClientCommandFieldCoordinate extends ClientCommand {
 	public ClientCommandFieldCoordinate initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fieldCoordinate = new FieldCoordinate(0);
+		fieldCoordinate = new FieldCoordinate();
 		fieldCoordinate.initFrom(source, IJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));
 		return this;
 	}

@@ -3,7 +3,6 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Player;
 
@@ -103,9 +102,11 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		pack();
 
 		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
-			Dimension sidebarSize = client.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.SIDEBAR);
-			int x = sidebarSize.width + ((playerCoordinate.getX() + 1) * FieldLayer.FIELD_SQUARE_SIZE);
-			int y = (playerCoordinate.getY() + 1) * FieldLayer.FIELD_SQUARE_SIZE;
+			DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+			Dimension sidebarSize = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
+			Dimension onPitch = dimensionProvider.map(playerCoordinate.getX() + 1, playerCoordinate.getY() + 1, false);
+			int x = sidebarSize.width + onPitch.width;
+			int y = onPitch.height;
 			setLocation(x, y);
 		} else {
 			setLocationToCenter();

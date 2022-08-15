@@ -40,8 +40,8 @@ public class FieldCoordinate implements IJsonSerializable {
 		fY = pY;
 	}
 
-	public FieldCoordinate(int pNrOfSquare) {
-		this(pNrOfSquare % FIELD_WIDTH, pNrOfSquare / FIELD_WIDTH);
+	public FieldCoordinate() {
+		this(0, 0);
 	}
 
 	public int getX() {
@@ -52,23 +52,22 @@ public class FieldCoordinate implements IJsonSerializable {
 		return fY;
 	}
 
-	public int getNrOfSquare() {
-		return ((getY() * FIELD_WIDTH) + getX());
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		FieldCoordinate that = (FieldCoordinate) o;
+
+		if (fX != that.fX) return false;
+		return fY == that.fY;
 	}
 
-	// java.lang.Object#hashCode()
+	@Override
 	public int hashCode() {
-		return getNrOfSquare();
-	}
-
-	// java.lang.Object#equals(java.lang.Object)
-	public boolean equals(Object pObject) {
-		if ((pObject instanceof FieldCoordinate)) {
-			FieldCoordinate otherCoordinate = (FieldCoordinate) pObject;
-			return ((getY() == otherCoordinate.getY()) && (getX() == otherCoordinate.getX()));
-		} else {
-			return super.equals(pObject);
-		}
+		int result = fX;
+		result = 31 * result + fY;
+		return result;
 	}
 
 	public FieldCoordinate add(int pDeltaX, int pDeltaY) {
@@ -126,6 +125,7 @@ public class FieldCoordinate implements IJsonSerializable {
 		return "(" + getX() + "," + getY() + ")";
 	}
 
+	@SuppressWarnings("unused")
 	public int compareTo(FieldCoordinate pAnotherFc) {
 		if (pAnotherFc == null) {
 			return -1;
@@ -209,7 +209,6 @@ public class FieldCoordinate implements IJsonSerializable {
 
 		switch (d) {
 		case NORTH:
-			dx = 0;
 			dy = -1;
 			break;
 		case NORTHEAST:
@@ -218,14 +217,12 @@ public class FieldCoordinate implements IJsonSerializable {
 			break;
 		case EAST:
 			dx = 1;
-			dy = 0;
 			break;
 		case SOUTHEAST:
 			dx = 1;
 			dy = 1;
 			break;
 		case SOUTH:
-			dx = 0;
 			dy = 1;
 			break;
 		case SOUTHWEST:
@@ -234,7 +231,6 @@ public class FieldCoordinate implements IJsonSerializable {
 			break;
 		case WEST:
 			dx = -1;
-			dy = 0;
 			break;
 		case NORTHWEST:
 			dx = -1;

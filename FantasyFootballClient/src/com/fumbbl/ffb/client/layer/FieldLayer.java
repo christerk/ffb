@@ -18,11 +18,6 @@ import java.awt.image.BufferedImage;
  */
 public abstract class FieldLayer {
 
-	public static final int FIELD_SQUARE_SIZE = 30;
-
-	public static final int FIELD_IMAGE_OFFSET_CENTER_X = 15;
-	public static final int FIELD_IMAGE_OFFSET_CENTER_Y = 15;
-
 	private final FantasyFootballClient fClient;
 	protected final BufferedImage fImage;
 	private Rectangle fUpdatedArea;
@@ -110,11 +105,13 @@ public abstract class FieldLayer {
 	}
 
 	protected int findCenteredIconUpperLeftX(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		return (FIELD_IMAGE_OFFSET_CENTER_X + (pCoordinate.getX() * FIELD_SQUARE_SIZE) - (pImage.getWidth() / 2));
+		Dimension dimension = dimensionProvider.map(pCoordinate, true);
+		return dimension.width - (pImage.getWidth() / 2);
 	}
 
 	protected int findCenteredIconUpperLeftY(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		return (FIELD_IMAGE_OFFSET_CENTER_Y + (pCoordinate.getY() * FIELD_SQUARE_SIZE) - (pImage.getHeight() / 2));
+		Dimension dimension = dimensionProvider.map(pCoordinate, true);
+		return dimension.height - (pImage.getHeight() / 2);
 	}
 
 	public void clear(boolean pUpdateArea) {
@@ -123,9 +120,10 @@ public abstract class FieldLayer {
 
 	public void clear(FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			int fieldX = pCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int fieldY = pCoordinate.getY() * FIELD_SQUARE_SIZE;
-			clear(fieldX, fieldY, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE, pUpdateArea);
+			Dimension dimension = dimensionProvider.map(pCoordinate);
+			int fieldX = dimension.width;
+			int fieldY = dimension.height;
+			clear(fieldX, fieldY, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize(), pUpdateArea);
 		}
 	}
 
@@ -143,5 +141,4 @@ public abstract class FieldLayer {
 
 	public void init() {
 	}
-
 }

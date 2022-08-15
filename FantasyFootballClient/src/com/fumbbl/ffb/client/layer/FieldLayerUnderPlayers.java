@@ -10,6 +10,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -48,12 +49,12 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 			Game game = getClient().getGame();
 			boolean pathCleared = ArrayTool.isProvided(fMovePath);
 			if (pathCleared) {
-				for (int i = 0; i < fMovePath.length; i++) {
-					TrackNumber trackNumber = game.getFieldModel().getTrackNumber(fMovePath[i]);
+				for (FieldCoordinate fieldCoordinate : fMovePath) {
+					TrackNumber trackNumber = game.getFieldModel().getTrackNumber(fieldCoordinate);
 					if (trackNumber != null) {
 						drawTrackNumber(trackNumber);
 					} else {
-						clear(fMovePath[i], true);
+						clear(fieldCoordinate, true);
 					}
 				}
 				fMovePath = null;
@@ -70,10 +71,9 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 			g2d.setFont(new Font("Sans Serif", Font.BOLD, 15));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D numberBounds = metrics.getStringBounds(numberString, g2d);
-			int baselineX = FIELD_IMAGE_OFFSET_CENTER_X + (pCoordinate.getX() * FIELD_SQUARE_SIZE)
-					- (int) (numberBounds.getWidth() / 2) + 1;
-			int baselineY = FIELD_IMAGE_OFFSET_CENTER_Y + (pCoordinate.getY() * FIELD_SQUARE_SIZE)
-					+ (int) (numberBounds.getHeight() / 2) - 2;
+			Dimension dimension = dimensionProvider.map(pCoordinate, true);
+			int baselineX = dimension.width - (int) (numberBounds.getWidth() / 2) + 1;
+			int baselineY = dimension.height + (int) (numberBounds.getHeight() / 2) - 2;
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(numberString, baselineX + 1, baselineY + 1);
@@ -94,8 +94,8 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		if (fieldModel != null) {
 			TrackNumber[] trackNumbers = fieldModel.getTrackNumbers();
-			for (int i = 0; i < trackNumbers.length; i++) {
-				drawTrackNumber(trackNumbers[i]);
+			for (TrackNumber trackNumber : trackNumbers) {
+				drawTrackNumber(trackNumber);
 			}
 		}
 	}

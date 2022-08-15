@@ -7,7 +7,6 @@ import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -23,16 +22,17 @@ public class UtilClientPlayerDrag {
 
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
-		Dimension fieldDimension = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD);
-		Dimension boxComponentSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.BOX);
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
+		Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		Dimension boxComponentSize = dimensionProvider.dimension(DimensionProvider.Component.BOX);
 		FieldCoordinate coordinate;
 		if (pBoxMode) {
 			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
 			if ((coordinate == null) && (pMouseEvent.getX() >= boxComponentSize.width)) {
-				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - boxComponentSize.width, pMouseEvent.getY());
+				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - boxComponentSize.width, pMouseEvent.getY(), dimensionProvider);
 			}
 		} else {
-			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY());
+			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY(), dimensionProvider);
 			if ((coordinate == null) && (pMouseEvent.getX() < 0)) {
 				coordinate = getBoxFieldCoordinate(pClient, boxComponentSize.width + pMouseEvent.getX(), pMouseEvent.getY());
 			}
@@ -40,10 +40,20 @@ public class UtilClientPlayerDrag {
 		return coordinate;
 	}
 
-	private static FieldCoordinate getFieldFieldCoordinate(Dimension fieldDimension, int pMouseX, int pMouseY) {
-		if ((pMouseX >= 0) && (pMouseX < fieldDimension.width) && (pMouseY >= 0)
-			&& (pMouseY < fieldDimension.height)) {
-			return new FieldCoordinate((pMouseX / FieldLayer.FIELD_SQUARE_SIZE), (pMouseY / FieldLayer.FIELD_SQUARE_SIZE));
+	private static FieldCoordinate getFieldFieldCoordinate(Dimension fieldDimension, int pMouseX, int pMouseY, DimensionProvider dimensionProvider) {
+
+		int actualX = pMouseX;
+		int actualY = pMouseY;
+
+		if (dimensionProvider.isPortrait()) {
+			//noinspection SuspiciousNameCombination
+			actualY = pMouseX;
+			actualX = fieldDimension.height - pMouseY;
+		}
+
+		if ((actualX >= 0) && (actualX < fieldDimension.width) && (actualY >= 0)
+			&& (actualY < fieldDimension.height)) {
+			return new FieldCoordinate((actualX / dimensionProvider.fieldSquareSize()), (actualY / dimensionProvider.fieldSquareSize()));
 		} else {
 			return null;
 		}

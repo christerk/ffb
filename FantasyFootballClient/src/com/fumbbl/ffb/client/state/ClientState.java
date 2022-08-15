@@ -8,6 +8,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IClientProperty;
@@ -37,6 +38,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -123,8 +125,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		FieldCoordinate coordinate = null;
 		int x = pMouseEvent.getX();
 		int y = pMouseEvent.getY();
-		if ((x < 31 * FIELD_SQUARE_SIZE) && (y > 0) && (y < 450)) {
-			coordinate = new FieldCoordinate((x / FIELD_SQUARE_SIZE), (y / FIELD_SQUARE_SIZE));
+		DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
+		Dimension field = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
+			coordinate = new FieldCoordinate((x / dimensionProvider.fieldSquareSize()), (y / dimensionProvider.fieldSquareSize()));
 		}
 		return coordinate;
 	}
@@ -142,6 +146,14 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			int x = pCoordinate.getX() * FIELD_SQUARE_SIZE + 1;
 			int y = pCoordinate.getY() * FIELD_SQUARE_SIZE + 1;
 			Rectangle bounds = new Rectangle(x, y, FIELD_SQUARE_SIZE - 2, FIELD_SQUARE_SIZE - 2);
+/*
+			DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
+			Dimension dimension = dimensionProvider.map(pCoordinate);
+			int x = dimension.width + 1;
+			int y = dimension.height + 1;
+			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
+*/
+
 			Graphics2D g2d = fieldComponent.getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -156,6 +168,11 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			int x = fSelectSquareCoordinate.getX() * FIELD_SQUARE_SIZE;
 			int y = fSelectSquareCoordinate.getY() * FIELD_SQUARE_SIZE;
 			Rectangle bounds = new Rectangle(x, y, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE);
+/*
+			DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
+			Dimension dimension = dimensionProvider.map(fSelectSquareCoordinate);
+			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize());
+*/
 			fieldComponent.refresh(bounds);
 			fSelectSquareCoordinate = null;
 		}
@@ -163,22 +180,23 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	public void mouseMoved(MouseEvent pMouseEvent) {
 		if (isSelectable()) {
-			FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
-			if ((coordinate == null) || !FieldCoordinateBounds.FIELD.isInBounds(coordinate)) {
+			FieldCoordinate localCoordinate = getFieldCoordinate(pMouseEvent);
+			FieldCoordinate normalizedCoordiante = getClient().getUserInterface().getDimensionProvider().normalize(localCoordinate);
+			if ((normalizedCoordiante == null) || !FieldCoordinateBounds.FIELD.isInBounds(normalizedCoordiante)) {
 				hideSelectSquare();
 			} else {
-				if (!coordinate.equals(fSelectSquareCoordinate)) {
+				if (!localCoordinate.equals(fSelectSquareCoordinate)) {
 					hideSelectSquare();
 					boolean selectable;
 					Game game = getClient().getGame();
-					Player<?> player = game.getFieldModel().getPlayer(coordinate);
+					Player<?> player = game.getFieldModel().getPlayer(normalizedCoordiante);
 					if (player != null) {
 						selectable = mouseOverPlayer(player);
 					} else {
-						selectable = mouseOverField(coordinate);
+						selectable = mouseOverField(normalizedCoordiante);
 					}
 					if (selectable) {
-						showSelectSquare(coordinate);
+						showSelectSquare(localCoordinate);
 					}
 				}
 			}
@@ -194,17 +212,23 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			return;
 		}
 		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
-		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
-		if ((getClient().getGame() != null) && (coordinate != null)) {
-			Player<?> player = getClient().getGame().getFieldModel().getPlayer(coordinate);
+		FieldCoordinate localCoordinate = getFieldCoordinate(pMouseEvent);
+		FieldCoordinate normalizedCoordiante = getClient().getUserInterface().getDimensionProvider().normalize(localCoordinate);
+		if ((getClient().getGame() != null) && (localCoordinate != null)) {
+			Player<?> player = getClient().getGame().getFieldModel().getPlayer(normalizedCoordiante);
 			if (pMouseEvent.isShiftDown()) {
 				hideSelectSquare();
 				if (player != null) {
-					int x = (coordinate.getX() + 1) * FIELD_SQUARE_SIZE;
-					int y = (coordinate.getY() + 1) * FIELD_SQUARE_SIZE;
+					int x = (localCoordinate.getX() + 1) * FIELD_SQUARE_SIZE;
+					int y = (localCoordinate.getY() + 1) * FIELD_SQUARE_SIZE;
 					UtilClientMarker.showMarkerPopup(getClient(), player, x, y);
+/*
+					DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
+					Dimension dimension = dimensionProvider.map(coordinate.getX() + 1,coordinate.getY() + 1, false);
+					UtilClientMarker.showMarkerPopup(getClient(), player, dimension.width, dimension.height);
+*/
 				} else {
-					UtilClientMarker.showMarkerPopup(getClient(), coordinate);
+					UtilClientMarker.showMarkerPopup(getClient(), localCoordinate);
 				}
 			} else {
 				if (isClickable()) {
@@ -222,7 +246,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 					} else if (player != null && (pMouseEvent.getButton() != MouseEvent.BUTTON3 || ALLOW_RIGHT_CLICK_ON_PLAYER.contains(rightClickProperty))) {
 						clickOnPlayer(player);
 					} else if (pMouseEvent.getButton() != MouseEvent.BUTTON3 || IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickProperty)) {
-						clickOnField(coordinate);
+						clickOnField(normalizedCoordiante);
 					}
 				}
 			}
@@ -243,9 +267,9 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			FieldCoordinate coordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(fPopupMenuPlayer);
 			if (coordinate != null) {
 				hideSelectSquare();
-				int x = (coordinate.getX() + 1) * FIELD_SQUARE_SIZE;
-				int y = (coordinate.getY() + 1) * FIELD_SQUARE_SIZE;
-				fPopupMenu.show(fClient.getUserInterface().getFieldComponent(), x, y);
+				DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
+				Dimension dimension = dimensionProvider.map(coordinate.getX() + 1, coordinate.getY() + 1, false);
+				fPopupMenu.show(fClient.getUserInterface().getFieldComponent(), dimension.width, dimension.height);
 			}
 		}
 	}

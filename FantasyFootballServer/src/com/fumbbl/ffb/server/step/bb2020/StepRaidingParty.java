@@ -311,7 +311,7 @@ public class StepRaidingParty extends AbstractStep {
 		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		if (IServerJsonOption.FIELD_COORDINATE.isDefinedIn(jsonObject)) {
-			coordinate = new FieldCoordinate(0).initFrom(source, IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));
+			coordinate = new FieldCoordinate().initFrom(source, IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));
 		}
 		IServerJsonOption.MOVE_SQUARE_ARRAY.getFrom(source,
 			jsonObject).values().stream().map(value ->

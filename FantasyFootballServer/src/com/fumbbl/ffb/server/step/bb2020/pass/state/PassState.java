@@ -149,7 +149,7 @@ public class PassState implements IJsonSerializable {
 		passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(source, jsonObject);
 		JsonObject throwerObject = IJsonOption.FIELD_COORDINATE_THROWER.getFrom(source, jsonObject);
 		if (throwerObject != null) {
-			throwerCoordinate = new FieldCoordinate(0).initFrom(source, throwerObject);
+			throwerCoordinate = new FieldCoordinate().initFrom(source, throwerObject);
 		}
 		landingOutOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
 		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(source, jsonObject);

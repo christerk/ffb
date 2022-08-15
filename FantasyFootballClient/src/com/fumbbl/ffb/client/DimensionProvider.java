@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.FieldCoordinate;
+
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,7 +13,8 @@ public class DimensionProvider {
 	private static final int SIDEBAR_WIDTH_P = 165;
 	private final Map<Component, Dimension> portraitDimensions = new HashMap<>();
 	private final Map<Component, Dimension> landscapeDimensions = new HashMap<>();
-	private boolean portrait = false;
+	private final int fieldSquareSize = 30;
+	private boolean portrait;
 
 	public DimensionProvider(boolean portrait) {
 		this.portrait = portrait;
@@ -60,9 +63,44 @@ public class DimensionProvider {
 		this.portrait = portrait;
 	}
 
+	public int fieldSquareSize() {
+		return fieldSquareSize;
+	}
+
+	public int imageOffset() {
+		return fieldSquareSize / 2;
+	}
+
 	private int sidebarHeight(Map<Component, Dimension> dimensions) {
 		return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BOX_BUTTON})
 			.map(dimensions::get).mapToDouble(Dimension::getHeight).sum();
+	}
+
+	public FieldCoordinate normalize(FieldCoordinate fieldCoordinate) {
+		if (portrait) {
+			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
+		}
+
+		return fieldCoordinate;
+	}
+
+	public Dimension map(FieldCoordinate fieldCoordinate) {
+		return map(fieldCoordinate, false);
+	}
+
+	public Dimension map(FieldCoordinate fieldCoordinate, boolean addImageOffset) {
+		return map(fieldCoordinate.getX(), fieldCoordinate.getY(), addImageOffset);
+	}
+
+	public Dimension map(int x, int y, boolean addImageOffset) {
+		int offset = addImageOffset ? fieldSquareSize / 2 : 0;
+
+
+		if (portrait) {
+			return new Dimension(y * fieldSquareSize + offset, (25 - x) * fieldSquareSize + offset);
+		}
+		return new Dimension(x * fieldSquareSize + offset, y * fieldSquareSize + offset);
+
 	}
 
 	public enum Component {

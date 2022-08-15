@@ -10,6 +10,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -49,10 +50,9 @@ public class FieldLayerMarker extends FieldLayer {
 			}
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pFieldMarker.getHomeText(), g2d);
-			int x = FIELD_IMAGE_OFFSET_CENTER_X + (pFieldMarker.getCoordinate().getX() * FIELD_SQUARE_SIZE)
-				- (int) (textBounds.getWidth() / 2) + 1;
-			int y = FIELD_IMAGE_OFFSET_CENTER_Y + (pFieldMarker.getCoordinate().getY() * FIELD_SQUARE_SIZE)
-				+ (int) (textBounds.getHeight() / 2) - 2;
+			Dimension dimension = dimensionProvider.map(pFieldMarker.getCoordinate(), true);
+			int x = dimension.width - (int) (textBounds.getWidth() / 2) + 1;
+			int y = dimension.height + (int) (textBounds.getHeight() / 2) - 2;
 			g2d.drawString(pFieldMarker.getHomeText(), x, y);
 			Rectangle bounds = new Rectangle(x, y - (int) textBounds.getHeight(), (int) Math.ceil(textBounds.getWidth()),
 				(int) Math.ceil(textBounds.getHeight()));
