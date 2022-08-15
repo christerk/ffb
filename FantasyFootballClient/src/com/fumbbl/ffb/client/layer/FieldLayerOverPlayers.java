@@ -268,7 +268,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if (pCoordinate != null) {
 			clear(pCoordinate, true);
-			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
 			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
