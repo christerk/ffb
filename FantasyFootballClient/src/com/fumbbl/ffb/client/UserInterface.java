@@ -111,6 +111,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		if (callInit) {
 			init(null);
 		}
+		fDialogManager.setShownDialogParameter(null);
+		fDialogManager.updateDialog();
 	}
 
 	private JPanel landscapeContent() {
