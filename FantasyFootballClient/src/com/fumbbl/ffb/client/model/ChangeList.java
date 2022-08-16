@@ -15,6 +15,7 @@ public class ChangeList {
 			.addImprovement("Cleanups")
 			.addBugfix("Prevent duplicate adding of temporary effects")
 			.addBugfix("Ball did not bounce after hit from Beer Barrel Bash!")
+			.addBugfix("Pitch Invasion caused crash if affected team could not field players")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
