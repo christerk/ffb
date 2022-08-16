@@ -57,9 +57,6 @@ import java.util.stream.Collectors;
  */
 public class PlayerDetailComponent extends JPanel {
 
-	private static final int _PORTRAIT_WIDTH = 121;
-	private static final int _PORTRAIT_HEIGHT = 147;
-
 	private static final int _STAT_BOX_WIDTH = 28;
 	private static final int _STAT_BOX_HEIGHT = 29;
 	private static final int _STAT_BOX_INNER_HEIGHT = 14;
@@ -83,13 +80,15 @@ public class PlayerDetailComponent extends JPanel {
 	private boolean fRefreshNecessary;
 
 	private Dimension size;
+	private final DimensionProvider dimensionProvider;
 
 	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
 		fRefreshNecessary = true;
+		this.dimensionProvider = dimensionProvider;
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout() {
 		size = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_DETAIL);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
@@ -148,7 +147,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerPortraitAndPosition() {
 		if (fPlayer != null) {
-			int x = 3, y = 32;
+			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT_OFFSET);
+			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			String portraitUrl = PlayerIconFactory.getPortraitUrl(getPlayer());
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
@@ -173,22 +173,24 @@ public class PlayerDetailComponent extends JPanel {
 			} else {
 				drawPortrait(x - 1, y + 1, g2d, portraitBackground);
 			}
+			Dimension portraitDimension = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT);
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
-			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 4), _PORTRAIT_WIDTH + metrics.getAscent() + 3);
+			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + metrics.getAscent() + x);
 			g2d.setColor(Color.WHITE);
-			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 5), _PORTRAIT_WIDTH + metrics.getAscent() + 2);
+			g2d.drawString(positionNameString, -(y + portraitDimension.height - 5), portraitDimension.width + metrics.getAscent() + x - 1);
 			g2d.dispose();
 		}
 	}
 
 	private void drawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
-		int canvasWidth = _PORTRAIT_WIDTH;
-		int canvasHeight = _PORTRAIT_HEIGHT;
+		Dimension portraitDimension = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT);
+		int canvasWidth = portraitDimension.width;
+		int canvasHeight = portraitDimension.height;
 		int portraitWidth = playerPortrait.getWidth();
 		int portraitHeight = playerPortrait.getHeight();
 
-		if (portraitWidth > canvasWidth || portraitHeight > canvasHeight) {
+		if (portraitWidth != canvasWidth || portraitHeight != canvasHeight) {
 			// Scale portrait to fit both width and height
 
 			float scale = Math.max(

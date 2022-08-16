@@ -43,7 +43,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void initLayout(DimensionProvider dimensionProvider) {
-		fPlayerDetail.initLayout(dimensionProvider);
+		fPlayerDetail.initLayout();
 		fBoxComponent.initLayout(dimensionProvider);
 		fBoxButtons.initLayout(dimensionProvider);
 		fResourceComponent.initLayout(dimensionProvider);
