@@ -261,11 +261,11 @@ public class PlayerDetailComponent extends JPanel {
 					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
 				}
 				int passingModifier = passing - position.getPassing();
-				drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
+				drawStatBox(g2d, x + 1 + (_STAT_BOX_WIDTH * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
 			int armourModifier = armour - position.getArmour();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + 1 + (_STAT_BOX_WIDTH * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
