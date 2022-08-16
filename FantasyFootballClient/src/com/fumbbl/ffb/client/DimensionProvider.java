@@ -38,8 +38,8 @@ public class DimensionProvider {
 		portraitDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_P, 185));
 		landscapeDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_L, 168));
 
-		portraitDimensions.put(Component.BOX_BUTTON, new Dimension(SIDEBAR_WIDTH_P, 24));
-		landscapeDimensions.put(Component.BOX_BUTTON, new Dimension(SIDEBAR_WIDTH_L, 22));
+		portraitDimensions.put(Component.BUTTON_BOX, new Dimension(SIDEBAR_WIDTH_P, 24));
+		landscapeDimensions.put(Component.BUTTON_BOX, new Dimension(SIDEBAR_WIDTH_L, 22));
 
 		portraitDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_P, 472));
 		landscapeDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_L, 430));
@@ -70,6 +70,12 @@ public class DimensionProvider {
 
 		portraitDimensions.put(Component.PLAYER_SKILL_OFFSET, new Dimension(10, 270));
 		landscapeDimensions.put(Component.PLAYER_SKILL_OFFSET, new Dimension(8, 246));
+
+		portraitDimensions.put(Component.BOX_BUTTON, new Dimension(82, 22));
+		landscapeDimensions.put(Component.BOX_BUTTON, new Dimension(72, 22));
+
+		portraitDimensions.put(Component.END_TURN_BUTTON, new Dimension(163, 34));
+		landscapeDimensions.put(Component.END_TURN_BUTTON, new Dimension(143, 31));
 	}
 
 	public Dimension dimension(Component component) {
@@ -93,7 +99,7 @@ public class DimensionProvider {
 	}
 
 	private int sidebarHeight(Map<Component, Dimension> dimensions) {
-		return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BOX_BUTTON})
+		return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BUTTON_BOX})
 			.map(dimensions::get).mapToDouble(Dimension::getHeight).sum();
 	}
 
@@ -150,8 +156,8 @@ public class DimensionProvider {
 	}
 
 	public enum Component {
-		FIELD, CHAT, LOG, REPLAY_CONTROL, TURN_DICE_STATUS, RESOURCE, BOX_BUTTON, BOX, PLAYER_DETAIL, SIDEBAR,
+		FIELD, CHAT, LOG, REPLAY_CONTROL, TURN_DICE_STATUS, RESOURCE, BUTTON_BOX, BOX, PLAYER_DETAIL, SIDEBAR,
 		PLAYER_PORTRAIT, PLAYER_PORTRAIT_OFFSET, PLAYER_STAT_OFFSET, PLAYER_STAT_BOX, PLAYER_STAT_BOX_MISC,
-		PLAYER_SPP_OFFSET, PLAYER_SKILL_OFFSET
+		PLAYER_SPP_OFFSET, PLAYER_SKILL_OFFSET, BOX_BUTTON, END_TURN_BUTTON
 	}
 }

@@ -33,8 +33,6 @@ import java.util.Map;
 public class BoxButtonComponent extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Dimension _BUTTON_DIMENSION = new Dimension(72, 22);
-
 	private final Map<BoxType, Rectangle> fButtonLocations;
 
 	private final SideBarComponent fSideBar;
@@ -54,16 +52,17 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void initLayout(DimensionProvider dimensionProvider) {
-		size = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
+		size = dimensionProvider.dimension(DimensionProvider.Component.BUTTON_BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+		Dimension button = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
 		if (getSideBar().isHomeSide()) {
-			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
+			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, button.width, button.height));
 			fButtonLocations.put(BoxType.OUT,
-				new Rectangle((size.width / 2) + 1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
+				new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
 		} else {
-			fButtonLocations.put(BoxType.OUT, new Rectangle(1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
+			fButtonLocations.put(BoxType.OUT, new Rectangle(1, 0, button.width, button.height));
 			fButtonLocations.put(BoxType.RESERVES,
-				new Rectangle((size.width / 2) + 1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
+				new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
 		}
 
 		setLayout(null);
@@ -120,7 +119,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 			} else {
 				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON);
 			}
-			g2d.drawImage(buttonImage, buttonLocation.x, buttonLocation.y, null);
+			g2d.drawImage(buttonImage, buttonLocation.x, buttonLocation.y, buttonLocation.width, buttonLocation.height, null);
 			g2d.setFont(_BUTTON_FONT);
 			g2d.setColor(Color.BLACK);
 			FontMetrics metrics = g2d.getFontMetrics();

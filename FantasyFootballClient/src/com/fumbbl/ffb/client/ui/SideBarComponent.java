@@ -47,7 +47,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fBoxComponent.initLayout(dimensionProvider);
 		fBoxButtons.initLayout(dimensionProvider);
 		fResourceComponent.initLayout(dimensionProvider);
-		fTurnDiceStatusComponent.initLayout(dimensionProvider);
+		fTurnDiceStatusComponent.initLayout();
 
 		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
 		setMinimumSize(size);
