@@ -728,7 +728,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			affectedPlayers.addAll(stunPlayers(game.getTeamAway(), game.getFieldModel(), stunned));
 		}
 
-		getResult().addReport(new ReportKickoffPitchInvasion(rollHome, rollAway, affectedPlayers, stunned));
+		getResult().addReport(new ReportKickoffPitchInvasion(rollHome, rollAway, affectedPlayers, affectedPlayers.size()));
 
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_PITCH_INVASION));
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -738,7 +738,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	private List<String> stunPlayers(Team team, FieldModel fieldModel, int stunned) {
 		List<String> affectedPlayers = new ArrayList<>();
 		List<Player<?>> standing = Arrays.stream(team.getPlayers()).filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING).collect(Collectors.toList());
-		for (int i = 0; i < stunned; i++) {
+		for (int i = 0; i < stunned && !standing.isEmpty(); i++) {
 			int index = getGameState().getDiceRoller().rollDice(standing.size()) - 1;
 			Player<?> stunnedPlayer = standing.get(index);
 			UtilServerInjury.stunPlayer(this, stunnedPlayer, ApothecaryMode.HOME);
