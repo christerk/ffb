@@ -64,6 +64,12 @@ public class DimensionProvider {
 
 		portraitDimensions.put(Component.PLAYER_STAT_BOX_MISC, new Dimension(0, 15));
 		landscapeDimensions.put(Component.PLAYER_STAT_BOX_MISC, new Dimension(0, 14));
+
+		portraitDimensions.put(Component.PLAYER_SPP_OFFSET, new Dimension(10, 245));
+		landscapeDimensions.put(Component.PLAYER_SPP_OFFSET, new Dimension(8, 222));
+
+		portraitDimensions.put(Component.PLAYER_SKILL_OFFSET, new Dimension(10, 270));
+		landscapeDimensions.put(Component.PLAYER_SKILL_OFFSET, new Dimension(8, 246));
 	}
 
 	public Dimension dimension(Component component) {
@@ -145,6 +151,7 @@ public class DimensionProvider {
 
 	public enum Component {
 		FIELD, CHAT, LOG, REPLAY_CONTROL, TURN_DICE_STATUS, RESOURCE, BOX_BUTTON, BOX, PLAYER_DETAIL, SIDEBAR,
-		PLAYER_PORTRAIT, PLAYER_PORTRAIT_OFFSET, PLAYER_STAT_OFFSET, PLAYER_STAT_BOX, PLAYER_STAT_BOX_MISC
+		PLAYER_PORTRAIT, PLAYER_PORTRAIT_OFFSET, PLAYER_STAT_OFFSET, PLAYER_STAT_BOX, PLAYER_STAT_BOX_MISC,
+		PLAYER_SPP_OFFSET, PLAYER_SKILL_OFFSET
 	}
 }

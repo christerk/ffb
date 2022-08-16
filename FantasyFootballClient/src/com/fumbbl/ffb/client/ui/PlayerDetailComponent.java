@@ -248,7 +248,6 @@ public class PlayerDetailComponent extends JPanel {
 				statSpacings = new int[]{0, 0, 1, 1};
 			}
 
-
 			Player<?> player = getPlayer();
 			Position position = player.getPosition();
 			int movementModifier = movement - position.getMovement();
@@ -344,7 +343,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSpps() {
 		if (fPlayer != null) {
-			int x = 8, y = 222;
+			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_SPP_OFFSET);
+			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.setFont(_SPP_FONT);
 			FontMetrics metrics = g2d.getFontMetrics();
@@ -374,7 +374,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSkills() {
 		if (fPlayer != null) {
-			int x = 8, y = 246;
+			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_SKILL_OFFSET);
+			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
