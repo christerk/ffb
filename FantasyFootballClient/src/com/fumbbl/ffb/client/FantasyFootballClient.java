@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FactoryManager;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;

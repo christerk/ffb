@@ -1,17 +1,15 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.Dimension;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.InternalFrameEvent;
-
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.dialog.DialogId;
+import java.awt.Dimension;
 
 public class DialogKeyBindings extends Dialog {
 

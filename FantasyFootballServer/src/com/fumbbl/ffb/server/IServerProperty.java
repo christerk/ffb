@@ -58,6 +58,7 @@ public interface IServerProperty {
 	String ADMIN_URL_STATS = "admin.url.stats";
 	String ADMIN_URL_UNBLOCK = "admin.url.unblock";
 	String ADMIN_URL_UPLOAD = "admin.url.upload";
+	String ADMIN_URL_PORTRAIT = "admin.url.portrait";
 
 	String GAMESTATE_URL_CHALLENGE = "gamestate.url.challenge";
 	String GAMESTATE_URL_BEHAVIORS = "gamestate.url.behaviours";

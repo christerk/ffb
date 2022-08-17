@@ -1,7 +1,11 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.sound.SoundEngine;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,20 +18,15 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
-
-import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.sound.SoundEngine;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class DialogSoundVolume extends Dialog implements ChangeListener, ActionListener {
 
-	private JSlider fSlider;
+	private final JSlider fSlider;
 	private int fVolume;
-	private JLabel fSettingLabel;
-	private JButton fTestButton;
+	private final JLabel fSettingLabel;
+	private final JButton fTestButton;
 
 	public DialogSoundVolume(FantasyFootballClient pClient) {
 

@@ -1,23 +1,9 @@
 package com.fumbbl.ffb.client.net;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import javax.websocket.ClientEndpoint;
-import javax.websocket.CloseReason;
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.GameTitle;
-import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.ui.GameTitleUpdateTask;
 import com.fumbbl.ffb.json.LZString;
 import com.fumbbl.ffb.net.NetCommand;
@@ -26,15 +12,27 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommandPong;
 import com.fumbbl.ffb.util.StringTool;
 
+import javax.websocket.ClientEndpoint;
+import javax.websocket.CloseReason;
+import javax.websocket.EndpointConfig;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 /**
- * 
  * @author Kalimar
  */
 @ClientEndpoint
 public class CommandEndpoint {
 
-	private FantasyFootballClient fClient;
-	private NetCommandFactory fNetCommandFactory;
+	private final FantasyFootballClient fClient;
+	private final NetCommandFactory fNetCommandFactory;
 	private boolean fCommandCompression;
 	private Session fSession;
 
@@ -61,7 +59,7 @@ public class CommandEndpoint {
 
 	@OnMessage
 	public void onBinary(byte[] buf, boolean last, Session session) {
-		this.onMessage(new String(buf, 0, buf.length, Charset.forName("UTF8")));
+		this.onMessage(new String(buf, 0, buf.length, StandardCharsets.UTF_8));
 	}
 
 	@OnMessage
@@ -108,7 +106,7 @@ public class CommandEndpoint {
 		}
 
 		// fSession.getAsyncRemote().sendText(textMessage);
-		fSession.getAsyncRemote().sendBinary(ByteBuffer.wrap(textMessage.getBytes(Charset.forName("UTF8"))));
+		fSession.getAsyncRemote().sendBinary(ByteBuffer.wrap(textMessage.getBytes(StandardCharsets.UTF_8)));
 		return true;
 
 	}
@@ -119,7 +117,6 @@ public class CommandEndpoint {
 
 	private void handleNetCommand(NetCommand netCommand) {
 		if (netCommand == null) {
-			return;
 		} else if (NetCommandId.SERVER_PONG == netCommand.getId()) {
 			ServerCommandPong pongCommand = (ServerCommandPong) netCommand;
 			if (pongCommand.getTimestamp() > 0) {

@@ -3,6 +3,8 @@ package com.fumbbl.ffb.client;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Weather;

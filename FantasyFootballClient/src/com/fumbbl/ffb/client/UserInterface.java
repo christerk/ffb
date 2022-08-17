@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;

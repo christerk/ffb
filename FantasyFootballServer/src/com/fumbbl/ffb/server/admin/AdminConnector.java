@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +38,7 @@ public class AdminConnector {
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector list <gameId>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector loglevel <value>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector message <message>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector portrait <coach>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector refresh\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector shutdown\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
@@ -58,14 +60,8 @@ public class AdminConnector {
 		} else {
 
 			Properties serverProperties = new Properties();
-			BufferedInputStream in = null;
-			try {
-				in = new BufferedInputStream(AdminConnector.class.getResourceAsStream("/" + filterResult.getInifileName()));
+			try (BufferedInputStream in = new BufferedInputStream(Objects.requireNonNull(AdminConnector.class.getResourceAsStream("/" + filterResult.getInifileName())))) {
 				serverProperties.load(in);
-			} finally {
-				if (in != null) {
-					in.close();
-				}
 			}
 
 			String adminChallengeUrl = serverProperties.getProperty(IServerProperty.ADMIN_URL_CHALLENGE);
@@ -221,9 +217,17 @@ public class AdminConnector {
 
 			if (AdminServlet.SCHEDULE.equals(args[0])) {
 				String scheduleUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_SCHEDULE), response,
-						args[1], args[2]);
+					args[1], args[2]);
 				System.out.println(scheduleUrl);
 				String scheduleXml = UtilServerHttpClient.fetchPage(scheduleUrl);
+				System.out.println(scheduleXml);
+			}
+
+			if (AdminServlet.PORTRAIT.equals(args[0])) {
+				String portraitUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_PORTRAIT), response,
+					args[1]);
+				System.out.println(portraitUrl);
+				String scheduleXml = UtilServerHttpClient.fetchPage(portraitUrl);
 				System.out.println(scheduleXml);
 			}
 

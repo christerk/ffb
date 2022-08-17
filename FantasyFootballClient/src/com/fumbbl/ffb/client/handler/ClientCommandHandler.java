@@ -1,10 +1,10 @@
 package com.fumbbl.ffb.client.handler;
 
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.GameTitle;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.client.ui.GameTitleUpdateTask;
 import com.fumbbl.ffb.net.NetCommand;
@@ -16,7 +16,7 @@ import com.fumbbl.ffb.net.NetCommandId;
  */
 public abstract class ClientCommandHandler {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
 	protected ClientCommandHandler(FantasyFootballClient pClient) {
 		fClient = pClient;

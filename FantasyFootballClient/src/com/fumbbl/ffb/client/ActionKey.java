@@ -1,7 +1,8 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.IClientProperty;
+
 /**
- * 
  * @author Kalimar
  */
 public enum ActionKey {

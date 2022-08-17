@@ -9,14 +9,14 @@ import java.util.List;
  */
 public class AdminList {
 
-	private List<AdminListEntry> fEntries;
+	private final List<AdminListEntry> fEntries;
 
 	public AdminList() {
 		fEntries = new ArrayList<>();
 	}
 
 	public AdminListEntry[] getEntries() {
-		return fEntries.toArray(new AdminListEntry[fEntries.size()]);
+		return fEntries.toArray(new AdminListEntry[0]);
 	}
 
 	public void add(AdminListEntry pAdminListEntry) {

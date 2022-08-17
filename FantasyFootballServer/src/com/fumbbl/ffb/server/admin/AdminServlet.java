@@ -2,6 +2,8 @@ package com.fumbbl.ffb.server.admin;
 
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameStatus;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.factory.GameStatusFactory;
 import com.fumbbl.ffb.model.Game;
@@ -11,6 +13,7 @@ import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.query.DbAdminListByIdQuery;
 import com.fumbbl.ffb.server.db.query.DbAdminListByStatusQuery;
+import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandDeleteGame;
@@ -63,10 +66,12 @@ public class AdminServlet extends HttpServlet {
 	public static final String UNBLOCK = "unblock";
 	public static final String UPLOAD = "upload";
 	public static final String FORCE_LOG = "forcelog";
+	public static final String PORTRAIT = "portrait";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
 
+	private static final String _PARAMETER_COACH = "coach";
 	private static final String _PARAMETER_RESPONSE = "response";
 	private static final String _PARAMETER_GAME_ID = "gameId";
 	private static final String _PARAMETER_TEAM_ID = "teamId";
@@ -182,6 +187,8 @@ public class AdminServlet extends HttpServlet {
 					isOk = handleStats(handler);
 				} else if (FORCE_LOG.equals(command)) {
 					isOk = handleForceLog(handler, parameters);
+				} else if (PORTRAIT.equals(command)) {
+					isOk = handlePortrait(handler, parameters);
 				} else {
 					isOk = false;
 				}
@@ -434,6 +441,18 @@ public class AdminServlet extends HttpServlet {
 			UtilXml.addEmptyElement(pHandler, _XML_TAG_LIST, attributes);
 		}
 		return isOk;
+	}
+
+	private boolean handlePortrait(TransformerHandler handler, Map<String, String[]> pParameters) {
+		String coach = ArrayTool.firstElement(pParameters.get(_PARAMETER_COACH));
+
+		DbUserSettingsQuery listQuery = (DbUserSettingsQuery) getServer().getDbQueryFactory()
+			.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+		listQuery.execute(coach);
+		boolean isPortrait = IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(listQuery.getSettingValue(IClientProperty.SETTING_PITCH_ORIENTATION));
+		UtilXml.addValueElement(handler, "isPortrait", isPortrait);
+
+		return true;
 	}
 
 	private boolean handleCache(TransformerHandler handler) {

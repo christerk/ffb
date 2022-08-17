@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.Action;

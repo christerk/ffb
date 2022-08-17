@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -16,7 +16,7 @@ import com.fumbbl.ffb.dialog.DialogId;
  */
 public abstract class DialogHandler implements IDialogCloseListener {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 	private IDialog fDialog;
 
 	public DialogHandler(FantasyFootballClient pClient) {

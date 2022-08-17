@@ -1,10 +1,10 @@
 package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;

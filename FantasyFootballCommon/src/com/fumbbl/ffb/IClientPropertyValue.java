@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.client;
-
-import com.fumbbl.ffb.CommonPropertyValue;
+package com.fumbbl.ffb;
 
 /**
  * @author Kalimar
