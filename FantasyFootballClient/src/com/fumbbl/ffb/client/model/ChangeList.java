@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.13.0")
+			.addFeature("Portrait mode")
 			.addImprovement("Adjustments for dice stats")
 			.addImprovement("Cleanups")
 			.addBugfix("Prevent duplicate adding of temporary effects")
