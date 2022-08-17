@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Prevent duplicate adding of temporary effects")
 			.addBugfix("Ball did not bounce after hit from Beer Barrel Bash!")
 			.addBugfix("Pitch Invasion caused crash if affected team could not field players")
+			.addBugfix("Bugman did not show up in inducement menu and result xml")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
