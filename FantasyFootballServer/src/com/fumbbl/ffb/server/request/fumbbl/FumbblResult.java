@@ -63,6 +63,7 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_INDUCEMENT_LIST = "inducementList";
 	private static final String _XML_TAG_INDUCEMENT = "inducement";
 	private static final String _XML_TAG_STAR_PLAYER = "starPlayer";
+	private static final String _XML_TAG_INFAMOUS_STAFF = "infamousStaff";
 	private static final String _XML_TAG_MERCENARY = "mercenary";
 	private static final String _XML_TAG_CARD = "card";
 
@@ -231,6 +232,7 @@ public class FumbblResult implements IXmlWriteable {
 
 			List<Player<?>> starPlayers = new ArrayList<>();
 			List<Player<?>> mercenaries = new ArrayList<>();
+			List<Player<?>> staffPlayers = new ArrayList<>();
 			for (Player<?> player : pTeam.getPlayers()) {
 				if (player.getPlayerType() == PlayerType.STAR) {
 					starPlayers.add(player);
@@ -238,18 +240,20 @@ public class FumbblResult implements IXmlWriteable {
 				if (player.getPlayerType() == PlayerType.MERCENARY) {
 					mercenaries.add(player);
 				}
+				if (player.getPlayerType() == PlayerType.INFAMOUS_STAFF) {
+					staffPlayers.add(player);
+				}
 			}
 
 			Card[] cards = pInducementSet.getAllCards();
 
-			if ((inducements.size() > 0) || (starPlayers.size() > 0) || (mercenaries.size() > 0)
-					|| ArrayTool.isProvided(cards)) {
+			if ((inducements.size() > 0) || (starPlayers.size() > 0) || (mercenaries.size() > 0) || staffPlayers.size() > 0
+				|| ArrayTool.isProvided(cards)) {
 
 				UtilXml.startElement(pHandler, _XML_TAG_INDUCEMENT_LIST);
 
 				// Inducements
 				for (Inducement inducement : inducements) {
-					// TODO: handle bribes coming from Get The Ref
 					if (inducement.getValue() > 0) {
 						AttributesImpl attributes = new AttributesImpl();
 						UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, inducement.getType().getName());
@@ -282,8 +286,17 @@ public class FumbblResult implements IXmlWriteable {
 					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_POSITION_ID, mercenary.getPositionId());
 					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, mercenary.getId());
 					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ADDED_SKILL,
-							(addedSkill != null) ? addedSkill.getName() : null);
+						(addedSkill != null) ? addedSkill.getName() : null);
 					UtilXml.addEmptyElement(pHandler, _XML_TAG_MERCENARY, attributes);
+				}
+
+				// Staff
+				for (Player<?> staff : staffPlayers) {
+					AttributesImpl attributes = new AttributesImpl();
+					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, staff.getName());
+					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_POSITION_ID, staff.getPositionId());
+					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, staff.getId());
+					UtilXml.addEmptyElement(pHandler, _XML_TAG_INFAMOUS_STAFF, attributes);
 				}
 
 				// Cards

@@ -1176,6 +1176,21 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 
+		List<Player<?>> staff = new ArrayList<>();
+		for (Player<?> player : team.getPlayers()) {
+			if (player.getPlayerType() == PlayerType.INFAMOUS_STAFF) {
+				staff.add(player);
+			}
+		}
+		if (staff.size() > 0) {
+			String staffText = staff.size() + " Infamous Staff";
+			JMenu staffMenu = new JMenu(staffText);
+			pInducementMenu.add(staffMenu);
+			for (Player<?> player : staff) {
+				addPlayerMenuItem(staffMenu, player, player.getName());
+			}
+		}
+
 		UserInterface userInterface = getClient().getUserInterface();
 		Map<CardType, List<Card>> cardMap = buildCardMap(pInducementSet);
 		for (CardType type : cardMap.keySet()) {
