@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Ball did not bounce after hit from Beer Barrel Bash!")
 			.addBugfix("Pitch Invasion caused crash if affected team could not field players")
 			.addBugfix("Bugman did not show up in inducement menu and result xml")
+			.addBugfix("Block roll log entry did show player id instead of name")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

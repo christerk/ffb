@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client.report;
 
 import com.fumbbl.ffb.BlockResult;
-import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.factory.BlockResultFactory;
@@ -22,8 +22,11 @@ public class BlockRollMessage extends ReportMessageBase<ReportBlockRoll> {
   				StringBuilder status = new StringBuilder();
   				status.append("Block Roll");
   				if (StringTool.isProvided(report.getDefenderId())) {
-  					status.append(" against ").append(report.getDefenderId());
-				  }
+						status.append(" against ");
+						print(getIndent(), TextStyle.ROLL, status.toString());
+						print(getIndent(), true, game.getPlayerById(report.getDefenderId()));
+						status = new StringBuilder();
+					}
   				BlockResultFactory blockResultFactory = game.getRules().getFactory(Factory.BLOCK_RESULT);
   				for (int i = 0; i < report.getBlockRoll().length; i++) {
   					BlockResult blockResult = blockResultFactory.forRoll(report.getBlockRoll()[i]);
