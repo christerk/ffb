@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Pitch Invasion caused crash if affected team could not field players")
 			.addBugfix("Bugman did not show up in inducement menu and result xml")
 			.addBugfix("Block roll log entry did show player id instead of name")
+			.addBugfix("Game crashed when kicking team could not field any players")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
