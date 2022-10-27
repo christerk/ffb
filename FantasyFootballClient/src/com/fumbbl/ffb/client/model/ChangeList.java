@@ -23,6 +23,7 @@ public class ChangeList {
 			.addBugfix("Message for failed AtC did not display proper minimum roll")
 			.addBugfix("Empty player names caused player to be unusable")
 			.addBugfix("Iron Man has to last for the entire game")
+			.addBugfix("Thick Skull for stunties was not displayed in game log")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

@@ -119,8 +119,8 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 						int modifierValue = injuryModifier.getModifier(attacker, defender);
 						injuryModifierTotal += modifierValue;
 						if (modifierValue == 0) {
-							thickSkullUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
-							stuntyUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
+							thickSkullUsed |= injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
+							stuntyUsed |= injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
 						} else if (modifierValue > 0) {
 							status.append(" + ").append(modifierValue).append(" ").append(injuryModifier.getName());
 						} else {
