@@ -7,7 +7,6 @@ public class CrowdPush extends InjuryType {
 
 	public CrowdPush() {
 		super("crowdpush", false, SendToBoxReason.CROWD_PUSHED);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

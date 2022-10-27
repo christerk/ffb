@@ -105,7 +105,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public String getName() {
-		return fName;
+		if (StringTool.isProvided(fName)) {
+			return fName;
+		}
+		return "Unnamed Player";
 	}
 
 	@Override

@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Block roll log entry did show player id instead of name")
 			.addBugfix("Game crashed when kicking team could not field any players")
 			.addBugfix("Message for failed AtC did not display proper minimum roll")
+			.addBugfix("Empty player names caused player to be unusable")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
