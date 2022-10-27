@@ -36,7 +36,8 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	IRON_MAN("Iron Man",
-		"One chosen player available to play during this drive without Loner improves AV by 1 (Max 11+)") {
+		"One chosen player available to play during this drive without Loner improves AV by 1 (Max 11+)",
+		InducementDuration.UNTIL_END_OF_GAME) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
