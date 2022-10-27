@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Bugman did not show up in inducement menu and result xml")
 			.addBugfix("Block roll log entry did show player id instead of name")
 			.addBugfix("Game crashed when kicking team could not field any players")
+			.addBugfix("Message for failed AtC did not display proper minimum roll")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

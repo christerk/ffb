@@ -34,6 +34,7 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 			if (biasedRefs > 1) {
 				builder.append("s");
 			}
+			minimumRoll -= biasedRefs;
 		}
 
 		String modifiers = builder.toString();
@@ -54,7 +55,7 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 			print(getIndent() + 1, TextStyle.NONE, "The ref bans ");
 			print(getIndent() + 1, false, player);
 			println(getIndent() + 1, TextStyle.NONE, " from the game.");
-			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Would have succeeded on a roll of " + report.getRoll() + " (Roll" + modifiers + " >= " + minimumRoll + ")");
+			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Would have succeeded on a roll of " + minimumRoll + " (Roll" + modifiers + " >= " + minimumRoll + ")");
 		}
 		if (report.isCoachBanned()) {
 			print(getIndent() + 1, TextStyle.NONE, "Coach ");
