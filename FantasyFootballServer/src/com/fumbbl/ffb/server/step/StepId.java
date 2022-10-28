@@ -3,11 +3,11 @@ package com.fumbbl.ffb.server.step;
 import com.fumbbl.ffb.INamedObject;
 
 /**
- *
  * @author Kalimar
  */
 public enum StepId implements INamedObject {
 
+	ABORT_TURN("abortTurn"), // action.common
 	ALWAYS_HUNGRY("alwaysHungry"), // action.ttm
 	ANIMAL_SAVAGERY("animalSavagery"), // action.common
 	ANIMOSITY("animosity"), // action.pass
@@ -117,6 +117,7 @@ public enum StepId implements INamedObject {
 	MULTI_BLOCK_FORK("multiBlockFork"), // action.multiBlock 2020
 	MVP("mvp"), // game.end
 	NEXT_STEP("nextStep"), //
+	NEXT_STEP_AND_REPEAT("nextStepAndRepeat"), //
 	PASS("pass"), // action.pass
 	PASS_BLOCK("passBlock"), // action.pass
 	PENALTY_SHOOTOUT("penaltyShootout"), // game.end

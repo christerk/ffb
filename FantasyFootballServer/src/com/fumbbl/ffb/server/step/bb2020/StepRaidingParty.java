@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -38,6 +39,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -49,6 +51,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepRaidingParty extends AbstractStep {
@@ -206,6 +210,17 @@ public class StepRaidingParty extends AbstractStep {
 				fieldModel.setPlayerCoordinate(player, coordinate);
 				actingPlayer.markSkillUsed(skill);
 				resetState(game);
+
+				Sequence sequence = new Sequence(getGameState());
+				sequence.add(StepId.PICK_UP, IStepLabel.END_SCATTER_PLAYER,
+					from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.SCATTER_BALL),
+					from(StepParameterKey.THROWN_PLAYER_ID, playerId));
+				sequence.jump(IStepLabel.NEXT);
+				sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
+				sequence.add(StepId.ABORT_TURN);
+				sequence.add(StepId.NEXT_STEP_AND_REPEAT);
+				getGameState().getStepStack().push(sequence.getSequence());
+
 			}
 		}
 	}
