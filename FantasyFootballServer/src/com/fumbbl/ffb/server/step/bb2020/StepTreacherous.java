@@ -110,7 +110,7 @@ public class StepTreacherous extends AbstractStep {
 
 				getResult().setSound(SoundId.STAB);
 				FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-				InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeStab(true),
+				InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeStab(true, true),
 					actingPlayer.getPlayer(), player, defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 
 				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,

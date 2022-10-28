@@ -7,6 +7,8 @@ import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -17,10 +19,16 @@ import java.util.Set;
 
 public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 	private final boolean useInjuryModifiers;
+	private final boolean addDefenderChainsaw;
 
 	public InjuryTypeStab(boolean useInjuryModifiers) {
+		this(useInjuryModifiers, false);
+	}
+
+	public InjuryTypeStab(boolean useInjuryModifiers, boolean addDefenderChainsaw) {
 		super(new Stab());
 		this.useInjuryModifiers = useInjuryModifiers;
+		this.addDefenderChainsaw = addDefenderChainsaw;
 		super.setFailedArmourPlacesProne(false);
 	}
 
@@ -44,6 +52,12 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 			Set<ArmorModifier> modifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
 			injuryContext.addArmorModifiers(modifiers);
+
+			Skill chainsaw = addDefenderChainsaw ? pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
+			if (chainsaw != null) {
+				injuryContext.addArmorModifiers(chainsaw.getArmorModifiers());
+			}
+
 			if (roll) {
 				injuryContext.setArmorRoll(diceRoller.rollArmour());
 			}

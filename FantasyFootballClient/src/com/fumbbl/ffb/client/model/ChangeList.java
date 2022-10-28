@@ -25,6 +25,7 @@ public class ChangeList {
 			.addBugfix("Iron Man has to last for the entire game")
 			.addBugfix("Thick Skull for stunties was not displayed in game log")
 			.addBugfix("Some replays failed to load")
+			.addBugfix("Treacherous against chainsaw player did not add chainsaw modifier")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
