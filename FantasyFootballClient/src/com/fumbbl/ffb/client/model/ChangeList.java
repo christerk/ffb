@@ -26,6 +26,7 @@ public class ChangeList {
 			.addBugfix("Thick Skull for stunties was not displayed in game log")
 			.addBugfix("Some replays failed to load")
 			.addBugfix("Treacherous against chainsaw player did not add chainsaw modifier")
+			.addBugfix("If the away client disconnected prayers were not displayed anymore for that client after rejoining")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
