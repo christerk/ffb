@@ -46,7 +46,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		setPreferredSize(size);
 		setMaximumSize(size);
 
-		fButtonPause = new ReplayButton(new Point(-(_ICON_WIDTH / 2), 1), IIconProperty.REPLAY_PAUSE,
+		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - (_ICON_WIDTH / 2)), 1), IIconProperty.REPLAY_PAUSE,
 			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED);
 		fButtonPlayBackward = new ReplayButton(new Point(fButtonPause.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
 			IIconProperty.REPLAY_PLAY_BACKWARD, IIconProperty.REPLAY_PLAY_BACKWARD_ACTIVE,
@@ -75,9 +75,9 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 	private void refresh() {
 		ClientReplayer replayer = getClient().getReplayer();
 		Graphics2D g2d = fImage.createGraphics();
-		g2d.setPaint(new GradientPaint(0, 0, Color.WHITE, size.width / 2, 0, new Color(128, 128, 128), false));
+		g2d.setPaint(new GradientPaint(0, 0, Color.WHITE, size.width / 2.0f, 0, new Color(128, 128, 128), false));
 		g2d.fillRect(0, 0, size.width / 2, size.height);
-		g2d.setPaint(new GradientPaint(size.width / 2, 0, new Color(128, 128, 128), size.width, 0, Color.WHITE, false));
+		g2d.setPaint(new GradientPaint(size.width / 2.0f, 0, new Color(128, 128, 128), size.width, 0, Color.WHITE, false));
 		g2d.fillRect(size.width / 2, 0, size.width, size.height);
 		if (replayer.isRunning()) {
 			g2d.setColor(Color.BLACK);
