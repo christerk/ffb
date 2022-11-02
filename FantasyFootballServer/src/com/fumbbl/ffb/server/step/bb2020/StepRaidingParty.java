@@ -58,7 +58,7 @@ import static com.fumbbl.ffb.server.step.StepParameter.from;
 public class StepRaidingParty extends AbstractStep {
 
 	private boolean endPlayerAction, endTurn;
-	private String goToLabelOnFailure, playerId;
+	private String goToLabelOnFailure, playerId, gotoLabelOnSuccess;
 	private final Set<MoveSquare> moveSquares = new HashSet<>();
 	private FieldCoordinate coordinate;
 	private boolean resetMoveSquares;
@@ -78,8 +78,15 @@ public class StepRaidingParty extends AbstractStep {
 		super.init(pParameterSet);
 		if (pParameterSet != null) {
 			Arrays.stream(pParameterSet.values()).forEach(parameter -> {
-				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
-					goToLabelOnFailure = (String) parameter.getValue();
+				switch (parameter.getKey()) {
+					case GOTO_LABEL_ON_FAILURE:
+						goToLabelOnFailure = (String) parameter.getValue();
+						break;
+					case GOTO_LABEL_ON_SUCCESS:
+						gotoLabelOnSuccess = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			});
 		}
@@ -215,7 +222,7 @@ public class StepRaidingParty extends AbstractStep {
 				sequence.add(StepId.PICK_UP, IStepLabel.END_SCATTER_PLAYER,
 					from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.SCATTER_BALL),
 					from(StepParameterKey.THROWN_PLAYER_ID, playerId));
-				sequence.jump(IStepLabel.NEXT);
+				sequence.jump(gotoLabelOnSuccess);
 				sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
 				sequence.add(StepId.ABORT_TURN);
 				sequence.add(StepId.NEXT_STEP_AND_REPEAT);
@@ -305,6 +312,7 @@ public class StepRaidingParty extends AbstractStep {
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, gotoLabelOnSuccess);
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		if (coordinate != null) {
 			IServerJsonOption.FIELD_COORDINATE.addTo(jsonObject, coordinate.toJsonValue());
@@ -324,6 +332,7 @@ public class StepRaidingParty extends AbstractStep {
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		gotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		if (IServerJsonOption.FIELD_COORDINATE.isDefinedIn(jsonObject)) {
 			coordinate = new FieldCoordinate().initFrom(source, IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));

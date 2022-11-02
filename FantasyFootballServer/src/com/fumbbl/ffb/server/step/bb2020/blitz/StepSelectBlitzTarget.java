@@ -111,7 +111,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 							getGameState().pushCurrentStepOnStack();
 							RaidingParty generator = (RaidingParty) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
 								.forName(SequenceGenerator.Type.RaidingParty.name());
-							generator.pushSequence(new RaidingParty.SequenceParams(getGameState(), IStepLabel.SELECT));
+							generator.pushSequence(new RaidingParty.SequenceParams(getGameState(), IStepLabel.SELECT, IStepLabel.SELECT));
 							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeOpponentMissTurn)) {
 							getGameState().pushCurrentStepOnStack();

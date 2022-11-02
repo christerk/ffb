@@ -213,7 +213,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		do {
 			if (mode == StepExecutionMode.Start) {
 				fCurrentStep.start();
-			} else {
+			} else if (receivedCommand != null) {
 				fCurrentStep.handleCommand(receivedCommand);
 			}
 
