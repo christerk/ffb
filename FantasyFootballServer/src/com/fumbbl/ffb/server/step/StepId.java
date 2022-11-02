@@ -140,6 +140,7 @@ public enum StepId implements INamedObject {
 	REMOVE_TARGET_SELECTION_STATE("removeTargetSelectionState", "removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
 	RESET_FUMBLEROOSKIE("resetFumblerooskie"), // action.move/action.blitz
+	RESET_TO_MOVE("resetToMove"),
 	RESOLVE_PASS("resolvePass"),
 	RIGHT_STUFF("rightStuff"), // action.ttm
 	RIOTOUS_ROOKIES("riotousRookies"),

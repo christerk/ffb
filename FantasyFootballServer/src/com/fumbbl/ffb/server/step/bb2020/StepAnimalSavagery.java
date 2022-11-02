@@ -2,10 +2,12 @@ package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.server.GameState;
@@ -31,8 +33,18 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				// mandatory
-				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
-					state.goToLabelOnFailure = (String) parameter.getValue();
+				switch (parameter.getKey()) {
+					case GOTO_LABEL_ON_FAILURE:
+						state.goToLabelOnFailure = (String) parameter.getValue();
+						break;
+					case TARGET_COORDINATE:
+						Player<?> catcher = getGameState().getGame().getFieldModel().getPlayer((FieldCoordinate) parameter.getValue());
+						if (catcher != null) {
+							state.catcherId = catcher.getId();
+						}
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -82,6 +94,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 			state.playerIds = Arrays.stream(playerArray).collect(Collectors.toSet());
 		}
 		state.endTurn = toPrimitive(IServerJsonOption.END_TURN.getFrom(source, jsonObject));
+		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -126,6 +139,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, state.playerIds);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, state.thrownPlayerId);
 		IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
+		IServerJsonOption.CATCHER_ID.addTo(jsonObject, state.catcherId);
 		return jsonObject;
 	}
 
@@ -135,6 +149,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		public String thrownPlayerId;
 		public Set<String> playerIds;
 		public boolean endTurn;
+		public String catcherId;
 	}
 
 

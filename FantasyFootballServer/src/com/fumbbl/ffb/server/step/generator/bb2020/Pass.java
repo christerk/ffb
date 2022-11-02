@@ -26,7 +26,7 @@ public class Pass extends com.fumbbl.ffb.server.step.generator.Pass {
 			from(StepParameterKey.TARGET_COORDINATE, params.getTargetCoordinate()));
 		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING), from(StepParameterKey.TARGET_COORDINATE, params.getTargetCoordinate()));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY,
@@ -62,7 +62,8 @@ public class Pass extends com.fumbbl.ffb.server.step.generator.Pass {
 		sequence.add(StepId.HAND_OVER, IStepLabel.HAND_OVER);
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
 
-		sequence.add(StepId.END_PASSING, IStepLabel.END_PASSING);
+		sequence.add(StepId.RESET_TO_MOVE, IStepLabel.END_PASSING);
+		sequence.add(StepId.END_PASSING);
 		// may insert bomb or endPlayerAction sequence add this point
 
 		gameState.getStepStack().push(sequence.getSequence());

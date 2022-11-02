@@ -473,6 +473,7 @@ public interface IJsonOption {
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonObjectOption STAT_BASED_ROLL_MODIFIER = new JsonObjectOption("statBasedRollModifier");
 	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
+	JsonStringOption STEP_PARAMETER_KEY = new JsonStringOption("stepParameterKey");
 	JsonStringArrayOption STEP_PARAMETER_KEYS = new JsonStringArrayOption("stepParameterKeys");
 	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");

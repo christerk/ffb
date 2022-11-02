@@ -28,6 +28,7 @@ public class ChangeList {
 			.addBugfix("Treacherous against chainsaw player did not add chainsaw modifier")
 			.addBugfix("If the away client disconnected prayers were not displayed anymore for that client after rejoining")
 			.addBugfix("When moving on the ball with Raiding Party no pickup was made")
+			.addBugfix("Lashing out against the player to be thrown or receive the ball did not work properly")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
