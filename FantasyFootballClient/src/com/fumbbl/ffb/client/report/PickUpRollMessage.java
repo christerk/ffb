@@ -1,31 +1,31 @@
 package com.fumbbl.ffb.client.report;
 
-import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportSkillRoll;
+import com.fumbbl.ffb.report.ReportPickupRoll;
 
 @ReportMessageType(ReportId.PICK_UP_ROLL)
 @RulesCollection(Rules.COMMON)
-public class PickUpRollMessage extends ReportMessageBase<ReportSkillRoll> {
+public class PickUpRollMessage extends ReportMessageBase<ReportPickupRoll> {
 
-    @Override
-    protected void render(ReportSkillRoll report) {
-  		StringBuilder status = new StringBuilder();
-  		StringBuilder neededRoll = null;
-  		Player<?> player = game.getActingPlayer().getPlayer();
-  		if (!report.isReRolled()) {
-  			print(getIndent(), true, player);
-  			println(getIndent(), TextStyle.BOLD, " tries to pick up the ball:");
-  		}
-  		status.append("Pickup Roll [ ").append(report.getRoll()).append(" ]");
-  		println(getIndent() + 1, TextStyle.ROLL, status.toString());
-  		print(getIndent() + 2, false, player);
+	@Override
+	protected void render(ReportPickupRoll report) {
+		StringBuilder status = new StringBuilder();
+		StringBuilder neededRoll = null;
+		Player<?> player = game.getPlayerById(report.getPlayerId());
+		if (!report.isReRolled()) {
+			print(getIndent(), true, player);
+			println(getIndent(), TextStyle.BOLD, " tries to pick up the ball:");
+		}
+		status.append("Pickup Roll [ ").append(report.getRoll()).append(" ]");
+		println(getIndent() + 1, TextStyle.ROLL, status.toString());
+		print(getIndent() + 2, false, player);
   		if (report.isSuccessful()) {
   			println(getIndent() + 2, " picks up the ball.");
   			if (!report.isReRolled()) {

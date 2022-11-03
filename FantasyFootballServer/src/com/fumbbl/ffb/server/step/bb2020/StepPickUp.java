@@ -35,7 +35,6 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
@@ -101,9 +100,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player<?> player = StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer();
+		Player<?> player = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 		boolean doPickUp = true;
-		if (isPickUp(player)) {
+		if (player != null && isPickUp(player)) {
 			if (ReRolledActions.PICK_UP == getReRolledAction()) {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
