@@ -54,6 +54,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure, thrownPlayerId;
 
+	private boolean ignore;
+
 	public StepPickUp(GameState pGameState) {
 		super(pGameState);
 	}
@@ -75,12 +77,24 @@ public class StepPickUp extends AbstractStepWithReRoll {
 						break;
 					default:
 						break;
- 				}
+				}
 			}
 		}
 		if (fGotoLabelOnFailure == null) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
 		}
+	}
+
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			if (parameter.getKey() == StepParameterKey.FOLLOWUP_CHOICE) {
+				ignore = !toPrimitive((Boolean) parameter.getValue());
+				return true;
+			}
+			return false;
+		}
+		return false;
 	}
 
 	@Override
@@ -143,7 +157,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		return (
-			game.getFieldModel().isBallInPlay()
+			!ignore
+				&& game.getFieldModel().isBallInPlay()
 				&& game.getFieldModel().isBallMoving()
 				&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate())
 				&& playerState.hasTacklezones()
@@ -196,6 +211,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, thrownPlayerId);
+		IServerJsonOption.IGNORE.addTo(jsonObject, ignore);
 		return jsonObject;
 	}
 
@@ -205,6 +221,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		ignore = toPrimitive(IServerJsonOption.IGNORE.getFrom(source, jsonObject));
 		return this;
 	}
 

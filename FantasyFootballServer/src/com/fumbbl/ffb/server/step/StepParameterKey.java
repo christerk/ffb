@@ -72,6 +72,7 @@ public enum StepParameterKey {
 	HOME_TEAM, // Boolean
 	IGNORE_ACTED_FLAG, // Boolean
 	IGNORE_NULL_VALUE, // Boolean
+	IN_SELECT, // Boolean
 	INCREMENT, // int
 	INDUCEMENT_GOLD_AWAY, // Integer
 	INDUCEMENT_GOLD_HOME, // Integer

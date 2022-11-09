@@ -216,6 +216,7 @@ public interface IJsonOption {
 	JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
 	JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
+	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);

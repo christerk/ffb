@@ -25,7 +25,7 @@ import java.util.Arrays;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepResetFumblerooskie extends AbstractStep {
 
-	private boolean resetForFailedBlock;
+	private boolean resetForFailedBlock, endPlayerAction, inSelect;
 
 	public StepResetFumblerooskie(GameState pGameState) {
 		super(pGameState);
@@ -40,12 +40,39 @@ public class StepResetFumblerooskie extends AbstractStep {
 	public void init(StepParameterSet parameterSet) {
 		if (parameterSet != null) {
 			Arrays.stream(parameterSet.values()).forEach(parameter -> {
-				if (parameter.getKey() == StepParameterKey.RESET_FOR_FAILED_BLOCK) {
-					resetForFailedBlock = parameter.getValue() != null && (boolean) parameter.getValue();
+				switch (parameter.getKey()) {
+					case RESET_FOR_FAILED_BLOCK:
+						resetForFailedBlock = toPrimitive((Boolean) parameter.getValue());
+						break;
+					case END_PLAYER_ACTION:
+						endPlayerAction = toPrimitive((Boolean) parameter.getValue());
+						break;
+					case IN_SELECT:
+						inSelect = toPrimitive((Boolean) parameter.getValue());
+						break;
+					default:
+						break;
 				}
 			});
 		}
 		super.init(parameterSet);
+	}
+
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if ((parameter != null) && !super.setParameter(parameter)) {
+			switch (parameter.getKey()) {
+				case END_PLAYER_ACTION:
+					endPlayerAction = toPrimitive((Boolean) parameter.getValue());
+					return true;
+				case END_TURN:
+					endPlayerAction = toPrimitive((Boolean) parameter.getValue());
+					return true;
+				default:
+					return false;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -70,14 +97,14 @@ public class StepResetFumblerooskie extends AbstractStep {
 					publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, actingPlayer.getPlayer().getId()));
 				}
 
-				if (!resetForFailedBlock
+				if (endPlayerAction
 					|| !ballCarrierStanding // reset if player fell down to trigger bounce
 					|| !UtilPlayer.isNextMovePossible(game, actingPlayer.isJumping()) // do not reset if player can move on
 				) {
 					fieldModel.setBallMoving(false);
 				}
 
-				if ((!resetForFailedBlock)
+				if (endPlayerAction
 					|| (ballCarrierStanding && !UtilPlayer.isNextMovePossible(game, actingPlayer.isJumping()))
 				) {
 					getResult().setSound(SoundId.PICKUP);
@@ -85,7 +112,9 @@ public class StepResetFumblerooskie extends AbstractStep {
 				}
 			}
 
-			actingPlayer.setFumblerooskiePending(false);
+			if (!fieldModel.isBallMoving()) {
+				actingPlayer.setFumblerooskiePending(false);
+			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -94,6 +123,8 @@ public class StepResetFumblerooskie extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.RESET_FOR_FAILED_BLOCK.addTo(jsonObject, resetForFailedBlock);
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
+		IServerJsonOption.IN_SELECT.addTo(jsonObject, inSelect);
 		return jsonObject;
 	}
 
@@ -101,7 +132,9 @@ public class StepResetFumblerooskie extends AbstractStep {
 	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		endPlayerAction = toPrimitive(IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject));
 		resetForFailedBlock = IServerJsonOption.RESET_FOR_FAILED_BLOCK.getFrom(source, jsonObject);
+		inSelect = toPrimitive(IServerJsonOption.IN_SELECT.getFrom(source, jsonObject));
 		return this;
 	}
 }

@@ -24,7 +24,7 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 
 		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.RESET_FUMBLEROOSKIE,
-			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false));
+			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false), from(StepParameterKey.END_PLAYER_ACTION, true));
 		sequence.add(StepId.INIT_FEEDING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FEEDING),
 			from(StepParameterKey.FEEDING_ALLOWED, params.isFeedingAllowed()),
 			from(StepParameterKey.END_PLAYER_ACTION, params.isEndPlayerAction()), from(StepParameterKey.END_TURN, params.isEndTurn()));
