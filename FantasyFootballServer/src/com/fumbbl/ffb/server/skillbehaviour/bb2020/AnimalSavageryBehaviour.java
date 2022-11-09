@@ -200,12 +200,11 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		switch (playerAction) {
 			case KICK_TEAM_MATE:
 			case KICK_TEAM_MATE_MOVE:
-				turnData.setKtmUsed(false);
+				turnData.setKtmUsed(true);
 				game.setPassCoordinate(null);
 				return PlayerAction.KICK_TEAM_MATE_MOVE;
 			case HAND_OVER:
 			case HAND_OVER_MOVE:
-				turnData.setHandOverUsed(false);
 				return PlayerAction.HAND_OVER_MOVE;
 			case PASS:
 			case PASS_MOVE:
@@ -215,7 +214,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			case THROW_TEAM_MATE:
 			case THROW_TEAM_MATE_MOVE:
 				if (playerRemoved) {
-					turnData.setPassUsed(false);
+					turnData.setPassUsed(true);
 					game.setPassCoordinate(null);
 					return PlayerAction.THROW_TEAM_MATE_MOVE;
 				}
