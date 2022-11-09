@@ -32,6 +32,7 @@ public class ChangeList {
 			.addBugfix("Pickup via Raiding Party used active player for pickup")
 			.addBugfix("Fumblerooskie did not work for square 1 of a movement")
 			.addBugfix("Using fumblerooskie before a blitz block and not following up resulted in a pick up roll")
+			.addBugfix("Cancelling jump up blitz left player standing")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

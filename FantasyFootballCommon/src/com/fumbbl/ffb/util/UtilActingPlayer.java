@@ -42,7 +42,7 @@ public class UtilActingPlayer {
 					&& !UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.enableThrowBombAction)))) {
 					pGame.getFieldModel().setPlayerState(oldPlayer,
 						currentState.changeBase(PlayerState.STANDING).changeActive(false));
-				} else if (actingPlayer.isStandingUp()) {
+				} else if (actingPlayer.isStandingUp() || actingPlayer.wasProne()) {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.PRONE));
 				} else {
 					pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.STANDING));
