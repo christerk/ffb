@@ -30,6 +30,8 @@ public class ChangeList {
 			.addBugfix("When moving on the ball with Raiding Party no pickup was made")
 			.addBugfix("Lashing out against the player to be thrown or receive the ball did not work properly")
 			.addBugfix("Pickup via Raiding Party used active player for pickup")
+			.addBugfix("Fumblerooskie did not work for square 1 of a movement")
+			.addBugfix("Using fumblerooskie before a blitz block and not following up resulted in a pick up roll")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
