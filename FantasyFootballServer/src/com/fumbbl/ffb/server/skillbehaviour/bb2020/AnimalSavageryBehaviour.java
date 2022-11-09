@@ -202,6 +202,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			case KICK_TEAM_MATE_MOVE:
 				turnData.setKtmUsed(true);
 				game.setPassCoordinate(null);
+				game.getFieldModel().setRangeRuler(null);
 				return PlayerAction.KICK_TEAM_MATE_MOVE;
 			case HAND_OVER:
 			case HAND_OVER_MOVE:
@@ -210,12 +211,14 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			case PASS_MOVE:
 				game.setPassCoordinate(null);
 				game.getActingPlayer().setHasPassed(false);
+				game.getFieldModel().setRangeRuler(null);
 				return PlayerAction.PASS;
 			case THROW_TEAM_MATE:
 			case THROW_TEAM_MATE_MOVE:
 				if (playerRemoved) {
 					turnData.setPassUsed(true);
 					game.setPassCoordinate(null);
+					game.getFieldModel().setRangeRuler(null);
 					return PlayerAction.THROW_TEAM_MATE_MOVE;
 				}
 				return null;
