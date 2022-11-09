@@ -33,6 +33,7 @@ public class ChangeList {
 			.addBugfix("Fumblerooskie did not work for square 1 of a movement")
 			.addBugfix("Using fumblerooskie before a blitz block and not following up resulted in a pick up roll")
 			.addBugfix("Cancelling jump up blitz left player standing")
+			.addBugfix("Players were marked as activated during setup and could not be moved during kick-off")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
