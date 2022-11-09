@@ -393,7 +393,6 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLLS_LEFT_HOME = new JsonIntOption("reRollsLeftHome");
 	JsonIntOption RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE = new JsonIntOption("rerollPumpUpTheCrowdOneDrive");
 	JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
-	JsonBooleanOption RESET_MOVE_SQUARES = new JsonBooleanOption("resetMoveSquares");
 	JsonStringOption RIOTOUS_POSITION_ID = new JsonStringOption("riotousPositionId");
 	JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");
 	JsonIntArrayOption RIOTOUS_ROLL = new JsonIntArrayOption("riotousRoll");

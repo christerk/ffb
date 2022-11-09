@@ -41,15 +41,14 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
@@ -59,9 +58,7 @@ public class StepRaidingParty extends AbstractStep {
 
 	private boolean endPlayerAction, endTurn;
 	private String goToLabelOnFailure, playerId, gotoLabelOnSuccess;
-	private final Set<MoveSquare> moveSquares = new HashSet<>();
 	private FieldCoordinate coordinate;
-	private boolean resetMoveSquares;
 	private TurnMode savedTurnMode;
 
 	public StepRaidingParty(GameState pGameState) {
@@ -224,8 +221,7 @@ public class StepRaidingParty extends AbstractStep {
 					from(StepParameterKey.THROWN_PLAYER_ID, playerId));
 				sequence.jump(gotoLabelOnSuccess);
 				sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
-				sequence.add(StepId.ABORT_TURN);
-				sequence.add(StepId.NEXT_STEP_AND_REPEAT);
+				sequence.jump(goToLabelOnFailure);
 				getGameState().getStepStack().push(sequence.getSequence());
 
 			}
@@ -239,19 +235,11 @@ public class StepRaidingParty extends AbstractStep {
 				game.setLastTurnMode(savedTurnMode);
 			}
 		}
-		FieldModel fieldModel = game.getFieldModel();
-		if (resetMoveSquares) {
-			fieldModel.clearMoveSquares();
-			moveSquares.forEach(fieldModel::add);
-		}
+		UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
 	}
 
 	private void prepareClientData(Game game, List<FieldCoordinate> eligibleSquares) {
 		FieldModel fieldModel = game.getFieldModel();
-		if (moveSquares.isEmpty() && !resetMoveSquares) {
-			moveSquares.addAll(Arrays.asList(fieldModel.getMoveSquares()));
-			resetMoveSquares = true;
-		}
 		fieldModel.clearMoveSquares();
 		eligibleSquares.stream().map(square -> new MoveSquare(square, 0, 0)).forEach(fieldModel::add);
 		getResult().setNextAction(StepAction.CONTINUE);
@@ -318,9 +306,7 @@ public class StepRaidingParty extends AbstractStep {
 			IServerJsonOption.FIELD_COORDINATE.addTo(jsonObject, coordinate.toJsonValue());
 		}
 		JsonArray jsonArray = new JsonArray();
-		moveSquares.stream().map(MoveSquare::toJsonValue).forEach(jsonArray::add);
 		IServerJsonOption.MOVE_SQUARE_ARRAY.addTo(jsonObject, jsonArray);
-		IServerJsonOption.RESET_MOVE_SQUARES.addTo(jsonObject, resetMoveSquares);
 		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, savedTurnMode);
 		return jsonObject;
 	}
@@ -337,10 +323,6 @@ public class StepRaidingParty extends AbstractStep {
 		if (IServerJsonOption.FIELD_COORDINATE.isDefinedIn(jsonObject)) {
 			coordinate = new FieldCoordinate().initFrom(source, IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));
 		}
-		IServerJsonOption.MOVE_SQUARE_ARRAY.getFrom(source,
-			jsonObject).values().stream().map(value ->
-			new MoveSquare().initFrom(source, value)).forEach(moveSquares::add);
-		resetMoveSquares = IServerJsonOption.RESET_MOVE_SQUARES.getFrom(source, jsonObject);
 		savedTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);
 		return this;
 	}
