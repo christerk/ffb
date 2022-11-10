@@ -35,6 +35,7 @@ public class ChangeList {
 			.addBugfix("Cancelling jump up blitz left player standing")
 			.addBugfix("Players were marked as activated during setup and could not be moved during kick-off")
 			.addBugfix("Consummate Professional was not marked as used when re-rolling a catch")
+			.addBugfix("Bomb rethrows could be re-rolled by any player using pro not just the original thrower")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

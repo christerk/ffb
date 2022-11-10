@@ -36,7 +36,7 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract int minimumProRoll();
 
-	public abstract boolean eligibleForPro(Game game, Player<?> player);
+	public abstract boolean eligibleForPro(Game game, Player<?> player, String originalBomberId);
 
 	public abstract SendToBoxReason raisedByNurgleReason();
 

@@ -58,7 +58,7 @@ public class OldProModification extends InjuryContextModification<OldProModifica
 
 	private boolean hasPrerequisite(Game game, InjuryContext injuryContext) {
 		String playerId = StringTool.isProvided(injuryContext.fAttackerId) ? injuryContext.fAttackerId : injuryContext.fDefenderId;
-		return UtilServerReRoll.isProReRollAvailable(game.getPlayerById(playerId), game);
+		return UtilServerReRoll.isProReRollAvailable(game.getPlayerById(playerId), game, null);
 	}
 
 	private boolean isSpottedFoul(InjuryContext injuryContext, InjuryType injuryType) {
