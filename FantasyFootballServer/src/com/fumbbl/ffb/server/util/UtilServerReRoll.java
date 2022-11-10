@@ -98,6 +98,8 @@ public class UtilServerReRoll {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				if (actingPlayer.getPlayer() == pPlayer) {
 					actingPlayer.markSkillUsed(reRollSourceSkill);
+				} else if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+					pPlayer.markUsed(reRollSourceSkill, game);
 				}
 			}
 		}
