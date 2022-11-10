@@ -216,7 +216,7 @@ public class StepRaidingParty extends AbstractStep {
 				resetState(game);
 
 				Sequence sequence = new Sequence(getGameState());
-				sequence.add(StepId.PICK_UP, IStepLabel.END_SCATTER_PLAYER,
+				sequence.add(StepId.PICK_UP,
 					from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.SCATTER_BALL),
 					from(StepParameterKey.THROWN_PLAYER_ID, playerId));
 				sequence.jump(gotoLabelOnSuccess);
