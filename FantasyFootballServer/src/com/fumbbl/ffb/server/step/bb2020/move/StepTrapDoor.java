@@ -8,6 +8,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.FieldModel;
@@ -150,6 +151,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 				game.getFieldModel().setBallCoordinate(playerCoordinate);
 			}
 		}
+		getResult().setSound(SoundId.TRAPDOOR);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

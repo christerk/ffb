@@ -6,6 +6,7 @@ import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -115,7 +116,8 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 				int minimumRoll = DiceInterpreter.getInstance().minimumRollProjectileVomit();
 				boolean successful = (roll >= minimumRoll);
 				getResult().addReport(new ReportProjectileVomit(actingPlayer.getPlayerId(), successful, roll,
-						minimumRoll, reRolled, game.getDefenderId()));
+					minimumRoll, reRolled, game.getDefenderId()));
+				getResult().setSound(SoundId.VOMIT);
 				if (successful) {
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeProjectileVomit(),

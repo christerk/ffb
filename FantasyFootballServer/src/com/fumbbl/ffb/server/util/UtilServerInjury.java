@@ -215,6 +215,7 @@ public class UtilServerInjury {
 			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() + 1);
 			attacker.markUsed(attacker.getSkillWithProperty(NamedProperties.grantsTeamReRollWhenCausingCas), game);
 			pStep.getResult().addReport(new ReportPumpUpTheCrowdReRoll(attacker.getId()));
+			pStep.getResult().setSound(SoundId.PUMP_CROWD);
 			return true;
 		}
 
