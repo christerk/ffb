@@ -146,16 +146,18 @@ public class StepBribes extends AbstractStepWithReRoll {
 		}
 		boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam());
 
+		InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+
 		if ((fBribesChoice != null) && (fArgueTheCallChoice == null)) {
 			boolean foulerHasBall = game.getFieldModel().getBallCoordinate()
 				.equals(game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
 			publishParameter(new StepParameter(StepParameterKey.FOULER_HAS_BALL, foulerHasBall));
-			askForArgueTheCall(friendsWithTheRef);
+			int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);
+			askForArgueTheCall(friendsWithTheRef, biasedRefBonus);
 		}
 		if ((fBribesChoice != null) && (fArgueTheCallChoice != null) && fArgueTheCallChoice
 			&& (getReRolledAction() != ReRolledActions.ARGUE_THE_CALL || getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION)) {
 
-			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 			Optional<InducementType> briberyReRoll = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REROLL_ARGUE))
 				.findFirst();
 
@@ -235,13 +237,13 @@ public class StepBribes extends AbstractStepWithReRoll {
 		}
 	}
 
-	private void askForArgueTheCall(boolean friendsWithTheRef) {
+	private void askForArgueTheCall(boolean friendsWithTheRef, int biasedRefBonus) {
 		fArgueTheCallChoice = false;
 		Game game = getGameState().getGame();
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) && !game.getTurnData().isCoachBanned()) {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), true, friendsWithTheRef);
+			DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), true, friendsWithTheRef, biasedRefBonus);
 			dialogParameter.addPlayerId(actingPlayer.getPlayerId());
 			UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
 			fArgueTheCallChoice = null;

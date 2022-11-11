@@ -25,6 +25,7 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 			minimumRoll = 5;
 		}
 
+		int target = minimumRoll;
 		int biasedRefs = report.getBiasedRefs();
 		StringBuilder builder = new StringBuilder();
 		if (biasedRefs > 0) {
@@ -50,12 +51,12 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 				status.append(" is sent to the reserve instead.");
 			}
 			println(getIndent() + 1, TextStyle.NONE, status.toString());
-			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Succeeded on a roll of " + minimumRoll + " (Roll" + modifiers + " >= " + minimumRoll + ")");
+			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Succeeded on a roll of " + minimumRoll + " (Roll" + modifiers + " >= " + target + ")");
 		} else {
 			print(getIndent() + 1, TextStyle.NONE, "The ref bans ");
 			print(getIndent() + 1, false, player);
 			println(getIndent() + 1, TextStyle.NONE, " from the game.");
-			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Would have succeeded on a roll of " + minimumRoll + " (Roll" + modifiers + " >= " + minimumRoll + ")");
+			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Would have succeeded on a roll of " + minimumRoll + " (Roll" + modifiers + " >= " + target + ")");
 		}
 		if (report.isCoachBanned()) {
 			print(getIndent() + 1, TextStyle.NONE, "Coach ");

@@ -414,7 +414,7 @@ public class StepEndTurn extends AbstractStep {
 			fArgueTheCallChoiceAway = false;
 			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getTeamAway());
 
-			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway(), friendsWithTheRef)) {
+			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway(), friendsWithTheRef, game.getTurnDataAway().getInducementSet())) {
 				fArgueTheCallChoiceAway = null;
 			}
 		}
@@ -424,7 +424,7 @@ public class StepEndTurn extends AbstractStep {
 			fArgueTheCallChoiceHome = false;
 			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getTeamHome());
 
-			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome(), friendsWithTheRef)) {
+			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome(), friendsWithTheRef, game.getTurnDataHome().getInducementSet())) {
 				fArgueTheCallChoiceHome = null;
 			}
 		}
@@ -854,7 +854,7 @@ public class StepEndTurn extends AbstractStep {
 		return false;
 	}
 
-	private boolean askForArgueTheCall(Team team, boolean friendsWithTheRef) {
+	private boolean askForArgueTheCall(Team team, boolean friendsWithTheRef, InducementSet inducementSet) {
 		Game game = getGameState().getGame();
 		if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
 			return false;
@@ -863,7 +863,8 @@ public class StepEndTurn extends AbstractStep {
 		if (playerIds.size() > 0) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
-				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false, friendsWithTheRef);
+				int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);
+				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false, friendsWithTheRef, biasedRefBonus);
 				dialogParameter.addPlayerIds(playerIds.toArray(new String[0]));
 				UtilServerDialog.showDialog(getGameState(), dialogParameter,
 					(game.isHomePlaying() && (team != game.getTeamHome()))
