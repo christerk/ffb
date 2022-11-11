@@ -50,7 +50,7 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 				status.append(" is sent to the reserve instead.");
 			}
 			println(getIndent() + 1, TextStyle.NONE, status.toString());
-			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Succeeded on a roll of " + report.getRoll() + " (Roll" + modifiers + " >= " + minimumRoll + ")");
+			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Succeeded on a roll of " + minimumRoll + " (Roll" + modifiers + " >= " + minimumRoll + ")");
 		} else {
 			print(getIndent() + 1, TextStyle.NONE, "The ref bans ");
 			print(getIndent() + 1, false, player);
