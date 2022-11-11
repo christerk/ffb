@@ -324,7 +324,7 @@ public abstract class AbstractStep implements IStep {
 				}
 				fieldModel.setPlayerCoordinate(player, coordinate);
 				int playerStateBase = coordinate.isBoxCoordinate() ? PlayerState.RESERVE : PlayerState.STANDING;
-				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(playerStateBase).changeActive(true));
+				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(playerStateBase));
 			}
 		}
 	}
