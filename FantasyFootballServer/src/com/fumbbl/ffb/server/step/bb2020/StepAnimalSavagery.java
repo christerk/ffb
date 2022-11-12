@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
@@ -13,6 +14,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -45,6 +47,9 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 						if (catcher != null) {
 							state.catcherId = catcher.getId();
 						}
+						break;
+					case BLOCK_DEFENDER_ID:
+						state.blockDefenderId = (String) parameter.getValue();
 						break;
 					default:
 						break;
@@ -99,6 +104,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		state.endTurn = toPrimitive(IServerJsonOption.END_TURN.getFrom(source, jsonObject));
 		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		state.attackOpponent = IServerJsonOption.ATTACK_OPPONENT.getFrom(source, jsonObject);
+		state.blockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -131,6 +137,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 						if (skillUsed) {
 							Game game = getGameState().getGame();
 							game.getPlayerById(commandUseSkill.getPlayerId()).markUsed(skill, game);
+							getResult().addReport(new ReportSkillUse(commandUseSkill.getPlayerId(), commandUseSkill.getSkill(), skillUsed, SkillUse.LASH_OUT_AGAINST_OPPONENT));
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -162,6 +169,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
 		IServerJsonOption.CATCHER_ID.addTo(jsonObject, state.catcherId);
 		IServerJsonOption.ATTACK_OPPONENT.addTo(jsonObject, state.attackOpponent);
+		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, state.blockDefenderId);
 		return jsonObject;
 	}
 
@@ -173,6 +181,7 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		public boolean endTurn;
 		public String catcherId;
 		public Boolean attackOpponent;
+		public String blockDefenderId;
 	}
 
 

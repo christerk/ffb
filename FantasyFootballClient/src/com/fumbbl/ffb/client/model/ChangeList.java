@@ -39,6 +39,7 @@ public class ChangeList {
 			.addFeature("Vomit sound")
 			.addFeature("Trapdoor sound")
 			.addFeature("Pump Up The Crowd sound")
+			.addFeature("Primal Savagery")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")
