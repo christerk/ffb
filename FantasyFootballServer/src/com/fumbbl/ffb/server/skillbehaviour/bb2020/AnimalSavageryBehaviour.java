@@ -10,12 +10,14 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -38,6 +40,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -76,7 +79,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					return false;
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				if (UtilCards.hasSkill(actingPlayer, skill)) {
+				if (UtilCards.hasSkill(actingPlayer, skill) && state.attackOpponent == null) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
 					if ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())) {
@@ -112,12 +115,33 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 						step.getResult().addReport(
 							new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, skill));
 					}
+				} else if (state.attackOpponent != null) {
+					status = ActionStatus.FAILURE;
 				}
+
 				if (status == ActionStatus.SUCCESS) {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (status == ActionStatus.FAILURE) {
-						Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()))).collect(Collectors.toSet());
+
+						Team team = game.getActingTeam();
+
+						if (state.attackOpponent == null) {
+							if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLashOutAgainstOpponents)
+								&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(team),
+								game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())))) {
+								UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canLashOutAgainstOpponents), 0), false);
+								return false;
+							} else {
+								state.attackOpponent = false;
+							}
+						}
+
+						if (state.attackOpponent) {
+							team = game.getOtherTeam(team);
+						}
+
+						Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, team, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()))).collect(Collectors.toSet());
 
 						if (StringTool.isProvided(state.thrownPlayerId)) {
 							players.add(game.getPlayerById(state.thrownPlayerId));
@@ -164,7 +188,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		game.setDefenderId(player.getId());
 		step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryTypeBlock.Mode mode = actingPlayer.isStandingUp() ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
+		InjuryTypeBlock.Mode mode = (actingPlayer.isStandingUp() || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam()) ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false),
 			actingPlayer.getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 
