@@ -54,7 +54,7 @@ public enum ReportId implements INamedObject {
 	INDOMITABLE("indomitable"), OLD_PRO("oldPro"), PICK_ME_UP("pickMeUp"),
 	SKILL_WASTED("skillWasted"), TWO_FOR_ONE("twoForOne"),
 	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
-	RAIDING_PARTY("raidingParty"), EVENT("event"),
+	RAIDING_PARTY("raidingParty"), EVENT("event"), HIT_AND_RUN("hitAndRun"),
 	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll"),
 	BIASED_REF("biasedRef"), WEATHER_MAGE_ROLL("weatherMageRoll"), WEATHER_MAGE_RESULT("weatherMageResult"),
 	LOOK_INTO_MY_EYES_ROLL("lookIntoMyEyesRoll"), BALEFUL_HEX("balefulHex");

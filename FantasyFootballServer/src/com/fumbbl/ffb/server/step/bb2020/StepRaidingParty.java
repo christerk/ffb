@@ -26,7 +26,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportRaidingParty;
-import com.fumbbl.ffb.report.bb2020.ReportSkillWasted;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -118,6 +117,12 @@ public class StepRaidingParty extends AbstractStep {
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
+				case CLIENT_END_TURN:
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						endTurn = true;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
 				default:
 					break;
 			}
@@ -164,9 +169,8 @@ public class StepRaidingParty extends AbstractStep {
 		if (skill != null) {
 
 			if (endTurn || endPlayerAction) {
-				getResult().addReport(new ReportSkillWasted(actingPlayer.getPlayerId(), skill));
 				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
-				actingPlayer.markSkillUsed(skill);
+				resetState(game);
 				return;
 			}
 

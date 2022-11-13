@@ -40,6 +40,7 @@ public class ChangeList {
 			.addFeature("Trapdoor sound")
 			.addFeature("Pump Up The Crowd sound")
 			.addFeature("Primal Savagery")
+			.addFeature("Hit and Run")
 		);
 
 		versions.add(new VersionChangeList("2.12.0")

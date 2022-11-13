@@ -71,6 +71,7 @@ public interface IClientProperty extends CommonProperty {
 	String KEY_PLAYER_ACTION_RAIDING_PARTY = "key.player.action.raidingParty";
 	String KEY_PLAYER_ACTION_LOOK_INTO_MY_EYES = "key.player.action.lookIntoMyEyes";
 	String KEY_PLAYER_ACTION_BALEFUL_HEX = "key.player.action.balefulHex";
+	String KEY_PLAYER_ACTION_HIT_AND_RUN = "key.player.action.hitAndRun";
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";
