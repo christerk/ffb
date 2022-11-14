@@ -116,7 +116,7 @@ public class StepMove extends AbstractStep {
 				fCoordinateTo);
 			if (ballPositionUpdated) {
 				PlayerResult playerResult = game.getGameResult().getPlayerResult(game.getActingPlayer().getPlayer());
-				int deltaX = 0;
+				int deltaX;
 				if (game.isHomePlaying()) {
 					deltaX = fCoordinateTo.getX() - fCoordinateFrom.getX();
 				} else {

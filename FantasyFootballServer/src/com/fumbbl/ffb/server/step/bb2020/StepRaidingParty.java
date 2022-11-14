@@ -215,7 +215,7 @@ public class StepRaidingParty extends AbstractStep {
 				Direction direction = FieldCoordinate.getDirection(fromCoordinate, coordinate);
 				getResult().addReport(new ReportRaidingParty(actingPlayer.getPlayerId(), playerId, direction));
 				getResult().setSound(SoundId.STEP);
-				fieldModel.setPlayerCoordinate(player, coordinate);
+				fieldModel.updatePlayerAndBallPosition(player, coordinate);
 				actingPlayer.markSkillUsed(skill);
 				resetState(game);
 
