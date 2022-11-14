@@ -145,6 +145,20 @@ public class UtilPlayer {
 		return adjacentPlayers.toArray(new Player[0]);
 	}
 
+	public static Player<?>[] findAdjacentPlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+		List<Player<?>> adjacentPlayers = new ArrayList<>();
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
+			1, false);
+		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
+			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
+			if ((player != null) && (player.getTeam() == pTeam)) {
+				adjacentPlayers.add(player);
+			}
+		}
+		return adjacentPlayers.toArray(new Player[0]);
+	}
+
 	public static Player<?>[] findAdjacentPlayersWithTacklezones(Game pGame, Team pTeam, FieldCoordinate pCoordinate,
 																															 boolean pWithStartCoordinate) {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();

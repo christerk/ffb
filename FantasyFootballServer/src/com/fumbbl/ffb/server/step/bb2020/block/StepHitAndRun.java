@@ -189,7 +189,7 @@ public class StepHitAndRun extends AbstractStep {
 		return Arrays.stream(possibleCoordinates)
 			.filter(possibleCoordinate -> (fieldModel.getPlayers(possibleCoordinate) == null))
 			.filter(possibleCoordinate -> !ArrayTool.isProvided(UtilPlayer
-				.findAdjacentBlockablePlayers(game, game.getOtherTeam(game.getActingTeam()), possibleCoordinate)))
+				.findAdjacentPlayers(game, game.getOtherTeam(game.getActingTeam()), possibleCoordinate)))
 			.collect(Collectors.toList());
 	}
 

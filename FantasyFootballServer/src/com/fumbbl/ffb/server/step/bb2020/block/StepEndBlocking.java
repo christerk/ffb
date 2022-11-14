@@ -263,7 +263,7 @@ public class StepEndBlocking extends AbstractStep {
 				Set<FieldCoordinate> availableSquares = Arrays.stream(game.getFieldModel().findAdjacentCoordinates(fieldModel.getPlayerCoordinate(activePlayer), FieldCoordinateBounds.FIELD, 1, false))
 					.filter(fieldCoordinate -> game.getFieldModel().getPlayers(fieldCoordinate) == null)
 					.filter(fieldCoordinate -> !ArrayTool.isProvided(UtilPlayer
-						.findAdjacentBlockablePlayers(game, game.getOtherTeam(game.getActingTeam()), fieldCoordinate)))
+						.findAdjacentPlayers(game, game.getOtherTeam(game.getActingTeam()), fieldCoordinate)))
 					.collect(Collectors.toSet());
 
 				if (!canMoveAfterBlock || availableSquares.isEmpty()) {
