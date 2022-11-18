@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gamestate>
+    <result>ok</result>
+    <options>
+        <option name="inducementIgorsMax" value="9"/>
+        <option name="mvpNominations" value="0"/>
+        <option name="wizardAvailable" value="true"/>
+        <option name="rulesVersion" value="BB2020"/>
+        <option name="inducementAposMax" value="9"/>
+        <option name="allowStaffOnBothTeams" value="true"/>
+        <option name="pitchUrl" value="http://localhost:2224/icons/pitches/fumbblcup.zip"/>
+        <option name="clawDoesNotStack" value="false"/>
+        <option name="inducementPrayersAvailableForUnderdog" value="false"/>
+    </options>
+</gamestate>
