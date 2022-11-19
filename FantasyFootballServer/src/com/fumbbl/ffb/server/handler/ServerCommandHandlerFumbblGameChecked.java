@@ -64,6 +64,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 		getServer().getGameCache().addTeamToGame(gameState, home, true);
 		getServer().getGameCache().addTeamToGame(gameState, away, false);
 		gameState.getGame().teamsAreInflated();
+		getServer().getGameCache().queueDbUpdate(gameState, true);
 
 		UtilServerStartGame.startGame(gameState);
 		return true;

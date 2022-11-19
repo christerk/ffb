@@ -12,6 +12,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameStartMode;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.ServerCommunication;
@@ -53,15 +54,33 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 		Session session = receivedCommand.getSession();
 
 		if (joinApprovedCommand.getGameId() > 0) {
+			getServer().getDebugLog().log(IServerLogLevel.WARN, joinApprovedCommand.getGameId(),
+				"Loading GameState by id");
 			gameState = loadGameStateById(joinApprovedCommand, session);
 
 		} else if (StringTool.isProvided(joinApprovedCommand.getGameName())) {
+			getServer().getDebugLog().log(IServerLogLevel.WARN, joinApprovedCommand.getGameId(),
+				"Loading GameState by name: " + joinApprovedCommand.getGameName());
+
 			gameState = gameCache.getGameStateByName(joinApprovedCommand.getGameName());
+
+			String info = "";
+			long id = 0;
+			if (gameState == null) {
+				info = "not ";
+			} else {
+				id = gameState.getId();
+			}
+			getServer().getDebugLog().log(IServerLogLevel.WARN, id,
+				"GameState " + info + "found by name: " + joinApprovedCommand.getGameName());
+
 			if ((gameState == null) && !getServer().isBlockingNewGames()) {
 				boolean testing = (joinApprovedCommand.getGameName().startsWith(_TEST_PREFIX)
-						|| getServer().getMode() == ServerMode.STANDALONE);
+					|| getServer().getMode() == ServerMode.STANDALONE);
 				gameState = gameCache.createGameState(testing ? GameStartMode.START_TEST_GAME : GameStartMode.START_GAME);
 				gameCache.mapGameNameToId(joinApprovedCommand.getGameName(), gameState.getId());
+				getServer().getDebugLog().log(IServerLogLevel.WARN, gameState.getId(),
+					"GameState created by name: " + joinApprovedCommand.getGameName());
 			}
 		}
 
@@ -70,9 +89,10 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 			Game game = gameState.getGame();
 
 			if (joinApprovedCommand.getClientMode() == ClientMode.PLAYER) {
-
+				getServer().getDebugLog().log(IServerLogLevel.WARN, gameState.getId(),
+					"Joining as player");
 				if (joinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach())
-						|| joinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamAway().getCoach())) {
+					|| joinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamAway().getCoach())) {
 					if ((gameState.getStatus() == GameStatus.SCHEDULED) || (game.getStarted() != null)) {
 						joinWithoutTeam(gameState, joinApprovedCommand, session);
 					} else {
@@ -96,11 +116,13 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 				// ClientMode.SPECTATOR
 			} else {
 
+				getServer().getDebugLog().log(IServerLogLevel.WARN, gameState.getId(),
+					"Joining as spectator");
 				closeOtherSessionWithThisCoach(gameState, joinApprovedCommand.getCoach(), session);
 				sessionManager.addSession(session, gameState.getId(), joinApprovedCommand.getCoach(),
-						joinApprovedCommand.getClientMode(), false, joinApprovedCommand.getAccountProperties());
+					joinApprovedCommand.getClientMode(), false, joinApprovedCommand.getAccountProperties());
 				UtilServerStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false,
-						ClientMode.SPECTATOR, joinApprovedCommand.getAccountProperties());
+					ClientMode.SPECTATOR, joinApprovedCommand.getAccountProperties());
 				if (gameState.getGame().getStarted() != null) {
 					UtilServerTimer.syncTime(gameState, System.currentTimeMillis());
 					communication.sendGameState(session, gameState);
@@ -119,18 +141,24 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 		Game game = pGameState.getGame();
 		if (pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach())
 				|| pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamAway().getCoach())) {
+			getServer().getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(),
+				"Joining without team");
 			if (!game.isTesting()) {
 				closeOtherSessionWithThisCoach(pGameState, pJoinApprovedCommand.getCoach(), pSession);
 			}
 			boolean homeTeam = pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach());
 			if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
-					pJoinApprovedCommand.getCoach(), homeTeam, pJoinApprovedCommand.getAccountProperties())) {
+				pJoinApprovedCommand.getCoach(), homeTeam, pJoinApprovedCommand.getAccountProperties())) {
 				if (getServer().getMode() == ServerMode.FUMBBL) {
 					if (game.getStarted() != null) {
+						getServer().getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(),
+							"Kick starting");
 						// Game is already initialized, so we just need to kickstart it
 						UtilSkillBehaviours.registerBehaviours(pGameState.getGame(), getServer().getDebugLog());
 						UtilServerStartGame.startGame(pGameState);
 					} else {
+						getServer().getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(),
+							"Check gamestate");
 						// This is a new game and we need to get options from FUMBBL
 						getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
 					}
@@ -177,9 +205,9 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 	private void closeOtherSessionWithThisCoach(GameState gameState, String coach, Session session) {
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session[] allSessions = sessionManager.getSessionsForGameId(gameState.getId());
-		for (int i = 0; i < allSessions.length; i++) {
-			if ((session != allSessions[i]) && coach.equalsIgnoreCase(sessionManager.getCoachForSession(allSessions[i]))) {
-				getServer().getCommunication().close(allSessions[i]);
+		for (Session existingSession : allSessions) {
+			if ((session != existingSession) && coach.equalsIgnoreCase(sessionManager.getCoachForSession(existingSession))) {
+				getServer().getCommunication().close(existingSession);
 				break;
 			}
 		}
@@ -189,12 +217,21 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 		GameCache gameCache = getServer().getGameCache();
 		GameState gameState = gameCache.getGameStateById(pJoinApprovedCommand.getGameId());
 		if (gameState != null) {
+			getServer().getDebugLog().log(IServerLogLevel.WARN, pJoinApprovedCommand.getGameId(),
+				"GameState found in cache");
 			return gameState;
 		}
+		getServer().getDebugLog().log(IServerLogLevel.WARN, pJoinApprovedCommand.getGameId(),
+			"GameState not found in cache, checking database");
 		gameState = gameCache.queryFromDb(pJoinApprovedCommand.getGameId());
 		if (gameState == null) {
+			getServer().getDebugLog().log(IServerLogLevel.WARN, pJoinApprovedCommand.getGameId(),
+				"GameState not found in database returning null");
 			return null;
 		}
+		getServer().getDebugLog().log(IServerLogLevel.WARN, pJoinApprovedCommand.getGameId(),
+			"GameState found in database");
+
 		gameCache.addGame(gameState);
 		gameCache.queueDbUpdate(gameState, true); // persist status update
 		return gameState;
