@@ -136,6 +136,11 @@ public class GameCache {
 		return (gameId != null) ? getGameStateById(gameId) : null;
 	}
 
+	public String getGameName(long id) {
+		return fGameIdByName.entrySet().stream().filter(entry -> entry.getValue() == id).findFirst().map(Map.Entry::getKey).orElse("");
+	}
+
+
 	private void removeGame(long gameId) {
 		GameState cachedGameState = fGameStateById.remove(gameId);
 		if (cachedGameState != null) {
@@ -143,7 +148,7 @@ public class GameCache {
 			removeMappingForGameId(cachedGameState.getId());
 			// log game cache size
 			getServer().getDebugLog().log(IServerLogLevel.WARN, cachedGameState.getId(),
-					StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
+				StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
 			// remove gameState from db if only one team has joined
 			// or the game hasn't even started yet (and isn't scheduled)
 			if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())

@@ -143,8 +143,7 @@ public class AdminConnector {
 			}
 
 			if (AdminServlet.CACHE.equals(args[0])) {
-				String cacheUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_CACHE), response,
-						args[1]);
+				String cacheUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_CACHE), response);
 				System.out.println(cacheUrl);
 				String cacheXml = UtilServerHttpClient.fetchPage(cacheUrl);
 				System.out.println(cacheXml);

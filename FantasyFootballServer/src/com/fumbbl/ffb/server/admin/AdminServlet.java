@@ -473,6 +473,7 @@ public class AdminServlet extends HttpServlet {
 			Game game = gameState.getGame();
 			AttributesImpl gameAttributes = new AttributesImpl();
 			UtilXml.addAttribute(gameAttributes, "id", gameState.getId());
+			UtilXml.addAttribute(gameAttributes, "name", getServer().getGameCache().getGameName(gameState.getId()));
 			UtilXml.startElement(handler, "game", gameAttributes);
 			if (gameState.getStatus() != null) {
 				UtilXml.addValueElement(handler, "status", gameState.getStatus().getName());
