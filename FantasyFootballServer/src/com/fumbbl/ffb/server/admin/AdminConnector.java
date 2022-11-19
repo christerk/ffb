@@ -200,7 +200,7 @@ public class AdminConnector {
 
 			if (AdminServlet.DELETE.equals(args[0])) {
 				String deleteUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_DELETE), response,
-						args[1], args[2]);
+					args[1]);
 				System.out.println(deleteUrl);
 				String deleteXml = UtilServerHttpClient.fetchPage(deleteUrl);
 				System.out.println(deleteXml);
