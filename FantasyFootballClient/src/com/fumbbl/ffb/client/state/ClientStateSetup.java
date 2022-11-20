@@ -32,8 +32,7 @@ public class ClientStateSetup extends ClientState {
 	public void enterState() {
 		super.enterState();
 		getClient().getClientData().clear();
-		getClient().getClientData().setLog(true);
-		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
+			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		if (!sideBarHome.isBoxOpen()) {
 			fReservesBoxOpened = true;
 			sideBarHome.openBox(BoxType.RESERVES);
@@ -45,8 +44,6 @@ public class ClientStateSetup extends ClientState {
 		if (fReservesBoxOpened && (sideBarHome.getOpenBox() == BoxType.RESERVES)) {
 			sideBarHome.closeBox();
 		}
-		getClient().getClientData().setLog(false);
-		System.out.println("Leaving ClientStateSetup");
 	}
 
 	public ClientStateId getId() {
@@ -83,14 +80,10 @@ public class ClientStateSetup extends ClientState {
 				super.mouseReleased(pMouseEvent);
 			} else {
 				if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
-					System.out.println("ClientStateSetup: Release event ignored");
-					System.out.println("Event: " + pMouseEvent);
 					return;
 				}
-				System.out.println("ClientStateSetup: Release event handled");
-				System.out.println("Event: " + pMouseEvent);
 				getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
-				UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
+				UtilClientPlayerDrag.mouseReleased(getClient());
 			}
 		}
 	}

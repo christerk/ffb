@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -288,11 +289,15 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public void setPlayerState(Player<?> pPlayer, PlayerState pState) {
+		setPlayerState(pPlayer, pState, false);
+	}
+
+	public void setPlayerState(Player<?> pPlayer, PlayerState pState, boolean force) {
 		if (pPlayer == null) {
 			return;
 		}
 		PlayerState oldState = fStateByPlayerId.get(pPlayer.getId());
-		if ((oldState == null) || ((pState != null) && (pState.getId() != oldState.getId()))) {
+		if ((oldState == null) || ((pState != null) && (pState.getId() != oldState.getId() || force))) {
 			fStateByPlayerId.put(pPlayer.getId(), pState);
 			notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_STATE, pPlayer.getId(), pState);
 		}
@@ -821,7 +826,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public void setRangeRuler(RangeRuler pRangeRuler) {
-		if ((pRangeRuler != null) ? pRangeRuler.equals(fRangeRuler) : (fRangeRuler == null)) {
+		if (Objects.equals(pRangeRuler, fRangeRuler)) {
 			return;
 		}
 		fRangeRuler = pRangeRuler;

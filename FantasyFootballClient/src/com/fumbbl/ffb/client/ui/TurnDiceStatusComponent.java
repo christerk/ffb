@@ -6,6 +6,7 @@ import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
@@ -51,9 +52,6 @@ import java.util.List;
 public class TurnDiceStatusComponent extends JPanel
 		implements MouseListener, MouseMotionListener, IDialogCloseListener {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 92;
-
 	private static final String _LABEL_END_TURN = "End Turn";
 	private static final String _LABEL_END_SETUP = "End Setup";
 	private static final String _LABEL_CONTINUE = "Continue";
@@ -61,15 +59,13 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final String _LABEL_TIMEOUT = "Timeout";
 
 	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 14);
-	private static final Rectangle _BUTTON_AREA = new Rectangle(1, 1, 143, 31);
 
 	private static final Font _DICE_FONT = new Font("Sans Serif", Font.BOLD, 11);
 	private static final Font _STATUS_TITLE_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font _STATUS_MESSAGE_FONT = new Font("Sans Serif", Font.PLAIN, 12);
-	private static final int _STATUS_TEXT_WIDTH = WIDTH - 10;
 
 	private final SideBarComponent fSideBar;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 
 	private boolean fEndTurnButtonShown;
 	private boolean fTimeoutButtonShown;
@@ -93,21 +89,37 @@ public class TurnDiceStatusComponent extends JPanel
 	private boolean fRefreshNecessary;
 	private boolean buttonEnabled = true;
 
-	public TurnDiceStatusComponent(SideBarComponent pSideBar) {
+	private Dimension size;
+
+	private final DimensionProvider dimensionProvider;
+	private Rectangle buttonArea;
+
+
+	public TurnDiceStatusComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		fRefreshNecessary = true;
+		this.dimensionProvider = dimensionProvider;
+	}
+
+	public void initLayout() {
+		size = dimensionProvider.dimension(DimensionProvider.Component.TURN_DICE_STATUS);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+		setLayout(null);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
+		Dimension buttonDimension = dimensionProvider.dimension(DimensionProvider.Component.END_TURN_BUTTON);
+		buttonArea = new Rectangle(1, 1, buttonDimension.width, buttonDimension.height);
 	}
 
 	public SideBarComponent getSideBar() {
 		return fSideBar;
+	}
+
+	private int statusTextWidth() {
+		return size.width - 10;
 	}
 
 	private void drawBackground() {
@@ -119,7 +131,7 @@ public class TurnDiceStatusComponent extends JPanel
 		} else {
 			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE);
 		}
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 
@@ -175,13 +187,13 @@ public class TurnDiceStatusComponent extends JPanel
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage buttonImage = iconCache.getIconByProperty(
 					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON);
-			g2d.drawImage(buttonImage, _BUTTON_AREA.x, _BUTTON_AREA.y, null);
+			g2d.drawImage(buttonImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.setFont(_BUTTON_FONT);
 			g2d.setColor(Color.BLACK);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D bounds = metrics.getStringBounds(pButtonText, g2d);
-			int x = ((WIDTH - (int) bounds.getWidth()) / 2);
-			int y = ((_BUTTON_AREA.height + metrics.getHeight()) / 2) - metrics.getDescent();
+			int x = ((size.width - (int) bounds.getWidth()) / 2);
+			int y = ((buttonArea.height + metrics.getHeight()) / 2) - metrics.getDescent();
 			g2d.drawString(pButtonText, x, y);
 			g2d.dispose();
 		}
@@ -192,7 +204,7 @@ public class TurnDiceStatusComponent extends JPanel
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage playingImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_STATUS_PLAYING);
-			g2d.drawImage(playingImage, _BUTTON_AREA.x, _BUTTON_AREA.y, null);
+			g2d.drawImage(playingImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.dispose();
 		}
 	}
@@ -212,7 +224,7 @@ public class TurnDiceStatusComponent extends JPanel
 			}
 			if (imageProperty != null) {
 				BufferedImage statusImage = iconCache.getIconByProperty(imageProperty);
-				g2d.drawImage(statusImage, 1, 1, null);
+				g2d.drawImage(statusImage, buttonArea.x, buttonArea.y, buttonArea.width, size.height, null);
 			}
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(_STATUS_TITLE_FONT);
@@ -226,15 +238,15 @@ public class TurnDiceStatusComponent extends JPanel
 			final AttributedString attStr = new AttributedString(fStatusMessage);
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
 			final LineBreakMeasurer measurer = new LineBreakMeasurer(attStr.getIterator(),
-					new FontRenderContext(null, false, false));
-			TextLayout layoutLine = measurer.nextLayout(_STATUS_TEXT_WIDTH);
+				new FontRenderContext(null, false, false));
+			TextLayout layoutLine = measurer.nextLayout(statusTextWidth());
 			while (layoutLine != null) {
 				layoutLine.draw(g2d, x, y);
 				y += fontMetrics.getHeight();
 				if (y <= 3 * fontMetrics.getHeight()) {
-					layoutLine = measurer.nextLayout(_STATUS_TEXT_WIDTH);
+					layoutLine = measurer.nextLayout(statusTextWidth());
 				} else {
-					layoutLine = measurer.nextLayout(_STATUS_TEXT_WIDTH - 20); // hourglass icon
+					layoutLine = measurer.nextLayout(statusTextWidth() - 20); // hourglass icon
 				}
 			}
 			g2d.dispose();
@@ -269,7 +281,7 @@ public class TurnDiceStatusComponent extends JPanel
 				FontMetrics fontMetrics = g2d.getFontMetrics();
 				String opponentsChoice = "Opponent's choice";
 				y += 38 + fontMetrics.getAscent();
-				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, WIDTH);
+				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, size.width);
 				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
 			} else {
 				y += 38;
@@ -376,7 +388,7 @@ public class TurnDiceStatusComponent extends JPanel
 		Game game = client.getGame();
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
-			&& _BUTTON_AREA.contains(pMouseEvent.getPoint()) && buttonEnabled) {
+			&& buttonArea.contains(pMouseEvent.getPoint()) && buttonEnabled) {
 			if (userInterface.getDialogManager().isEndTurnAllowed()) {
 				buttonEnabled = false;
 				fButtonSelected = false;
@@ -404,7 +416,7 @@ public class TurnDiceStatusComponent extends JPanel
 		// + fButtonSelected + " contained=" +
 		// _BUTTON_AREA.contains(pMouseEvent.getPoint()));
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && !fButtonSelected
-				&& _BUTTON_AREA.contains(pMouseEvent.getPoint())) {
+			&& buttonArea.contains(pMouseEvent.getPoint())) {
 			fButtonSelected = true;
 			if (fEndTurnButtonShown) {
 				drawEndTurnButton();
@@ -412,10 +424,10 @@ public class TurnDiceStatusComponent extends JPanel
 			if (fTimeoutButtonShown) {
 				drawTimeoutButton();
 			}
-			repaint(_BUTTON_AREA);
+			repaint(buttonArea);
 		}
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && fButtonSelected
-				&& !_BUTTON_AREA.contains(pMouseEvent.getPoint())) {
+			&& !buttonArea.contains(pMouseEvent.getPoint())) {
 			fButtonSelected = false;
 			if (fEndTurnButtonShown) {
 				drawEndTurnButton();
@@ -423,7 +435,7 @@ public class TurnDiceStatusComponent extends JPanel
 			if (fTimeoutButtonShown) {
 				drawTimeoutButton();
 			}
-			repaint(_BUTTON_AREA);
+			repaint(buttonArea);
 		}
 	}
 
@@ -446,6 +458,6 @@ public class TurnDiceStatusComponent extends JPanel
 
 	public void enableButton() {
 		buttonEnabled = true;
-		repaint(_BUTTON_AREA);
+		repaint(buttonArea);
 	}
 }

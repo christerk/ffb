@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.util.UtilPassing;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -52,8 +54,8 @@ public class FieldLayerRangeRuler extends FieldLayer {
 	private FieldCoordinate fSelectSquareCoordinate;
 	private FieldCoordinate[] fMarkedCoordinates;
 
-	public FieldLayerRangeRuler(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerRangeRuler(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void drawRangeRuler(RangeRuler pRangeRuler) {
@@ -72,12 +74,10 @@ public class FieldLayerRangeRuler extends FieldLayer {
 			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 				pRangeRuler.getTargetCoordinate(), false);
 			if (passingDistance != null) {
-
-				Point startCenter = new Point((throwerCoordinate.getX() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2),
-					(throwerCoordinate.getY() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2));
-				Point endCenter = new Point(
-					(pRangeRuler.getTargetCoordinate().getX() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2),
-					(pRangeRuler.getTargetCoordinate().getY() * FIELD_SQUARE_SIZE) + (FIELD_SQUARE_SIZE / 2));
+				Dimension startDimension = dimensionProvider.mapToLocal(throwerCoordinate, true);
+				Point startCenter = new Point(startDimension.width, startDimension.height);
+				Dimension endDimension = dimensionProvider.mapToLocal(pRangeRuler.getTargetCoordinate(), true);
+				Point endCenter = new Point(endDimension.width, endDimension.height);
 
 				int lengthY = startCenter.y - endCenter.y;
 				int lengthX = endCenter.x - startCenter.x;
@@ -158,25 +158,11 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		fSelectSquareCoordinate = null;
 	}
 
-	public boolean isRulerShown() {
-		return (fPolygonComplete != null);
-	}
-
-	public boolean testCoordinateInsideRangeRuler(FieldCoordinate pCoordinate) {
-		if (pCoordinate != null) {
-			int x = pCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int y = pCoordinate.getY() * FIELD_SQUARE_SIZE;
-			Rectangle playerSquare = new Rectangle(x, y, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE);
-			return (fPolygonComplete != null) && fPolygonComplete.intersects(playerSquare);
-		}
-		return false;
-	}
-
 	private Polygon findPolygon(Point pStartCenter, int pMaxLength, double pSinPhi, double pCosPhi) {
 
 		if (pMaxLength > 0) {
 
-			int halfRulerWidth = (int) (FIELD_SQUARE_SIZE * UtilPassing.RULER_WIDTH / 2);
+			int halfRulerWidth = (int) (dimensionProvider.fieldSquareSize() * UtilPassing.RULER_WIDTH / 2);
 			Point point1 = new Point(pStartCenter.x, pStartCenter.y - halfRulerWidth);
 			point1 = rotate(point1, pStartCenter, pSinPhi, pCosPhi);
 			Point point2 = new Point(pStartCenter.x, pStartCenter.y + halfRulerWidth);
@@ -208,9 +194,8 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor, Color border) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			int x = pCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int y = pCoordinate.getY() * FIELD_SQUARE_SIZE;
-			Rectangle bounds = new Rectangle(x, y, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize());
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

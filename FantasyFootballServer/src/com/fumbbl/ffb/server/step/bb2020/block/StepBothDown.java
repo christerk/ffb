@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -17,6 +17,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 
 /**
  * Step in block sequence to handle both down block result.
@@ -47,12 +48,9 @@ public class StepBothDown extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
-			switch (parameter.getKey()) {
-				case OLD_DEFENDER_STATE:
-					fOldDefenderState = (PlayerState) parameter.getValue();
-					return true;
-				default:
-					break;
+			if (parameter.getKey() == StepParameterKey.OLD_DEFENDER_STATE) {
+				fOldDefenderState = (PlayerState) parameter.getValue();
+				return true;
 			}
 		}
 		return false;

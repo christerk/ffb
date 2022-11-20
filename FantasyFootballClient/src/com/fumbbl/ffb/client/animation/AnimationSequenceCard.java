@@ -1,8 +1,9 @@
 package com.fumbbl.ffb.client.animation;
 
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
@@ -11,6 +12,7 @@ import com.fumbbl.ffb.model.Animation;
 
 import javax.swing.Timer;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -20,15 +22,31 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- * 
  * @author Kalimar
  */
 public class AnimationSequenceCard implements IAnimationSequence, ActionListener {
 
+	private final AnimationFrame[] fFrames;
+	private final Timer fTimer;
+
+	private static final int _TIMER_DELAY = 100;
+	private final int fX;
+	private int fPosition;
+	private final int fY;
+	private FieldLayer fFieldLayer;
+
+	protected AnimationSequenceCard(Dimension containerDimension, AnimationFrame[] pFrames) {
+		fFrames = pFrames;
+		fX = containerDimension.width / 2;
+		fY = containerDimension.height / 2;
+		fTimer = new Timer(_TIMER_DELAY, this);
+	}
+
 	public static AnimationSequenceCard createAnimationSequence(FantasyFootballClient pClient, Animation pAnimation) {
 		String cardBackProperty = pAnimation.getCard().getType().getCardBack();
 		BufferedImage cardFront = createCardFront(pClient, pAnimation.getCard());
-		return new AnimationSequenceCard(new AnimationFrame[] { new AnimationFrame(cardBackProperty, 0.5f, 0.3, 100),
+		return new AnimationSequenceCard(pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD),
+			new AnimationFrame[]{new AnimationFrame(cardBackProperty, 0.5f, 0.3, 100),
 				new AnimationFrame(cardBackProperty, 0.6f, 0.4, 100), new AnimationFrame(cardBackProperty, 0.7f, 0.5, 100),
 				new AnimationFrame(cardBackProperty, 0.8f, 0.6, 100), new AnimationFrame(cardBackProperty, 0.9f, 0.7, 100),
 				new AnimationFrame(cardBackProperty, 1.0f, 0.8, 100), new AnimationFrame(cardBackProperty, 1.0f, 0.9, 100),
@@ -52,8 +70,11 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 				// new AnimationFrame(cardFront, 1.0f, 0.7, 1.0, 100),
 				new AnimationFrame(cardFront, 1.0f, 0.8, 1.0, 100),
 				// new AnimationFrame(cardFront, 1.0f, 0.9, 1.0, 100),
-				new AnimationFrame(cardFront, 1.0f, 1.0, 1.0, 2000) });
+				new AnimationFrame(cardFront, 1.0f, 1.0, 1.0, 2000)});
 	}
+
+	private int fDelay;
+	private IAnimationListener fListener;
 
 	private static BufferedImage createCardFront(FantasyFootballClient pClient, Card pCard) {
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
@@ -63,7 +84,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 		}
 		String[] lines = pCard.getShortName().split(" ");
 		BufferedImage cardIcon = new BufferedImage(frontIcon.getWidth(), frontIcon.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
+			BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = cardIcon.createGraphics();
 		g2d.drawImage(frontIcon, 0, 0, null);
 		g2d.setColor(Color.BLACK);
@@ -77,24 +98,6 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 		}
 		g2d.dispose();
 		return cardIcon;
-	}
-
-	private static final int _TIMER_DELAY = 100;
-
-	private AnimationFrame[] fFrames;
-	private int fPosition;
-	private Timer fTimer;
-	private FieldLayer fFieldLayer;
-	private int fX;
-	private int fY;
-	private int fDelay;
-	private IAnimationListener fListener;
-
-	protected AnimationSequenceCard(AnimationFrame[] pFrames) {
-		fFrames = pFrames;
-		fX = FieldLayer.FIELD_IMAGE_WIDTH / 2;
-		fY = FieldLayer.FIELD_IMAGE_HEIGHT / 2;
-		fTimer = new Timer(_TIMER_DELAY, this);
 	}
 
 	public void play(FieldLayer pFieldLayer, IAnimationListener pListener) {
@@ -121,7 +124,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 				SoundEngine soundEngine = fFieldLayer.getClient().getUserInterface().getSoundEngine();
 				String soundSetting = fFieldLayer.getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
 				if (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting)
-						|| (IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting))) {
+					|| (IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting))) {
 					soundEngine.playSound(fFrames[fPosition].getSound());
 				}
 			}

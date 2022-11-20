@@ -7,6 +7,13 @@ import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.List;
 
 /**
  * 
@@ -79,4 +86,11 @@ public class ReportSpecialEffectRoll implements IReport {
 		return this;
 	}
 
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		if (fRoll > 0) {
+			int minimumRoll = fSpecialEffect == SpecialEffect.LIGHTNING ? 2 : 4;
+			diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.OPPONENT_TEAM_FOR_PLAYER, fPlayerId, fRoll, minimumRoll, getId(), fSuccessful));
+		}
+	}
 }

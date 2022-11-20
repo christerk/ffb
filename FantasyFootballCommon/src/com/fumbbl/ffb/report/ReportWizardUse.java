@@ -9,11 +9,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportWizardUse implements IReport {
+public class ReportWizardUse extends NoDiceReport {
 
 	private String fTeamId;
 	private SpecialEffect fWizardSpell;

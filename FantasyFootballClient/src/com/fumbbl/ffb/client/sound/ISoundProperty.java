@@ -8,7 +8,6 @@ public interface ISoundProperty {
 
 	String BLOCK = "sound.block";
 	String BLUNDER = "sound.blunder";
-	// String BOO = "sound.boo";
 	String BOUNCE = "sound.bounce";
 	String CATCH = "sound.catch";
 	String CHAINSAW = "sound.chainsaw";
@@ -27,10 +26,10 @@ public interface ISoundProperty {
 	String KICK = "sound.kick";
 	String KO = "sound.ko";
 	String LIGHTNING = "sound.lightning";
-	String ZAP = "sound.zap";
 	String METAL = "sound.metal";
 	String NOMNOM = "sound.nomnom";
 	String ORGAN = "sound.organ";
+	String PUMP_CROWD = "sound.pumpcrowd";
 	String PICKUP = "sound.pickup";
 	String QUESTION = "sound.question";
 	String RIP = "sound.rip";
@@ -42,8 +41,11 @@ public interface ISoundProperty {
 	String SWOOP = "sound.swoop";
 	String THROW = "sound.throw";
 	String TOUCHDOWN = "sound.touchdown";
+	String TRAPDOOR = "sound.trapdoor";
+	String VOMIT = "sound.vomit";
 	String WHISTLE = "sound.whistle";
 	String WOOOAAAH = "sound.woooaaah";
+	String ZAP = "sound.zap";
 
 	String SPEC_AAH = "sound.specAah";
 	String SPEC_BOO = "sound.specBoo";

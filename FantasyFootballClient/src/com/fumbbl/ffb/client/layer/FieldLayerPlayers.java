@@ -1,12 +1,10 @@
 package com.fumbbl.ffb.client.layer;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
@@ -15,14 +13,17 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
 /**
- *
  * @author Kalimar
  */
 public class FieldLayerPlayers extends FieldLayer {
 
-	public FieldLayerPlayers(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void refresh(FieldCoordinateBounds pBounds) {
@@ -36,24 +37,23 @@ public class FieldLayerPlayers extends FieldLayer {
 	public void updateBallAndPlayers(FieldCoordinate pCoordinate, boolean pPlayerOverBall) {
 		if ((pCoordinate != null) && !pCoordinate.isBoxCoordinate()) {
 			Game game = getClient().getGame();
-			int x = FIELD_IMAGE_OFFSET_CENTER_X + (pCoordinate.getX() * FIELD_SQUARE_SIZE)
-					- (PlayerIconFactory.MAX_ICON_WIDTH / 2);
-			int y = FIELD_IMAGE_OFFSET_CENTER_Y + (pCoordinate.getY() * FIELD_SQUARE_SIZE)
-					- (PlayerIconFactory.MAX_ICON_HEIGHT / 2);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
+			int x = dimension.width - (PlayerIconFactory.MAX_ICON_WIDTH / 2);
+			int y = dimension.height - (PlayerIconFactory.MAX_ICON_HEIGHT / 2);
 			clear(x, y, PlayerIconFactory.MAX_ICON_WIDTH, PlayerIconFactory.MAX_ICON_HEIGHT, true); // also adds updated area
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setClip(x, y, PlayerIconFactory.MAX_ICON_WIDTH, PlayerIconFactory.MAX_ICON_HEIGHT);
 			FieldCoordinate[] adjacentCoordinates = game.getFieldModel().findAdjacentCoordinates(pCoordinate,
-					FieldCoordinateBounds.FIELD, 1, true);
-			for (int i = 0; i < adjacentCoordinates.length; i++) {
+				FieldCoordinateBounds.FIELD, 1, true);
+			for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
 				if (pPlayerOverBall) {
-					drawBall(g2d, adjacentCoordinates[i]);
-					drawPlayer(g2d, adjacentCoordinates[i]);
-					drawBomb(g2d, adjacentCoordinates[i]); // moving bomb always on top
+					drawBall(g2d, adjacentCoordinate);
+					drawPlayer(g2d, adjacentCoordinate);
+					drawBomb(g2d, adjacentCoordinate); // moving bomb always on top
 				} else {
-					drawPlayer(g2d, adjacentCoordinates[i]);
-					drawBall(g2d, adjacentCoordinates[i]);
-					drawBomb(g2d, adjacentCoordinates[i]); // moving bomb always on top
+					drawPlayer(g2d, adjacentCoordinate);
+					drawBall(g2d, adjacentCoordinate);
+					drawBomb(g2d, adjacentCoordinate); // moving bomb always on top
 				}
 			}
 		}
@@ -116,8 +116,8 @@ public class FieldLayerPlayers extends FieldLayer {
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		if (fieldModel != null) {
 			FieldCoordinate[] playerCoordinates = fieldModel.getPlayerCoordinates();
-			for (int i = 0; i < playerCoordinates.length; i++) {
-				updateBallAndPlayers(playerCoordinates[i], true);
+			for (FieldCoordinate playerCoordinate : playerCoordinates) {
+				updateBallAndPlayers(playerCoordinate, true);
 			}
 			updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
 		}

@@ -21,15 +21,18 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 	private final List<String> fPlayerIds;
 	private boolean stayOnPitch, friendsWithTheRef;
 
+	private int biasedRefs;
+
 	public DialogArgueTheCallParameter() {
 		fPlayerIds = new ArrayList<>();
 	}
 
-	public DialogArgueTheCallParameter(String teamId, boolean stayOnPitch, boolean friendsWithTheRef) {
+	public DialogArgueTheCallParameter(String teamId, boolean stayOnPitch, boolean friendsWithTheRef, int biasedRefs) {
 		this();
 		setTeamId(teamId);
 		this.stayOnPitch = stayOnPitch;
 		this.friendsWithTheRef = friendsWithTheRef;
+		this.biasedRefs = biasedRefs;
 	}
 
 	public DialogId getId() {
@@ -70,10 +73,13 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		return fPlayerIds.toArray(new String[0]);
 	}
 
-	// transformation
+	public int getBiasedRefs() {
+		return biasedRefs;
+	}
+// transformation
 
 	public IDialogParameter transform() {
-		DialogArgueTheCallParameter transformedParameter = new DialogArgueTheCallParameter(getTeamId(), stayOnPitch, friendsWithTheRef);
+		DialogArgueTheCallParameter transformedParameter = new DialogArgueTheCallParameter(getTeamId(), stayOnPitch, friendsWithTheRef, biasedRefs);
 		transformedParameter.addPlayerIds(getPlayerIds());
 		return transformedParameter;
 	}
@@ -87,6 +93,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		IJsonOption.PLAYER_IDS.addTo(jsonObject, getPlayerIds());
 		IJsonOption.STAYS_ON_PITCH.addTo(jsonObject, stayOnPitch);
 		IJsonOption.FRIENDS_WITH_REF.addTo(jsonObject, friendsWithTheRef);
+		IJsonOption.BIASED_REFS.addTo(jsonObject, biasedRefs);
 		return jsonObject;
 	}
 
@@ -99,6 +106,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		stayOnPitch = stayOnPitchValue != null && stayOnPitchValue;
 		Boolean friendsWithTheRefValue = IJsonOption.FRIENDS_WITH_REF.getFrom(source, jsonObject);
 		friendsWithTheRef = friendsWithTheRefValue != null && friendsWithTheRefValue;
+		biasedRefs = IJsonOption.BIASED_REFS.getFrom(source, jsonObject);
 		return this;
 	}
 

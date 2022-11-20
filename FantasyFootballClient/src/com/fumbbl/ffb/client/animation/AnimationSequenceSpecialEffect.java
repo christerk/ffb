@@ -1,10 +1,10 @@
 package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 
@@ -18,31 +18,31 @@ import java.awt.event.ActionListener;
  */
 public class AnimationSequenceSpecialEffect implements IAnimationSequence, ActionListener {
 
-	public static final AnimationSequenceSpecialEffect createAnimationSequenceBomb(FieldCoordinate pCoordinate) {
+	public static AnimationSequenceSpecialEffect createAnimationSequenceBomb(FieldCoordinate pCoordinate) {
 		return new AnimationSequenceSpecialEffect(pCoordinate,
-				new AnimationFrame[] {
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, SoundId.EXPLODE),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_2, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_3, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_4, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_5, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 1.0f, 200),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 0.7f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 0.5f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 0.2f, 100) });
-	}
-
-	public static final AnimationSequenceSpecialEffect createAnimationSequenceFireball(FieldCoordinate pCoordinate) {
-		return new AnimationSequenceSpecialEffect(pCoordinate, new AnimationFrame[] {
-				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, SoundId.FIREBALL),
+			new AnimationFrame[]{
+				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, SoundId.EXPLODE),
 				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_2, 1.0f, 100),
 				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_3, 1.0f, 100),
 				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_4, 1.0f, 100),
 				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_5, 1.0f, 100),
-				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 1.0f, 100),
-				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_7, 1.0f, 100),
-				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 1.0f, IIconProperty.ANIMATION_FIREBALL_SMOKE_1,
-						1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 1.0f, 200),
+				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 0.7f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 0.5f, 100),
+						new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 0.2f, 100) });
+	}
+
+	public static AnimationSequenceSpecialEffect createAnimationSequenceFireball(FieldCoordinate pCoordinate) {
+		return new AnimationSequenceSpecialEffect(pCoordinate, new AnimationFrame[]{
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, SoundId.FIREBALL),
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_2, 1.0f, 100),
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_3, 1.0f, 100),
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_4, 1.0f, 100),
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_5, 1.0f, 100),
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_6, 1.0f, 100),
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_7, 1.0f, 100),
+			new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 1.0f, IIconProperty.ANIMATION_FIREBALL_SMOKE_1,
+				1.0f, 100),
 				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 0.7f, IIconProperty.ANIMATION_FIREBALL_SMOKE_2,
 						1.0f, 100),
 				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 0.5f, IIconProperty.ANIMATION_FIREBALL_SMOKE_3,
@@ -52,17 +52,17 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
 				new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_4, 0.5f, 100) });
 	}
 
-	public static final AnimationSequenceSpecialEffect createAnimationSequenceLightning(FieldCoordinate pCoordinate) {
+	public static AnimationSequenceSpecialEffect createAnimationSequenceLightning(FieldCoordinate pCoordinate) {
 		return new AnimationSequenceSpecialEffect(pCoordinate,
-				new AnimationFrame[] { new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_01, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_02, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_03, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_04, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_05, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, SoundId.LIGHTNING),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200),
-						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, SoundId.LIGHTNING),
+			new AnimationFrame[]{new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_01, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_02, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_03, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_04, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_05, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, SoundId.LIGHTNING),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200),
+				new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, SoundId.LIGHTNING),
 						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200),
 						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_08, 1.0f, 100),
 						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_09, 1.0f, 100),
@@ -71,17 +71,17 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
 						new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_12, 1.0f, 100) });
 	}
 
-	public static final AnimationSequenceSpecialEffect createAnimationSequenceZap(FieldCoordinate pCoordinate) {
+	public static AnimationSequenceSpecialEffect createAnimationSequenceZap(FieldCoordinate pCoordinate) {
 		return new AnimationSequenceSpecialEffect(pCoordinate,
-				new AnimationFrame[] { new AnimationFrame(IIconProperty.ANIMATION_ZAP_01, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_02, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_03, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_04, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_05, 1.0f, 100),
-						new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
-					new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
-					new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
-					new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
+			new AnimationFrame[]{new AnimationFrame(IIconProperty.ANIMATION_ZAP_01, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_02, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_03, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_04, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_05, 1.0f, 100),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
+				new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
 					new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
 					new AnimationFrame(IIconProperty.ANIMATION_ZAP_08, 1.0f, 100),
 					new AnimationFrame(IIconProperty.ANIMATION_ZAP_09, 1.0f, 100),

@@ -1,7 +1,8 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.IClientProperty;
+
 /**
- * 
  * @author Kalimar
  */
 public enum ActionKey {
@@ -45,6 +46,7 @@ public enum ActionKey {
 	PLAYER_ACTION_RAIDING_PARTY(IClientProperty.KEY_PLAYER_ACTION_RAIDING_PARTY),
 	PLAYER_ACTION_LOOK_INTO_MY_EYES(IClientProperty.KEY_PLAYER_ACTION_LOOK_INTO_MY_EYES),
 	PLAYER_ACTION_BALEFUL_HEX(IClientProperty.KEY_PLAYER_ACTION_BALEFUL_HEX),
+	PLAYER_ACTION_HIT_AND_RUN(IClientProperty.KEY_PLAYER_ACTION_HIT_AND_RUN),
 
 	TOOLBAR_TURN_END(IClientProperty.KEY_TOOLBAR_TURN_END),
 	TOOLBAR_ILLEGAL_PROCEDURE(IClientProperty.KEY_TOOLBAR_ILLEGAL_PROCEDURE),

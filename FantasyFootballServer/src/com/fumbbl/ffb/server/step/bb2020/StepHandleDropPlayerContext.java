@@ -133,6 +133,9 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 					if (dropPlayerContext.isEndTurn()) {
 						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
+					if (dropPlayerContext.getVictimStateKey() != null) {
+						publishParameter(new StepParameter(dropPlayerContext.getVictimStateKey(), game.getFieldModel().getPlayerState(game.getDefender())));
+					}
 				}
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 				if (StringTool.isProvided(dropPlayerContext.getLabel())) {

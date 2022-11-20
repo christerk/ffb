@@ -99,7 +99,6 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 				UtilClientCursor.setDefaultCursor(userInterface);
 			}
 		}
-//    if ((PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) && (game.getPassCoordinate() == null)) {
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
 			drawRangeRuler(game.getFieldModel().getPlayerCoordinate(pPlayer));
 		}
@@ -108,7 +107,7 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		return true;
 	}
 
-	private boolean drawRangeRuler(FieldCoordinate pCoordinate) {
+	private void drawRangeRuler(FieldCoordinate pCoordinate) {
 		RangeRuler rangeRuler = null;
 		if (fShowRangeRuler) {
 			Game game = getClient().getGame();
@@ -127,7 +126,6 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 			fieldComponent.getLayerUnderPlayers().clearMovePath();
 			fieldComponent.refresh();
 		}
-		return (rangeRuler != null);
 	}
 
 	private boolean canBeThrown(Player<?> pPlayer) {

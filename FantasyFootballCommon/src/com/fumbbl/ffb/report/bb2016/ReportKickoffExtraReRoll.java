@@ -7,12 +7,19 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.KickoffResult;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DicePoolStat;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2016)
@@ -29,7 +36,7 @@ public class ReportKickoffExtraReRoll implements IReport {
 	}
 
 	public ReportKickoffExtraReRoll(KickoffResult pKickoffResult, int pRollHome, boolean pHomeGainsReRoll, int pRollAway,
-			boolean pAwayGainsReRoll) {
+																	boolean pAwayGainsReRoll) {
 		fKickoffResult = pKickoffResult;
 		fRollHome = pRollHome;
 		fHomeGainsReRoll = pHomeGainsReRoll;
@@ -65,7 +72,7 @@ public class ReportKickoffExtraReRoll implements IReport {
 
 	public IReport transform(IFactorySource source) {
 		return new ReportKickoffExtraReRoll(getKickoffResult(), getRollAway(), isAwayGainsReRoll(), getRollHome(),
-				isHomeGainsReRoll());
+			isHomeGainsReRoll());
 	}
 
 	// JSON serialization
@@ -92,4 +99,9 @@ public class ReportKickoffExtraReRoll implements IReport {
 		return this;
 	}
 
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new DicePoolStat(DieBase.D3, TeamMapping.TEAM, game.getTeamHome().getId(), Collections.singletonList(fRollHome), false));
+		diceStats.add(new DicePoolStat(DieBase.D3, TeamMapping.TEAM, game.getTeamAway().getId(), Collections.singletonList(fRollAway), false));
+	}
 }

@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.handler;
 
+import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
 import com.fumbbl.ffb.client.dialog.DialogChangeList;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;

@@ -37,6 +37,7 @@ public class ThrowKeg extends com.fumbbl.ffb.server.step.generator.ThrowKeg {
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.APOTHECARY,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.END_THROW_KEG, IStepLabel.END);
 		gameState.getStepStack().push(sequence.getSequence());
 	}

@@ -2,9 +2,11 @@ package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.WeatherFactory;
 import com.fumbbl.ffb.model.Game;
@@ -224,9 +226,9 @@ public class IconCache {
 
 	}
 
-	public BufferedImage getIcon(PushbackSquare pPushbackSquare) {
-		if (pPushbackSquare.isSelected()) {
-			switch (pPushbackSquare.getDirection()) {
+	public BufferedImage getPushbackIcon(Direction direction, boolean selected) {
+		if (selected) {
+			switch (direction) {
 				case NORTH:
 					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH_SELECTED);
 				case NORTHEAST:
@@ -247,7 +249,7 @@ public class IconCache {
 					return null;
 			}
 		} else {
-			switch (pPushbackSquare.getDirection()) {
+			switch (direction) {
 				case NORTH:
 					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH);
 				case NORTHEAST:

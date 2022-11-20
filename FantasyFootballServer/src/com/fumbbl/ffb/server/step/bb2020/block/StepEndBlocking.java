@@ -1,14 +1,16 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -18,14 +20,15 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -50,6 +53,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -71,8 +75,8 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
-	private boolean fUsingStab, usingChainsaw, addBlockDie, allowSecondBlockAction;
-	private Boolean usePileDriver;
+	private boolean fUsingStab, usingChainsaw, addBlockDie, allowSecondBlockAction, usingVomit;
+	private Boolean usePileDriver, useHitAndRun;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
 	private PlayerState oldDefenderState;
@@ -89,11 +93,22 @@ public class StepEndBlocking extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), receivedCommand)) {
-			if (receivedCommand.getId() == NetCommandId.CLIENT_PILE_DRIVER) {
-				ClientCommandPileDriver commandPileDriver = (ClientCommandPileDriver) receivedCommand.getCommand();
-				targetPlayerId = commandPileDriver.getPlayerId();
-				usePileDriver = StringTool.isProvided(targetPlayerId);
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			switch (receivedCommand.getId()) {
+				case CLIENT_PILE_DRIVER:
+					ClientCommandPileDriver commandPileDriver = (ClientCommandPileDriver) receivedCommand.getCommand();
+					targetPlayerId = commandPileDriver.getPlayerId();
+					usePileDriver = StringTool.isProvided(targetPlayerId);
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) receivedCommand.getCommand();
+					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMoveAfterBlock)) {
+						useHitAndRun = commandUseSkill.isSkillUsed();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -242,7 +257,28 @@ public class StepEndBlocking extends AbstractStep {
 					usePileDriver = false;
 				}
 
-				if (usePileDriver == null) {
+				boolean canMoveAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canMoveAfterBlock)
+					&& !fUsingStab && !usingChainsaw && !usingVomit;
+
+				Set<FieldCoordinate> availableSquares = Arrays.stream(game.getFieldModel().findAdjacentCoordinates(fieldModel.getPlayerCoordinate(activePlayer), FieldCoordinateBounds.FIELD, 1, false))
+					.filter(fieldCoordinate -> game.getFieldModel().getPlayers(fieldCoordinate) == null)
+					.filter(fieldCoordinate -> !ArrayTool.isProvided(UtilPlayer
+						.findAdjacentPlayers(game, game.getOtherTeam(game.getActingTeam()), fieldCoordinate)))
+					.collect(Collectors.toSet());
+
+				if (!canMoveAfterBlock || availableSquares.isEmpty()) {
+					useHitAndRun = false;
+				}
+
+				if (useHitAndRun == null) {
+					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(activePlayer.getId(), activePlayer.getSkillWithProperty(NamedProperties.canMoveAfterBlock), 0), false);
+					getResult().setNextAction(StepAction.CONTINUE);
+				} else if (useHitAndRun) {
+					useHitAndRun = false;
+					getGameState().pushCurrentStepOnStack();
+					IStep step = getGameState().getStepFactory().create(StepId.HIT_AND_RUN, null, null);
+					getGameState().getStepStack().push(step);
+				} else if (usePileDriver == null) {
 					UtilServerDialog.showDialog(getGameState(), new DialogPileDriverParameter(game.getActingTeam().getId(), knockedDownPlayers), false);
 					getResult().setNextAction(StepAction.CONTINUE);
 				} else if (usePileDriver) {
@@ -322,6 +358,9 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.ADD_BLOCK_DIE.addTo(jsonObject, addBlockDie);
 		IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.addTo(jsonObject, allowSecondBlockAction);
+		IServerJsonOption.USING_PILE_DRIVER.addTo(jsonObject, usePileDriver);
+		IServerJsonOption.USING_HIT_AND_RUN.addTo(jsonObject, useHitAndRun);
+		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		return jsonObject;
 	}
 
@@ -333,11 +372,14 @@ public class StepEndBlocking extends AbstractStep {
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(source, jsonObject);
 		fUsingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
+		usingVomit = toPrimitive(IServerJsonOption.USING_VOMIT.getFrom(source, jsonObject));
 		knockedDownPlayers = Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList());
 		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject));
 		addBlockDie = toPrimitive(IServerJsonOption.ADD_BLOCK_DIE.getFrom(source, jsonObject));
 		allowSecondBlockAction = toPrimitive(IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.getFrom(source, jsonObject));
+		useHitAndRun = IServerJsonOption.USING_HIT_AND_RUN.getFrom(source, jsonObject);
+		usePileDriver = IServerJsonOption.USING_PILE_DRIVER.getFrom(source, jsonObject);
 		return this;
 	}
 

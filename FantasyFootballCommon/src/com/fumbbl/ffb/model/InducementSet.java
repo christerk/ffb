@@ -229,6 +229,9 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 					}
 				}
 			}
+			for (Prayer prayer : pInducementSet.getPrayers()) {
+				addPrayer(prayer);
+			}
 		}
 	}
 

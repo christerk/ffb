@@ -3,26 +3,27 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.util.StringTool;
 
 /**
  * @author Kalimar
  */
 public class DialogArgueTheCall extends DialogThreeWayChoice {
 
-	public DialogArgueTheCall(FantasyFootballClient pClient, Player<?> pPlayer, boolean stayOnPitch, boolean friendsWithTheRef) {
-		super(pClient, "Argue the call", createMessages(pPlayer, stayOnPitch, friendsWithTheRef), null);
+	public DialogArgueTheCall(FantasyFootballClient pClient, Player<?> pPlayer, boolean stayOnPitch, boolean friendsWithTheRef, int biasedRefs) {
+		super(pClient, "Argue the call", createMessages(pPlayer, stayOnPitch, friendsWithTheRef, biasedRefs), null);
 	}
 
 	public DialogId getId() {
 		return DialogId.ARGUE_THE_CALL;
 	}
 
-	private static String[] createMessages(Player<?> pPlayer, boolean stayOnPitch, boolean friendsWithTheRef) {
+	private static String[] createMessages(Player<?> pPlayer, boolean stayOnPitch, boolean friendsWithTheRef, int biasedRefs) {
 		String[] messages;
 		if (pPlayer != null) {
 			messages = new String[3];
 			StringBuilder message = new StringBuilder();
-			message.append("On a roll of ").append(successResult(friendsWithTheRef)).append(" the ref ");
+			message.append("On a roll of ").append(successResult(friendsWithTheRef, biasedRefs)).append(" the ref ");
 			if (stayOnPitch) {
 				message.append("refrains from banning ").append(pPlayer.getName()).append(".");
 			} else {
@@ -37,11 +38,35 @@ public class DialogArgueTheCall extends DialogThreeWayChoice {
 		return messages;
 	}
 
-	private static String successResult(boolean friendsWithTheRef) {
+	private static String successResult(boolean friendsWithTheRef, int biasedRefs) {
+		int roll = 6;
+		String suffix = " ";
+		String modifier = "";
 		if (friendsWithTheRef) {
-			return "5+ (for being friends)";
+			modifier += "Friends with the Ref";
+			roll--;
 		}
-		return "6";
+
+		if (biasedRefs > 0) {
+			roll -= biasedRefs;
+			if (StringTool.isProvided(modifier)) {
+				modifier += " and ";
+			}
+			modifier += biasedRefs + " Biased Ref";
+			if (biasedRefs > 1) {
+				modifier += "s";
+			}
+		}
+
+		if (StringTool.isProvided(modifier)) {
+			modifier = "(" + modifier + ")";
+		}
+
+		if (roll < 6) {
+			suffix = "+ ";
+		}
+
+		return roll + suffix + modifier;
 	}
 
 }

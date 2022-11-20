@@ -9,12 +9,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportBlockChoice implements IReport {
-
+public class ReportBlockChoice extends NoDiceReport {
 	private int fNrOfDice;
 	private int[] fBlockRoll;
 	private int fDiceIndex, blockRollId;

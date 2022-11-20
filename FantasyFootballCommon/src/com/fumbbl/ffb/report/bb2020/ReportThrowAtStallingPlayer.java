@@ -6,9 +6,16 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.List;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportThrowAtStallingPlayer implements IReport {
@@ -46,6 +53,11 @@ public class ReportThrowAtStallingPlayer implements IReport {
 
 	public IReport transform(IFactorySource source) {
 		return new ReportThrowAtStallingPlayer(getPlayerId(), roll, successful);
+	}
+
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.OPPONENT_TEAM_FOR_PLAYER, fPlayerId, roll, 5, getId(), roll >= 5));
 	}
 
 	// JSON serialization

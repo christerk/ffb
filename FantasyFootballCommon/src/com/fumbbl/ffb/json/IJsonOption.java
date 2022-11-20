@@ -216,6 +216,7 @@ public interface IJsonOption {
 	JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
 	JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
+	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);
@@ -393,7 +394,6 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLLS_LEFT_HOME = new JsonIntOption("reRollsLeftHome");
 	JsonIntOption RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE = new JsonIntOption("rerollPumpUpTheCrowdOneDrive");
 	JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
-	JsonBooleanOption RESET_MOVE_SQUARES = new JsonBooleanOption("resetMoveSquares");
 	JsonStringOption RIOTOUS_POSITION_ID = new JsonStringOption("riotousPositionId");
 	JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");
 	JsonIntArrayOption RIOTOUS_ROLL = new JsonIntArrayOption("riotousRoll");
@@ -473,6 +473,7 @@ public interface IJsonOption {
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonObjectOption STAT_BASED_ROLL_MODIFIER = new JsonObjectOption("statBasedRollModifier");
 	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
+	JsonStringOption STEP_PARAMETER_KEY = new JsonStringOption("stepParameterKey");
 	JsonStringArrayOption STEP_PARAMETER_KEYS = new JsonStringArrayOption("stepParameterKeys");
 	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");
@@ -555,6 +556,8 @@ public interface IJsonOption {
 	JsonIntOption USES = new JsonIntOption("uses");
 	JsonBooleanOption USES_A_TEAM_REROLL = new JsonBooleanOption("usesATeamReroll");
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
+	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
+	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");
 	JsonBooleanOption USING_STAB = new JsonBooleanOption("usingStab");
 	JsonBooleanOption USING_VOMIT = new JsonBooleanOption("usingVomit");
 	JsonIntOption VALUE = new JsonIntOption("value");

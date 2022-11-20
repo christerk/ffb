@@ -9,11 +9,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportPushback implements IReport {
+public class ReportPushback extends NoDiceReport {
 
 	private String fDefenderId;
 	private PushbackMode fPushbackMode;

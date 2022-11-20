@@ -233,13 +233,13 @@ public class StepPlaceBall extends AbstractStep {
 
 		JsonObject fieldCoordinate = IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject);
 		if (fieldCoordinate != null) {
-			selectedCoordinate = new FieldCoordinate(0).initFrom(source, fieldCoordinate);
+			selectedCoordinate = new FieldCoordinate().initFrom(source, fieldCoordinate);
 		}
 
 		JsonArray jsonArray = IServerJsonOption.FIELD_COORDINATES.getFrom(source, jsonObject);
 		if (jsonArray != null) {
 			adjacentSquares.clear();
-			jsonArray.values().stream().map(value -> new FieldCoordinate(0).initFrom(source, value)).forEach(adjacentSquares::add);
+			jsonArray.values().stream().map(value -> new FieldCoordinate().initFrom(source, value)).forEach(adjacentSquares::add);
 		}
 
 		return this;

@@ -19,7 +19,6 @@ import com.fumbbl.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsQuery;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
-
 import org.eclipse.jetty.websocket.api.Session;
 
 /**
@@ -147,7 +146,7 @@ public class UtilServerSetup {
 					if ((game.getTurnMode() == TurnMode.QUICK_SNAP) && !coordinate.equals(oldCoordinate)) {
 						fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(false));
 					} else {
-						fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true));
+						fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true), true);
 					}
 				}
 				fieldModel.setPlayerCoordinate(player, coordinate);

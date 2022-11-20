@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.client;
-
-import com.fumbbl.ffb.CommonProperty;
+package com.fumbbl.ffb;
 
 /**
  * @author Kalimar
@@ -25,6 +23,7 @@ public interface IClientProperty extends CommonProperty {
 	String SETTING_TEAM_LOGOS = "setting.pitch.teamLogos";
 	String SETTING_PITCH_WEATHER = "setting.pitch.weather";
 	String SETTING_RANGEGRID = "setting.rangegrid";
+	String SETTING_PITCH_ORIENTATION = "setting.pitch.orientation";
 
 	String SETTING_LAST_CHANGE_LOG_FINGERPRINT = "setting.lastChangeLogFingerPrint";
 
@@ -72,6 +71,7 @@ public interface IClientProperty extends CommonProperty {
 	String KEY_PLAYER_ACTION_RAIDING_PARTY = "key.player.action.raidingParty";
 	String KEY_PLAYER_ACTION_LOOK_INTO_MY_EYES = "key.player.action.lookIntoMyEyes";
 	String KEY_PLAYER_ACTION_BALEFUL_HEX = "key.player.action.balefulHex";
+	String KEY_PLAYER_ACTION_HIT_AND_RUN = "key.player.action.hitAndRun";
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";
@@ -81,7 +81,7 @@ public interface IClientProperty extends CommonProperty {
 	String KEY_MENU_SETUP_SAVE = "key.menu.setup.save";
 
 
-	String[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE,
+	String[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
 		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_CHATLOG, SETTING_RIGHT_CLICK_END_ACTION,
 		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
 		SETTING_PITCH_MARKINGS, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,

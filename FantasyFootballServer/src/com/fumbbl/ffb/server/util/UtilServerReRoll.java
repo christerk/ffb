@@ -23,6 +23,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Optional;
@@ -98,6 +99,8 @@ public class UtilServerReRoll {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				if (actingPlayer.getPlayer() == pPlayer) {
 					actingPlayer.markSkillUsed(reRollSourceSkill);
+				} else if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+					pPlayer.markUsed(reRollSourceSkill, game);
 				}
 			}
 		}
@@ -135,7 +138,7 @@ public class UtilServerReRoll {
 		if (minimumRoll >= 0) {
 			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
 			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
-			boolean proOption = isProReRollAvailable(player, game);
+			boolean proOption = isProReRollAvailable(player, game, gameState.getPassState());
 			if (reRollSkill == null) {
 				Optional<Skill> reRollOnce = UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerGame);
 				if (reRollOnce.isPresent()) {
@@ -161,10 +164,14 @@ public class UtilServerReRoll {
 		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, null, null);
 	}
 
-	public static boolean isProReRollAvailable(Player<?> player, Game game) {
+	public static boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
+		String originalBomberId = null;
+		if (passState != null) {
+			originalBomberId = passState.getOriginalBombardier();
+		}
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		return (mechanic.eligibleForPro(game, player) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
+		return (mechanic.eligibleForPro(game, player, originalBomberId) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
 			&& !playerState.hasUsedPro());
 	}
 

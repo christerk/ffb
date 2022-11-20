@@ -6,9 +6,16 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
+
+import java.util.List;
 
 /**
  * @author Kalimar
@@ -73,6 +80,15 @@ public class ReportArgueTheCallRoll implements IReport {
 
 	public IReport transform(IFactorySource source) {
 		return new ReportArgueTheCallRoll(getPlayerId(), isSuccessful(), isCoachBanned(), getRoll(), staysOnPitch, friendsWithRef, biasedRefs);
+	}
+
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		int minimumRoll = 6 - biasedRefs;
+		if (friendsWithRef) {
+			minimumRoll--;
+		}
+		diceStats.add(new SingleDieStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, fPlayerId, fRoll, minimumRoll, getId(), fRoll >= minimumRoll));
 	}
 
 	// JSON serialization

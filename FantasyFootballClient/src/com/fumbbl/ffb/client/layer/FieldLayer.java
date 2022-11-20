@@ -2,9 +2,11 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 
 import java.awt.AlphaComposite;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
@@ -16,21 +18,22 @@ import java.awt.image.BufferedImage;
  */
 public abstract class FieldLayer {
 
-	public static final int FIELD_SQUARE_SIZE = 30;
-
-	public static final int FIELD_IMAGE_WIDTH = 782;
-	public static final int FIELD_IMAGE_HEIGHT = 452;
-
-	public static final int FIELD_IMAGE_OFFSET_CENTER_X = 15;
-	public static final int FIELD_IMAGE_OFFSET_CENTER_Y = 15;
-
 	private final FantasyFootballClient fClient;
-	private final BufferedImage fImage;
+	protected BufferedImage fImage;
 	private Rectangle fUpdatedArea;
 
-	public FieldLayer(FantasyFootballClient pClient) {
+	protected Dimension size;
+
+	protected DimensionProvider dimensionProvider;
+
+	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
-		fImage = new BufferedImage(FIELD_IMAGE_WIDTH, FIELD_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		this.dimensionProvider = dimensionProvider;
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		addUpdatedArea(new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight()));
 	}
 
@@ -105,11 +108,13 @@ public abstract class FieldLayer {
 	}
 
 	protected int findCenteredIconUpperLeftX(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		return (FIELD_IMAGE_OFFSET_CENTER_X + (pCoordinate.getX() * FIELD_SQUARE_SIZE) - (pImage.getWidth() / 2));
+		Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
+		return dimension.width - (pImage.getWidth() / 2);
 	}
 
 	protected int findCenteredIconUpperLeftY(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		return (FIELD_IMAGE_OFFSET_CENTER_Y + (pCoordinate.getY() * FIELD_SQUARE_SIZE) - (pImage.getHeight() / 2));
+		Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
+		return dimension.height - (pImage.getHeight() / 2);
 	}
 
 	public void clear(boolean pUpdateArea) {
@@ -118,9 +123,10 @@ public abstract class FieldLayer {
 
 	public void clear(FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			int fieldX = pCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int fieldY = pCoordinate.getY() * FIELD_SQUARE_SIZE;
-			clear(fieldX, fieldY, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE, pUpdateArea);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			int fieldX = dimension.width;
+			int fieldY = dimension.height;
+			clear(fieldX, fieldY, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize(), pUpdateArea);
 		}
 	}
 
@@ -138,5 +144,4 @@ public abstract class FieldLayer {
 
 	public void init() {
 	}
-
 }

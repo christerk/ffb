@@ -8,11 +8,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportBlockRoll implements IReport {
+public class ReportBlockRoll extends NoDiceReport {
 
 	private int[] blockRoll;
 	private String choosingTeamId;
@@ -72,5 +71,4 @@ public class ReportBlockRoll implements IReport {
 		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
-
 }

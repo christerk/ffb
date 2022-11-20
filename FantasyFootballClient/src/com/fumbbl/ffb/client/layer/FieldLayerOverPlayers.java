@@ -1,27 +1,30 @@
 package com.fumbbl.ffb.client.layer;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PushbackSquare;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -37,8 +40,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private FieldCoordinate fMarkerCoordinate;
 
-	public FieldLayerOverPlayers(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerOverPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public void removeThrownPlayer() {
@@ -69,7 +72,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if (pPushbackSquare != null) {
 			clear(pPushbackSquare.getCoordinate(), true);
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage pushbackIcon = iconCache.getIcon(pPushbackSquare);
+			Direction localDirection = dimensionProvider.mapToLocal(pPushbackSquare.getDirection());
+			BufferedImage pushbackIcon = iconCache.getPushbackIcon(localDirection, pPushbackSquare.isSelected());
 			draw(pushbackIcon, pPushbackSquare.getCoordinate(), 1.0f);
 		}
 	}
@@ -123,12 +127,14 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				clear(pMoveSquare.getCoordinate(), true);
 			}
 
-			int x = pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE + 2;
-			int y = pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE + 2;
+			Dimension dimensionWithOffset = dimensionProvider.mapToLocal(pMoveSquare.getCoordinate(), true);
+			Dimension dimension = dimensionProvider.mapToLocal(pMoveSquare.getCoordinate());
+			int x = dimension.width + 2;
+			int y = dimension.height + 2;
 			Graphics2D g2d = getImage().createGraphics();
 
 			g2d.setPaint(COLOR_MOVE_SQUARE);
-			Rectangle bounds = new Rectangle(x, y, FIELD_SQUARE_SIZE - 4, FIELD_SQUARE_SIZE - 4);
+			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize() - 4, dimensionProvider.fieldSquareSize() - 4);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
 			g2d.setColor(COLOR_TARGET_NUMBER);
@@ -143,14 +149,12 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				g2d.setFont(new Font("Sans Serif", Font.PLAIN, 10));
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D numberBounds = metrics.getStringBounds(numberGoForIt.toString(), g2d);
-				x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE)
-						- (int) (numberBounds.getWidth() / 2) - 5;
-				y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE)
-						+ (int) (numberBounds.getHeight() / 2) - 9;
+				x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) - 5;
+				y = dimensionWithOffset.height + (int) (numberBounds.getHeight() / 2) - 9;
 				g2d.drawString(numberGoForIt.toString(), x, y);
 
-				x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE) - 10;
-				y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE) + 10;
+				x = dimensionWithOffset.width - 10;
+				y = dimensionWithOffset.height + 10;
 				g2d.drawLine(x, y, x + 20, y - 20);
 
 				StringBuilder numberDodge = new StringBuilder();
@@ -158,10 +162,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				g2d.setFont(new Font("Sans Serif", Font.PLAIN, 10));
 				metrics = g2d.getFontMetrics();
 				numberBounds = metrics.getStringBounds(numberDodge.toString(), g2d);
-				x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE)
-						- (int) (numberBounds.getWidth() / 2) + 7;
-				y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE)
-						+ (int) (numberBounds.getHeight() / 2) + 5;
+				x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) + 7;
+				y = dimensionWithOffset.height + (int) (numberBounds.getHeight() / 2) + 5;
 				g2d.drawString(numberDodge.toString(), x, y);
 
 			} else {
@@ -177,10 +179,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 					g2d.setFont(new Font("Sans Serif", Font.PLAIN, 11));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D numberBounds = metrics.getStringBounds(number.toString(), g2d);
-					x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE)
-							- (int) (numberBounds.getWidth() / 2) + 1;
-					y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE)
-							+ (int) (numberBounds.getHeight() / 2) - 2;
+					x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) + 1;
+					y = dimensionWithOffset.height + (int) (numberBounds.getHeight() / 2) - 2;
 					g2d.drawString(number.toString(), x, y);
 				}
 
@@ -206,49 +206,41 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		}
 	}
 
-	public boolean drawSpellMarker(FieldCoordinate pMarkerCoordinate, String iconProperty, boolean pFaded) {
+	public void drawSpellMarker(FieldCoordinate pMarkerCoordinate, String iconProperty, boolean pFaded) {
 		if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
 			fMarkerCoordinate = pMarkerCoordinate;
 			clear(fMarkerCoordinate, true);
-			int x = fMarkerCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int y = fMarkerCoordinate.getY() * FIELD_SQUARE_SIZE;
+			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage spellIcon = iconCache.getIconByProperty(iconProperty);
 			if (pFaded) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 			}
-			g2d.drawImage(spellIcon, x, y, null);
+			g2d.drawImage(spellIcon, dimension.width, dimension.height, null);
 			g2d.dispose();
-			return true;
-		} else {
-			return false;
 		}
 	}
 
-	public boolean clearSpellMarker() {
+	public void clearSpellMarker() {
 		if (fMarkerCoordinate != null) {
 			clear(fMarkerCoordinate, true);
 			fMarkerCoordinate = null;
-			return true;
-		} else {
-			return false;
 		}
 	}
 
-	public boolean drawFireballMarker(FieldCoordinate pMarkerCoordinate, boolean pFaded) {
+	public void drawFireballMarker(FieldCoordinate pMarkerCoordinate, boolean pFaded) {
 		if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
 			fMarkerCoordinate = pMarkerCoordinate;
 			clear(fMarkerCoordinate, true);
-			int x = fMarkerCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int y = fMarkerCoordinate.getY() * FIELD_SQUARE_SIZE;
+			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage fireballIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL);
 			if (pFaded) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
 			}
-			g2d.drawImage(fireballIcon, x, y, null);
+			g2d.drawImage(fireballIcon, dimension.width, dimension.height, null);
 			Game game = getClient().getGame();
 			FieldCoordinate[] markedSquares = game.getFieldModel().findAdjacentCoordinates(fMarkerCoordinate,
 					FieldCoordinateBounds.FIELD, 1, false);
@@ -260,33 +252,26 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				}
 			}
 			g2d.dispose();
-			return true;
-		} else {
-			return false;
 		}
 	}
 
-	public boolean clearFireballMarker() {
+	public void clearFireballMarker() {
 		if (fMarkerCoordinate != null) {
 			Game game = getClient().getGame();
 			FieldCoordinate[] markedSquares = game.getFieldModel().findAdjacentCoordinates(fMarkerCoordinate,
-					FieldCoordinateBounds.FIELD, 1, true);
+				FieldCoordinateBounds.FIELD, 1, true);
 			for (FieldCoordinate markedSquare : markedSquares) {
 				clear(markedSquare, true);
 			}
 			fMarkerCoordinate = null;
-			return true;
-		} else {
-			return false;
 		}
 	}
 
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if (pCoordinate != null) {
 			clear(pCoordinate, true);
-			int x = pCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int y = pCoordinate.getY() * FIELD_SQUARE_SIZE;
-			Rectangle bounds = new Rectangle(x + 1, y + 1, FIELD_SQUARE_SIZE - 2, FIELD_SQUARE_SIZE - 2);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

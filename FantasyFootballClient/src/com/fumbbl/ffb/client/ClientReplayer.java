@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -109,9 +110,7 @@ public class ClientReplayer implements ActionListener {
 	public void init(ServerCommand[] pServerCommands, IProgressListener pProgressListener) {
 		List<ServerCommand> oldReplayList = fReplayList;
 		fReplayList = new ArrayList<>();
-		for (ServerCommand command : pServerCommands) {
-			fReplayList.add(command);
-		}
+		Collections.addAll(fReplayList, pServerCommands);
 		fReplayList.addAll(oldReplayList);
 		getClient().getUserInterface().getLog().detachLogDocument();
 		if (pProgressListener != null) {
@@ -389,23 +388,23 @@ public class ClientReplayer implements ActionListener {
 			pGame.setTeamAway(pTeam);
 		}
 		FieldModel fieldModel = pGame.getFieldModel();
-		for (int i = 0; i < players.length; i++) {
+		for (Player<?> player : players) {
 			// remove mercs, stars and raised players, they will be added via command later
-			PlayerType playerType = players[i].getPlayerType();
+			PlayerType playerType = player.getPlayerType();
 			if ((playerType == null) || (playerType == PlayerType.MERCENARY) || (playerType == PlayerType.STAR)
-					|| (playerType == PlayerType.RAISED_FROM_DEAD)) {
-				fieldModel.remove(players[i]);
-				pTeam.removePlayer(players[i]);
+				|| (playerType == PlayerType.RAISED_FROM_DEAD)) {
+				fieldModel.remove(player);
+				pTeam.removePlayer(player);
 			} else {
-				PlayerResult playerResult = pGame.getGameResult().getPlayerResult(players[i]);
-				if (players[i].getRecoveringInjury() != null) {
-					fieldModel.setPlayerState(players[i], new PlayerState(PlayerState.MISSING));
+				PlayerResult playerResult = pGame.getGameResult().getPlayerResult(player);
+				if (player.getRecoveringInjury() != null) {
+					fieldModel.setPlayerState(player, new PlayerState(PlayerState.MISSING));
 					playerResult.setSendToBoxReason(SendToBoxReason.MNG);
 				} else {
-					fieldModel.setPlayerState(players[i], new PlayerState(PlayerState.RESERVE));
+					fieldModel.setPlayerState(player, new PlayerState(PlayerState.RESERVE));
 				}
-				playerResult.setCurrentSpps(pOldTeamResult.getPlayerResult(players[i]).getCurrentSpps());
-				UtilBox.putPlayerIntoBox(pGame, players[i]);
+				playerResult.setCurrentSpps(pOldTeamResult.getPlayerResult(player).getCurrentSpps());
+				UtilBox.putPlayerIntoBox(pGame, player);
 			}
 		}
 	}

@@ -4,13 +4,14 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 
 /**
@@ -21,35 +22,49 @@ public class UtilClientPlayerDrag {
 
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
+		Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		Dimension boxComponentSize = dimensionProvider.dimension(DimensionProvider.Component.BOX);
 		FieldCoordinate coordinate;
 		if (pBoxMode) {
 			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
-			if ((coordinate == null) && (pMouseEvent.getX() >= BoxComponent.WIDTH)) {
-				coordinate = getFieldFieldCoordinate(pMouseEvent.getX() - BoxComponent.WIDTH, pMouseEvent.getY());
+			if ((coordinate == null) && (pMouseEvent.getX() >= boxComponentSize.width)) {
+				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - boxComponentSize.width, pMouseEvent.getY(), dimensionProvider);
 			}
 		} else {
-			coordinate = getFieldFieldCoordinate(pMouseEvent.getX(), pMouseEvent.getY());
+			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY(), dimensionProvider);
 			if ((coordinate == null) && (pMouseEvent.getX() < 0)) {
-				coordinate = getBoxFieldCoordinate(pClient, BoxComponent.WIDTH + pMouseEvent.getX(), pMouseEvent.getY());
+				coordinate = getBoxFieldCoordinate(pClient, boxComponentSize.width + pMouseEvent.getX(), pMouseEvent.getY());
 			}
 		}
 		return coordinate;
 	}
 
-	private static FieldCoordinate getFieldFieldCoordinate(int pMouseX, int pMouseY) {
-		if ((pMouseX >= 0) && (pMouseX < FieldLayer.FIELD_IMAGE_WIDTH) && (pMouseY >= 0)
-			&& (pMouseY < FieldLayer.FIELD_IMAGE_HEIGHT)) {
-			return new FieldCoordinate((pMouseX / FieldLayer.FIELD_SQUARE_SIZE), (pMouseY / FieldLayer.FIELD_SQUARE_SIZE));
+	private static FieldCoordinate getFieldFieldCoordinate(Dimension fieldDimension, int pMouseX, int pMouseY, DimensionProvider dimensionProvider) {
+
+		int actualX = pMouseX;
+		int actualY = pMouseY;
+
+		if (dimensionProvider.isPortrait()) {
+			//noinspection SuspiciousNameCombination
+			actualY = pMouseX;
+			actualX = fieldDimension.height - pMouseY;
+		}
+
+		if ((actualX >= 0) && (actualX < fieldDimension.width) && (actualY >= 0)
+			&& (actualY < fieldDimension.height)) {
+			return new FieldCoordinate((actualX / dimensionProvider.fieldSquareSize()), (actualY / dimensionProvider.fieldSquareSize()));
 		} else {
 			return null;
 		}
 	}
 
 	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY) {
-		if ((pMouseX >= 0) && (pMouseX < BoxComponent.WIDTH) && (pMouseY >= 0) && (pMouseY < BoxComponent.HEIGHT)) {
+		Dimension boxComponentSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.BOX);
+		if ((pMouseX >= 0) && (pMouseX < boxComponentSize.width) && (pMouseY >= 0) && (pMouseY < boxComponentSize.height)) {
 			int boxTitleOffset = pClient.getUserInterface().getSideBarHome().getBoxComponent().getMaxTitleOffset();
 			int y = (((pMouseY - boxTitleOffset) / BoxComponent.FIELD_SQUARE_SIZE) * 3)
-					+ (pMouseX / BoxComponent.FIELD_SQUARE_SIZE);
+				+ (pMouseX / BoxComponent.FIELD_SQUARE_SIZE);
 			if ((y >= 0) && (y < BoxComponent.MAX_BOX_ELEMENTS)) {
 				return new FieldCoordinate(FieldCoordinate.RSV_HOME_X, y);
 			}
@@ -63,7 +78,6 @@ public class UtilClientPlayerDrag {
 	}
 
 	private static void initPlayerDragging(FantasyFootballClient pClient, FieldCoordinate pCoordinate, boolean pBoxMode) {
-		System.out.println("Entering init drag");
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
@@ -71,7 +85,6 @@ public class UtilClientPlayerDrag {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		boolean initDragAllowed = ((ClientMode.PLAYER == pClient.getMode()) && (player != null)
 				&& game.getTeamHome().hasPlayer(player) && pClient.getClientState().isInitDragAllowed(pCoordinate));
-		System.out.println("InitDragAllowed: " + initDragAllowed);
 		if (initDragAllowed) {
 			if (pBoxMode) {
 				initDragAllowed = (((playerState.getBase() == PlayerState.STANDING) && playerState.isActive())
@@ -81,7 +94,6 @@ public class UtilClientPlayerDrag {
 						|| (playerState.getBase() == PlayerState.BEING_DRAGGED));
 			}
 		}
-		System.out.println("InitDragAllowed: " + initDragAllowed);
 
 		if (initDragAllowed) {
 			clientData.setSelectedPlayer(player);
@@ -95,18 +107,11 @@ public class UtilClientPlayerDrag {
 				userInterface.getFieldComponent().refresh();
 			}
 		} else {
-			System.out.println("boxMode: " + pBoxMode);
-			System.out.println("playerState.getBase(): " + playerState.getBase());
-			System.out.println("playerState.isActive(): " + playerState.isActive());
-
 			clientData.setDragStartPosition(null);
 		}
-		System.out.println("Leaving init drag");
 	}
 
 	public static void mouseDragged(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
-		System.out.println("Entering dragged");
-		System.out.println("Event: " + pMouseEvent);
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
@@ -123,34 +128,24 @@ public class UtilClientPlayerDrag {
 				}
 			}
 		}
-		System.out.println("Leaving dragged");
 	}
 
-	public static void mouseReleased(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
+	public static void mouseReleased(FantasyFootballClient pClient) {
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		if ((clientData.getSelectedPlayer() != null) && (clientData.getDragStartPosition() != null)
 			&& (clientData.getDragEndPosition() != null)) {
 			if (pClient.getClientState().isDropAllowed(clientData.getDragEndPosition())) {
-				System.out.println("Util: Sending setup command: " + clientData.getSelectedPlayer().getId());
 				pClient.getCommunication().sendSetupPlayer(clientData.getSelectedPlayer(), clientData.getDragEndPosition());
 			} else {
-				System.out.println("Util: Resetting player: " + clientData.getSelectedPlayer().getId());
 				game.getFieldModel().setPlayerCoordinate(clientData.getSelectedPlayer(), clientData.getDragStartPosition());
 			}
-		} else {
-			System.out.println("Util: Ignoring released event");
-			System.out.println("Player is " + (clientData.getSelectedPlayer() != null ? clientData.getSelectedPlayer().getId() : "null"));
-			System.out.println("DragStart is " + (clientData.getDragStartPosition() != null ? clientData.getDragStartPosition() : "null"));
-			System.out.println("DragEnd is " + (clientData.getDragEndPosition() != null ? clientData.getDragEndPosition() : "null"));
 		}
-		System.out.println("Event: " + pMouseEvent);
 		resetDragging(pClient);
 		clientData.clear();
 	}
 
 	public static void resetDragging(FantasyFootballClient pClient) {
-		System.out.println("Entering reset drag");
 		Game game = pClient.getGame();
 		for (Player<?> player : game.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -169,7 +164,6 @@ public class UtilClientPlayerDrag {
 		UserInterface userInterface = pClient.getUserInterface();
 		userInterface.getSideBarHome().refresh();
 		userInterface.getFieldComponent().refresh();
-		System.out.println("Leaving reset drag");
 	}
 
 }

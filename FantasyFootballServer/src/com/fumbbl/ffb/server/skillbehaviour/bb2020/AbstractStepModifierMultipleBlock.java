@@ -119,7 +119,7 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 		} else {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			state.teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(step.getGameState(), actingPlayer.getPlayer());
-			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game);
+			state.proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
 			state.consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
 			if (UtilServerReRoll.isSingleUseReRollAvailable(step.getGameState(), actingPlayer.getPlayer())) {
 				state.singleUseReRollSource = ReRollSources.LORD_OF_CHAOS;

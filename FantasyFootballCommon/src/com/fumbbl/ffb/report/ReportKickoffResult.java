@@ -9,11 +9,10 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.KickoffResult;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportKickoffResult implements IReport {
+public class ReportKickoffResult extends NoDiceReport {
 
 	private KickoffResult fKickoffResult;
 	private int[] fKickoffRoll;

@@ -81,7 +81,7 @@ public class ClientStateDumpOff extends ClientStateMove {
 	}
 
 	private boolean testCoordinateInRange(FieldCoordinate pCoordinate) {
-		boolean validInRange = false;
+		boolean validInRange;
 		Game game = getClient().getGame();
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 		PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());

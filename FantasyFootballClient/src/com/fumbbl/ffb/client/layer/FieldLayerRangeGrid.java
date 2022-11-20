@@ -4,24 +4,25 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 /**
- * 
  * @author Kalimar
  */
 public class FieldLayerRangeGrid extends FieldLayer {
 
 	private FieldCoordinate fCenterCoordinate;
 
-	public FieldLayerRangeGrid(FantasyFootballClient pClient) {
-		super(pClient);
+	public FieldLayerRangeGrid(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+		super(pClient, dimensionProvider);
 	}
 
 	public boolean drawRangeGrid(FieldCoordinate pCenterCoordinate, boolean pThrowTeamMate) {
@@ -58,18 +59,14 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			int x = pCoordinate.getX() * FIELD_SQUARE_SIZE;
-			int y = pCoordinate.getY() * FIELD_SQUARE_SIZE;
-			Rectangle bounds = new Rectangle(x + 1, y + 1, FIELD_SQUARE_SIZE - 2, FIELD_SQUARE_SIZE - 2);
+			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			int x = dimension.width;
+			int y = dimension.height;
+			Rectangle bounds = new Rectangle(x + 1, y + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 			g2d.dispose();
 		}
 	}
-
-	public FieldCoordinate getCenterCoordinate() {
-		return fCenterCoordinate;
-	}
-
 }

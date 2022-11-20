@@ -20,9 +20,9 @@ public class KickoffScatterMessage extends ReportMessageBase<ReportKickoffScatte
   		status = new StringBuilder();
   		status.append("The kick will land ");
   		status.append(report.getRollScatterDistance())
-  			.append((report.getRollScatterDistance() == 1) ? " square " : " squares ");
-  		status.append(report.getScatterDirection().getName().toLowerCase()).append(" of where it was aimed.");
-  		println(getIndent() + 1, status.toString());
+				.append((report.getRollScatterDistance() == 1) ? " square " : " squares ");
+			status.append(mapToLocal(report.getScatterDirection()).getName().toLowerCase()).append(" of where it was aimed.");
+			println(getIndent() + 1, status.toString());
   		setIndent(1);
     }
 }

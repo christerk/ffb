@@ -17,6 +17,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.NoDiceReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
@@ -26,11 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2016)
-public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
+public class ReportInjury extends NoDiceReport implements com.fumbbl.ffb.report.ReportInjury {
 
 	private String fAttackerId;
 	private String fDefenderId;
@@ -52,10 +52,10 @@ public class ReportInjury implements com.fumbbl.ffb.report.ReportInjury {
 		fInjuryModifiers = new ArrayList<>();
 	}
 
-	protected ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
-												 int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
-												 SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
-												 PlayerState pInjuryDecay, String pAttackerId) {
+	public ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,
+											int[] pArmorRoll, InjuryModifier[] pInjuryModifiers, int[] pInjuryRoll, int[] pCasualtyRoll,
+											SeriousInjury pSeriousInjury, int[] pCasualtyRollDecay, SeriousInjury pSeriousInjuryDecay, PlayerState pInjury,
+											PlayerState pInjuryDecay, String pAttackerId) {
 		this();
 		init(pDefenderId, pInjuryType, pArmorBroken, pArmorModifiers, pArmorRoll, pInjuryModifiers, pInjuryRoll, pCasualtyRoll,
 			pSeriousInjury, pCasualtyRollDecay, pSeriousInjuryDecay, pInjury, pInjuryDecay, pAttackerId);

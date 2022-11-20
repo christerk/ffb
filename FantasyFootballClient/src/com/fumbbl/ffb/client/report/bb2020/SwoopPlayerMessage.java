@@ -18,7 +18,7 @@ public class SwoopPlayerMessage extends ReportMessageBase<ReportSwoopPlayer> {
 		status.append("Swoop Roll [ ");
 		status.append(report.getDistance());
 		status.append(" ] in direction ");
-		status.append(report.getDirection().getName());
+		status.append(mapToLocal(report.getDirection()).getName());
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		status = new StringBuilder();
 		status.append("Player swoops from square (");

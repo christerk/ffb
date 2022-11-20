@@ -1,7 +1,11 @@
 package com.fumbbl.ffb.client.animation;
 
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.model.Animation;
+
+import java.awt.Dimension;
 
 /**
  * @author Kalimar
@@ -22,43 +26,46 @@ public class AnimationSequenceFactory {
 		if ((pAnimation == null) || (pAnimation.getAnimationType() == null)) {
 			return null;
 		}
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
+		Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+
 		switch (pAnimation.getAnimationType()) {
 			case KICKOFF_BLITZ:
-				return AnimationSequenceKickoff.KICKOFF_BLITZ;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_BLITZ, dimensionProvider.isPortrait());
 			case KICKOFF_BLIZZARD:
-				return AnimationSequenceKickoff.KICKOFF_BLIZZARD;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_BLIZZARD, dimensionProvider.isPortrait());
 			case KICKOFF_BRILLIANT_COACHING:
-				return AnimationSequenceKickoff.KICKOFF_BRILLIANT_COACHING;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_BRILLIANT_COACHING, dimensionProvider.isPortrait());
 			case KICKOFF_CHEERING_FANS:
-				return AnimationSequenceKickoff.KICKOFF_CHEERING_FANS;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_CHEERING_FANS, dimensionProvider.isPortrait());
 			case KICKOFF_GET_THE_REF:
-				return AnimationSequenceKickoff.KICKOFF_GET_THE_REF;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_GET_THE_REF, dimensionProvider.isPortrait());
 			case KICKOFF_HIGH_KICK:
-				return AnimationSequenceKickoff.KICKOFF_HIGH_KICK;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_HIGH_KICK, dimensionProvider.isPortrait());
 			case KICKOFF_NICE:
-				return AnimationSequenceKickoff.KICKOFF_NICE;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_NICE, dimensionProvider.isPortrait());
 			case KICKOFF_PERFECT_DEFENSE:
-				return AnimationSequenceKickoff.KICKOFF_PERFECT_DEFENSE;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_PERFECT_DEFENSE, dimensionProvider.isPortrait());
 			case KICKOFF_SOLID_DEFENSE:
-				return AnimationSequenceKickoff.KICKOFF_SOLID_DEFENSE;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_SOLID_DEFENCE, dimensionProvider.isPortrait());
 			case KICKOFF_PITCH_INVASION:
-				return AnimationSequenceKickoff.KICKOFF_PITCH_INVASION;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_PITCH_INVASION, dimensionProvider.isPortrait());
 			case KICKOFF_POURING_RAIN:
-				return AnimationSequenceKickoff.KICKOFF_POURING_RAIN;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_POURING_RAIN, dimensionProvider.isPortrait());
 			case KICKOFF_QUICK_SNAP:
-				return AnimationSequenceKickoff.KICKOFF_QUICK_SNAP;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_QUICK_SNAP, dimensionProvider.isPortrait());
 			case KICKOFF_RIOT:
-				return AnimationSequenceKickoff.KICKOFF_RIOT;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_RIOT, dimensionProvider.isPortrait());
 			case KICKOFF_TIMEOUT:
-				return AnimationSequenceKickoff.KICKOFF_TIMEOUT;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_TIMEOUT, dimensionProvider.isPortrait());
 			case KICKOFF_SWELTERING_HEAT:
-				return AnimationSequenceKickoff.KICKOFF_SWELTERING_HEAT;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_SWELTERING_HEAT, dimensionProvider.isPortrait());
 			case KICKOFF_THROW_A_ROCK:
-				return AnimationSequenceKickoff.KICKOFF_THROW_A_ROCK;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_THROW_A_ROCK, dimensionProvider.isPortrait());
 			case KICKOFF_OFFICIOUS_REF:
-				return AnimationSequenceKickoff.KICKOFF_OFFICIOUS_REF;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_OFFICIOUS_REF, dimensionProvider.isPortrait());
 			case KICKOFF_VERY_SUNNY:
-				return AnimationSequenceKickoff.KICKOFF_VERY_SUNNY;
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_VERY_SUNNY, dimensionProvider.isPortrait());
 			case SPELL_FIREBALL:
 				return AnimationSequenceSpecialEffect.createAnimationSequenceFireball(pAnimation.getStartCoordinate());
 			case SPELL_LIGHTNING:

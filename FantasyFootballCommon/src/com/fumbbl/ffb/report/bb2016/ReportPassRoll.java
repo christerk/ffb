@@ -28,8 +28,7 @@ public class ReportPassRoll extends ReportSkillRoll {
 	}
 
 	public ReportPassRoll(String pPlayerId, int pRoll, boolean pReRolled, boolean pBomb, PassResult result) {
-		this(pPlayerId, pRoll, 2, pReRolled, null, null, pBomb, result);
-		fHailMaryPass = true;
+		this(pPlayerId, pRoll, 2, pReRolled, null, null, pBomb, result, true);
 	}
 
 	public ReportPassRoll(String pPlayerId, int pRoll, int pMinimumRoll, boolean pReRolled,
@@ -41,7 +40,7 @@ public class ReportPassRoll extends ReportSkillRoll {
 	public ReportPassRoll(String pPlayerId, int pRoll, int pMinimumRoll, boolean pReRolled,
 	                      PassModifier[] pRollModifiers, PassingDistance pPassingDistance,
 	                      boolean pBomb, PassResult result, boolean hailMaryPass) {
-		super(pPlayerId, PassResult.ACCURATE == result, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
+		super(pPlayerId, PassResult.ACCURATE == result || (hailMaryPass && PassResult.INACCURATE == result), pRoll, pMinimumRoll, pReRolled, pRollModifiers);
 		this.result = result;
 		fPassingDistance = pPassingDistance;
 		fBomb = pBomb;

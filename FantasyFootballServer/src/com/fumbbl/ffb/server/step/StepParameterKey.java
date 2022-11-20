@@ -72,6 +72,7 @@ public enum StepParameterKey {
 	HOME_TEAM, // Boolean
 	IGNORE_ACTED_FLAG, // Boolean
 	IGNORE_NULL_VALUE, // Boolean
+	IN_SELECT, // Boolean
 	INCREMENT, // int
 	INDUCEMENT_GOLD_AWAY, // Integer
 	INDUCEMENT_GOLD_HOME, // Integer
@@ -114,6 +115,7 @@ public enum StepParameterKey {
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean
 	RESET_FOR_FAILED_BLOCK, // Boolean
+	RESET_PLAYER_ACTION, // PlayerAction
 	RETAIN_MODEL_DATA, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect

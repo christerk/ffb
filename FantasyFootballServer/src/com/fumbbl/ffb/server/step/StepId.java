@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.step;
 import com.fumbbl.ffb.INamedObject;
 
 /**
- *
  * @author Kalimar
  */
 public enum StepId implements INamedObject {
@@ -79,7 +78,8 @@ public enum StepId implements INamedObject {
 	GOTO_LABEL("gotoLabel"), //
 	HAIL_MARY_PASS("hailMaryPass"), // action.pass
 	HAND_OVER("handOver"), // action.pass
-	HANDLE_DROP_PLAYER_CONTEXT("handleDropPlayerContext"), // action block
+	HANDLE_DROP_PLAYER_CONTEXT("handleDropPlayerContext"), // action.block
+	HIT_AND_RUN("hitAndRun"), // action.block
 	HORNS("horns"), // action.block
 	HYPNOTIC_GAZE("hypnoticGaze"), // action.move
 	INIT_ACTIVATION("initActivation", "recoverFromGaze"),
@@ -117,6 +117,7 @@ public enum StepId implements INamedObject {
 	MULTI_BLOCK_FORK("multiBlockFork"), // action.multiBlock 2020
 	MVP("mvp"), // game.end
 	NEXT_STEP("nextStep"), //
+	NEXT_STEP_AND_REPEAT("nextStepAndRepeat"), //
 	PASS("pass"), // action.pass
 	PASS_BLOCK("passBlock"), // action.pass
 	PENALTY_SHOOTOUT("penaltyShootout"), // game.end
@@ -139,6 +140,7 @@ public enum StepId implements INamedObject {
 	REMOVE_TARGET_SELECTION_STATE("removeTargetSelectionState", "removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
 	RESET_FUMBLEROOSKIE("resetFumblerooskie"), // action.move/action.blitz
+	RESET_TO_MOVE("resetToMove"),
 	RESOLVE_PASS("resolvePass"),
 	RIGHT_STUFF("rightStuff"), // action.ttm
 	RIOTOUS_ROOKIES("riotousRookies"),

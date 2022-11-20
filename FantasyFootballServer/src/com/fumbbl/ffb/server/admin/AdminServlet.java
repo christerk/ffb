@@ -2,16 +2,18 @@ package com.fumbbl.ffb.server.admin;
 
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameStatus;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.factory.GameStatusFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IGameIdListener;
 import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.query.DbAdminListByIdQuery;
 import com.fumbbl.ffb.server.db.query.DbAdminListByStatusQuery;
+import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandDeleteGame;
@@ -27,7 +29,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -66,10 +66,12 @@ public class AdminServlet extends HttpServlet {
 	public static final String UNBLOCK = "unblock";
 	public static final String UPLOAD = "upload";
 	public static final String FORCE_LOG = "forcelog";
+	public static final String PORTRAIT = "portrait";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
 
+	private static final String _PARAMETER_COACH = "coach";
 	private static final String _PARAMETER_RESPONSE = "response";
 	private static final String _PARAMETER_GAME_ID = "gameId";
 	private static final String _PARAMETER_TEAM_ID = "teamId";
@@ -117,17 +119,21 @@ public class AdminServlet extends HttpServlet {
 		fServer = pServer;
 	}
 
+	private static int compare(GameState o1, GameState o2) {
+		return Long.compare(o1.getId(), o2.getId());
+	}
+
 	public FantasyFootballServer getServer() {
 		return fServer;
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse)
-			throws ServletException, IOException {
+		throws IOException {
 
 		pResponse.setContentType("text/xml; charset=UTF-8");
 
-		boolean isOk = true;
+		boolean isOk;
 		TransformerHandler handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
 
 		try {
@@ -181,6 +187,8 @@ public class AdminServlet extends HttpServlet {
 					isOk = handleStats(handler);
 				} else if (FORCE_LOG.equals(command)) {
 					isOk = handleForceLog(handler, parameters);
+				} else if (PORTRAIT.equals(command)) {
+					isOk = handlePortrait(handler, parameters);
 				} else {
 					isOk = false;
 				}
@@ -201,8 +209,8 @@ public class AdminServlet extends HttpServlet {
 
 	private boolean handleChallenge(TransformerHandler pHandler) {
 		boolean isOk = true;
-		String challenge = new StringBuilder().append(fServer.getProperty(IServerProperty.ADMIN_SALT))
-				.append(System.currentTimeMillis()).toString();
+		String challenge = fServer.getProperty(IServerProperty.ADMIN_SALT) +
+			System.currentTimeMillis();
 		try {
 			fLastChallenge = PasswordChallenge.toHexString(PasswordChallenge.md5Encode(challenge.getBytes()));
 		} catch (NoSuchAlgorithmException pE) {
@@ -238,11 +246,9 @@ public class AdminServlet extends HttpServlet {
 		final CountDownLatch latch = new CountDownLatch(1);
 		final AtomicLong gameIdHolder = new AtomicLong();
 		InternalServerCommandScheduleGame scheduleCommand = new InternalServerCommandScheduleGame(teamHomeId, teamAwayId);
-		scheduleCommand.setGameIdListener(new IGameIdListener() {
-			public void setGameId(long pGameId) {
-				gameIdHolder.set(pGameId);
-				latch.countDown();
-			}
+		scheduleCommand.setGameIdListener(pGameId -> {
+			gameIdHolder.set(pGameId);
+			latch.countDown();
 		});
 		getServer().getCommunication().handleCommand(scheduleCommand);
 		try {
@@ -286,7 +292,7 @@ public class AdminServlet extends HttpServlet {
 
 	private boolean handleLogLevel(TransformerHandler pHandler, Map<String, String[]> pParameters) {
 		String valueString = ArrayTool.firstElement(pParameters.get(_PARAMETER_VALUE));
-		int logLevel = StringTool.isProvided(valueString) ? Integer.valueOf(valueString) : 0;
+		int logLevel = StringTool.isProvided(valueString) ? Integer.parseInt(valueString) : 0;
 		AttributesImpl attributes = new AttributesImpl();
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, valueString);
 		UtilXml.addEmptyElement(pHandler, _XML_TAG_LOGLEVEL, attributes);
@@ -410,8 +416,7 @@ public class AdminServlet extends HttpServlet {
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdParameter);
 			try {
 				gameId = Long.parseLong(gameIdParameter);
-			} catch (NumberFormatException pNfe) {
-				gameId = 0;
+			} catch (NumberFormatException ignored) {
 			}
 		}
 		AdminList adminList = new AdminList();
@@ -438,20 +443,22 @@ public class AdminServlet extends HttpServlet {
 		return isOk;
 	}
 
+	private boolean handlePortrait(TransformerHandler handler, Map<String, String[]> pParameters) {
+		String coach = ArrayTool.firstElement(pParameters.get(_PARAMETER_COACH));
+
+		DbUserSettingsQuery listQuery = (DbUserSettingsQuery) getServer().getDbQueryFactory()
+			.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+		listQuery.execute(coach);
+		boolean isPortrait = IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(listQuery.getSettingValue(IClientProperty.SETTING_PITCH_ORIENTATION));
+		UtilXml.addValueElement(handler, "isPortrait", isPortrait);
+
+		return true;
+	}
+
 	private boolean handleCache(TransformerHandler handler) {
 		boolean isOk = true;
 		GameState[] gameStates = getServer().getGameCache().allGameStates();
-		Arrays.sort(gameStates, new Comparator<GameState>() {
-			public int compare(GameState o1, GameState o2) {
-				if (o1.getId() == o2.getId()) {
-					return 0;
-				} else if (o1.getId() > o2.getId()) {
-					return 1;
-				} else {
-					return -1;
-				}
-			}
-		});
+		Arrays.sort(gameStates, AdminServlet::compare);
 		AttributesImpl cacheAttributes = new AttributesImpl();
 		UtilXml.addAttribute(cacheAttributes, "size", gameStates.length);
 		int activeGames = 0;
@@ -559,11 +566,7 @@ public class AdminServlet extends HttpServlet {
 		AttributesImpl attributes = new AttributesImpl();
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INITIATED, _TIMESTAMP_FORMAT.format(new Date()));
 		UtilXml.addEmptyElement(pHandler, _XML_TAG_SHUTDOWN, attributes);
-		Thread stopThread = new Thread(new Runnable() {
-			public void run() {
-				getServer().stop(0);
-			}
-		});
+		Thread stopThread = new Thread(() -> getServer().stop(0));
 		stopThread.start();
 		return true;
 	}

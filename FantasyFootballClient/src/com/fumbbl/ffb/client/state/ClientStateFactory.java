@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateHitAndRun;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateMaximumCarnage;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
@@ -80,6 +81,7 @@ public class ClientStateFactory {
 		register(new ClientStateRaidingParty(pClient));
 		register(new ClientStateSelectBlockKind(pClient));
 		register(new ClientStateMaximumCarnage(pClient));
+		register(new ClientStateHitAndRun(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -124,6 +126,13 @@ public class ClientStateFactory {
 //      }
 		} else {
 			switch (game.getTurnMode()) {
+				case HIT_AND_RUN:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.HIT_AND_RUN;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
 				case SELECT_BLITZ_TARGET:
 					if (game.isHomePlaying()) {
 						clientStateId = ClientStateId.SELECT_BLITZ_TARGET;

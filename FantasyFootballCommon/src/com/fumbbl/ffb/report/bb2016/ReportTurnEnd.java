@@ -9,10 +9,15 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
+import com.fumbbl.ffb.stats.DieBase;
+import com.fumbbl.ffb.stats.DieStat;
+import com.fumbbl.ffb.stats.SingleDieStat;
+import com.fumbbl.ffb.stats.TeamMapping;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
@@ -151,4 +156,13 @@ public class ReportTurnEnd implements IReport {
 		return this;
 	}
 
+	@Override
+	public void addStats(Game game, List<DieStat<?>> diceStats) {
+		fHeatExhaustions.stream().map(ext ->
+				new SingleDieStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, ext.getPlayerId(), ext.getRoll(), 2, getId(), !ext.isExhausted()))
+			.forEach(diceStats::add);
+		fKnockoutRecoveries.stream().map(rec ->
+				new SingleDieStat(DieBase.D6, TeamMapping.TEAM_FOR_PLAYER, rec.getPlayerId(), rec.getRoll(), 4 - rec.getBloodweiserBabes(), getId(), rec.isRecovering()))
+			.forEach(diceStats::add);
+	}
 }

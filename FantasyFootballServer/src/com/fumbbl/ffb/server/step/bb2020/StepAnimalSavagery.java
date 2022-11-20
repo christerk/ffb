@@ -2,12 +2,19 @@ package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -31,8 +38,21 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				// mandatory
-				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
-					state.goToLabelOnFailure = (String) parameter.getValue();
+				switch (parameter.getKey()) {
+					case GOTO_LABEL_ON_FAILURE:
+						state.goToLabelOnFailure = (String) parameter.getValue();
+						break;
+					case TARGET_COORDINATE:
+						Player<?> catcher = getGameState().getGame().getFieldModel().getPlayer((FieldCoordinate) parameter.getValue());
+						if (catcher != null) {
+							state.catcherId = catcher.getId();
+						}
+						break;
+					case BLOCK_DEFENDER_ID:
+						state.blockDefenderId = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -82,6 +102,9 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 			state.playerIds = Arrays.stream(playerArray).collect(Collectors.toSet());
 		}
 		state.endTurn = toPrimitive(IServerJsonOption.END_TURN.getFrom(source, jsonObject));
+		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
+		state.attackOpponent = IServerJsonOption.ATTACK_OPPONENT.getFrom(source, jsonObject);
+		state.blockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -97,12 +120,30 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
-				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-				if (PlayerChoiceMode.ANIMAL_SAVAGERY == playerChoiceCommand.getPlayerChoiceMode()) {
-					state.playerId = playerChoiceCommand.getPlayerId();
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-				}
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_PLAYER_CHOICE:
+					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+					if (PlayerChoiceMode.ANIMAL_SAVAGERY == playerChoiceCommand.getPlayerChoiceMode()) {
+						state.playerId = playerChoiceCommand.getPlayerId();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					Skill skill = commandUseSkill.getSkill();
+					if (skill.hasSkillProperty(NamedProperties.canLashOutAgainstOpponents)) {
+						boolean skillUsed = commandUseSkill.isSkillUsed();
+						state.attackOpponent = skillUsed;
+						if (skillUsed) {
+							Game game = getGameState().getGame();
+							game.getPlayerById(commandUseSkill.getPlayerId()).markUsed(skill, game);
+							getResult().addReport(new ReportSkillUse(commandUseSkill.getPlayerId(), commandUseSkill.getSkill(), skillUsed, SkillUse.LASH_OUT_AGAINST_OPPONENT));
+						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -126,6 +167,9 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, state.playerIds);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, state.thrownPlayerId);
 		IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
+		IServerJsonOption.CATCHER_ID.addTo(jsonObject, state.catcherId);
+		IServerJsonOption.ATTACK_OPPONENT.addTo(jsonObject, state.attackOpponent);
+		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, state.blockDefenderId);
 		return jsonObject;
 	}
 
@@ -135,6 +179,9 @@ public class StepAnimalSavagery extends AbstractStepWithReRoll {
 		public String thrownPlayerId;
 		public Set<String> playerIds;
 		public boolean endTurn;
+		public String catcherId;
+		public Boolean attackOpponent;
+		public String blockDefenderId;
 	}
 
 

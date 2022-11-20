@@ -1,90 +1,86 @@
 package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
-import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Player;
 
 import javax.swing.Timer;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 /**
- *
  * @author Kalimar
  */
 public class AnimationSequenceThrowing implements IAnimationSequence, ActionListener {
 
+	private final DimensionProvider dimensionProvider;
+
+	protected AnimationSequenceThrowing(AnimationType pAnimationType, BufferedImage pAnimatedIcon,
+																			FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate,
+																			SoundId pSound, DimensionProvider dimensionProvider) {
+		fAnimationType = pAnimationType;
+		fAnimatedIcon = pAnimatedIcon;
+		fStartCoordinate = pStartCoordinate;
+		fEndCoordinate = pEndCoordinate;
+		fInterceptorCoordinate = pInterceptorCoordinate;
+		fSound = pSound;
+		fTimer = new Timer(20, this);
+		this.dimensionProvider = dimensionProvider;
+	}
+
 	public static AnimationSequenceThrowing createAnimationSequencePass(FantasyFootballClient pClient,
-			Animation pAnimation) {
+																																			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.PASS,
-				pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL),
-				pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-				SoundId.THROW);
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL),
+			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
+			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
 
 	public static AnimationSequenceThrowing createAnimationSequenceThrowBomb(FantasyFootballClient pClient,
 			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.THROW_BOMB,
-				pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB),
-				pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-				SoundId.THROW);
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB),
+			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
+			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
 
 	public static AnimationSequenceThrowing createAnimationSequenceThrowARock(FantasyFootballClient pClient,
 			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.THROW_A_ROCK,
-				pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_ROCK),
-				pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-				SoundId.THROW);
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_ROCK),
+			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
+			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
 
 	public static AnimationSequenceThrowing createAnimationSequenceKick(FantasyFootballClient pClient,
-			Animation pAnimation) {
+																																			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.KICK,
-				pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG),
-				pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-				SoundId.KICK);
-	}
-
-	public static AnimationSequenceThrowing createAnimationSequenceHailMaryPass(FantasyFootballClient pClient,
-			Animation pAnimation) {
-		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_PASS,
-				pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG),
-				pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-				SoundId.THROW);
-	}
-
-	public static AnimationSequenceThrowing createAnimationSequenceHailMaryBomb(FantasyFootballClient pClient,
-																																							Animation pAnimation) {
-		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_BOMB,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW);
+			SoundId.KICK, pClient.getUserInterface().getDimensionProvider());
 	}
 
 	private final AnimationType fAnimationType;
 
-	public static AnimationSequenceThrowing createAnimationSequenceThrowTeamMate(FantasyFootballClient pClient,
-																																							 Animation pAnimation) {
-		Player<?> thrownPlayer = pClient.getGame().getPlayerById(pAnimation.getThrownPlayerId());
-		boolean homePlayer = pClient.getGame().getTeamHome().hasPlayer(thrownPlayer);
-		PlayerIconFactory playerIconFactory = pClient.getUserInterface().getPlayerIconFactory();
-		BufferedImage playerIcon = playerIconFactory.getBasicIcon(pClient, thrownPlayer, homePlayer, false,
-			pAnimation.isWithBall(), false);
-		return new AnimationSequenceThrowing(AnimationType.THROW_TEAM_MATE, playerIcon, pAnimation.getStartCoordinate(),
-			pAnimation.getEndCoordinate(), null, SoundId.WOOOAAAH);
+	public static AnimationSequenceThrowing createAnimationSequenceHailMaryPass(FantasyFootballClient pClient,
+																																							Animation pAnimation) {
+		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_PASS,
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG),
+			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
+			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
 
 	private final BufferedImage fAnimatedIcon;
@@ -111,24 +107,31 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	private FieldLayer fFieldLayer;
 	private IAnimationListener fListener;
 
+	public static AnimationSequenceThrowing createAnimationSequenceHailMaryBomb(FantasyFootballClient pClient,
+																																							Animation pAnimation) {
+		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_BOMB,
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG),
+			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
+			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
+	}
+
+	public static AnimationSequenceThrowing createAnimationSequenceThrowTeamMate(FantasyFootballClient pClient,
+																																							 Animation pAnimation) {
+		Player<?> thrownPlayer = pClient.getGame().getPlayerById(pAnimation.getThrownPlayerId());
+		boolean homePlayer = pClient.getGame().getTeamHome().hasPlayer(thrownPlayer);
+		PlayerIconFactory playerIconFactory = pClient.getUserInterface().getPlayerIconFactory();
+		BufferedImage playerIcon = playerIconFactory.getBasicIcon(pClient, thrownPlayer, homePlayer, false,
+			pAnimation.isWithBall(), false);
+		return new AnimationSequenceThrowing(AnimationType.THROW_TEAM_MATE, playerIcon, pAnimation.getStartCoordinate(),
+			pAnimation.getEndCoordinate(), null, SoundId.WOOOAAAH, pClient.getUserInterface().getDimensionProvider());
+	}
+
 	public static AnimationSequenceThrowing createAnimationSequenceThrowKeg(FantasyFootballClient pClient,
 																																					Animation pAnimation) {
 		return new AnimationSequenceThrowing(pAnimation.getAnimationType(),
 			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW);
-	}
-
-	protected AnimationSequenceThrowing(AnimationType pAnimationType, BufferedImage pAnimatedIcon,
-																			FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate,
-																			SoundId pSound) {
-		fAnimationType = pAnimationType;
-		fAnimatedIcon = pAnimatedIcon;
-		fStartCoordinate = pStartCoordinate;
-		fEndCoordinate = pEndCoordinate;
-		fInterceptorCoordinate = pInterceptorCoordinate;
-		fSound = pSound;
-		fTimer = new Timer(20, this);
+			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
 
 	public void play(FieldLayer pFieldLayer, IAnimationListener pListener) {
@@ -137,20 +140,21 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		fListener = pListener;
 		fLastIconBounds = null;
 
-		fStartX = (fStartCoordinate.getX() * ClientState.FIELD_SQUARE_SIZE) + (ClientState.FIELD_SQUARE_SIZE / 2);
-		fStartY = (fStartCoordinate.getY() * ClientState.FIELD_SQUARE_SIZE) + (ClientState.FIELD_SQUARE_SIZE / 2);
+		Dimension startDimension = dimensionProvider.mapToLocal(fStartCoordinate, true);
+		fStartX = startDimension.width;
+		fStartY = startDimension.height;
 
-		fEndX = (fEndCoordinate.getX() * ClientState.FIELD_SQUARE_SIZE) + (ClientState.FIELD_SQUARE_SIZE / 2);
-		fEndY = (fEndCoordinate.getY() * ClientState.FIELD_SQUARE_SIZE) + (ClientState.FIELD_SQUARE_SIZE / 2);
+		Dimension endDimension = dimensionProvider.mapToLocal(fEndCoordinate, true);
+		fEndX = endDimension.width;
+		fEndY = endDimension.height;
 
 		fInterceptorX = fEndX;
 		fInterceptorY = fEndY;
 
 		if (fInterceptorCoordinate != null) {
-			fInterceptorX = (fInterceptorCoordinate.getX() * ClientState.FIELD_SQUARE_SIZE)
-					+ (ClientState.FIELD_SQUARE_SIZE / 2);
-			fInterceptorY = (fInterceptorCoordinate.getY() * ClientState.FIELD_SQUARE_SIZE)
-					+ (ClientState.FIELD_SQUARE_SIZE / 2);
+			Dimension intDimension = dimensionProvider.mapToLocal(fInterceptorCoordinate, true);
+			fInterceptorX = intDimension.width;
+			fInterceptorY = intDimension.height;
 		}
 
 		fPositionX = fStartX;
@@ -171,8 +175,8 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 
 		fFieldLayer.clear(fLastIconBounds, true);
 
-		double scale = 0.0;
-		boolean stopAnimation = false;
+		double scale;
+		boolean stopAnimation;
 		boolean xAxisAnimation = (Math.abs(fEndX - fStartX) > Math.abs(fEndY - fStartY));
 
 		if (xAxisAnimation) {

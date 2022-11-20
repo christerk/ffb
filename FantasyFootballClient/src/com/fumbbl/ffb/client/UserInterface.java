@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -15,6 +16,7 @@ import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameOptions;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -30,7 +32,6 @@ import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * 
  * @author Kalimar
  */
 public class UserInterface extends JFrame implements WindowListener, IDialogCloseListener {
@@ -46,13 +47,16 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final LogComponent fLog;
 	private final ChatComponent fChat;
 	private final DialogManager fDialogManager;
-	private final JDesktopPane fDesktop;
+	private JDesktopPane fDesktop;
 	private GameTitle fGameTitle;
 	private final PlayerIconFactory fPlayerIconFactory;
 	private final MouseEntropySource fMouseEntropySource;
 
+	private final DimensionProvider dimensionProvider;
+
 	public UserInterface(FantasyFootballClient pClient) {
 
+		fDesktop = null;
 		fClient = pClient;
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
@@ -61,18 +65,61 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDialogManager = new DialogManager(getClient());
 		setGameMenuBar(new GameMenuBar(getClient()));
 		setGameTitle(new GameTitle());
-
-		fFieldComponent = new FieldComponent(getClient());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
+		fMouseEntropySource = new MouseEntropySource(this);
 
+		dimensionProvider = new DimensionProvider(pClient.getParameters().isPortrait());
+
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(this);
+		setResizable(false);
+
+		fScoreBar = new ScoreBarComponent(getClient());
+		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
+		fLog = new LogComponent(getClient(), dimensionProvider);
+		fChat = new ChatComponent(getClient(), dimensionProvider);
+		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider);
+		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider);
+
+		initComponents(false);
+
+		getChat().requestChatInputFocus();
+
+	}
+
+	public void initComponents(boolean callInit) {
+		if (fDesktop != null) {
+			getContentPane().remove(fDesktop);
+		}
+		fDesktop = new JDesktopPane();
+
+		fFieldComponent.initLayout(dimensionProvider);
+		fLog.initLayout(dimensionProvider);
+		fChat.initLayout(dimensionProvider);
+		fSideBarHome.initLayout(dimensionProvider);
+		fSideBarAway.initLayout(dimensionProvider);
+
+		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
+		panelContent.setSize(panelContent.getPreferredSize());
+
+		fDesktop.add(panelContent, -1);
+		fDesktop.setPreferredSize(panelContent.getPreferredSize());
+
+		getContentPane().add(fDesktop, BorderLayout.CENTER);
+		pack();
+
+		if (callInit) {
+			init(null);
+		}
+		fDialogManager.setShownDialogParameter(null);
+		fDialogManager.updateDialog();
+	}
+
+	private JPanel landscapeContent() {
 		JPanel fieldPanel = new JPanel();
 		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
 		fieldPanel.add(fFieldComponent);
-		// fieldPanel.setBorder(BorderFactory.createEmptyBorder(2, 1, 1, 1));
-
-		fLog = new LogComponent(getClient());
-		fChat = new ChatComponent(getClient());
 
 		JPanel logChatPanel = new JPanel();
 		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
@@ -81,51 +128,58 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		logChatPanel.add(getChat());
 		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-		fScoreBar = new ScoreBarComponent(getClient());
-
 		JPanel panelCenter = new JPanel();
 		panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
 		panelCenter.add(fieldPanel);
 		panelCenter.add(getScoreBar());
 		panelCenter.add(logChatPanel);
 
-		fSideBarHome = new SideBarComponent(getClient(), true);
+		JPanel panelMain = new JPanel();
+		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
+		panelMain.add(createSideBarPanel(fSideBarHome));
+		panelMain.add(panelCenter);
+		panelMain.add(createSideBarPanel(fSideBarAway));
+
+		return panelMain;
+	}
+
+	private JPanel createSideBarPanel(SideBarComponent fSideBarHome) {
 		JPanel panelHome = new JPanel();
 		panelHome.setLayout(new BoxLayout(panelHome, BoxLayout.Y_AXIS));
 		panelHome.add(fSideBarHome);
-		// panelHome.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+		return panelHome;
+	}
 
-		fSideBarAway = new SideBarComponent(getClient(), false);
-		JPanel panelAway = new JPanel();
-		panelAway.setLayout(new BoxLayout(panelAway, BoxLayout.Y_AXIS));
-		panelAway.add(fSideBarAway);
-		// panelAway.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+	private JPanel portraitContent() {
+		JPanel fieldPanel = new JPanel();
+		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
+		fieldPanel.add(fFieldComponent);
+
+
+		JPanel logChatPanel = new JPanel();
+		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
+		logChatPanel.add(getLog());
+		logChatPanel.add(Box.createHorizontalStrut(2));
+		logChatPanel.add(getChat());
+		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+		JPanel panelMain = new JPanel();
+		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
+		panelMain.add(createSideBarPanel(fSideBarHome));
+		panelMain.add(fieldPanel);
+		panelMain.add(createSideBarPanel(fSideBarAway));
 
 		JPanel panelContent = new JPanel();
-		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
-		panelContent.add(panelHome);
-		// panelContent.add(Box.createHorizontalStrut(1));
-		panelContent.add(panelCenter);
-		// panelContent.add(Box.createHorizontalStrut(1));
-		panelContent.add(panelAway);
+		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.Y_AXIS));
+		panelContent.add(panelMain);
+		panelContent.add(getScoreBar());
+		panelContent.add(logChatPanel);
 
-		fDesktop = new JDesktopPane();
-		panelContent.setSize(panelContent.getPreferredSize());
-		fDesktop.add(panelContent, -1);
-		fDesktop.setPreferredSize(panelContent.getPreferredSize());
+		return panelContent;
+	}
 
-		fMouseEntropySource = new MouseEntropySource(this);
-
-		getContentPane().add(fDesktop, BorderLayout.CENTER);
-
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(this);
-		setResizable(false);
-
-		pack();
-
-		getChat().requestChatInputFocus();
-
+	public DimensionProvider getDimensionProvider() {
+		return dimensionProvider;
 	}
 
 	public FieldComponent getFieldComponent() {
@@ -191,7 +245,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public synchronized void init(GameOptions gameOptions) {
 
-		getStatusReport().init(gameOptions);
+		if (gameOptions != null && ArrayTool.isProvided(gameOptions.getOptions())) {
+			getStatusReport().init(gameOptions);
+		}
 		getSideBarHome().init();
 		getSideBarAway().init();
 		getScoreBar().init();

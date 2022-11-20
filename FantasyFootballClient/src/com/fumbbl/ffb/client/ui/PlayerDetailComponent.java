@@ -9,6 +9,7 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
@@ -56,16 +57,6 @@ import java.util.stream.Collectors;
  */
 public class PlayerDetailComponent extends JPanel {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 430;
-
-	private static final int _PORTRAIT_WIDTH = 121;
-	private static final int _PORTRAIT_HEIGHT = 147;
-
-	private static final int _STAT_BOX_WIDTH = 28;
-	private static final int _STAT_BOX_HEIGHT = 29;
-	private static final int _STAT_BOX_INNER_HEIGHT = 14;
-
 	private static final Font _NAME_FONT = new Font("Sans Serif", Font.PLAIN, 12);
 	private static final Font _STAT_FONT = new Font("Sans Serif", Font.BOLD, 13);
 	private static final Font _POSITION_FONT = new Font("Sans Serif", Font.PLAIN, 11);
@@ -81,18 +72,25 @@ public class PlayerDetailComponent extends JPanel {
 
 	private final SideBarComponent fSideBar;
 	private Player<?> fPlayer;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 	private boolean fRefreshNecessary;
 
-	public PlayerDetailComponent(SideBarComponent pSideBar) {
+	private Dimension size;
+	private final DimensionProvider dimensionProvider;
+
+	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		fRefreshNecessary = true;
+		this.dimensionProvider = dimensionProvider;
+	}
+
+	public void initLayout() {
+		size = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_DETAIL);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		fRefreshNecessary = true;
 	}
 
 	private void drawBackground() {
@@ -104,7 +102,7 @@ public class PlayerDetailComponent extends JPanel {
 		} else {
 			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
 		}
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		if (fPlayer != null) {
 			BufferedImage overlay;
 			Game game = getSideBar().getClient().getGame();
@@ -113,7 +111,7 @@ public class PlayerDetailComponent extends JPanel {
 			} else {
 				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_BLUE);
 			}
-			g2d.drawImage(overlay, 0, 0, null);
+			g2d.drawImage(overlay, 0, 0, size.width, size.height, null);
 		}
 		g2d.dispose();
 	}
@@ -128,11 +126,11 @@ public class PlayerDetailComponent extends JPanel {
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
 			final LineBreakMeasurer measurer = new LineBreakMeasurer(attStr.getIterator(),
 				new FontRenderContext(null, false, true));
-			TextLayout layoutLine1 = measurer.nextLayout(WIDTH - (2 * x));
+			TextLayout layoutLine1 = measurer.nextLayout(size.width - (2 * x));
 			if (layoutLine1 != null) {
 				int yLine1 = y + fontMetrics.getHeight() - fontMetrics.getDescent();
 				int yLine2 = yLine1 + fontMetrics.getHeight() - 1;
-				TextLayout layoutLine2 = measurer.nextLayout(WIDTH - (2 * x));
+				TextLayout layoutLine2 = measurer.nextLayout(size.width - (2 * x));
 				if (layoutLine2 != null) {
 					drawShadowedLayout(g2d, layoutLine1, x, yLine1);
 					drawShadowedLayout(g2d, layoutLine2, x, yLine2);
@@ -145,7 +143,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerPortraitAndPosition() {
 		if (fPlayer != null) {
-			int x = 3, y = 32;
+			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT_OFFSET);
+			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			String portraitUrl = PlayerIconFactory.getPortraitUrl(getPlayer());
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
@@ -170,22 +169,24 @@ public class PlayerDetailComponent extends JPanel {
 			} else {
 				drawPortrait(x - 1, y + 1, g2d, portraitBackground);
 			}
+			Dimension portraitDimension = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT);
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
-			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 4), _PORTRAIT_WIDTH + metrics.getAscent() + 3);
+			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + metrics.getAscent() + x);
 			g2d.setColor(Color.WHITE);
-			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 5), _PORTRAIT_WIDTH + metrics.getAscent() + 2);
+			g2d.drawString(positionNameString, -(y + portraitDimension.height - 5), portraitDimension.width + metrics.getAscent() + x - 1);
 			g2d.dispose();
 		}
 	}
 
 	private void drawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
-		int canvasWidth = _PORTRAIT_WIDTH;
-		int canvasHeight = _PORTRAIT_HEIGHT;
+		Dimension portraitDimension = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT);
+		int canvasWidth = portraitDimension.width;
+		int canvasHeight = portraitDimension.height;
 		int portraitWidth = playerPortrait.getWidth();
 		int portraitHeight = playerPortrait.getHeight();
 
-		if (portraitWidth > canvasWidth || portraitHeight > canvasHeight) {
+		if (portraitWidth != canvasWidth || portraitHeight != canvasHeight) {
 			// Scale portrait to fit both width and height
 
 			float scale = Math.max(
@@ -207,7 +208,8 @@ public class PlayerDetailComponent extends JPanel {
 
 		if (fPlayer != null) {
 
-			int x = 3, y = 179;
+			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_OFFSET);
+			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
 			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
@@ -238,6 +240,13 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
+			int statBoxWidth = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX).width;
+			int[] statSpacings;
+			if (dimensionProvider.isPortrait()) {
+				statSpacings = new int[]{1, 1, 3, 4};
+			} else {
+				statSpacings = new int[]{0, 0, 1, 1};
+			}
 
 			Player<?> player = getPlayer();
 			Position position = player.getPosition();
@@ -245,10 +254,10 @@ public class PlayerDetailComponent extends JPanel {
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = strength - position.getStrength();
-			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
+			drawStatBox(g2d, x + statSpacings[0] + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = agility - position.getAgility();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + statSpacings[1] + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
 				int passing = getPlayer().getPassingWithModifiers();
@@ -256,11 +265,11 @@ public class PlayerDetailComponent extends JPanel {
 					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
 				}
 				int passingModifier = passing - position.getPassing();
-				drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
+				drawStatBox(g2d, x + statSpacings[2] + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
 			int armourModifier = armour - position.getArmour();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + statSpacings[3] + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
@@ -334,7 +343,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSpps() {
 		if (fPlayer != null) {
-			int x = 8, y = 222;
+			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_SPP_OFFSET);
+			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.setFont(_SPP_FONT);
 			FontMetrics metrics = g2d.getFontMetrics();
@@ -364,7 +374,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSkills() {
 		if (fPlayer != null) {
-			int x = 8, y = 246;
+			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_SKILL_OFFSET);
+			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -432,7 +443,7 @@ public class PlayerDetailComponent extends JPanel {
 					pG2d.setFont(_SKILL_FONT);
 				}
 				FontMetrics metrics = pG2d.getFontMetrics();
-				for (String part: splitSkill(skill)) {
+				for (String part : splitSkill(skill)) {
 					height += metrics.getHeight();
 					if (yPos > pY) {
 						yPos += metrics.getHeight();
@@ -458,7 +469,7 @@ public class PlayerDetailComponent extends JPanel {
 
 		StringBuilder line = new StringBuilder(LINE_LENGTH);
 
-		for (String word: words) {
+		for (String word : words) {
 			if (line.length() + word.length() > LINE_LENGTH && line.toString().trim().length() > 0) {
 				addPart(parts, line);
 				line = new StringBuilder(LINE_LENGTH);
@@ -484,29 +495,32 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier, String suffix) {
 		if (fPlayer != null) {
+			Dimension statBox = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX);
+			int innerHeight = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX_MISC).height;
+
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(_STAT_FONT);
 			if (modifier.isImprovement()) {
 				pG2d.setColor(Color.GREEN);
 				if (modifier.getAbsoluteModifier() > 1) {
-					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
-						_STAT_BOX_INNER_HEIGHT);
+					pG2d.fillRect(pX + 2, pY + statBox.height - innerHeight - 2, statBox.width - 6,
+						innerHeight);
 				} else {
-					pG2d.fillPolygon(new int[]{pX + 2, pX + 2, pX + _STAT_BOX_WIDTH - 3},
-						new int[]{pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2,
-							pY + _STAT_BOX_HEIGHT - 2},
+					pG2d.fillPolygon(new int[]{pX + 2, pX + 2, pX + statBox.width - 3},
+						new int[]{pY + statBox.height - innerHeight - 2, pY + statBox.height - 2,
+							pY + statBox.height - 2},
 						3);
 				}
 			}
 			if (modifier.isImpairment()) {
 				pG2d.setColor(Color.RED);
 				if (modifier.getAbsoluteModifier() > 1) {
-					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
-						_STAT_BOX_INNER_HEIGHT);
+					pG2d.fillRect(pX + 2, pY + statBox.height - innerHeight - 2, statBox.width - 6,
+						innerHeight);
 				} else {
-					pG2d.fillPolygon(new int[]{pX + 2, pX + _STAT_BOX_WIDTH - 3, pX + _STAT_BOX_WIDTH - 3},
-						new int[]{pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2,
-							pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2},
+					pG2d.fillPolygon(new int[]{pX + 2, pX + statBox.width - 3, pX + statBox.width - 3},
+						new int[]{pY + statBox.height - innerHeight - 2,
+							pY + statBox.height - innerHeight - 2, pY + statBox.height - 2},
 						3);
 				}
 			}
@@ -517,7 +531,7 @@ public class PlayerDetailComponent extends JPanel {
 				// Move the dash more central
 				pY -= 1;
 			}
-			drawCenteredText(pG2d, pX + (_STAT_BOX_WIDTH / 2), pY + _STAT_BOX_HEIGHT - 4, statColor,
+			drawCenteredText(pG2d, pX + (statBox.width / 2), pY + statBox.height - 4, statColor,
 				statText);
 		}
 	}

@@ -16,11 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportScatterBall implements IReport {
+public class ReportScatterBall extends NoDiceReport {
 
 	private final List<Direction> fDirections;
 	private final List<Integer> fRolls;

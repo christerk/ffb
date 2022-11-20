@@ -38,6 +38,7 @@ public enum SkillUse implements INamedObject {
 	GAIN_GRANTED_SKILL("gainGrantedSkill", "to gain a skill for this turn"),
 	IGNORE_SENT_OFF("ignoreSentOff", "to not be ejected"),
 	MOVE_OPEN_TEAM_MATE("moveOpenTeamMate", "to move a team-mate"),
+	MOVE_SQUARE("moveOpenTeamMate", "to move a square"),
 	ADD_BLOCK_DIE("addBlockDie", "to add a block die"),
 	PERFORM_SECOND_CHAINSAW_ATTACK("performSecondChainsawAttack", "to perform a second chainsaw attack"),
 	PERFORM_SECOND_TWO_BLOCKS("performSecondTwoBlocks", "to perform two block actions"),
@@ -47,6 +48,7 @@ public enum SkillUse implements INamedObject {
 	RE_ROLL_CATCH("reRollCatch", "to re-roll the catch roll"),
 	LOOK_INTO_MY_EYES("lookIntoMyEyes", "to steal the ball from %g opponent"),
 	MAKE_OPPONENT_MISS_TURN("makeOpponentMissTurn", "to make an opponent player miss a turn"),
+	LASH_OUT_AGAINST_OPPONENT("lashOutAgainstOpponent", "to lash out against an opponent player instead"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

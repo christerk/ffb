@@ -31,6 +31,8 @@ public class ClientParameters {
 	private static final String _ARGUMENT_SERVER = "-server";
 	private static final String _ARGUMENT_BUILD = "-build";
 
+	private static final String _ARGUMENT_PORTRAIT = "-portrait";
+
 	private ClientMode fMode;
 	private String fCoach;
 	private long fGameId;
@@ -42,6 +44,7 @@ public class ClientParameters {
 	private int fPort;
 	private String fServer;
 	private String fBuild;
+	private boolean portrait;
 
 	public ClientMode getMode() {
 		return fMode;
@@ -91,6 +94,10 @@ public class ClientParameters {
 		return fBuild;
 	}
 
+	public boolean isPortrait() {
+		return portrait;
+	}
+
 	public void initFrom(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
 			ClientModeFactory clientModeFactory = new ClientModeFactory();
@@ -127,6 +134,8 @@ public class ClientParameters {
 					fServer = fetchArgument(pArguments, pos++);
 				} else if (_ARGUMENT_BUILD.equalsIgnoreCase(argument)) {
 					fBuild = fetchArgument(pArguments, pos++);
+				} else if (_ARGUMENT_PORTRAIT.equalsIgnoreCase(argument)) {
+					portrait = Boolean.parseBoolean(fetchArgument(pArguments, pos++));
 				} else {
 					throw new FantasyFootballException("Unknown argument " + argument);
 				}
@@ -159,15 +168,12 @@ public class ClientParameters {
 				}
 			}
 			return true;
-		case SPECTATOR:
-			if (!StringTool.isProvided(getCoach())) {
+			case SPECTATOR:
+				return StringTool.isProvided(getCoach());
+			case REPLAY:
+				return (getGameId() > 0);
+			default:
 				return false;
-			}
-			return true;
-		case REPLAY:
-			return (getGameId() > 0);
-		default:
-			return false;
 		}
 	}
 

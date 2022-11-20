@@ -10,11 +10,10 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ReportSkillUse implements IReport {
+public class ReportSkillUse extends NoDiceReport {
 
 	private String fPlayerId;
 	private Skill fSkill;

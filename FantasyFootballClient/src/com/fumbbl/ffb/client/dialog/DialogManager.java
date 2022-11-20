@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IClientProperty;
-import com.fumbbl.ffb.client.IClientPropertyValue;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsAndInducementsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyInducementsHandler;

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.ui;
 import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.FieldModel;
 
@@ -31,41 +32,43 @@ import java.util.Map;
  */
 public class BoxButtonComponent extends JPanel implements MouseListener, MouseMotionListener {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 22;
-
 	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Dimension _BUTTON_DIMENSION = new Dimension(72, 22);
-
 	private final Map<BoxType, Rectangle> fButtonLocations;
 
 	private final SideBarComponent fSideBar;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
 	private BoxType fOpenBox;
 	private BoxType fSelectedBox;
 
-	public BoxButtonComponent(SideBarComponent pSideBar) {
+	private Dimension size;
+
+	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		fButtonLocations = new HashMap<>();
-		if (getSideBar().isHomeSide()) {
-			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
-			fButtonLocations.put(BoxType.OUT,
-					new Rectangle((WIDTH / 2) + 1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
-		} else {
-			fButtonLocations.put(BoxType.OUT, new Rectangle(1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
-			fButtonLocations.put(BoxType.RESERVES,
-					new Rectangle((WIDTH / 2) + 1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
-		}
-		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
 		fOpenBox = null;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		size = dimensionProvider.dimension(DimensionProvider.Component.BUTTON_BOX);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+		Dimension button = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
+		if (getSideBar().isHomeSide()) {
+			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, button.width, button.height));
+			fButtonLocations.put(BoxType.OUT,
+				new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
+		} else {
+			fButtonLocations.put(BoxType.OUT, new Rectangle(1, 0, button.width, button.height));
+			fButtonLocations.put(BoxType.RESERVES,
+				new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
+		}
+
+		setLayout(null);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
 	public void closeBox() {
@@ -101,7 +104,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 		} else {
 			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE);
 		}
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 
@@ -116,12 +119,12 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 			} else {
 				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON);
 			}
-			g2d.drawImage(buttonImage, buttonLocation.x, buttonLocation.y, null);
+			g2d.drawImage(buttonImage, buttonLocation.x, buttonLocation.y, buttonLocation.width, buttonLocation.height, null);
 			g2d.setFont(_BUTTON_FONT);
 			g2d.setColor(Color.BLACK);
 			FontMetrics metrics = g2d.getFontMetrics();
-			String buttonText = new StringBuilder().append(countBoxElements(pBox, getSideBar().isHomeSide())).append(" ")
-					.append(pBox.getShortcut()).toString();
+			String buttonText = countBoxElements(pBox, getSideBar().isHomeSide()) + " " +
+				pBox.getShortcut();
 			int x = buttonLocation.x + findCenteredX(g2d, buttonText, buttonLocation.width);
 			int y = buttonLocation.y + (buttonLocation.height + metrics.getHeight()) / 2 - metrics.getDescent();
 			g2d.drawString(buttonText, x, y);
@@ -170,11 +173,6 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 			return null;
 		}
 	}
-
-	public BoxType getOpenBox() {
-		return fOpenBox;
-	}
-
 	public void mouseClicked(MouseEvent pMouseEvent) {
 	}
 

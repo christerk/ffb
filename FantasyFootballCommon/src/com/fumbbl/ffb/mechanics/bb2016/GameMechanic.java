@@ -52,7 +52,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean eligibleForPro(Game game, Player<?> player) {
+	public boolean eligibleForPro(Game game, Player<?> player, String originalBomberId) {
 		return true;
 	}
 

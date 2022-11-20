@@ -49,7 +49,8 @@ public class KickTeamMate extends com.fumbbl.ffb.server.step.generator.KickTeamM
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_KICKED_PLAYER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.THROWN_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.END_KICK_TEAM_MATE, IStepLabel.END_KICK_TEAM_MATE);
+		sequence.add(StepId.RESET_TO_MOVE, IStepLabel.END_KICK_TEAM_MATE);
+		sequence.add(StepId.END_KICK_TEAM_MATE);
 
 		gameState.getStepStack().push(sequence.getSequence());
 	}

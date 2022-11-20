@@ -22,9 +22,9 @@ public class PassDeviateMessage extends ReportMessageBase<ReportPassDeviate> {
   		status = new StringBuilder();
   		status.append("The ").append(thrownEntity).append(" will land ");
   		status.append(report.getRollScatterDistance())
-  			.append((report.getRollScatterDistance() == 1) ? " square " : " squares ");
-  		status.append(report.getScatterDirection().getName().toLowerCase()).append(" from the thrower.");
-  		println(getIndent() + 1, status.toString());
+				.append((report.getRollScatterDistance() == 1) ? " square " : " squares ");
+			status.append(mapToLocal(report.getScatterDirection()).getName().toLowerCase()).append(" from the thrower.");
+			println(getIndent() + 1, status.toString());
   		setIndent(1);
     }
 }

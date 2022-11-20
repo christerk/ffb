@@ -1,8 +1,9 @@
 package com.fumbbl.ffb.mechanics;
 
 public class StatsDrawingModifier {
-	private boolean improvement, impairment;
-	private int absoluteModifier;
+	private final boolean improvement;
+	private final boolean impairment;
+	private final int absoluteModifier;
 
 	private StatsDrawingModifier(boolean improvement, boolean impairment, int absoluteModifier) {
 		this.improvement = improvement;

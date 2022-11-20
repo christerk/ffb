@@ -4,10 +4,10 @@ import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
@@ -38,33 +38,34 @@ import java.util.List;
  */
 public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = 430;
-
 	public static final int MAX_BOX_ELEMENTS = 30;
 	public static final int FIELD_SQUARE_SIZE = 39;
 
 	private static final Font _BOX_FONT = new Font("Sans Serif", Font.BOLD, 12);
 
 	private final SideBarComponent fSideBar;
-	private final BufferedImage fImage;
+	private BufferedImage fImage;
+	private Dimension size;
 	private BoxType fOpenBox;
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
 
-	public BoxComponent(SideBarComponent pSideBar) {
+	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
 		fSideBar = pSideBar;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		fBoxSlots = new ArrayList<>();
-		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
 		fOpenBox = null;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		size = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+		setLayout(null);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
 	public void closeBox() {
@@ -80,7 +81,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 		BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX);
-		g2d.drawImage(background, 0, 0, null);
+		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 
@@ -202,18 +203,13 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? 5 : FieldLayer.FIELD_IMAGE_WIDTH - 135;
+					int x = getSideBar().isHomeSide() ? 5 : getSideBar().getClient().getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD).width - 135;
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
 					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}
 			} else {
 				if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-					System.out.println("BoxComponent: Release event handled");
-					System.out.println("Event: " + pMouseEvent);
-					UtilClientPlayerDrag.mouseReleased(getSideBar().getClient(), pMouseEvent, true);
-				} else {
-					System.out.println("BoxComponent: Release event ignored");
-					System.out.println("Event: " + pMouseEvent);
+					UtilClientPlayerDrag.mouseReleased(getSideBar().getClient());
 				}
 			}
 		}
@@ -308,16 +304,16 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				g2d.setFont(_BOX_FONT);
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D bounds = metrics.getStringBounds(title, g2d);
-				int x = ((WIDTH - (int) bounds.getWidth()) / 2);
+				int x = ((size.width - (int) bounds.getWidth()) / 2);
 				int y = pYPosition + metrics.getAscent() + 2;
 				UtilClientGraphics.drawShadowedText(g2d, title, x, y);
 				y = pYPosition + ((int) bounds.getHeight() / 2) + 3;
 				g2d.setColor(Color.WHITE);
 				g2d.drawLine(2, y, x - 4, y);
-				g2d.drawLine(x + (int) bounds.getWidth() + 4, y, WIDTH - 3, y);
+				g2d.drawLine(x + (int) bounds.getWidth() + 4, y, size.width - 3, y);
 				g2d.setColor(Color.BLACK);
 				g2d.drawLine(2, y + 1, x - 4, y + 1);
-				g2d.drawLine(x + (int) bounds.getWidth() + 4, y + 1, WIDTH - 3, y + 1);
+				g2d.drawLine(x + (int) bounds.getWidth() + 4, y + 1, size.width - 3, y + 1);
 				height = (int) bounds.getHeight() + 4;
 				if (height > fMaxTitleOffset) {
 					fMaxTitleOffset = height;

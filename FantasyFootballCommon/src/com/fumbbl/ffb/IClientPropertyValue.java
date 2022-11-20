@@ -1,6 +1,4 @@
-package com.fumbbl.ffb.client;
-
-import com.fumbbl.ffb.CommonPropertyValue;
+package com.fumbbl.ffb;
 
 /**
  * @author Kalimar
@@ -36,6 +34,9 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_PITCH_MARKINGS_ON = "pitchMarkingsOn";
 	String SETTING_PITCH_MARKINGS_OFF = "pitchMarkingsOff";
+
+	String SETTING_PITCH_LANDSCAPE = "pitchLandscape";
+	String SETTING_PITCH_PORTRAIT = "pitchPortrait";
 
 	String SETTING_TEAM_LOGOS_BOTH = "teamLogosBoth";
 	String SETTING_TEAM_LOGOS_OWN = "teamLogosOwn";

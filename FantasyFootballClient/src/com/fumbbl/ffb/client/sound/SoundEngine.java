@@ -1,24 +1,22 @@
 package com.fumbbl.ffb.client.sound;
 
+import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.util.StringTool;
+import kuusisto.tinysound.Sound;
+import kuusisto.tinysound.TinySound;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.util.StringTool;
-
-import kuusisto.tinysound.Sound;
-import kuusisto.tinysound.TinySound;
-
 /**
- *
  * @author Kalimar
  */
 public class SoundEngine {
 
-	private static Map<SoundId, String> _SOUND_PROPERTY_KEYS = Collections
-			.synchronizedMap(new HashMap<>());
+	private static final Map<SoundId, String> _SOUND_PROPERTY_KEYS = Collections
+		.synchronizedMap(new HashMap<>());
 
 	static {
 		_SOUND_PROPERTY_KEYS.put(SoundId.BLOCK, ISoundProperty.BLOCK);
@@ -67,10 +65,13 @@ public class SoundEngine {
 		_SOUND_PROPERTY_KEYS.put(SoundId.TOUCHDOWN, ISoundProperty.TOUCHDOWN);
 		_SOUND_PROPERTY_KEYS.put(SoundId.WHISTLE, ISoundProperty.WHISTLE);
 		_SOUND_PROPERTY_KEYS.put(SoundId.WOOOAAAH, ISoundProperty.WOOOAAAH);
+		_SOUND_PROPERTY_KEYS.put(SoundId.PUMP_CROWD, ISoundProperty.PUMP_CROWD);
+		_SOUND_PROPERTY_KEYS.put(SoundId.TRAPDOOR, ISoundProperty.TRAPDOOR);
+		_SOUND_PROPERTY_KEYS.put(SoundId.VOMIT, ISoundProperty.VOMIT);
 	}
 
-	private FantasyFootballClient fClient;
-	private Map<SoundId, Sound> fSoundById;
+	private final FantasyFootballClient fClient;
+	private final Map<SoundId, Sound> fSoundById;
 	private int fVolume;
 
 	public SoundEngine(FantasyFootballClient pClient) {
@@ -88,10 +89,8 @@ public class SoundEngine {
 		if (sound == null) {
 			String soundPropertyKey = _SOUND_PROPERTY_KEYS.get(pSoundId);
 			if (StringTool.isProvided(soundPropertyKey)) {
-				String fileProperty = new StringBuilder().append(soundPropertyKey).append(ISoundProperty.FILE_SUFFIX)
-						.toString();
-				String soundResource = new StringBuilder().append("/sounds/").append(getClient().getProperty(fileProperty))
-						.toString();
+				String fileProperty = soundPropertyKey + ISoundProperty.FILE_SUFFIX;
+				String soundResource = "/sounds/" + getClient().getProperty(fileProperty);
 				sound = TinySound.loadSound(soundResource);
 				fSoundById.put(pSoundId, sound);
 			}
@@ -102,9 +101,9 @@ public class SoundEngine {
 	}
 
 	public long getSoundLength(SoundId pSoundId) {
-		StringBuilder lengthProperty = new StringBuilder().append(_SOUND_PROPERTY_KEYS.get(pSoundId))
-				.append(ISoundProperty.LENGTH_SUFFIX);
-		String length = getClient().getProperty(lengthProperty.toString());
+		String lengthProperty = _SOUND_PROPERTY_KEYS.get(pSoundId) +
+			ISoundProperty.LENGTH_SUFFIX;
+		String length = getClient().getProperty(lengthProperty);
 		if (StringTool.isProvided(length)) {
 			return Long.parseLong(length);
 		} else {
@@ -120,9 +119,4 @@ public class SoundEngine {
 	public void setVolume(int pVolume) {
 		fVolume = pVolume;
 	}
-
-	public int getVolume() {
-		return fVolume;
-	}
-
 }

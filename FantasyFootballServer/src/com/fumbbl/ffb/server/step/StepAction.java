@@ -15,14 +15,14 @@ public enum StepAction implements INamedObject {
 	NEXT_STEP_AND_REPEAT("nextStepAndRepeat", true, true, false, false),
 	GOTO_LABEL_AND_REPEAT("gotoLabelAndRepeat", true, true, true, false);
 
-	private String fName;
-	private boolean fTriggerNextStep;
-	private boolean fForwardCommand;
-	private boolean fTriggerGoto;
-	private boolean fTriggerRepeat;
+	private final String fName;
+	private final boolean fTriggerNextStep;
+	private final boolean fForwardCommand;
+	private final boolean fTriggerGoto;
+	private final boolean fTriggerRepeat;
 
-	private StepAction(String pName, boolean triggerNextStep, boolean forwardCommand, boolean triggerGoto,
-			boolean triggerRepeat) {
+	StepAction(String pName, boolean triggerNextStep, boolean forwardCommand, boolean triggerGoto,
+						 boolean triggerRepeat) {
 		fName = pName;
 		fTriggerNextStep = triggerNextStep;
 		fForwardCommand = forwardCommand;

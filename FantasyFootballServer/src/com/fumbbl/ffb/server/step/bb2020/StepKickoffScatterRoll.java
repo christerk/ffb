@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportKickoffScatter;
 import com.fumbbl.ffb.report.ReportSkillUse;
@@ -69,12 +70,9 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
-			switch (parameter.getKey()) {
-				case KICKOFF_START_COORDINATE:
-					fKickoffStartCoordinate = (FieldCoordinate) parameter.getValue();
-					return true;
-				default:
-					break;
+			if (parameter.getKey() == StepParameterKey.KICKOFF_START_COORDINATE) {
+				fKickoffStartCoordinate = (FieldCoordinate) parameter.getValue();
+				return true;
 			}
 		}
 		return false;
@@ -90,16 +88,12 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_USE_SKILL:
-					ClientCommandUseSkill skillUseCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-					if (skillUseCommand.getSkill().hasSkillProperty(NamedProperties.canReduceKickDistance)) {
-						fUseKickChoice = skillUseCommand.isSkillUsed();
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					}
-					break;
-				default:
-					break;
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+				ClientCommandUseSkill skillUseCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+				if (skillUseCommand.getSkill().hasSkillProperty(NamedProperties.canReduceKickDistance)) {
+					fUseKickChoice = skillUseCommand.isSkillUsed();
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				}
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -205,6 +199,10 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 				.collect(Collectors.toList());
 		} else {
 			playersOnField = centerPlayers;
+		}
+
+		if (playersOnField.isEmpty()) {
+			return null;
 		}
 
 		return playersOnField.stream().filter(player -> player.hasSkillProperty(NamedProperties.canReduceKickDistance))

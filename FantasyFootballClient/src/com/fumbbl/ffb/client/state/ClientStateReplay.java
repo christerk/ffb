@@ -26,6 +26,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 
 	private DialogProgressBar fDialogProgress;
 	private List<ServerCommand> fReplayList;
+	private boolean replayerInitialized;
 
 	protected ClientStateReplay(FantasyFootballClient pClient) {
 		super(pClient);
@@ -57,24 +58,25 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 	public void handleCommand(NetCommand pNetCommand) {
 		ClientReplayer replayer = getClient().getReplayer();
 		switch (pNetCommand.getId()) {
-		case SERVER_REPLAY:
-			ServerCommandReplay replayCommand = (ServerCommandReplay) pNetCommand;
-			initProgress(0, replayCommand.getTotalNrOfCommands());
-			for (ServerCommand command : replayCommand.getReplayCommands()) {
-				fReplayList.add(command);
-				updateProgress(fReplayList.size(), "Received Step %d of %d.");
-			}
-			if (replayCommand.isLastCommand() || fReplayList.size() >= replayCommand.getTotalNrOfCommands()) {
-				fDialogProgress.hideDialog();
-				// signal server that we've received the full replay and the session can be
-				// closed
-				if (ClientMode.REPLAY == getClient().getMode()) {
-					getClient().getCommunication().sendCloseSession();
+			case SERVER_REPLAY:
+				ServerCommandReplay replayCommand = (ServerCommandReplay) pNetCommand;
+				initProgress(0, replayCommand.getTotalNrOfCommands());
+				for (ServerCommand command : replayCommand.getReplayCommands()) {
+					fReplayList.add(command);
+					updateProgress(fReplayList.size(), "Received Step %d of %d.");
 				}
-				ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[fReplayList.size()]);
-				fDialogProgress = new DialogProgressBar(getClient(), "Initializing Replay");
-				fDialogProgress.showDialog(this);
-				replayer.init(replayCommands, this);
+				if (!replayerInitialized && (replayCommand.isLastCommand() || fReplayList.size() >= replayCommand.getTotalNrOfCommands())) {
+					replayerInitialized = true;
+					fDialogProgress.hideDialog();
+					// signal server that we've received the full replay and the session can be
+					// closed
+					if (ClientMode.REPLAY == getClient().getMode()) {
+						getClient().getCommunication().sendCloseSession();
+					}
+					ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[0]);
+					fDialogProgress = new DialogProgressBar(getClient(), "Initializing Replay");
+					fDialogProgress.showDialog(this);
+					replayer.init(replayCommands, this);
 				fDialogProgress.hideDialog();
 				if (ClientMode.REPLAY == getClient().getMode()) {
 					replayer.positionOnFirstCommand();

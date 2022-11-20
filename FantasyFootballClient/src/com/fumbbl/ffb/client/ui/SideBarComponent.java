@@ -1,54 +1,58 @@
 package com.fumbbl.ffb.client.ui;
 
-import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import com.fumbbl.ffb.BoxType;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.model.Player;
 
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
 /**
- *
  * @author Kalimar
  */
 public class SideBarComponent extends JPanel implements MouseMotionListener {
 
-	public static final int WIDTH = 145;
-	public static final int HEIGHT = BoxComponent.HEIGHT + BoxButtonComponent.HEIGHT + ResourceComponent.HEIGHT
-			+ TurnDiceStatusComponent.HEIGHT; // 708
+	private final FantasyFootballClient fClient;
+	private final boolean fHomeSide;
+	private final PlayerDetailComponent fPlayerDetail;
+	private final BoxComponent fBoxComponent;
+	private final BoxButtonComponent fBoxButtons;
+	private final ResourceComponent fResourceComponent;
+	private final TurnDiceStatusComponent fTurnDiceStatusComponent;
 
-	private FantasyFootballClient fClient;
-	private boolean fHomeSide;
-	private PlayerDetailComponent fPlayerDetail;
-	private BoxComponent fBoxComponent;
-	private BoxButtonComponent fBoxButtons;
-	private ResourceComponent fResourceComponent;
-	private TurnDiceStatusComponent fTurnDiceStatusComponent;
-
-	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide) {
+	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, DimensionProvider dimensionProvider) {
 		fClient = pClient;
 		fHomeSide = pHomeSide;
-		fPlayerDetail = new PlayerDetailComponent(this);
-		fBoxComponent = new BoxComponent(this);
-		fBoxButtons = new BoxButtonComponent(this);
-		fResourceComponent = new ResourceComponent(this);
-		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this);
+		fPlayerDetail = new PlayerDetailComponent(this, dimensionProvider);
+		fBoxComponent = new BoxComponent(this, dimensionProvider);
+		fBoxButtons = new BoxButtonComponent(this, dimensionProvider);
+		fResourceComponent = new ResourceComponent(this, dimensionProvider);
+		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, dimensionProvider);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		addComponents();
-		Dimension size = new Dimension(WIDTH, HEIGHT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
 		fPlayerDetail.addMouseMotionListener(this);
 		fBoxComponent.addMouseMotionListener(this);
 		fBoxButtons.addMouseMotionListener(this);
 		fResourceComponent.addMouseMotionListener(this);
 		fTurnDiceStatusComponent.addMouseMotionListener(this);
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
+		fPlayerDetail.initLayout();
+		fBoxComponent.initLayout(dimensionProvider);
+		fBoxButtons.initLayout(dimensionProvider);
+		fResourceComponent.initLayout(dimensionProvider);
+		fTurnDiceStatusComponent.initLayout();
+
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
 	public FantasyFootballClient getClient() {
