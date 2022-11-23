@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Block dice indicators were not updated after Raiding Party or Hit and Run")
 			.addImprovement("Improvements for local development")
 			.addBugfix("Hit and run message referred to a team-mate")
+			.addImprovement("Closed session are no longer eligible when checking for game start")
 		);
 
 		versions.add(new VersionChangeList("2.13.0")

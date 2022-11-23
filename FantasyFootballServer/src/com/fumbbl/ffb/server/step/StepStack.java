@@ -65,7 +65,7 @@ public class StepStack implements IJsonSerializable {
 	}
 
 	public IStep[] toArray() {
-		return fStack.toArray(new IStep[fStack.size()]);
+		return fStack.toArray(new IStep[0]);
 	}
 
 	public void clear() {
@@ -76,10 +76,9 @@ public class StepStack implements IJsonSerializable {
 		for (IStep step : fStack) {
 			DebugLog debugLog = getGameState().getServer().getDebugLog();
 			if (debugLog.isLogging(IServerLogLevel.TRACE)) {
-				StringBuilder trace = new StringBuilder();
-				trace.append(step.getId()).append(" receives ").append(pParameter.getKey()).append("=")
-					.append(pParameter.getValue());
-				debugLog.log(IServerLogLevel.TRACE, getGameState().getGame().getId(), trace.toString());
+				String trace = step.getId() + " receives " + pParameter.getKey() + "=" +
+					pParameter.getValue();
+				debugLog.log(IServerLogLevel.TRACE, getGameState().getGame().getId(), trace);
 			}
 
 			step.setParameter(pParameter);
