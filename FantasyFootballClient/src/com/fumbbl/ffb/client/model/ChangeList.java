@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("RaidingParty used with e.g. Block caused the game to break")
 			.addBugfix("Block dice indicators were not updated after Raiding Party or Hit and Run")
 			.addImprovement("Improvements for local development")
+			.addBugfix("Hit and run message referred to a team-mate")
 		);
 
 		versions.add(new VersionChangeList("2.13.0")

@@ -38,7 +38,7 @@ public enum SkillUse implements INamedObject {
 	GAIN_GRANTED_SKILL("gainGrantedSkill", "to gain a skill for this turn"),
 	IGNORE_SENT_OFF("ignoreSentOff", "to not be ejected"),
 	MOVE_OPEN_TEAM_MATE("moveOpenTeamMate", "to move a team-mate"),
-	MOVE_SQUARE("moveOpenTeamMate", "to move a square"),
+	MOVE_SQUARE("moveSquare", "to move a square"),
 	ADD_BLOCK_DIE("addBlockDie", "to add a block die"),
 	PERFORM_SECOND_CHAINSAW_ATTACK("performSecondChainsawAttack", "to perform a second chainsaw attack"),
 	PERFORM_SECOND_TWO_BLOCKS("performSecondTwoBlocks", "to perform two block actions"),
