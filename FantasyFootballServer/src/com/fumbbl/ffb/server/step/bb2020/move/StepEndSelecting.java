@@ -373,7 +373,7 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case RAIDING_PARTY:
 				selectGenerator.pushSequence(selectParams);
-				RadingParty.SequenceParams raidingParams = new RadingParty.SequenceParams(getGameState(), IStepLabel.END_SELECTING, IStepLabel.NEXT);
+				RadingParty.SequenceParams raidingParams = new RadingParty.SequenceParams(getGameState(), IStepLabel.END_SELECTING, null);
 				RadingParty raidingGenerator = (RadingParty) factory.forName(SequenceGenerator.Type.RaidingParty.name());
 				raidingGenerator.pushSequence(raidingParams);
 				break;

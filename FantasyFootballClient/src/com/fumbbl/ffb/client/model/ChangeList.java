@@ -10,6 +10,12 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.13.1")
+			.addBugfix("RaidingParty used with e.g. Block caused the game to break")
+			.addBugfix("Block dice indicators were not updated after Raiding Party or Hit and Run")
+			.addImprovement("Improvements for local development")
+		);
+
 		versions.add(new VersionChangeList("2.13.0")
 			.addFeature("Portrait mode")
 			.addImprovement("Adjustments for dice stats")
