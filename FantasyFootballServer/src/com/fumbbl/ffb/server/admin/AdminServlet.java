@@ -152,6 +152,8 @@ public class AdminServlet extends HttpServlet {
 
 		if (CHALLENGE.equals(command)) {
 			isOk = handleChallenge(handler);
+		} else if (CACHE.equals(command)) {
+			isOk = handleCache(handler);
 		} else {
 			isOk = checkResponse(ArrayTool.firstElement(parameters.get(_PARAMETER_RESPONSE)));
 			if (isOk) {
@@ -163,8 +165,6 @@ public class AdminServlet extends HttpServlet {
 					isOk = handleBackup(handler, parameters);
 				} else if (BLOCK.equals(command)) {
 					isOk = handleBlock(handler, true);
-				} else if (CACHE.equals(command)) {
-					isOk = handleCache(handler);
 				} else if (UNBLOCK.equals(command)) {
 					isOk = handleBlock(handler, false);
 				} else if (LOGLEVEL.equals(command)) {
