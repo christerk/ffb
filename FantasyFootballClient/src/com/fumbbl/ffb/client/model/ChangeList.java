@@ -16,6 +16,7 @@ public class ChangeList {
 			.addImprovement("Improvements for local development")
 			.addBugfix("Hit and run message referred to a team-mate")
 			.addImprovement("Closed session are no longer eligible when checking for game start")
+			.addBugfix("Team logos did not display properly in portrait mode")
 		);
 
 		versions.add(new VersionChangeList("2.13.0")
