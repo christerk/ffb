@@ -20,24 +20,32 @@ import java.awt.image.BufferedImage;
  */
 public class ReplayControl extends JPanel implements MouseInputListener {
 
-	private static final int _ICON_WIDTH = 36;
-	private static final int _ICON_GAP = 10;
-
 	private final FantasyFootballClient fClient;
-	private final BufferedImage fImage;
-	private final ReplayButton fButtonSkipBackward;
+	private BufferedImage fImage;
 	private boolean fActive;
-	private final ReplayButton fButtonFastBackward;
-	private final ReplayButton fButtonPlayBackward;
-	private final ReplayButton fButtonPause;
-	private final ReplayButton fButtonPlayForward;
-	private final ReplayButton fButtonFastForward;
-	private final ReplayButton fButtonSkipForward;
-	private final Dimension size;
+	private ReplayButton fButtonSkipBackward;
+	private ReplayButton fButtonFastBackward;
+	private ReplayButton fButtonPlayBackward;
+	private ReplayButton fButtonPause;
+	private ReplayButton fButtonPlayForward;
+	private ReplayButton fButtonFastForward;
+	private ReplayButton fButtonSkipForward;
+	private Dimension size;
 
-	public ReplayControl(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+	private int iconGap;
+
+	private int iconWidth;
+
+	public ReplayControl(FantasyFootballClient pClient) {
 
 		fClient = pClient;
+
+		addMouseListener(this);
+		addMouseMotionListener(this);
+
+	}
+
+	public void initLayout(DimensionProvider dimensionProvider) {
 		size = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_CONTROL);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
@@ -46,33 +54,37 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		setPreferredSize(size);
 		setMaximumSize(size);
 
-		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - (_ICON_WIDTH / 2)), 1), IIconProperty.REPLAY_PAUSE,
-			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED);
-		fButtonPlayBackward = new ReplayButton(new Point(fButtonPause.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
-			IIconProperty.REPLAY_PLAY_BACKWARD, IIconProperty.REPLAY_PLAY_BACKWARD_ACTIVE,
-			IIconProperty.REPLAY_PLAY_BACKWARD_SELECTED);
-		fButtonFastBackward = new ReplayButton(new Point(fButtonPlayBackward.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
-			IIconProperty.REPLAY_FAST_BACKWARD, IIconProperty.REPLAY_FAST_BACKWARD_ACTIVE,
-			IIconProperty.REPLAY_FAST_BACKWARD_SELECTED);
-		fButtonSkipBackward = new ReplayButton(new Point(fButtonFastBackward.getPosition().x - _ICON_WIDTH - _ICON_GAP, 1),
-			IIconProperty.REPLAY_SKIP_BACKWARD, IIconProperty.REPLAY_SKIP_BACKWARD_ACTIVE,
-			IIconProperty.REPLAY_SKIP_BACKWARD_SELECTED);
-		fButtonPlayForward = new ReplayButton(new Point(fButtonPause.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
-			IIconProperty.REPLAY_PLAY_FORWARD, IIconProperty.REPLAY_PLAY_FORWARD_ACTIVE,
-			IIconProperty.REPLAY_PLAY_FORWARD_SELECTED);
-		fButtonFastForward = new ReplayButton(new Point(fButtonPlayForward.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
-			IIconProperty.REPLAY_FAST_FORWARD, IIconProperty.REPLAY_FAST_FORWARD_ACTIVE,
-			IIconProperty.REPLAY_FAST_FORWARD_SELECTED);
-		fButtonSkipForward = new ReplayButton(new Point(fButtonFastForward.getPosition().x + _ICON_WIDTH + _ICON_GAP, 1),
-			IIconProperty.REPLAY_SKIP_FORWARD, IIconProperty.REPLAY_SKIP_FORWARD_ACTIVE,
-			IIconProperty.REPLAY_SKIP_FORWARD_SELECTED);
+		iconGap = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_ICON_GAP).width;
+		iconWidth = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_ICON_WIDTH).width;
 
-		addMouseListener(this);
-		addMouseMotionListener(this);
+		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - (iconWidth / 2)), 1), IIconProperty.REPLAY_PAUSE,
+			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED, isActive(fButtonPause));
+		fButtonPlayBackward = new ReplayButton(new Point(fButtonPause.getPosition().x - iconWidth - iconGap, 1),
+			IIconProperty.REPLAY_PLAY_BACKWARD, IIconProperty.REPLAY_PLAY_BACKWARD_ACTIVE,
+			IIconProperty.REPLAY_PLAY_BACKWARD_SELECTED, isActive(fButtonPlayBackward));
+		fButtonFastBackward = new ReplayButton(new Point(fButtonPlayBackward.getPosition().x - iconWidth - iconGap, 1),
+			IIconProperty.REPLAY_FAST_BACKWARD, IIconProperty.REPLAY_FAST_BACKWARD_ACTIVE,
+			IIconProperty.REPLAY_FAST_BACKWARD_SELECTED, isActive(fButtonFastBackward));
+		fButtonSkipBackward = new ReplayButton(new Point(fButtonFastBackward.getPosition().x - iconWidth - iconGap, 1),
+			IIconProperty.REPLAY_SKIP_BACKWARD, IIconProperty.REPLAY_SKIP_BACKWARD_ACTIVE,
+			IIconProperty.REPLAY_SKIP_BACKWARD_SELECTED, isActive(fButtonSkipBackward));
+		fButtonPlayForward = new ReplayButton(new Point(fButtonPause.getPosition().x + iconWidth + iconGap, 1),
+			IIconProperty.REPLAY_PLAY_FORWARD, IIconProperty.REPLAY_PLAY_FORWARD_ACTIVE,
+			IIconProperty.REPLAY_PLAY_FORWARD_SELECTED, isActive(fButtonPlayForward));
+		fButtonFastForward = new ReplayButton(new Point(fButtonPlayForward.getPosition().x + iconWidth + iconGap, 1),
+			IIconProperty.REPLAY_FAST_FORWARD, IIconProperty.REPLAY_FAST_FORWARD_ACTIVE,
+			IIconProperty.REPLAY_FAST_FORWARD_SELECTED, isActive(fButtonFastForward));
+		fButtonSkipForward = new ReplayButton(new Point(fButtonFastForward.getPosition().x + iconWidth + iconGap, 1),
+			IIconProperty.REPLAY_SKIP_FORWARD, IIconProperty.REPLAY_SKIP_FORWARD_ACTIVE,
+			IIconProperty.REPLAY_SKIP_FORWARD_SELECTED, isActive(fButtonSkipForward));
 
 	}
 
-	private void refresh() {
+	private boolean isActive(ReplayButton button) {
+		return button != null && button.isActive();
+	}
+
+	public void refresh() {
 		ClientReplayer replayer = getClient().getReplayer();
 		Graphics2D g2d = fImage.createGraphics();
 		g2d.setPaint(new GradientPaint(0, 0, Color.WHITE, size.width / 2.0f, 0, new Color(128, 128, 128), false));
@@ -114,11 +126,12 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		private final Point fPosition;
 
 		public ReplayButton(Point pPosition, String pIconProperty, String pIconPropertyActive,
-												String pIconPropertySelected) {
+												String pIconPropertySelected, boolean active) {
 			fPosition = pPosition;
 			fIconProperty = pIconProperty;
 			fIconPropertyActive = pIconPropertyActive;
 			fIconPropertySelected = pIconPropertySelected;
+			fActive = active;
 		}
 
 		public boolean isActive() {
@@ -171,8 +184,8 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		}
 
 		public boolean isMouseOver(MouseEvent pMouseEvent) {
-			return ((pMouseEvent.getX() >= (fPosition.x - (_ICON_GAP / 2)))
-				&& (pMouseEvent.getX() < (fPosition.x + _ICON_WIDTH + (_ICON_GAP / 2))));
+			return ((pMouseEvent.getX() >= (fPosition.x - (iconGap / 2)))
+				&& (pMouseEvent.getX() < (fPosition.x + iconWidth + (iconGap / 2))));
 		}
 
 		public boolean activateOnMouseOver(MouseEvent pMouseEvent) {

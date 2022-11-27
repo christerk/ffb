@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.client.ui;
 
-import java.awt.Rectangle;
-
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
+
+import java.awt.Rectangle;
 
 /**
  *
@@ -14,7 +14,7 @@ import com.fumbbl.ffb.model.PlayerResult;
 public class BoxSlot {
 
 	private PlayerState fType;
-	private Rectangle fLocation;
+	private final Rectangle fLocation;
 	private Player<?> fPlayer;
 
 	public BoxSlot(Rectangle pLocation, PlayerState pType) {

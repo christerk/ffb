@@ -898,19 +898,21 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void updateOrientation() {
 
-		DimensionProvider.ClientLayout layout;
+		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
 
 		String orientation = getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION);
-		switch (orientation) {
-			case IClientPropertyValue.SETTING_PITCH_PORTRAIT:
-				layout = DimensionProvider.ClientLayout.PORTRAIT;
-				break;
-			case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
-				layout = DimensionProvider.ClientLayout.SQUARE;
-				break;
-			default:
-				layout = DimensionProvider.ClientLayout.LANDSCAPE;
-				break;
+
+		if (orientation != null) {
+			switch (orientation) {
+				case IClientPropertyValue.SETTING_PITCH_PORTRAIT:
+					layout = DimensionProvider.ClientLayout.PORTRAIT;
+					break;
+				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
+					layout = DimensionProvider.ClientLayout.SQUARE;
+					break;
+				default:
+					break;
+			}
 		}
 
 		if (getClient() != null && getClient().getUserInterface() != null) {

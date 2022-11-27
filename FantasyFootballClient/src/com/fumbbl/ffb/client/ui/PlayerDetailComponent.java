@@ -242,7 +242,7 @@ public class PlayerDetailComponent extends JPanel {
 
 			int statBoxWidth = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX).width;
 			int[] statSpacings;
-			if (dimensionProvider.isPortrait()) {
+			if (dimensionProvider.isPitchPortrait()) {
 				statSpacings = new int[]{1, 1, 3, 4};
 			} else {
 				statSpacings = new int[]{0, 0, 1, 1};

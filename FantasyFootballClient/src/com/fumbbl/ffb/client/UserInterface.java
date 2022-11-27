@@ -75,10 +75,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		addWindowListener(this);
 		setResizable(false);
 
-		fScoreBar = new ScoreBarComponent(getClient());
+		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider);
 		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
-		fLog = new LogComponent(getClient(), dimensionProvider);
-		fChat = new ChatComponent(getClient(), dimensionProvider);
+		fLog = new LogComponent(getClient());
+		fChat = new ChatComponent(getClient());
 		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider);
 		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider);
 
@@ -99,6 +99,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fChat.initLayout(dimensionProvider);
 		fSideBarHome.initLayout(dimensionProvider);
 		fSideBarAway.initLayout(dimensionProvider);
+		fScoreBar.initLayout();
 
 		JPanel panelContent;
 		switch (dimensionProvider.getLayout()) {
@@ -123,6 +124,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		if (callInit) {
 			init(null);
+			getChat().getReplayControl().refresh();
 		}
 		fDialogManager.setShownDialogParameter(null);
 		fDialogManager.updateDialog();
@@ -195,13 +197,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
 		fieldPanel.add(fFieldComponent);
 
-
 		JPanel logChatScorePanel = new JPanel();
 		logChatScorePanel.setLayout(new BoxLayout(logChatScorePanel, BoxLayout.Y_AXIS));
 		logChatScorePanel.add(getLog());
-		logChatScorePanel.add(Box.createVerticalStrut(2));
 		logChatScorePanel.add(getScoreBar());
-		logChatScorePanel.add(Box.createVerticalStrut(2));
 		logChatScorePanel.add(getChat());
 		logChatScorePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 

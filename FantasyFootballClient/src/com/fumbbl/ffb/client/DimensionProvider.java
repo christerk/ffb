@@ -33,11 +33,11 @@ public class DimensionProvider {
 		landscapeDimensions.put(Component.FIELD, new Dimension(782, 452));
 
 		portraitDimensions.put(Component.CHAT, new Dimension(389, 153));
-		squareDimensions.put(Component.CHAT, new Dimension(260, 226));
+		squareDimensions.put(Component.CHAT, new Dimension(260, 343));
 		landscapeDimensions.put(Component.CHAT, new Dimension(389, 226));
 
 		portraitDimensions.put(Component.LOG, new Dimension(389, 153));
-		squareDimensions.put(Component.LOG, new Dimension(260, 226));
+		squareDimensions.put(Component.LOG, new Dimension(260, 343));
 		landscapeDimensions.put(Component.LOG, new Dimension(389, 226));
 
 		portraitDimensions.put(Component.REPLAY_CONTROL, new Dimension(389, 26));
@@ -103,13 +103,25 @@ public class DimensionProvider {
 		portraitDimensions.put(Component.END_TURN_BUTTON, new Dimension(163, 34));
 		squareDimensions.put(Component.END_TURN_BUTTON, new Dimension(163, 34));
 		landscapeDimensions.put(Component.END_TURN_BUTTON, new Dimension(143, 31));
+
+		portraitDimensions.put(Component.SCORE_BOARD, new Dimension(782, 32));
+		squareDimensions.put(Component.SCORE_BOARD, new Dimension(260, 96));
+		landscapeDimensions.put(Component.SCORE_BOARD, new Dimension(782, 32));
+
+		portraitDimensions.put(Component.REPLAY_ICON_GAP, new Dimension(10, 0));
+		squareDimensions.put(Component.REPLAY_ICON_GAP, new Dimension(0, 0));
+		landscapeDimensions.put(Component.REPLAY_ICON_GAP, new Dimension(10, 0));
+
+		portraitDimensions.put(Component.REPLAY_ICON_WIDTH, new Dimension(36, 0));
+		squareDimensions.put(Component.REPLAY_ICON_WIDTH, new Dimension(30, 0));
+		landscapeDimensions.put(Component.REPLAY_ICON_WIDTH, new Dimension(36, 0));
 	}
 
 	public Dimension dimension(Component component) {
 		return dimensions.get(layout).get(component);
 	}
 
-	public boolean isPortrait() {
+	public boolean isPitchPortrait() {
 		return layout != ClientLayout.LANDSCAPE;
 	}
 
@@ -122,7 +134,7 @@ public class DimensionProvider {
 	}
 
 	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {
-		if (isPortrait()) {
+		if (isPitchPortrait()) {
 			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
 		}
 
@@ -146,7 +158,7 @@ public class DimensionProvider {
 		int offset = addImageOffset ? fieldSquareSize / 2 : 0;
 
 
-		if (isPortrait()) {
+		if (isPitchPortrait()) {
 			return new Dimension(y * fieldSquareSize + offset, (25 - x) * fieldSquareSize + offset);
 		}
 		return new Dimension(x * fieldSquareSize + offset, y * fieldSquareSize + offset);
@@ -162,7 +174,7 @@ public class DimensionProvider {
 	}
 
 	public Direction mapToLocal(Direction direction) {
-		if (isPortrait()) {
+		if (isPitchPortrait()) {
 			switch (direction) {
 				case NORTHEAST:
 					return Direction.NORTHWEST;
@@ -193,6 +205,7 @@ public class DimensionProvider {
 	public enum Component {
 		FIELD, CHAT, LOG, REPLAY_CONTROL, TURN_DICE_STATUS, RESOURCE, BUTTON_BOX, BOX, PLAYER_DETAIL, SIDEBAR,
 		PLAYER_PORTRAIT, PLAYER_PORTRAIT_OFFSET, PLAYER_STAT_OFFSET, PLAYER_STAT_BOX, PLAYER_STAT_BOX_MISC,
-		PLAYER_SPP_OFFSET, PLAYER_SKILL_OFFSET, BOX_BUTTON, END_TURN_BUTTON
+		PLAYER_SPP_OFFSET, PLAYER_SKILL_OFFSET, BOX_BUTTON, END_TURN_BUTTON, SCORE_BOARD, REPLAY_ICON_GAP,
+		REPLAY_ICON_WIDTH
 	}
 }

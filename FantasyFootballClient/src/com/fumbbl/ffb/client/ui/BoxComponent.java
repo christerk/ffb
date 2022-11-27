@@ -50,7 +50,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
 
-	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
+	public BoxComponent(SideBarComponent pSideBar) {
 		fSideBar = pSideBar;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;

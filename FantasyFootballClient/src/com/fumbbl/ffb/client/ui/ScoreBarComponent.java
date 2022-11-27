@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
@@ -27,16 +28,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- * 
  * @author Kalimar
  */
 public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
-	public static final int WIDTH = 782;
-	public static final int HEIGHT = 32;
-
-	//  private static final String _HOME = "Home";
-//  private static final String _GUEST = "Guest";
 	private static final String _TURN = "Turn";
 
 	private static final Font _SCORE_FONT = new Font("Sans Serif", Font.BOLD, 24);
@@ -45,13 +40,14 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private static final Font _SPECTATOR_FONT = new Font("Sans Serif", Font.BOLD, 14);
 
-	private final Rectangle _WEATHER_LOCATION = new Rectangle(WIDTH - 101, 0, 100, 32);
-	private final Rectangle _SPECTATOR_LOCATION = new Rectangle((WIDTH / 2 + 160), 0, 130, 32);
-	private final Rectangle _COACH_BANNED_HOME = new Rectangle((WIDTH / 2 - 130 - 36), 0, 36, 32);
-	private final Rectangle _COACH_BANNED_AWAY = new Rectangle((WIDTH / 2 + 130), 0, 36, 32);
+	private static final int LINE_HEIGHT = 32;
+	private final DimensionProvider dimensionProvider;
+	private Rectangle weatherLocation;
+	private Rectangle spectatorLocation;
+	private Rectangle coachBannedHome;
 
 	private final FantasyFootballClient fClient;
-	private final BufferedImage fImage;
+	private Rectangle coachBannedAway;
 
 	private int fTurnHome;
 	private int fTurnAway;
@@ -63,15 +59,12 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private boolean fCoachBannedHome;
 	private boolean fCoachBannedAway;
 	private boolean fRefreshNecessary;
+	private BufferedImage fImage;
 
-	public ScoreBarComponent(FantasyFootballClient pClient) {
+	public ScoreBarComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
-		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		this.dimensionProvider = dimensionProvider;
 		setLayout(null);
-		Dimension size = new Dimension(WIDTH, HEIGHT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
 		ToolTipManager.sharedInstance().registerComponent(this);
 		fRefreshNecessary = true;
 		addMouseMotionListener(this);
@@ -80,7 +73,9 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
-		BufferedImage background = iconCache.getIconByProperty(IIconProperty.SCOREBAR_BACKGROUND);
+		String scorebarBackground = dimensionProvider.getLayout() ==
+			DimensionProvider.ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
+		BufferedImage background = iconCache.getIconByProperty(scorebarBackground);
 		g2d.drawImage(background, 0, 0, null);
 		g2d.dispose();
 	}
@@ -92,11 +87,15 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		g2d.setFont(_SCORE_FONT);
 		FontMetrics fontMetrics = g2d.getFontMetrics();
 		Rectangle2D boundsHome = fontMetrics.getStringBounds(scoreHome, g2d);
-		int x = ((WIDTH - (int) boundsHome.getWidth()) / 2) - 40;
-		int y = ((HEIGHT + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
+		int x;
+		x = ((getPreferredSize().width - (int) boundsHome.getWidth()) / 2) - 40;
+		int y = ((LINE_HEIGHT + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
+		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+			y += LINE_HEIGHT;
+		}
 		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y);
 		Rectangle2D boundsAway = fontMetrics.getStringBounds(scoreAway, g2d);
-		x = ((WIDTH - (int) boundsAway.getWidth()) / 2) + 40;
+		x = ((getPreferredSize().width - (int) boundsAway.getWidth()) / 2) + 40;
 		UtilClientGraphics.drawShadowedText(g2d, scoreAway, x, y);
 		g2d.dispose();
 	}
@@ -104,21 +103,20 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private void drawTurn() {
 		Graphics2D g2d = fImage.createGraphics();
 		Game game = getClient().getGame();
-		g2d.setFont(_TURN_TEXT_FONT);
-		FontMetrics metrics = g2d.getFontMetrics();
-		int x = 4;
-		int y = ((HEIGHT + metrics.getHeight()) / 2) - metrics.getDescent();
-		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, y);
-		Rectangle2D bounds = metrics.getStringBounds(_TURN, g2d);
-		x += bounds.getWidth() + 10;
-		String turn = new StringBuilder().append(game.getTurnDataHome().getTurnNr()).append(" / ")
-				.append(game.getTurnDataAway().getTurnNr()).toString();
+
+		String turn = game.getTurnDataHome().getTurnNr() + " / " +
+			game.getTurnDataAway().getTurnNr();
+
 		g2d.setFont(_TURN_NUMBER_FONT);
-		metrics = g2d.getFontMetrics();
-		y = ((HEIGHT + metrics.getHeight()) / 2) - metrics.getDescent() - 1;
-		UtilClientGraphics.drawShadowedText(g2d, turn, x, y);
-		bounds = metrics.getStringBounds(turn, g2d);
-		x += bounds.getWidth() + 10;
+		FontMetrics metricsInts = g2d.getFontMetrics();
+		int yInts = ((LINE_HEIGHT + metricsInts.getHeight()) / 2) - metricsInts.getDescent() - 1;
+		Rectangle2D turnBounds = metricsInts.getStringBounds(turn, g2d);
+
+		g2d.setFont(_TURN_TEXT_FONT);
+		FontMetrics metricsText = g2d.getFontMetrics();
+		int yText = ((LINE_HEIGHT + metricsText.getHeight()) / 2) - metricsText.getDescent();
+		Rectangle2D turnPrefixBounds = metricsText.getStringBounds(_TURN, g2d);
+
 		String half;
 		if (game.getHalf() > 2) {
 			half = "of Overtime";
@@ -127,10 +125,25 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		} else {
 			half = "of 1st half";
 		}
+
+		Rectangle2D halfBounds = metricsText.getStringBounds(half, g2d);
+
+		int x;
+		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+			int length = (int) (turnPrefixBounds.getWidth() + turnBounds.getWidth() + halfBounds.getWidth() + 20);
+			x = (getWidth() - length) / 2;
+		} else {
+			x = 4;
+		}
+
 		g2d.setFont(_TURN_TEXT_FONT);
-		metrics = g2d.getFontMetrics();
-		y = (HEIGHT + metrics.getHeight()) / 2 - metrics.getDescent();
-		UtilClientGraphics.drawShadowedText(g2d, half, x, y);
+		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText);
+		x += turnPrefixBounds.getWidth() + 10;
+		g2d.setFont(_TURN_NUMBER_FONT);
+		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts);
+		x += turnBounds.getWidth() + 10;
+		g2d.setFont(_TURN_TEXT_FONT);
+		UtilClientGraphics.drawShadowedText(g2d, half, x, yText);
 		g2d.dispose();
 	}
 
@@ -139,10 +152,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS);
-			g2d.drawImage(spectatorsImage, _SPECTATOR_LOCATION.x, _SPECTATOR_LOCATION.y, null);
+			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(_SPECTATOR_FONT);
 			String spectatorString = Integer.toString(fSpectators);
-			UtilClientGraphics.drawShadowedText(g2d, spectatorString, _SPECTATOR_LOCATION.x + 108, 21);
+			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, 21);
 			g2d.dispose();
 		}
 	}
@@ -153,11 +166,11 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			if (fCoachBannedHome) {
 				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_HOME);
-				g2d.drawImage(coachBannedImage, _COACH_BANNED_HOME.x, _COACH_BANNED_HOME.y, null);
+				g2d.drawImage(coachBannedImage, coachBannedHome.x, coachBannedHome.y, null);
 			}
 			if (fCoachBannedAway) {
 				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_AWAY);
-				g2d.drawImage(coachBannedImage, _COACH_BANNED_AWAY.x, _COACH_BANNED_AWAY.y, null);
+				g2d.drawImage(coachBannedImage, coachBannedAway.x, coachBannedAway.y, null);
 			}
 			g2d.dispose();
 		}
@@ -167,30 +180,30 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		if (fWeather != null) {
 			String weatherIconProperty = null;
 			switch (fWeather) {
-			case BLIZZARD:
-				weatherIconProperty = IIconProperty.WEATHER_BLIZZARD;
-				break;
-			case INTRO:
-				weatherIconProperty = IIconProperty.WEATHER_INTRO;
-				break;
-			case NICE:
-				weatherIconProperty = IIconProperty.WEATHER_NICE;
-				break;
-			case POURING_RAIN:
-				weatherIconProperty = IIconProperty.WEATHER_RAIN;
-				break;
-			case SWELTERING_HEAT:
-				weatherIconProperty = IIconProperty.WEATHER_HEAT;
-				break;
-			case VERY_SUNNY:
-				weatherIconProperty = IIconProperty.WEATHER_SUNNY;
-				break;
+				case BLIZZARD:
+					weatherIconProperty = IIconProperty.WEATHER_BLIZZARD;
+					break;
+				case INTRO:
+					weatherIconProperty = IIconProperty.WEATHER_INTRO;
+					break;
+				case NICE:
+					weatherIconProperty = IIconProperty.WEATHER_NICE;
+					break;
+				case POURING_RAIN:
+					weatherIconProperty = IIconProperty.WEATHER_RAIN;
+					break;
+				case SWELTERING_HEAT:
+					weatherIconProperty = IIconProperty.WEATHER_HEAT;
+					break;
+				case VERY_SUNNY:
+					weatherIconProperty = IIconProperty.WEATHER_SUNNY;
+					break;
 			}
 			if (StringTool.isProvided(weatherIconProperty)) {
 				IconCache iconCache = getClient().getUserInterface().getIconCache();
 				BufferedImage weatherIcon = iconCache.getIconByProperty(weatherIconProperty);
 				Graphics2D g2d = fImage.createGraphics();
-				g2d.drawImage(weatherIcon, _WEATHER_LOCATION.x, _WEATHER_LOCATION.y, null);
+				g2d.drawImage(weatherIcon, weatherLocation.x, weatherLocation.y, null);
 				g2d.dispose();
 			}
 		}
@@ -207,17 +220,37 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		refresh();
 	}
 
+	public void initLayout() {
+		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.SCORE_BOARD);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
+		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+
+		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+			weatherLocation = new Rectangle(159, 64, 100, 32);
+			spectatorLocation = new Rectangle(1, 64, 130, 32);
+			coachBannedHome = new Rectangle(1, 32, 36, 32);
+			coachBannedAway = new Rectangle(size.width - 37, 32, 36, 32);
+		} else {
+			weatherLocation = new Rectangle(size.width - 101, 0, 100, 32);
+			spectatorLocation = new Rectangle((size.width / 2 + 160), 0, 130, 32);
+			coachBannedHome = new Rectangle((size.width / 2 - 130 - 36), 0, 36, 32);
+			coachBannedAway = new Rectangle((size.width / 2 + 130), 0, 36, 32);
+		}
+	}
+
 	public void refresh() {
 		Game game = getClient().getGame();
 		if (game.getHalf() > 0) {
 			ClientData clientData = getClient().getClientData();
 			if (!fRefreshNecessary) {
 				fRefreshNecessary = ((fTurnHome != game.getTurnDataHome().getTurnNr())
-						|| (fTurnAway != game.getTurnDataAway().getTurnNr()) || (fHalf != game.getHalf()));
+					|| (fTurnAway != game.getTurnDataAway().getTurnNr()) || (fHalf != game.getHalf()));
 			}
 			if (!fRefreshNecessary) {
 				fRefreshNecessary = ((fScoreHome != game.getGameResult().getTeamResultHome().getScore())
-						|| (fTurnAway != game.getGameResult().getTeamResultAway().getScore()));
+					|| (fTurnAway != game.getGameResult().getTeamResultAway().getScore()));
 			}
 			if (!fRefreshNecessary) {
 				fRefreshNecessary = (fSpectators != clientData.getSpectators());
@@ -227,7 +260,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			}
 			if (!fRefreshNecessary) {
 				fRefreshNecessary = (fCoachBannedHome != game.getTurnDataHome().isCoachBanned())
-						|| (fCoachBannedAway != game.getTurnDataAway().isCoachBanned());
+					|| (fCoachBannedAway != game.getTurnDataAway().isCoachBanned());
 			}
 			if (fRefreshNecessary) {
 				fTurnHome = game.getTurnDataHome().getTurnNr();
@@ -267,11 +300,11 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		Game game = getClient().getGame();
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		FieldModel fieldModel = game.getFieldModel();
-		if ((fWeather != null) && _WEATHER_LOCATION.contains(pMouseEvent.getPoint())) {
+		if ((fWeather != null) && weatherLocation.contains(pMouseEvent.getPoint())) {
 			toolTip = "<html><b>" + fieldModel.getWeather().getName() + "</b><br>" +
 				mechanic.weatherDescription(fWeather) + "</html>";
 		}
-		if ((fSpectators > 0) && _SPECTATOR_LOCATION.contains(pMouseEvent.getPoint())) {
+		if ((fSpectators > 0) && spectatorLocation.contains(pMouseEvent.getPoint())) {
 			toolTip = "<html>" + fSpectators +
 				((fSpectators == 1) ? " spectator is watching the game." : " spectators are watching the game.") +
 				"</html>";
@@ -286,5 +319,4 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	public void mouseDragged(MouseEvent pMouseEvent) {
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
 	}
-
 }
