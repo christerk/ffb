@@ -100,8 +100,19 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSideBarHome.initLayout(dimensionProvider);
 		fSideBarAway.initLayout(dimensionProvider);
 
-		// TODO
-		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
+		JPanel panelContent;
+		switch (dimensionProvider.getLayout()) {
+			case PORTRAIT:
+				panelContent = portraitContent();
+				break;
+			case SQUARE:
+				panelContent = squareContent();
+				break;
+			default:
+				panelContent = landscapeContent();
+				break;
+		}
+
 		panelContent.setSize(panelContent.getPreferredSize());
 
 		fDesktop.add(panelContent, -1);
@@ -175,6 +186,35 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		panelContent.add(panelMain);
 		panelContent.add(getScoreBar());
 		panelContent.add(logChatPanel);
+
+		return panelContent;
+	}
+
+	private JPanel squareContent() {
+		JPanel fieldPanel = new JPanel();
+		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
+		fieldPanel.add(fFieldComponent);
+
+
+		JPanel logChatScorePanel = new JPanel();
+		logChatScorePanel.setLayout(new BoxLayout(logChatScorePanel, BoxLayout.Y_AXIS));
+		logChatScorePanel.add(getLog());
+		logChatScorePanel.add(Box.createVerticalStrut(2));
+		logChatScorePanel.add(getScoreBar());
+		logChatScorePanel.add(Box.createVerticalStrut(2));
+		logChatScorePanel.add(getChat());
+		logChatScorePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+		JPanel panelMain = new JPanel();
+		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
+		panelMain.add(createSideBarPanel(fSideBarHome));
+		panelMain.add(fieldPanel);
+		panelMain.add(createSideBarPanel(fSideBarAway));
+
+		JPanel panelContent = new JPanel();
+		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
+		panelContent.add(panelMain);
+		panelContent.add(logChatScorePanel);
 
 		return panelContent;
 	}
