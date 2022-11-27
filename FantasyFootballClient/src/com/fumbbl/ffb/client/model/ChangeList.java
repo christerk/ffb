@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.14.0")
+			.addFeature("Square mode (like portrait but logs and score board on the side")
+
+		);
+
 		versions.add(new VersionChangeList("2.13.1")
 			.addBugfix("RaidingParty used with e.g. Block caused the game to break")
 			.addBugfix("Block dice indicators were not updated after Raiding Party or Hit and Run")
