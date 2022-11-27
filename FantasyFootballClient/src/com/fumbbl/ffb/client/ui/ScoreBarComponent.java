@@ -230,8 +230,8 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
 			weatherLocation = new Rectangle(159, 64, 100, 32);
 			spectatorLocation = new Rectangle(1, 64, 130, 32);
-			coachBannedHome = new Rectangle(1, 32, 36, 32);
-			coachBannedAway = new Rectangle(size.width - 37, 32, 36, 32);
+			coachBannedHome = new Rectangle(1, 0, 36, 32);
+			coachBannedAway = new Rectangle(size.width - 37, 0, 36, 32);
 		} else {
 			weatherLocation = new Rectangle(size.width - 101, 0, 100, 32);
 			spectatorLocation = new Rectangle((size.width / 2 + 160), 0, 130, 32);
