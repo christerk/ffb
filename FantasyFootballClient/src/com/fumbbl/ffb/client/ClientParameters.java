@@ -31,7 +31,7 @@ public class ClientParameters {
 	private static final String _ARGUMENT_SERVER = "-server";
 	private static final String _ARGUMENT_BUILD = "-build";
 
-	private static final String _ARGUMENT_PORTRAIT = "-portrait";
+	private static final String _ARGUMENT_LAYOUT = "-layout";
 
 	private ClientMode fMode;
 	private String fCoach;
@@ -44,7 +44,7 @@ public class ClientParameters {
 	private int fPort;
 	private String fServer;
 	private String fBuild;
-	private boolean portrait;
+	private DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
 
 	public ClientMode getMode() {
 		return fMode;
@@ -94,8 +94,8 @@ public class ClientParameters {
 		return fBuild;
 	}
 
-	public boolean isPortrait() {
-		return portrait;
+	public DimensionProvider.ClientLayout getLayout() {
+		return layout;
 	}
 
 	public void initFrom(String[] pArguments) {
@@ -134,8 +134,8 @@ public class ClientParameters {
 					fServer = fetchArgument(pArguments, pos++);
 				} else if (_ARGUMENT_BUILD.equalsIgnoreCase(argument)) {
 					fBuild = fetchArgument(pArguments, pos++);
-				} else if (_ARGUMENT_PORTRAIT.equalsIgnoreCase(argument)) {
-					portrait = Boolean.parseBoolean(fetchArgument(pArguments, pos++));
+				} else if (_ARGUMENT_LAYOUT.equalsIgnoreCase(argument)) {
+					layout = DimensionProvider.ClientLayout.valueOf(fetchArgument(pArguments, pos++));
 				} else {
 					throw new FantasyFootballException("Unknown argument " + argument);
 				}

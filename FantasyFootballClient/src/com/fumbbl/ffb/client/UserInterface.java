@@ -69,7 +69,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
 
-		dimensionProvider = new DimensionProvider(pClient.getParameters().isPortrait());
+		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
@@ -100,6 +100,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSideBarHome.initLayout(dimensionProvider);
 		fSideBarAway.initLayout(dimensionProvider);
 
+		// TODO
 		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
 		panelContent.setSize(panelContent.getPreferredSize());
 

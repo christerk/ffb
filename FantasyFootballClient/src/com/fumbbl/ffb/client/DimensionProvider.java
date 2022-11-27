@@ -10,15 +10,16 @@ import java.util.Map;
 
 public class DimensionProvider {
 
+	private ClientLayout layout;
+
 	private static final int SIDEBAR_WIDTH_L = 145;
 	private static final int SIDEBAR_WIDTH_P = 165;
 	private final Map<Component, Dimension> portraitDimensions = new HashMap<>();
 	private final Map<Component, Dimension> landscapeDimensions = new HashMap<>();
 	private final int fieldSquareSize = 30;
-	private boolean portrait;
 
-	public DimensionProvider(boolean portrait) {
-		this.portrait = portrait;
+	public DimensionProvider(ClientLayout layout) {
+		this.layout = layout;
 
 		portraitDimensions.put(Component.FIELD, new Dimension(452, 782));
 		landscapeDimensions.put(Component.FIELD, new Dimension(782, 452));
@@ -79,15 +80,27 @@ public class DimensionProvider {
 	}
 
 	public Dimension dimension(Component component) {
-		return (portrait ? portraitDimensions : landscapeDimensions).get(component);
+		return (layout != ClientLayout.LANDSCAPE ? portraitDimensions : landscapeDimensions).get(component);
 	}
 
 	public boolean isPortrait() {
-		return portrait;
+		return layout != ClientLayout.LANDSCAPE;
 	}
 
-	public void setPortrait(boolean portrait) {
-		this.portrait = portrait;
+	public ClientLayout getLayout() {
+		return layout;
+	}
+
+	public void setLayout(ClientLayout layout) {
+		this.layout = layout;
+	}
+
+	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {
+		if (isPortrait()) {
+			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
+		}
+
+		return fieldCoordinate;
 	}
 
 	public int fieldSquareSize() {
@@ -103,12 +116,15 @@ public class DimensionProvider {
 			.map(dimensions::get).mapToDouble(Dimension::getHeight).sum();
 	}
 
-	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {
-		if (portrait) {
-			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
-		}
+	public Dimension mapToLocal(int x, int y, boolean addImageOffset) {
+		int offset = addImageOffset ? fieldSquareSize / 2 : 0;
 
-		return fieldCoordinate;
+
+		if (isPortrait()) {
+			return new Dimension(y * fieldSquareSize + offset, (25 - x) * fieldSquareSize + offset);
+		}
+		return new Dimension(x * fieldSquareSize + offset, y * fieldSquareSize + offset);
+
 	}
 
 	public Dimension mapToLocal(FieldCoordinate fieldCoordinate) {
@@ -119,19 +135,8 @@ public class DimensionProvider {
 		return mapToLocal(fieldCoordinate.getX(), fieldCoordinate.getY(), addImageOffset);
 	}
 
-	public Dimension mapToLocal(int x, int y, boolean addImageOffset) {
-		int offset = addImageOffset ? fieldSquareSize / 2 : 0;
-
-
-		if (portrait) {
-			return new Dimension(y * fieldSquareSize + offset, (25 - x) * fieldSquareSize + offset);
-		}
-		return new Dimension(x * fieldSquareSize + offset, y * fieldSquareSize + offset);
-
-	}
-
 	public Direction mapToLocal(Direction direction) {
-		if (portrait) {
+		if (isPortrait()) {
 			switch (direction) {
 				case NORTHEAST:
 					return Direction.NORTHWEST;
@@ -153,6 +158,10 @@ public class DimensionProvider {
 		}
 
 		return direction;
+	}
+
+	public enum ClientLayout {
+		LANDSCAPE, PORTRAIT, SQUARE
 	}
 
 	public enum Component {
