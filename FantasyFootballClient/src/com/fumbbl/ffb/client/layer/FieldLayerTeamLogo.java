@@ -73,14 +73,25 @@ public class FieldLayerTeamLogo extends FieldLayer {
 				Graphics2D g2d = getImage().createGraphics();
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				int x, y;
-				if (pHomeTeam) {
-					x = (fieldDimension.width / 4) - (teamLogo.getWidth() / 2) + dimensionProvider.imageOffset();
+				if (dimensionProvider.isPortrait()) {
+					if (pHomeTeam) {
+						y = (3 * (fieldDimension.height / 4)) - (teamLogo.getHeight() / 2) - dimensionProvider.imageOffset();
+					} else {
+						y = (fieldDimension.height / 4) - (teamLogo.getHeight() / 2) + dimensionProvider.imageOffset();
+					}
+					x = (fieldDimension.width / 2) - (teamLogo.getWidth() / 2);
+					g2d.setClip(0, pHomeTeam ? fieldDimension.height / 2 : dimensionProvider.fieldSquareSize(),
+						fieldDimension.width, (fieldDimension.height / 2) - dimensionProvider.fieldSquareSize());
 				} else {
-					x = (3 * (fieldDimension.width / 4)) - (teamLogo.getWidth() / 2) - dimensionProvider.imageOffset();
+					if (pHomeTeam) {
+						x = (fieldDimension.width / 4) - (teamLogo.getWidth() / 2) + dimensionProvider.imageOffset();
+					} else {
+						x = (3 * (fieldDimension.width / 4)) - (teamLogo.getWidth() / 2) - dimensionProvider.imageOffset();
+					}
+					y = (fieldDimension.height / 2) - (teamLogo.getHeight() / 2);
+					g2d.setClip(pHomeTeam ? dimensionProvider.fieldSquareSize() : fieldDimension.width / 2, 0,
+						(fieldDimension.width / 2) - dimensionProvider.fieldSquareSize(), fieldDimension.height);
 				}
-				y = (fieldDimension.height / 2) - (teamLogo.getHeight() / 2);
-				g2d.setClip(pHomeTeam ? dimensionProvider.fieldSquareSize() : fieldDimension.width / 2, 0,
-					(fieldDimension.width / 2) - dimensionProvider.fieldSquareSize(), fieldDimension.height);
 				g2d.drawImage(teamLogo, x, y, null);
 				g2d.dispose();
 			}

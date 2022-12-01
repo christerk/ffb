@@ -176,19 +176,10 @@ public class DebugLog {
 		}
 	}
 
-//  public void logChangeState(int pLogLevel, GameState pGameState, ServerStateId pServerStateId) {
-//    if ((getLogLevel() >= pLogLevel) && (pServerStateId != null)) {
-//      StringBuilder changeStateLog = new StringBuilder(50);
-//      changeStateLog.append("Change Server State to ").append(pServerStateId);
-//      log(pGameState, null, changeStateLog.toString());
-//    }
-//  }
-
 	public void logCurrentStep(int pLogLevel, GameState pGameState) {
 		if (isLogging(pLogLevel) && (pGameState != null) && (pGameState.getCurrentStep() != null)) {
-			StringBuilder changeStateLog = new StringBuilder();
-			changeStateLog.append("Current Step is ").append(pGameState.getCurrentStep().getId());
-			logInternal(pGameState.getId(), null, changeStateLog.toString());
+			String changeStateLog = "Current Step is " + pGameState.getCurrentStep().getId();
+			logInternal(pGameState.getId(), null, changeStateLog);
 		}
 	}
 

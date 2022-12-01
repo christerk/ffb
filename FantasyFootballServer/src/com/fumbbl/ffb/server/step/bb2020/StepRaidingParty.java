@@ -39,6 +39,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -223,9 +224,16 @@ public class StepRaidingParty extends AbstractStep {
 				sequence.add(StepId.PICK_UP,
 					from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.SCATTER_BALL),
 					from(StepParameterKey.THROWN_PLAYER_ID, playerId));
-				sequence.jump(gotoLabelOnSuccess);
+				if (StringTool.isProvided(gotoLabelOnSuccess)) {
+					sequence.jump(gotoLabelOnSuccess);
+				} else {
+					sequence.jump(IStepLabel.NEXT);
+				}
 				sequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.SCATTER_BALL);
 				sequence.jump(goToLabelOnFailure);
+				if (!StringTool.isProvided(gotoLabelOnSuccess)) {
+					sequence.add(StepId.NEXT_STEP_AND_REPEAT, IStepLabel.NEXT);
+				}
 				getGameState().getStepStack().push(sequence.getSequence());
 
 			}
@@ -240,6 +248,7 @@ public class StepRaidingParty extends AbstractStep {
 			}
 		}
 		UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
+		ServerUtilBlock.updateDiceDecorations(game);
 	}
 
 	private void prepareClientData(Game game, List<FieldCoordinate> eligibleSquares) {

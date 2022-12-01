@@ -1,11 +1,5 @@
 package com.fumbbl.ffb.server.db.update;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -14,6 +8,12 @@ import com.fumbbl.ffb.server.db.DbUpdateStatement;
 import com.fumbbl.ffb.server.db.IDbTableGamesSerialized;
 import com.fumbbl.ffb.server.db.IDbUpdateParameter;
 import com.fumbbl.ffb.util.StringTool;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * 
@@ -33,11 +33,10 @@ public class DbGamesSerializedUpdate extends DbUpdateStatement {
 
 	public void prepare(Connection pConnection) {
 		try {
-			StringBuilder sql = new StringBuilder();
-			sql.append("UPDATE ").append(IDbTableGamesSerialized.TABLE_NAME).append(" SET ");
-			sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append("=?"); // 2
-			sql.append(" WHERE ").append(IDbTableGamesSerialized.COLUMN_ID).append("=?"); // 1
-			fStatement = pConnection.prepareStatement(sql.toString());
+			String sql = "UPDATE " + IDbTableGamesSerialized.TABLE_NAME + " SET " +
+				IDbTableGamesSerialized.COLUMN_SERIALIZED + "=?" + // 2
+				" WHERE " + IDbTableGamesSerialized.COLUMN_ID + "=?"; // 1
+			fStatement = pConnection.prepareStatement(sql);
 		} catch (SQLException sqlE) {
 			throw new FantasyFootballException(sqlE);
 		}
@@ -61,14 +60,11 @@ public class DbGamesSerializedUpdate extends DbUpdateStatement {
 			if (pFillBlob && getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
 				int newLength = blobData.length;
 				int oldLength = parameter.length();
-				StringBuilder logMsg = new StringBuilder();
-				logMsg.append("updating compressed serialized game of ").append(StringTool.formatThousands(newLength))
-						.append(" bytes");
-				logMsg.append(" (").append(Math.round((double) newLength * 100 / oldLength)).append("%");
-				logMsg.append(" of original ").append(StringTool.formatThousands(oldLength)).append(" bytes)");
-				getServer().getDebugLog().log(IServerLogLevel.TRACE, parameter.getId(), logMsg.toString());
-//        String currentStepName = (parameter.getGameState().getCurrentStep() != null) ? parameter.getGameState().getCurrentStep().getId().getName() : "null";
-//        getServer().getDebugLog().log(IServerLogLevel.TRACE, StringTool.bind("saved CurrentStep $1", currentStepName));
+				String logMsg = "updating compressed serialized game of " + StringTool.formatThousands(newLength) +
+					" bytes" +
+					" (" + Math.round((double) newLength * 100 / oldLength) + "%" +
+					" of original " + StringTool.formatThousands(oldLength) + " bytes)";
+				getServer().getDebugLog().log(IServerLogLevel.TRACE, parameter.getId(), logMsg);
 			}
 			fStatement.setBinaryStream(col++, new ByteArrayInputStream(blobData), blobData.length);
 		} catch (IOException pIoException) {

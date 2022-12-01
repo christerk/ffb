@@ -62,16 +62,18 @@ public class UtilServerStartGame {
 		int numVisibleSpectators = 0;
 		Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
 		for (Session session : sessions) {
-			String coach = sessionManager.getCoachForSession(session);
-			ClientMode mode = sessionManager.getModeForSession(session);
-			if (mode == ClientMode.PLAYER) {
-				if (session == sessionManager.getSessionOfHomeCoach(pGameState.getId())) {
-					playerList.add(0, coach);
-				} else {
-					playerList.add(coach);
+			if (session.isOpen()) {
+				String coach = sessionManager.getCoachForSession(session);
+				ClientMode mode = sessionManager.getModeForSession(session);
+				if (mode == ClientMode.PLAYER) {
+					if (session == sessionManager.getSessionOfHomeCoach(pGameState.getId())) {
+						playerList.add(0, coach);
+					} else {
+						playerList.add(coach);
+					}
+				} else if (!sessionManager.isSessionAdmin(session)) {
+					numVisibleSpectators++;
 				}
-			} else if (!sessionManager.isSessionAdmin(session)) {
-				numVisibleSpectators++;
 			}
 		}
 		String[] players = playerList.toArray(new String[0]);

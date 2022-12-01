@@ -10,6 +10,15 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.13.1")
+			.addBugfix("RaidingParty used with e.g. Block caused the game to break")
+			.addBugfix("Block dice indicators were not updated after Raiding Party or Hit and Run")
+			.addImprovement("Improvements for local development")
+			.addBugfix("Hit and run message referred to a team-mate")
+			.addImprovement("Closed session are no longer eligible when checking for game start")
+			.addBugfix("Team logos did not display properly in portrait mode")
+		);
+
 		versions.add(new VersionChangeList("2.13.0")
 			.addFeature("Portrait mode")
 			.addImprovement("Adjustments for dice stats")
