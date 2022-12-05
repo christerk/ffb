@@ -95,12 +95,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 	private Integer availableInducementGoldAway;
 	private Integer usedInducementGoldHome = 0;
 	private Integer usedInducementGoldAway = 0;
-
-	private boolean fCardsSelectedHome;
-	private boolean fCardsSelectedAway;
-
-	private boolean fReportedHome;
-	private boolean fReportedAway;
+	private boolean parallel;
 	private CardChoices cardChoices = new CardChoices();
 	private List<Card> usedCards = new ArrayList<>();
 	private ClientCommandSelectCardToBuy.Selection currentSelection;
@@ -137,11 +132,25 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_BUY_INDUCEMENTS:
-					buyInducementCommands.add((ClientCommandBuyInducements) pReceivedCommand.getCommand());
+					ClientCommandBuyInducements command = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
+					if (parallel) {
+						buyInducementCommands.add(command);
+					} else {
+						Game game = getGameState().getGame();
+						handleBuyInducements(game, command);
+
+						Team team = game.getTeamById(command.getTeamId());
+						if (team == game.getTeamHome()) {
+							int newTvHome = getNewTv(usedInducementGoldHome, game.getTurnDataHome(), team);
+							getResult().addReport(generateReport(team, usedInducementGoldHome, newTvHome));
+						} else {
+							int newTvAway = getNewTv(usedInducementGoldAway, game.getTurnDataAway(), team);
+							getResult().addReport(generateReport(team, usedInducementGoldAway, newTvAway));
+						}
+					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
-					// Ignore other commands. This removes warnings.
 					break;
 			}
 		}
@@ -191,21 +200,14 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				init(game);
 				break;
 			case HOME:
-				if (currentSelection != null) {
-					handleCard();
-				} else {
-					swapToAway();
-				}
-				break;
 			case AWAY:
 				if (currentSelection != null) {
 					handleCard();
 				} else {
-					phase = Phase.DONE;
+					swapTeam();
 				}
 				break;
 			default:
-				// Removes warning.
 				break;
 		}
 
@@ -248,43 +250,88 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
 				+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
 
-			availableInducementGoldHome = freeCash + game.getTeamHome().getTreasury() + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff();
-			availableInducementGoldAway = freeCash + game.getTeamAway().getTreasury() + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff();
-			phase = Phase.HOME;
+			Team overDog;
 
-			int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
-			int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-			boolean canBuyCards = cardSlots > 0 && availableInducementGoldHome >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
+			boolean allowInducementsOnEvenCTV = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV) || freeCash > 0;
 
-			boolean canBuyInducements = minimumInducementCost(game.getTeamHome()) <= availableInducementGoldHome;
-
-			if (canBuyCards || canBuyInducements) {
-				UtilServerDialog.showDialog(getGameState(),
-					createDialogParameter(game.getTeamHome().getId(), game.getTeamHome().getTreasury(), availableInducementGoldHome, canBuyCards, cardSlots, cardPrice), false);
+			if (game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff() > 0) {
+				overDog = game.getTeamAway();
+				phase = Phase.AWAY;
+			} else if (game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff() > 0) {
+				overDog = game.getTeamHome();
+				phase = Phase.HOME;
+			} else if (allowInducementsOnEvenCTV) {
+				overDog = game.getTeamHome();
+				phase = Phase.HOME;
+				parallel = true;
 			} else {
-				swapToAway();
+				phase = Phase.DONE;
+				return;
+			}
+
+			int availableGold = getAvailableGold(game, freeCash, true);
+
+			if (!showDialog(availableGold, overDog)) {
+				swapTeam();
 			}
 		}
 	}
 
-	private void swapToAway() {
-		Game game = getGameState().getGame();
-		phase = Phase.AWAY;
-		usedCards.clear();
+	private int getAvailableGold(Game game, int freeCash, boolean useTreasury) {
+		int availableGold;
+		if (phase == Phase.HOME) {
+			availableInducementGoldHome = freeCash + (useTreasury ? game.getTeamHome().getTreasury() : usedInducementGoldAway + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff());
+			availableGold = availableInducementGoldHome;
+		} else {
+			availableInducementGoldAway = freeCash + (useTreasury ? game.getTeamAway().getTreasury() : usedInducementGoldHome + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff());
+			availableGold = availableInducementGoldAway;
+		}
+		return availableGold;
+	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	private boolean showDialog(int availableGold, Team team) {
 		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
 		int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-		boolean canBuyCards = cardSlots > 0 && availableInducementGoldAway >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
+		boolean canBuyCards = cardSlots > 0 && availableGold >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
 
-		boolean canBuyInducements = minimumInducementCost(game.getTeamAway()) <= availableInducementGoldAway;
+		boolean canBuyInducements = minimumInducementCost(team) <= availableGold;
 
 		if (canBuyCards || canBuyInducements) {
 			UtilServerDialog.showDialog(getGameState(),
-				createDialogParameter(game.getTeamAway().getId(), game.getTeamAway().getTreasury(), availableInducementGoldAway, canBuyCards, cardSlots, cardPrice), false);
-		} else {
-			phase = Phase.DONE;
+				createDialogParameter(team.getId(), team.getTreasury(), availableGold, canBuyCards, cardSlots, cardPrice), false);
+			return true;
 		}
 
+		return false;
+	}
+
+	private void swapTeam() {
+		Game game = getGameState().getGame();
+
+		Team team;
+
+		if (phase == Phase.HOME && availableInducementGoldAway == null) {
+			phase = Phase.AWAY;
+			team = game.getTeamAway();
+			usedCards.clear();
+		} else if (phase == Phase.AWAY && availableInducementGoldHome == null) {
+			phase = Phase.HOME;
+			team = game.getTeamHome();
+			usedCards.clear();
+		} else {
+			phase = Phase.DONE;
+			return;
+		}
+
+		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
+			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+
+		int availableGold = getAvailableGold(game, freeCash, parallel);
+
+		if (!showDialog(availableGold, team)) {
+			phase = Phase.DONE;
+		}
 	}
 
 	private int minimumInducementCost(Team team) {
@@ -579,15 +626,15 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		buyInducementCommands.forEach(command -> handleBuyInducements(game, command));
 
 		Team teamHome = getGameState().getGame().getTeamHome();
+		int newTvHome = getNewTv(usedInducementGoldHome, getGameState().getGame().getTurnDataHome(), teamHome);
+
 		Team teamAway = getGameState().getGame().getTeamAway();
+		int newTvAway = getNewTv(usedInducementGoldAway, getGameState().getGame().getTurnDataAway(), teamAway);
 
-		int spentMoneyHome = usedInducementGoldHome + cardCost(getGameState().getGame().getTurnDataHome().getInducementSet());
-		int spentMoneyAway = usedInducementGoldAway + cardCost(getGameState().getGame().getTurnDataAway().getInducementSet());
-		int newTvHome = teamHome.getTeamValue() + spentMoneyHome;
-		int newTvAway = teamAway.getTeamValue() + spentMoneyAway;
-
-		getResult().addReport(generateReport(teamHome, usedInducementGoldHome, newTvHome));
-		getResult().addReport(generateReport(teamAway, usedInducementGoldAway, newTvAway));
+		if (parallel) {
+			getResult().addReport(generateReport(teamHome, usedInducementGoldHome, newTvHome));
+			getResult().addReport(generateReport(teamAway, usedInducementGoldAway, newTvAway));
+		}
 
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
@@ -664,6 +711,12 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
+	private int getNewTv(Integer usedInducementGoldHome, TurnData TurnDataHome, Team teamHome) {
+		int spentMoneyHome = usedInducementGoldHome + cardCost(TurnDataHome.getInducementSet());
+		int newTvHome = teamHome.getTeamValue() + spentMoneyHome;
+		return newTvHome;
+	}
+
 	private ReportCardsAndInducementsBought generateReport(Team pTeam, int gold, int newTv) {
 		Game game = getGameState().getGame();
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
@@ -699,11 +752,6 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		IServerJsonOption.CARDS_USED.addTo(jsonObject, usedCards.stream().map(Card::getName).collect(Collectors.toList()));
 
 
-		IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
-		IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
-		IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
-		IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
-
 		if (currentSelection != null) {
 			IServerJsonOption.CARD_SELECTION.addTo(jsonObject, currentSelection.name());
 		}
@@ -715,6 +763,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		IServerJsonOption.INDUCEMENT_COMMANDS.addTo(jsonObject, commandArray);
 
 		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
+		IServerJsonOption.INDUCEMENTS_SELECTED_PARALLEL.addTo(jsonObject, parallel);
 		return jsonObject;
 	}
 
@@ -724,10 +773,6 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		availableInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(source, jsonObject);
 		availableInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(source, jsonObject);
-		fCardsSelectedAway = IServerJsonOption.CARDS_SELECTED_AWAY.getFrom(source, jsonObject);
-		fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(source, jsonObject);
-		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(source, jsonObject);
-		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(source, jsonObject);
 
 		JsonObject choiceObject = IServerJsonOption.CARD_CHOICES.getFrom(source, jsonObject);
 		if (choiceObject != null) {
@@ -753,6 +798,8 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		}
 
 		phase = Phase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
+
+		parallel = toPrimitive(IServerJsonOption.INDUCEMENTS_SELECTED_PARALLEL.getFrom(source, jsonObject));
 
 		return this;
 	}

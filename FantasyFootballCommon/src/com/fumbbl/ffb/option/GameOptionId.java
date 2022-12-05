@@ -69,6 +69,7 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_TEMP_CHEERLEADER_MAX("inducementTempCheerleaderMax"), INDUCEMENT_TEMP_CHEERLEADER_TOTAL_MAX("inducementTempCheerleaderTotalMax"), INDUCEMENT_TEMP_CHEERLEADER_COST("inducementTempCheerleaderCost"),
 	INDUCEMENT_PART_TIME_COACH_MAX("inducementPartTimeCoachMax"), INDUCEMENT_PART_TIME_COACH_TOTAL_MAX("inducementPartTimeCoachTotalMax"), INDUCEMENT_PART_TIME_COACH_COST("inducementPartTimeCoachCost"),
 	INDUCEMENT_WEATHER_MAGE_MAX("inducementWeatherMageMax"), INDUCEMENT_WEATHER_MAGE_COST("inducementWeatherMageCost"),
+	INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV("inducementsAllowSpendingTreasuryOnEqualCTV"),
 
 	ENABLE_STALLING_CHECK("enableStallingCheck"), ALLOW_BALL_AND_CHAIN_RE_ROLL("allowBallAndChainReRoll"),
 	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"), SWOOP_DISTANCE("swoopDistance"),

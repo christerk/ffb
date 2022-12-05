@@ -104,6 +104,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonEnumWithNameOption INDUCEMENT_PHASE = new JsonEnumWithNameOption("inducementPhase", Factory.INDUCEMENT_PHASE);
     JsonBooleanOption INDUCEMENTS_SELECTED_AWAY = new JsonBooleanOption("inducementsSelectedAway");
     JsonBooleanOption INDUCEMENTS_SELECTED_HOME = new JsonBooleanOption("inducementsSelectedHome");
+    JsonBooleanOption INDUCEMENTS_SELECTED_PARALLEL = new JsonBooleanOption("inducementsSelectedParallel");
     JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
     JsonArrayOption INJURY_RESULTS = new JsonArrayOption("injuryResults");
     JsonArrayOption INJURY_RESULTS_REGENERATION_FAILED = new JsonArrayOption("injuryResultsRegenerationFailed");
