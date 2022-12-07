@@ -29,6 +29,8 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.FoulAppearance;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.ArrayList;
+
 @RulesCollection(Rules.BB2020)
 public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 	public FoulAppearanceBehaviour() {
@@ -38,7 +40,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepFoulAppearance step, StepState state,
-			                                           ClientCommandUseSkill useSkillCommand) {
+																								 ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -144,13 +146,13 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 
 			@Override
 			protected void unhandledTargetsCallback(StepFoulAppearanceMultiple step, StepStateMultipleRolls state) {
-				state.blockTargets.forEach(target -> {
+				for (String target : new ArrayList<>(state.blockTargets)) {
 					Game game = step.getGameState().getGame();
 					Player<?> player = game.getPlayerById(target);
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					game.getFieldModel().setPlayerState(player, playerState.changeSelectedStabTarget(false).changeSelectedBlockTarget(false));
 					step.publishParameter(new StepParameter(StepParameterKey.PLAYER_ID_TO_REMOVE, target));
-				});
+				}
 			}
 
 			@Override

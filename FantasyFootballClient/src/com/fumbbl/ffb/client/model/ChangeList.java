@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Inducement phase now follows Designer's Commentary from Nov 22")
 			.addBugfix("Animal Savagery caused game crashes used with ttm/ktm/pass/hand off")
 			.addBugfix("Default value for ttm turnover option on hitting team mates is now false again")
+			.addBugfix("Multiple Block vs Foul Appearance opponents could cause game crashes when failing a Foul Appearance roll")
 		);
 
 		versions.add(new VersionChangeList("2.13.1")
