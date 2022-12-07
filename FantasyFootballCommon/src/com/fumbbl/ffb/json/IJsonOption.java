@@ -555,6 +555,7 @@ public interface IJsonOption {
 	JsonBooleanOption USED = new JsonBooleanOption("used");
 	JsonIntOption USES = new JsonIntOption("uses");
 	JsonBooleanOption USES_A_TEAM_REROLL = new JsonBooleanOption("usesATeamReroll");
+	JsonBooleanOption USES_TREASURY = new JsonBooleanOption("usesTreasury");
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
 	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
 	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");

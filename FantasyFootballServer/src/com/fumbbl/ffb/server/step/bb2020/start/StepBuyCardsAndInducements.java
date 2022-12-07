@@ -266,18 +266,19 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				parallel = true;
 			} else {
 				phase = Phase.DONE;
+				availableInducementGoldHome = 0;
+				availableInducementGoldAway = 0;
 				return;
 			}
 
-			int availableGold = getAvailableGold(game, freeCash, true);
-
-			if (!showDialog(availableGold, overDog)) {
+			if (!showDialog(overDog, freeCash, true)) {
 				swapTeam();
 			}
 		}
 	}
 
-	private int getAvailableGold(Game game, int freeCash, boolean useTreasury) {
+	private int getAvailableGold(int freeCash, boolean useTreasury) {
+		Game game = getGameState().getGame();
 		int availableGold;
 		if (phase == Phase.HOME) {
 			availableInducementGoldHome = freeCash + (useTreasury ? game.getTeamHome().getTreasury() : usedInducementGoldAway + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff());
@@ -290,7 +291,9 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	private boolean showDialog(int availableGold, Team team) {
+	private boolean showDialog(Team team, int freeCash, boolean usesTreasury) {
+		int availableGold = getAvailableGold(freeCash, usesTreasury);
+
 		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
 		int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
 		boolean canBuyCards = cardSlots > 0 && availableGold >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
@@ -299,7 +302,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 		if (canBuyCards || canBuyInducements) {
 			UtilServerDialog.showDialog(getGameState(),
-				createDialogParameter(team.getId(), team.getTreasury(), availableGold, canBuyCards, cardSlots, cardPrice), false);
+				createDialogParameter(team.getId(), availableGold, canBuyCards, cardSlots, cardPrice, usesTreasury), false);
 			return true;
 		}
 
@@ -327,9 +330,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
 			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
 
-		int availableGold = getAvailableGold(game, freeCash, parallel);
-
-		if (!showDialog(availableGold, team)) {
+		if (!showDialog(team, freeCash, parallel)) {
 			phase = Phase.DONE;
 		}
 	}
@@ -404,13 +405,13 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		});
 	}
 
-	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int treasury, int availableGold, boolean canBuyCards, int cardSlots, int cardPrice) {
+	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int availableGold, boolean canBuyCards, int cardSlots, int cardPrice, boolean usesTreasury) {
 
 		if (canBuyCards) {
 			updateChoices();
 		}
 		DialogBuyCardsAndInducementsParameter dialogParameter =
-			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlots, treasury, availableGold, cardChoices, cardPrice);
+			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlots, availableGold, cardChoices, cardPrice, usesTreasury);
 		for (CardType type : fDeckByType.keySet()) {
 			CardDeck deck = fDeckByType.get(type);
 			dialogParameter.put(type, deck.size());

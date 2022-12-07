@@ -14,30 +14,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 
 	private String fTeamId;
-	private int treasury, availableGold, cardSlots, cardPrice;
+	private int availableGold, cardSlots, cardPrice;
 	private final Map<CardType, Integer> fNrOfCardsPerType;
 	private CardChoices cardChoices;
-	private boolean canBuyCards;
+	private boolean canBuyCards, usesTreasury;
 
 	public DialogBuyCardsAndInducementsParameter() {
 		fNrOfCardsPerType = new HashMap<>();
 	}
 
-	public DialogBuyCardsAndInducementsParameter(String teamId, boolean canBuyCards, int cardSlots, int treasury, int availableGold, CardChoices cardChoices, int cardPrice) {
+	public DialogBuyCardsAndInducementsParameter(String teamId, boolean canBuyCards, int cardSlots, int availableGold,
+																							 CardChoices cardChoices, int cardPrice, boolean usesTreasury) {
 		this();
 		fTeamId = teamId;
 		this.cardSlots = cardSlots;
-		this.treasury = treasury;
 		this.availableGold = availableGold;
 		this.cardChoices = cardChoices;
 		this.cardPrice = cardPrice;
 		this.canBuyCards = canBuyCards;
+		this.usesTreasury = usesTreasury;
 	}
 
 	public int getCardPrice() {
@@ -60,10 +60,6 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		return availableGold;
 	}
 
-	public int getTreasury() {
-		return treasury;
-	}
-
 	public void put(CardType pType, int pNrOfCards) {
 		fNrOfCardsPerType.put(pType, pNrOfCards);
 	}
@@ -83,11 +79,16 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 	public void setCardChoices(CardChoices cardChoices) {
 		this.cardChoices = cardChoices;
 	}
-// transformation
+
+	public boolean isUsesTreasury() {
+		return usesTreasury;
+	}
+
+	// transformation
 
 	public IDialogParameter transform() {
 		DialogBuyCardsAndInducementsParameter dialogParameter = new DialogBuyCardsAndInducementsParameter(getTeamId(), canBuyCards, getCardSlots(),
-			treasury, availableGold, cardChoices, cardPrice);
+			availableGold, cardChoices, cardPrice, usesTreasury);
 		fNrOfCardsPerType.forEach(dialogParameter::put);
 		return dialogParameter;
 	}
@@ -100,7 +101,6 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
 		IJsonOption.AVAILABLE_CARDS.addTo(jsonObject, cardSlots);
 		IJsonOption.AVAILABLE_GOLD.addTo(jsonObject, availableGold);
-		IJsonOption.TREASURY.addTo(jsonObject, treasury);
 		// build array of inner jsonObjects with cardType + nrOfCards
 		JsonArray nrOfCardsPerType = new JsonArray();
 		for (CardType type : fNrOfCardsPerType.keySet()) {
@@ -115,6 +115,7 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 
 		IJsonOption.CARDS_PRICE.addTo(jsonObject, cardPrice);
 		IJsonOption.CAN_BUY_CARDS.addTo(jsonObject, canBuyCards);
+		IJsonOption.USES_TREASURY.addTo(jsonObject, usesTreasury);
 		return jsonObject;
 	}
 
@@ -124,7 +125,6 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		cardSlots = IJsonOption.AVAILABLE_CARDS.getFrom(source, jsonObject);
 		availableGold = IJsonOption.AVAILABLE_GOLD.getFrom(source, jsonObject);
-		treasury = IJsonOption.TREASURY.getFrom(source, jsonObject);
 		// get nrOfCards and cardType from array of inner jsonObjects
 		JsonArray nrOfCardsPerType = IJsonOption.NR_OF_CARDS_PER_TYPE.getFrom(source, jsonObject);
 		for (int i = 0; i < nrOfCardsPerType.size(); i++) {
@@ -141,6 +141,9 @@ public class DialogBuyCardsAndInducementsParameter implements IDialogParameter {
 
 		cardPrice = IJsonOption.CARDS_PRICE.getFrom(source, jsonObject);
 		canBuyCards = IJsonOption.CAN_BUY_CARDS.getFrom(source, jsonObject);
+		if (IJsonOption.USES_TREASURY.isDefinedIn(jsonObject)) {
+			usesTreasury = IJsonOption.USES_TREASURY.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 
