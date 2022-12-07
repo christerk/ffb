@@ -13,7 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.14.0")
 			.addFeature("Square mode (like portrait but logs and score board on the side")
 			.addBugfix("Inducement phase now follows Designer's Commentary from Nov 22")
-
+			.addBugfix("Animal Savagery caused game crashes used with ttm/ktm/pass/hand off")
 		);
 
 		versions.add(new VersionChangeList("2.13.1")
