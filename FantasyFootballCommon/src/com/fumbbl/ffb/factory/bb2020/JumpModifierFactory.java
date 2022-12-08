@@ -87,8 +87,11 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 			tacklezoneModifier.ifPresent(modifiers::add);
 		}
 
-		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getFrom()))
-			.ifPresent(modifiers::add);
+		if (!UtilCards.hasSkillToCancelProperty(context.getPlayer(), NamedProperties.makesJumpingHarder)) {
+
+			prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getFrom()))
+				.ifPresent(modifiers::add);
+		}
 
 		modifiers.addAll(super.findModifiers(context));
 
