@@ -221,15 +221,18 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		} else {
 
 			TurnData turnData = game.isHomePlaying() ? game.getTurnDataHome() : game.getTurnDataAway();
-			PlayerAction action = fallbackAction(step, actingPlayer.getPlayerAction(), injuryResult.injuryContext(), turnData, game, state.blockDefenderId);
+			boolean hitTargetTeamMate = player.getId().equals(state.thrownPlayerId) || player.getId().equals(state.catcherId);
+			PlayerAction action = fallbackAction(step, actingPlayer.getPlayerAction(), injuryResult.injuryContext(), turnData, game, state.blockDefenderId, hitTargetTeamMate);
 			if (action == BLOCK) {
 				label = state.goToLabelOnFailure;
-			} else if (action != null && (player.getId().equals(state.thrownPlayerId) || player.getId().equals(state.catcherId))) {
-				step.publishParameter(StepParameter.from(StepParameterKey.RESET_PLAYER_ACTION, action));
-				step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
-				step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
-			} else if (action == null && player.getId().equals(state.thrownPlayerId)) {
-				playerStateKey = StepParameterKey.THROWN_PLAYER_STATE;
+			} else {
+				if (action != null && hitTargetTeamMate) {
+					step.publishParameter(StepParameter.from(StepParameterKey.RESET_PLAYER_ACTION, action));
+					step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
+					step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
+				} else if (action == null && player.getId().equals(state.thrownPlayerId)) {
+					playerStateKey = StepParameterKey.THROWN_PLAYER_STATE;
+				}
 			}
 		}
 
@@ -239,29 +242,38 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 	}
 
 	private PlayerAction fallbackAction(StepAnimalSavagery step, PlayerAction playerAction, InjuryContext injuryContext,
-																			TurnData turnData, Game game, String oldDefenderId) {
+																			TurnData turnData, Game game, String oldDefenderId, boolean hitTargetTeamMate) {
 		boolean playerRemoved = injuryContext.isCasualty() || injuryContext.isKnockedOut();
 		FieldModel fieldModel = game.getFieldModel();
 		Player<?> defender = game.getDefender();
 		switch (playerAction) {
 			case KICK_TEAM_MATE:
 			case KICK_TEAM_MATE_MOVE:
-				turnData.setKtmUsed(true);
-				game.setPassCoordinate(null);
-				fieldModel.setRangeRuler(null);
-				return PlayerAction.KICK_TEAM_MATE_MOVE;
+				if (hitTargetTeamMate) {
+					turnData.setKtmUsed(true);
+					game.setPassCoordinate(null);
+					fieldModel.setRangeRuler(null);
+					return PlayerAction.KICK_TEAM_MATE_MOVE;
+				}
+				return null;
 			case HAND_OVER:
 			case HAND_OVER_MOVE:
-				return PlayerAction.HAND_OVER_MOVE;
+				if (hitTargetTeamMate) {
+					return PlayerAction.HAND_OVER_MOVE;
+				}
+				return null;
 			case PASS:
 			case PASS_MOVE:
-				game.setPassCoordinate(null);
-				game.getActingPlayer().setHasPassed(false);
-				fieldModel.setRangeRuler(null);
-				return PlayerAction.PASS;
+				if (hitTargetTeamMate) {
+					game.setPassCoordinate(null);
+					game.getActingPlayer().setHasPassed(false);
+					fieldModel.setRangeRuler(null);
+					return PlayerAction.PASS;
+				}
+				return null;
 			case THROW_TEAM_MATE:
 			case THROW_TEAM_MATE_MOVE:
-				if (playerRemoved) {
+				if (playerRemoved && hitTargetTeamMate) {
 					turnData.setPassUsed(true);
 					game.setPassCoordinate(null);
 					fieldModel.setRangeRuler(null);

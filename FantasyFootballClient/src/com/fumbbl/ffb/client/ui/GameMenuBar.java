@@ -122,6 +122,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final JRadioButtonMenuItem pitchLandscapeMenuItem;
 	private final JRadioButtonMenuItem pitchPortraitMenuItem;
+	private final JRadioButtonMenuItem layoutSquareMenuItem;
 
 	private final JRadioButtonMenuItem fTeamLogoBothMenuItem;
 	private final JRadioButtonMenuItem fTeamLogoOwnMenuItem;
@@ -455,6 +456,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		orientationGroup.add(pitchPortraitMenuItem);
 		orientationMenu.add(pitchPortraitMenuItem);
 
+		layoutSquareMenuItem = new JRadioButtonMenuItem("Square");
+		layoutSquareMenuItem.addActionListener(this);
+		orientationGroup.add(layoutSquareMenuItem);
+		orientationMenu.add(layoutSquareMenuItem);
+
 		JMenu fTeamLogoMenu = new JMenu("Team Logo");
 		fTeamLogoMenu.setMnemonic(KeyEvent.VK_T);
 		fPitchMenu.add(fTeamLogoMenu);
@@ -625,6 +631,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String orientationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION);
 		pitchLandscapeMenuItem.setSelected(true);
 		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(orientationSetting));
+		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
 
 		String teamLogosSetting = getClient().getProperty(IClientProperty.SETTING_TEAM_LOGOS);
 		fTeamLogoBothMenuItem.setSelected(true);
@@ -804,6 +811,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(IClientProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
 			getClient().saveUserSettings(true);
 		}
+		if (source == layoutSquareMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
+			getClient().saveUserSettings(true);
+		}
 		if (source == fTeamLogoBothMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
 			getClient().saveUserSettings(true);
@@ -887,11 +898,27 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void updateOrientation() {
 
-		boolean portrait = IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION));
+		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
+
+		String orientation = getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION);
+
+		if (orientation != null) {
+			switch (orientation) {
+				case IClientPropertyValue.SETTING_PITCH_PORTRAIT:
+					layout = DimensionProvider.ClientLayout.PORTRAIT;
+					break;
+				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
+					layout = DimensionProvider.ClientLayout.SQUARE;
+					break;
+				default:
+					break;
+			}
+		}
+
 		if (getClient() != null && getClient().getUserInterface() != null) {
 			DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
-			if (dimensionProvider != null && portrait != dimensionProvider.isPortrait()) {
-				dimensionProvider.setPortrait(portrait);
+			if (dimensionProvider != null && layout != dimensionProvider.getLayout()) {
+				dimensionProvider.setLayout(layout);
 				getClient().getUserInterface().initComponents(true);
 			}
 		}

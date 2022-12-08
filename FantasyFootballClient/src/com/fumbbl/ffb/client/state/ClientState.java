@@ -210,7 +210,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 					int offsetX = 1, offsetY = 1;
 					DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
 
-					if (dimensionProvider.isPortrait()) {
+					if (dimensionProvider.isPitchPortrait()) {
 						offsetX = -1;
 					}
 
@@ -260,7 +260,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 				int offsetX = 1, offsetY = 1;
 				DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
 
-				if (dimensionProvider.isPortrait()) {
+				if (dimensionProvider.isPitchPortrait()) {
 					offsetX = -1;
 				}
 				Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);

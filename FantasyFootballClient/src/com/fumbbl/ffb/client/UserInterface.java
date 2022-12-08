@@ -69,16 +69,16 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
 
-		dimensionProvider = new DimensionProvider(pClient.getParameters().isPortrait());
+		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 		setResizable(false);
 
-		fScoreBar = new ScoreBarComponent(getClient());
+		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider);
 		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
-		fLog = new LogComponent(getClient(), dimensionProvider);
-		fChat = new ChatComponent(getClient(), dimensionProvider);
+		fLog = new LogComponent(getClient());
+		fChat = new ChatComponent(getClient());
 		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider);
 		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider);
 
@@ -99,8 +99,21 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fChat.initLayout(dimensionProvider);
 		fSideBarHome.initLayout(dimensionProvider);
 		fSideBarAway.initLayout(dimensionProvider);
+		fScoreBar.initLayout();
 
-		JPanel panelContent = dimensionProvider.isPortrait() ? portraitContent() : landscapeContent();
+		JPanel panelContent;
+		switch (dimensionProvider.getLayout()) {
+			case PORTRAIT:
+				panelContent = portraitContent();
+				break;
+			case SQUARE:
+				panelContent = squareContent();
+				break;
+			default:
+				panelContent = landscapeContent();
+				break;
+		}
+
 		panelContent.setSize(panelContent.getPreferredSize());
 
 		fDesktop.add(panelContent, -1);
@@ -111,6 +124,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		if (callInit) {
 			init(null);
+			getChat().getReplayControl().refresh();
 		}
 		fDialogManager.setShownDialogParameter(null);
 		fDialogManager.updateDialog();
@@ -174,6 +188,32 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		panelContent.add(panelMain);
 		panelContent.add(getScoreBar());
 		panelContent.add(logChatPanel);
+
+		return panelContent;
+	}
+
+	private JPanel squareContent() {
+		JPanel fieldPanel = new JPanel();
+		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
+		fieldPanel.add(fFieldComponent);
+
+		JPanel logChatScorePanel = new JPanel();
+		logChatScorePanel.setLayout(new BoxLayout(logChatScorePanel, BoxLayout.Y_AXIS));
+		logChatScorePanel.add(getLog());
+		logChatScorePanel.add(getScoreBar());
+		logChatScorePanel.add(getChat());
+		logChatScorePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+		JPanel panelMain = new JPanel();
+		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
+		panelMain.add(createSideBarPanel(fSideBarHome));
+		panelMain.add(fieldPanel);
+		panelMain.add(createSideBarPanel(fSideBarAway));
+
+		JPanel panelContent = new JPanel();
+		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
+		panelContent.add(panelMain);
+		panelContent.add(logChatScorePanel);
 
 		return panelContent;
 	}

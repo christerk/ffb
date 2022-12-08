@@ -110,6 +110,7 @@ public interface IIconProperty {
 
 	// Scorebar
 	String SCOREBAR_BACKGROUND = "scorebar.background";
+	String SCOREBAR_BACKGROUND_SQUARE = "scorebar.background.square";
 	String SCOREBAR_SPECTATORS = "scorebar.spectators";
 	String SCOREBAR_COACH_BANNED_HOME = "scorebar.coachBanned.home";
 	String SCOREBAR_COACH_BANNED_AWAY = "scorebar.coachBanned.away";

@@ -73,7 +73,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 				Graphics2D g2d = getImage().createGraphics();
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				int x, y;
-				if (dimensionProvider.isPortrait()) {
+				if (dimensionProvider.isPitchPortrait()) {
 					if (pHomeTeam) {
 						y = (3 * (fieldDimension.height / 4)) - (teamLogo.getHeight() / 2) - dimensionProvider.imageOffset();
 					} else {

@@ -42,7 +42,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 
 	private Dimension size;
 
-	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
+	public BoxButtonComponent(SideBarComponent pSideBar) {
 		fSideBar = pSideBar;
 		fButtonLocations = new HashMap<>();
 		fOpenBox = null;

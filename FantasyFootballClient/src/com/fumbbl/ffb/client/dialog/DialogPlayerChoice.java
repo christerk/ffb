@@ -105,7 +105,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 			int offsetX = 1, offsetY = 1;
 			DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
 
-			if (dimensionProvider.isPortrait()) {
+			if (dimensionProvider.isPitchPortrait()) {
 				offsetX = -1;
 			}
 

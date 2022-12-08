@@ -39,7 +39,7 @@ public class FieldLayerPitch extends FieldLayer {
 
 	protected void drawPitch(BufferedImage pImage) {
 		Graphics2D g2d = fImage.createGraphics();
-		if (dimensionProvider.isPortrait()) {
+		if (dimensionProvider.isPitchPortrait()) {
 			g2d.translate(0, size.height);
 			g2d.rotate(-Math.PI / 2);
 		}
@@ -68,7 +68,7 @@ public class FieldLayerPitch extends FieldLayer {
 			int translateX;
 			int translateY;
 			int squareSize = dimensionProvider.fieldSquareSize();
-			if (dimensionProvider.isPortrait()) {
+			if (dimensionProvider.isPitchPortrait()) {
 				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
 				translateY = (int) ((25.5 * squareSize) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
@@ -84,7 +84,7 @@ public class FieldLayerPitch extends FieldLayer {
 			g2d = getGraphicsWithFontAndColor();
 			metrics = g2d.getFontMetrics();
 			teamNameBounds = metrics.getStringBounds(teamNameAway, g2d);
-			if (dimensionProvider.isPortrait()) {
+			if (dimensionProvider.isPitchPortrait()) {
 				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
 				translateY = (int) ((0.5 * squareSize) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);

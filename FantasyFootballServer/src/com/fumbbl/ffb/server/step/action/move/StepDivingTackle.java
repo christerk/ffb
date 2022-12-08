@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -19,6 +20,8 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.util.StringTool;
+
+import java.util.Objects;
 
 /**
  * Step in move sequence to handle the DIVING_TACKLE skill.
@@ -81,6 +84,9 @@ public class StepDivingTackle extends AbstractStep {
 				case USING_MODIFYING_SKILL:
 					state.usingModifyingSkill = (Boolean) parameter.getValue();
 					return true;
+				case USING_DIVING_TACKLE:
+					state.usingDivingTackle = (Boolean) parameter.getValue();
+					return true;
 				default:
 					break;
 			}
@@ -92,17 +98,13 @@ public class StepDivingTackle extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_PLAYER_CHOICE:
-					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-					if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.DIVING_TACKLE) {
-						state.usingDivingTackle = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-						getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					}
-					break;
-				default:
-					break;
+			if (Objects.requireNonNull(pReceivedCommand.getId()) == NetCommandId.CLIENT_PLAYER_CHOICE) {
+				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+				if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.DIVING_TACKLE) {
+					state.usingDivingTackle = StringTool.isProvided(playerChoiceCommand.getPlayerId());
+					getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				}
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {

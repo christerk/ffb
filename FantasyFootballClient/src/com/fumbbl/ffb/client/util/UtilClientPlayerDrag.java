@@ -45,7 +45,7 @@ public class UtilClientPlayerDrag {
 		int actualX = pMouseX;
 		int actualY = pMouseY;
 
-		if (dimensionProvider.isPortrait()) {
+		if (dimensionProvider.isPitchPortrait()) {
 			//noinspection SuspiciousNameCombination
 			actualY = pMouseX;
 			actualX = fieldDimension.height - pMouseY;

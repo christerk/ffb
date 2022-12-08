@@ -27,6 +27,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportJumpRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -45,9 +46,11 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -200,15 +203,24 @@ public class StepJump extends AbstractStepWithReRoll {
 				.findFirst();
 			if (skill.isPresent()) {
 
-				skill.get().getJumpModifiers().forEach(modifier -> {
-					context.addModififerValue(modifier.getModifier());
-					divingTackleModifiers.add(modifier);
-				});
+				boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(), NamedProperties.canAttemptToTackleJumpingPlayer));
 				if (!alreadyReported) {
 					publishParameter(new StepParameter(StepParameterKey.USING_DIVING_TACKLE, true));
 					alreadyReported = true;
+					if (!ignoresDT) {
+						getResult()
+							.addReport(new ReportSkillUse(game.getDefender().getId(), skill.get(), true, SkillUse.STOP_OPPONENT));
+					}
+				}
+
+				if (ignoresDT) {
 					getResult()
-						.addReport(new ReportSkillUse(game.getDefender().getId(), skill.get(), true, SkillUse.STOP_OPPONENT));
+						.addReport(new ReportPlayerEvent(game.getDefender().getId(), "uses " + skill.get().getName() + " even though it has no effect on the roll to move to the vacated square"));
+				} else {
+					skill.get().getJumpModifiers().forEach(modifier -> {
+						context.addModififerValue(modifier.getModifier());
+						divingTackleModifiers.add(modifier);
+					});
 				}
 			}
 		}
@@ -258,13 +270,21 @@ public class StepJump extends AbstractStepWithReRoll {
 				jumpModifiers.addAll(skill.get().getJumpModifiers());
 				int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);
 
-				if (DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll)) {
+				boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(), NamedProperties.canAttemptToTackleJumpingPlayer));
+
+				if (DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll) && !ignoresDT) {
 					getResult().addReport(new ReportSkillUse(null, skill.get(), false, SkillUse.WOULD_NOT_HELP));
 				} else {
 
+					String[] descriptions = null;
+
+					if (ignoresDT) {
+						descriptions = Arrays.stream(divingTacklers).map(player -> "This will NOT change the roll but allows you to move to the vacated square").toArray(String[]::new);
+					}
+
 					String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 					UtilServerDialog.showDialog(getGameState(),
-						new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1),
+						new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1),
 						true);
 					usingDivingTackle = null;
 

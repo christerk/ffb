@@ -19,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -27,22 +26,20 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private final JLabel labelAvailableGold = new JLabel(), labelPettyCash = new JLabel(), labelTreasury = new JLabel(),
-		typeLabel = new JLabel();
+	private final JLabel labelAvailableGold = new JLabel(), typeLabel = new JLabel();
 	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel,
 		cardsListPanel = new JPanel(), cardsSummaryPanel = new JPanel();
 	private final JButton addCardButton = new JButton(), rerollChoiceButton = new JButton(), selectChoiceButton = new JButton(),
 		choiceOneButton = new JButton(), choiceTwoButton = new JButton();
 	private final Map<CardType, Integer> nrOfCardsPerType;
 	private final int cardPrice;
-	private int availableGold, cardSlots, pettyCash, treasury, maximumTreasury;
+	private int availableGold, cardSlots, maximumGold;
 	private CardChoices cardChoices;
 	private CardChoice currentChoice;
 	private final boolean superInitialized;
@@ -60,9 +57,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		cardSlots = pParameter.getCardSlots();
 		cardPrice = pParameter.getCardPrice();
-		treasury = maximumTreasury = pParameter.getTreasury();
-		availableGold = pParameter.getAvailableGold();
-		pettyCash =  availableGold - treasury;
+		maximumGold = availableGold = pParameter.getAvailableGold();
 		updateGoldValue();
 
 		addCardPanel = buildAddCardPanel(pParameter);
@@ -162,30 +157,13 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private JPanel goldPanel() {
 		JPanel panelGold = new JPanel();
 		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
-		updateColors();
 
 		labelAvailableGold.setFont(BOLD_FONT);
-		labelPettyCash.setFont(BOLD_FONT);
-		labelTreasury.setFont(BOLD_FONT);
 
 		panelGold.add(Box.createHorizontalGlue());
 		panelGold.add(labelAvailableGold);
 		panelGold.add(Box.createHorizontalGlue());
-		panelGold.add(labelPettyCash);
-		panelGold.add(Box.createHorizontalGlue());
-		panelGold.add(labelTreasury);
-		panelGold.add(Box.createHorizontalGlue());
 		return panelGold;
-	}
-
-	private void updateColors() {
-		Color foreGround = Color.BLACK;
-
-		if (maximumTreasury > treasury) {
-			foreGround = Color.ORANGE.darker();
-		}
-		labelAvailableGold.setForeground(foreGround);
-		labelTreasury.setForeground(foreGround);
 	}
 
 	private void showDialog() {
@@ -291,13 +269,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	protected void updateGoldValue() {
 		if (superInitialized) {
-			labelAvailableGold.setText("Total Gold: " + StringTool.formatThousands(availableGold) + " gp");
-
-			labelPettyCash.setText("Petty Cash (free): " + StringTool.formatThousands(pettyCash) + " gp");
-
-			labelTreasury.setText("Team Treasury: " + StringTool.formatThousands(treasury) + " gp");
-
-			updateColors();
+			labelAvailableGold.setText((parameter.isUsesTreasury() ? "Treasury: " : "Petty Cash: ") + StringTool.formatThousands(availableGold) + " gp");
 
 			getContentPane().validate();
 		}
@@ -330,13 +302,13 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	@Override
 	public void setMaximumGold(int maximumGold) {
 		super.setMaximumGold(maximumGold);
-		maximumTreasury = Math.min(maximumTreasury, getMaximumGold());
+		this.maximumGold = Math.min(this.maximumGold, getMaximumGold());
 	}
 
 	@Override
 	protected void resetPanels() {
 		super.resetPanels();
-		treasury = maximumTreasury;
+		availableGold = maximumGold;
 	}
 
 	@Override
@@ -349,13 +321,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		if (this.availableGold == availableGold) {
 			return;
 		}
-		if (this.availableGold < availableGold) {
-			treasury = Math.min(availableGold, maximumTreasury);
-		} else {
-			treasury = Math.min(availableGold, treasury);
-		}
+
 		this.availableGold = availableGold;
-		pettyCash = availableGold - treasury;
 		if (superInitialized) {
 			addCardButton.setEnabled(availableGold >= cardPrice && cardSlots > 0 && parameter.isCanBuyCards());
 		}
