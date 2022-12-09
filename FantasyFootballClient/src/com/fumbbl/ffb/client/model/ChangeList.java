@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Animal Savagery caused game crashes used with ttm/ktm/pass/hand off")
 			.addBugfix("Default value for ttm turnover option on hitting team mates is now false again")
 			.addBugfix("Multiple Block vs Foul Appearance opponents could cause game crashes when failing a Foul Appearance roll")
+			.addBugfix("Inducement phase calculated spent treasury incorrectly for underdog, draining money while petty cash was used")
 		);
 
 		versions.add(new VersionChangeList("2.13.1")

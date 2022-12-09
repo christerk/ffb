@@ -195,6 +195,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean staff = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_STAFF_ON_BOTH_TEAMS);
 			staff.setValue(true);
 			game.getOptions().addOption(staff);
+			GameOptionBoolean sameTv = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV);
+			sameTv.setValue(true);
+			//	game.getOptions().addOption(sameTv);
 		}
 	}
 

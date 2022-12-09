@@ -281,10 +281,10 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		Game game = getGameState().getGame();
 		int availableGold;
 		if (phase == Phase.HOME) {
-			availableInducementGoldHome = freeCash + (useTreasury ? game.getTeamHome().getTreasury() : usedInducementGoldAway + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff());
+			availableInducementGoldHome = useTreasury ? freeCash + game.getTeamHome().getTreasury() : usedInducementGoldAway + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff();
 			availableGold = availableInducementGoldHome;
 		} else {
-			availableInducementGoldAway = freeCash + (useTreasury ? game.getTeamAway().getTreasury() : usedInducementGoldHome + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff());
+			availableInducementGoldAway = useTreasury ? freeCash + game.getTeamAway().getTreasury() : usedInducementGoldHome + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff();
 			availableGold = availableInducementGoldAway;
 		}
 		return availableGold;
@@ -668,17 +668,19 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			publishParameter(StepParameter.from(StepParameterKey.TV_AWAY, newTvAway));
 		}
 
-		int unspentMoneyHome = availableInducementGoldHome - usedInducementGoldHome;
-		int spentTreasuryHome = Math.max(0, game.getTeamHome().getTreasury() - unspentMoneyHome);
 		TeamResult teamResultHome = game.getGameResult().getTeamResultHome();
-		teamResultHome.setTreasurySpentOnInducements(spentTreasuryHome);
-		teamResultHome.setPettyCashUsed(Math.min(usedInducementGoldHome, teamResultHome.getPettyCashFromTvDiff()));
+		if (teamResultHome.getPettyCashFromTvDiff() == 0) {
+			teamResultHome.setTreasurySpentOnInducements(usedInducementGoldHome);
+		} else {
+			teamResultHome.setPettyCashUsed(usedInducementGoldHome);
+		}
 
-		int unspentMoneyAway = availableInducementGoldAway - usedInducementGoldAway;
-		int spentTreasuryAway = Math.max(0, game.getTeamAway().getTreasury() - unspentMoneyAway);
 		TeamResult teamResultAway = game.getGameResult().getTeamResultAway();
-		teamResultAway.setTreasurySpentOnInducements(spentTreasuryAway);
-		teamResultAway.setPettyCashUsed(Math.min(usedInducementGoldAway, teamResultAway.getPettyCashFromTvDiff()));
+		if (teamResultAway.getPettyCashFromTvDiff() == 0) {
+			teamResultAway.setTreasurySpentOnInducements(usedInducementGoldAway);
+		} else {
+			teamResultAway.setPettyCashUsed(usedInducementGoldAway);
+		}
 
 		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
 
@@ -714,8 +716,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 	private int getNewTv(Integer usedInducementGoldHome, TurnData TurnDataHome, Team teamHome) {
 		int spentMoneyHome = usedInducementGoldHome + cardCost(TurnDataHome.getInducementSet());
-		int newTvHome = teamHome.getTeamValue() + spentMoneyHome;
-		return newTvHome;
+		return teamHome.getTeamValue() + spentMoneyHome;
 	}
 
 	private ReportCardsAndInducementsBought generateReport(Team pTeam, int gold, int newTv) {
