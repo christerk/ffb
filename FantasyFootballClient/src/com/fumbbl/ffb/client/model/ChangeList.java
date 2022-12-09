@@ -11,6 +11,10 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.14.0")
+			.addBugfix("Pogo stick now ignores Diving Tackle and Prehensile Tail")
+		);
+
+		versions.add(new VersionChangeList("2.14.0")
 			.addFeature("Square mode (like portrait but logs and score board on the side")
 			.addBugfix("Inducement phase now follows Designer's Commentary from Nov 22")
 			.addBugfix("Animal Savagery caused game crashes used with ttm/ktm/pass/hand off")
