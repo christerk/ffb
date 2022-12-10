@@ -330,7 +330,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
 			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
 
-		if (!showDialog(team, freeCash, parallel)) {
+		if (!showDialog(team, freeCash, parallel || UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY))) {
 			phase = Phase.DONE;
 		}
 	}
@@ -668,15 +668,17 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			publishParameter(StepParameter.from(StepParameterKey.TV_AWAY, newTvAway));
 		}
 
+		boolean alwaysUseTreasury = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
+
 		TeamResult teamResultHome = game.getGameResult().getTeamResultHome();
-		if (teamResultHome.getPettyCashFromTvDiff() == 0) {
+		if (teamResultHome.getPettyCashFromTvDiff() == 0 || alwaysUseTreasury) {
 			teamResultHome.setTreasurySpentOnInducements(usedInducementGoldHome);
 		} else {
 			teamResultHome.setPettyCashUsed(usedInducementGoldHome);
 		}
 
 		TeamResult teamResultAway = game.getGameResult().getTeamResultAway();
-		if (teamResultAway.getPettyCashFromTvDiff() == 0) {
+		if (teamResultAway.getPettyCashFromTvDiff() == 0 || alwaysUseTreasury) {
 			teamResultAway.setTreasurySpentOnInducements(usedInducementGoldAway);
 		} else {
 			teamResultAway.setPettyCashUsed(usedInducementGoldAway);

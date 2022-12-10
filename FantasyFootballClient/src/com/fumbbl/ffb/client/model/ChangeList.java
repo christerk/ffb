@@ -18,6 +18,8 @@ public class ChangeList {
 			.addBugfix("Multiple Block vs Foul Appearance opponents could cause game crashes when failing a Foul Appearance roll")
 			.addBugfix("Pogo stick now ignores Diving Tackle and Prehensile Tail")
 			.addBugfix("Inducement phase calculated spent treasury incorrectly for underdog, draining money while petty cash was used")
+			.addFeature("Add game option inducementsAllowSpendingTreasuryOnEqualCTV, when active in case of equal CTV both teams can buy inducements from treasury simultaneously")
+			.addFeature("Add game option inducementsAlwaysUseTreasury, when active teams always only use treasury for inducements instead of petty cash")
 		);
 
 		versions.add(new VersionChangeList("2.13.1")

@@ -198,6 +198,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean sameTv = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV);
 			sameTv.setValue(true);
 			//	game.getOptions().addOption(sameTv);
+			GameOptionBoolean alwaysTreasury = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
+			alwaysTreasury.setValue(true);
+			//	game.getOptions().addOption(alwaysTreasury);
 		}
 	}
 

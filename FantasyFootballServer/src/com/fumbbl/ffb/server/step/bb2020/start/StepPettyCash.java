@@ -4,6 +4,8 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.bb2020.ReportFreePettyCash;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -12,7 +14,7 @@ import com.fumbbl.ffb.server.step.StepId;
 
 /**
  * Step in start game sequence to handle petty cash.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -47,9 +49,13 @@ public final class StepPettyCash extends AbstractStep {
 		if (availablePettyCash != 0) {
 			TeamResult underdogResult = availablePettyCash < 0 ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
 
+			// we set this value always to know who should go first in the inducement step even if petty cash will not be used
 			underdogResult.setPettyCashFromTvDiff(Math.abs(availablePettyCash));
-			getResult().addReport(
-				new ReportFreePettyCash(underdogResult.getTeam().getId(), underdogResult.getPettyCashFromTvDiff()));
+			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY)) {
+
+				getResult().addReport(
+					new ReportFreePettyCash(underdogResult.getTeam().getId(), underdogResult.getPettyCashFromTvDiff()));
+			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 

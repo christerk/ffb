@@ -174,6 +174,8 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 wizard(s).");
 			case INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV:
 				return new GameOptionBoolean(pOptionId).setDefault(false).setMessageTrue("On equal CTV teams can buy inducements from treasury");
+			case INDUCEMENTS_ALWAYS_USE_TREASURY:
+				return new GameOptionBoolean(pOptionId).setDefault(false).setMessageTrue("Teams will always use treasury instead of petty cash for inducements");
 			case MAX_NR_OF_CARDS:
 				return new GameOptionInt(pOptionId).setDefault(5).setMessage("A maximum of $1 cards can be bought.");
 			case MAX_PLAYERS_IN_WIDE_ZONE:
