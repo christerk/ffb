@@ -11,15 +11,15 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.14.0")
-			.addBugfix("Pogo stick now ignores Diving Tackle and Prehensile Tail")
-		);
-
-		versions.add(new VersionChangeList("2.14.0")
 			.addFeature("Square mode (like portrait but logs and score board on the side")
 			.addBugfix("Inducement phase now follows Designer's Commentary from Nov 22")
 			.addBugfix("Animal Savagery caused game crashes used with ttm/ktm/pass/hand off")
 			.addBugfix("Default value for ttm turnover option on hitting team mates is now false again")
 			.addBugfix("Multiple Block vs Foul Appearance opponents could cause game crashes when failing a Foul Appearance roll")
+			.addBugfix("Pogo stick now ignores Diving Tackle and Prehensile Tail")
+			.addBugfix("Inducement phase calculated spent treasury incorrectly for underdog, draining money while petty cash was used")
+			.addFeature("Add game option inducementsAllowSpendingTreasuryOnEqualCTV, when active in case of equal CTV both teams can buy inducements from treasury simultaneously")
+			.addFeature("Add game option inducementsAlwaysUseTreasury, when active teams always only use treasury for inducements instead of petty cash")
 		);
 
 		versions.add(new VersionChangeList("2.13.1")

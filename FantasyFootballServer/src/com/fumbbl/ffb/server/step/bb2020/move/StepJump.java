@@ -27,7 +27,6 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportJumpRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -50,7 +49,6 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -203,25 +201,17 @@ public class StepJump extends AbstractStepWithReRoll {
 				.findFirst();
 			if (skill.isPresent()) {
 
-				boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(), NamedProperties.canAttemptToTackleJumpingPlayer));
 				if (!alreadyReported) {
 					publishParameter(new StepParameter(StepParameterKey.USING_DIVING_TACKLE, true));
 					alreadyReported = true;
-					if (!ignoresDT) {
-						getResult()
-							.addReport(new ReportSkillUse(game.getDefender().getId(), skill.get(), true, SkillUse.STOP_OPPONENT));
-					}
+					getResult()
+						.addReport(new ReportSkillUse(game.getDefender().getId(), skill.get(), true, SkillUse.STOP_OPPONENT));
 				}
 
-				if (ignoresDT) {
-					getResult()
-						.addReport(new ReportPlayerEvent(game.getDefender().getId(), "uses " + skill.get().getName() + " even though it has no effect on the roll to move to the vacated square"));
-				} else {
-					skill.get().getJumpModifiers().forEach(modifier -> {
-						context.addModififerValue(modifier.getModifier());
-						divingTackleModifiers.add(modifier);
-					});
-				}
+				skill.get().getJumpModifiers().forEach(modifier -> {
+					context.addModififerValue(modifier.getModifier());
+					divingTackleModifiers.add(modifier);
+				});
 			}
 		}
 		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
@@ -254,12 +244,19 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private ActionStatus checkDivingTackle(Game game, JumpContext context, JumpModifierFactory modifierFactory, AgilityMechanic mechanic) {
+		boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(), NamedProperties.canAttemptToTackleJumpingPlayer));
+
+		if (ignoresDT) {
+			return ActionStatus.SUCCESS;
+		}
+
 		Player<?>[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, context.getFrom(),
 			NamedProperties.canAttemptToTackleJumpingPlayer, true);
 		divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
 		if (game.getTurnMode() == TurnMode.DUMP_OFF) {
 			divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
 		}
+
 
 		if (ArrayTool.isProvided(divingTacklers)) {
 			Optional<Skill> skill = divingTacklers[0].getSkillsIncludingTemporaryOnes().stream().filter(s -> s.getSkillProperties().contains(NamedProperties.canAttemptToTackleJumpingPlayer))
@@ -270,21 +267,13 @@ public class StepJump extends AbstractStepWithReRoll {
 				jumpModifiers.addAll(skill.get().getJumpModifiers());
 				int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);
 
-				boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(), NamedProperties.canAttemptToTackleJumpingPlayer));
-
-				if (DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll) && !ignoresDT) {
+				if (DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll)) {
 					getResult().addReport(new ReportSkillUse(null, skill.get(), false, SkillUse.WOULD_NOT_HELP));
 				} else {
 
-					String[] descriptions = null;
-
-					if (ignoresDT) {
-						descriptions = Arrays.stream(divingTacklers).map(player -> "This will NOT change the roll but allows you to move to the vacated square").toArray(String[]::new);
-					}
-
 					String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 					UtilServerDialog.showDialog(getGameState(),
-						new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1),
+						new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1),
 						true);
 					usingDivingTackle = null;
 
