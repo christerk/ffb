@@ -213,7 +213,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 		boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
 		getResult().addReport(
 			new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef, biasedRefBonus));
-		boolean couldReRoll = modifiedRoll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
+		boolean couldReRoll = roll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
 			&& briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get());
 		if (couldReRoll && coachBanned) {
 			useBriberyReRoll(game, inducementSet, briberyReRoll.get());

@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.14.1")
+			.addBugfix("Allow re-rolling natural one on AtC with Biased Ref even though coach would not have been banned")
+		);
+
 		versions.add(new VersionChangeList("2.14.0")
 			.addFeature("Square mode (like portrait but logs and score board on the side")
 			.addBugfix("Inducement phase now follows Designer's Commentary from Nov 22")
