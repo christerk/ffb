@@ -34,8 +34,8 @@ public class DialogArgueTheCallHandler extends DialogHandler {
 					setDialog(new DialogArgueTheCall(getClient(), player, dialogParameter.isStayOnPitch(), dialogParameter.isFriendsWithTheRef(), dialogParameter.getBiasedRefs()));
 
 				} else {
-					setDialog(new DialogPlayerChoice(getClient(), "Select players to argue the call for",
-							dialogParameter.getPlayerIds(), null, 0, dialogParameter.getPlayerIds().length, null, true));
+					setDialog(new DialogPlayerChoice(getClient(), "Select players to argue the call for (you will be prompted again if you do not select all)",
+						dialogParameter.getPlayerIds(), null, 0, dialogParameter.getPlayerIds().length, null, true));
 				}
 
 				getDialog().showDialog(this);

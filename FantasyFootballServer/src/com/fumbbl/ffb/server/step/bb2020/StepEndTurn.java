@@ -125,6 +125,7 @@ public class StepEndTurn extends AbstractStep {
 	private int turnNr, half;
 	private List<String> playerIdsNaturalOnes = new ArrayList<>();
 	private Set<String> playerIdsFailedBribes = new HashSet<>();
+	private Set<String> playerIdsArgued = new HashSet<>();
 
 	public StepEndTurn(GameState pGameState) {
 		super(pGameState);
@@ -189,13 +190,7 @@ public class StepEndTurn extends AbstractStep {
 					ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
 					if (inducementCommand.getInducementType().hasUsage(Usage.AVOID_BAN)) {
 						fWithinSecretWeaponHandling = true;
-						if (!useSecretWeaponBribes(team, inducementCommand.getPlayerIds())) {
-							if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-								fBribesChoiceHome = null;
-							} else {
-								fBribesChoiceAway = null;
-							}
-						}
+						useSecretWeaponBribes(team, inducementCommand.getPlayerIds());
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -384,33 +379,6 @@ public class StepEndTurn extends AbstractStep {
 
 		}
 
-		if (!playerIdsNaturalOnes.isEmpty()) {
-			String playerId = playerIdsNaturalOnes.get(0);
-			Team team = game.findTeam(game.getPlayerById(playerId));
-			TurnData turnData = team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
-			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet()
-				.stream().filter(key -> key.hasUsage(Usage.REROLL_ARGUE)).findFirst();
-			boolean rollWasModified = turnData.getInducementSet().getInducementTypes().stream().anyMatch(type -> type.hasUsage(Usage.ADD_TO_ARGUE_ROLL));
-
-			if (playerIdsNaturalOnes.size() == 1) {
-
-				playerIdsNaturalOnes.clear();
-
-				if (rollWasModified) {
-					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(team);
-					reRollArgue(team, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
-				} else {
-					UtilServerDialog.showDialog(getGameState(), new DialogBriberyAndCorruptionParameter(team.getId()), false);
-					return;
-				}
-			} else {
-				String[] players = playerIdsNaturalOnes.toArray(new String[0]);
-				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.BRIBERY_AND_CORRUPTION, players,
-					null, 1, rollWasModified ? 0 : 1), false);
-				return;
-			}
-		}
-
 		if (fArgueTheCallChoiceAway == null) {
 			fArgueTheCallChoiceAway = false;
 			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getTeamAway());
@@ -418,6 +386,11 @@ public class StepEndTurn extends AbstractStep {
 			if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway(), friendsWithTheRef, game.getTurnDataAway().getInducementSet())) {
 				fArgueTheCallChoiceAway = null;
 			}
+		}
+
+
+		if (reRollArgueFailures(game)) {
+			return;
 		}
 
 		if (fArgueTheCallChoiceHome == null && fArgueTheCallChoiceAway != null) {
@@ -428,6 +401,11 @@ public class StepEndTurn extends AbstractStep {
 				fArgueTheCallChoiceHome = null;
 			}
 		}
+
+		if (reRollArgueFailures(game)) {
+			return;
+		}
+
 
 		if (fBribesChoiceAway == null && fArgueTheCallChoiceHome != null && fArgueTheCallChoiceAway != null) {
 			fBribesChoiceAway = false;
@@ -503,6 +481,39 @@ public class StepEndTurn extends AbstractStep {
 
 		}
 
+	}
+
+	private boolean reRollArgueFailures(Game game) {
+		boolean result = false;
+		if (!playerIdsNaturalOnes.isEmpty()) {
+			String playerId = playerIdsNaturalOnes.get(0);
+			Team team = game.findTeam(game.getPlayerById(playerId));
+			TurnData turnData = team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway();
+			Optional<InducementType> briberyReRoll = turnData.getInducementSet().getInducementMapping().keySet()
+				.stream().filter(key -> key.hasUsage(Usage.REROLL_ARGUE)).findFirst();
+			boolean rollWasModified = turnData.getInducementSet().getInducementTypes().stream().anyMatch(type -> type.hasUsage(Usage.ADD_TO_ARGUE_ROLL));
+
+			if (playerIdsNaturalOnes.size() == 1) {
+
+				if (rollWasModified) {
+					UtilServerDialog.showDialog(getGameState(), new DialogBriberyAndCorruptionParameter(team.getId()), false);
+					result = true;
+				} else {
+					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(team);
+					reRollArgue(team, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
+					playerIdsNaturalOnes.clear();
+				}
+			} else {
+				String[] players = playerIdsNaturalOnes.toArray(new String[0]);
+				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.BRIBERY_AND_CORRUPTION, players,
+					null, 1, rollWasModified ? 0 : 1), false);
+				result = true;
+				playerIdsNaturalOnes.clear();
+
+			}
+		}
+
+		return result;
 	}
 
 	private int getFaintingCount(Game game, List<KnockoutRecovery> knockoutRecoveries, List<HeatExhaustion> heatExhaustions, List<Player<?>> unzappedPlayers) {
@@ -720,12 +731,22 @@ public class StepEndTurn extends AbstractStep {
 
 	private void argueTheCall(Team pTeam, String[] pPlayerIds, boolean friendsWithTheRef) {
 		Game game = getGameState().getGame();
+
+		playerIdsArgued.addAll(Arrays.asList(pPlayerIds));
+		List<String> playersForArgue = playersForArgue(pTeam, game);
+
 		TurnData turnData;
 		if (game.getTeamHome() == pTeam) {
-			fArgueTheCallChoiceHome = ArrayTool.isProvided(pPlayerIds);
+			if (playersForArgue.isEmpty() || !ArrayTool.isProvided(pPlayerIds)) {
+				fArgueTheCallChoiceHome = ArrayTool.isProvided(pPlayerIds);
+				playersForArgue.clear();
+			}
 			turnData = game.getTurnDataHome();
 		} else {
-			fArgueTheCallChoiceAway = ArrayTool.isProvided(pPlayerIds);
+			if (playersForArgue.isEmpty() || !ArrayTool.isProvided(pPlayerIds)) {
+				fArgueTheCallChoiceAway = ArrayTool.isProvided(pPlayerIds);
+				playersForArgue.clear();
+			}
 			turnData = game.getTurnDataAway();
 		}
 		if (ArrayTool.isProvided(pPlayerIds)) {
@@ -748,15 +769,18 @@ public class StepEndTurn extends AbstractStep {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);
 					}
-					boolean canBeReRolled = modifiedRoll == 1 && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
+					boolean canBeReRolled = roll == 1 && briberyReRoll.isPresent() && turnData.getInducementSet().hasUsesLeft(briberyReRoll.get());
 
 					if (canBeReRolled && coachBanned) {
 						reRollArgue(pTeam, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
 					} else if (coachBanned) {
 						turnData.setCoachBanned(true);
 						removeUsedSecretWeapon(game, player);
-					} else if (canBeReRolled) {
-						playerIdsNaturalOnes.add(playerId);
+					} else {
+						if (canBeReRolled) {
+							playerIdsNaturalOnes.add(playerId);
+						}
+
 					}
 				}
 
@@ -764,14 +788,9 @@ public class StepEndTurn extends AbstractStep {
 		}
 	}
 
-	private boolean useSecretWeaponBribes(Team pTeam, String[] pPlayerIds) {
-		boolean allSuccessful = true;
+	private void useSecretWeaponBribes(Team pTeam, String[] pPlayerIds) {
 		Game game = getGameState().getGame();
-		if (game.getTeamHome() == pTeam) {
-			fBribesChoiceHome = ArrayTool.isProvided(pPlayerIds);
-		} else {
-			fBribesChoiceAway = ArrayTool.isProvided(pPlayerIds);
-		}
+
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
 		Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
@@ -789,12 +808,20 @@ public class StepEndTurn extends AbstractStep {
 						playerResult.setHasUsedSecretWeapon(false);
 					} else {
 						playerIdsFailedBribes.add(playerId);
-						allSuccessful = false;
 					}
 				}
 			}
 		}
-		return allSuccessful;
+
+		if (playersForBribe(pTeam, game).isEmpty() || !ArrayTool.isProvided(pPlayerIds)) {
+			if (game.getTeamHome() == pTeam) {
+				fBribesChoiceHome = ArrayTool.isProvided(pPlayerIds);
+				playerIdsFailedBribes.clear();
+			} else {
+				fBribesChoiceAway = ArrayTool.isProvided(pPlayerIds);
+				playerIdsFailedBribes.clear();
+			}
+		}
 	}
 
 	private void deactivateCardsAndPrayers(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
@@ -855,8 +882,8 @@ public class StepEndTurn extends AbstractStep {
 
 	private boolean askForSecretWeaponBribes(Team team) {
 		Game game = getGameState().getGame();
-		List<String> playerIds = getPlayerIds(team, game).stream().filter(id -> !playerIdsFailedBribes.contains(id)).collect(Collectors.toList());
-		if (playerIds.size() > 0) {
+		List<String> playerIds = playersForBribe(team, game);
+		if (!playerIds.isEmpty()) {
 			InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
 			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
@@ -878,7 +905,7 @@ public class StepEndTurn extends AbstractStep {
 		if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
 			return false;
 		}
-		List<String> playerIds = getPlayerIds(team, game);
+		List<String> playerIds = playersForArgue(team, game);
 		if (playerIds.size() > 0) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
@@ -892,6 +919,18 @@ public class StepEndTurn extends AbstractStep {
 			}
 		}
 		return false;
+	}
+
+	private List<String> playersForArgue(Team team, Game game) {
+		List<String> playerIds = getPlayerIds(team, game);
+		playerIds.removeAll(playerIdsArgued);
+		return playerIds;
+	}
+
+	private List<String> playersForBribe(Team team, Game game) {
+		List<String> playerIds = getPlayerIds(team, game);
+		playerIds.removeAll(playerIdsFailedBribes);
+		return playerIds;
 	}
 
 	private List<String> getPlayerIds(Team team, Game game) {
@@ -932,6 +971,7 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.TURN_NR.addTo(jsonObject, turnNr);
 		IServerJsonOption.PLAYER_IDS_NATURAL_ONES.addTo(jsonObject, playerIdsNaturalOnes);
 		IServerJsonOption.PLAYER_IDS_FAILED_BRIBE.addTo(jsonObject, playerIdsFailedBribes);
+		IServerJsonOption.PLAYER_IDS_ARGUED.addTo(jsonObject, playerIdsArgued);
 		return jsonObject;
 	}
 
@@ -956,6 +996,10 @@ public class StepEndTurn extends AbstractStep {
 		String[] failedBribes = IServerJsonOption.PLAYER_IDS_FAILED_BRIBE.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(failedBribes)) {
 			playerIdsFailedBribes = Arrays.stream(failedBribes).collect(Collectors.toSet());
+		}
+
+		if (IServerJsonOption.PLAYER_IDS_ARGUED.isDefinedIn(jsonObject)) {
+			playerIdsArgued = Arrays.stream(IServerJsonOption.PLAYER_IDS_ARGUED.getFrom(source, jsonObject)).collect(Collectors.toSet());
 		}
 		return this;
 	}

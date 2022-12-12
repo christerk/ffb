@@ -10,8 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.14.1")
-			.addBugfix("Allow re-rolling natural one on AtC with Biased Ref even though coach would not have been banned")
+		versions.add(new VersionChangeList("2.15.0")
+			.addBugfix("Allow re-rolling natural one on Argue the Call with Biased Ref even though coach would not have been banned")
+			.addBugfix("Argue the Call now is coming before Bribes")
+			.addImprovement("Argue the Call for weapons is now asked multiple times so a coach can first argue for selected players")
+			.addBugfix("Repeated Bribes dialog for weapons now also shows up if all bribes roll were successful so now a coach can first bribe for selected players")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")

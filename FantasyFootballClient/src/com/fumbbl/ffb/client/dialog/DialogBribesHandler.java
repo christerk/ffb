@@ -40,7 +40,7 @@ public class DialogBribesHandler extends DialogHandler {
 					StringBuilder header = new StringBuilder();
 					if (dialogBribesParameter.getMaxNrOfBribes() > 1) {
 						header.append("Select max. ").append(dialogBribesParameter.getMaxNrOfBribes())
-							.append(" players to use a Bribe for");
+							.append(" players to use a Bribe for (you will be prompted again if there are players and bribes left)");
 					} else {
 						header.append("Select a player to use a Bribe for");
 					}
