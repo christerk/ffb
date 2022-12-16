@@ -16,6 +16,7 @@ public class ChangeList {
 			.addImprovement("Argue the Call for weapons is now asked multiple times so a coach can first argue for selected players")
 			.addBugfix("Repeated Bribes dialog for weapons now also shows up if all bribes roll were successful so now a coach can first bribe for selected players")
 			.addBugfix("Failing the first rush on a jump requiring two rushes knocks the player down in the start square")
+			.addBugfix("Spec counter in square mode was not rendered properly")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")

@@ -155,7 +155,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(_SPECTATOR_FONT);
 			String spectatorString = Integer.toString(fSpectators);
-			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, 21);
+			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, spectatorLocation.y + 21);
 			g2d.dispose();
 		}
 	}
