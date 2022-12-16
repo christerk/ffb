@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Spec counter in square mode was not rendered properly")
 			.addBugfix("Two For One bonus stays even if partner returns to play")
 			.addBugfix("In some cases duplicate commands could trigger double activation (network issues)")
+			.addBugfix("Take \"replacesPosition\" attribute into account for mercenaries (prevent buying more players than allowed e.g. for Jaguar Warriors")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")

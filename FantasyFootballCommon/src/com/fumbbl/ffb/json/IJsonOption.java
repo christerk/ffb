@@ -374,6 +374,7 @@ public interface IJsonOption {
 	JsonBooleanOption RECEIVE_CHOICE = new JsonBooleanOption("receiveChoice");
 	JsonBooleanOption RECOVERING = new JsonBooleanOption("recovering");
 	JsonEnumWithNameOption RECOVERING_INJURY = new JsonEnumWithNameOption("recoveringInjury", Factory.SERIOUS_INJURY);
+	JsonStringOption REPLACES_POSITION = new JsonStringOption("replacesPosition");
 	JsonIntOption REPLAY_TO_COMMAND_NR = new JsonIntOption("replayToCommandNr");
 	JsonEnumWithNameOption REPORT_ID = new JsonEnumWithNameOption("reportId", Factory.REPORT_ID);
 	JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");

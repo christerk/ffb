@@ -125,7 +125,14 @@ public class MercenaryTableModel extends AbstractTableModel {
 		List<Object[]> mercenaryList = new ArrayList<>();
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
 			if (PlayerType.STAR != pos.getType() && PlayerType.INFAMOUS_STAFF != pos.getType()) {
-				int playerInPosition = fDialog.getTeam().getNrOfAvailablePlayersInPosition(pos);
+				int playerInReplacedPosition = 0;
+				if (StringTool.isProvided(pos.getReplacesPosition())) {
+					RosterPosition replacedPosition = fDialog.getRoster().getPositionById(pos.getReplacesPosition());
+					if (replacedPosition != null) {
+						playerInReplacedPosition = fDialog.getTeam().getNrOfAvailablePlayersInPosition(replacedPosition);
+					}
+				}
+				int playerInPosition = fDialog.getTeam().getNrOfAvailablePlayersInPosition(pos) + playerInReplacedPosition;
 				for (int i = 0; i < pos.getQuantity() - playerInPosition; i++) {
 					if (pos.getType() != PlayerType.BIG_GUY || fDialog.getRoster().getMaxBigGuys() > bigGuysOnTeam) {
 						RosterPlayer player = new RosterPlayer();

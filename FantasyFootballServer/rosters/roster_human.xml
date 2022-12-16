@@ -110,7 +110,33 @@
 	</position>
 	
 	<position id="human.catcher">
+		<replacesPosition>human.catcher.old</replacesPosition>
 		<quantity>4</quantity>
+		<name>Catcher</name>
+		<displayName>Human Catcher</displayName>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>8</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<passing>5</passing>
+		<armour>7</armour>
+		<portrait>portraits/human_catcher.png</portrait>
+		<iconSet size="4">iconsets/human_catcher.png</iconSet>
+		<skillList>
+			<skill>Catch</skill>
+			<skill>Dodge</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Passing</double>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>
+
+	<position id="human.catcher.old">
+		<quantity>0</quantity>
 		<name>Catcher</name>
 		<displayName>Human Catcher</displayName>
 		<type>Regular</type>
