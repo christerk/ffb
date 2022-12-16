@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Argue the Call now is coming before Bribes")
 			.addImprovement("Argue the Call for weapons is now asked multiple times so a coach can first argue for selected players")
 			.addBugfix("Repeated Bribes dialog for weapons now also shows up if all bribes roll were successful so now a coach can first bribe for selected players")
+			.addBugfix("Failing the first rush on a jump requiring two rushes knocks the player down in the start square")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")

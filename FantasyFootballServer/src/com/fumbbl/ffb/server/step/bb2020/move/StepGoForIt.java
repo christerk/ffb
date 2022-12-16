@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.bb2020.move;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
@@ -40,12 +41,12 @@ import java.util.Set;
 
 /**
  * Step in block sequence to handle go for it on blitz.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ * <p>
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_TYPE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -53,6 +54,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private boolean fBallandChainGfi;
 	private boolean fSecondGoForIt;
 	private String fGotoLabelOnFailure;
+	private FieldCoordinate moveStart;
 
 	public StepGoForIt(GameState pGameState) {
 		super(pGameState);
@@ -67,20 +69,29 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				case GOTO_LABEL_ON_FAILURE:
-					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				case BALL_AND_CHAIN_GFI:
-					fBallandChainGfi = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				default:
-					break;
+					case GOTO_LABEL_ON_FAILURE:
+						fGotoLabelOnFailure = (String) parameter.getValue();
+						break;
+					case BALL_AND_CHAIN_GFI:
+						fBallandChainGfi = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					default:
+						break;
 				}
 			}
 		}
 		if (!StringTool.isProvided(fGotoLabelOnFailure)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
 		}
+	}
+
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.MOVE_START) {
+			moveStart = (FieldCoordinate) parameter.getValue();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -112,24 +123,24 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));
 			}
 			if (actingPlayer.isGoingForIt()
-					&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers())) {
+				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers())) {
 				if (ReRolledActions.GO_FOR_IT == getReRolledAction()) {
 					if ((getReRollSource() == null)
-							|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 						failGfi();
 						return;
 					}
 				}
 				switch (goForIt()) {
-				case SUCCESS:
-					succeedGfi();
-					return;
-				case FAILURE:
-					failGfi();
-					return;
-				default:
-					getResult().setNextAction(StepAction.CONTINUE);
-					return;
+					case SUCCESS:
+						succeedGfi();
+						return;
+					case FAILURE:
+						failGfi();
+						return;
+					default:
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
 				}
 			}
 		}
@@ -140,8 +151,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.isJumping()
-				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)
-				&& !fSecondGoForIt) {
+			&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)
+			&& !fSecondGoForIt) {
 			fSecondGoForIt = true;
 			setReRolledAction(null);
 			getGameState().pushCurrentStepOnStack();
@@ -150,8 +161,17 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	}
 
 	private void failGfi() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (actingPlayer.isJumping() && !fSecondGoForIt && actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1) {
+			publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, null));
+			game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), moveStart);
+		}
+
 		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropGFI()));
+
+
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 	}
 
@@ -179,7 +199,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 					return goForIt();
 				} else {
 					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-							ReRolledActions.GO_FOR_IT, minimumRoll, false)) {
+						ReRolledActions.GO_FOR_IT, minimumRoll, false)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;
@@ -198,6 +218,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.SECOND_GO_FOR_IT.addTo(jsonObject, fSecondGoForIt);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.MOVE_START.addTo(jsonObject, moveStart);
 		return jsonObject;
 	}
 
@@ -207,6 +228,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(source, jsonObject);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		moveStart = IServerJsonOption.MOVE_START.getFrom(source, jsonObject);
 		return this;
 	}
 
