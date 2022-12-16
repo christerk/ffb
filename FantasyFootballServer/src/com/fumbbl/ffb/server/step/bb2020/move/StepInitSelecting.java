@@ -134,8 +134,9 @@ public final class StepInitSelecting extends AbstractStep {
 				case CLIENT_ACTING_PLAYER:
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
+					PlayerState playerState = game.getFieldModel().getPlayerState(selectedPlayer);
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
-						&& game.getActingTeam() == selectedPlayer.getTeam()) {
+						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()) {
 						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
