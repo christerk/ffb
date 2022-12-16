@@ -220,41 +220,13 @@ public class UtilServerGame {
 				if (partner.isPresent()) {
 					players.remove(partner.get());
 					PlayerState playerState = fieldModel.getPlayerState(currentPlayer);
-					PlayerState partnerState = fieldModel.getPlayerState(partner.get());
 					boolean playerRemovedFromPlay = playerState.isCasualty() || playerState.getBase() == PlayerState.KNOCKED_OUT;
-					boolean partnerRemovedFromPlay = partnerState.isCasualty() || partnerState.getBase() == PlayerState.KNOCKED_OUT;
-					if (playerRemovedFromPlay) {
-						if (currentPlayer.hasActiveEnhancement(skill)) {
-							removePartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
-						}
-
-						if (partnerRemovedFromPlay && partner.get().hasActiveEnhancement(skill)) {
-							removePartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
-
-						} else if (!partnerRemovedFromPlay && !partner.get().hasActiveEnhancement(skill)) {
-							addPartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
-						}
-					} else {
-						if (partner.get().hasActiveEnhancement(skill)) {
-							removePartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
-						}
-
-						if (partnerRemovedFromPlay && !currentPlayer.hasActiveEnhancement(skill)) {
-							addPartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
-
-						} else if (!partnerRemovedFromPlay && currentPlayer.hasActiveEnhancement(skill)) {
-							removePartnerEnhancement(game, fieldModel, currentPlayer, partner.get(), skill, step);
-						}
+					if (playerRemovedFromPlay && !partner.get().hasActiveEnhancement(skill)) {
+						addPartnerEnhancement(game, fieldModel, partner.get(), currentPlayer, skill, step);
 					}
 				}
 			}
 		}
-	}
-
-	private static void removePartnerEnhancement(Game game, FieldModel fieldModel, Player<?> player, Player<?> partner, Skill skill, IStep step) {
-		fieldModel.removeSkillEnhancements(player, skill);
-		player.markUnused(skill, game);
-		step.getResult().addReport(new ReportTwoForOne(player.getId(), partner.getId(), false));
 	}
 
 	private static void addPartnerEnhancement(Game game, FieldModel fieldModel, Player<?> player, Player<?> partner, Skill skill, IStep step) {

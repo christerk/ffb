@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Repeated Bribes dialog for weapons now also shows up if all bribes roll were successful so now a coach can first bribe for selected players")
 			.addBugfix("Failing the first rush on a jump requiring two rushes knocks the player down in the start square")
 			.addBugfix("Spec counter in square mode was not rendered properly")
+			.addBugfix("Two For One bonus stays even if partner returns to play")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")
