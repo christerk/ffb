@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Two For One bonus stays even if partner returns to play")
 			.addBugfix("In some cases duplicate commands could trigger double activation (network issues)")
 			.addBugfix("Take \"replacesPosition\" attribute into account for mercenaries (prevent buying more players than allowed e.g. for Jaguar Warriors")
+			.addImprovement("Replay mode now loads user settings if authentication data is available (changes will not be saved)")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")

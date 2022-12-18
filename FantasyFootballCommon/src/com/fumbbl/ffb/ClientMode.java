@@ -1,17 +1,16 @@
 package com.fumbbl.ffb;
 
 /**
- * 
  * @author Kalimar
  */
 public enum ClientMode implements INamedObject {
 
 	PLAYER("player", "-player"), SPECTATOR("spectator", "-spectator"), REPLAY("replay", "-replay");
 
-	private String fName;
-	private String fArgument;
+	private final String fName;
+	private final String fArgument;
 
-	private ClientMode(String pName, String pArgument) {
+	ClientMode(String pName, String pArgument) {
 		fName = pName;
 		fArgument = pArgument;
 	}
