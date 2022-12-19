@@ -30,6 +30,7 @@ public interface IIconProperty {
 	String DECORATION_GAZE_TARGET_SELECTED = "decoration.selected.gaze.target";
 	String DECORATION_BLOCK_TARGET = "decoration.block.target";
 	String DECORATION_STAB_TARGET = "decoration.stab.target";
+	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";

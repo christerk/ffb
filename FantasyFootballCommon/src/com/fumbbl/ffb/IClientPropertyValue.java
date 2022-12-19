@@ -48,4 +48,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_PITCH_WEATHER_OFF = "pitchWeatherOff";
 
 	String SETTING_RANGEGRID_ALWAYS_ON = "rangegridAlwaysOn";
+
+	String SETTING_MARK_USED_PLAYERS_DEFAULT = "markUsedPlayersDefault";
+	String SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN = "markUsedPlayersCheckIconGreen";
 }

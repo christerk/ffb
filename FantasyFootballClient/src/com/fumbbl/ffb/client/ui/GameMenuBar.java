@@ -134,6 +134,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
 	private final JRadioButtonMenuItem fRangeGridToggleMenuItem;
 
+	private final JRadioButtonMenuItem markUsedPlayersDefaultMenuItem;
+	private final JRadioButtonMenuItem markUsedPlayersCheckIconGreenMenuItem;
+
 	private final JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
 	private final JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
 	private final JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
@@ -514,6 +517,23 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		rangeGridGroup.add(fRangeGridToggleMenuItem);
 		fRangeGridMenu.add(fRangeGridToggleMenuItem);
 
+		JMenu markUsedPlayersMenu = new JMenu("Mark used players");
+		markUsedPlayersMenu.setMnemonic(KeyEvent.VK_M);
+		fUserSettingsMenu.add(markUsedPlayersMenu);
+
+		ButtonGroup markUsedPlayersGroup = new ButtonGroup();
+
+		markUsedPlayersDefaultMenuItem = new JRadioButtonMenuItem("Fade only");
+		markUsedPlayersDefaultMenuItem.addActionListener(this);
+		markUsedPlayersGroup.add(markUsedPlayersDefaultMenuItem);
+		markUsedPlayersMenu.add(markUsedPlayersDefaultMenuItem);
+
+		markUsedPlayersCheckIconGreenMenuItem = new JRadioButtonMenuItem("Green check mark");
+		markUsedPlayersCheckIconGreenMenuItem.addActionListener(this);
+		markUsedPlayersGroup.add(markUsedPlayersCheckIconGreenMenuItem);
+		markUsedPlayersMenu.add(markUsedPlayersCheckIconGreenMenuItem);
+
+
 		fUserSettingsMenu.addSeparator();
 
 		fRestoreDefaultsMenuItem = new JMenuItem("Restore Defaults");
@@ -645,6 +665,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String rangeGridSetting = getClient().getProperty(IClientProperty.SETTING_RANGEGRID);
 		fRangeGridToggleMenuItem.setSelected(true);
 		fRangeGridAlwaysOnMenuItem.setSelected(IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON.equals(rangeGridSetting));
+
+		String markUsedPlayersSetting = getClient().getProperty(IClientProperty.SETTING_MARK_USED_PLAYERS);
+		markUsedPlayersDefaultMenuItem.setSelected(true);
+		markUsedPlayersCheckIconGreenMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(markUsedPlayersSetting));
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -843,6 +867,17 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(IClientProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);
 			getClient().saveUserSettings(false);
 		}
+
+		if (source == markUsedPlayersCheckIconGreenMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == markUsedPlayersDefaultMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_DEFAULT);
+			getClient().saveUserSettings(true);
+		}
+
 		if (source == fRestoreDefaultsMenuItem) {
 			try {
 				getClient().loadProperties();
