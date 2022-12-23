@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Take \"replacesPosition\" attribute into account for mercenaries (prevent buying more players than allowed e.g. for Jaguar Warriors")
 			.addImprovement("Replay mode now loads user settings if authentication data is available (changes will not be saved)")
 			.addFeature("New setting to display green check mark for used players. User Settings -> Mark used players")
+			.addBugfix("Animal Savagery player lashing out against the ball carrier got confused")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")

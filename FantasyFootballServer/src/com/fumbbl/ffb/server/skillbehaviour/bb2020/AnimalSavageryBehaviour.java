@@ -152,19 +152,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 							players.add(game.getPlayerById(state.thrownPlayerId));
 						}
 
-						if (!players.isEmpty()) {
-							if (players.size() == 1) {
-								lashOut(game, step, players.stream().findFirst().get(), state);
-							} else {
-								state.playerIds = players.stream().map(Player::getId).collect(Collectors.toSet());
-								UtilServerDialog.showDialog(step.getGameState(),
-									new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.ANIMAL_SAVAGERY, state.playerIds.toArray(new String[0]),
-										null, 1, 1),
-									false);
-							}
-						} else {
+						if (players.isEmpty()) {
 
-							cancelPlayerAction(step);
+							cancelPlayerAction(step, false);
 
 							TargetSelectionState targetSelectionState = fieldModel.getTargetSelectionState();
 							if (targetSelectionState != null) {
@@ -174,6 +164,16 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 							step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 							step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId()));
+						} else {
+							if (players.size() == 1) {
+								lashOut(game, step, players.stream().findFirst().get(), state);
+							} else {
+								state.playerIds = players.stream().map(Player::getId).collect(Collectors.toSet());
+								UtilServerDialog.showDialog(step.getGameState(),
+									new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.ANIMAL_SAVAGERY, state.playerIds.toArray(new String[0]),
+										null, 1, 1),
+									false);
+							}
 						}
 					}
 				}
@@ -214,7 +214,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 		if (endTurn) {
 			actingPlayer.setStandingUp(false);
-			cancelPlayerAction(step);
+			cancelPlayerAction(step, true);
 			step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 			step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
@@ -298,7 +298,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		}
 	}
 
-	private void cancelPlayerAction(StepAnimalSavagery step) {
+	private void cancelPlayerAction(StepAnimalSavagery step, boolean lashedOut) {
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
@@ -329,16 +329,19 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			default:
 				break;
 		}
-		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-		if (actingPlayer.isStandingUp()) {
-			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-				playerState.changeBase(PlayerState.PRONE).changeActive(false));
-		} else {
-			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-				playerState.changeBase(PlayerState.STANDING).changeActive(false).changeConfused(true));
+
+		if (!lashedOut) {
+			PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+			if (actingPlayer.isStandingUp()) {
+				game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
+					playerState.changeBase(PlayerState.PRONE).changeActive(false));
+			} else {
+				game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
+					playerState.changeBase(PlayerState.STANDING).changeActive(false).changeConfused(true));
+			}
+			step.getResult().setSound(SoundId.ROAR);
 		}
 		game.setPassCoordinate(null);
-		step.getResult().setSound(SoundId.ROAR);
 	}
 
 }
