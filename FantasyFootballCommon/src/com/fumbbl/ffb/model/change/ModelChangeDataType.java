@@ -6,7 +6,7 @@ import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldMarker;
+import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.LeaderState;
