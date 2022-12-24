@@ -11,7 +11,7 @@ import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RangeRuler;

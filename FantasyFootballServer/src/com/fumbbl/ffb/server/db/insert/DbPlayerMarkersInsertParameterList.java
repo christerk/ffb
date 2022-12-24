@@ -3,7 +3,7 @@ package com.fumbbl.ffb.server.db.insert;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;

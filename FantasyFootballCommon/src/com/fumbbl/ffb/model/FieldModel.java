@@ -11,7 +11,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.FieldMarker;
 import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RangeRuler;
