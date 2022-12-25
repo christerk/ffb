@@ -1,5 +1,7 @@
 package com.fumbbl.ffb;
 
+import java.util.Arrays;
+
 /**
  * 
  * @author Kalimar
@@ -22,5 +24,9 @@ public enum InjuryAttribute {
 
 	public String getName() {
 		return fName;
+	}
+
+	public static InjuryAttribute forName(String name) {
+		return Arrays.stream(values()).filter(value -> name.equalsIgnoreCase(value.getName()) || ("-" + name).equalsIgnoreCase(value.getName())).findFirst().orElse(null);
 	}
 }
