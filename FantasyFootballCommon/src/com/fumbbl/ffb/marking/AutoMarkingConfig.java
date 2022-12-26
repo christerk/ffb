@@ -8,12 +8,13 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AutoMarkingConfig implements IJsonSerializable {
 
-	private Set<AutoMarkingRecord> markings;
+	private Set<AutoMarkingRecord> markings = new HashSet<>();
 
 	public Set<AutoMarkingRecord> getMarkings() {
 		return markings;

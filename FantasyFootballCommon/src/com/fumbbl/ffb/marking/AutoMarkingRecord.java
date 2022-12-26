@@ -21,7 +21,8 @@ public class AutoMarkingRecord implements IJsonSerializable {
 
 	private boolean gainedOnly;
 
-	private ApplyTo applyTo;
+	private ApplyTo applyTo = ApplyTo.BOTH;
+	private String marking = "";
 
 
 	public List<Skill> getSkills() {
@@ -54,6 +55,30 @@ public class AutoMarkingRecord implements IJsonSerializable {
 
 	public void setApplyTo(ApplyTo applyTo) {
 		this.applyTo = applyTo;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AutoMarkingRecord that = (AutoMarkingRecord) o;
+
+		if (gainedOnly != that.gainedOnly) return false;
+		if (!skills.equals(that.skills)) return false;
+		if (!injuries.equals(that.injuries)) return false;
+		if (applyTo != that.applyTo) return false;
+		return marking.equals(that.marking);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = skills.hashCode();
+		result = 31 * result + injuries.hashCode();
+		result = 31 * result + (gainedOnly ? 1 : 0);
+		result = 31 * result + applyTo.hashCode();
+		result = 31 * result + marking.hashCode();
+		return result;
 	}
 
 	@Override
@@ -96,8 +121,16 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		return jsonObject;
 	}
 
+	public String getMarking() {
+		return marking;
+	}
+
+	public void setMarking(String marking) {
+		this.marking = marking;
+	}
+
 	public static class Builder {
-		private SkillFactory skillFactory;
+		private final SkillFactory skillFactory;
 		private AutoMarkingRecord record;
 
 		public Builder(SkillFactory skillFactory) {
@@ -122,6 +155,11 @@ public class AutoMarkingRecord implements IJsonSerializable {
 
 		public Builder withApplyTo(ApplyTo applyTo) {
 			record.applyTo = applyTo;
+			return this;
+		}
+
+		public Builder withMarking(String marking) {
+			record.marking = marking;
 			return this;
 		}
 
