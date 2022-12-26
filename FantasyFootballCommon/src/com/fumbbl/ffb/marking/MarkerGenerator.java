@@ -15,6 +15,7 @@ public class MarkerGenerator {
 		config.getMarkings().stream()
 			.filter(entry -> skills.containsAll(entry.getSkills()))
 			.map(AutoMarkingRecord::getMarking)
+			.sorted()
 			.forEach(marking::append);
 
 		return marking.toString();

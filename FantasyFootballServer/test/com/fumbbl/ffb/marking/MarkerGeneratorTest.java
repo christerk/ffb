@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,7 +21,8 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class MarkerGeneratorTest {
 
-	public static final String BLOCK_MARKING = "B";
+	private static final String BLOCK_MARKING = "B";
+	private static final String DODGE_MARKING = "D";
 	private final MarkerGenerator generator = new MarkerGenerator();
 	private AutoMarkingConfig config;
 	private AutoMarkingRecord.Builder builder;
@@ -33,6 +35,34 @@ class MarkerGeneratorTest {
 		skillFactory = new MockSkillFactory();
 		config = new AutoMarkingConfig();
 		builder = new AutoMarkingRecord.Builder(skillFactory);
+	}
+
+	@Test
+	public void generateOnlyForAllMatchingConfigs() {
+		Set<AutoMarkingRecord> markings = config.getMarkings();
+		markings.add(builder.withSkill("block").withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withSkill("dodge").withMarking(DODGE_MARKING).build());
+
+		Skill[] skills = {skillFactory.forName("block"), skillFactory.forName("dodge")};
+		given(player.getSkills()).willReturn(skills);
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(BLOCK_MARKING + DODGE_MARKING, marking);
+	}
+
+	@Test
+	public void generateOnlyForMatchingConfig() {
+		Set<AutoMarkingRecord> markings = config.getMarkings();
+		markings.add(builder.withSkill("block").withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withSkill("dodge").withMarking(DODGE_MARKING).build());
+
+		Skill[] skills = {skillFactory.forName("block")};
+		given(player.getSkills()).willReturn(skills);
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(BLOCK_MARKING, marking);
 	}
 
 	@Test
