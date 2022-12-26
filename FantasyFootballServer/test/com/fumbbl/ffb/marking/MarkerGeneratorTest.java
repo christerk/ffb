@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -58,6 +59,17 @@ class MarkerGeneratorTest {
 		assertEquals(BLOCK_MARKING, marking);
 	}
 
+	@Test
+	public void generateNoMarking() {
+		config.getMarkings().add(builder.withSkill("block").withMarking(BLOCK_MARKING).build());
+
+		Skill[] skills = {skillFactory.forName("dodge")};
+		given(player.getSkills()).willReturn(skills);
+
+		String marking = generator.generate(player, config, true);
+
+		assertTrue(marking.isEmpty());
+	}
 
 	private static class MockSkillFactory extends SkillFactory {
 
@@ -68,7 +80,7 @@ class MarkerGeneratorTest {
 			name = name.toLowerCase();
 			if (!skills.containsKey(name)) {
 				Skill skill = mock(Skill.class);
-				given(skill.getName()).willReturn(name);
+//				given(skill.getName()).willReturn(name);
 				skills.put(name, skill);
 			}
 
