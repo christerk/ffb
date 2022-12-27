@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.marking;
 
+import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
@@ -27,7 +29,8 @@ class MarkerGeneratorTest {
 	private static final String DODGE_MARKING = "D";
 	private static final String BLACKLE_MARKING = "Y";
 	private static final String WRECKLE_MARKING = "Q";
-
+	private static final String MA_MARKING = "Ma";
+	private static final String AG_MARKING = "Ag";
 	private static final String TACKLE_MARKING = "T";
 	private static final String WRESTLE_MARKING = "W";
 	private static final String SNEAKY_GIT = "sneaky git";
@@ -55,14 +58,21 @@ class MarkerGeneratorTest {
 
 		Skill[] gainedSkills = {skillFactory.forName(BLOCK), skillFactory.forName(DODGE)};
 		given(player.getSkills()).willReturn(gainedSkills);
+
 		Skill[] baseSkills = {skillFactory.forName(WRESTLE), skillFactory.forName(TACKLE)};
 		given(player.getPosition()).willReturn(position);
 		given(position.getSkills()).willReturn(baseSkills);
+
+		given(player.getLastingInjuries()).willReturn(new SeriousInjury[]{
+			com.fumbbl.ffb.bb2020.SeriousInjury.SMASHED_KNEE,
+			com.fumbbl.ffb.bb2020.SeriousInjury.SMASHED_KNEE,
+			com.fumbbl.ffb.bb2020.SeriousInjury.NECK_INJURY
+		});
 	}
 
 	@Test
 	public void generate() {
-		config.getMarkings().add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
@@ -71,7 +81,7 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateNoMarking() {
-		config.getMarkings().add(builder.withSkill(SNEAKY_GIT).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withSkill(SNEAKY_GIT).withMarking(BLOCK_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
@@ -200,6 +210,121 @@ class MarkerGeneratorTest {
 		String marking = generator.generate(player, config, false);
 
 		assertEquals(DODGE_MARKING, marking);
+	}
+
+	@Test
+	public void generateForSingleInjuryMarkings() {
+		markings.add(builder.withInjury(InjuryAttribute.AG).withMarking(AG_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(AG_MARKING + MA_MARKING + MA_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreGainedOnlyInjuryMarkings() {
+		markings.add(builder.withInjury(InjuryAttribute.AG).withMarking(AG_MARKING).withGainedOnly(true).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).withGainedOnly(true).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(AG_MARKING + MA_MARKING + MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateForMultiInjuryMarkings() {
+		markings.add(builder.withInjury(InjuryAttribute.AG).withInjury(InjuryAttribute.AG).withMarking(AG_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateForSingleInjuryMarkingsOnlyForOwnPlayer() {
+		markings.add(builder.withInjury(InjuryAttribute.AG).withApplyTo(ApplyTo.OWN).withMarking(AG_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withApplyTo(ApplyTo.OPPONENT).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(AG_MARKING, marking);
+	}
+
+	@Test
+	public void generateForSingleInjuryMarkingsOnlyForOpponent() {
+		markings.add(builder.withInjury(InjuryAttribute.AG).withApplyTo(ApplyTo.OWN).withMarking(AG_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withApplyTo(ApplyTo.OPPONENT).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, false);
+
+		assertEquals(MA_MARKING + MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateForCombinedSkillAndInjuryMarkings() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(BLOCK).withMarking(MA_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.AV).withSkill(DODGE).withMarking(DODGE_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.AG).withSkill(SNEAKY_GIT).withMarking(AG_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateOnlyOnceForInjuryMarkings() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(BLOCK_MARKING + MA_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreCombinedSkillAndInjuryMarkingsIfGainedOnlyDoesNotMatch() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(BLOCK).withGainedOnly(true).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING + MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateForMultiStatIncreases() {
+		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
+		given(player.getSkills()).willReturn(increases);
+		given(player.getLastingInjuries()).willReturn(new SeriousInjury[0]);
+		markings.add(builder.withSkill("+AG").withMarking(AG_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(AG_MARKING + AG_MARKING, marking);
+	}
+
+	@Test
+	public void generateOnlyForNetStatIncreases() {
+		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
+		given(player.getSkills()).willReturn(increases);
+		markings.add(builder.withSkill("+AG").withMarking(AG_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(AG_MARKING, marking);
+	}
+
+	@Test
+	public void generateOnlyForNetInjuries() {
+		Skill[] increases = new Skill[]{skillFactory.forName("+MA")};
+		given(player.getSkills()).willReturn(increases);
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING, marking);
 	}
 
 	private static class MockSkillFactory extends SkillFactory {
