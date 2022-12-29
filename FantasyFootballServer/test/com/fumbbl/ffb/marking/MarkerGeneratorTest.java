@@ -38,6 +38,7 @@ class MarkerGeneratorTest {
 	private static final String DODGE = "dodge";
 	private static final String TACKLE = "tackle";
 	private static final String WRESTLE = "wrestle";
+	public static final String OTHER = "O";
 
 	private final MarkerGenerator generator = new MarkerGenerator();
 	private AutoMarkingConfig config;
@@ -325,6 +326,18 @@ class MarkerGeneratorTest {
 		String marking = generator.generate(player, config, true);
 
 		assertEquals(MA_MARKING, marking);
+	}
+
+	@Test
+	public void sortInjuriesLastAndAlphabeticallyOtherwise() {
+		markings.add(builder.withSkill(BLOCK).withSkill(DODGE).withMarking(BLODGE_MARKING).build());
+		markings.add(builder.withSkill(WRESTLE).withMarking(WRECKLE_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.AG).withSkill(TACKLE).withMarking(OTHER).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(OTHER + WRESTLE_MARKING + BLODGE_MARKING + MA_MARKING, marking);
 	}
 
 	private static class MockSkillFactory extends SkillFactory {
