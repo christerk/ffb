@@ -265,13 +265,14 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateForCombinedSkillAndInjuryMarkings() {
-		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(BLOCK).withMarking(MA_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.AV).withSkill(DODGE).withMarking(DODGE_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.AG).withSkill(SNEAKY_GIT).withMarking(AG_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(MA_MARKING, marking);
+		assertEquals(BLOCK_MARKING + MA_MARKING, marking);
 	}
 
 	@Test
