@@ -55,7 +55,7 @@ public class MarkerGenerator {
 
 		//noinspection SlowListContainsAll
 		if (skillsToCheck.containsAll(markingRecord.getSkills()) && injuries.containsAll(markingRecord.getInjuries())) {
-			injuries.removeAll(markingRecord.getInjuries());
+			markingRecord.getInjuries().forEach(injuries::remove);
 
 			markingRecord.getSkills().forEach(skillToRemove -> {
 
