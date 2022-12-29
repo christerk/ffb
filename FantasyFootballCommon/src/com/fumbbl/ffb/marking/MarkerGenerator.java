@@ -26,16 +26,17 @@ public class MarkerGenerator {
 			.filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach))
 			.collect(Collectors.groupingBy(markingRecord -> markingRecord.getSkills().isEmpty()))
 			.entrySet().stream()
-			.sorted((entry1, entry2) -> entry1.getKey() == entry2.getKey() ? 0 : entry1.getKey() ? -1 : 1)
-			.flatMap(entry -> entry.getValue().stream())
-			.sorted(Comparator.comparingInt(
-					(AutoMarkingRecord record) ->
-						record.getSkills().size())
-				.thenComparingInt(
-					record -> record.getInjuries().size())
-				.thenComparing(
-					AutoMarkingRecord::getMarking))
-			.map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries)).forEach(marking::append);
+			.sorted((entry1, entry2) -> entry1.getKey() == entry2.getKey() ? 0 : entry1.getKey() ? 1 : -1)
+			.forEach(
+				entry -> entry.getValue().stream()
+					.sorted(Comparator.comparingInt(
+							(AutoMarkingRecord record) ->
+								record.getSkills().size())
+						.thenComparingInt(
+							record -> record.getInjuries().size())
+						.thenComparing(
+							AutoMarkingRecord::getMarking))
+					.map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries)).forEach(marking::append));
 
 		return marking.toString();
 	}
