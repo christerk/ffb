@@ -130,6 +130,27 @@ class MarkerGeneratorTest {
 	}
 
 	@Test
+	public void ignoreSubsetUnlessApplyToMakesDifference() {
+		markings.add(builder.withSkill(BLOCK).withSkill(DODGE).withMarking(BLODGE_MARKING).withApplyTo(ApplyTo.OWN).build());
+		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).withApplyTo(ApplyTo.OPPONENT).build());
+		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).withApplyTo(ApplyTo.BOTH).build());
+
+		String marking = generator.generate(player, config, false);
+
+		assertEquals(BLOCK_MARKING + DODGE_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreSubsetUnlessGainedOnlyMakesDifference() {
+		markings.add(builder.withSkill(WRESTLE).withSkill(TACKLE).withMarking(WRECKLE_MARKING).withGainedOnly(true).build());
+		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).build());
+
+		String marking = generator.generate(player, config, false);
+
+		assertEquals(WRESTLE_MARKING, marking);
+	}
+
+	@Test
 	public void generateForAllMatchingConfigs() {
 		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
 		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).build());
