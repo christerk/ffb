@@ -57,6 +57,11 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		this.applyTo = applyTo;
 	}
 
+	public boolean isSubSetOf(AutoMarkingRecord other) {
+		//noinspection SlowListContainsAll
+		return other != null && other.getSkills().containsAll(skills) && other.injuries.containsAll(injuries);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
