@@ -33,4 +33,8 @@ public class Grab extends Skill {
 		registerConflictingProperty(NamedProperties.movesRandomly);
 	}
 
+	@Override
+	public String[] getSkillUseDescription() {
+		return new String[]{"Using Grab will allow to push the opponent into any open square, Side Step will be cancelled in any case"};
+	}
 }
