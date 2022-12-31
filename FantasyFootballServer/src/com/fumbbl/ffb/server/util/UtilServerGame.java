@@ -218,7 +218,6 @@ public class UtilServerGame {
 			if (StringTool.isProvided(partnerPosId)) {
 				Optional<Player<?>> partner = players.stream().filter(player -> partnerPosId.equals(player.getPosition().getId())).findFirst();
 				if (partner.isPresent()) {
-					players.remove(partner.get());
 					PlayerState playerState = fieldModel.getPlayerState(currentPlayer);
 					boolean playerRemovedFromPlay = playerState.isCasualty() || playerState.getBase() == PlayerState.KNOCKED_OUT;
 					if (playerRemovedFromPlay && !partner.get().hasActiveEnhancement(skill)) {
