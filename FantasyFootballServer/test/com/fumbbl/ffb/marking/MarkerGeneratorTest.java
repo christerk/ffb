@@ -106,7 +106,7 @@ class MarkerGeneratorTest {
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(BLACKLE_MARKING + BLODGE_MARKING, marking);
+		assertEquals(BLODGE_MARKING + BLACKLE_MARKING, marking);
 	}
 
 	@Test
@@ -192,29 +192,29 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateForAllMatchingConfigsWithGainedOnly() {
-		markings.add(builder.withSkill(WRESTLE).withMarking(WRECKLE_MARKING).withGainedOnly(true).build());
+		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).withGainedOnly(true).build());
 		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).withGainedOnly(true).build());
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(WRESTLE_MARKING, marking);
+		assertEquals(DODGE_MARKING, marking);
 	}
 
 	@Test
 	public void generateForAllMatchingConfigsWithOpponentAndGainedOnly() {
-		markings.add(builder.withSkill(WRESTLE).withMarking(WRECKLE_MARKING).withGainedOnly(true).build());
+		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).withGainedOnly(true).build());
 		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).withGainedOnly(true).build());
 
 		String marking = generator.generate(player, config, false);
 
-		assertEquals(WRESTLE_MARKING, marking);
+		assertEquals(DODGE_MARKING, marking);
 	}
 
 	@Test
 	public void generateForAllMatchingConfigsWithMatchingGainedAndApplyTo() {
+		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).withGainedOnly(true).withApplyTo(ApplyTo.OWN).build());
 		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).withApplyTo(ApplyTo.OWN).build());
-		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).withGainedOnly(true).withApplyTo(ApplyTo.OWN).build());
-		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).withApplyTo(ApplyTo.OPPONENT).build());
+		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).withApplyTo(ApplyTo.OPPONENT).build());
 		markings.add(builder.withSkill(TACKLE).withMarking(TACKLE_MARKING).withGainedOnly(true).withApplyTo(ApplyTo.OPPONENT).build());
 
 		String marking = generator.generate(player, config, true);
@@ -224,9 +224,9 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateForAllMatchingConfigsWithOpponentAndMatchingGainedAndApplyTo() {
+		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).withGainedOnly(true).withApplyTo(ApplyTo.OWN).build());
 		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).withApplyTo(ApplyTo.OWN).build());
-		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).withGainedOnly(true).withApplyTo(ApplyTo.OWN).build());
-		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).withApplyTo(ApplyTo.OPPONENT).build());
+		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).withApplyTo(ApplyTo.OPPONENT).build());
 		markings.add(builder.withSkill(TACKLE).withMarking(TACKLE_MARKING).withGainedOnly(true).withApplyTo(ApplyTo.OPPONENT).build());
 
 		String marking = generator.generate(player, config, false);
@@ -241,17 +241,17 @@ class MarkerGeneratorTest {
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(AG_MARKING + MA_MARKING + MA_MARKING, marking);
+		assertEquals(AG_MARKING + MA_MARKING, marking);
 	}
 
 	@Test
-	public void ignoreGainedOnlyInjuryMarkings() {
+	public void ignoreGainedOnlyOnInjuryMarkings() {
 		markings.add(builder.withInjury(InjuryAttribute.AG).withMarking(AG_MARKING).withGainedOnly(true).build());
 		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).withGainedOnly(true).build());
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(AG_MARKING + MA_MARKING + MA_MARKING, marking);
+		assertEquals(AG_MARKING + MA_MARKING, marking);
 	}
 
 	@Test
@@ -281,7 +281,7 @@ class MarkerGeneratorTest {
 
 		String marking = generator.generate(player, config, false);
 
-		assertEquals(MA_MARKING + MA_MARKING, marking);
+		assertEquals(MA_MARKING, marking);
 	}
 
 	@Test
@@ -293,31 +293,31 @@ class MarkerGeneratorTest {
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(BLOCK_MARKING + MA_MARKING, marking);
+		assertEquals(BLOCK_MARKING, marking);
 	}
 
 	@Test
-	public void generateOnlyOnceForInjuryMarkings() {
+	public void ignoreInjuryOnlyMarkingsIfTheyAreASubset() {
 		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(BLOCK_MARKING + MA_MARKING, marking);
+		assertEquals(BLOCK_MARKING, marking);
 	}
 
 	@Test
 	public void ignoreCombinedSkillAndInjuryMarkingsIfGainedOnlyDoesNotMatch() {
-		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(BLOCK).withGainedOnly(true).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withSkill(WRESTLE).withGainedOnly(true).withMarking(WRESTLE_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(MA_MARKING + MA_MARKING, marking);
+		assertEquals(MA_MARKING, marking);
 	}
 
 	@Test
-	public void generateForMultiStatIncreases() {
+	public void generateSingleMarkingForMultiStatIncreases() {
 		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
 		given(player.getSkills()).willReturn(increases);
 		given(player.getLastingInjuries()).willReturn(new SeriousInjury[0]);
@@ -325,7 +325,31 @@ class MarkerGeneratorTest {
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(AG_MARKING + AG_MARKING, marking);
+		assertEquals(AG_MARKING, marking);
+	}
+
+	@Test
+	public void generateMarkingMatchingForMultiStatIncreases() {
+		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
+		given(player.getSkills()).willReturn(increases);
+		given(player.getLastingInjuries()).willReturn(new SeriousInjury[0]);
+		markings.add(builder.withSkill("+AG").withSkill("+AG").withMarking(AG_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(AG_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreMatchingForMultiStatIncreasesIfOnlyOneIsPresent() {
+		Skill[] increases = new Skill[]{skillFactory.forName("+AG")};
+		given(player.getSkills()).willReturn(increases);
+		given(player.getLastingInjuries()).willReturn(new SeriousInjury[0]);
+		markings.add(builder.withSkill("+AG").withSkill("+AG").withMarking(AG_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertTrue(marking.isEmpty());
 	}
 
 	@Test
@@ -333,6 +357,7 @@ class MarkerGeneratorTest {
 		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
 		given(player.getSkills()).willReturn(increases);
 		markings.add(builder.withSkill("+AG").withMarking(AG_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.AG).withMarking(AG_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
@@ -343,6 +368,7 @@ class MarkerGeneratorTest {
 	public void generateOnlyForNetInjuries() {
 		Skill[] increases = new Skill[]{skillFactory.forName("+MA")};
 		given(player.getSkills()).willReturn(increases);
+		markings.add(builder.withSkill("+MA").withMarking(MA_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
@@ -351,9 +377,36 @@ class MarkerGeneratorTest {
 	}
 
 	@Test
+	public void generateSingleMarkingForMultiInjuries() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateMarkingMatchingForMultiInjuries() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreMatchingForMultiInjuriesIfOnlyOneIsPresent() {
+		markings.add(builder.withInjury(InjuryAttribute.AG).withInjury(InjuryAttribute.AG).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertTrue(marking.isEmpty());
+	}
+
+	@Test
 	public void sortInjuriesLastAndAlphabeticallyOtherwise() {
 		markings.add(builder.withSkill(BLOCK).withSkill(DODGE).withMarking(BLODGE_MARKING).build());
-		markings.add(builder.withSkill(WRESTLE).withMarking(WRECKLE_MARKING).build());
+		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.AG).withSkill(TACKLE).withMarking(OTHER).build());
 
