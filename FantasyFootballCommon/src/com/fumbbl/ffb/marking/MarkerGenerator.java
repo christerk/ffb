@@ -4,6 +4,7 @@ import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +24,8 @@ public class MarkerGenerator {
 		List<Skill> gainedSkills = new ArrayList<>(Arrays.asList(player.getSkills()));
 		gainedSkills.removeAll(baseSkills);
 		List<InjuryAttribute> injuries = Arrays.stream(player.getLastingInjuries()).map(SeriousInjury::getInjuryAttribute).collect(Collectors.toList());
+
+		removeNegatingPairs(gainedSkills, injuries);
 
 		StringBuilder marking = new StringBuilder();
 
@@ -68,7 +71,19 @@ public class MarkerGenerator {
 		return "";
 	}
 
-	public <T> boolean isSubSetWithDuplicates(List<T> subSet, List<T> superSet) {
+	private void removeNegatingPairs(List<Skill> skills, List<InjuryAttribute> injuries) {
+
+		new HashSet<>(skills).stream().map(skill -> new Pair<>(skill, InjuryAttribute.forSkill(skill)))
+			.filter(pair -> pair.getValue() != null)
+			.forEach(
+				pair -> injuries.stream().filter(injury -> injury == pair.getValue()).findFirst().ifPresent(injury -> {
+					injuries.remove(injury);
+					skills.remove(pair.getKey());
+				})
+			);
+	}
+
+	private <T> boolean isSubSetWithDuplicates(List<T> subSet, List<T> superSet) {
 		Map<Integer, List<T>> subGroups = subSet.stream().collect(Collectors.groupingBy(Object::hashCode));
 		Map<Integer, List<T>> superGroups = superSet.stream().collect(Collectors.groupingBy(Object::hashCode));
 

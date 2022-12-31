@@ -2,6 +2,7 @@ package com.fumbbl.ffb.marking;
 
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
@@ -43,7 +44,7 @@ class MarkerGeneratorTest {
 	private final MarkerGenerator generator = new MarkerGenerator();
 	private AutoMarkingConfig config;
 	private AutoMarkingRecord.Builder builder;
-	private SkillFactory skillFactory;
+	private MockSkillFactory skillFactory;
 	private Set<AutoMarkingRecord> markings;
 	@Mock
 	private Player<Position> player;
@@ -354,7 +355,7 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateOnlyForNetStatIncreases() {
-		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
+		Skill[] increases = new Skill[]{skillFactory.forName("+AG", SkillCategory.STAT_INCREASE), skillFactory.forName("+AG", SkillCategory.STAT_INCREASE)};
 		given(player.getSkills()).willReturn(increases);
 		markings.add(builder.withSkill("+AG").withMarking(AG_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.AG).withMarking(AG_MARKING).build());
@@ -366,7 +367,7 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateOnlyForNetInjuries() {
-		Skill[] increases = new Skill[]{skillFactory.forName("+MA")};
+		Skill[] increases = new Skill[]{skillFactory.forName("+MA", SkillCategory.STAT_INCREASE)};
 		given(player.getSkills()).willReturn(increases);
 		markings.add(builder.withSkill("+MA").withMarking(MA_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
@@ -421,10 +422,17 @@ class MarkerGeneratorTest {
 
 		@Override
 		public Skill forName(String name) {
+			return forName(name, null);
+		}
+
+		public Skill forName(String name, SkillCategory skillCategory) {
 			name = name.toLowerCase();
-			if (!skills.containsKey(name)) {
+			if (!skills.containsKey(name) || (skillCategory != null && skills.get(name).getCategory() != skillCategory)) {
 				Skill skill = mock(Skill.class);
-//				given(skill.getName()).willReturn(name);
+				given(skill.getName()).willReturn(name);
+				if (skillCategory != null) {
+					given(skill.getCategory()).willReturn(skillCategory);
+				}
 				skills.put(name, skill);
 			}
 
