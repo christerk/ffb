@@ -23,6 +23,7 @@ public class ChangeList {
 			.addImprovement("Replay mode now loads user settings if authentication data is available (changes will not be saved)")
 			.addFeature("New setting to display green check mark for used players. User Settings -> Mark used players")
 			.addBugfix("Animal Savagery player lashing out against the ball carrier got confused")
+			.addImprovement("Added explanation to skill use dialog for Grab")
 		);
 
 		versions.add(new VersionChangeList("2.14.0")
