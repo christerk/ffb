@@ -257,7 +257,7 @@ public class PlayerIconFactory {
 		}
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
-			if (!playerState.isActive() && playerOnPitch
+			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
 				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(IClientProperty.SETTING_MARK_USED_PLAYERS))) {
 				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN));
 			}
