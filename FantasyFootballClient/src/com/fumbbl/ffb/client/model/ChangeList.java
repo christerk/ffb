@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.16.0")
+			.addFeature("Thinking Man's Troll")
+			.addFeature("Halfling Luck")
+		);
+
 		versions.add(new VersionChangeList("2.15.0")
 			.addBugfix("Allow re-rolling natural one on Argue the Call with Biased Ref even though coach would not have been banned")
 			.addBugfix("Argue the Call now is coming before Bribes")
