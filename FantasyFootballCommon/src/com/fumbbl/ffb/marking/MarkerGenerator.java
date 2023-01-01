@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,6 +42,26 @@ public class MarkerGenerator {
 								record.getSkills().size())
 						.thenComparingInt(
 							record -> record.getInjuries().size()).reversed()
+						.thenComparing((record1, record2) -> {
+							if (record1.getApplyTo() == record2.getApplyTo()) {
+								return 0;
+							}
+							if (record1.getApplyTo() == ApplyTo.BOTH) {
+								return -1;
+							}
+
+							if (record2.getApplyTo() == ApplyTo.BOTH) {
+								return 1;
+							}
+
+							if (record1.getApplyTo() == ApplyTo.OWN) {
+								return -1;
+							}
+
+							return 1;
+						})
+						.thenComparing(AutoMarkingRecord::isGainedOnly)
+						.thenComparing((o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
 						.thenComparing(
 							AutoMarkingRecord::getMarking))
 					.map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries, markingsToApply)).sorted().forEach(marking::append));
@@ -56,7 +75,7 @@ public class MarkerGenerator {
 
 	private String getMarking(AutoMarkingRecord markingRecord, List<Skill> baseSkills, List<Skill> gainedSkills, List<InjuryAttribute> injuries, Set<AutoMarkingRecord> markingsToApply) {
 
-		if (providesNewInformation(markingRecord, markingsToApply)) {
+		if (markingsToApply.stream().noneMatch(markingRecord::isSubSetOf)) {
 
 			List<Skill> skillsToCheck = new ArrayList<>(gainedSkills);
 			if (!markingRecord.isGainedOnly()) {
@@ -91,17 +110,5 @@ public class MarkerGenerator {
 			List<T> superElements = superGroups.get(entry.getKey());
 			return superElements != null && superElements.size() >= entry.getValue().size();
 		});
-	}
-
-	private boolean providesNewInformation(AutoMarkingRecord markingRecord, Set<AutoMarkingRecord> markingsToApply) {
-
-		Optional<AutoMarkingRecord> superSet = markingsToApply.stream().filter(markingRecord::isSubSetOf).findFirst();
-
-		if (superSet.isPresent()) {
-			ApplyTo superApplyTo = superSet.get().getApplyTo();
-			return superApplyTo != ApplyTo.BOTH && superApplyTo != markingRecord.getApplyTo() && !markingRecord.isGainedOnly() && superSet.get().isGainedOnly();
-		}
-
-		return true;
 	}
 }
