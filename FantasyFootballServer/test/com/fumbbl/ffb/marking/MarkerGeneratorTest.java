@@ -34,12 +34,12 @@ class MarkerGeneratorTest {
 	private static final String AG_MARKING = "Ag";
 	private static final String TACKLE_MARKING = "T";
 	private static final String WRESTLE_MARKING = "W";
+	public static final String OTHER_MARKING = "O";
 	private static final String SNEAKY_GIT = "sneaky git";
 	private static final String BLOCK = "block";
 	private static final String DODGE = "dodge";
 	private static final String TACKLE = "tackle";
 	private static final String WRESTLE = "wrestle";
-	public static final String OTHER = "O";
 
 	private final MarkerGenerator generator = new MarkerGenerator();
 	private AutoMarkingConfig config;
@@ -80,7 +80,7 @@ class MarkerGeneratorTest {
 
 		assertEquals(BLOCK_MARKING, marking);
 	}
-
+	
 	@Test
 	public void generateNoMarking() {
 		markings.add(builder.withSkill(SNEAKY_GIT).withMarking(BLOCK_MARKING).build());
@@ -409,13 +409,33 @@ class MarkerGeneratorTest {
 		markings.add(builder.withSkill(BLOCK).withSkill(DODGE).withMarking(BLODGE_MARKING).build());
 		markings.add(builder.withSkill(WRESTLE).withMarking(WRESTLE_MARKING).build());
 		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
-		markings.add(builder.withInjury(InjuryAttribute.AG).withSkill(TACKLE).withMarking(OTHER).build());
+		markings.add(builder.withInjury(InjuryAttribute.AG).withSkill(TACKLE).withMarking(OTHER_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
-		assertEquals(OTHER + WRESTLE_MARKING + BLODGE_MARKING + MA_MARKING, marking);
+		assertEquals(OTHER_MARKING + WRESTLE_MARKING + BLODGE_MARKING + MA_MARKING, marking);
 	}
 
+	@Test
+	public void ignoreIdenticalMarkingWithGainedOnly() {
+		markings.add(builder.withSkill(BLOCK).withGainedOnly(true).withMarking(OTHER_MARKING).build());
+		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(BLOCK_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreIdenticalMarkingWithNoRepetition() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(OTHER_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).withApplyRepeatedly(true).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING + MA_MARKING, marking);
+	}
+	
 	private static class MockSkillFactory extends SkillFactory {
 
 		private final Map<String, Skill> skills = new HashMap<>();

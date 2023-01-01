@@ -14,12 +14,13 @@ import com.fumbbl.ffb.model.skill.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AutoMarkingRecord implements IJsonSerializable {
 	private List<Skill> skills = new ArrayList<>();
 	private List<InjuryAttribute> injuries = new ArrayList<>();
 
-	private boolean gainedOnly;
+	private boolean gainedOnly, applyRepeatedly;
 
 	private ApplyTo applyTo = ApplyTo.BOTH;
 	private String marking = "";
@@ -62,28 +63,25 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		return other != null && other.getSkills().containsAll(skills) && other.injuries.containsAll(injuries);
 	}
 
+	public boolean isApplyRepeatedly() {
+		return applyRepeatedly;
+	}
+
+	public void setApplyRepeatedly(boolean applyRepeatedly) {
+		this.applyRepeatedly = applyRepeatedly;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-
 		AutoMarkingRecord that = (AutoMarkingRecord) o;
-
-		if (gainedOnly != that.gainedOnly) return false;
-		if (!skills.equals(that.skills)) return false;
-		if (!injuries.equals(that.injuries)) return false;
-		if (applyTo != that.applyTo) return false;
-		return marking.equals(that.marking);
+		return gainedOnly == that.gainedOnly && applyRepeatedly == that.applyRepeatedly && skills.equals(that.skills) && injuries.equals(that.injuries) && applyTo == that.applyTo && marking.equals(that.marking);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = skills.hashCode();
-		result = 31 * result + injuries.hashCode();
-		result = 31 * result + (gainedOnly ? 1 : 0);
-		result = 31 * result + applyTo.hashCode();
-		result = 31 * result + marking.hashCode();
-		return result;
+		return Objects.hash(skills, injuries, gainedOnly, applyRepeatedly, applyTo, marking);
 	}
 
 	@Override
@@ -165,6 +163,11 @@ public class AutoMarkingRecord implements IJsonSerializable {
 
 		public Builder withMarking(String marking) {
 			record.marking = marking;
+			return this;
+		}
+
+		public Builder withApplyRepeatedly(boolean applyRepeatedly) {
+			record.applyRepeatedly = applyRepeatedly;
 			return this;
 		}
 
