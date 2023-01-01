@@ -71,6 +71,14 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		this.applyRepeatedly = applyRepeatedly;
 	}
 
+	public String getMarking() {
+		return marking;
+	}
+
+	public void setMarking(String marking) {
+		this.marking = marking;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -122,14 +130,6 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		IJsonOption.GAINED_ONLY.addTo(jsonObject, gainedOnly);
 
 		return jsonObject;
-	}
-
-	public String getMarking() {
-		return marking;
-	}
-
-	public void setMarking(String marking) {
-		this.marking = marking;
 	}
 
 	public static class Builder {
