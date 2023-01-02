@@ -148,16 +148,5 @@
 		</skillList>
 	</player>
 
-	<player nr="15" id="teamGoblinKalimar15">
-		<name>Goblin9</name>
-		<gender>male</gender>
-		<positionId>goblin.goblin</positionId>
-		<skillList>
-			<skill>Dodge</skill>
-			<skill>Right Stuff</skill>
-			<skill>Stunty</skill>
-			<skill>Thick Skull</skill>
-		</skillList>
-	</player>
 
 </team>

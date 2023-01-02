@@ -211,8 +211,7 @@ public class UtilServerGame {
 		List<Player<?>> players = Arrays.stream(team.getPlayers())
 			.filter(player -> player.hasSkillProperty(NamedProperties.reducesLonerRollIfPartnerIsHurt)).collect(Collectors.toList());
 
-		while (!players.isEmpty()) {
-			Player<?> currentPlayer = players.remove(0);
+		for (Player<?> currentPlayer : players) {
 			Skill skill = currentPlayer.getSkillWithProperty(NamedProperties.reducesLonerRollIfPartnerIsHurt);
 			String partnerPosId = currentPlayer.getPosition().getTeamWithPositionId();
 			if (StringTool.isProvided(partnerPosId)) {
