@@ -21,6 +21,6 @@ public class HalflingLuck extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canRerollSingleDieOncePerGame);
+		registerProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
 	}
 }

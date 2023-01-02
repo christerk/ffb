@@ -184,7 +184,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
 			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
-			final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
+			final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
 
 			state.blockRolls.forEach(roll -> {
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
@@ -281,7 +281,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		final boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
-		final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
+		final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 
 		state.blockRolls.forEach(roll -> {
@@ -338,7 +338,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			if (state.reRollSource == ReRollSources.PRO) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollOncePerTurn);
 			} else if (state.reRollSource == ReRollSources.CONSUMMATE_PROFESSIONAL) {
-				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
+				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
 			} else {
 				roll.clearReRollSources();
 				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));

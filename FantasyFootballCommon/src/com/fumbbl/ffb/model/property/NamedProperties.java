@@ -95,7 +95,7 @@ public class NamedProperties {
 	public static final ISkillProperty canReRollHmpScatter = new NamedProperty("Can ReRoll Hmp Scatter");
 	public static final ISkillProperty canReRollOnesOnKORecovery = new NamedProperty("Can Re-Roll Ones On KO Recovery");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
-	public static final ISkillProperty canRerollSingleDieOncePerGame = new NamedProperty("Can Reroll Single Die Once Per Game");
+	public static final ISkillProperty canRerollSingleDieOncePerPeriod = new NamedProperty("Can Reroll Single Die Once Per Period");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");

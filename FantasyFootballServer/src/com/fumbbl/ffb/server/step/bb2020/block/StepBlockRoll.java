@@ -247,7 +247,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		boolean consummateOption = (getReRollSource() == null ||
 			((getReRollSource() == ReRollSources.BRAWLER || getReRollSource() == ReRollSources.PRO)
 				&& fBlockRoll.length > reRolledDiceIndexes.length))
-			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
+			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
 		boolean brawlerOption = actingPlayer.getPlayerAction() != PlayerAction.BLITZ
 			&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns) && brawlerIndex < 0
 			&& (getReRollSource() == null ||
