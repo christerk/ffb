@@ -18,6 +18,8 @@ public enum SkillUse implements INamedObject {
 	CANCEL_STRIP_BALL("cancelStripBall", "to cancel %g opponent's Strip Ball skill"),
 	HALVE_KICKOFF_SCATTER("halveKickoffScatter", "to halve the kickoff scatter"),
 	CANCEL_DODGE("cancelDodge", "to cancel %g opponent's Dodge skill"),
+	CANCEL_WATCH_OUT("cancelWatchOut", "to cancel %g opponent's Watch Out! skill"),
+
 	AVOID_FALLING("avoidFalling", "to avoid falling"),
 	CANCEL_TACKLE("cancelTackle", "to cancel %g opponent's Tackle skill"),
 	INCREASE_STRENGTH_BY_1("increaseStrengthBy1", "to increase %g strength by 1"),

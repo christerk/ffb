@@ -133,6 +133,7 @@ public class NamedProperties {
 		"Grants Team Re-Roll When On Pitch");
 	public static final ISkillProperty grantsSingleUseTeamRerollWhenOnPitch = new NamedProperty(
 		"Grants Single Use Team Reroll When On Pitch");
+	public static final ISkillProperty ignoresDefenderStumblesResultForFirstBlock = new NamedProperty("Ignores Defender Stumbles Result For First Block");
 	public static final ISkillProperty hasToMissTurn = new NamedProperty("Has To Miss Turn");
 	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");
 	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");

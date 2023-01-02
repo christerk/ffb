@@ -31,6 +31,7 @@ public interface IJsonOption {
 	JsonArrayOption ARMOR_MODIFIERS = new JsonArrayOption("armorModifiers");
 	JsonIntArrayOption ARMOR_ROLL = new JsonIntArrayOption("armorRoll");
 	JsonIntOption ARMOUR = new JsonIntOption("armour");
+	JsonBooleanOption ASK_FOR_SKILL = new JsonBooleanOption("askForSkill");
 	JsonIntOption ASSISTANT_COACHES = new JsonIntOption("assistantCoaches");
 	JsonStringOption ATTACKER_ID = new JsonStringOption("attackerId");
 	JsonBooleanOption ATTACKER_SELECTS = new JsonBooleanOption("attackerSelects");

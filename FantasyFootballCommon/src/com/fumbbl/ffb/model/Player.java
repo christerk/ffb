@@ -378,6 +378,13 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return skill.isPresent() && isUsed(skill.get());
 	}
 
+	public boolean has(Skill skill) {
+		return getSkillsIncludingTemporaryOnes().contains(skill);
+	}
+
+	public boolean hasUnused(Skill skill) {
+		return has(skill) && !isUsed(skill);
+	}
 	public abstract boolean isUsed(Skill skill);
 
 	public abstract void markUsed(Skill skill, Game game);

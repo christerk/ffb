@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.16.0")
 			.addFeature("Thinking Man's Troll")
 			.addFeature("Halfling Luck")
+			.addFeature("Watch Out!")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")

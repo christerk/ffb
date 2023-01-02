@@ -189,6 +189,10 @@ public class StepEndBlocking extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 		fieldModel.clearMultiBlockTargets();
+
+		UtilCards.getUnusedSkillWithProperty(game.getDefender(), NamedProperties.ignoresDefenderStumblesResultForFirstBlock)
+			.ifPresent(skill -> game.getDefender().markUsed(skill, game));
+
 		if (fEndTurn || fEndPlayerAction) {
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
