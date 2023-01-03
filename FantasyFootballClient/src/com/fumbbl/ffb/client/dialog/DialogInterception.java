@@ -13,9 +13,9 @@ import com.fumbbl.ffb.model.Game;
  */
 public class DialogInterception extends DialogThreeWayChoice {
 
-	public DialogInterception(FantasyFootballClient pClient) {
+	public DialogInterception(FantasyFootballClient pClient, String skillText, int skillMnemonic) {
 		super(pClient, title(pClient.getGame()), new String[]{description(pClient.getGame())},
-			IIconProperty.GAME_REF);
+			IIconProperty.GAME_REF, skillText, skillMnemonic);
 	}
 
 	public DialogId getId() {

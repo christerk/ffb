@@ -36,6 +36,10 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', "No", 'N');
 	}
 
+	public DialogThreeWayChoice(FantasyFootballClient client, String title, String[] messages, String iconProperty, String choiceTwoText, int choiceTwoMnemonic) {
+		this(client, title, messages, iconProperty, "Yes", 'Y', choiceTwoText, choiceTwoMnemonic, "No", 'N', null, null);
+	}
+
 	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty, String menuProperty, String defaultValueKey) {
 		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', null, 0, "No", 'N', menuProperty, defaultValueKey);
 	}

@@ -216,6 +216,7 @@ public interface IJsonOption {
 	JsonBooleanOption HOME_PLAYING = new JsonBooleanOption("homePlaying");
 	JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
 	JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
+	JsonBooleanOption IGNORE_AGILITY = new JsonBooleanOption("ignoreAgility");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
 	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
@@ -233,6 +234,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
 	JsonBooleanOption IS_OWN_CHOICE = new JsonBooleanOption("isOwnChoice");
+	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
 	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
 	JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", Factory.KICKOFF_RESULT);
@@ -243,7 +245,6 @@ public interface IJsonOption {
 	JsonStringOption LAST_DEFENDER_ID = new JsonStringOption("lastDefenderId");
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);
-	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
 	JsonBooleanOption LAST_COMMAND = new JsonBooleanOption("lastCommand");
 	JsonBooleanOption LIMIT_REACHED = new JsonBooleanOption("limitReached");
 	JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");
@@ -451,6 +452,7 @@ public interface IJsonOption {
 	JsonLegacySkillValuesOption SKILL_DISPLAY_VALUES = new JsonLegacySkillValuesOption("skillDisplayValues");
 	JsonSkillValuesMapOption SKILL_DISPLAY_VALUES_MAP = new JsonSkillValuesMapOption("skillDisplayValuesMap");
 	JsonBooleanOption SKILL_NEVER_USE = new JsonBooleanOption("skillNeverUse");
+	JsonIntOption SKILL_MNEMONIC = new JsonIntOption("skillMnemonic");
 	JsonEnumWithNameOption SKILL_USE = new JsonEnumWithNameOption("skillUse", Factory.SKILL_USE);
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");

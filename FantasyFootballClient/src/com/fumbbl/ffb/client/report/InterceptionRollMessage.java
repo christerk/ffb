@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.report;
 
-import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
@@ -52,9 +52,11 @@ public class InterceptionRollMessage extends ReportMessageBase<ReportInterceptio
   			}
   		}
   		if (neededRoll != null) {
-  			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-  			neededRoll.append(mechanic.formatInterceptionResult(report, player));
-  			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
-  		}
+				if (!report.isIgnoreAgility()) {
+					AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+					neededRoll.append(mechanic.formatInterceptionResult(report, player));
+				}
+				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
+			}
     }
 }

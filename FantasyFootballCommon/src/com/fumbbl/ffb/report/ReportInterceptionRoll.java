@@ -9,21 +9,21 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 
 /**
- * 
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportInterceptionRoll extends ReportSkillRoll {
 
-	private boolean fBomb;
+	private boolean fBomb, ignoreAgility;
 
 	public ReportInterceptionRoll() {
 	}
 
 	public ReportInterceptionRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled,
-			InterceptionModifier[] pModifiers, boolean pBomb) {
+																InterceptionModifier[] pModifiers, boolean pBomb, boolean ignoreAgility) {
 		super(pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pModifiers);
 		fBomb = pBomb;
+		this.ignoreAgility = ignoreAgility;
 	}
 
 	public ReportId getId() {
@@ -39,11 +39,14 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 		return fBomb;
 	}
 
-	// transformation
+	public boolean isIgnoreAgility() {
+		return ignoreAgility;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
 		return new ReportInterceptionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
-				getRollModifiers(), isBomb());
+			getRollModifiers(), isBomb(), ignoreAgility);
 	}
 
 	// JSON serialization
@@ -52,6 +55,7 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
 		IJsonOption.BOMB.addTo(jsonObject, fBomb);
+		IJsonOption.IGNORE_AGILITY.addTo(jsonObject, ignoreAgility);
 		return jsonObject;
 	}
 
@@ -60,6 +64,9 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fBomb = IJsonOption.BOMB.getFrom(source, jsonObject);
+		if (IJsonOption.IGNORE_AGILITY.isDefinedIn(jsonObject)) {
+			ignoreAgility = IJsonOption.IGNORE_AGILITY.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 

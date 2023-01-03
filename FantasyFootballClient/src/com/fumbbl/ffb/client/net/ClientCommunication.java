@@ -407,9 +407,9 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandFollowupChoice(pFollowupChoice));
 	}
 
-	public void sendInterceptorChoice(Player<?> pInterceptor) {
+	public void sendInterceptorChoice(Player<?> pInterceptor, Skill interceptionSkill) {
 		String interceptorId = (pInterceptor != null) ? pInterceptor.getId() : null;
-		send(new ClientCommandInterceptorChoice(interceptorId));
+		send(new ClientCommandInterceptorChoice(interceptorId, interceptionSkill));
 	}
 
 	public void sendTeamSetupLoad(String pSetupName) {

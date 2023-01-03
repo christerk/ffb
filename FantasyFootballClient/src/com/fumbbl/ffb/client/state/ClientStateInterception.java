@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPassing;
 
 /**
@@ -15,6 +16,7 @@ import com.fumbbl.ffb.util.UtilPassing;
  */
 public class ClientStateInterception extends ClientState {
 
+	private Skill interceptionSkill;
 	protected ClientStateInterception(FantasyFootballClient pClient) {
 		super(pClient);
 	}
@@ -30,7 +32,7 @@ public class ClientStateInterception extends ClientState {
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
 		if (isInterceptor(pPlayer)) {
-			getClient().getCommunication().sendInterceptorChoice(pPlayer);
+			getClient().getCommunication().sendInterceptorChoice(pPlayer, interceptionSkill);
 		}
 	}
 
@@ -52,15 +54,22 @@ public class ClientStateInterception extends ClientState {
 
 	private boolean isInterceptor(Player<?> pPlayer) {
 		boolean isInterceptor = false;
-		Game game = getClient().getGame();
-		Player<?>[] interceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
-		for (int i = 0; i < interceptors.length; i++) {
-			if (interceptors[i] == pPlayer) {
-				isInterceptor = true;
-				break;
+
+		if (interceptionSkill == null || pPlayer.hasUnused(interceptionSkill)) {
+
+			Game game = getClient().getGame();
+			Player<?>[] interceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
+			for (int i = 0; i < interceptors.length; i++) {
+				if (interceptors[i] == pPlayer) {
+					isInterceptor = true;
+					break;
+				}
 			}
 		}
 		return isInterceptor;
 	}
 
+	public void setInterceptionSkill(Skill interceptionSkill) {
+		this.interceptionSkill = interceptionSkill;
+	}
 }

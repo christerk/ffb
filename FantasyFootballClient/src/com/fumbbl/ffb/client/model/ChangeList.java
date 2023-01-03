@@ -14,6 +14,7 @@ public class ChangeList {
 			.addFeature("Thinking Man's Troll")
 			.addFeature("Halfling Luck")
 			.addFeature("Watch Out!")
+			.addFeature("Yoink!")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")
