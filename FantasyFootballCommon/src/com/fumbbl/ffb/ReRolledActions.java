@@ -58,6 +58,7 @@ public class ReRolledActions {
 	public static final ReRolledAction DIRECTION = new ReRolledAction("Direction");
 	public static final ReRolledAction LOOK_INTO_MY_EYES = new ReRolledAction("Look Into My Eyes");
 	public static final ReRolledAction BALEFUL_HEX = new ReRolledAction("Baleful Hex");
+	public static final ReRolledAction SINGLE_DIE = new ReRolledAction("Single Die");
 
 	private final Map<String, ReRolledAction> values;
 

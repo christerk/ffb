@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.skill.bb2020.special;
 
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
@@ -22,5 +24,6 @@ public class HalflingLuck extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+		registerRerollSource(ReRolledActions.SINGLE_DIE, ReRollSources.HALFLING_LUCK);
 	}
 }

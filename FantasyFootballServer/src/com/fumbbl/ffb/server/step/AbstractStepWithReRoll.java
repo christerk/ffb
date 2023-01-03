@@ -6,6 +6,7 @@ import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -59,7 +60,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod)) {
 						setReRolledAction(commandUseSkill.getReRolledAction());
-						setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
+						setReRollSource(commandUseSkill.getSkill().getRerollSource(ReRolledActions.SINGLE_DIE));
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;

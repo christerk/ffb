@@ -2,17 +2,20 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsParameter;
 import com.fumbbl.ffb.model.BlockRoll;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.function.ObjIntConsumer;
 public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 
 	private final DialogReRollBlockForTargetsParameter dialogParameter;
-	private ReRollSource reRollSource;
+	private ReRollSource reRollSource, singleDieReRollSource;
 	@SuppressWarnings("FieldCanBeLocal")
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
 		add(new Mnemonics('T', 'N', 'B', 'S',
@@ -60,6 +63,12 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
+		Skill reRollSkill = pClient.getGame().getPlayerById(parameter.getPlayerId()).getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+
+		if (reRollSkill != null) {
+			singleDieReRollSource = reRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+		}
+
 		for (BlockRoll blockRoll : parameter.getBlockRolls()) {
 
 			String target = blockRoll.getTargetId();
@@ -87,8 +96,8 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 						buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro.get(0)));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
-					if (blockRoll.has(ReRollSources.CONSUMMATE_PROFESSIONAL)) {
-						buttonPanel.add(createReRollButton(target, ReRollSources.CONSUMMATE_PROFESSIONAL.getName(pClient.getGame()), ReRollSources.CONSUMMATE_PROFESSIONAL, currentMnemonics.consummate.get(0)));
+					if (singleDieReRollSource != null && blockRoll.has(singleDieReRollSource)) {
+						buttonPanel.add(createReRollButton(target, singleDieReRollSource.getName(pClient.getGame()), singleDieReRollSource, currentMnemonics.consummate.get(0)));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
 				}
@@ -112,8 +121,8 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 						targetPanel.add(createSingleDieReRollPanel(proTextPanel(),
 							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.pro, this::proAction));
 					}
-					if (blockRoll.has(ReRollSources.CONSUMMATE_PROFESSIONAL)) {
-						targetPanel.add(createSingleDieReRollPanel(textPanel(ReRollSources.CONSUMMATE_PROFESSIONAL.getName(getClient().getGame())),
+					if (singleDieReRollSource != null && blockRoll.has(singleDieReRollSource)) {
+						targetPanel.add(createSingleDieReRollPanel(textPanel(singleDieReRollSource.getName(getClient().getGame())),
 							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.consummate, this::consummateAction));
 					}
 				}
@@ -179,7 +188,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 	}
 
 	private void consummateAction(String target, int index) {
-		reRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+		reRollSource = singleDieReRollSource;
 		this.proIndex = index;
 		this.selectedTarget = target;
 		close();

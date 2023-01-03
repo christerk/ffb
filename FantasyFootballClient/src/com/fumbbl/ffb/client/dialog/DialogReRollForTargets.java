@@ -13,6 +13,7 @@ import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -132,8 +133,14 @@ public class DialogReRollForTargets extends Dialog {
 					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'o'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
-				if (parameter.isConsummateAvailable()) {
-					buttonPanel.add(createButton(target, ReRollSources.CONSUMMATE_PROFESSIONAL.getName(game), ReRollSources.CONSUMMATE_PROFESSIONAL, index == 0 ? 'C' : 'm'));
+				if (parameter.isConsummateAvailable() && reRollingPlayer != null) {
+					Skill reRollSkill = reRollingPlayer.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+					if (reRollSkill != null) {
+						ReRollSource source = reRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+						if (source != null) {
+							buttonPanel.add(createButton(target, source.getName(game), source, index == 0 ? 'C' : 'm'));
+						}
+					}
 				}
 				if (parameter.getReRollSkill() != null) {
 					buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll", parameter.getReRollSkill().getRerollSource(ReRolledActions.DAUNTLESS), index == 0 ? 'S' : 'k'));

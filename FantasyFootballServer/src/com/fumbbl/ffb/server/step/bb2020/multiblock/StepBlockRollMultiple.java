@@ -7,6 +7,7 @@ import com.fumbbl.ffb.BlockResult;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogOpponentBlockSelectionParameter;
@@ -24,6 +25,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.report.ReportBlock;
@@ -53,6 +55,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -172,9 +175,19 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		executeStep();
 	}
 
+	private static ReRollSource getSingleDieReRollSource(ActingPlayer actingPlayer) {
+		final Skill singleDieReRollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
+		if (singleDieReRollSkill != null) {
+			return singleDieReRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+		}
+		return null;
+	}
+
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+
+		ReRollSource singleDieReRollSource = getSingleDieReRollSource(actingPlayer);
 
 		if (state.firstRun) {
 			state.firstRun = false;
@@ -184,14 +197,14 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
 			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
-			final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
 
 			state.blockRolls.forEach(roll -> {
+
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
 				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength(), false);
 				roll.setNrOfDice(Math.abs(nrOfDice));
 				roll.setOwnChoice(nrOfDice > 0);
-				roll(roll, false, actingPlayer);
+				roll(roll, false, actingPlayer, singleDieReRollSource);
 				if (teamReRollAvailable) {
 					roll.add(ReRollSources.TEAM_RE_ROLL);
 				}
@@ -204,8 +217,8 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				if (brawlerAvailable) {
 					roll.add(ReRollSources.BRAWLER);
 				}
-				if (consummateAvailable) {
-					roll.add(ReRollSources.CONSUMMATE_PROFESSIONAL);
+				if (singleDieReRollSource != null) {
+					roll.add(singleDieReRollSource);
 				}
 				getResult().setSound(SoundId.BLOCK);
 				UtilServerGame.syncGameModel(this);
@@ -227,7 +240,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 							if (state.reRollSource == ReRollSources.BRAWLER) {
 								handleBrawler(actingPlayer.getPlayer(), roll);
 							} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
-								roll(roll, true, actingPlayer);
+								roll(roll, true, actingPlayer, singleDieReRollSource);
 							} else if (state.reRollSource == ReRollSources.PRO) {
 								roll.setReRollDiceIndexes(add(roll.getReRollDiceIndexes(), roll.getProIndex()));
 							}
@@ -281,7 +294,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		final boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
-		final boolean consummateAvailable = UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
+		final Optional<Skill> singleDieReRollSkill = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canRerollSingleDieOncePerPeriod);
+		final boolean singleDieReRollAvailable = singleDieReRollSkill.isPresent() && !actingPlayer.isSkillUsed(singleDieReRollSkill.get());
+
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 
 		state.blockRolls.forEach(roll -> {
@@ -294,8 +309,8 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			if (!proReRollAvailable) {
 				roll.remove(ReRollSources.PRO);
 			}
-			if (!consummateAvailable) {
-				roll.remove(ReRollSources.CONSUMMATE_PROFESSIONAL);
+			if (!singleDieReRollAvailable && singleDieReRollSkill.isPresent()) {
+				roll.remove(singleDieReRollSkill.get().getRerollSource(ReRolledActions.SINGLE_DIE));
 			}
 
 			boolean bothDownPresent = false;
@@ -332,12 +347,12 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 	}
 
-	private void roll(BlockRoll roll, boolean reRolling, ActingPlayer actingPlayer) {
+	private void roll(BlockRoll roll, boolean reRolling, ActingPlayer actingPlayer, ReRollSource singleDieReRollSource) {
 		Game game = getGameState().getGame();
 		if (reRolling) {
 			if (state.reRollSource == ReRollSources.PRO) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollOncePerTurn);
-			} else if (state.reRollSource == ReRollSources.CONSUMMATE_PROFESSIONAL) {
+			} else if (singleDieReRollSource != null && state.reRollSource == singleDieReRollSource) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
 			} else {
 				roll.clearReRollSources();
