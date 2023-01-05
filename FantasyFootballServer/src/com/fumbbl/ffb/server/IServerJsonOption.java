@@ -170,6 +170,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringArrayOption TEAM_UNDER_SCRUTINY = new JsonStringArrayOption("underScrutiny");
     JsonFieldCoordinateOption THROW_IN_COORDINATE = new JsonFieldCoordinateOption("throwInCoordinate");
     JsonBooleanOption THROW_SCATTER = new JsonBooleanOption("throwScatter");
+    JsonBooleanOption THROW_TWO_BOMBS = new JsonBooleanOption("throwTwoBombs");
     JsonFieldCoordinateOption THROWN_PLAYER_COORDINATE = new JsonFieldCoordinateOption("thrownPlayerCoordinate");
     JsonBooleanOption THROWN_PLAYER_HAS_BALL = new JsonBooleanOption("thrownPlayerHasBall");
     JsonStringOption THROWN_PLAYER_ID = new JsonStringOption("thrownPlayerId");

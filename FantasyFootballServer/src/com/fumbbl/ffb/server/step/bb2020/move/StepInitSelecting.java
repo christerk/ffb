@@ -49,6 +49,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -137,22 +138,27 @@ public final class StepInitSelecting extends AbstractStep {
 					PlayerState playerState = game.getFieldModel().getPlayerState(selectedPlayer);
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()) {
-						if (actingPlayerCommand.getPlayerAction() == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
+						PlayerAction playerAction = actingPlayerCommand.getPlayerAction();
+						if (playerAction == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
-							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
+							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), playerAction, actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
-						} else if (actingPlayerCommand.getPlayerAction() == PlayerAction.GAZE_MOVE && targetSelectionState == null) {
+						} else if (playerAction == PlayerAction.GAZE_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.GAZE_SELECT;
-							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
+							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), playerAction, actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
 						} else {
-							if (actingPlayerCommand.getPlayerAction() == PlayerAction.THROW_BOMB) {
-								getGameState().getPassState().setOriginalBombardier(actingPlayerCommand.getPlayerId());
+							PassState passState = getGameState().getPassState();
+							if (playerAction != null && playerAction.isBomb()) {
+								passState.setOriginalBombardier(actingPlayerCommand.getPlayerId());
+								if (playerAction == PlayerAction.ALL_YOU_CAN_EAT) {
+									passState.setThrowTwoBombs(true);
+								}
 							} else {
-								getGameState().getPassState().setOriginalBombardier(null);
+								passState.reset();
 							}
 							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
+								playerAction, actingPlayerCommand.isJumping());
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 

@@ -4,12 +4,15 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -20,6 +23,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
@@ -27,7 +31,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 /**
  * Final step of the bomb sequence. Consumes all expected stepParameters.
- *
+ * <p>
  * Expects stepParameter CATCHER_ID to be set by a preceding step. Expects
  * stepParameter END_TURN to be set by a preceding step.
  *
@@ -53,20 +57,20 @@ public final class StepEndBomb extends AbstractStep {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-			case CATCHER_ID:
-				fCatcherId = (String) parameter.getValue();
-				consume(parameter);
-				return true;
-			case END_TURN:
-				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				consume(parameter);
-				return true;
-			case BOMB_EXPLODED:
-				fBombExploded = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				consume(parameter);
-				return true;
-			default:
-				break;
+				case CATCHER_ID:
+					fCatcherId = (String) parameter.getValue();
+					consume(parameter);
+					return true;
+				case END_TURN:
+					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				case BOMB_EXPLODED:
+					fBombExploded = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -76,7 +80,7 @@ public final class StepEndBomb extends AbstractStep {
 	public void init(StepParameterSet parameterSet) {
 		super.init(parameterSet);
 		if (parameterSet != null) {
-			for (StepParameter parameter: parameterSet.values()) {
+			for (StepParameter parameter : parameterSet.values()) {
 				if (parameter.getKey() == StepParameterKey.ALLOW_MOVE_AFTER_PASS) {
 					allowMoveAfterPass = (boolean) parameter.getValue();
 				}
@@ -97,13 +101,35 @@ public final class StepEndBomb extends AbstractStep {
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		if (fEndTurn || (fCatcherId == null) || fBombExploded) {
 			game.setHomePlaying(
-					(TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()));
+				(TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()));
 			if ((TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
 				game.setTurnMode(TurnMode.BLITZ);
 			} else {
 				game.setTurnMode(TurnMode.REGULAR);
 			}
-			if (!fEndTurn && allowMoveAfterPass) {
+
+			PassState state = getGameState().getPassState();
+			Player<?> originalBomber = game.getPlayerById(state.getOriginalBombardier());
+			Skill skill = originalBomber.getSkillWithProperty(NamedProperties.canUseThrowBombActionTwice);
+			PlayerState playerState = game.getFieldModel().getPlayerState(originalBomber);
+			boolean threwOnlyFirstBomb = toPrimitive(state.getThrowTwoBombs());
+
+			if (!fEndTurn && threwOnlyFirstBomb && skill != null && originalBomber.hasUnused(skill) && playerState.hasTacklezones()) {
+				originalBomber.markUsed(skill, game);
+				state.setThrowTwoBombs(false);
+				// TODO insert Pass/Bomb sequence
+			} else if (state.getThrowTwoBombs() != null && skill != null) {
+
+				if (state.getThrowTwoBombs() && originalBomber.hasUnused(skill)) {
+					originalBomber.markUsed(skill, game);
+				}
+
+				if (!state.getThrowTwoBombs()) {
+					// TODO handle send off
+				}
+
+
+			} else if (!fEndTurn && allowMoveAfterPass) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.MOVE, false);
 				((Move) factory.forName(SequenceGenerator.Type.Move.name()))
 					.pushSequence(new Move.SequenceParams(getGameState()));
@@ -115,7 +141,7 @@ public final class StepEndBomb extends AbstractStep {
 			Player<?> catcher = game.getPlayerById(fCatcherId);
 			game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));
 			UtilServerSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
-			((Pass)factory.forName(SequenceGenerator.Type.Pass.name()))
+			((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
 				.pushSequence(new Pass.SequenceParams(getGameState(), null));
 		}
 		// stop immediate re-throwing of the bomb

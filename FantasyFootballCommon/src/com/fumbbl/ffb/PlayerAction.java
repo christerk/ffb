@@ -21,16 +21,22 @@ public enum PlayerAction implements INamedObject {
 	TREACHEROUS("treacherous", 32, null), WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", 33, null),
 	THROW_KEG("throwKey", 34, "readies a beer keg"), RAIDING_PARTY("raidingParty", 35, null),
 	MAXIMUM_CARNAGE("maximumCarnage", 36, null), LOOK_INTO_MY_EYES("lookIntoMyEyes", 37, "tries to steal the ball"),
-	BALEFUL_HEX("balefulHex", 38, null);
+	BALEFUL_HEX("balefulHex", 38, null), ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB);
 
 	private final String fName;
 	private final int fType;
 	private final String fDescription;
+	private final PlayerAction delegate;
 
 	PlayerAction(String pName, int pType, String pDescription) {
+		this(pName, pType, pDescription, null);
+	}
+
+	PlayerAction(String pName, int pType, String pDescription, PlayerAction delegate) {
 		fName = pName;
 		fType = pType;
 		fDescription = pDescription;
+		this.delegate = delegate;
 	}
 
 	public String getName() {
@@ -43,6 +49,10 @@ public enum PlayerAction implements INamedObject {
 
 	public String getDescription() {
 		return fDescription;
+	}
+
+	public PlayerAction getDelegate() {
+		return delegate;
 	}
 
 	public boolean isMoving() {
@@ -65,5 +75,9 @@ public enum PlayerAction implements INamedObject {
 
 	public boolean isGaze() {
 		return this == GAZE || this == GAZE_MOVE || this == GAZE_SELECT;
+	}
+
+	public boolean isBomb() {
+		return this == THROW_BOMB || this.delegate == THROW_BOMB;
 	}
 }

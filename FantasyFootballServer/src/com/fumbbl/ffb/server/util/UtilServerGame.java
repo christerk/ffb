@@ -83,8 +83,15 @@ public class UtilServerGame {
 																				boolean jumping) {
 		Game game = pStep.getGameState().getGame();
 		PlayerAction oldPlayerAction = game.getActingPlayer().getPlayerAction();
-		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, pPlayerAction, jumping) && (pPlayerAction != null)
-			&& ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
+
+		PlayerAction actualAction = pPlayerAction;
+
+		if (pPlayerAction != null && pPlayerAction.getDelegate() != null) {
+			actualAction = pPlayerAction.getDelegate();
+		}
+
+		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping) && (actualAction != null)
+			&& ((oldPlayerAction == null) || (actualAction.getType() != oldPlayerAction.getType()))) {
 			if (oldPlayerAction == null) {
 				pStep.getResult().setSound(SoundId.CLICK);
 			}

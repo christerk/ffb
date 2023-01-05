@@ -17,7 +17,7 @@ public class PassState implements IJsonSerializable {
 	private PassResult result;
 	private FieldCoordinate throwerCoordinate;
 	private TurnMode oldTurnMode;
-	private Boolean usingBlastIt;
+	private Boolean usingBlastIt, throwTwoBombs;
 
 	public String getInterceptorId() {
 		return interceptorId;
@@ -115,11 +115,24 @@ public class PassState implements IJsonSerializable {
 		this.usingBlastIt = usingBlastIt;
 	}
 
+	public Boolean getThrowTwoBombs() {
+		return throwTwoBombs;
+	}
+
+	public void setThrowTwoBombs(Boolean throwTwoBombs) {
+		this.throwTwoBombs = throwTwoBombs;
+	}
+
 	public PassState populate(PassState passState) {
 		if (passState != null) {
 			originalBombardier = passState.originalBombardier;
 		}
 		return this;
+	}
+
+	public void reset() {
+		originalBombardier = null;
+		throwTwoBombs = null;
 	}
 
 	@Override
@@ -137,7 +150,8 @@ public class PassState implements IJsonSerializable {
 		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, oldTurnMode);
 		IServerJsonOption.INTERCEPTION_SUCCESSFUL.addTo(jsonObject, deflectionSuccessful);
 		IServerJsonOption.ORIGINAL_BOMBER.addTo(jsonObject, originalBombardier);
-		IServerJsonOption.USING_BREAK_TACKLE.addTo(jsonObject, usingBlastIt);
+		IServerJsonOption.USING_BLAST_IT.addTo(jsonObject, usingBlastIt);
+		IServerJsonOption.THROW_TWO_BOMBS.addTo(jsonObject, throwTwoBombs);
 		return jsonObject;
 	}
 
@@ -158,6 +172,7 @@ public class PassState implements IJsonSerializable {
 		deflectionSuccessful = IServerJsonOption.INTERCEPTION_SUCCESSFUL.getFrom(source, jsonObject);
 		originalBombardier = IServerJsonOption.ORIGINAL_BOMBER.getFrom(source, jsonObject);
 		usingBlastIt = IServerJsonOption.USING_BLAST_IT.getFrom(source, jsonObject);
+		throwTwoBombs = IServerJsonOption.THROW_TWO_BOMBS.getFrom(source, jsonObject);
 		return this;
 	}
 }
