@@ -15,6 +15,7 @@ public class ChangeList {
 			.addFeature("Halfling Luck")
 			.addFeature("Watch Out!")
 			.addFeature("Yoink!")
+			.addFeature("A Sneaky Pair")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")

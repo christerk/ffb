@@ -60,7 +60,11 @@ public class UtilPlayer {
 	public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate,
 																																 Skill pSkill, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
+		return findAdjacentOpposingPlayersWithSkill(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pSkill, pCheckAbleToMove);
+	}
+
+	public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, Player<?> player, FieldCoordinate pCenterCoordinate, Skill pSkill, boolean pCheckAbleToMove) {
+		Team otherTeam = UtilPlayer.findOtherTeam(pGame, player);
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
 		Set<Player<?>> shadowingPlayers = new HashSet<>();
 		for (Player<?> opponent : opponents) {
@@ -78,7 +82,11 @@ public class UtilPlayer {
 	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, FieldCoordinate pCenterCoordinate,
 																																		ISkillProperty pProperty, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
+		return findAdjacentOpposingPlayersWithProperty(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pProperty, pCheckAbleToMove);
+	}
+
+	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, Player<?> player, FieldCoordinate pCenterCoordinate, ISkillProperty pProperty, boolean pCheckAbleToMove) {
+		Team otherTeam = UtilPlayer.findOtherTeam(pGame, player);
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
 		Set<Player<?>> shadowingPlayers = new HashSet<>();
 		for (Player<?> opponent : opponents) {

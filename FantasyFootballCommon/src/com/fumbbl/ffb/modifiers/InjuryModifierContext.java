@@ -62,7 +62,7 @@ public class InjuryModifierContext {
 		return mode == Mode.ATTACKER;
 	}
 
-	public boolean isDefnderMode() {
+	public boolean isDefenderMode() {
 		return mode == Mode.DEFENDER;
 	}
 
