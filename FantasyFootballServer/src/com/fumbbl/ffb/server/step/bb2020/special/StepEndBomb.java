@@ -117,7 +117,7 @@ public final class StepEndBomb extends AbstractStep {
 			if (!fEndTurn && threwOnlyFirstBomb && skill != null && originalBomber.hasUnused(skill) && playerState.hasTacklezones()) {
 				originalBomber.markUsed(skill, game);
 				state.setThrowTwoBombs(false);
-				// TODO insert Pass/Bomb sequence
+				((Pass) factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new Pass.SequenceParams(getGameState()));
 			} else if (state.getThrowTwoBombs() != null && skill != null) {
 
 				if (state.getThrowTwoBombs() && originalBomber.hasUnused(skill)) {
@@ -125,7 +125,9 @@ public final class StepEndBomb extends AbstractStep {
 				}
 
 				if (!state.getThrowTwoBombs()) {
-					// TODO handle send off
+					state.setThrowTwoBombs(null);
+					getGameState().pushCurrentStepOnStack();
+					getGameState().getStepStack().push(getGameState().getStepFactory().create(StepId.ALL_YOU_CAN_EAT, null, null));
 				}
 
 
