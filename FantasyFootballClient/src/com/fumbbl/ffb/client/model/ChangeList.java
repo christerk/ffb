@@ -16,6 +16,7 @@ public class ChangeList {
 			.addFeature("Watch Out!")
 			.addFeature("Yoink!")
 			.addFeature("A Sneaky Pair")
+			.addFeature("All You Can Eat")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")

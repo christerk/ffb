@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.step.bb2020.pass;
 
 import com.fumbbl.ffb.ReRolledActions;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepAllYouCanEat extends AbstractStepWithReRoll {
 
 	public StepAllYouCanEat(GameState pGameState) {
@@ -47,6 +49,7 @@ public class StepAllYouCanEat extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		boolean doRoll = true;
 		boolean success = false;
+		boolean reRolled = false;
 		Player<?> player = game.getPlayerById(getGameState().getPassState().getOriginalBombardier());
 
 		if (getReRolledAction() == ReRolledActions.ALL_YOU_CAN_EAT) {
@@ -55,10 +58,11 @@ public class StepAllYouCanEat extends AbstractStepWithReRoll {
 			}
 		}
 
+
 		if (doRoll) {
 			int roll = getGameState().getDiceRoller().rollSkill();
 			int minimumRoll = 4;
-			boolean reRolled = getReRollSource() != null && getReRolledAction() == ReRolledActions.ALL_YOU_CAN_EAT;
+			reRolled = getReRollSource() != null && getReRolledAction() == ReRolledActions.ALL_YOU_CAN_EAT;
 			success = roll >= minimumRoll;
 			getResult().addReport(new ReportAllYouCanEatRoll(player.getId(), success, roll, minimumRoll, reRolled));
 
@@ -71,11 +75,13 @@ public class StepAllYouCanEat extends AbstractStepWithReRoll {
 
 		if (!success) {
 			StepParameterSet parameterSet = new StepParameterSet();
-			parameterSet.add(from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_PASSING));
+			parameterSet.add(from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BOMB));
 
 			getGameState().getStepStack().push(getGameState().getStepFactory().create(StepId.EJECT_PLAYER, null, parameterSet));
 			getGameState().getStepStack().push(getGameState().getStepFactory().create(StepId.BRIBES, null, parameterSet));
-			getResult().setSound(SoundId.WHISTLE);
+			if (!reRolled) {
+				getResult().setSound(SoundId.WHISTLE);
+			}
 		}
 
 		getResult().setNextAction(StepAction.NEXT_STEP);

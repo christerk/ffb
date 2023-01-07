@@ -151,6 +151,11 @@ public class ClientStateSelect extends ClientState {
 						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_KEG, false);
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT:
+					if (isAllYouCanEatAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.ALL_YOU_CAN_EAT, false);
+					}
+					break;
 				default:
 					break;
 			}
@@ -275,6 +280,13 @@ public class ClientStateSelect extends ClientState {
 			beerBashItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH);
 			beerBashItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH, 0));
 			menuItemList.add(beerBashItem);
+		}
+		if (isAllYouCanEatAvailable(pPlayer)) {
+			JMenuItem allYouCanEatItem = new JMenuItem("All You Can Eat",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_ALL_YOU_CAN_EAT)));
+			allYouCanEatItem.setMnemonic(IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT);
+			allYouCanEatItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT, 0));
+			menuItemList.add(allYouCanEatItem);
 		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem("Recover from Confusion & End Move",
@@ -594,5 +606,11 @@ public class ClientStateSelect extends ClientState {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return game.getTurnMode() == TurnMode.REGULAR && playerState.getBase() == PlayerState.STANDING && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canThrowKeg);
+	}
+
+	private boolean isAllYouCanEatAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		return isThrowBombActionAvailable(player) && game.getTurnMode() == TurnMode.REGULAR
+			&& UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canUseThrowBombActionTwice);
 	}
 }

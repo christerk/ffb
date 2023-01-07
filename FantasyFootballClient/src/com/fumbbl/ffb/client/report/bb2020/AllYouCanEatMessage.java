@@ -22,14 +22,26 @@ public class AllYouCanEatMessage extends ReportMessageBase<ReportAllYouCanEatRol
 
 		StringBuilder message = new StringBuilder();
 
-		message.append(player.getName()).append(" ");
+		message.append("All You Can Eat Roll [ ").append(report.getRoll()).append(" ]");
+		println(getIndent() + 1, TextStyle.ROLL, message.toString());
+
+		print(getIndent(), false, player);
+
+		message = new StringBuilder();
+
+		message.append(" ");
 
 		if (report.isSuccessful()) {
 			message.append("goes unnoticed.");
 		} else {
 			message.append("is spotted.");
 		}
+		println(getIndent() + 2, TextStyle.NONE, message.toString());
 
-		println(getIndent(), TextStyle.NONE, message.toString());
+		if (!report.isReRolled()) {
+			message = new StringBuilder().append("Roll a ").append(report.getMinimumRoll()).append("+ to succeed");
+			println(getIndent() + 2, TextStyle.NEEDED_ROLL, message.toString());
+
+		}
 	}
 }

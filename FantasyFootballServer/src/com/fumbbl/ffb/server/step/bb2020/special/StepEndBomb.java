@@ -96,16 +96,18 @@ public final class StepEndBomb extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		game.setPassCoordinate(null);
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
+		boolean removePassCoordinate = true;
 		if (fEndTurn || (fCatcherId == null) || fBombExploded) {
-			game.setHomePlaying(
-				(TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()));
-			if ((TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
-				game.setTurnMode(TurnMode.BLITZ);
-			} else {
-				game.setTurnMode(TurnMode.REGULAR);
+			if (game.getTurnMode().isBombTurn()) {
+				game.setHomePlaying(
+					(TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()));
+				if ((TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
+					game.setTurnMode(TurnMode.BLITZ);
+				} else {
+					game.setTurnMode(TurnMode.REGULAR);
+				}
 			}
 
 			PassState state = getGameState().getPassState();
@@ -126,10 +128,13 @@ public final class StepEndBomb extends AbstractStep {
 
 				if (!state.getThrowTwoBombs()) {
 					state.setThrowTwoBombs(null);
+					removePassCoordinate = false;
 					getGameState().pushCurrentStepOnStack();
 					getGameState().getStepStack().push(getGameState().getStepFactory().create(StepId.ALL_YOU_CAN_EAT, null, null));
+				} else {
+					((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
+						.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, fEndTurn));
 				}
-
 
 			} else if (!fEndTurn && allowMoveAfterPass) {
 				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.MOVE, false);
@@ -140,6 +145,7 @@ public final class StepEndBomb extends AbstractStep {
 					.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, fEndTurn));
 			}
 		} else {
+			game.setPassCoordinate(null);
 			Player<?> catcher = game.getPlayerById(fCatcherId);
 			game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));
 			UtilServerSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
@@ -147,7 +153,9 @@ public final class StepEndBomb extends AbstractStep {
 				.pushSequence(new Pass.SequenceParams(getGameState(), null));
 		}
 		// stop immediate re-throwing of the bomb
-		game.setPassCoordinate(null);
+		if (removePassCoordinate) {
+			game.setPassCoordinate(null);
+		}
 		game.setThrowerId(null);
 		game.setThrowerAction(null);
 		getResult().setNextAction(StepAction.NEXT_STEP);

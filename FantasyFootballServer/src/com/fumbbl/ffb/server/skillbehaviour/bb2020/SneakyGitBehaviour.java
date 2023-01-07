@@ -47,8 +47,16 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
+				boolean wasCased = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).isCasualty();
 
-				SendToBoxReason reason = state.officiousRef ? SendToBoxReason.OFFICIOUS_REF : SendToBoxReason.FOUL_BAN;
+				SendToBoxReason reason = SendToBoxReason.FOUL_BAN;
+
+				if (state.officiousRef) {
+					reason = SendToBoxReason.OFFICIOUS_REF;
+				} else if (actingPlayer.getPlayerId().equals(step.getGameState().getPassState().getOriginalBombardier())) {
+					reason = SendToBoxReason.THREW_TWO_BOMBS;
+				}
+
 				if (UtilCards.hasSkill(actingPlayer, skill)
 					&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
@@ -56,7 +64,7 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 					attackerResult.setSendToBoxReason(reason);
 					attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
 					attackerResult.setSendToBoxHalf(game.getHalf());
-				} else if (state.argueTheCallSuccessful == null || !state.argueTheCallSuccessful) {
+				} else if ((state.argueTheCallSuccessful == null || !state.argueTheCallSuccessful) && !wasCased) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
 					attackerResult.setSendToBoxReason(reason);
 					attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());

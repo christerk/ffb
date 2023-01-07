@@ -126,6 +126,7 @@ public class PassState implements IJsonSerializable {
 	public PassState populate(PassState passState) {
 		if (passState != null) {
 			originalBombardier = passState.originalBombardier;
+			throwTwoBombs = passState.throwTwoBombs;
 		}
 		return this;
 	}

@@ -254,8 +254,9 @@ public class StepBribes extends AbstractStepWithReRoll {
 	private void askForArgueTheCall(boolean friendsWithTheRef, int biasedRefBonus) {
 		fArgueTheCallChoice = false;
 		Game game = getGameState().getGame();
-		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) && !game.getTurnData().isCoachBanned()) {
-			ActingPlayer actingPlayer = game.getActingPlayer();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		boolean wasCased = game.getFieldModel().getPlayerState(actingPlayer.getPlayer()).isCasualty();
+		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) && !game.getTurnData().isCoachBanned() && !wasCased) {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), true, friendsWithTheRef, biasedRefBonus);
 			dialogParameter.addPlayerId(actingPlayer.getPlayerId());

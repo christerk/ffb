@@ -172,6 +172,7 @@ public interface IIconProperty {
 	String ACTION_LOOK_INTO_MY_EYES = "action.lookIntoMyEyes";
 	String ACTION_BALEFUL_HEX = "action.balefulHex";
 	String ACTION_HIT_AND_RUN = "action.hitAndRun";
+	String ACTION_ALL_YOU_CAN_EAT = "action.allYouCanEat";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

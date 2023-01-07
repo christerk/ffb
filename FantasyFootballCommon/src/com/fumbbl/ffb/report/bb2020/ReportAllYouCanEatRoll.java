@@ -19,7 +19,7 @@ public class ReportAllYouCanEatRoll extends ReportSkillRoll {
 
 	@Override
 	public ReportId getId() {
-		return ReportId.ESCAPE_ROLL;
+		return ReportId.ALL_YOU_CAN_EAT;
 	}
 
 	@Override
