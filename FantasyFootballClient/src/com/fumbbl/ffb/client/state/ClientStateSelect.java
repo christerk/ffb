@@ -397,6 +397,9 @@ public class ClientStateSelect extends ClientState {
 			case PLAYER_ACTION_BEER_BARREL_BASH:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH);
 				break;
+			case PLAYER_ACTION_ALL_YOU_CAN_EAT:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT);
+				break;
 			default:
 				actionHandled = false;
 				break;

@@ -76,6 +76,7 @@ public interface IClientProperty extends CommonProperty {
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";
+	String KEY_PLAYER_ACTION_ALL_YOU_CAN_EAT = "key.player.action.allYouCanEat";
 
 	String KEY_MENU_REPLAY = "key.menu.replay";
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";
