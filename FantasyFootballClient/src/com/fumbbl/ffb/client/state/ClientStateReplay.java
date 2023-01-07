@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.state;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.ClientParameters;
 import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IProgressListener;
@@ -14,6 +15,7 @@ import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +43,12 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 		setClickable(false);
 		ClientReplayer replayer = getClient().getReplayer();
 		if (ClientMode.REPLAY == getClient().getMode()) {
-			replayer.start();
-			getClient().getCommunication().sendReplay(getClient().getParameters().getGameId(), 0);
+			ClientParameters parameters = getClient().getParameters();
+			if (StringTool.isProvided(parameters.getAuthentication())) {
+				getClient().getCommunication().sendJoin(parameters.getCoach(), parameters.getAuthentication(), 0, null, null, null);
+			} else {
+				startLoadingReplay(replayer, parameters);
+			}
 		} else {
 			if (fReplayList == null) {
 				fReplayList = new ArrayList<>();
@@ -55,9 +61,17 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 		}
 	}
 
+	private void startLoadingReplay(ClientReplayer replayer, ClientParameters parameters) {
+		replayer.start();
+		getClient().getCommunication().sendReplay(parameters.getGameId(), 0);
+	}
+
 	public void handleCommand(NetCommand pNetCommand) {
 		ClientReplayer replayer = getClient().getReplayer();
 		switch (pNetCommand.getId()) {
+			case SERVER_USER_SETTINGS:
+				startLoadingReplay(getClient().getReplayer(), getClient().getParameters());
+				break;
 			case SERVER_REPLAY:
 				ServerCommandReplay replayCommand = (ServerCommandReplay) pNetCommand;
 				initProgress(0, replayCommand.getTotalNrOfCommands());
@@ -84,24 +98,27 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 					replayer.positionOnLastCommand();
 				}
 				replayer.getReplayControl().setActive(true);
-			}
-			break;
-		case SERVER_GAME_STATE:
-			if (ClientMode.REPLAY == getClient().getMode()) {
-				fReplayList = new ArrayList<>();
-				showProgressDialog();
-			}
-			break;
-		case SERVER_STATUS:
-			ServerCommandStatus statusCommand = (ServerCommandStatus) pNetCommand;
-			if ((ServerStatus.REPLAY_UNAVAILABLE == statusCommand.getServerStatus())
-					&& (ClientMode.REPLAY == getClient().getMode())) {
-				getClient().getUserInterface().getStatusReport().reportStatus(statusCommand.getServerStatus());
-				getClient().getCommunication().sendCloseSession();
-			}
-			break;
-		default:
-			break;
+				}
+				break;
+			case SERVER_GAME_STATE:
+				if (ClientMode.REPLAY == getClient().getMode()) {
+					fReplayList = new ArrayList<>();
+					showProgressDialog();
+				}
+				break;
+			case SERVER_STATUS:
+				ServerCommandStatus statusCommand = (ServerCommandStatus) pNetCommand;
+				if (ClientMode.REPLAY == getClient().getMode()) {
+					if (ServerStatus.REPLAY_UNAVAILABLE == statusCommand.getServerStatus()) {
+						getClient().getUserInterface().getStatusReport().reportStatus(statusCommand.getServerStatus());
+						getClient().getCommunication().sendCloseSession();
+					} else {
+						startLoadingReplay(getClient().getReplayer(), getClient().getParameters());
+					}
+				}
+				break;
+			default:
+				break;
 		}
 	}
 

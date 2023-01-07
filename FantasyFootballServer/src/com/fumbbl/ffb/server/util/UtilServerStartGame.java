@@ -83,14 +83,13 @@ public class UtilServerStartGame {
 			server.getCommunication().sendJoin(sessions, pCoach, pMode, players, numVisibleSpectators);
 		}
 
-		sendUserSettings(pGameState, pCoach, pSession);
+		sendUserSettings(pGameState.getServer(), pCoach, pSession);
 
 		return players.length;
 
 	}
 
-	public static void sendUserSettings(GameState pGameState, String pCoach, Session pSession) {
-		FantasyFootballServer server = pGameState.getServer();
+	public static void sendUserSettings(FantasyFootballServer server, String pCoach, Session pSession) {
 		List<String> settingNames = new ArrayList<>();
 		List<String> settingValues = new ArrayList<>();
 		// always send any client settings defined in server.ini

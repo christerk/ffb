@@ -330,6 +330,7 @@ public interface IJsonOption {
 	JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
 	JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
 	JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
+	JsonStringArrayOption PLAYER_IDS_ARGUED = new JsonStringArrayOption("playerIdsArgued");
 	JsonStringArrayOption PLAYER_IDS_FAILED_BRIBE = new JsonStringArrayOption("playerIdsFailedBribe");
 	JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
 	JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
@@ -373,6 +374,7 @@ public interface IJsonOption {
 	JsonBooleanOption RECEIVE_CHOICE = new JsonBooleanOption("receiveChoice");
 	JsonBooleanOption RECOVERING = new JsonBooleanOption("recovering");
 	JsonEnumWithNameOption RECOVERING_INJURY = new JsonEnumWithNameOption("recoveringInjury", Factory.SERIOUS_INJURY);
+	JsonStringOption REPLACES_POSITION = new JsonStringOption("replacesPosition");
 	JsonIntOption REPLAY_TO_COMMAND_NR = new JsonIntOption("replayToCommandNr");
 	JsonEnumWithNameOption REPORT_ID = new JsonEnumWithNameOption("reportId", Factory.REPORT_ID);
 	JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");

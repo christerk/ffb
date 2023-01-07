@@ -38,14 +38,14 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
 		ClientCommandJoin joinCommand = (ClientCommandJoin) pReceivedCommand.getCommand();
 		ServerCommunication communication = getServer().getCommunication();
 
-		if ((joinCommand.getGameId() > 0) || StringTool.isProvided(joinCommand.getGameName())) {
+		if ((joinCommand.getGameId() > 0) || StringTool.isProvided(joinCommand.getGameName()) || joinCommand.getClientMode() == ClientMode.REPLAY) {
 
 			if (ServerMode.FUMBBL == getServer().getMode()) {
 
 				getServer().getRequestProcessor()
-						.add(new FumbblRequestCheckAuthorization(pReceivedCommand.getSession(), joinCommand.getCoach(),
-								joinCommand.getPassword(), joinCommand.getGameId(), joinCommand.getGameName(), joinCommand.getTeamId(),
-								joinCommand.getClientMode()));
+					.add(new FumbblRequestCheckAuthorization(pReceivedCommand.getSession(), joinCommand.getCoach(),
+						joinCommand.getPassword(), joinCommand.getGameId(), joinCommand.getGameName(), joinCommand.getTeamId(),
+						joinCommand.getClientMode()));
 
 			} else {
 

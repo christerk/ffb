@@ -10,6 +10,22 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.15.0")
+			.addBugfix("Allow re-rolling natural one on Argue the Call with Biased Ref even though coach would not have been banned")
+			.addBugfix("Argue the Call now is coming before Bribes")
+			.addImprovement("Argue the Call for weapons is now asked multiple times so a coach can first argue for selected players")
+			.addBugfix("Repeated Bribes dialog for weapons now also shows up if all bribes roll were successful so now a coach can first bribe for selected players")
+			.addBugfix("Failing the first rush on a jump requiring two rushes knocks the player down in the start square")
+			.addBugfix("Spec counter in square mode was not rendered properly")
+			.addBugfix("Two For One bonus stays even if partner returns to play")
+			.addBugfix("In some cases duplicate commands could trigger double activation (network issues)")
+			.addBugfix("Take \"replacesPosition\" attribute into account for mercenaries (prevent buying more players than allowed e.g. for Jaguar Warriors")
+			.addImprovement("Replay mode now loads user settings if authentication data is available (changes will not be saved)")
+			.addFeature("New setting to display green check mark for used players. User Settings -> Mark used players")
+			.addBugfix("Animal Savagery player lashing out against the ball carrier got confused")
+			.addImprovement("Added explanation to skill use dialog for Grab")
+		);
+
 		versions.add(new VersionChangeList("2.14.0")
 			.addFeature("Square mode (like portrait but logs and score board on the side")
 			.addBugfix("Inducement phase now follows Designer's Commentary from Nov 22")

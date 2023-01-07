@@ -56,7 +56,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 		if (joinApprovedCommand.getGameId() > 0) {
 			getServer().getDebugLog().log(IServerLogLevel.WARN, joinApprovedCommand.getGameId(),
 				"Loading GameState by id");
-			gameState = loadGameStateById(joinApprovedCommand, session);
+			gameState = loadGameStateById(joinApprovedCommand);
 
 		} else if (StringTool.isProvided(joinApprovedCommand.getGameName())) {
 			getServer().getDebugLog().log(IServerLogLevel.WARN, joinApprovedCommand.getGameId(),
@@ -130,6 +130,13 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 
 			}
 
+		} else if (joinApprovedCommand.getClientMode() == ClientMode.REPLAY) {
+
+
+			getServer().getDebugLog().logWithOutGameId(IServerLogLevel.WARN,
+				"Authenticating coach " + joinApprovedCommand.getCoach() + " for replay");
+
+			UtilServerStartGame.sendUserSettings(getServer(), joinApprovedCommand.getCoach(), session);
 		}
 
 		return true;
@@ -213,7 +220,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 		}
 	}
 
-	private GameState loadGameStateById(InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {
+	private GameState loadGameStateById(InternalServerCommandJoinApproved pJoinApprovedCommand) {
 		GameCache gameCache = getServer().getGameCache();
 		GameState gameState = gameCache.getGameStateById(pJoinApprovedCommand.getGameId());
 		if (gameState != null) {

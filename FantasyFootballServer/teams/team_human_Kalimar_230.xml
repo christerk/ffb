@@ -140,6 +140,32 @@
         <playerStatistics currentSpps="51"/>
     </player>
 
+    <player nr="13" id="teamHumanKalimar13">
+        <name>Catcher1</name>
+        <gender>male</gender>
+        <positionId>human.catcher.old</positionId>
+        <skillList>
+            <skill>Sure Feet</skill>
+            <skill>Sprint</skill>
+            <skill>Side Step</skill>
+            <skill>Diving Tackle</skill>
+        </skillList>
+        <playerStatistics currentSpps="51"/>
+    </player>
+
+    <player nr="14" id="teamHumanKalimar14">
+        <name>Catcher2</name>
+        <gender>male</gender>
+        <positionId>human.catcher.old</positionId>
+        <skillList>
+            <skill>Sure Feet</skill>
+            <skill>Sprint</skill>
+            <skill>Side Step</skill>
+            <skill>Diving Tackle</skill>
+        </skillList>
+        <playerStatistics currentSpps="51"/>
+    </player>
+
     <player nr="8" id="teamHumanKalimar8">
         <name>Lineman1</name>
         <gender>male</gender>
@@ -186,38 +212,5 @@
         <positionId>human.lineman</positionId>
         <skillList></skillList>
     </player>
-    <player nr="13" id="teamHumanKalimar13">
-        <name>Lineman5</name>
-        <gender>male</gender>
-        <positionId>human.lineman</positionId>
-        <skillList></skillList>
-    </player>
 
-    <player nr="14" id="teamHumanKalimar14">
-        <name>Lineman6</name>
-        <gender>male</gender>
-        <positionId>human.lineman</positionId>
-        <skillList></skillList>
-    </player>
-
-    <player nr="15" id="teamHumanKalimar15">
-        <name>Lineman7</name>
-        <gender>male</gender>
-        <positionId>human.lineman</positionId>
-        <skillList>
-            <skill>Kick</skill>
-            <skill>Kick-Off Return</skill>
-        </skillList>
-        <playerStatistics currentSpps="6"/>
-    </player>
-
-    <player nr="16" id="teamHumanKalimar16">
-        <name>Lineman8</name>
-        <gender>male</gender>
-        <positionId>human.lineman</positionId>
-        <injuryList>
-            <injury recovering="true">Fractured Leg (MNG)</injury>
-        </injuryList>
-        <skillList></skillList>
-    </player>
 </team>

@@ -21,7 +21,7 @@ public class DialogArgueTheCall extends DialogThreeWayChoice {
 	private static String[] createMessages(Player<?> pPlayer, boolean stayOnPitch, boolean friendsWithTheRef, int biasedRefs) {
 		String[] messages;
 		if (pPlayer != null) {
-			messages = new String[3];
+			messages = new String[biasedRefs == 0 ? 3 : 2];
 			StringBuilder message = new StringBuilder();
 			message.append("On a roll of ").append(successResult(friendsWithTheRef, biasedRefs)).append(" the ref ");
 			if (stayOnPitch) {
@@ -30,7 +30,9 @@ public class DialogArgueTheCall extends DialogThreeWayChoice {
 				message.append("sends ").append(pPlayer.getName()).append(" to the reserves instead.");
 			}
 			messages[1] = message.toString();
-			messages[2] = "On a roll of 1 the ref will ban the coach for the rest of the game.";
+			if (biasedRefs == 0) {
+				messages[2] = "On a roll of 1 the ref will ban the coach for the rest of the game.";
+			}
 		} else {
 			messages = new String[1];
 		}

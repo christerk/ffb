@@ -169,9 +169,10 @@ public class PlayerIconFactory {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-		boolean withBomb = (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)
+		boolean playerOnPitch = FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate);
+		boolean withBomb = (playerOnPitch
 			&& playerCoordinate.equals(game.getFieldModel().getBombCoordinate()) && !game.getFieldModel().isBombMoving());
-		boolean withBall = (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate) && !game.getFieldModel().isBallMoving()
+		boolean withBall = (playerOnPitch && !game.getFieldModel().isBallMoving()
 			&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
 
 		if (playerState.getBase() != PlayerState.PICKED_UP) {
@@ -256,6 +257,10 @@ public class PlayerIconFactory {
 		}
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
+			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
+				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(IClientProperty.SETTING_MARK_USED_PLAYERS))) {
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN));
+			}
 		}
 
 		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());

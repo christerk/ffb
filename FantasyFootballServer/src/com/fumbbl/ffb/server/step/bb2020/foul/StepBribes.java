@@ -125,55 +125,65 @@ public class StepBribes extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UtilServerDialog.hideDialog(getGameState());
-		if (fBribesChoice == null) {
-			askForBribes();
-		}
-		if ((fBribesChoice != null) && fBribesChoice && (fBribeSuccessful == null)) {
-			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-			inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN))
-				.findFirst().ifPresent(type -> {
-					if (UtilServerInducementUse.useInducement(getGameState(), team, type, 1)) {
-						int roll = getGameState().getDiceRoller().rollBribes();
-						fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
-						getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
-					}
-				});
-		}
-		if (((fBribeSuccessful != null) && fBribeSuccessful)) {
-			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-			return;
-		}
-		boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam());
-
 		InducementSet inducementSet = game.isHomePlaying() ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 
-		if ((fBribesChoice != null) && (fArgueTheCallChoice == null)) {
-			boolean foulerHasBall = game.getFieldModel().getBallCoordinate()
-				.equals(game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
-			publishParameter(new StepParameter(StepParameterKey.FOULER_HAS_BALL, foulerHasBall));
-			int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);
-			askForArgueTheCall(friendsWithTheRef, biasedRefBonus);
-		}
-		if ((fBribesChoice != null) && (fArgueTheCallChoice != null) && fArgueTheCallChoice
-			&& (getReRolledAction() != ReRolledActions.ARGUE_THE_CALL || getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION)) {
+		if (fBribesChoice == null) {
 
-			Optional<InducementType> briberyReRoll = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REROLL_ARGUE))
-				.findFirst();
+			boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(game.getActingTeam());
 
-			if (getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION) {
-				if (briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get())) {
-					useBriberyReRoll(game, inducementSet, briberyReRoll.get());
+
+			if (fArgueTheCallChoice == null) {
+				boolean foulerHasBall = game.getFieldModel().getBallCoordinate()
+					.equals(game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
+				publishParameter(new StepParameter(StepParameterKey.FOULER_HAS_BALL, foulerHasBall));
+				int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);
+				askForArgueTheCall(friendsWithTheRef, biasedRefBonus);
+			}
+
+			if (fArgueTheCallChoice != null && fArgueTheCallChoice && (getReRolledAction() != ReRolledActions.ARGUE_THE_CALL || getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION)) {
+
+				Optional<InducementType> briberyReRoll = inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REROLL_ARGUE))
+					.findFirst();
+
+				if (getReRollSource() == ReRollSources.BRIBERY_AND_CORRUPTION) {
+					if (briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get())) {
+						useBriberyReRoll(game, inducementSet, briberyReRoll.get());
+					}
+				}
+
+				if (rollArgue(game, actingPlayer, inducementSet, friendsWithTheRef, briberyReRoll)) {
+					return;
 				}
 			}
 
-			if (rollArgue(game, actingPlayer, inducementSet, friendsWithTheRef, briberyReRoll)) {
-				return;
+			if (getReRollSource() == null && getReRolledAction() == ReRolledActions.ARGUE_THE_CALL) {
+				fBribesChoice = false;
+				game.getTurnData().setCoachBanned(true);
 			}
+
 		}
 
-		if (getReRollSource() == null && getReRolledAction() == ReRolledActions.ARGUE_THE_CALL) {
-			game.getTurnData().setCoachBanned(true);
+		if (fArgueTheCallChoice != null && (fArgueTheCallSuccessful == null || !fArgueTheCallSuccessful)) {
+
+			if (fBribesChoice == null) {
+				askForBribes();
+			}
+			if ((fBribesChoice != null) && fBribesChoice && (fBribeSuccessful == null)) {
+				Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+				inducementSet.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN))
+					.findFirst().ifPresent(type -> {
+						if (UtilServerInducementUse.useInducement(getGameState(), team, type, 1)) {
+							int roll = getGameState().getDiceRoller().rollBribes();
+							fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
+							getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
+						}
+					});
+			}
+
+			if (((fBribeSuccessful != null) && fBribeSuccessful)) {
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+				return;
+			}
 		}
 
 		if ((fBribesChoice != null) && (fArgueTheCallChoice != null)) {
@@ -197,10 +207,13 @@ public class StepBribes extends AbstractStepWithReRoll {
 		modifiedRoll += biasedRefBonus;
 
 		fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(modifiedRoll);
+		if (fArgueTheCallSuccessful) {
+			fBribesChoice = false;
+		}
 		boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(modifiedRoll);
 		getResult().addReport(
 			new ReportArgueTheCallRoll(actingPlayer.getPlayerId(), fArgueTheCallSuccessful, coachBanned, roll, true, friendsWithTheRef, biasedRefBonus));
-		boolean couldReRoll = modifiedRoll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
+		boolean couldReRoll = roll == 1 && getReRollSource() != ReRollSources.BRIBERY_AND_CORRUPTION
 			&& briberyReRoll.isPresent() && inducementSet.hasUsesLeft(briberyReRoll.get());
 		if (couldReRoll && coachBanned) {
 			useBriberyReRoll(game, inducementSet, briberyReRoll.get());
@@ -209,6 +222,7 @@ public class StepBribes extends AbstractStepWithReRoll {
 			UtilServerDialog.showDialog(getGameState(), new DialogBriberyAndCorruptionParameter(game.getActingTeam().getId()), false);
 			return true;
 		} else if (coachBanned) {
+			fBribesChoice = false;
 			game.getTurnData().setCoachBanned(true);
 		}
 
