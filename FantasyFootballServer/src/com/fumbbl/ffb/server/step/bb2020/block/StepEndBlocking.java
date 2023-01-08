@@ -237,7 +237,7 @@ public class StepEndBlocking extends AbstractStep {
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), defenderId, fUsingStab, true, null, askForBlockKind, addBlockDie));
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), defenderId, fUsingStab, null, askForBlockKind));
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(defenderId).useStab(fUsingStab).askForBlockKind(askForBlockKind).build());
 					publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, allowSecondBlockAction));
 				}
 			} else {
@@ -293,7 +293,7 @@ public class StepEndBlocking extends AbstractStep {
 					return;
 				} else if (usePutridRegurgitation) {
 					actingPlayer.markSkillUsed(NamedProperties.canUseVomitAfterBlock);
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), null, false, false, true, true));
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).useVomit(true).publishDefender(true).build());
 					ServerUtilBlock.updateDiceDecorations(game, true);
 					return;
 				}
@@ -349,7 +349,7 @@ public class StepEndBlocking extends AbstractStep {
 						allowSecondBlockAction = false;
 						actingPlayer.setHasBlocked(false);
 						actingPlayer.markSkillUnused(NamedProperties.forceSecondBlock);
-						blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), usingChainsaw, true));
+						blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).publishDefender(true).build());
 						ServerUtilBlock.updateDiceDecorations(game);
 					} else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
 						&& attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
@@ -358,7 +358,7 @@ public class StepEndBlocking extends AbstractStep {
 						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true, true));
 						} else {
-							blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), true, true));
+							blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(true).publishDefender(true).build());
 						}
 
 					} else {

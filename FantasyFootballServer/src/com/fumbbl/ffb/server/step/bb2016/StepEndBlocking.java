@@ -149,7 +149,7 @@ public class StepEndBlocking extends AbstractStep {
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(),  game.getDefenderId(), fUsingStab, null));
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), null, false, game.getDefenderId()));
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).withMultiBlockDefenderId(game.getDefenderId()).build());
 				}
 				game.setDefenderId(null);
 				getResult().setNextAction(StepAction.NEXT_STEP);
@@ -160,7 +160,7 @@ public class StepEndBlocking extends AbstractStep {
 				&& UtilPlayer.isNextMovePossible(game, false)) {
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
-				blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), game.getDefenderId(), fUsingStab,  true,null));
+				blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(game.getDefenderId()).useStab(fUsingStab).isFrenzyBlock(true).build());
 			} else {
 				ServerUtilBlock.removePlayerBlockStates(game);
 				game.getFieldModel().clearDiceDecorations();
@@ -185,7 +185,7 @@ public class StepEndBlocking extends AbstractStep {
 					game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
 					game.setDefenderId(null);
 					ServerUtilBlock.updateDiceDecorations(game);
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).build());
 				} else {
 					game.setDefenderId(null); // clear defender for next multi block
 					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));

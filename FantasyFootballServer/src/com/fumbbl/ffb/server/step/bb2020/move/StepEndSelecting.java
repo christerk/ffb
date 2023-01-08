@@ -306,9 +306,10 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case BLOCK:
 				if (pWithParameter) {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw, usingVomit));
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(fBlockDefenderId)
+						.useStab(fUsingStab).useChainsaw(usingChainsaw).useVomit(usingVomit).build());
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).build());
 				}
 				break;
 			case MULTIPLE_BLOCK:

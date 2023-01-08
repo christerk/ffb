@@ -196,7 +196,7 @@ public class StepEndMoving extends AbstractStep {
 				}
 			}
 			((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-				.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, false, null, askForBlockKind));
+				.pushSequence(new Block.Builder(getGameState()).withDefenderId(fBlockDefenderId).askForBlockKind(askForBlockKind).build());
 			// this may happen on a failed TAKE_ROOT roll
 		} else if (StringTool.isProvided(actingPlayer.getPlayerId()) && (actingPlayer.getPlayerAction() != null)
 			&& !actingPlayer.getPlayerAction().isMoving() && !(actingPlayer.getPlayerAction() == PlayerAction.PASS
@@ -243,7 +243,7 @@ public class StepEndMoving extends AbstractStep {
 			switch (pPlayerAction) {
 				case BLOCK:
 					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-						.pushSequence(new Block.SequenceParams(getGameState(), usingChainsaw));
+						.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).build());
 					return true;
 				case BLITZ:
 				case BLITZ_MOVE:

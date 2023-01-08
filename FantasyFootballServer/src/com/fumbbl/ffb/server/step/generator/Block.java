@@ -8,32 +8,63 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 		super(Type.Block);
 	}
 
+	public static class Builder {
+		private final SequenceParams params;
+
+		public Builder(GameState gameState) {
+			params = new SequenceParams(gameState);
+		}
+
+		public SequenceParams build() {
+			return params;
+		}
+
+		public Builder withDefenderId(String blockDefenderId) {
+			params.blockDefenderId = blockDefenderId;
+			return this;
+		}
+
+		public Builder withMultiBlockDefenderId(String multiBlockDefenderId) {
+			params.multiBlockDefenderId = multiBlockDefenderId;
+			return this;
+		}
+
+		public Builder publishDefender(boolean publishDefender) {
+			params.publishDefender = publishDefender;
+			return this;
+		}
+
+		public Builder useStab(boolean usingStab) {
+			params.usingStab = usingStab;
+			return this;
+		}
+
+		public Builder useChainsaw(boolean usingChainsaw) {
+			params.usingChainsaw = usingChainsaw;
+			return this;
+		}
+
+		public Builder useVomit(boolean usingVomit) {
+			params.usingVomit = usingVomit;
+			return this;
+		}
+
+		public Builder isFrenzyBlock(boolean frenzyBlock) {
+			params.frenzyBlock = frenzyBlock;
+			return this;
+		}
+
+		public Builder askForBlockKind(boolean askForBlockKind) {
+			params.askForBlockKind = askForBlockKind;
+			return this;
+		}
+	}
+
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final String blockDefenderId;
-		private final String multiBlockDefenderId;
-		private final boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind;
+		private String blockDefenderId;
+		private String multiBlockDefenderId;
+		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind;
 		private boolean publishDefender;
-
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, boolean usingVomit, boolean publishDefender) {
-			this(gameState, blockDefenderId, usingStab, usingChainsaw, usingVomit, false, null, false);
-			this.publishDefender = publishDefender;
-		}
-
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, boolean usingVomit) {
-			this(gameState, blockDefenderId, usingStab, usingChainsaw, usingVomit, false, null, false);
-		}
-
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, String multiBlockDefenderId) {
-			this(gameState, blockDefenderId, usingStab, false, false, false, multiBlockDefenderId, false);
-		}
-
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, String multiBlockDefenderId, boolean askForBlockKind) {
-			this(gameState, blockDefenderId, usingStab, false, false, false, multiBlockDefenderId, askForBlockKind);
-		}
-
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean frenzyBlock, String multiBlockDefenderId) {
-			this(gameState, blockDefenderId, usingStab, false, false, frenzyBlock, multiBlockDefenderId, false);
-		}
 
 		private SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw,
 													 boolean usingVomit, boolean frenzyBlock, String multiBlockDefenderId, boolean askForBlockKind) {
@@ -47,17 +78,8 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 			this.askForBlockKind = askForBlockKind;
 		}
 
-		public SequenceParams(GameState gameState) {
-			this(gameState, null, false, false, false, false, null, false);
-		}
-
-		public SequenceParams(GameState gameState, boolean usingChainsaw) {
-			this(gameState, null, false, usingChainsaw, false, false, null, false);
-		}
-
-		public SequenceParams(GameState gameState, boolean usingChainsaw, boolean publishDefender) {
-			this(gameState, usingChainsaw);
-			this.publishDefender = publishDefender;
+		private SequenceParams(GameState gameState) {
+			super(gameState);
 		}
 
 		public String getBlockDefenderId() {
