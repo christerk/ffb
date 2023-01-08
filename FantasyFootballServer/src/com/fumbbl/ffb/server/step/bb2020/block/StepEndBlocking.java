@@ -76,7 +76,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
 	private boolean fUsingStab, usingChainsaw, addBlockDie, allowSecondBlockAction, usingVomit;
-	private Boolean usePileDriver, useHitAndRun;
+	private Boolean usePileDriver, useHitAndRun, usePutridRegurgitation;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
 	private PlayerState oldDefenderState;
@@ -104,6 +104,10 @@ public class StepEndBlocking extends AbstractStep {
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) receivedCommand.getCommand();
 					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMoveAfterBlock)) {
 						useHitAndRun = commandUseSkill.isSkillUsed();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					} else if (
+						commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
+						usePutridRegurgitation = commandUseSkill.isSkillUsed();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -274,6 +278,25 @@ public class StepEndBlocking extends AbstractStep {
 					useHitAndRun = false;
 				}
 
+				boolean canUsePutridRegurgitation = actingPlayer.getPlayerAction() == PlayerAction.BLOCK
+					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
+					&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(activePlayer.getTeam()), game.getFieldModel().getPlayerCoordinate(activePlayer)))
+					&& !fUsingStab && !usingChainsaw && !usingVomit;
+
+				if (!canUsePutridRegurgitation) {
+					usePutridRegurgitation = false;
+				}
+
+				if (usePutridRegurgitation == null) {
+					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(activePlayer.getId(), activePlayer.getSkillWithProperty(NamedProperties.canUseVomitAfterBlock), 0), false);
+					getResult().setNextAction(StepAction.CONTINUE);
+					return;
+				} else if (usePutridRegurgitation) {
+					actingPlayer.markSkillUsed(NamedProperties.canUseVomitAfterBlock);
+					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), null, false, false, true, true));
+					ServerUtilBlock.updateDiceDecorations(game, true);
+					return;
+				}
 				if (useHitAndRun == null) {
 					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(activePlayer.getId(), activePlayer.getSkillWithProperty(NamedProperties.canMoveAfterBlock), 0), false);
 					getResult().setNextAction(StepAction.CONTINUE);
@@ -365,6 +388,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.USING_PILE_DRIVER.addTo(jsonObject, usePileDriver);
 		IServerJsonOption.USING_HIT_AND_RUN.addTo(jsonObject, useHitAndRun);
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
+		IServerJsonOption.USING_PUTRID_REGURGITATION.addTo(jsonObject, usePutridRegurgitation);
 		return jsonObject;
 	}
 
@@ -384,6 +408,7 @@ public class StepEndBlocking extends AbstractStep {
 		allowSecondBlockAction = toPrimitive(IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.getFrom(source, jsonObject));
 		useHitAndRun = IServerJsonOption.USING_HIT_AND_RUN.getFrom(source, jsonObject);
 		usePileDriver = IServerJsonOption.USING_PILE_DRIVER.getFrom(source, jsonObject);
+		usePutridRegurgitation = IServerJsonOption.USING_PUTRID_REGURGITATION.getFrom(source, jsonObject);
 		return this;
 	}
 

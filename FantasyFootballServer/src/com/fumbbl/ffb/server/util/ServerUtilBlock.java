@@ -16,7 +16,12 @@ import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 public class ServerUtilBlock {
+
 	public static void updateDiceDecorations(Game pGame) {
+		updateDiceDecorations(pGame, false);
+	}
+
+	public static void updateDiceDecorations(Game pGame, boolean allowAdditionalBlock) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
 		boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
@@ -27,7 +32,7 @@ public class ServerUtilBlock {
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
 
 		if ((actingPlayer.getPlayer() != null)
-			&& (blocksDuringMove || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)) || isCarnage)) {
+			&& (blocksDuringMove || ((!actingPlayer.hasBlocked() || allowAdditionalBlock) && (isBlitz || isBlock || isMultiBlock)) || isCarnage)) {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
@@ -95,7 +100,7 @@ public class ServerUtilBlock {
 	}
 
 	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
-	                                    boolean usingMultiBlock, boolean successfulDauntless) {
+																			boolean usingMultiBlock, boolean successfulDauntless) {
 
 		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false, false);
 	}

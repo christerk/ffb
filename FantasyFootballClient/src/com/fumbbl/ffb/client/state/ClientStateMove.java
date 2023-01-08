@@ -148,6 +148,7 @@ public class ClientStateMove extends ClientState {
 				|| isRaidingPartyAvailable(actingPlayer)
 				|| isLookIntoMyEyesAvailable(actingPlayer)
 				|| isBalefulHexAvailable(actingPlayer)
+				|| isPutridRegurgitationAvailable()
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -258,6 +259,12 @@ public class ClientStateMove extends ClientState {
 						communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
+					if (isPutridRegurgitationAvailable()) {
+						Skill putridSkill = pPlayer.getSkillWithProperty(NamedProperties.canUseVomitAfterBlock);
+						communication.sendUseSkill(putridSkill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -348,6 +355,9 @@ public class ClientStateMove extends ClientState {
 		if (isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
+		if (isPutridRegurgitationAvailable()) {
+			menuItemList.add(createPutridRegurgitationItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -404,6 +414,9 @@ public class ClientStateMove extends ClientState {
 					break;
 				case PLAYER_ACTION_BALEFUL_HEX:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+					return true;
+				case PLAYER_ACTION_PROJECTILE_VOMIT:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 					return true;
 				default:
 					actionHandled = false;
@@ -472,6 +485,18 @@ public class ClientStateMove extends ClientState {
 			&& actingPlayer.getPlayerAction() != null
 			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
 			&& UtilPlayer.hasBall(getClient().getGame(), actingPlayer.getPlayer()));
+	}
+
+	protected boolean isPutridRegurgitationAvailable() {
+		return false;
+	}
+
+	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem("Putrid Regurgitation",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
+		return menuItem;
 	}
 
 	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,

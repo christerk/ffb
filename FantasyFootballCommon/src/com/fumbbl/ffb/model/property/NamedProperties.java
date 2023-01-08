@@ -109,6 +109,7 @@ public class NamedProperties {
 	public static final ISkillProperty canTakeDownPlayersWithHimOnBothDown = new NamedProperty("Can Take Down Players With Him On Both Down");
 	public static final ISkillProperty canThrowTeamMates = new NamedProperty("Can Throw Team Mates");
 	public static final ISkillProperty canUseThrowBombActionTwice = new NamedProperty("Can Use Throw Bomb Action Twice");
+	public static final ISkillProperty canUseVomitAfterBlock = new NamedProperty("Can Use Vomit After Block");
 	public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
 	public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
 	public static final ISkillProperty dontDropFumbles = new NamedProperty("Don't Drop 2+ Fumbles");

@@ -21,7 +21,8 @@ public enum PlayerAction implements INamedObject {
 	TREACHEROUS("treacherous", 32, null), WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", 33, null),
 	THROW_KEG("throwKey", 34, "readies a beer keg"), RAIDING_PARTY("raidingParty", 35, null),
 	MAXIMUM_CARNAGE("maximumCarnage", 36, null), LOOK_INTO_MY_EYES("lookIntoMyEyes", 37, "tries to steal the ball"),
-	BALEFUL_HEX("balefulHex", 38, null), ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB);
+	BALEFUL_HEX("balefulHex", 38, null), ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB),
+	PUTRID_REGURGITATION("putridRegurgitation", 40, "starts a Putrid Regurgitation action", PlayerAction.BLITZ_MOVE);
 
 	private final String fName;
 	private final int fType;

@@ -564,6 +564,7 @@ public interface IJsonOption {
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
 	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
 	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");
+	JsonBooleanOption USING_PUTRID_REGURGITATION = new JsonBooleanOption("usingPutridRegurgitation");
 	JsonBooleanOption USING_STAB = new JsonBooleanOption("usingStab");
 	JsonBooleanOption USING_VOMIT = new JsonBooleanOption("usingVomit");
 	JsonIntOption VALUE = new JsonIntOption("value");

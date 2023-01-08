@@ -52,6 +52,7 @@ public enum SkillUse implements INamedObject {
 	MAKE_OPPONENT_MISS_TURN("makeOpponentMissTurn", "to make an opponent player miss a turn"),
 	LASH_OUT_AGAINST_OPPONENT("lashOutAgainstOpponent", "to lash out against an opponent player instead"),
 	EASY_INTERCEPT("easyIntercept", "to try an easy interception"),
+	PERFORM_ADDITIONAL_ATTACK("performAdditionalAttack", "to perform an additional attack"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

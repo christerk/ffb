@@ -91,7 +91,7 @@ public class UtilServerGame {
 		}
 
 		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping) && (actualAction != null)
-			&& ((oldPlayerAction == null) || (actualAction.getType() != oldPlayerAction.getType()))) {
+			&& ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
 			if (oldPlayerAction == null) {
 				pStep.getResult().setSound(SoundId.CLICK);
 			}
