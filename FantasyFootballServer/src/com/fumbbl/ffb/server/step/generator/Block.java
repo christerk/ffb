@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.generator;
 
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 
 public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
@@ -58,25 +59,19 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 			params.askForBlockKind = askForBlockKind;
 			return this;
 		}
+
+		public Builder withSkillFixingBlockKind(Skill skillFixingBlockKind) {
+			params.skillFixingBlockKind = skillFixingBlockKind;
+			return this;
+		}
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private String blockDefenderId;
 		private String multiBlockDefenderId;
-		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind;
-		private boolean publishDefender;
+		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, publishDefender;
 
-		private SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw,
-													 boolean usingVomit, boolean frenzyBlock, String multiBlockDefenderId, boolean askForBlockKind) {
-			super(gameState);
-			this.blockDefenderId = blockDefenderId;
-			this.multiBlockDefenderId = multiBlockDefenderId;
-			this.usingStab = usingStab;
-			this.usingChainsaw = usingChainsaw;
-			this.usingVomit = usingVomit;
-			this.frenzyBlock = frenzyBlock;
-			this.askForBlockKind = askForBlockKind;
-		}
+		private Skill skillFixingBlockKind;
 
 		private SequenceParams(GameState gameState) {
 			super(gameState);
@@ -112,6 +107,10 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 
 		public boolean isPublishDefender() {
 			return publishDefender;
+		}
+
+		public Skill getSkillFixingBlockKind() {
+			return skillFixingBlockKind;
 		}
 	}
 }

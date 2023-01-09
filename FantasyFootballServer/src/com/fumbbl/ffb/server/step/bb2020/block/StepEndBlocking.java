@@ -292,8 +292,7 @@ public class StepEndBlocking extends AbstractStep {
 					getResult().setNextAction(StepAction.CONTINUE);
 					return;
 				} else if (usePutridRegurgitation) {
-					actingPlayer.markSkillUsed(NamedProperties.canUseVomitAfterBlock);
-					blockGenerator.pushSequence(new Block.Builder(getGameState()).useVomit(true).publishDefender(true).build());
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).useVomit(true).withSkillFixingBlockKind(activePlayer.getSkillWithProperty(NamedProperties.canUseVomitAfterBlock)).publishDefender(true).build());
 					ServerUtilBlock.updateDiceDecorations(game, true);
 					return;
 				}

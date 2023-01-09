@@ -41,10 +41,10 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
-import com.fumbbl.ffb.util.UtilActingPlayer;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Objects;
@@ -253,7 +253,8 @@ public class StepInitMoving extends AbstractStep {
 					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
 						if (commandUseSkill.isSkillUsed()) {
 							postBlockSkill = commandUseSkill.getSkill();
-							UtilActingPlayer.changeActingPlayer(game, commandUseSkill.getPlayerId(), PlayerAction.PUTRID_REGURGITATION, false);
+							UtilServerGame.changeActingPlayer(this, commandUseSkill.getPlayerId(), PlayerAction.PUTRID_REGURGITATION, false);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						} else {
 							postBlockSkill = null;
 						}

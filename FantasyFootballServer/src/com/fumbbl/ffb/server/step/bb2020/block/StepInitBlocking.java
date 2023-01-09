@@ -11,6 +11,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.server.GameState;
@@ -52,6 +53,8 @@ public class StepInitBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean askForBlockKind, publishDefender;
+
+	private Skill skillFixingBlockKind;
 
 	public StepInitBlocking(GameState pGameState) {
 		super(pGameState);
@@ -98,6 +101,9 @@ public class StepInitBlocking extends AbstractStep {
 					case PUBLISH_DEFENDER:
 						publishDefender = (boolean) parameter.getValue();
 						break;
+					case SKILL_FIXING_BLOCK_KIND:
+						skillFixingBlockKind = (Skill) parameter.getValue();
+						break;
 					default:
 						break;
 				}
@@ -124,9 +130,11 @@ public class StepInitBlocking extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
 						if ((fMultiBlockDefenderId == null) || !fMultiBlockDefenderId.equals(blockCommand.getDefenderId())) {
 							fBlockDefenderId = blockCommand.getDefenderId();
-							fUsingStab = blockCommand.isUsingStab();
-							usingChainsaw = blockCommand.isUsingChainsaw();
-							usingVomit = blockCommand.isUsingVomit();
+							if (skillFixingBlockKind == null) {
+								fUsingStab = blockCommand.isUsingStab();
+								usingChainsaw = blockCommand.isUsingChainsaw();
+								usingVomit = blockCommand.isUsingVomit();
+							}
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
 					}
@@ -178,6 +186,10 @@ public class StepInitBlocking extends AbstractStep {
 					game.setTurnMode(TurnMode.SELECT_BLOCK_KIND);
 					askForBlockKind = false;
 				} else {
+					if (skillFixingBlockKind != null) {
+						actingPlayer.markSkillUsed(skillFixingBlockKind);
+					}
+
 					game.setDefenderId(defender.getId());
 					actingPlayer.setStrength(actingPlayer.getPlayer().getStrengthWithModifiers());
 
@@ -217,6 +229,7 @@ public class StepInitBlocking extends AbstractStep {
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IServerJsonOption.ASK_FOR_BLOCK_KIND.addTo(jsonObject, askForBlockKind);
 		IServerJsonOption.PUBLISH_DEFENDER.addTo(jsonObject, publishDefender);
+		//TODO
 		return jsonObject;
 	}
 
