@@ -67,7 +67,7 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean allowsFumblerooskie() {
-		return this == MOVE || this == BLITZ_MOVE;
+		return isMoving();
 	}
 
 	public boolean isBlitzing() {
