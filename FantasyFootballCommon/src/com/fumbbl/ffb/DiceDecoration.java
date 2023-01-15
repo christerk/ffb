@@ -6,6 +6,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.util.ArrayTool;
 
 /**
@@ -16,14 +17,16 @@ public class DiceDecoration implements IJsonSerializable {
 
 	private FieldCoordinate fCoordinate;
 	private int fNrOfDice;
+	private BlockKind blockKind;
 
 	public DiceDecoration() {
 		super();
 	}
 
-	public DiceDecoration(FieldCoordinate pCoordinate, int pNrOfDice) {
+	public DiceDecoration(FieldCoordinate pCoordinate, int pNrOfDice, BlockKind blockKind) {
 		fCoordinate = pCoordinate;
 		fNrOfDice = pNrOfDice;
+		this.blockKind = blockKind;
 	}
 
 	public FieldCoordinate getCoordinate() {
@@ -32,6 +35,10 @@ public class DiceDecoration implements IJsonSerializable {
 
 	public int getNrOfDice() {
 		return fNrOfDice;
+	}
+
+	public BlockKind getBlockKind() {
+		return blockKind;
 	}
 
 	public int hashCode() {
@@ -45,7 +52,7 @@ public class DiceDecoration implements IJsonSerializable {
 	// transformation
 
 	public DiceDecoration transform() {
-		return new DiceDecoration(getCoordinate().transform(), getNrOfDice());
+		return new DiceDecoration(getCoordinate().transform(), getNrOfDice(), blockKind);
 	}
 
 	public static DiceDecoration transform(DiceDecoration pDiceDecoration) {
@@ -69,6 +76,9 @@ public class DiceDecoration implements IJsonSerializable {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);
 		IJsonOption.NR_OF_DICE.addTo(jsonObject, fNrOfDice);
+		if (blockKind != null) {
+			IJsonOption.BLOCK_KIND.addTo(jsonObject, blockKind.name());
+		}
 		return jsonObject;
 	}
 
@@ -76,6 +86,9 @@ public class DiceDecoration implements IJsonSerializable {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fCoordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
 		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		if (IJsonOption.BLOCK_KIND.isDefinedIn(jsonObject)) {
+			blockKind = BlockKind.valueOf(IJsonOption.BLOCK_KIND.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 

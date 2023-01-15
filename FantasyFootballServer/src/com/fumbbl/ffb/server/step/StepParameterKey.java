@@ -118,7 +118,6 @@ public enum StepParameterKey {
 	RESET_PLAYER_ACTION, // PlayerAction
 	RETAIN_MODEL_DATA, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
-	SKILL_FIXING_BLOCK_KIND, // Skill
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
 	SUPPRESS_EXTRA_EFFECT_HANDLING, // Boolean

@@ -216,7 +216,7 @@ public class StepEndMoving extends AbstractStep {
 			|| ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
 			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-			if (PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction()) {
+			if (PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction() || PlayerAction.PUTRID_REGURGITATION_MOVE == actingPlayer.getPlayerAction()) {
 				blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
 			} else {
 				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
@@ -247,6 +247,7 @@ public class StepEndMoving extends AbstractStep {
 					return true;
 				case BLITZ:
 				case BLITZ_MOVE:
+				case PUTRID_REGURGITATION_MOVE:
 					((BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name()))
 						.pushSequence(new BlitzBlock.SequenceParams(getGameState(), usingChainsaw));
 					return true;

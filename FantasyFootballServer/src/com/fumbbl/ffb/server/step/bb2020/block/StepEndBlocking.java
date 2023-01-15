@@ -292,8 +292,9 @@ public class StepEndBlocking extends AbstractStep {
 					getResult().setNextAction(StepAction.CONTINUE);
 					return;
 				} else if (usePutridRegurgitation) {
-					blockGenerator.pushSequence(new Block.Builder(getGameState()).useVomit(true).withSkillFixingBlockKind(activePlayer.getSkillWithProperty(NamedProperties.canUseVomitAfterBlock)).publishDefender(true).build());
-					ServerUtilBlock.updateDiceDecorations(game, true);
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).publishDefender(true).build());
+					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.PUTRID_REGURGITATION_BLOCK, actingPlayer.isJumping());
+					ServerUtilBlock.updateDiceDecorations(game);
 					return;
 				}
 				if (useHitAndRun == null) {
@@ -323,7 +324,11 @@ public class StepEndBlocking extends AbstractStep {
 					&& !usingChainsaw
 					&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 					String actingPlayerId = activePlayer.getId();
-					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
+						UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
+					} else {
+						UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+					}
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));

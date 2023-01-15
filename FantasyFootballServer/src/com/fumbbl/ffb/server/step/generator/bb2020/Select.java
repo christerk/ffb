@@ -42,9 +42,10 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 		sequence.add(StepId.GOTO_LABEL, from(StepParameterKey.GOTO_LABEL, IStepLabel.NEXT), from(StepParameterKey.ALTERNATE_GOTO_LABEL, IStepLabel.END_SELECTING));
 		sequence.add(StepId.JUMP_UP, IStepLabel.NEXT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
 		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		PlayerAction playerAction = gameState.getGame().getActingPlayer().getPlayerAction();
 		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING,
 			from(StepParameterKey.IN_SELECT, true),
-			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, gameState.getGame().getActingPlayer().getPlayerAction() == PlayerAction.BLITZ_MOVE));
+			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, playerAction == PlayerAction.BLITZ_MOVE || playerAction == PlayerAction.PUTRID_REGURGITATION_MOVE));
 		sequence.add(StepId.END_SELECTING, from(StepParameterKey.BLOCK_TARGETS, params.getBlockTargets()));
 		// may insert endTurn, pass, throwTeamMate, block, foul or moveSequence add
 		// this point

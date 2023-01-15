@@ -90,12 +90,15 @@ public class UtilServerGame {
 			actualAction = pPlayerAction.getDelegate();
 		}
 
-		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping) && (actualAction != null)
-			&& ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
-			if (oldPlayerAction == null) {
-				pStep.getResult().setSound(SoundId.CLICK);
+		boolean playerChanged = UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping);
+		if (pPlayerAction != null) {
+			boolean differentAction = (oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType());
+			if ((playerChanged && differentAction) || pPlayerAction.forceLog()) {
+				if (oldPlayerAction == null) {
+					pStep.getResult().setSound(SoundId.CLICK);
+				}
+				pStep.getResult().addReport(new ReportPlayerAction(pActingPlayerId, pPlayerAction));
 			}
-			pStep.getResult().addReport(new ReportPlayerAction(pActingPlayerId, pPlayerAction));
 		}
 	}
 

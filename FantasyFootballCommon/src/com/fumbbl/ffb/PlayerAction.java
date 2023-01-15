@@ -1,7 +1,6 @@
 package com.fumbbl.ffb;
 
 /**
- *
  * @author Kalimar
  */
 public enum PlayerAction implements INamedObject {
@@ -22,7 +21,8 @@ public enum PlayerAction implements INamedObject {
 	THROW_KEG("throwKey", 34, "readies a beer keg"), RAIDING_PARTY("raidingParty", 35, null),
 	MAXIMUM_CARNAGE("maximumCarnage", 36, null), LOOK_INTO_MY_EYES("lookIntoMyEyes", 37, "tries to steal the ball"),
 	BALEFUL_HEX("balefulHex", 38, null), ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB),
-	PUTRID_REGURGITATION("putridRegurgitation", 40, "starts a Putrid Regurgitation action", PlayerAction.BLITZ_MOVE);
+	PUTRID_REGURGITATION_MOVE("putridRegurgitationMove", 40, null), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz", 40, "performs an additional Projectile Vomit attack"),
+	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock", 40, "performs an additional Projectile Vomit attack");
 
 	private final String fName;
 	private final int fType;
@@ -58,7 +58,8 @@ public enum PlayerAction implements INamedObject {
 
 	public boolean isMoving() {
 		return ((this == MOVE) || (this == BLITZ_MOVE) || (this == HAND_OVER_MOVE) || (this == PASS_MOVE)
-			|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE) || this == GAZE_MOVE);
+			|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE) || this == GAZE_MOVE
+			|| this == PUTRID_REGURGITATION_MOVE);
 	}
 
 	public boolean isPassing() {
@@ -71,7 +72,7 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean isBlitzing() {
-		return this == BLITZ || this == BLITZ_MOVE || this == BLITZ_SELECT;
+		return this == BLITZ || this == BLITZ_MOVE || this == BLITZ_SELECT || this == PUTRID_REGURGITATION_MOVE;
 	}
 
 	public boolean isGaze() {
@@ -80,5 +81,17 @@ public enum PlayerAction implements INamedObject {
 
 	public boolean isBomb() {
 		return this == THROW_BOMB || this.delegate == THROW_BOMB;
+	}
+
+	public boolean isPutrid() {
+		return isPutridBlock() || this == PUTRID_REGURGITATION_MOVE;
+	}
+
+	public boolean isPutridBlock() {
+		return this == PUTRID_REGURGITATION_BLITZ || this == PUTRID_REGURGITATION_BLOCK;
+	}
+
+	public boolean forceLog() {
+		return isPutridBlock();
 	}
 }

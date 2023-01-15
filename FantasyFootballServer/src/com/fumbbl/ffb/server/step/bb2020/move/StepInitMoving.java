@@ -7,7 +7,6 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -15,7 +14,6 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
@@ -26,7 +24,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -77,8 +74,6 @@ public class StepInitMoving extends AbstractStep {
 	private FieldCoordinate[] fMoveStack;
 	private String fGazeVictimId;
 	private boolean fEndTurn, fEndPlayerAction;
-
-	private Skill postBlockSkill;
 
 	public StepInitMoving(GameState pGameState) {
 		super(pGameState);
@@ -143,7 +138,7 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
 					boolean homePlayerBlitz = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
-							&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)) {
+						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)) {
 						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homePlayerBlitz)));
 						if (!ArrayTool.isProvided(fMoveStack)) {
 							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
@@ -156,7 +151,7 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
 					boolean homePlayer = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
-							&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)) {
+						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)) {
 						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homePlayer)));
 						if (!ArrayTool.isProvided(fMoveStack)) {
 							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
@@ -167,28 +162,27 @@ public class StepInitMoving extends AbstractStep {
 					break;
 				case CLIENT_BLOCK:
 					ClientCommandBlock blockCommand = (ClientCommandBlock) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)
-						&& (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) && (!actingPlayer.hasBlocked() || postBlockSkill != null)) {
-						commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
-						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
-						publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
-						if (postBlockSkill != null) {
-							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), postBlockSkill, true, SkillUse.PERFORM_ADDITIONAL_ATTACK));
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
+						if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE && !actingPlayer.hasBlocked()
+							|| actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ) {
+							commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
+							publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
+							publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
 						}
 					}
 					break;
 				case CLIENT_FOUL:
 					ClientCommandFoul foulCommand = (ClientCommandFoul) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), foulCommand)
-							&& (actingPlayer.getPlayerAction() == PlayerAction.FOUL_MOVE) && !actingPlayer.hasFouled()) {
+						&& (actingPlayer.getPlayerAction() == PlayerAction.FOUL_MOVE) && !actingPlayer.hasFouled()) {
 						commandStatus = dispatchPlayerAction(PlayerAction.FOUL);
 					}
 					break;
 				case CLIENT_HAND_OVER:
 					ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)
-							&& ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE)
-							|| (actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER))) {
+						&& ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE)
+						|| (actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER))) {
 						commandStatus = dispatchPlayerAction(PlayerAction.HAND_OVER);
 					}
 					break;
@@ -196,7 +190,7 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand)) {
 						if (((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE)
-								|| (actingPlayer.getPlayerAction() == PlayerAction.PASS))) {
+							|| (actingPlayer.getPlayerAction() == PlayerAction.PASS))) {
 							commandStatus = dispatchPlayerAction(PlayerAction.PASS);
 						}
 						if (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS) {
@@ -226,7 +220,7 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-								actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
+							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 					} else {
 						fEndPlayerAction = true;
 					}
@@ -247,20 +241,6 @@ public class StepInitMoving extends AbstractStep {
 						getResult().addReport(new ReportFumblerooskie(player.getId(), true));
 						actingPlayer.setFumblerooskiePending(true);
 					}
-					break;
-				case CLIENT_USE_SKILL:
-					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
-						if (commandUseSkill.isSkillUsed()) {
-							postBlockSkill = commandUseSkill.getSkill();
-							UtilServerGame.changeActingPlayer(this, commandUseSkill.getPlayerId(), PlayerAction.PUTRID_REGURGITATION, false);
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						} else {
-							postBlockSkill = null;
-						}
-						ServerUtilBlock.updateDiceDecorations(game, commandUseSkill.isSkillUsed());
-					}
-
 					break;
 				default:
 					break;
@@ -348,7 +328,6 @@ public class StepInitMoving extends AbstractStep {
 		IServerJsonOption.GAZE_VICTIM_ID.addTo(jsonObject, fGazeVictimId);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
-		// TODO
 		return jsonObject;
 	}
 

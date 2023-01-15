@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
@@ -18,21 +19,18 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class ServerUtilBlock {
 
 	public static void updateDiceDecorations(Game pGame) {
-		updateDiceDecorations(pGame, false);
-	}
-
-	public static void updateDiceDecorations(Game pGame, boolean allowAdditionalBlock) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
 		boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
 		boolean isCarnage = PlayerAction.MAXIMUM_CARNAGE == actingPlayer.getPlayerAction();
+		boolean isPutrid = actingPlayer.getPlayerAction().isPutrid();
 		boolean isBlock = PlayerAction.BLOCK == actingPlayer.getPlayerAction();
 		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction());
 		boolean blocksDuringMove = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksDuringMove);
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
 
 		if ((actingPlayer.getPlayer() != null)
-			&& (blocksDuringMove || ((!actingPlayer.hasBlocked() || allowAdditionalBlock) && (isBlitz || isBlock || isMultiBlock)) || isCarnage)) {
+			&& (blocksDuringMove || ((!actingPlayer.hasBlocked()) && (isBlitz || isBlock || isMultiBlock)) || isCarnage || isPutrid)) {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
@@ -60,18 +58,22 @@ public class ServerUtilBlock {
 			TargetSelectionState targetSelectionState = pGame.getFieldModel().getTargetSelectionState();
 			boolean performsBlitz = targetSelectionState != null && targetSelectionState.isSelected();
 			for (Player<?> pPlayer : pPlayers) {
-				boolean isBystanderDuringBlitz = performsBlitz && !pPlayer.getId().equals(targetSelectionState.getSelectedPlayerId());
-				if (isBystanderDuringBlitz || pPlayer.getId().equals(pGame.getLastDefenderId())) {
-					continue;
-				}
 				int nrOfDice = 0;
-				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.needsNoDiceDecorations)) {
-					nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayer,
-						usingMultiBlock, false);
+				BlockKind blockKind = null;
+				if (actingPlayer.getPlayerAction().isPutridBlock()) {
+					blockKind = BlockKind.VOMIT;
+				} else {
+					boolean isBystanderDuringBlitz = performsBlitz && !pPlayer.getId().equals(targetSelectionState.getSelectedPlayerId());
+					if (isBystanderDuringBlitz || pPlayer.getId().equals(pGame.getLastDefenderId())) {
+						continue;
+					}
+					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.needsNoDiceDecorations)) {
+						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayer,
+							usingMultiBlock, false);
+					}
 				}
 				FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-				pGame.getFieldModel().add(new DiceDecoration(coordinateOpponent, nrOfDice));
-
+				pGame.getFieldModel().add(new DiceDecoration(coordinateOpponent, nrOfDice, blockKind));
 			}
 		}
 	}

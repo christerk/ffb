@@ -10,6 +10,8 @@ import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateHitAndRun;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateMaximumCarnage;
+import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlitz;
+import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlock;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
@@ -82,6 +84,8 @@ public class ClientStateFactory {
 		register(new ClientStateSelectBlockKind(pClient));
 		register(new ClientStateMaximumCarnage(pClient));
 		register(new ClientStateHitAndRun(pClient));
+		register(new ClientStatePutridRegurgitationBlitz(pClient));
+		register(new ClientStatePutridRegurgitationBlock(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -213,6 +217,12 @@ public class ClientStateFactory {
 								case MAXIMUM_CARNAGE:
 									clientStateId = ClientStateId.MAXIMUM_CARNAGE;
 									break;
+								case PUTRID_REGURGITATION_BLITZ:
+								case PUTRID_REGURGITATION_MOVE:
+									clientStateId = ClientStateId.PUTRID_REGURGITATION_BLITZ;
+									break;
+								case PUTRID_REGURGITATION_BLOCK:
+									clientStateId = ClientStateId.PUTRID_REGURGITATION_BLOCK;
 								default:
 									break;
 							}

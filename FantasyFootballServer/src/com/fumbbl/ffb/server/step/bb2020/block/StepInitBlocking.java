@@ -11,6 +11,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
@@ -53,8 +54,6 @@ public class StepInitBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean askForBlockKind, publishDefender;
-
-	private Skill skillFixingBlockKind;
 
 	public StepInitBlocking(GameState pGameState) {
 		super(pGameState);
@@ -101,9 +100,6 @@ public class StepInitBlocking extends AbstractStep {
 					case PUBLISH_DEFENDER:
 						publishDefender = (boolean) parameter.getValue();
 						break;
-					case SKILL_FIXING_BLOCK_KIND:
-						skillFixingBlockKind = (Skill) parameter.getValue();
-						break;
 					default:
 						break;
 				}
@@ -130,11 +126,9 @@ public class StepInitBlocking extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
 						if ((fMultiBlockDefenderId == null) || !fMultiBlockDefenderId.equals(blockCommand.getDefenderId())) {
 							fBlockDefenderId = blockCommand.getDefenderId();
-							if (skillFixingBlockKind == null) {
-								fUsingStab = blockCommand.isUsingStab();
-								usingChainsaw = blockCommand.isUsingChainsaw();
-								usingVomit = blockCommand.isUsingVomit();
-							}
+							fUsingStab = blockCommand.isUsingStab();
+							usingChainsaw = blockCommand.isUsingChainsaw();
+							usingVomit = blockCommand.isUsingVomit();
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
 					}
@@ -186,8 +180,8 @@ public class StepInitBlocking extends AbstractStep {
 					game.setTurnMode(TurnMode.SELECT_BLOCK_KIND);
 					askForBlockKind = false;
 				} else {
-					if (skillFixingBlockKind != null) {
-						actingPlayer.markSkillUsed(skillFixingBlockKind);
+					if (actingPlayer.getPlayerAction().isPutrid()) {
+						actingPlayer.markSkillUsed(NamedProperties.canUseVomitAfterBlock);
 					}
 
 					game.setDefenderId(defender.getId());

@@ -9,6 +9,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.WeatherFactory;
+import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -408,6 +409,11 @@ public class IconCache {
 				break;
 			case 3:
 				iconProperty = IIconProperty.DECORATION_DICE_3;
+				break;
+			case 0:
+				if (pDiceDecoration.getBlockKind() == BlockKind.VOMIT) {
+					iconProperty = IIconProperty.DECORATION_VOMIT_TARGET;
+				}
 				break;
 			default:
 				break;

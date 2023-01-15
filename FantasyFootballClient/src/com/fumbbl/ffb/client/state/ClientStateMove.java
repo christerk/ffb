@@ -302,11 +302,7 @@ public class ClientStateMove extends ClientState {
 			menuItemList.add(toggleRangeGridAction);
 		}
 		if (PlayerAction.GAZE == actingPlayer.getPlayerAction()) {
-			JMenuItem moveAction = new JMenuItem("Move",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
-			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
-			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
-			menuItemList.add(moveAction);
+			menuItemList.add(createMoveMenuItem(iconCache));
 		}
 		if (isJumpAvailableAsNextMove(game, actingPlayer, true)) {
 			if (actingPlayer.isJumping()) {
@@ -360,6 +356,14 @@ public class ClientStateMove extends ClientState {
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
+	}
+
+	protected JMenuItem createMoveMenuItem(IconCache iconCache) {
+		JMenuItem moveAction = new JMenuItem("Move",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+		moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
+		moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
+		return moveAction;
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
@@ -492,11 +496,7 @@ public class ClientStateMove extends ClientState {
 	}
 
 	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem("Putrid Regurgitation",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
-		return menuItem;
+		return null;
 	}
 
 	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,

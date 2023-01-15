@@ -59,19 +59,12 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 			params.askForBlockKind = askForBlockKind;
 			return this;
 		}
-
-		public Builder withSkillFixingBlockKind(Skill skillFixingBlockKind) {
-			params.skillFixingBlockKind = skillFixingBlockKind;
-			return this;
-		}
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private String blockDefenderId;
 		private String multiBlockDefenderId;
 		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, publishDefender;
-
-		private Skill skillFixingBlockKind;
 
 		private SequenceParams(GameState gameState) {
 			super(gameState);
@@ -107,10 +100,6 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 
 		public boolean isPublishDefender() {
 			return publishDefender;
-		}
-
-		public Skill getSkillFixingBlockKind() {
-			return skillFixingBlockKind;
 		}
 	}
 }
