@@ -21,20 +21,23 @@ public class ServerUtilBlock {
 	public static void updateDiceDecorations(Game pGame) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
-		boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
-		boolean isCarnage = PlayerAction.MAXIMUM_CARNAGE == actingPlayer.getPlayerAction();
-		boolean isPutrid = actingPlayer.getPlayerAction().isPutrid();
-		boolean isBlock = PlayerAction.BLOCK == actingPlayer.getPlayerAction();
-		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction());
+		PlayerAction playerAction = actingPlayer.getPlayerAction();
+		boolean isBlitz = PlayerAction.BLITZ_MOVE == playerAction;
+		boolean isCarnage = PlayerAction.MAXIMUM_CARNAGE == playerAction;
+		boolean isPutrid = playerAction != null && playerAction.isPutrid();
+		boolean isBlock = PlayerAction.BLOCK == playerAction;
+		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == playerAction);
 		boolean blocksDuringMove = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksDuringMove);
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
+		boolean kicksDowned = playerAction != null && playerAction.isKickingDowned();
 
 		if ((actingPlayer.getPlayer() != null)
-			&& (blocksDuringMove || ((!actingPlayer.hasBlocked()) && (isBlitz || isBlock || isMultiBlock)) || isCarnage || isPutrid)) {
+			&& (blocksDuringMove || ((!actingPlayer.hasBlocked()) && (isBlitz || isBlock || isMultiBlock || kicksDowned)) || isCarnage || isPutrid)) {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
-			addDiceDecorations(pGame, UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, coordinateAttacker));
+			Player<?>[] adjacentPlayers = kicksDowned ? UtilPlayer.findAdjacentPronePlayers(pGame, otherTeam, coordinateAttacker) : UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, coordinateAttacker);
+			addDiceDecorations(pGame, adjacentPlayers);
 			if (canBlockSameTeamPlayer) {
 				addDiceDecorations(pGame,
 					UtilPlayer.findAdjacentBlockablePlayers(pGame, actingPlayer.getPlayer().getTeam(), coordinateAttacker));
@@ -62,6 +65,8 @@ public class ServerUtilBlock {
 				BlockKind blockKind = null;
 				if (actingPlayer.getPlayerAction().isPutridBlock()) {
 					blockKind = BlockKind.VOMIT;
+				} else if (actingPlayer.getPlayerAction().isKickingDowned()) {
+					blockKind = BlockKind.CHAINSAW;
 				} else {
 					boolean isBystanderDuringBlitz = performsBlitz && !pPlayer.getId().equals(targetSelectionState.getSelectedPlayerId());
 					if (isBystanderDuringBlitz || pPlayer.getId().equals(pGame.getLastDefenderId())) {

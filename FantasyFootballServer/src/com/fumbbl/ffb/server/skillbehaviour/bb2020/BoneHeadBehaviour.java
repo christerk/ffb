@@ -108,6 +108,7 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 		switch (actingPlayer.getPlayerAction()) {
 			case BLITZ:
 			case BLITZ_MOVE:
+			case KICK_EM_BLITZ:
 				game.getTurnData().setBlitzUsed(true);
 				break;
 			case KICK_TEAM_MATE:

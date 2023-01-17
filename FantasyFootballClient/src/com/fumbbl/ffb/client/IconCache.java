@@ -413,6 +413,8 @@ public class IconCache {
 			case 0:
 				if (pDiceDecoration.getBlockKind() == BlockKind.VOMIT) {
 					iconProperty = IIconProperty.DECORATION_VOMIT_TARGET;
+				} else if (pDiceDecoration.getBlockKind() == BlockKind.CHAINSAW) {
+					iconProperty = IIconProperty.DECORATION_CHAINSAW_TARGET;
 				}
 				break;
 			default:

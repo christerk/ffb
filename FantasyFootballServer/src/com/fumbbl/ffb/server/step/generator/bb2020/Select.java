@@ -45,7 +45,7 @@ public class Select extends com.fumbbl.ffb.server.step.generator.Select {
 		PlayerAction playerAction = gameState.getGame().getActingPlayer().getPlayerAction();
 		sequence.add(StepId.RESET_FUMBLEROOSKIE, IStepLabel.END_SELECTING,
 			from(StepParameterKey.IN_SELECT, true),
-			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, playerAction == PlayerAction.BLITZ_MOVE || playerAction == PlayerAction.PUTRID_REGURGITATION_MOVE));
+			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, playerAction != null && playerAction.isBlitzMove()));
 		sequence.add(StepId.END_SELECTING, from(StepParameterKey.BLOCK_TARGETS, params.getBlockTargets()));
 		// may insert endTurn, pass, throwTeamMate, block, foul or moveSequence add
 		// this point

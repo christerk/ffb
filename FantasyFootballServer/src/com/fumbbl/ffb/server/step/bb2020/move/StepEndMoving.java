@@ -198,31 +198,34 @@ public class StepEndMoving extends AbstractStep {
 			((Block) factory.forName(SequenceGenerator.Type.Block.name()))
 				.pushSequence(new Block.Builder(getGameState()).withDefenderId(fBlockDefenderId).askForBlockKind(askForBlockKind).build());
 			// this may happen on a failed TAKE_ROOT roll
-		} else if (StringTool.isProvided(actingPlayer.getPlayerId()) && (actingPlayer.getPlayerAction() != null)
-			&& !actingPlayer.getPlayerAction().isMoving() && !(actingPlayer.getPlayerAction() == PlayerAction.PASS
-			&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
-			pushSequenceForPlayerAction(actingPlayer.getPlayerAction());
-		} else if (ArrayTool.isProvided(fMoveStack)) {
-			if (PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction()) {
-				blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, null, moveStart));
-			} else {
-				moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart));
-			}
-		} else if (UtilPlayer.isNextMovePossible(game, false)
-			|| ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
-			|| ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-			|| ((PlayerAction.FOUL_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
-			|| ((PlayerAction.GAZE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.isNextToGazeTarget(game, actingPlayer.getPlayer()))
-			|| ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
-			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
-			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-			if (PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction() || PlayerAction.PUTRID_REGURGITATION_MOVE == actingPlayer.getPlayerAction()) {
-				blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
-			} else {
-				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-			}
 		} else {
-			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
+			PlayerAction playerAction = actingPlayer.getPlayerAction();
+			if (StringTool.isProvided(actingPlayer.getPlayerId()) && (playerAction != null)
+				&& !playerAction.isMoving() && !(playerAction == PlayerAction.PASS
+				&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
+				pushSequenceForPlayerAction(playerAction);
+			} else if (ArrayTool.isProvided(fMoveStack)) {
+				if (PlayerAction.BLITZ_MOVE == playerAction) {
+					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, null, moveStart));
+				} else {
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart));
+				}
+			} else if (UtilPlayer.isNextMovePossible(game, false)
+				|| ((PlayerAction.HAND_OVER_MOVE == playerAction) && UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.PASS_MOVE == playerAction) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.FOUL_MOVE == playerAction) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.GAZE_MOVE == playerAction) && UtilPlayer.isNextToGazeTarget(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.KICK_TEAM_MATE_MOVE == playerAction) && UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
+				|| ((PlayerAction.THROW_TEAM_MATE_MOVE == playerAction) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
+				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+				if (playerAction != null && playerAction.isBlitzMove()) {
+					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
+				} else {
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+				}
+			} else {
+				endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
+			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -248,6 +251,7 @@ public class StepEndMoving extends AbstractStep {
 				case BLITZ:
 				case BLITZ_MOVE:
 				case PUTRID_REGURGITATION_MOVE:
+				case KICK_EM_BLITZ:
 					((BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name()))
 						.pushSequence(new BlitzBlock.SequenceParams(getGameState(), usingChainsaw));
 					return true;

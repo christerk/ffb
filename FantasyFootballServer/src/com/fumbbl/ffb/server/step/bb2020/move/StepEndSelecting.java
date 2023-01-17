@@ -345,6 +345,7 @@ public final class StepEndSelecting extends AbstractStep {
 				}
 				break;
 			case BLITZ_MOVE:
+			case KICK_EM_BLITZ:
 				if (pWithParameter) {
 					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, moveStart));
 				} else {

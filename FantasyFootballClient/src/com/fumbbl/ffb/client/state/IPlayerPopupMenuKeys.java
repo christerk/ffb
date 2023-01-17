@@ -46,4 +46,6 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_BALEFUL_HEX = KeyEvent.VK_X;
 	int KEY_HIT_AND_RUN = KeyEvent.VK_H;
 	int KEY_ALL_YOU_CAN_EAT = KeyEvent.VK_Y;
+	int KEY_KICK_EM_BLOCK = KeyEvent.VK_C;
+	int KEY_KICK_EM_BLITZ = KeyEvent.VK_I;
 }

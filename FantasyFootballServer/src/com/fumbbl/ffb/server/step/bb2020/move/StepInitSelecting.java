@@ -439,6 +439,7 @@ public final class StepInitSelecting extends AbstractStep {
 		if ((actingPlayer.getPlayer() != null) && (actingPlayer.getPlayerAction() != null)) {
 			if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
+				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)) {
 				ServerUtilBlock.updateDiceDecorations(game);

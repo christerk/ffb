@@ -22,7 +22,8 @@ public enum PlayerAction implements INamedObject {
 	MAXIMUM_CARNAGE("maximumCarnage", 36, null), LOOK_INTO_MY_EYES("lookIntoMyEyes", 37, "tries to steal the ball"),
 	BALEFUL_HEX("balefulHex", 38, null), ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB),
 	PUTRID_REGURGITATION_MOVE("putridRegurgitationMove", 40, null), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz", 40, "performs an additional Projectile Vomit attack"),
-	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock", 40, "performs an additional Projectile Vomit attack");
+	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock", 40, "performs an additional Projectile Vomit attack"),
+	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent");
 
 	private final String fName;
 	private final int fType;
@@ -59,7 +60,7 @@ public enum PlayerAction implements INamedObject {
 	public boolean isMoving() {
 		return ((this == MOVE) || (this == BLITZ_MOVE) || (this == HAND_OVER_MOVE) || (this == PASS_MOVE)
 			|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE) || this == GAZE_MOVE
-			|| this == PUTRID_REGURGITATION_MOVE);
+			|| this == PUTRID_REGURGITATION_MOVE) || this == KICK_EM_BLITZ;
 	}
 
 	public boolean isPassing() {
@@ -72,7 +73,7 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean isBlitzing() {
-		return this == BLITZ || this == BLITZ_MOVE || this == BLITZ_SELECT || this == PUTRID_REGURGITATION_MOVE;
+		return this == BLITZ || this == BLITZ_SELECT || isBlitzMove();
 	}
 
 	public boolean isGaze() {
@@ -91,7 +92,15 @@ public enum PlayerAction implements INamedObject {
 		return this == PUTRID_REGURGITATION_BLITZ || this == PUTRID_REGURGITATION_BLOCK;
 	}
 
+	public boolean isKickingDowned() {
+		return this == KICK_EM_BLITZ || this == KICK_EM_BLOCK;
+	}
+
 	public boolean forceLog() {
 		return isPutridBlock();
+	}
+
+	public boolean isBlitzMove() {
+		return this == BLITZ_MOVE || this == PUTRID_REGURGITATION_MOVE || this == KICK_EM_BLITZ;
 	}
 }

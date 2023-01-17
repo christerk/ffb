@@ -23,7 +23,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
-import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -37,8 +36,6 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.util.ServerUtilBlock;
-import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -163,7 +160,7 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_BLOCK:
 					ClientCommandBlock blockCommand = (ClientCommandBlock) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
-						if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE && !actingPlayer.hasBlocked()
+						if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE || actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ) && !actingPlayer.hasBlocked()
 							|| actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ) {
 							commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
 							publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
@@ -285,6 +282,7 @@ public class StepInitMoving extends AbstractStep {
 					game.getTurnData().setTurnStarted(true);
 					switch (actingPlayer.getPlayerAction()) {
 						case BLITZ_MOVE:
+						case KICK_EM_BLITZ:
 							game.getTurnData().setBlitzUsed(true);
 							break;
 						case FOUL_MOVE:

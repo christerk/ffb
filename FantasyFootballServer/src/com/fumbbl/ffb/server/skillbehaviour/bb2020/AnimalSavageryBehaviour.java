@@ -96,11 +96,13 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					if (doRoll) {
 						step.commitTargetSelection();
 						int roll = step.getGameState().getDiceRoller().rollSkill();
-						boolean goodConditions = ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
-							|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
-							|| (actingPlayer.getPlayerAction() == BLOCK)
-							|| (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
-							|| (actingPlayer.getPlayerAction() == PlayerAction.STAND_UP_BLITZ));
+						PlayerAction playerAction = actingPlayer.getPlayerAction();
+						boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
+							|| (playerAction != null && playerAction.isKickingDowned())
+							|| (playerAction == PlayerAction.BLITZ)
+							|| (playerAction == BLOCK)
+							|| (playerAction == PlayerAction.MULTIPLE_BLOCK)
+							|| (playerAction == PlayerAction.STAND_UP_BLITZ));
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
@@ -304,6 +306,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		switch (actingPlayer.getPlayerAction()) {
 			case BLITZ:
 			case BLITZ_MOVE:
+			case KICK_EM_BLITZ:
 				game.getTurnData().setBlitzUsed(true);
 				break;
 			case KICK_TEAM_MATE:

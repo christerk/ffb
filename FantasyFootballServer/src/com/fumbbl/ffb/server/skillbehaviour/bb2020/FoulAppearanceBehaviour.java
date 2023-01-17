@@ -94,7 +94,8 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			}
 
 			private void handleFailure(StepFoulAppearance step, StepState state, Game game, ActingPlayer actingPlayer) {
-				if (actingPlayer.isStandingUp() && (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+				PlayerAction playerAction = actingPlayer.getPlayerAction();
+				if (actingPlayer.isStandingUp() && (playerAction == PlayerAction.BLITZ_MOVE || playerAction == PlayerAction.BLOCK || playerAction != null && playerAction.isKickingDowned())) {
 					Player<?> player = actingPlayer.getPlayer();
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));
@@ -105,12 +106,12 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 				if (targetSelectionState != null) {
 					targetSelectionState.failed();
-					if (actingPlayer.getPlayerAction().isBlitzing()) {
+					if (playerAction != null && playerAction.isBlitzing()) {
 						game.getTurnData().setBlitzUsed(true);
 					}
 				}
 
-				if (actingPlayer.getPlayerAction() == PlayerAction.GAZE) {
+				if (playerAction == PlayerAction.GAZE) {
 					step.publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				}
 				game.setDefenderId(null);
