@@ -1,14 +1,17 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientStateBlock;
+import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 public class ClientStateKickEmBlock extends ClientStateBlock {
 	public ClientStateKickEmBlock(FantasyFootballClient pClient) {
@@ -28,5 +31,15 @@ public class ClientStateKickEmBlock extends ClientStateBlock {
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents) && game.getFieldModel().getPlayerState(pPlayer).isProneOrStunned()) {
 			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false);
 		}
+	}
+
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+		super.mouseOverPlayer(pPlayer);
+		if (UtilPlayer.isKickable(getClient().getGame(), pPlayer)) {
+			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
+		} else {
+			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
+		}
+		return true;
 	}
 }

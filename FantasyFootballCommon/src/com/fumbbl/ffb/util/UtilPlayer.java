@@ -478,6 +478,20 @@ public class UtilPlayer {
 		return foulable;
 	}
 
+	public static boolean isKickable(Game pGame, Player<?> pPlayer) {
+		boolean kickable = false;
+		ActingPlayer actingPlayer = pGame.getActingPlayer();
+		if (pPlayer != null) {
+			PlayerState defenderState = pGame.getFieldModel().getPlayerState(pPlayer);
+			FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
+			FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			kickable = (defenderState.isProneOrStunned()
+				&& pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
+				&& defenderCoordinate.isAdjacent(attackerCoordinate));
+		}
+		return kickable;
+	}
+
 	public static boolean isPickUp(Game pGame) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());

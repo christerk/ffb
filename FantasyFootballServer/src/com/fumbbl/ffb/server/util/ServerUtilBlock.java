@@ -45,11 +45,17 @@ public class ServerUtilBlock {
 		}
 	}
 
-	public static void removePlayerBlockStates(Game pGame) {
+	public static void removePlayerBlockStates(Game pGame, PlayerState oldDefenderState) {
 		for (Player<?> player : pGame.getPlayers()) {
 			PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
 			if (playerState.getBase() == PlayerState.BLOCKED) {
-				pGame.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.STANDING));
+
+				int newBase = PlayerState.STANDING;
+
+				if (oldDefenderState != null && oldDefenderState.isProneOrStunned() && player == pGame.getDefender()) {
+					newBase = oldDefenderState.getBase();
+				}
+				pGame.getFieldModel().setPlayerState(player, playerState.changeBase(newBase));
 			}
 		}
 	}

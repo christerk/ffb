@@ -162,7 +162,7 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
 				blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(game.getDefenderId()).useStab(fUsingStab).isFrenzyBlock(true).build());
 			} else {
-				ServerUtilBlock.removePlayerBlockStates(game);
+				ServerUtilBlock.removePlayerBlockStates(game, null);
 				game.getFieldModel().clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				// go-for-it

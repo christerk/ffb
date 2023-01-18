@@ -241,7 +241,7 @@ public class StepEndBlocking extends AbstractStep {
 					publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, allowSecondBlockAction));
 				}
 			} else {
-				ServerUtilBlock.removePlayerBlockStates(game);
+				ServerUtilBlock.removePlayerBlockStates(game, oldDefenderState);
 				fieldModel.clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(activePlayer);

@@ -19,6 +19,7 @@ public class ChangeList {
 			.addFeature("All You Can Eat")
 			.addBugfix("Allow Fumblerooskie during all move related actions")
 			.addFeature("Putrid Regurgitation")
+			.addFeature("Kick 'em while they are down!")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")
