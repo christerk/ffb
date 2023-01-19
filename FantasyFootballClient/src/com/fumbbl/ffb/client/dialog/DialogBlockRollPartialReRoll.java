@@ -150,14 +150,12 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 					reRollPanel.add(fButtonProReRoll);
 				}
 
-				if (getDialogParameter().hasConsummateOption()) {
-					if (singleDieReRollSource != null) {
-						consummateButton = new JButton(singleDieReRollSource.getName(getClient().getGame()));
-						consummateButton.addActionListener(this);
-						consummateButton.setMnemonic(KeyEvent.VK_C);
-						consummateButton.addKeyListener(this);
-						reRollPanel.add(consummateButton);
-					}
+				if (getDialogParameter().hasConsummateOption() && singleDieReRollSource != null) {
+					consummateButton = new JButton(singleDieReRollSource.getName(getClient().getGame()));
+					consummateButton.addActionListener(this);
+					consummateButton.setMnemonic(KeyEvent.VK_C);
+					consummateButton.addKeyListener(this);
+					reRollPanel.add(consummateButton);
 				}
 			}
 
@@ -194,7 +192,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
 
-				if (singleDieReRollSource != null) {
+				if (pDialogParameter.hasConsummateOption() && singleDieReRollSource != null) {
 					centerPanel.add(consummatePanel(Math.abs(pDialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
