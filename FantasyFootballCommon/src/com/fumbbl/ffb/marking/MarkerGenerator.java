@@ -75,6 +75,8 @@ public class MarkerGenerator {
 
 	private String getMarking(AutoMarkingRecord markingRecord, List<Skill> baseSkills, List<Skill> gainedSkills, List<InjuryAttribute> injuries, Set<AutoMarkingRecord> markingsToApply) {
 
+		StringBuilder marking = new StringBuilder();
+
 		if (markingsToApply.stream().noneMatch(markingRecord::isSubSetOf)) {
 
 			List<Skill> skillsToCheck = new ArrayList<>(gainedSkills);
@@ -82,12 +84,24 @@ public class MarkerGenerator {
 				skillsToCheck.addAll(baseSkills);
 			}
 
-			if (isSubSetWithDuplicates(markingRecord.getSkills(), skillsToCheck) && isSubSetWithDuplicates(markingRecord.getInjuries(), injuries)) {
+			int matches = findMin(isSubSetWithDuplicates(markingRecord.getSkills(), skillsToCheck), isSubSetWithDuplicates(markingRecord.getInjuries(), injuries));
+
+			if (!markingRecord.isApplyRepeatedly()) {
+				matches = Math.min(1, matches);
+			}
+
+			for (int counter = 0; counter < matches; counter++) {
 				markingsToApply.add(markingRecord);
-				return markingRecord.getMarking();
+				marking.append(markingRecord.getMarking());
 			}
 		}
-		return "";
+		return marking.toString();
+	}
+
+	private int findMin(int first, int second) {
+		int result = Math.min(first, second);
+
+		return result == Integer.MAX_VALUE ? 0 : result;
 	}
 
 	private void removeNegatingPairs(List<Skill> skills, List<InjuryAttribute> injuries) {
@@ -102,13 +116,21 @@ public class MarkerGenerator {
 			);
 	}
 
-	private <T> boolean isSubSetWithDuplicates(List<T> subSet, List<T> superSet) {
+	private <T> int isSubSetWithDuplicates(List<T> subSet, List<T> superSet) {
+
+		if (subSet.isEmpty()) {
+			return Integer.MAX_VALUE;
+		}
+
 		Map<Integer, List<T>> subGroups = subSet.stream().collect(Collectors.groupingBy(Object::hashCode));
 		Map<Integer, List<T>> superGroups = superSet.stream().collect(Collectors.groupingBy(Object::hashCode));
 
-		return subGroups.entrySet().stream().allMatch(entry -> {
+		return subGroups.entrySet().stream().map(entry -> {
 			List<T> superElements = superGroups.get(entry.getKey());
-			return superElements != null && superElements.size() >= entry.getValue().size();
-		});
+			if (superElements == null || superElements.isEmpty()) {
+				return 0;
+			}
+			return superElements.size() / entry.getValue().size();
+		}).min(Comparator.naturalOrder()).orElse(0);
 	}
 }
