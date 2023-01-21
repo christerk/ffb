@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -22,6 +23,20 @@ public class AutoMarkingConfig implements IJsonSerializable {
 
 	public void setMarkings(Set<AutoMarkingRecord> markings) {
 		this.markings = markings;
+	}
+
+	public static Set<AutoMarkingRecord> defaults(SkillFactory skillFactory) {
+
+		Set<AutoMarkingRecord> defaults = new HashSet<>();
+		AutoMarkingRecord.Builder builder = new AutoMarkingRecord.Builder(skillFactory);
+
+		defaults.add(builder.withSkill("Block").withMarking("B").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Tackle").withMarking("T").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Dodge").withMarking("D").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Mighty Blow").withMarking("M").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Sneaky Git").withMarking("Sg").withGainedOnly(true).build());
+
+		return defaults;
 	}
 
 	@Override

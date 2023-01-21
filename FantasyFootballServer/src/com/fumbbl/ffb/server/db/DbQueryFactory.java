@@ -1,11 +1,5 @@
 package com.fumbbl.ffb.server.db;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.db.query.DbAdminListByIdQuery;
@@ -19,17 +13,22 @@ import com.fumbbl.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsQuery;
 import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Kalimar
  */
 public class DbQueryFactory implements IDbStatementFactory {
 
-	private DbConnectionManager fDbConnectionManager;
+	private final DbConnectionManager fDbConnectionManager;
 
 	private Connection fDbConnection;
 
-	private Map<DbStatementId, DbStatement> fStatementById;
+	private final Map<DbStatementId, DbStatement> fStatementById;
 
 	public DbQueryFactory(DbConnectionManager pDbConnectionManager) {
 
@@ -63,9 +62,7 @@ public class DbQueryFactory implements IDbStatementFactory {
 	public void prepareStatements() throws SQLException {
 		fDbConnection = getDbConnectionManager().openDbConnection();
 		fDbConnection.setAutoCommit(true);
-		Iterator<DbStatement> statementIterator = fStatementById.values().iterator();
-		while (statementIterator.hasNext()) {
-			DbStatement statement = statementIterator.next();
+		for (DbStatement statement : fStatementById.values()) {
 			statement.prepare(fDbConnection);
 		}
 	}

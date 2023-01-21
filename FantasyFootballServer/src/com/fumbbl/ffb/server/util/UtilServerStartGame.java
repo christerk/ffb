@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.server.util;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.factory.GameOptionFactory;
@@ -16,7 +18,6 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.IDbStatementFactory;
-import com.fumbbl.ffb.server.db.query.DbPlayerMarkersQuery;
 import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.SessionManager;
@@ -115,16 +116,19 @@ public class UtilServerStartGame {
 		Game game = gameState.getGame();
 		FantasyFootballServer server = gameState.getServer();
 		boolean ownershipOk = true;
+		SessionManager sessionManager = server.getSessionManager();
+		Session sessionOfHomeCoach = sessionManager.getSessionOfHomeCoach(game.getId());
+		Session sessionOfAwayCoach = sessionManager.getSessionOfAwayCoach(game.getId());
 		if (!game.isTesting() && UtilGameOption.isOptionEnabled(game, GameOptionId.CHECK_OWNERSHIP)) {
-			if (!server.getSessionManager().isHomeCoach(game.getId(), game.getTeamHome().getCoach())) {
+			if (!sessionManager.isHomeCoach(game.getId(), game.getTeamHome().getCoach())) {
 				ownershipOk = false;
-				server.getCommunication().sendStatus(server.getSessionManager().getSessionOfHomeCoach(game.getId()),
-						ServerStatus.ERROR_NOT_YOUR_TEAM, null);
+				server.getCommunication().sendStatus(sessionOfHomeCoach,
+					ServerStatus.ERROR_NOT_YOUR_TEAM, null);
 			}
-			if (!server.getSessionManager().isAwayCoach(game.getId(), game.getTeamAway().getCoach())) {
+			if (!sessionManager.isAwayCoach(game.getId(), game.getTeamAway().getCoach())) {
 				ownershipOk = false;
-				server.getCommunication().sendStatus(server.getSessionManager().getSessionOfAwayCoach(game.getId()),
-						ServerStatus.ERROR_NOT_YOUR_TEAM, null);
+				server.getCommunication().sendStatus(sessionOfAwayCoach,
+					ServerStatus.ERROR_NOT_YOUR_TEAM, null);
 			}
 		}
 		if (ownershipOk) {
@@ -144,9 +148,21 @@ public class UtilServerStartGame {
 			if (!game.isWaitingForOpponent()) {
 				UtilServerTimer.startTurnTimer(gameState, System.currentTimeMillis());
 			}
-			DbPlayerMarkersQuery dbPlayerMarkersQuery = (DbPlayerMarkersQuery) server.getDbQueryFactory()
-					.getStatement(DbStatementId.PLAYER_MARKERS_QUERY);
-			dbPlayerMarkersQuery.execute(gameState);
+
+			MarkerLoadingService loadingService = new MarkerLoadingService();
+
+			IDbStatementFactory statementFactory = server.getDbQueryFactory();
+			DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
+				.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+
+			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfHomeCoach));
+			boolean loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+			loadingService.loadMarker(gameState, sessionOfHomeCoach, true, loadAuto);
+
+			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfAwayCoach));
+			loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+			loadingService.loadMarker(gameState, sessionOfAwayCoach, false, loadAuto);
+
 			server.getCommunication().sendGameState(gameState);
 			gameState.fetchChanges(); // clear changes after sending the whole model
 		}

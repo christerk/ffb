@@ -88,6 +88,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JMenuItem fSaveSetupMenuItem;
 
 	private final JMenuItem fRestoreDefaultsMenuItem;
+	private final JMenu playerMarkingMenu;
 
 	private final JMenuItem fSoundVolumeItem;
 	private final JRadioButtonMenuItem fSoundOnMenuItem;
@@ -136,6 +137,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final JRadioButtonMenuItem markUsedPlayersDefaultMenuItem;
 	private final JRadioButtonMenuItem markUsedPlayersCheckIconGreenMenuItem;
+
+	private final JRadioButtonMenuItem playersMarkingManualMenuItem;
+	private final JRadioButtonMenuItem playersMarkingAutoMenuItem;
 
 	private final JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
 	private final JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
@@ -319,7 +323,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		ButtonGroup blitzTargetPanelGroup = new ButtonGroup();
 		JMenu blitzTargetPanelMenu = new JMenu("Blitz Target Panel");
-		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_P);
+		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(blitzTargetPanelMenu);
 
 		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem("Enable");
@@ -533,6 +537,21 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		markUsedPlayersGroup.add(markUsedPlayersCheckIconGreenMenuItem);
 		markUsedPlayersMenu.add(markUsedPlayersCheckIconGreenMenuItem);
 
+		playerMarkingMenu = new JMenu("Player Marking");
+		playerMarkingMenu.setMnemonic(KeyEvent.VK_L);
+		fUserSettingsMenu.add(playerMarkingMenu);
+
+		ButtonGroup playerMarkingGroup = new ButtonGroup();
+
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem("Automatic");
+		playersMarkingAutoMenuItem.addActionListener(this);
+		playerMarkingGroup.add(playersMarkingAutoMenuItem);
+		playerMarkingMenu.add(playersMarkingAutoMenuItem);
+
+		playersMarkingManualMenuItem = new JRadioButtonMenuItem("Manual");
+		playersMarkingManualMenuItem.addActionListener(this);
+		playerMarkingGroup.add(playersMarkingManualMenuItem);
+		playerMarkingMenu.add(playersMarkingManualMenuItem);
 
 		fUserSettingsMenu.addSeparator();
 
@@ -670,6 +689,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		markUsedPlayersDefaultMenuItem.setSelected(true);
 		markUsedPlayersCheckIconGreenMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(markUsedPlayersSetting));
 
+		String playerMarkingSetting = getClient().getProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE);
+		playersMarkingManualMenuItem.setSelected(true);
+		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
+
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
 
@@ -678,6 +701,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
 
 		fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
+
+		playerMarkingMenu.setEnabled(ClientMode.REPLAY != getClient().getMode());
 
 		updateMissingPlayers();
 		updateInducements();
@@ -876,6 +901,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == markUsedPlayersDefaultMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_DEFAULT);
 			getClient().saveUserSettings(true);
+		}
+
+		if (source == playersMarkingAutoMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+			getClient().saveUserSettings(true);
+			getClient().getCommunication().sendUpdatePlayerMarkings(true);
+		}
+
+		if (source == playersMarkingManualMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+			getClient().saveUserSettings(true);
+			getClient().getCommunication().sendUpdatePlayerMarkings(false);
 		}
 
 		if (source == fRestoreDefaultsMenuItem) {

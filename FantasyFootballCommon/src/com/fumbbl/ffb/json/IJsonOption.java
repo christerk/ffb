@@ -555,6 +555,7 @@ public interface IJsonOption {
 	JsonStringOption UPLOAD_STATUS = new JsonStringOption("uploadStatus");
 	JsonStringOption URL_ICON_SET = new JsonStringOption("urlIconSet");
 	JsonStringOption URL_PORTRAIT = new JsonStringOption("urlPortrait");
+	JsonBooleanOption USE_AUTO_MARKINGS = new JsonBooleanOption("useAutoMarkings");
 	JsonArrayOption USED_SKILLS = new JsonArrayOption("usedSkills");
 	JsonStringArrayOption USER_SETTING_NAMES = new JsonStringArrayOption("userSettingNames");
 	JsonStringArrayOption USER_SETTING_VALUES = new JsonStringArrayOption("userSettingValues");
