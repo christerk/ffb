@@ -435,7 +435,52 @@ class MarkerGeneratorTest {
 
 		assertEquals(MA_MARKING + MA_MARKING, marking);
 	}
-	
+
+	@Test
+	public void generateRepeatedMarking() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).withApplyRepeatedly(true).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING + MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateMultiInjuryMarkingOverRepeated() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(OTHER_MARKING).withApplyRepeatedly(true).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).withApplyRepeatedly(true).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING, marking);
+	}
+
+	@Test
+	public void generateCombinedMultiInjuryMarkingWithSingleRepeated() {
+		given(player.getLastingInjuries()).willReturn(new SeriousInjury[]{
+			com.fumbbl.ffb.bb2020.SeriousInjury.SMASHED_KNEE,
+			com.fumbbl.ffb.bb2020.SeriousInjury.SMASHED_KNEE,
+			com.fumbbl.ffb.bb2020.SeriousInjury.SMASHED_KNEE,
+			com.fumbbl.ffb.bb2020.SeriousInjury.NECK_INJURY
+		});
+
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(OTHER_MARKING).withApplyRepeatedly(true).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).withApplyRepeatedly(true).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(MA_MARKING + OTHER_MARKING, marking);
+	}
+
+	@Test
+	public void generateRepeatedMarkingOnlyOnceIfNotCompletelyApplicable() {
+		markings.add(builder.withSkill(BLOCK).withInjury(InjuryAttribute.MA).withMarking(BLOCK_MARKING).withApplyRepeatedly(true).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(BLOCK_MARKING, marking);
+	}
+
 	private static class MockSkillFactory extends SkillFactory {
 
 		private final Map<String, Skill> skills = new HashMap<>();
