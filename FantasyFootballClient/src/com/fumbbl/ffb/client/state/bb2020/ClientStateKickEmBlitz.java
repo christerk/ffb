@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientStateBlitz;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -52,4 +53,8 @@ public class ClientStateKickEmBlitz extends ClientStateBlitz {
 		return true;
 	}
 
+	@Override
+	protected PlayerAction moveAction() {
+		return PlayerAction.KICK_EM_BLITZ;
+	}
 }

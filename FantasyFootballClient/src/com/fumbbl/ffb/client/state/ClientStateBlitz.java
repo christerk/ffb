@@ -86,7 +86,7 @@ public class ClientStateBlitz extends ClientStateMove {
 					break;
 				case IPlayerPopupMenuKeys.KEY_MOVE:
 					if (actingPlayer.isSufferingBloodLust()) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+						getClient().getCommunication().sendActingPlayer(pPlayer, moveAction(), actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
@@ -97,6 +97,10 @@ public class ClientStateBlitz extends ClientStateMove {
 					break;
 			}
 		}
+	}
+
+	protected PlayerAction moveAction() {
+		return PlayerAction.BLITZ_MOVE;
 	}
 
 	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates) {

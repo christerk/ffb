@@ -165,6 +165,9 @@ public class StepInitBlocking extends AbstractStep {
 		if (game.getTurnMode() == TurnMode.SELECT_BLOCK_KIND) {
 			game.setTurnMode(game.getLastTurnMode());
 		}
+		if (actingPlayer.getPlayerAction() != null && actingPlayer.getPlayerAction().isKickingDowned()) {
+			actingPlayer.markSkillUsed(NamedProperties.canUseChainsawOnDownedOpponents);
+		}
 		if (fEndTurn) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);

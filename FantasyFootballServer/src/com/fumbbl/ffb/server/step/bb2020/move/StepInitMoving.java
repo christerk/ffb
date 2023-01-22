@@ -162,7 +162,11 @@ public class StepInitMoving extends AbstractStep {
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
 						if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE || actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ) && !actingPlayer.hasBlocked()
 							|| actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ) {
-							commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
+							if (actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ) {
+								commandStatus = dispatchPlayerAction(PlayerAction.KICK_EM_BLITZ);
+							} else {
+								commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
+							}
 							publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 							publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
 						}
