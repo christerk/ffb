@@ -9,9 +9,7 @@ import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RangeRuler;
@@ -26,6 +24,8 @@ import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
@@ -498,7 +498,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public FieldCoordinate[] findAdjacentCoordinates(FieldCoordinate pCoordinate, FieldCoordinateBounds pBounds,
-	                                                 int pSteps, boolean pWithStartCoordinate) {
+																									 int pSteps, boolean pWithStartCoordinate) {
 		List<FieldCoordinate> adjacentCoordinates = new ArrayList<>();
 		if ((pCoordinate != null) && (pBounds != null)) {
 			for (int y = -pSteps; y <= pSteps; y++) {
@@ -766,6 +766,10 @@ public class FieldModel implements IJsonSerializable {
 
 	public void removeTransient(PlayerMarker playerMarker) {
 		transientPlayerMarkers.remove(playerMarker);
+	}
+
+	public void clearTransientPlayerMarkers() {
+		transientPlayerMarkers.clear();
 	}
 
 	public void add(PlayerMarker pPlayerMarker) {

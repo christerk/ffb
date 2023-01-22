@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server;
 
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
+import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadPlayerMarkings;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -73,15 +74,17 @@ public class ServerReplayer implements Runnable {
 					if (getServer().getDebugLog().isLogging(IServerLogLevel.DEBUG)) {
 						StringBuilder message = new StringBuilder().append("Replay commands ").append(replayCommand.getCommandNr());
 						message.append(replayCommand.findLowestCommandNr()).append(" - ")
-								.append(replayCommand.findHighestCommandNr());
+							.append(replayCommand.findHighestCommandNr());
 						message.append(" of ").append(replayCommand.getTotalNrOfCommands()).append(" total.");
 						getServer().getDebugLog().log(IServerLogLevel.DEBUG, serverReplay.getGameId(),
-								DebugLog.COMMAND_SERVER_SPECTATOR, message.toString());
+							DebugLog.COMMAND_SERVER_SPECTATOR, message.toString());
 					}
 
 					if (!serverReplay.isComplete()) {
 						serverReplay.setFromCommandNr(replayCommand.findHighestCommandNr() + 1);
 					} else {
+						//TODO check setting
+						getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(serverReplay.getGameState(), serverReplay.getSession()));
 						serverReplay = null;
 					}
 

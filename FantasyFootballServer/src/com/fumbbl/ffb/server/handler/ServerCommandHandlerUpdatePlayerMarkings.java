@@ -7,8 +7,11 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadPlayerMarkings;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.MarkerLoadingService;
+
+import java.util.Collections;
 
 public class ServerCommandHandlerUpdatePlayerMarkings extends ServerCommandHandler {
 
@@ -29,6 +32,12 @@ public class ServerCommandHandlerUpdatePlayerMarkings extends ServerCommandHandl
 
 		if (mode == ClientMode.PLAYER) {
 			new MarkerLoadingService().loadMarker(gameState, receivedCommand.getSession(), isHome, commandUpdatePlayerMarkings.isAuto());
+		} else if (mode == ClientMode.SPECTATOR) {
+			if (commandUpdatePlayerMarkings.isAuto()) {
+				getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(gameState, receivedCommand.getSession()));
+			} else {
+				getServer().getCommunication().sendUpdateLocalPlayerMarkers(receivedCommand.getSession(), Collections.emptyList());
+			}
 		}
 
 		return true;

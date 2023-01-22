@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.marking.MarkerGenerator;
 import com.fumbbl.ffb.marking.PlayerMarker;
@@ -17,6 +18,8 @@ import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 
@@ -55,6 +58,28 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 			config.getMarkings().addAll(AutoMarkingConfig.defaults(game.getRules().getSkillFactory()));
 		}
 
+		if (sessionManager.getModeForSession(session) == ClientMode.PLAYER) {
+			markForPlayer(sessionManager, game, config);
+		} else if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR) {
+			markForSpec(game, config);
+		}
+	}
+
+
+	private void markForSpec(Game game, AutoMarkingConfig config) {
+//TODO call when spec joins
+		List<PlayerMarker> markers = Arrays.stream(game.getPlayers()).map(player -> {
+			String marking = markerGenerator.generate(player, config, false);
+			PlayerMarker playerMarker = new PlayerMarker(player.getId());
+			playerMarker.setHomeText(marking);
+			return playerMarker;
+		}).collect(Collectors.toList());
+
+		gameState.getServer().getCommunication().sendUpdateLocalPlayerMarkers(session, markers);
+
+	}
+
+	private void markForPlayer(SessionManager sessionManager, Game game, AutoMarkingConfig config) {
 		boolean homeCoach = sessionManager.getSessionOfHomeCoach(game.getId()) == session;
 		Team team = homeCoach ? game.getTeamHome() : game.getTeamAway();
 
