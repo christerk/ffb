@@ -661,7 +661,7 @@ public class ClientStateSelect extends ClientState {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
 		PlayerState playerState = fieldModel.getPlayerState(player);
 		if ((playerState != null) && playerState.isActive() && (!game.getTurnData().isBlitzUsed() || !moveAllowed)
-			&& !player.isUsed(NamedProperties.canUseChainsawOnDownedOpponents) && player.hasSkill(NamedProperties.blocksLikeChainsaw)) {
+			&& UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canUseChainsawOnDownedOpponents) && player.hasSkill(NamedProperties.blocksLikeChainsaw)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
 				PlayerState opponentState = fieldModel.getPlayerState(opponent);
 				if (opponentState.canBeFouled() && (moveAllowed || playerCoordinate.isAdjacent(fieldModel.getPlayerCoordinate(opponent)))) {

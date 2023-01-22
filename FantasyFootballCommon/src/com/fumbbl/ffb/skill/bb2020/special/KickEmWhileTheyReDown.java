@@ -7,9 +7,9 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class KickEmWhileTheyAreDown extends Skill {
-	public KickEmWhileTheyAreDown() {
-		super("Kick 'em while they are down!", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
+public class KickEmWhileTheyReDown extends Skill {
+	public KickEmWhileTheyReDown() {
+		super("Kick 'em while they're down!", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
 	}
 
 	@Override
