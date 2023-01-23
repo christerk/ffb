@@ -45,10 +45,10 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 			sessionManager.getCoachForSession(session)));
 
 		try {
-			String response = UtilServerHttpClient.fetchPage(getRequestUrl());
+ 			String response = UtilServerHttpClient.fetchPage(getRequestUrl());
 			JsonValue jsonValue = JsonValue.readFrom(response);
 			if (jsonValue != null && !jsonValue.isNull()) {
-				config.initFrom(processor.getServer(), jsonValue);
+				config.initFrom(game.getRules(), jsonValue);
 			}
 		} catch (Throwable e) {
 			processor.getServer().getDebugLog().log(game.getId(), e);
