@@ -54,19 +54,23 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 			processor.getServer().getDebugLog().log(game.getId(), e);
 		}
 
-		if (config.getMarkings().isEmpty()) {
-			config.getMarkings().addAll(AutoMarkingConfig.defaults(game.getRules().getSkillFactory()));
-		}
+		try {
+			if (config.getMarkings().isEmpty()) {
+				config.getMarkings().addAll(AutoMarkingConfig.defaults(game.getRules().getSkillFactory()));
+			}
 
-		if (sessionManager.getModeForSession(session) == ClientMode.PLAYER) {
-			markForPlayer(sessionManager, game, config);
-		} else if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR) {
-			markForSpec(game, config);
+			if (sessionManager.getModeForSession(session) == ClientMode.PLAYER) {
+				markForPlayer(sessionManager, game, config);
+			} else if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR || sessionManager.getModeForSession(session) == ClientMode.REPLAY) {
+				markForSpecOrReplay(game, config);
+			}
+		} catch (Throwable e) {
+			processor.getServer().getDebugLog().log(game.getId(), e);
 		}
 	}
 
 
-	private void markForSpec(Game game, AutoMarkingConfig config) {
+	private void markForSpecOrReplay(Game game, AutoMarkingConfig config) {
 		List<PlayerMarker> markers = Arrays.stream(game.getPlayers()).map(player -> {
 			String marking = markerGenerator.generate(player, config, false);
 			PlayerMarker playerMarker = new PlayerMarker(player.getId());
