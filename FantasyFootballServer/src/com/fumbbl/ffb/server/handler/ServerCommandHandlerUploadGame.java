@@ -10,8 +10,8 @@ import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.fumbbl.ffb.server.request.ServerRequestLoadReplay;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.EndGame;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
@@ -36,7 +36,7 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
 		if (gameState == null) {
 			// game has been moved out of the db - request it from the backup service
 			getServer().getRequestProcessor().add(new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0,
-					receivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME, uploadGameCommand.getConcedingTeamId()));
+				receivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME, uploadGameCommand.getConcedingTeamId(), null));
 		} else {
 			gameState.getStepStack().clear();
 			Game game = gameState.getGame();

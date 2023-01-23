@@ -30,17 +30,15 @@ public class ServerRequestLoadReplay extends ServerRequest {
 	private final Session fSession;
 	private final int fMode;
 	private final String teamId;
+	private final String coach;
 
-	public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, int pMode) {
-		this(pGameId, pReplayToCommandNr, pSession, pMode, null);
-	}
-
-	public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, int pMode, String teamId) {
+	public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, int pMode, String teamId, String coach) {
 		fGameId = pGameId;
 		fReplayToCommandNr = pReplayToCommandNr;
 		fSession = pSession;
 		fMode = pMode;
 		this.teamId = teamId;
+		this.coach = coach;
 	}
 
 	public long getGameId() {
@@ -78,7 +76,7 @@ public class ServerRequestLoadReplay extends ServerRequest {
 				gameState.setStatus(GameStatus.LOADING);
 				server.getGameCache().addGame(gameState);
 				InternalServerCommandReplayLoaded replayLoadedCommand = new InternalServerCommandReplayLoaded(getGameId(),
-						getReplayToCommandNr());
+					getReplayToCommandNr(), coach);
 				server.getCommunication().handleCommand(new ReceivedCommand(replayLoadedCommand, getSession()));
 			} else {
 				server.getCommunication().sendStatus(getSession(), ServerStatus.REPLAY_UNAVAILABLE, "");
