@@ -40,6 +40,7 @@ class MarkerGeneratorTest {
 	private static final String DODGE = "dodge";
 	private static final String TACKLE = "tackle";
 	private static final String WRESTLE = "wrestle";
+	public static final String UNKNOWN = "unknown";
 
 	private final MarkerGenerator generator = new MarkerGenerator();
 	private AutoMarkingConfig config;
@@ -75,6 +76,19 @@ class MarkerGeneratorTest {
 	@Test
 	public void generate() {
 		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(BLOCK_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreUnknownSkills() {
+		Skill[] gainedSkills = {skillFactory.forName(BLOCK), skillFactory.forName(DODGE), null};
+		given(player.getSkills()).willReturn(gainedSkills);
+
+		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withSkill(UNKNOWN).withMarking(OTHER_MARKING).build());
 
 		String marking = generator.generate(player, config, true);
 
@@ -474,6 +488,9 @@ class MarkerGeneratorTest {
 		}
 
 		public Skill forName(String name, SkillCategory skillCategory) {
+			if (UNKNOWN.equalsIgnoreCase(name)) {
+				return null;
+			}
 			name = name.toLowerCase();
 			if (!skills.containsKey(name) || (skillCategory != null && skills.get(name).getCategory() != skillCategory)) {
 				Skill skill = mock(Skill.class);

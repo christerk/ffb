@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -106,7 +107,7 @@ public class MarkerGenerator {
 
 	private void removeNegatingPairs(List<Skill> skills, List<InjuryAttribute> injuries) {
 
-		new HashSet<>(skills).stream().map(skill -> new Pair<>(skill, InjuryAttribute.forSkill(skill)))
+		new HashSet<>(skills).stream().filter(Objects::nonNull).map(skill -> new Pair<>(skill, InjuryAttribute.forSkill(skill)))
 			.filter(pair -> pair.getValue() != null)
 			.forEach(
 				pair -> injuries.stream().filter(injury -> injury == pair.getValue()).findFirst().ifPresent(injury -> {
@@ -122,8 +123,8 @@ public class MarkerGenerator {
 			return Integer.MAX_VALUE;
 		}
 
-		Map<Integer, List<T>> subGroups = subSet.stream().collect(Collectors.groupingBy(Object::hashCode));
-		Map<Integer, List<T>> superGroups = superSet.stream().collect(Collectors.groupingBy(Object::hashCode));
+		Map<Integer, List<T>> subGroups = subSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
+		Map<Integer, List<T>> superGroups = superSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
 
 		return subGroups.entrySet().stream().map(entry -> {
 			List<T> superElements = superGroups.get(entry.getKey());
