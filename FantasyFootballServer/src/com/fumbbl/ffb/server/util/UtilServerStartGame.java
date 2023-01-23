@@ -21,6 +21,7 @@ import com.fumbbl.ffb.server.db.IDbStatementFactory;
 import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadPlayerMarkings;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestResumeGamestate;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.StartGame;
@@ -29,21 +30,22 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class UtilServerStartGame {
 
 	public static boolean joinGameAsPlayerAndCheckIfReadyToStart(GameState pGameState, Session pSession, String pCoach,
-			boolean pHomeTeam, List<String> pAccountProperties) {
+																															 boolean pHomeTeam, List<String> pAccountProperties) {
 		Game game = pGameState.getGame();
 		FantasyFootballServer server = pGameState.getServer();
 		if ((game.getTeamAway() != null) && (game.getTeamHome() != null)
-				&& StringTool.isProvided(game.getTeamAway().getId())
-				&& game.getTeamAway().getId().equals(game.getTeamHome().getId())) {
+			&& StringTool.isProvided(game.getTeamAway().getId())
+			&& game.getTeamAway().getId().equals(game.getTeamHome().getId())) {
 			server.getCommunication().sendStatus(pSession, ServerStatus.ERROR_SAME_TEAM, null);
 		} else {
 			return sendServerJoin(pGameState, pSession, pCoach, pHomeTeam, ClientMode.PLAYER, pAccountProperties) > 1;
@@ -52,7 +54,7 @@ public class UtilServerStartGame {
 	}
 
 	public static int sendServerJoin(GameState pGameState, Session pSession, String pCoach, boolean pHomeTeam,
-			ClientMode pMode, List<String> pAccountProperties) {
+																	 ClientMode pMode, List<String> pAccountProperties) {
 
 		FantasyFootballServer server = pGameState.getServer();
 		SessionManager sessionManager = server.getSessionManager();
@@ -79,18 +81,23 @@ public class UtilServerStartGame {
 		}
 		String[] players = playerList.toArray(new String[0]);
 
+		Map<String, String> settingsMap = sendUserSettings(pGameState.getServer(), pCoach, pSession);
+
 		boolean silentJoin = pMode == ClientMode.SPECTATOR && pAccountProperties.contains("ADMIN");
 		if (!silentJoin) {
 			server.getCommunication().sendJoin(sessions, pCoach, pMode, players, numVisibleSpectators);
 		}
 
-		sendUserSettings(pGameState.getServer(), pCoach, pSession);
+		if (pMode == ClientMode.SPECTATOR
+			&& CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(settingsMap.get(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+			server.getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(pGameState, pSession));
+		}
 
 		return players.length;
 
 	}
 
-	public static void sendUserSettings(FantasyFootballServer server, String pCoach, Session pSession) {
+	public static Map<String, String> sendUserSettings(FantasyFootballServer server, String pCoach, Session pSession) {
 		List<String> settingNames = new ArrayList<>();
 		List<String> settingValues = new ArrayList<>();
 		// always send any client settings defined in server.ini
@@ -102,14 +109,20 @@ public class UtilServerStartGame {
 		}
 		IDbStatementFactory statementFactory = server.getDbQueryFactory();
 		DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
-				.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+			.getStatement(DbStatementId.USER_SETTINGS_QUERY);
 		userSettingsQuery.execute(pCoach);
 		Collections.addAll(settingNames, userSettingsQuery.getSettingNames());
 		Collections.addAll(settingValues, userSettingsQuery.getSettingValues());
 		if ((settingNames.size() > 0) && (settingValues.size() > 0)) {
 			server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new String[0]),
-					settingValues.toArray(new String[0]));
+				settingValues.toArray(new String[0]));
 		}
+		Map<String, String> settingsMap = new HashMap<>();
+		for (int i = 0; i < settingNames.size() && i < settingValues.size(); i++) {
+			settingsMap.put(settingNames.get(i), settingValues.get(i));
+		}
+
+		return settingsMap;
 	}
 
 	public static void startGame(GameState gameState) {
@@ -134,7 +147,7 @@ public class UtilServerStartGame {
 		if (ownershipOk) {
 			if ((game.getFinished() == null) && (gameState.getStepStack().size() == 0)) {
 				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-				((StartGame)factory.forName(SequenceGenerator.Type.StartGame.name()))
+				((StartGame) factory.forName(SequenceGenerator.Type.StartGame.name()))
 					.pushSequence(new SequenceGenerator.SequenceParams(gameState));
 			} else {
 				if (server.getMode() == ServerMode.FUMBBL) {

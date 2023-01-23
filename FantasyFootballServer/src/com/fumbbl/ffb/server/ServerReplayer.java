@@ -1,7 +1,12 @@
 package com.fumbbl.ffb.server;
 
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
+import com.fumbbl.ffb.server.db.DbStatementId;
+import com.fumbbl.ffb.server.db.IDbStatementFactory;
+import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadPlayerMarkings;
 
 import java.util.LinkedList;
@@ -34,6 +39,7 @@ public class ServerReplayer implements Runnable {
 
 		while (true) {
 
+			FantasyFootballServer server = getServer();
 			try {
 
 				synchronized (fReplayQueue) {
@@ -50,6 +56,16 @@ public class ServerReplayer implements Runnable {
 					if (serverReplay == null) {
 						serverReplay = fReplayQueue.remove(0);
 					}
+				}
+
+				String coach = server.getSessionManager().getCoachForSession(serverReplay.getSession());
+				IDbStatementFactory statementFactory = server.getDbQueryFactory();
+				DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
+					.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+				userSettingsQuery.execute(coach);
+
+				if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+					server.getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(serverReplay.getGameState(), serverReplay.getSession()));
 				}
 
 				while (serverReplay != null) {
@@ -70,28 +86,26 @@ public class ServerReplayer implements Runnable {
 						}
 					}
 
-					getServer().getCommunication().send(serverReplay.getSession(), replayCommand, false);
-					if (getServer().getDebugLog().isLogging(IServerLogLevel.DEBUG)) {
+					server.getCommunication().send(serverReplay.getSession(), replayCommand, false);
+					if (server.getDebugLog().isLogging(IServerLogLevel.DEBUG)) {
 						StringBuilder message = new StringBuilder().append("Replay commands ").append(replayCommand.getCommandNr());
 						message.append(replayCommand.findLowestCommandNr()).append(" - ")
 							.append(replayCommand.findHighestCommandNr());
 						message.append(" of ").append(replayCommand.getTotalNrOfCommands()).append(" total.");
-						getServer().getDebugLog().log(IServerLogLevel.DEBUG, serverReplay.getGameId(),
+						server.getDebugLog().log(IServerLogLevel.DEBUG, serverReplay.getGameId(),
 							DebugLog.COMMAND_SERVER_SPECTATOR, message.toString());
 					}
 
 					if (!serverReplay.isComplete()) {
 						serverReplay.setFromCommandNr(replayCommand.findHighestCommandNr() + 1);
 					} else {
-						//TODO check setting
-						getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(serverReplay.getGameState(), serverReplay.getSession()));
 						serverReplay = null;
 					}
 
 				}
 
 			} catch (Exception pException) {
-				getServer().getDebugLog().log(serverReplay.getGameId(), pException);
+				server.getDebugLog().log(serverReplay.getGameId(), pException);
 			}
 
 		}

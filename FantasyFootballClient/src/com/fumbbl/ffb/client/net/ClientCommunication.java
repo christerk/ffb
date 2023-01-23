@@ -438,8 +438,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUserSettings(pSettingNames, pSettingValues));
 	}
 
-	public void sendReplay(long pGameId, int pReplayToCommandNr) {
-		send(new ClientCommandReplay(pGameId, pReplayToCommandNr));
+	public void sendReplay(long pGameId, int pReplayToCommandNr, String coach) {
+		send(new ClientCommandReplay(pGameId, pReplayToCommandNr, coach));
 	}
 
 	public void sendThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {

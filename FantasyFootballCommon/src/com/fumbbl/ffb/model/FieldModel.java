@@ -768,10 +768,6 @@ public class FieldModel implements IJsonSerializable {
 		transientPlayerMarkers.remove(playerMarker);
 	}
 
-	public void clearTransientPlayerMarkers() {
-		transientPlayerMarkers.clear();
-	}
-
 	public void add(PlayerMarker pPlayerMarker) {
 		if (pPlayerMarker == null) {
 			return;

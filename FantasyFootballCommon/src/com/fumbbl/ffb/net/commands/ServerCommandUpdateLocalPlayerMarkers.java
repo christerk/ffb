@@ -9,11 +9,12 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.net.NetCommandId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServerCommandUpdateLocalPlayerMarkers extends ServerCommand {
 
-	private List<PlayerMarker> markers;
+	private List<PlayerMarker> markers = new ArrayList<>();
 
 	public ServerCommandUpdateLocalPlayerMarkers() {
 	}

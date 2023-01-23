@@ -15,14 +15,16 @@ public class ClientCommandReplay extends ClientCommand {
 
 	private long fGameId;
 	private int fReplayToCommandNr;
+	private String coach;
 
 	public ClientCommandReplay() {
 		super();
 	}
 
-	public ClientCommandReplay(long pGameId, int pReplayToCommandNr) {
+	public ClientCommandReplay(long pGameId, int pReplayToCommandNr, String coach) {
 		fGameId = pGameId;
 		fReplayToCommandNr = pReplayToCommandNr;
+		this.coach = coach;
 	}
 
 	public NetCommandId getId() {
@@ -37,12 +39,17 @@ public class ClientCommandReplay extends ClientCommand {
 		return fReplayToCommandNr;
 	}
 
-	// JSON serialization
+	public String getCoach() {
+		return coach;
+	}
+
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.GAME_ID.addTo(jsonObject, fGameId);
 		IJsonOption.REPLAY_TO_COMMAND_NR.addTo(jsonObject, fReplayToCommandNr);
+		IJsonOption.COACH.addTo(jsonObject, coach);
 		return jsonObject;
 	}
 
@@ -51,6 +58,7 @@ public class ClientCommandReplay extends ClientCommand {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fGameId = IJsonOption.GAME_ID.getFrom(source, jsonObject);
 		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(source, jsonObject);
+		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;
 	}
 

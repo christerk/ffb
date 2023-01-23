@@ -67,7 +67,6 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 
 
 	private void markForSpec(Game game, AutoMarkingConfig config) {
-//TODO call when spec joins
 		List<PlayerMarker> markers = Arrays.stream(game.getPlayers()).map(player -> {
 			String marking = markerGenerator.generate(player, config, false);
 			PlayerMarker playerMarker = new PlayerMarker(player.getId());

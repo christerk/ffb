@@ -35,6 +35,10 @@ public class AutoMarkingConfig implements IJsonSerializable {
 		defaults.add(builder.withSkill("Dodge").withMarking("D").withGainedOnly(true).build());
 		defaults.add(builder.withSkill("Mighty Blow").withMarking("M").withGainedOnly(true).build());
 		defaults.add(builder.withSkill("Sneaky Git").withMarking("Sg").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Claws").withMarking("C").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Diving Tackle").withMarking("Dt").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Dirty Player").withMarking("Dp").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Side Step").withMarking("S").withGainedOnly(true).build());
 
 		return defaults;
 	}
