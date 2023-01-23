@@ -25,6 +25,7 @@ public interface IJsonOption {
 	JsonStringOption APOTHECARY_TYPE = new JsonStringOption("apothecaryType");
 	JsonStringArrayOption APOTHECARY_TYPES = new JsonStringArrayOption("apothecaryTypes");
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
+	JsonBooleanOption APPLY_REPEATEDLY = new JsonBooleanOption("applyRepeatedly");
 	JsonStringOption APPLY_TO = new JsonStringOption("applyTo");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");

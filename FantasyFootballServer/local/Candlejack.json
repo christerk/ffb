@@ -2,12 +2,23 @@
   "autoMarkingRecords": [
     {
       "skillArray": [
+        "Side Step"
+      ],
+      "injuryAttributes": [],
+      "applyTo": "BOTH",
+      "gainedOnly": true,
+      "marking": "S",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
         "Sneaky Git"
       ],
       "injuryAttributes": [],
       "applyTo": "BOTH",
       "gainedOnly": true,
-      "marking": "Sg"
+      "marking": "Sg",
+      "applyRepeatedly": false
     },
     {
       "skillArray": [
@@ -16,52 +27,8 @@
       "injuryAttributes": [],
       "applyTo": "BOTH",
       "gainedOnly": true,
-      "marking": "D"
-    },
-    {
-      "skillArray": [
-        "Side Step"
-      ],
-      "injuryAttributes": [],
-      "applyTo": "BOTH",
-      "gainedOnly": true,
-      "marking": "S"
-    },
-    {
-      "skillArray": [
-        null
-      ],
-      "injuryAttributes": [],
-      "applyTo": "BOTH",
-      "gainedOnly": true,
-      "marking": "C"
-    },
-    {
-      "skillArray": [
-        "Block"
-      ],
-      "injuryAttributes": [],
-      "applyTo": "BOTH",
-      "gainedOnly": false,
-      "marking": "BLOCK"
-    },
-    {
-      "skillArray": [
-        "Diving Tackle"
-      ],
-      "injuryAttributes": [],
-      "applyTo": "BOTH",
-      "gainedOnly": true,
-      "marking": "Dt"
-    },
-    {
-      "skillArray": [
-        "Dirty Player"
-      ],
-      "injuryAttributes": [],
-      "applyTo": "BOTH",
-      "gainedOnly": true,
-      "marking": "Dp"
+      "marking": "D",
+      "applyRepeatedly": false
     },
     {
       "skillArray": [
@@ -70,7 +37,18 @@
       "injuryAttributes": [],
       "applyTo": "BOTH",
       "gainedOnly": true,
-      "marking": "T"
+      "marking": "T",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        null
+      ],
+      "injuryAttributes": [],
+      "applyTo": "BOTH",
+      "gainedOnly": true,
+      "marking": "C",
+      "applyRepeatedly": false
     },
     {
       "skillArray": [
@@ -79,7 +57,38 @@
       "injuryAttributes": [],
       "applyTo": "BOTH",
       "gainedOnly": true,
-      "marking": "M"
+      "marking": "M",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Block"
+      ],
+      "injuryAttributes": [],
+      "applyTo": "BOTH",
+      "gainedOnly": true,
+      "marking": "B",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Dirty Player"
+      ],
+      "injuryAttributes": [],
+      "applyTo": "BOTH",
+      "gainedOnly": true,
+      "marking": "Dp",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Diving Tackle"
+      ],
+      "injuryAttributes": [],
+      "applyTo": "BOTH",
+      "gainedOnly": true,
+      "marking": "Dt",
+      "applyRepeatedly": false
     }
   ]
 }

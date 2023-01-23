@@ -109,6 +109,7 @@ public class AutoMarkingRecord implements IJsonSerializable {
 
 		gainedOnly = IJsonOption.GAINED_ONLY.getFrom(source, jsonObject);
 		marking = IJsonOption.MARKING.getFrom(source, jsonObject);
+		applyRepeatedly = IJsonOption.APPLY_REPEATEDLY.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -130,6 +131,7 @@ public class AutoMarkingRecord implements IJsonSerializable {
 
 		IJsonOption.GAINED_ONLY.addTo(jsonObject, gainedOnly);
 		IJsonOption.MARKING.addTo(jsonObject, marking);
+		IJsonOption.APPLY_REPEATEDLY.addTo(jsonObject, applyRepeatedly);
 
 		return jsonObject;
 	}
