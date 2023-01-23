@@ -42,16 +42,6 @@
     },
     {
       "skillArray": [
-        null
-      ],
-      "injuryAttributes": [],
-      "applyTo": "BOTH",
-      "gainedOnly": true,
-      "marking": "C",
-      "applyRepeatedly": false
-    },
-    {
-      "skillArray": [
         "Mighty Blow"
       ],
       "injuryAttributes": [],
