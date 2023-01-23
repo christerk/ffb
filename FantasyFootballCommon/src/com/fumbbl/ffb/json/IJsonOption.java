@@ -252,6 +252,7 @@ public interface IJsonOption {
 	JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
+	JsonStringOption MARKING = new JsonStringOption("marking");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
