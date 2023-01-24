@@ -9,6 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.16.0")
+			.addFeature("Automated Markings: Can be activated in user settings, more details can be found in the wiki https://fumbbl.com/help:AutomaticMarking")
+		);
 
 		versions.add(new VersionChangeList("2.15.0")
 			.addBugfix("Allow re-rolling natural one on Argue the Call with Biased Ref even though coach would not have been banned")
