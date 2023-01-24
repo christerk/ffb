@@ -14,7 +14,6 @@ import com.fumbbl.ffb.model.skill.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class AutoMarkingRecord implements IJsonSerializable {
 	private List<Skill> skills = new ArrayList<>();
@@ -83,13 +82,26 @@ public class AutoMarkingRecord implements IJsonSerializable {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
+
 		AutoMarkingRecord that = (AutoMarkingRecord) o;
-		return gainedOnly == that.gainedOnly && applyRepeatedly == that.applyRepeatedly && skills.equals(that.skills) && injuries.equals(that.injuries) && applyTo == that.applyTo && marking.equals(that.marking);
+
+		if (gainedOnly != that.gainedOnly) return false;
+		if (applyRepeatedly != that.applyRepeatedly) return false;
+		if (!skills.equals(that.skills)) return false;
+		if (!injuries.equals(that.injuries)) return false;
+		if (applyTo != that.applyTo) return false;
+		return marking.equals(that.marking);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(skills, injuries, gainedOnly, applyRepeatedly, applyTo, marking);
+		int result = skills.hashCode();
+		result = 31 * result + injuries.hashCode();
+		result = 31 * result + (gainedOnly ? 1 : 0);
+		result = 31 * result + (applyRepeatedly ? 1 : 0);
+		result = 31 * result + applyTo.hashCode();
+		result = 31 * result + marking.hashCode();
+		return result;
 	}
 
 	@Override

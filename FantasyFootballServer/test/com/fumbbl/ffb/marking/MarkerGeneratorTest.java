@@ -40,7 +40,8 @@ class MarkerGeneratorTest {
 	private static final String DODGE = "dodge";
 	private static final String TACKLE = "tackle";
 	private static final String WRESTLE = "wrestle";
-	public static final String UNKNOWN = "unknown";
+	private static final String UNKNOWN = "unknown";
+	private static final String SEPARATOR = ", ";
 
 	private final MarkerGenerator generator = new MarkerGenerator();
 	private AutoMarkingConfig config;
@@ -80,6 +81,18 @@ class MarkerGeneratorTest {
 		String marking = generator.generate(player, config, true);
 
 		assertEquals(BLOCK_MARKING, marking);
+	}
+
+	@Test
+	public void generateWithSeparator() {
+		config.setSeparator(SEPARATOR);
+		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).withApplyRepeatedly(true).build());
+
+		String marking = generator.generate(player, config, true);
+
+		assertEquals(BLOCK_MARKING + SEPARATOR + DODGE_MARKING + SEPARATOR + MA_MARKING + SEPARATOR + MA_MARKING, marking);
 	}
 
 	@Test

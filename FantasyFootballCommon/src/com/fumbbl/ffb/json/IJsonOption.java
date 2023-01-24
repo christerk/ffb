@@ -432,6 +432,7 @@ public interface IJsonOption {
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");
 	JsonEnumWithNameOption SEND_TO_BOX_REASON = new JsonEnumWithNameOption("sendToBoxReason", Factory.SEND_TO_BOX_REASON);
 	JsonIntOption SEND_TO_BOX_TURN = new JsonIntOption("sendToBoxTurn");
+	JsonStringOption SEPARATOR = new JsonStringOption("separator");
 	JsonEnumWithNameOption SERIOUS_INJURY = new JsonEnumWithNameOption("seriousInjury", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_DECAY = new JsonEnumWithNameOption("seriousInjuryDecay", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_NEW = new JsonEnumWithNameOption("seriousInjuryNew", Factory.SERIOUS_INJURY);

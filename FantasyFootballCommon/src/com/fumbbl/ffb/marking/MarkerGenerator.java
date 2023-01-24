@@ -31,12 +31,12 @@ public class MarkerGenerator {
 
 		Set<AutoMarkingRecord> markingsToApply = new HashSet<>();
 
-		config.getMarkings().stream()
+		return config.getMarkings().stream()
 			.filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach))
 			.collect(Collectors.groupingBy(markingRecord -> markingRecord.getSkills().isEmpty()))
 			.entrySet().stream()
 			.sorted((entry1, entry2) -> entry1.getKey() == entry2.getKey() ? 0 : entry1.getKey() ? 1 : -1)
-			.forEach(
+			.flatMap(
 				entry -> entry.getValue().stream()
 					.sorted(Comparator.comparingInt(
 							(AutoMarkingRecord record) ->
@@ -65,18 +65,20 @@ public class MarkerGenerator {
 						.thenComparing((o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
 						.thenComparing(
 							AutoMarkingRecord::getMarking))
-					.map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries, markingsToApply)).sorted().forEach(marking::append));
+					.map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries, markingsToApply, config.getSeparator()))
+					.sorted()).collect(Collectors.joining(config.getSeparator()));
 
-		return marking.toString();
+
 	}
 
 	private boolean appliesTo(ApplyTo applyTo, boolean playsForMarkingCoach) {
 		return playsForMarkingCoach && applyTo.isAppliesToOwn() || !playsForMarkingCoach && applyTo.isAppliesToOpponent();
 	}
 
-	private String getMarking(AutoMarkingRecord markingRecord, List<Skill> baseSkills, List<Skill> gainedSkills, List<InjuryAttribute> injuries, Set<AutoMarkingRecord> markingsToApply) {
+	private String getMarking(AutoMarkingRecord markingRecord, List<Skill> baseSkills, List<Skill> gainedSkills,
+														List<InjuryAttribute> injuries, Set<AutoMarkingRecord> markingsToApply, String separator) {
 
-		StringBuilder marking = new StringBuilder();
+		List<String> marking = new ArrayList<>();
 
 		if (markingsToApply.stream().noneMatch(markingRecord::isSubSetOf)) {
 
@@ -93,10 +95,10 @@ public class MarkerGenerator {
 
 			for (int counter = 0; counter < matches; counter++) {
 				markingsToApply.add(markingRecord);
-				marking.append(markingRecord.getMarking());
+				marking.add(markingRecord.getMarking());
 			}
 		}
-		return marking.toString();
+		return String.join(separator, marking);
 	}
 
 	private int findMin(int first, int second) {

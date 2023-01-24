@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class AutoMarkingConfig implements IJsonSerializable {
 
+	private String separator = "";
 	private Set<AutoMarkingRecord> markings = new HashSet<>();
 
 	public Set<AutoMarkingRecord> getMarkings() {
@@ -23,6 +24,14 @@ public class AutoMarkingConfig implements IJsonSerializable {
 
 	public void setMarkings(Set<AutoMarkingRecord> markings) {
 		this.markings = markings;
+	}
+
+	public String getSeparator() {
+		return separator;
+	}
+
+	public void setSeparator(String separator) {
+		this.separator = separator;
 	}
 
 	public static Set<AutoMarkingRecord> defaults(SkillFactory skillFactory) {
@@ -45,8 +54,10 @@ public class AutoMarkingConfig implements IJsonSerializable {
 
 	@Override
 	public AutoMarkingConfig initFrom(IFactorySource source, JsonValue jsonValue) {
-		markings = IJsonOption.AUTO_MARKING_RECORDS.getFrom(source, UtilJson.toJsonObject(jsonValue)).values().stream()
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		markings = IJsonOption.AUTO_MARKING_RECORDS.getFrom(source, jsonObject).values().stream()
 			.map(value -> new AutoMarkingRecord().initFrom(source, value)).collect(Collectors.toSet());
+		separator = IJsonOption.SEPARATOR.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -56,6 +67,7 @@ public class AutoMarkingConfig implements IJsonSerializable {
 		JsonArray jsonArray = new JsonArray();
 		markings.stream().map(AutoMarkingRecord::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.AUTO_MARKING_RECORDS.addTo(jsonObject, jsonArray);
+		IJsonOption.SEPARATOR.addTo(jsonObject, separator);
 		return jsonObject;
 	}
 }
