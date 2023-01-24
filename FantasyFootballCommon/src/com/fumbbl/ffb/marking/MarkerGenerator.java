@@ -27,8 +27,6 @@ public class MarkerGenerator {
 
 		removeNegatingPairs(gainedSkills, injuries);
 
-		StringBuilder marking = new StringBuilder();
-
 		Set<AutoMarkingRecord> markingsToApply = new HashSet<>();
 
 		return config.getMarkings().stream()
