@@ -116,6 +116,10 @@ public final class StepEndBomb extends AbstractStep {
 			PlayerState playerState = game.getFieldModel().getPlayerState(originalBomber);
 			boolean threwOnlyFirstBomb = toPrimitive(state.getThrowTwoBombs());
 
+			if (originalBomber != game.getActingPlayer().getPlayer()) {
+				UtilServerSteps.changePlayerAction(this, originalBomber.getId(), PlayerAction.THROW_BOMB, false);
+			}
+
 			if (!fEndTurn && threwOnlyFirstBomb && skill != null && originalBomber.hasUnused(skill) && playerState.hasTacklezones()) {
 				originalBomber.markUsed(skill, game);
 				state.setThrowTwoBombs(false);
