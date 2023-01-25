@@ -210,12 +210,17 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			getResult().addReport(new ReportSkillUse(pInterceptor.getId(), interceptionSkill, true, SkillUse.EASY_INTERCEPT));
 		}
 
+		boolean isBomb = PlayerAction.THROW_BOMB == game.getThrowerAction();
 		getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, reRolled,
-			interceptionModifierArray, (PlayerAction.THROW_BOMB == game.getThrowerAction()), easyIntercept));
+			interceptionModifierArray, isBomb, easyIntercept));
 		if (successful) {
 			status = ActionStatus.SUCCESS;
 			if (easyIntercept) {
-				game.getFieldModel().setBallMoving(false);
+				if (isBomb) {
+					game.getFieldModel().setBombMoving(false);
+				} else {
+					game.getFieldModel().setBallMoving(false);
+				}
 				passState.setInterceptionSuccessful(true);
 			}
 		} else {

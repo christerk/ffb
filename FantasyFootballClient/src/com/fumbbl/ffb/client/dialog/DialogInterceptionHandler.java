@@ -40,7 +40,7 @@ public class DialogInterceptionHandler extends DialogHandler {
 		Player<?> thrower = game.getPlayerById(dialogParameter.getThrowerId());
 
 		if ((ClientMode.PLAYER != getClient().getMode()) || game.getTeamHome().hasPlayer(thrower)) {
-			Wording wording = ((AgilityMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name())).interceptionWording();
+			Wording wording = ((AgilityMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name())).interceptionWording(false);
 
 			showStatus(wording.getNoun(), "Waiting for coach to choose an " + wording.getPlayerCharacterization() + ".", StatusType.WAITING);
 

@@ -20,7 +20,7 @@ public class InterceptionRollMessage extends ReportMessageBase<ReportInterceptio
   		StringBuilder status = new StringBuilder();
   		StringBuilder neededRoll = null;
   		Player<?> player = game.getPlayerById(report.getPlayerId());
-  		Wording wording = ((AgilityMechanic)game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name())).interceptionWording();
+			Wording wording = ((AgilityMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name())).interceptionWording(report.isIgnoreAgility());
   		if (!report.isReRolled()) {
   			print(getIndent(), true, player);
   			if (report.isBomb()) {

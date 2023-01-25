@@ -124,7 +124,10 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-	public Wording interceptionWording() {
+	public Wording interceptionWording(boolean easyIntercept) {
+		if (easyIntercept) {
+			return new Wording("Interception", "intercept", "intercepts", "interceptor");
+		}
 		return new Wording("Interference", "deflect", "deflects", "interfering player");
 	}
 
