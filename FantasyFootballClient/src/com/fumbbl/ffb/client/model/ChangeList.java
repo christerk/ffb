@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Allow Fumblerooskie during all move related actions")
 			.addFeature("Putrid Regurgitation")
 			.addFeature("Kick 'em while they're down!")
+			.addBugfix("Dead players could defect")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")
