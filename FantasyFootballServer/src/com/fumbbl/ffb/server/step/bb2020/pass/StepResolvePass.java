@@ -51,6 +51,10 @@ public class StepResolvePass extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
 						CatchScatterThrowInMode.DEFLECTED));
 				}
+			} else {
+				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+					game.getFieldModel().setBombCoordinate(interceptorCoordinate);
+				}
 			}
 		} else if (state.getResult() == PassResult.ACCURATE) {
 			Player<?> catcher = game.getPlayerById(state.getCatcherId());

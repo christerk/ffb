@@ -218,6 +218,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			if (easyIntercept) {
 				if (isBomb) {
 					game.getFieldModel().setBombMoving(false);
+					publishParameter(StepParameter.from(StepParameterKey.INTERCEPTOR_ID, pInterceptor.getId()));
 				} else {
 					game.getFieldModel().setBallMoving(false);
 				}
