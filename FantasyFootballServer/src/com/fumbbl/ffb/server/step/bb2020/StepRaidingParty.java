@@ -290,7 +290,9 @@ public class StepRaidingParty extends AbstractStep {
 				Player<?>[] adjacentPlayersWithTacklezones = UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()), teamMateCoordinate, false);
 				FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(teamMateCoordinate, FieldCoordinateBounds.FIELD,
 					1, false);
-				return fieldModel.getPlayerState(teamMate).getBase() == PlayerState.STANDING
+				PlayerState playerState = fieldModel.getPlayerState(teamMate);
+				return playerState.getBase() == PlayerState.STANDING
+					&& !playerState.isRooted()
 					&& teamMateCoordinate.distanceInSteps(playerCoordinate) <= 5
 					&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
 					&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> {

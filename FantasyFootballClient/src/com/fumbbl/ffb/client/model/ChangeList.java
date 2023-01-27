@@ -21,6 +21,7 @@ public class ChangeList {
 			.addFeature("Putrid Regurgitation")
 			.addFeature("Kick 'em while they're down!")
 			.addBugfix("Dead players could defect")
+			.addBugfix("Raiding Party was able to move rooted players")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")
