@@ -28,7 +28,7 @@ public class PlayerState {
 	public static final int HIT_BY_LIGHTNING = 0x00012; // used for bloodSpots only
 	public static final int HIT_BY_BOMB = 0x00013; // used for bloodSpots only
 	public static final int SETUP_PREVENTED = 0x00014;
-
+	public static final int IN_THE_AIR = 0x00015;
 	private static final int _BIT_ACTIVE = 0x00100;
 	private static final int _BIT_CONFUSED = 0x00200;
 	private static final int _BIT_ROOTED = 0x00400;
@@ -59,6 +59,7 @@ public class PlayerState {
 		0xfff00, // PICKED_UP
 		0xfff00, // HIT_ON_GROUND
 		0xfff00, // SETUP_PREVENTED
+		0xfff00, // IN_THE_AIR
 	};
 
 	public static List<Integer> REMOVED_FROM_PLAY = new ArrayList<Integer>() {{
@@ -277,6 +278,8 @@ public class PlayerState {
 				return "was hit while on the ground";
 			case SETUP_PREVENTED:
 				return "can not be set up";
+			case IN_THE_AIR:
+				return "is in the air";
 			default:
 				return null;
 		}
@@ -322,6 +325,8 @@ public class PlayerState {
 				return "Hit on the ground";
 			case SETUP_PREVENTED:
 				return "Can't be set up";
+			case IN_THE_AIR:
+				return "In the air";
 			default:
 				return null;
 		}

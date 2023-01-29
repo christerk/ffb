@@ -16,6 +16,7 @@ import com.fumbbl.ffb.model.Player;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * @author Kalimar
@@ -61,13 +62,15 @@ public class FieldLayerPlayers extends FieldLayer {
 
 	private void drawPlayer(Graphics2D pG2d, FieldCoordinate pCoordinate) {
 		if (pCoordinate != null) {
-			Player<?> player = getClient().getGame().getFieldModel().getPlayer(pCoordinate);
-			if (player != null) {
-				PlayerIconFactory playerIconFactory = getClient().getUserInterface().getPlayerIconFactory();
-				BufferedImage icon = playerIconFactory.getIcon(getClient(), player);
-				if (icon != null) {
-					pG2d.drawImage(icon, findCenteredIconUpperLeftX(icon, pCoordinate),
+			List<Player<?>> players = getClient().getGame().getFieldModel().getPlayers(pCoordinate);
+			if (players != null) {
+				for (Player<?> player : players) {
+					PlayerIconFactory playerIconFactory = getClient().getUserInterface().getPlayerIconFactory();
+					BufferedImage icon = playerIconFactory.getIcon(getClient(), player);
+					if (icon != null) {
+						pG2d.drawImage(icon, findCenteredIconUpperLeftX(icon, pCoordinate),
 							findCenteredIconUpperLeftY(icon, pCoordinate), null);
+					}
 				}
 			}
 		}

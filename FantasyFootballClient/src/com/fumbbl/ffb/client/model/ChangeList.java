@@ -22,6 +22,8 @@ public class ChangeList {
 			.addFeature("Kick 'em while they're down!")
 			.addBugfix("Dead players could defect")
 			.addBugfix("Raiding Party was able to move rooted players")
+			.addBugfix("When a thrown player hit and removed the ttm player a ghost image of the thrown player was shown in it's place")
+			.addBugfix("Players hit by ttm were not shown on the pitch during the animation sequences")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")

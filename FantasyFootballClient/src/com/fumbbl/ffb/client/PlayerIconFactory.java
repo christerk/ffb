@@ -175,7 +175,7 @@ public class PlayerIconFactory {
 		boolean withBall = (playerOnPitch && !game.getFieldModel().isBallMoving()
 			&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
 
-		if (playerState.getBase() != PlayerState.PICKED_UP) {
+		if (playerState.getBase() != PlayerState.PICKED_UP && playerState.getBase() != PlayerState.IN_THE_AIR) {
 			boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
 			icon = getBasicIcon(pClient, pPlayer, homePlayer, (playerState.getBase() == PlayerState.MOVING), withBall,
 				withBomb);
