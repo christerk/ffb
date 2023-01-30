@@ -9,6 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.16.0")
+			.addFeature("Automated Markings: Can be activated in user settings, more details can be found in the wiki https://fumbbl.com/help:AutomaticMarking or help menu")
+		);
 
 		versions.add(new VersionChangeList("2.16.0")
 			.addFeature("Thinking Man's Troll")

@@ -69,7 +69,7 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 	public void process(ServerRequestProcessor pRequestProcessor) {
 		FantasyFootballServer server = pRequestProcessor.getServer();
 		Game game = getGameState().getGame();
-		Team team = null;
+		Team team;
 		try {
 			team = UtilFumbblRequest.loadFumbblTeam(server, getTeamId());
 		} catch (FantasyFootballException pFantasyFootballException) {

@@ -17,10 +17,12 @@ public class ServerReplay {
 	private final int fToCommandNr;
 	private final Session fSession;
 	private boolean fComplete;
+	private final GameState gameState;
 
 	public ServerReplay(GameState gameState, int toCommandNr, Session session) {
 		fToCommandNr = toCommandNr;
 		fSession = session;
+		this.gameState = gameState;
 		if (gameState != null) {
 			fGameId = gameState.getId();
 			if (gameState.getGameLog() != null) {
@@ -66,6 +68,10 @@ public class ServerReplay {
 		return fComplete;
 	}
 
+	public GameState getGameState() {
+		return gameState;
+	}
+
 	private void orderCommands() {
 		if (fServerCommands != null) {
 			for (int i = 0; i < fServerCommands.length; i++) {
@@ -84,7 +90,7 @@ public class ServerReplay {
 				}
 			}
 		}
-		return replayCommands.toArray(new ServerCommand[replayCommands.size()]);
+		return replayCommands.toArray(new ServerCommand[0]);
 	}
 
 }

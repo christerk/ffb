@@ -13,7 +13,7 @@ import com.fumbbl.ffb.server.admin.UtilBackup;
  */
 public class ServerRequestSaveReplay extends ServerRequest {
 
-	private long fGameId;
+	private final long fGameId;
 
 	public ServerRequestSaveReplay(long gameId) {
 		fGameId = gameId;
@@ -43,7 +43,7 @@ public class ServerRequestSaveReplay extends ServerRequest {
 			server.getDebugLog().log(IServerLogLevel.WARN, getGameId(), "Replay stored in file system");
 			// request replay to see if backup has been successful, queue delete command
 			server.getRequestProcessor()
-					.add(new ServerRequestLoadReplay(gameState.getId(), 0, null, ServerRequestLoadReplay.DELETE_GAME));
+				.add(new ServerRequestLoadReplay(gameState.getId(), 0, null, ServerRequestLoadReplay.DELETE_GAME, null, null));
 		}
 	}
 

@@ -32,7 +32,7 @@ public class ServerCommandHandlerReplayLoaded extends ServerCommandHandler {
 			if (gameState != null) {
 				gameState.setStatus(GameStatus.REPLAYING);
 				UtilServerReplay.startServerReplay(gameState, replayCommand.getReplayToCommandNr(),
-						pReceivedCommand.getSession());
+					pReceivedCommand.getSession(), replayCommand.getCoach());
 			} else {
 				getServer().getCommunication().sendStatus(pReceivedCommand.getSession(), ServerStatus.ERROR_UNKNOWN_GAME_ID,
 						null);

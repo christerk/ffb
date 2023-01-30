@@ -31,10 +31,8 @@ public class NetCommandFactory {
 		NetCommandId netCommandId = (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(applicationFactorySource, jsonObject);
 		if (netCommandId != null) {
 			netCommand = netCommandId.createNetCommand();
-			if (netCommand != null) {
-				IFactorySource commandSource = netCommand.getContext() == FactoryContext.APPLICATION ? applicationFactorySource : source;
-				netCommand.initFrom(commandSource, pJsonValue);
-			}
+			IFactorySource commandSource = netCommand.getContext() == FactoryContext.APPLICATION ? applicationFactorySource : source;
+			netCommand.initFrom(commandSource, pJsonValue);
 		}
 		return netCommand;
 	}

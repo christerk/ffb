@@ -37,6 +37,7 @@ public interface IServerProperty {
 	String FUMBBL_RESULT = "fumbbl.result";
 	String FUMBBL_TALK = "fumbbl.talk";
 	String FUMBBL_NAMEGENERATOR_BASE = "fumbbl.namegenerator.base";
+	String FUMBBL_PLAYER_MARKINGS = "fumbbl.playermarkings";
 
 	String ADMIN_SALT = "admin.salt";
 	String ADMIN_PASSWORD = "admin.password";

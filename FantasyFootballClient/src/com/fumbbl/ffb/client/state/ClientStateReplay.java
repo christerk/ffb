@@ -41,9 +41,9 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 	public void enterState() {
 		super.enterState();
 		setClickable(false);
+		ClientParameters parameters = getClient().getParameters();
 		ClientReplayer replayer = getClient().getReplayer();
 		if (ClientMode.REPLAY == getClient().getMode()) {
-			ClientParameters parameters = getClient().getParameters();
 			if (StringTool.isProvided(parameters.getAuthentication())) {
 				getClient().getCommunication().sendJoin(parameters.getCoach(), parameters.getAuthentication(), 0, null, null, null);
 			} else {
@@ -53,7 +53,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 			if (fReplayList == null) {
 				fReplayList = new ArrayList<>();
 				showProgressDialog();
-				getClient().getCommunication().sendReplay(0, replayer.getFirstCommandNr());
+				getClient().getCommunication().sendReplay(0, replayer.getFirstCommandNr(), parameters.getCoach());
 			} else {
 				replayer.positionOnLastCommand();
 				replayer.getReplayControl().setActive(true);
@@ -63,7 +63,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 
 	private void startLoadingReplay(ClientReplayer replayer, ClientParameters parameters) {
 		replayer.start();
-		getClient().getCommunication().sendReplay(parameters.getGameId(), 0);
+		getClient().getCommunication().sendReplay(parameters.getGameId(), 0, parameters.getCoach());
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {

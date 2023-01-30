@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.server.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -13,7 +13,7 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
  */
 public class ServerCommandHandlerFactory {
 
-	private Map<NetCommandId, ServerCommandHandler> fCommandHandlerById;
+	private final Map<NetCommandId, ServerCommandHandler> fCommandHandlerById;
 
 	public ServerCommandHandlerFactory(FantasyFootballServer server) {
 		fCommandHandlerById = new HashMap<>();
@@ -35,6 +35,7 @@ public class ServerCommandHandlerFactory {
 		register(new ServerCommandHandlerUserSettings(server));
 		register(new ServerCommandHandlerCloseSession(server));
 		register(new ServerCommandHandlerPing(server));
+		register(new ServerCommandHandlerUpdatePlayerMarkings(server));
 	}
 
 	public void handleCommand(ReceivedCommand receivedCommand) {

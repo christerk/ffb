@@ -1,12 +1,12 @@
 package com.fumbbl.ffb.client.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -14,9 +14,9 @@ import com.fumbbl.ffb.net.NetCommandId;
  */
 public class ClientCommandHandlerFactory {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
-	private Map<NetCommandId, ClientCommandHandler> fCommandHandlerById;
+	private final Map<NetCommandId, ClientCommandHandler> fCommandHandlerById;
 
 	public ClientCommandHandlerFactory(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -35,6 +35,7 @@ public class ClientCommandHandlerFactory {
 		register(new ClientCommandHandlerGameTime(getClient()));
 		register(new ClientCommandHandlerZapPlayer(getClient()));
 		register(new ClientCommandHandlerUnzapPlayer(getClient()));
+		register(new ClientCommandHandlerUpdateLocalPlayerMarkers(getClient()));
 	}
 
 	public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
@@ -49,7 +50,7 @@ public class ClientCommandHandlerFactory {
 						synchronized (this) {
 							try {
 								wait();
-							} catch (InterruptedException ie) {
+							} catch (InterruptedException ignored) {
 							}
 						}
 					}

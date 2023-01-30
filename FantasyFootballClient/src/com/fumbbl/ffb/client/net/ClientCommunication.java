@@ -87,6 +87,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandThrowKeg;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandTouchback;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandUpdatePlayerMarkings;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
@@ -437,8 +438,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUserSettings(pSettingNames, pSettingValues));
 	}
 
-	public void sendReplay(long pGameId, int pReplayToCommandNr) {
-		send(new ClientCommandReplay(pGameId, pReplayToCommandNr));
+	public void sendReplay(long pGameId, int pReplayToCommandNr, String coach) {
+		send(new ClientCommandReplay(pGameId, pReplayToCommandNr, coach));
 	}
 
 	public void sendThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
@@ -542,6 +543,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendSelectedWeather(int modifier, String weatherName) {
 		send(new ClientCommandSelectWeather(modifier, weatherName));
+	}
+
+	public void sendUpdatePlayerMarkings(boolean auto) {
+		send(new ClientCommandUpdatePlayerMarkings(auto));
 	}
 
 	public FantasyFootballClient getClient() {

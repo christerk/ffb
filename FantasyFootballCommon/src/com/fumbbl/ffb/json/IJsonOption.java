@@ -25,6 +25,8 @@ public interface IJsonOption {
 	JsonStringOption APOTHECARY_TYPE = new JsonStringOption("apothecaryType");
 	JsonStringArrayOption APOTHECARY_TYPES = new JsonStringArrayOption("apothecaryTypes");
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
+	JsonBooleanOption APPLY_REPEATEDLY = new JsonBooleanOption("applyRepeatedly");
+	JsonStringOption APPLY_TO = new JsonStringOption("applyTo");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
 	JsonBooleanOption ARMOR_BROKEN = new JsonBooleanOption("armorBroken");
@@ -35,6 +37,7 @@ public interface IJsonOption {
 	JsonIntOption ASSISTANT_COACHES = new JsonIntOption("assistantCoaches");
 	JsonStringOption ATTACKER_ID = new JsonStringOption("attackerId");
 	JsonBooleanOption ATTACKER_SELECTS = new JsonBooleanOption("attackerSelects");
+	JsonArrayOption AUTO_MARKING_RECORDS = new JsonArrayOption("autoMarkingRecords");
 	JsonIntOption AVAILABLE_CARDS = new JsonIntOption("availableCards");
 	JsonIntOption AVAILABLE_GOLD = new JsonIntOption("availableGold");
 	JsonBooleanOption AWAY_GAINS_RE_ROLL = new JsonBooleanOption("awayGainsReRoll");
@@ -182,6 +185,7 @@ public interface IJsonOption {
 	JsonBooleanOption FRIENDS_WITH_REF = new JsonBooleanOption("friendsWithRef");
 	JsonBooleanOption FUMBLE = new JsonBooleanOption("fumble");
 	JsonBooleanOption FUMBLEROOSKIE_PENDING = new JsonBooleanOption("fumblerooskiePending");
+	JsonBooleanOption GAINED_ONLY = new JsonBooleanOption("gainedOnly");
 	JsonObjectOption GAME = new JsonObjectOption("game");
 	JsonLongOption GAME_ID = new JsonLongOption("gameId");
 	JsonObjectOption GAME_LIST = new JsonObjectOption("gameList");
@@ -224,6 +228,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);
 	JsonStringArrayOption INDUCEMENT_TYPE_ARRAY = new JsonStringArrayOption("inducementTypeArray");
 	JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
+	JsonStringArrayOption INJURY_ATTRIBUTES = new JsonStringArrayOption("injuryAttributes");
 	JsonPlayerStateOption INJURY_DECAY = new JsonPlayerStateOption("injuryDecay");
 	JsonArrayOption INJURY_DESCRIPTIONS = new JsonArrayOption("injuryDescriptions");
 	JsonStringOption INJURY_MODIFICATION = new JsonStringOption("injuryModification");
@@ -250,6 +255,7 @@ public interface IJsonOption {
 	JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
+	JsonStringOption MARKING = new JsonStringOption("marking");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
@@ -428,6 +434,7 @@ public interface IJsonOption {
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");
 	JsonEnumWithNameOption SEND_TO_BOX_REASON = new JsonEnumWithNameOption("sendToBoxReason", Factory.SEND_TO_BOX_REASON);
 	JsonIntOption SEND_TO_BOX_TURN = new JsonIntOption("sendToBoxTurn");
+	JsonStringOption SEPARATOR = new JsonStringOption("separator");
 	JsonEnumWithNameOption SERIOUS_INJURY = new JsonEnumWithNameOption("seriousInjury", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_DECAY = new JsonEnumWithNameOption("seriousInjuryDecay", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_NEW = new JsonEnumWithNameOption("seriousInjuryNew", Factory.SERIOUS_INJURY);
@@ -554,6 +561,7 @@ public interface IJsonOption {
 	JsonStringOption UPLOAD_STATUS = new JsonStringOption("uploadStatus");
 	JsonStringOption URL_ICON_SET = new JsonStringOption("urlIconSet");
 	JsonStringOption URL_PORTRAIT = new JsonStringOption("urlPortrait");
+	JsonBooleanOption USE_AUTO_MARKINGS = new JsonBooleanOption("useAutoMarkings");
 	JsonArrayOption USED_SKILLS = new JsonArrayOption("usedSkills");
 	JsonStringArrayOption USER_SETTING_NAMES = new JsonStringArrayOption("userSettingNames");
 	JsonStringArrayOption USER_SETTING_VALUES = new JsonStringArrayOption("userSettingValues");

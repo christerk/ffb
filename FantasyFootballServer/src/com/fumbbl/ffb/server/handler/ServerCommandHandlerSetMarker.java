@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server.handler;
 
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldMarker;
-import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandSetMarker;
