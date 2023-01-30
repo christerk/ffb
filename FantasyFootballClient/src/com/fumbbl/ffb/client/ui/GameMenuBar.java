@@ -19,6 +19,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogAbout;
+import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogChangeList;
 import com.fumbbl.ffb.client.dialog.DialogChatCommands;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
@@ -160,6 +161,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JMenuItem fChatCommandsMenuItem;
 	private final JMenuItem fKeyBindingsMenuItem;
 	private final JMenuItem changeListItem;
+	private final JMenuItem autoMarkingItem;
 	private final JMenu reRollBallAndChainPanelMenu;
 
 	private IDialog fDialogShown;
@@ -601,6 +603,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		changeListItem.addActionListener(this);
 		fHelpMenu.add(changeListItem);
 
+		autoMarkingItem = new JMenuItem("Automarking Panel", KeyEvent.VK_L);
+		autoMarkingItem.addActionListener(this);
+		fHelpMenu.add(autoMarkingItem);
+
 		fKeyBindingsMenuItem = new JMenuItem("Key Bindings", KeyEvent.VK_K);
 		fKeyBindingsMenuItem.addActionListener(this);
 		fHelpMenu.add(fKeyBindingsMenuItem);
@@ -770,6 +776,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == changeListItem) {
 			showDialog(new DialogChangeList(getClient()));
 		}
+		if (source == autoMarkingItem) {
+			showDialog(DialogAutoMarking.create(getClient(), false));
+		}
 		if (source == fKeyBindingsMenuItem) {
 			showDialog(new DialogKeyBindings(getClient()));
 		}
@@ -907,6 +916,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
 			getClient().saveUserSettings(true);
 			getClient().getCommunication().sendUpdatePlayerMarkings(true);
+
+			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(getClient().getProperty(IClientProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
+				showDialog(DialogAutoMarking.create(getClient(), true));
+			}
 		}
 
 		if (source == playersMarkingManualMenuItem) {
