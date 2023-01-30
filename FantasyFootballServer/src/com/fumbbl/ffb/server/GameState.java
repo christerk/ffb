@@ -331,8 +331,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return activeEffects.getOldWeather();
 	}
 
-	public void restoreWeather() {
-		if (activeEffects.isSkipRestoreWeather()) {
+	public void restoreWeather(boolean endOfDrive) {
+		if (endOfDrive) {
+			if (activeEffects.getOldWeather() != null) {
+				getGame().getFieldModel().setWeather(activeEffects.getOldWeather());
+			}
+			activeEffects.setSkipRestoreWeather(false);
+			activeEffects.setOldWeather(null);
+		} else if (activeEffects.isSkipRestoreWeather()) {
 			activeEffects.setSkipRestoreWeather(false);
 		} else if (activeEffects.getOldWeather() != null) {
 			getGame().getFieldModel().setWeather(activeEffects.getOldWeather());

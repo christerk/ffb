@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Raiding Party was able to move rooted players")
 			.addBugfix("When a thrown player hit and removed the ttm player a ghost image of the thrown player was shown in it's place")
 			.addBugfix("Players hit by ttm were not shown on the pitch during the animation sequences")
+			.addBugfix("Weather Mage effect did not revert at the end of a drive")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")

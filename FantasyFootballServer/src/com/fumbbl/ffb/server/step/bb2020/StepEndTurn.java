@@ -428,6 +428,8 @@ public class StepEndTurn extends AbstractStep {
 				removeUsedSecretWeapons();
 			}
 
+			getGameState().restoreWeather(fNewHalf || fTouchdown);
+
 			List<KnockoutRecovery> knockoutRecoveries = new ArrayList<>();
 			List<HeatExhaustion> heatExhaustions = new ArrayList<>();
 			List<Player<?>> unzappedPlayers = new ArrayList<>();
@@ -443,8 +445,6 @@ public class StepEndTurn extends AbstractStep {
 
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
 			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
-
-			getGameState().restoreWeather();
 
 			if (fNewHalf || fTouchdown) {
 				UtilServerGame.updatePlayerStateDependentProperties(this);
