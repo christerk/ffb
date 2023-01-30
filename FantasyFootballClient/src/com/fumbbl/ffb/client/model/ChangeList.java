@@ -9,9 +9,6 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("2.16.0")
-			.addFeature("Automated Markings: Can be activated in user settings, more details can be found in the wiki https://fumbbl.com/help:AutomaticMarking or help menu")
-		);
 
 		versions.add(new VersionChangeList("2.16.0")
 			.addFeature("Thinking Man's Troll")
@@ -28,6 +25,7 @@ public class ChangeList {
 			.addBugfix("When a thrown player hit and removed the ttm player a ghost image of the thrown player was shown in it's place")
 			.addBugfix("Players hit by ttm were not shown on the pitch during the animation sequences")
 			.addBugfix("Weather Mage effect did not revert at the end of a drive")
+			.addFeature("Automated Markings: Can be activated in user settings, more details can be found in the wiki https://fumbbl.com/help:AutomaticMarking or help menu")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")
