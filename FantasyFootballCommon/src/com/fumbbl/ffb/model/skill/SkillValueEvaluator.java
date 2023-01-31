@@ -141,6 +141,10 @@ public interface SkillValueEvaluator {
 				category = SkillDisplayInfo.Category.TEMPORARY;
 			}
 
+			if (intValue == 0) {
+				return Collections.singleton(new SkillDisplayInfo(skill.getName(), category, skill));
+			}
+
 			return Collections.singleton(new SkillDisplayInfo(format(skill, intValue), category, skill));
 		}
 

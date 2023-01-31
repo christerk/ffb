@@ -5,6 +5,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 
 /**
  * The player has a powerful telepathic ability that he can use to stun an
@@ -30,4 +31,8 @@ public class HypnoticGaze extends Skill {
 		registerProperty(NamedProperties.inflictsConfusion);
 	}
 
+	@Override
+	public SkillValueEvaluator evaluator() {
+		return SkillValueEvaluator.ROLL;
+	}
 }
