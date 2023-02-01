@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("Weather Mage effect did not revert at the end of a drive")
 			.addFeature("Automated Markings: Can be activated in user settings, more details can be found in the wiki https://fumbbl.com/help:AutomaticMarking or help menu")
 			.addFeature("Hypnotic Gaze can now be used with a custom skill value to be used instead of agility (requested by Secret League)")
+			.addImprovement("Use new pitch icons")
 		);
 
 		versions.add(new VersionChangeList("2.15.0")
