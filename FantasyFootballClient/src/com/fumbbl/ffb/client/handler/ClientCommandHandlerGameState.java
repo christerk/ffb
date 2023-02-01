@@ -74,7 +74,6 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		Set<String> iconUrlsToDownload = new HashSet<>();
 		for (String iconUrl : iconUrls) {
-			// TODO: FUMBBL wrong empty player portraits
 			if (!iconCache.loadIconFromArchive(iconUrl) && !iconUrl.endsWith("/i/")) {
 				iconUrlsToDownload.add(iconUrl);
 			}
