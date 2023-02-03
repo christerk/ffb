@@ -4,6 +4,7 @@ import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.StringTool;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class MarkerGenerator {
 
 		Set<AutoMarkingRecord> markingsToApply = new HashSet<>();
 
+		String separator = config.getSeparator();
+
+		String finalSeparator = separator == null ? "" : separator;
 		return config.getMarkings().stream()
 			.filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach))
 			.collect(Collectors.groupingBy(markingRecord -> markingRecord.getSkills().isEmpty()))
@@ -63,8 +67,8 @@ public class MarkerGenerator {
 						.thenComparing((o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
 						.thenComparing(
 							AutoMarkingRecord::getMarking))
-					.map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries, markingsToApply, config.getSeparator()))
-					.sorted()).collect(Collectors.joining(config.getSeparator()));
+					.map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries, markingsToApply, finalSeparator))
+					.sorted()).filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
 
 
 	}

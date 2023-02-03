@@ -11,8 +11,10 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AutoMarkingRecord implements IJsonSerializable {
@@ -122,6 +124,11 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		gainedOnly = IJsonOption.GAINED_ONLY.getFrom(source, jsonObject);
 		marking = IJsonOption.MARKING.getFrom(source, jsonObject);
 		applyRepeatedly = IJsonOption.APPLY_REPEATEDLY.getFrom(source, jsonObject);
+		String[] injuryAttributes = IJsonOption.INJURY_ATTRIBUTES.getFrom(source, jsonObject);
+		if (ArrayTool.isProvided(injuryAttributes)) {
+			Arrays.stream(injuryAttributes).map(InjuryAttribute::forName).forEach(injuries::add);
+		}
+
 		return this;
 	}
 
