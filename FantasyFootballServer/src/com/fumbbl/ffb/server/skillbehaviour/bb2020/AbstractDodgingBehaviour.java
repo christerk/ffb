@@ -43,7 +43,7 @@ public abstract class AbstractDodgingBehaviour<T extends Skill> extends SkillBeh
 					state.usingDodge = state.oldDefenderState.hasTacklezones();
 				}
 
-				if (state.askForSkill) {
+				if (state.askForSkill && state.oldDefenderState.hasTacklezones()) {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
 						true);
 					return true;
