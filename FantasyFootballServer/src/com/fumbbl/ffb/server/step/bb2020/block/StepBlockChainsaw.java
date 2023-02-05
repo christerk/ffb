@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
@@ -146,10 +147,12 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 						minimumRoll, reRolled, null));
 				if (successful) {
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
+					PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(),
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
-						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess, game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
+						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess, game.getDefenderId(),
+							ApothecaryMode.DEFENDER, true, defenderState.isProneOrStunned())));
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),

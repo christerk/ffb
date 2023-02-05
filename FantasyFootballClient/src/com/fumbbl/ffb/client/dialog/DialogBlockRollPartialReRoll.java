@@ -2,11 +2,13 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.dialog.DialogBlockRollPartialReRollParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
@@ -43,7 +45,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 	private Skill addBlockDieSkill;
 	private int fDiceIndex, proIndex;
-	private ReRollSource fReRollSource;
+	private ReRollSource fReRollSource, singleDieReRollSource;
 	private JButton buttonSingleUseReRoll;
 
 	private final DialogBlockRollPartialReRollParameter fDialogParameter;
@@ -56,6 +58,11 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		fDialogParameter = pDialogParameter;
 		singleUseReRollSource = pDialogParameter.getSingleUseReRollSource();
 		Skill addBlockDieSkill = pDialogParameter.getAddBlockDieSkill();
+
+		Skill singleDieReRollSkill = getClient().getGame().getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+		if (singleDieReRollSkill != null) {
+			singleDieReRollSource = singleDieReRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+		}
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
@@ -143,8 +150,8 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 					reRollPanel.add(fButtonProReRoll);
 				}
 
-				if (getDialogParameter().hasConsummateOption()) {
-					consummateButton = new JButton(ReRollSources.CONSUMMATE_PROFESSIONAL.getName(getClient().getGame()));
+				if (getDialogParameter().hasConsummateOption() && singleDieReRollSource != null) {
+					consummateButton = new JButton(singleDieReRollSource.getName(getClient().getGame()));
 					consummateButton.addActionListener(this);
 					consummateButton.setMnemonic(KeyEvent.VK_C);
 					consummateButton.addKeyListener(this);
@@ -185,7 +192,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
 
-				if (getDialogParameter().hasConsummateOption()) {
+				if (pDialogParameter.hasConsummateOption() && singleDieReRollSource != null) {
 					centerPanel.add(consummatePanel(Math.abs(pDialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
@@ -251,7 +258,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		JPanel consummatePanel = new JPanel();
 		consummatePanel.setLayout(new BoxLayout(consummatePanel, BoxLayout.Y_AXIS));
 		consummatePanel.setAlignmentX(CENTER_ALIGNMENT);
-		consummatePanel.add(textPanel(ReRollSources.CONSUMMATE_PROFESSIONAL.getName(getClient().getGame())));
+		consummatePanel.add(textPanel(singleDieReRollSource.getName(getClient().getGame())));
 		consummatePanel.setOpaque(false);
 
 		JPanel consummateButtonPanel = new JPanel();
@@ -306,19 +313,19 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			fReRollSource = singleUseReRollSource;
 		}
 		if (pActionEvent.getSource() == consummateButton) {
-			fReRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+			fReRollSource = singleDieReRollSource;
 			proIndex = 0;
 		}
 		if (pActionEvent.getSource() == consummateButton1) {
-			fReRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+			fReRollSource = singleDieReRollSource;
 			proIndex = 0;
 		}
 		if (pActionEvent.getSource() == consummateButton2) {
-			fReRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+			fReRollSource = singleDieReRollSource;
 			proIndex = 1;
 		}
 		if (pActionEvent.getSource() == consummateButton3) {
-			fReRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+			fReRollSource = singleDieReRollSource;
 			proIndex = 2;
 		}
 		if (pActionEvent.getSource() == fButtonProReRoll) {
@@ -383,6 +390,10 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		return proIndex;
 	}
 
+	public ReRollSource getSingleDieReRollSource() {
+		return singleDieReRollSource;
+	}
+
 	public void keyPressed(KeyEvent pKeyEvent) {
 	}
 
@@ -445,21 +456,21 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			case KeyEvent.VK_C:
 				if (getDialogParameter().hasConsummateOption()) {
 					keyHandled = true;
-					fReRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+					fReRollSource = singleDieReRollSource;
 					proIndex = 0;
 				}
 				break;
 			case KeyEvent.VK_O:
 				if (getDialogParameter().hasConsummateOption()) {
 					keyHandled = true;
-					fReRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+					fReRollSource = singleDieReRollSource;
 					proIndex = 1;
 				}
 				break;
 			case KeyEvent.VK_M:
 				if (getDialogParameter().hasConsummateOption()) {
 					keyHandled = true;
-					fReRollSource = ReRollSources.CONSUMMATE_PROFESSIONAL;
+					fReRollSource = singleDieReRollSource;
 					proIndex = 2;
 				}
 				break;

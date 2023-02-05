@@ -9,6 +9,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogInformation extends Dialog implements ActionListener {
@@ -24,27 +25,33 @@ public class DialogInformation extends Dialog implements ActionListener {
 	public static final int OK_DIALOG = 1;
 	public static final int CANCEL_DIALOG = 2;
 
+	private final JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
 	private final int fOptionType;
+	private final String panelProperty;
+	private final String panelOffValue;
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String pMessage, int pOptionType) {
-		this(pClient, pTitle, new String[] { pMessage }, pOptionType, false, null);
+		this(pClient, pTitle, new String[]{pMessage}, pOptionType, false, null, null, null);
 	}
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			boolean pCenteredText) {
-		this(pClient, pTitle, pMessages, pOptionType, pCenteredText, null);
+													 boolean pCenteredText) {
+		this(pClient, pTitle, pMessages, pOptionType, pCenteredText, null, null, null);
 	}
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
 			String pIconProperty) {
-		this(pClient, pTitle, pMessages, pOptionType, false, pIconProperty);
+		this(pClient, pTitle, pMessages, pOptionType, false, pIconProperty, null, null);
 	}
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-			boolean pCenteredText, String pIconProperty) {
+													 boolean pCenteredText, String pIconProperty, String panelProperty, String panelOffValue) {
 
 		super(pClient, pTitle, false);
 		fOptionType = pOptionType;
+
+		this.panelProperty = panelProperty;
+		this.panelOffValue = panelOffValue;
 
 		JButton fButton;
 		if (getOptionType() == OK_DIALOG) {
@@ -86,6 +93,9 @@ public class DialogInformation extends Dialog implements ActionListener {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(fButton);
+		if (StringTool.isProvided(panelOffValue) && StringTool.isProvided(panelProperty)) {
+			buttonPanel.add(doNotShowAgainCheckbox);
+		}
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -100,6 +110,11 @@ public class DialogInformation extends Dialog implements ActionListener {
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(this);
+
+			if (doNotShowAgainCheckbox.isSelected()) {
+				getClient().setProperty(panelProperty, panelOffValue);
+				getClient().saveUserSettings(false);
+			}
 		}
 	}
 

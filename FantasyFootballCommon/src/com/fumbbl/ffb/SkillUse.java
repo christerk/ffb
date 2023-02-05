@@ -18,6 +18,8 @@ public enum SkillUse implements INamedObject {
 	CANCEL_STRIP_BALL("cancelStripBall", "to cancel %g opponent's Strip Ball skill"),
 	HALVE_KICKOFF_SCATTER("halveKickoffScatter", "to halve the kickoff scatter"),
 	CANCEL_DODGE("cancelDodge", "to cancel %g opponent's Dodge skill"),
+	CANCEL_WATCH_OUT("cancelWatchOut", "to cancel %g opponent's Watch Out! skill"),
+
 	AVOID_FALLING("avoidFalling", "to avoid falling"),
 	CANCEL_TACKLE("cancelTackle", "to cancel %g opponent's Tackle skill"),
 	INCREASE_STRENGTH_BY_1("increaseStrengthBy1", "to increase %g strength by 1"),
@@ -49,6 +51,8 @@ public enum SkillUse implements INamedObject {
 	LOOK_INTO_MY_EYES("lookIntoMyEyes", "to steal the ball from %g opponent"),
 	MAKE_OPPONENT_MISS_TURN("makeOpponentMissTurn", "to make an opponent player miss a turn"),
 	LASH_OUT_AGAINST_OPPONENT("lashOutAgainstOpponent", "to lash out against an opponent player instead"),
+	EASY_INTERCEPT("easyIntercept", "to try an easy interception"),
+	PERFORM_ADDITIONAL_ATTACK("performAdditionalAttack", "to perform an additional attack"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

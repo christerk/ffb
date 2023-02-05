@@ -24,6 +24,7 @@ public class Tackle extends Skill {
 	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(NamedProperties.canRerollDodge));
 		registerProperty(new CancelSkillProperty(NamedProperties.ignoreDefenderStumblesResult));
+		registerProperty(new CancelSkillProperty(NamedProperties.ignoresDefenderStumblesResultForFirstBlock));
 	}
 
 }

@@ -102,6 +102,7 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail) && usingVomit) {
+			actingPlayer.markSkillUsed(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
 			boolean dropSelf = false;
 			if (ReRolledActions.PROJECTILE_VOMIT == getReRolledAction()) {
 				if ((getReRollSource() == null)

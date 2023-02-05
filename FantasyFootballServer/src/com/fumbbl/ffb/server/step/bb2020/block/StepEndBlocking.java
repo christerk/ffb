@@ -76,7 +76,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
 	private boolean fUsingStab, usingChainsaw, addBlockDie, allowSecondBlockAction, usingVomit;
-	private Boolean usePileDriver, useHitAndRun;
+	private Boolean usePileDriver, useHitAndRun, usePutridRegurgitation;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
 	private PlayerState oldDefenderState;
@@ -104,6 +104,10 @@ public class StepEndBlocking extends AbstractStep {
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) receivedCommand.getCommand();
 					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMoveAfterBlock)) {
 						useHitAndRun = commandUseSkill.isSkillUsed();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					} else if (
+						commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
+						usePutridRegurgitation = commandUseSkill.isSkillUsed();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -189,6 +193,10 @@ public class StepEndBlocking extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 		fieldModel.clearMultiBlockTargets();
+
+		UtilCards.getUnusedSkillWithProperty(game.getDefender(), NamedProperties.ignoresDefenderStumblesResultForFirstBlock)
+			.ifPresent(skill -> game.getDefender().markUsed(skill, game));
+
 		if (fEndTurn || fEndPlayerAction) {
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
@@ -229,11 +237,11 @@ public class StepEndBlocking extends AbstractStep {
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), defenderId, fUsingStab, true, null, askForBlockKind, addBlockDie));
 				} else {
-					blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), defenderId, fUsingStab, null, askForBlockKind));
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(defenderId).useStab(fUsingStab).askForBlockKind(askForBlockKind).build());
 					publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, allowSecondBlockAction));
 				}
 			} else {
-				ServerUtilBlock.removePlayerBlockStates(game);
+				ServerUtilBlock.removePlayerBlockStates(game, oldDefenderState);
 				fieldModel.clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(activePlayer);
@@ -270,6 +278,25 @@ public class StepEndBlocking extends AbstractStep {
 					useHitAndRun = false;
 				}
 
+				boolean canUsePutridRegurgitation = actingPlayer.getPlayerAction() == PlayerAction.BLOCK
+					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
+					&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(activePlayer.getTeam()), game.getFieldModel().getPlayerCoordinate(activePlayer)))
+					&& !fUsingStab && !usingChainsaw && !usingVomit;
+
+				if (!canUsePutridRegurgitation) {
+					usePutridRegurgitation = false;
+				}
+
+				if (usePutridRegurgitation == null) {
+					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(activePlayer.getId(), activePlayer.getSkillWithProperty(NamedProperties.canUseVomitAfterBlock), 0), false);
+					getResult().setNextAction(StepAction.CONTINUE);
+					return;
+				} else if (usePutridRegurgitation) {
+					blockGenerator.pushSequence(new Block.Builder(getGameState()).publishDefender(true).build());
+					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.PUTRID_REGURGITATION_BLOCK, actingPlayer.isJumping());
+					ServerUtilBlock.updateDiceDecorations(game);
+					return;
+				}
 				if (useHitAndRun == null) {
 					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(activePlayer.getId(), activePlayer.getSkillWithProperty(NamedProperties.canMoveAfterBlock), 0), false);
 					getResult().setNextAction(StepAction.CONTINUE);
@@ -297,7 +324,11 @@ public class StepEndBlocking extends AbstractStep {
 					&& !usingChainsaw
 					&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 					String actingPlayerId = activePlayer.getId();
-					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
+						UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
+					} else {
+						UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+					}
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
@@ -322,7 +353,7 @@ public class StepEndBlocking extends AbstractStep {
 						allowSecondBlockAction = false;
 						actingPlayer.setHasBlocked(false);
 						actingPlayer.markSkillUnused(NamedProperties.forceSecondBlock);
-						blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), usingChainsaw, true));
+						blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).publishDefender(true).build());
 						ServerUtilBlock.updateDiceDecorations(game);
 					} else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
 						&& attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
@@ -331,7 +362,7 @@ public class StepEndBlocking extends AbstractStep {
 						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true, true));
 						} else {
-							blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), true, true));
+							blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(true).publishDefender(true).build());
 						}
 
 					} else {
@@ -361,6 +392,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.USING_PILE_DRIVER.addTo(jsonObject, usePileDriver);
 		IServerJsonOption.USING_HIT_AND_RUN.addTo(jsonObject, useHitAndRun);
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
+		IServerJsonOption.USING_PUTRID_REGURGITATION.addTo(jsonObject, usePutridRegurgitation);
 		return jsonObject;
 	}
 
@@ -380,6 +412,7 @@ public class StepEndBlocking extends AbstractStep {
 		allowSecondBlockAction = toPrimitive(IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.getFrom(source, jsonObject));
 		useHitAndRun = IServerJsonOption.USING_HIT_AND_RUN.getFrom(source, jsonObject);
 		usePileDriver = IServerJsonOption.USING_PILE_DRIVER.getFrom(source, jsonObject);
+		usePutridRegurgitation = IServerJsonOption.USING_PUTRID_REGURGITATION.getFrom(source, jsonObject);
 		return this;
 	}
 

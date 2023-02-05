@@ -67,6 +67,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	private boolean fDropThrownPlayer, kickedPlayer;
 	private PassResult passResult;
 	private String goToOnSuccess;
+	private PlayerState oldPlayerState;
 
 	public StepRightStuff(GameState pGameState) {
 		super(pGameState);
@@ -111,6 +112,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				case PASS_RESULT:
 					passResult = (PassResult) parameter.getValue();
 					return true;
+				case OLD_DEFENDER_STATE:
+					oldPlayerState = (PlayerState) parameter.getValue();
+					return true;
 				default:
 					break;
 			}
@@ -144,6 +148,8 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
+		game.getFieldModel().setPlayerState(thrownPlayer, oldPlayerState);
+		publishParameter(StepParameter.from(StepParameterKey.THROWN_PLAYER_STATE, oldPlayerState));
 		if (fThrownPlayerHasBall) {
 			game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(thrownPlayer));
 		}
@@ -231,6 +237,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, passResult);
 		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, goToOnSuccess);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, kickedPlayer);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -244,6 +251,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		goToOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
 		kickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		fDropThrownPlayer = IServerJsonOption.DROP_THROWN_PLAYER.getFrom(source, jsonObject);
+		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 

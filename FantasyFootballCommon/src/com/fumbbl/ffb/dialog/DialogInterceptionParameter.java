@@ -6,21 +6,29 @@ import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.skill.Skill;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogInterceptionParameter implements IDialogParameter {
 
 	private String fThrowerId;
+	private Skill interceptionSkill;
+	private int skillMnemonic;
 
 	public DialogInterceptionParameter() {
 		super();
 	}
 
 	public DialogInterceptionParameter(String pPlayerId) {
-		fThrowerId = pPlayerId;
+		this(pPlayerId, null, 0);
+	}
+
+	public DialogInterceptionParameter(String fThrowerId, Skill interceptionSkill, int skillMnemonic) {
+		this.fThrowerId = fThrowerId;
+		this.interceptionSkill = interceptionSkill;
+		this.skillMnemonic = skillMnemonic;
 	}
 
 	public DialogId getId() {
@@ -31,10 +39,17 @@ public class DialogInterceptionParameter implements IDialogParameter {
 		return fThrowerId;
 	}
 
-	// transformation
+	public Skill getInterceptionSkill() {
+		return interceptionSkill;
+	}
+
+	public int getSkillMnemonic() {
+		return skillMnemonic;
+	}
+// transformation
 
 	public IDialogParameter transform() {
-		return new DialogInterceptionParameter(getThrowerId());
+		return new DialogInterceptionParameter(getThrowerId(), interceptionSkill, skillMnemonic);
 	}
 
 	// JSON serialization
@@ -43,6 +58,8 @@ public class DialogInterceptionParameter implements IDialogParameter {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.THROWER_ID.addTo(jsonObject, fThrowerId);
+		IJsonOption.SKILL.addTo(jsonObject, interceptionSkill);
+		IJsonOption.SKILL_MNEMONIC.addTo(jsonObject, skillMnemonic);
 		return jsonObject;
 	}
 
@@ -50,6 +67,10 @@ public class DialogInterceptionParameter implements IDialogParameter {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
 		fThrowerId = IJsonOption.THROWER_ID.getFrom(source, jsonObject);
+		interceptionSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+		if (IJsonOption.SKILL_MNEMONIC.isDefinedIn(jsonObject)) {
+			skillMnemonic = IJsonOption.SKILL_MNEMONIC.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 

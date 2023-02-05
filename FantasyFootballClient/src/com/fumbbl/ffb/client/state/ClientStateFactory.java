@@ -8,8 +8,12 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateHitAndRun;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateKickEmBlitz;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateKickEmBlock;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateMaximumCarnage;
+import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlitz;
+import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlock;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
@@ -82,6 +86,10 @@ public class ClientStateFactory {
 		register(new ClientStateSelectBlockKind(pClient));
 		register(new ClientStateMaximumCarnage(pClient));
 		register(new ClientStateHitAndRun(pClient));
+		register(new ClientStatePutridRegurgitationBlitz(pClient));
+		register(new ClientStatePutridRegurgitationBlock(pClient));
+		register(new ClientStateKickEmBlitz(pClient));
+		register(new ClientStateKickEmBlock(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -212,6 +220,19 @@ public class ClientStateFactory {
 									break;
 								case MAXIMUM_CARNAGE:
 									clientStateId = ClientStateId.MAXIMUM_CARNAGE;
+									break;
+								case PUTRID_REGURGITATION_BLITZ:
+								case PUTRID_REGURGITATION_MOVE:
+									clientStateId = ClientStateId.PUTRID_REGURGITATION_BLITZ;
+									break;
+								case PUTRID_REGURGITATION_BLOCK:
+									clientStateId = ClientStateId.PUTRID_REGURGITATION_BLOCK;
+									break;
+								case KICK_EM_BLITZ:
+									clientStateId = ClientStateId.KICK_EM_BLITZ;
+									break;
+								case KICK_EM_BLOCK:
+									clientStateId = ClientStateId.KICK_EM_BLOCK;
 									break;
 								default:
 									break;

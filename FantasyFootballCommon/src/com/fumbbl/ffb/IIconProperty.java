@@ -30,6 +30,8 @@ public interface IIconProperty {
 	String DECORATION_GAZE_TARGET_SELECTED = "decoration.selected.gaze.target";
 	String DECORATION_BLOCK_TARGET = "decoration.block.target";
 	String DECORATION_STAB_TARGET = "decoration.stab.target";
+	String DECORATION_VOMIT_TARGET = "decoration.vomit.target";
+	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
 
 	// Game icons
@@ -172,6 +174,9 @@ public interface IIconProperty {
 	String ACTION_LOOK_INTO_MY_EYES = "action.lookIntoMyEyes";
 	String ACTION_BALEFUL_HEX = "action.balefulHex";
 	String ACTION_HIT_AND_RUN = "action.hitAndRun";
+	String ACTION_ALL_YOU_CAN_EAT = "action.allYouCanEat";
+	String ACTION_KICK_EM_BLOCK = "action.kickEmBlock";
+	String ACTION_KICK_EM_BLITZ = "action.kickEmBlitz";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

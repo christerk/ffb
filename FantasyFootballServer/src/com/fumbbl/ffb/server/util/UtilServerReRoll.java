@@ -140,7 +140,7 @@ public class UtilServerReRoll {
 			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
 			boolean proOption = isProReRollAvailable(player, game, gameState.getPassState());
 			if (reRollSkill == null) {
-				Optional<Skill> reRollOnce = UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerGame);
+				Optional<Skill> reRollOnce = UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
 				if (reRollOnce.isPresent()) {
 					reRollSkill = reRollOnce.get();
 				}

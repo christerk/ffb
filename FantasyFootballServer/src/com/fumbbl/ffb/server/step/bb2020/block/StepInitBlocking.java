@@ -11,6 +11,8 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.server.GameState;
@@ -163,6 +165,9 @@ public class StepInitBlocking extends AbstractStep {
 		if (game.getTurnMode() == TurnMode.SELECT_BLOCK_KIND) {
 			game.setTurnMode(game.getLastTurnMode());
 		}
+		if (actingPlayer.getPlayerAction() != null && actingPlayer.getPlayerAction().isKickingDowned()) {
+			actingPlayer.markSkillUsed(NamedProperties.canUseChainsawOnDownedOpponents);
+		}
 		if (fEndTurn) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
@@ -178,6 +183,10 @@ public class StepInitBlocking extends AbstractStep {
 					game.setTurnMode(TurnMode.SELECT_BLOCK_KIND);
 					askForBlockKind = false;
 				} else {
+					if (actingPlayer.getPlayerAction().isPutrid()) {
+						actingPlayer.markSkillUsed(NamedProperties.canUseVomitAfterBlock);
+					}
+
 					game.setDefenderId(defender.getId());
 					actingPlayer.setStrength(actingPlayer.getPlayer().getStrengthWithModifiers());
 
@@ -217,6 +226,7 @@ public class StepInitBlocking extends AbstractStep {
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IServerJsonOption.ASK_FOR_BLOCK_KIND.addTo(jsonObject, askForBlockKind);
 		IServerJsonOption.PUBLISH_DEFENDER.addTo(jsonObject, publishDefender);
+		//TODO
 		return jsonObject;
 	}
 

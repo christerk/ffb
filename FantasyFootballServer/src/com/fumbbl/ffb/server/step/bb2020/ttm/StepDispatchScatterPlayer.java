@@ -28,7 +28,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepDispatchScatterPlayer extends AbstractStep {
 	private String thrownPlayerId;
-	private PlayerState thrownPlayerState;
+	private PlayerState thrownPlayerState, oldPlayerState;
 	private boolean thrownPlayerHasBall = false, isKickedPlayer;
 	private PassResult passResult = PassResult.FUMBLE;
 
@@ -71,6 +71,9 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 					return true;
 				case IS_KICKED_PLAYER:
 					isKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;
+				case OLD_DEFENDER_STATE:
+					oldPlayerState = (PlayerState) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -119,7 +122,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
 					thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
-					throwScatter, deviate, !thrownPlayerState.hasTacklezones(), isKickedPlayer));
+					throwScatter, deviate, !oldPlayerState.hasTacklezones(), isKickedPlayer));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -132,6 +135,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, thrownPlayerHasBall);
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, passResult);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, isKickedPlayer);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -144,6 +148,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
 		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
+		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 }

@@ -10,6 +10,26 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.16.0")
+			.addFeature("Thinking Man's Troll")
+			.addFeature("Halfling Luck")
+			.addFeature("Watch Out!")
+			.addFeature("Yoink!")
+			.addFeature("A Sneaky Pair")
+			.addFeature("All You Can Eat")
+			.addBugfix("Allow Fumblerooskie during all move related actions")
+			.addFeature("Putrid Regurgitation")
+			.addFeature("Kick 'em while they're down!")
+			.addBugfix("Dead players could defect")
+			.addBugfix("Raiding Party was able to move rooted players")
+			.addBugfix("When a thrown player hit and removed the ttm player a ghost image of the thrown player was shown in it's place")
+			.addBugfix("Players hit by ttm were not shown on the pitch during the animation sequences")
+			.addBugfix("Weather Mage effect did not revert at the end of a drive")
+			.addFeature("Automated Markings: Can be activated in user settings, more details can be found in the wiki https://fumbbl.com/help:AutomaticMarking or help menu")
+			.addFeature("Hypnotic Gaze can now be used with a custom skill value to be used instead of agility (requested by Secret League)")
+			.addImprovement("Use new pitch icons")
+		);
+
 		versions.add(new VersionChangeList("2.15.0")
 			.addBugfix("Allow re-rolling natural one on Argue the Call with Biased Ref even though coach would not have been banned")
 			.addBugfix("Argue the Call now is coming before Bribes")

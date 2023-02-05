@@ -5,6 +5,7 @@ import com.fumbbl.ffb.mechanics.Wording;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
@@ -56,7 +57,10 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 
 	@Override
 	public int minimumRollHypnoticGaze(Player<?> pPlayer, Set<GazeModifier> pGazeModifiers) {
-		return minimumRoll(pPlayer.getAgilityWithModifiers(), pGazeModifiers);
+
+		int variableValue = pPlayer.getSkillIntValue(NamedProperties.inflictsConfusion);
+
+		return minimumRoll(variableValue == 0 ? pPlayer.getAgilityWithModifiers() : variableValue, pGazeModifiers);
 	}
 
 	@Override
@@ -115,7 +119,10 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 
 	@Override
 	public String formatHypnoticGazeResult(ReportSkillRoll report, Player<?> player) {
-		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
+		int variableValue = player.getSkillIntValue(NamedProperties.inflictsConfusion);
+
+
+		return formatResult(variableValue == 0 ? player.getAgilityWithModifiers() : variableValue, report.getRollModifiers());
 	}
 
 	@Override
@@ -124,7 +131,10 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-	public Wording interceptionWording() {
+	public Wording interceptionWording(boolean easyIntercept) {
+		if (easyIntercept) {
+			return new Wording("Interception", "intercept", "intercepts", "interceptor");
+		}
 		return new Wording("Interference", "deflect", "deflects", "interfering player");
 	}
 

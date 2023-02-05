@@ -157,15 +157,17 @@ public final class StepInitThrowTeamMate extends AbstractStep {
 					}
 				} else {
 					game.setDefenderId(thrownPlayerId);
-					PlayerState thrownPlayerState = game.getFieldModel().getPlayerState(game.getDefender());
+					PlayerState oldPlayerState = game.getFieldModel().getPlayerState(game.getDefender());
+					PlayerState thrownPlayerState = oldPlayerState.changeBase(PlayerState.PICKED_UP);
 					publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, thrownPlayerId));
 					publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
+					publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldPlayerState));
 					FieldCoordinate thrownPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, thrownPlayerCoordinate));
 					boolean thrownPlayerHasBall = thrownPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())
 						&& !game.getFieldModel().isBallMoving();
 					publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));
-					game.getFieldModel().setPlayerState(game.getDefender(), thrownPlayerState.changeBase(PlayerState.PICKED_UP));
+					game.getFieldModel().setPlayerState(game.getDefender(), thrownPlayerState);
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), kicked ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE, false);
 				}
 			}

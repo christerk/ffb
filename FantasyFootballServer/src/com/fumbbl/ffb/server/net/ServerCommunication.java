@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TeamList;
 import com.fumbbl.ffb.json.LZString;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.PlayerResult;
@@ -35,6 +36,7 @@ import com.fumbbl.ffb.net.commands.ServerCommandTalk;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamList;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamSetupList;
 import com.fumbbl.ffb.net.commands.ServerCommandUnzapPlayer;
+import com.fumbbl.ffb.net.commands.ServerCommandUpdateLocalPlayerMarkers;
 import com.fumbbl.ffb.net.commands.ServerCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.net.commands.ServerCommandZapPlayer;
@@ -475,8 +477,12 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 	public void sendUnzapPlayer(GameState gameState, ZappedPlayer player) {
 		ServerCommandUnzapPlayer commandUnzapPlayer = new ServerCommandUnzapPlayer(player.getId(),
-				player.getTeam().getId());
+			player.getTeam().getId());
 		sendAllSessions(gameState, commandUnzapPlayer, true);
+	}
+
+	public void sendUpdateLocalPlayerMarkers(Session session, List<PlayerMarker> markers) {
+		send(session, new ServerCommandUpdateLocalPlayerMarkers(markers), true);
 	}
 
 	public int getQueueLength() {

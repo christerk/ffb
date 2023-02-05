@@ -15,10 +15,12 @@ import com.fumbbl.ffb.net.commands.UtilNetCommand;
 public class InternalServerCommandReplayLoaded extends InternalServerCommand {
 
 	private int fReplayToCommandNr;
+	private String coach;
 
-	public InternalServerCommandReplayLoaded(long pGameId, int pReplayToCommandNr) {
+	public InternalServerCommandReplayLoaded(long pGameId, int pReplayToCommandNr, String coach) {
 		super(pGameId);
 		fReplayToCommandNr = pReplayToCommandNr;
+		this.coach = coach;
 	}
 
 	public NetCommandId getId() {
@@ -29,11 +31,16 @@ public class InternalServerCommandReplayLoaded extends InternalServerCommand {
 		return fReplayToCommandNr;
 	}
 
+	public String getCoach() {
+		return coach;
+	}
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.REPLAY_TO_COMMAND_NR.addTo(jsonObject, fReplayToCommandNr);
+		IJsonOption.COACH.addTo(jsonObject, coach);
 		return jsonObject;
 	}
 
@@ -41,6 +48,7 @@ public class InternalServerCommandReplayLoaded extends InternalServerCommand {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(source, jsonObject);
+		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;
 	}
 

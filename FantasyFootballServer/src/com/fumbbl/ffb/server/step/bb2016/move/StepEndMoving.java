@@ -160,7 +160,7 @@ public class StepEndMoving extends AbstractStep {
 			// block defender set by ball and chain
 		} else if (StringTool.isProvided(fBlockDefenderId)) {
 			((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-				.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, false, null));
+				.pushSequence(new Block.Builder(getGameState()).withDefenderId(fBlockDefenderId).build());
 			// this may happen on a failed TAKE_ROOT roll
 		} else if (StringTool.isProvided(actingPlayer.getPlayerId()) && (actingPlayer.getPlayerAction() != null)
 			&& !actingPlayer.getPlayerAction().isMoving() && !(actingPlayer.getPlayerAction() == PlayerAction.PASS
@@ -204,7 +204,7 @@ public class StepEndMoving extends AbstractStep {
 			switch (pPlayerAction) {
 				case BLOCK:
 					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-							.pushSequence(new Block.SequenceParams(getGameState()));
+						.pushSequence(new Block.Builder(getGameState()).build());
 					return true;
 				case BLITZ:
 				case BLITZ_MOVE:

@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.BlockResult;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -114,7 +115,10 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				case CLIENT_USE_CONSUMMATE_RE_ROLL_FOR_BLOCK:
 					ClientCommandUseConsummateReRollForBlock consummateCommand = (ClientCommandUseConsummateReRollForBlock) pReceivedCommand.getCommand();
 					setReRolledAction(ReRolledActions.BLOCK);
-					setReRollSource(ReRollSources.CONSUMMATE_PROFESSIONAL);
+					Skill skill = getGameState().getGame().getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+					if (skill != null) {
+						setReRollSource(skill.getRerollSource(ReRolledActions.SINGLE_DIE));
+					}
 					proIndex = consummateCommand.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -186,7 +190,16 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				} else {
 					fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
 						game.getDefender(), false, successfulDauntless, doubleTargetStrength, addBlockDie);
-					if (getReRollSource() == ReRollSources.PRO || getReRollSource() == ReRollSources.CONSUMMATE_PROFESSIONAL) {
+
+					Skill singleDieRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+
+					ReRollSource singleDieReRollSource = null;
+
+					if (singleDieRrSkill != null) {
+						singleDieReRollSource = singleDieRrSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+					}
+
+					if (getReRollSource() == ReRollSources.PRO || (getReRollSource() == singleDieReRollSource && singleDieReRollSource != null)) {
 						if (getReRollSource() == ReRollSources.PRO) {
 							actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 						}
@@ -238,20 +251,26 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		Skill singleDieRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+		ReRollSource singleDieReRollSource = null;
+		if (singleDieRrSkill != null) {
+			singleDieReRollSource = singleDieRrSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+		}
+
 		boolean teamReRollOption = getReRollSource() == null && UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		boolean singleUseReRollOption = getReRollSource() == null && UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		boolean proReRollOption = (getReRollSource() == null ||
-			((getReRollSource() == ReRollSources.BRAWLER || getReRollSource() == ReRollSources.CONSUMMATE_PROFESSIONAL)
+			((getReRollSource() == ReRollSources.BRAWLER || (getReRollSource() == singleDieReRollSource && singleDieReRollSource != null))
 				&& fBlockRoll.length > reRolledDiceIndexes.length))
 			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn);
 		boolean consummateOption = (getReRollSource() == null ||
 			((getReRollSource() == ReRollSources.BRAWLER || getReRollSource() == ReRollSources.PRO)
 				&& fBlockRoll.length > reRolledDiceIndexes.length))
-			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerGame);
+			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod);
 		boolean brawlerOption = actingPlayer.getPlayerAction() != PlayerAction.BLITZ
 			&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns) && brawlerIndex < 0
 			&& (getReRollSource() == null ||
-			((getReRollSource() == ReRollSources.PRO || getReRollSource() == ReRollSources.CONSUMMATE_PROFESSIONAL)
+			((getReRollSource() == ReRollSources.PRO || (getReRollSource() == singleDieReRollSource && singleDieReRollSource != null))
 				&& fBlockRoll.length > reRolledDiceIndexes.length));
 
 		if (brawlerOption) {

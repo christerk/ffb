@@ -25,15 +25,19 @@ public interface IJsonOption {
 	JsonStringOption APOTHECARY_TYPE = new JsonStringOption("apothecaryType");
 	JsonStringArrayOption APOTHECARY_TYPES = new JsonStringArrayOption("apothecaryTypes");
 	JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
+	JsonBooleanOption APPLY_REPEATEDLY = new JsonBooleanOption("applyRepeatedly");
+	JsonStringOption APPLY_TO = new JsonStringOption("applyTo");
 	JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
 	JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
 	JsonBooleanOption ARMOR_BROKEN = new JsonBooleanOption("armorBroken");
 	JsonArrayOption ARMOR_MODIFIERS = new JsonArrayOption("armorModifiers");
 	JsonIntArrayOption ARMOR_ROLL = new JsonIntArrayOption("armorRoll");
 	JsonIntOption ARMOUR = new JsonIntOption("armour");
+	JsonBooleanOption ASK_FOR_SKILL = new JsonBooleanOption("askForSkill");
 	JsonIntOption ASSISTANT_COACHES = new JsonIntOption("assistantCoaches");
 	JsonStringOption ATTACKER_ID = new JsonStringOption("attackerId");
 	JsonBooleanOption ATTACKER_SELECTS = new JsonBooleanOption("attackerSelects");
+	JsonArrayOption AUTO_MARKING_RECORDS = new JsonArrayOption("autoMarkingRecords");
 	JsonIntOption AVAILABLE_CARDS = new JsonIntOption("availableCards");
 	JsonIntOption AVAILABLE_GOLD = new JsonIntOption("availableGold");
 	JsonBooleanOption AWAY_GAINS_RE_ROLL = new JsonBooleanOption("awayGainsReRoll");
@@ -181,6 +185,7 @@ public interface IJsonOption {
 	JsonBooleanOption FRIENDS_WITH_REF = new JsonBooleanOption("friendsWithRef");
 	JsonBooleanOption FUMBLE = new JsonBooleanOption("fumble");
 	JsonBooleanOption FUMBLEROOSKIE_PENDING = new JsonBooleanOption("fumblerooskiePending");
+	JsonBooleanOption GAINED_ONLY = new JsonBooleanOption("gainedOnly");
 	JsonObjectOption GAME = new JsonObjectOption("game");
 	JsonLongOption GAME_ID = new JsonLongOption("gameId");
 	JsonObjectOption GAME_LIST = new JsonObjectOption("gameList");
@@ -215,6 +220,7 @@ public interface IJsonOption {
 	JsonBooleanOption HOME_PLAYING = new JsonBooleanOption("homePlaying");
 	JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
 	JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
+	JsonBooleanOption IGNORE_AGILITY = new JsonBooleanOption("ignoreAgility");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
 	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
@@ -222,6 +228,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);
 	JsonStringArrayOption INDUCEMENT_TYPE_ARRAY = new JsonStringArrayOption("inducementTypeArray");
 	JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
+	JsonStringArrayOption INJURY_ATTRIBUTES = new JsonStringArrayOption("injuryAttributes");
 	JsonPlayerStateOption INJURY_DECAY = new JsonPlayerStateOption("injuryDecay");
 	JsonArrayOption INJURY_DESCRIPTIONS = new JsonArrayOption("injuryDescriptions");
 	JsonStringOption INJURY_MODIFICATION = new JsonStringOption("injuryModification");
@@ -232,6 +239,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
 	JsonBooleanOption IS_OWN_CHOICE = new JsonBooleanOption("isOwnChoice");
+	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
 	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
 	JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", Factory.KICKOFF_RESULT);
@@ -242,12 +250,12 @@ public interface IJsonOption {
 	JsonStringOption LAST_DEFENDER_ID = new JsonStringOption("lastDefenderId");
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);
-	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
 	JsonBooleanOption LAST_COMMAND = new JsonBooleanOption("lastCommand");
 	JsonBooleanOption LIMIT_REACHED = new JsonBooleanOption("limitReached");
 	JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
+	JsonStringOption MARKING = new JsonStringOption("marking");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
@@ -426,6 +434,7 @@ public interface IJsonOption {
 	JsonIntOption SEND_TO_BOX_HALF = new JsonIntOption("sendToBoxHalf");
 	JsonEnumWithNameOption SEND_TO_BOX_REASON = new JsonEnumWithNameOption("sendToBoxReason", Factory.SEND_TO_BOX_REASON);
 	JsonIntOption SEND_TO_BOX_TURN = new JsonIntOption("sendToBoxTurn");
+	JsonStringOption SEPARATOR = new JsonStringOption("autoMarkingSeparator");
 	JsonEnumWithNameOption SERIOUS_INJURY = new JsonEnumWithNameOption("seriousInjury", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_DECAY = new JsonEnumWithNameOption("seriousInjuryDecay", Factory.SERIOUS_INJURY);
 	JsonEnumWithNameOption SERIOUS_INJURY_NEW = new JsonEnumWithNameOption("seriousInjuryNew", Factory.SERIOUS_INJURY);
@@ -450,6 +459,7 @@ public interface IJsonOption {
 	JsonLegacySkillValuesOption SKILL_DISPLAY_VALUES = new JsonLegacySkillValuesOption("skillDisplayValues");
 	JsonSkillValuesMapOption SKILL_DISPLAY_VALUES_MAP = new JsonSkillValuesMapOption("skillDisplayValuesMap");
 	JsonBooleanOption SKILL_NEVER_USE = new JsonBooleanOption("skillNeverUse");
+	JsonIntOption SKILL_MNEMONIC = new JsonIntOption("skillMnemonic");
 	JsonEnumWithNameOption SKILL_USE = new JsonEnumWithNameOption("skillUse", Factory.SKILL_USE);
 	JsonLegacySkillValuesOption SKILL_VALUES = new JsonLegacySkillValuesOption("skillValues");
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");
@@ -551,6 +561,7 @@ public interface IJsonOption {
 	JsonStringOption UPLOAD_STATUS = new JsonStringOption("uploadStatus");
 	JsonStringOption URL_ICON_SET = new JsonStringOption("urlIconSet");
 	JsonStringOption URL_PORTRAIT = new JsonStringOption("urlPortrait");
+	JsonBooleanOption USE_AUTO_MARKINGS = new JsonBooleanOption("useAutoMarkings");
 	JsonArrayOption USED_SKILLS = new JsonArrayOption("usedSkills");
 	JsonStringArrayOption USER_SETTING_NAMES = new JsonStringArrayOption("userSettingNames");
 	JsonStringArrayOption USER_SETTING_VALUES = new JsonStringArrayOption("userSettingValues");
@@ -561,6 +572,7 @@ public interface IJsonOption {
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
 	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
 	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");
+	JsonBooleanOption USING_PUTRID_REGURGITATION = new JsonBooleanOption("usingPutridRegurgitation");
 	JsonBooleanOption USING_STAB = new JsonBooleanOption("usingStab");
 	JsonBooleanOption USING_VOMIT = new JsonBooleanOption("usingVomit");
 	JsonIntOption VALUE = new JsonIntOption("value");

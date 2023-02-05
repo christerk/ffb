@@ -12,6 +12,9 @@ import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
@@ -59,20 +62,6 @@ public class ClientStateBlitz extends ClientStateMove {
 		return true;
 	}
 
-//  public void handleNetCommand(NetCommand pNetCommand) {
-//    switch (pNetCommand.getId()) {
-//      case SERVER_MOVE:
-//        getClient().getGame().getTurnData().setBlitzUsed(true);
-//        if (UtilBlock.updateDiceDecorations(getClient().getGame())) {
-//          getClient().getUserInterface().getFieldComponent().refresh();
-//        }
-//        break;
-//      case SERVER_BLOCK:
-//        getClient().getGame().getTurnData().setBlitzUsed(true);
-//        break;
-//    }
-//  }
-
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		boolean actionHandled = UtilClientStateBlocking.actionKeyPressed(this, pActionKey, true);
 		if (!actionHandled) {
@@ -83,9 +72,9 @@ public class ClientStateBlitz extends ClientStateMove {
 
 	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pPlayer != null) {
+			ClientCommunication communication = getClient().getCommunication();
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
-			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
 					communication.sendActingPlayer(null, null, false);
@@ -97,7 +86,7 @@ public class ClientStateBlitz extends ClientStateMove {
 					break;
 				case IPlayerPopupMenuKeys.KEY_MOVE:
 					if (actingPlayer.isSufferingBloodLust()) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+						getClient().getCommunication().sendActingPlayer(pPlayer, moveAction(), actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
@@ -108,6 +97,10 @@ public class ClientStateBlitz extends ClientStateMove {
 					break;
 			}
 		}
+	}
+
+	protected PlayerAction moveAction() {
+		return PlayerAction.BLITZ_MOVE;
 	}
 
 	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates) {

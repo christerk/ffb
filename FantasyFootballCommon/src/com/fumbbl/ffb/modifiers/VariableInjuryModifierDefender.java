@@ -15,6 +15,6 @@ public class VariableInjuryModifierDefender extends VariableInjuryModifier {
 
 	@Override
 	public boolean appliesToContext(InjuryModifierContext context) {
-		return context.isDefnderMode() && UtilCards.hasSkill(context.getDefender(), registeredTo);
+		return context.isDefenderMode() && UtilCards.hasSkill(context.getDefender(), registeredTo);
 	}
 }

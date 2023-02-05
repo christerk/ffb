@@ -13,9 +13,9 @@ import com.fumbbl.ffb.model.Game;
  */
 public class DialogInterception extends DialogThreeWayChoice {
 
-	public DialogInterception(FantasyFootballClient pClient) {
+	public DialogInterception(FantasyFootballClient pClient, String skillText, int skillMnemonic) {
 		super(pClient, title(pClient.getGame()), new String[]{description(pClient.getGame())},
-			IIconProperty.GAME_REF);
+			IIconProperty.GAME_REF, skillText, skillMnemonic);
 	}
 
 	public DialogId getId() {
@@ -24,12 +24,12 @@ public class DialogInterception extends DialogThreeWayChoice {
 
 	private static String title(Game game) {
 		return ((AgilityMechanic) game.getFactory(FactoryType.Factory.MECHANIC)
-			.forName(Mechanic.Type.AGILITY.name())).interceptionWording().getNoun();
+			.forName(Mechanic.Type.AGILITY.name())).interceptionWording(false).getNoun();
 	}
 
 	private static String description(Game game) {
 		return "Do you want to try to " + ((AgilityMechanic) game.getFactory(FactoryType.Factory.MECHANIC)
-			.forName(Mechanic.Type.AGILITY.name())).interceptionWording().getVerb() + " the pass?";
+			.forName(Mechanic.Type.AGILITY.name())).interceptionWording(false).getVerb() + " the pass?";
 	}
 
 }

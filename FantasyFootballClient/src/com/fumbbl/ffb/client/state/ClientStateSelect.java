@@ -151,6 +151,21 @@ public class ClientStateSelect extends ClientState {
 						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_KEG, false);
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT:
+					if (isAllYouCanEatAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.ALL_YOU_CAN_EAT, false);
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK:
+					if (isKickEmBlockAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.KICK_EM_BLOCK, false);
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ:
+					if (isKickEmBlitzAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.KICK_EM_BLITZ, false);
+					}
+					break;
 				default:
 					break;
 			}
@@ -276,6 +291,27 @@ public class ClientStateSelect extends ClientState {
 			beerBashItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH, 0));
 			menuItemList.add(beerBashItem);
 		}
+		if (isAllYouCanEatAvailable(pPlayer)) {
+			JMenuItem allYouCanEatItem = new JMenuItem("All You Can Eat",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_ALL_YOU_CAN_EAT)));
+			allYouCanEatItem.setMnemonic(IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT);
+			allYouCanEatItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT, 0));
+			menuItemList.add(allYouCanEatItem);
+		}
+		if (isKickEmBlockAvailable(pPlayer)) {
+			JMenuItem kickEmItem = new JMenuItem("Kick 'em while they are down! (Block)",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_KICK_EM_BLOCK)));
+			kickEmItem.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK);
+			kickEmItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK, 0));
+			menuItemList.add(kickEmItem);
+		}
+		if (isKickEmBlitzAvailable(pPlayer)) {
+			JMenuItem kickEmItem = new JMenuItem("Kick 'em while they are down! (Blitz)",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_KICK_EM_BLITZ)));
+			kickEmItem.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ);
+			kickEmItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ, 0));
+			menuItemList.add(kickEmItem);
+		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem("Recover from Confusion & End Move",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
@@ -384,6 +420,15 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_BEER_BARREL_BASH:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH);
+				break;
+			case PLAYER_ACTION_ALL_YOU_CAN_EAT:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT);
+				break;
+			case PLAYER_ACTION_KICK_EM_BLOCK:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK);
+				break;
+			case PLAYER_ACTION_KICK_EM_BLITZ:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ);
 				break;
 			default:
 				actionHandled = false;
@@ -595,4 +640,36 @@ public class ClientStateSelect extends ClientState {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return game.getTurnMode() == TurnMode.REGULAR && playerState.getBase() == PlayerState.STANDING && UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canThrowKeg);
 	}
+
+	private boolean isAllYouCanEatAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		return isThrowBombActionAvailable(player) && game.getTurnMode() == TurnMode.REGULAR
+			&& UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canUseThrowBombActionTwice);
+	}
+
+	private boolean isKickEmBlockAvailable(Player<?> player) {
+		return isKickEmAvailable(player, false);
+	}
+
+	private boolean isKickEmBlitzAvailable(Player<?> player) {
+		return isKickEmAvailable(player, true);
+	}
+
+	private boolean isKickEmAvailable(Player<?> player, boolean moveAllowed) {
+		Game game = getClient().getGame();
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+		PlayerState playerState = fieldModel.getPlayerState(player);
+		if ((playerState != null) && playerState.isActive() && (!game.getTurnData().isBlitzUsed() || !moveAllowed)
+			&& UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canUseChainsawOnDownedOpponents) && player.hasSkill(NamedProperties.blocksLikeChainsaw)) {
+			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
+				PlayerState opponentState = fieldModel.getPlayerState(opponent);
+				if (opponentState.canBeFouled() && (moveAllowed || playerCoordinate.isAdjacent(fieldModel.getPlayerCoordinate(opponent)))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 }

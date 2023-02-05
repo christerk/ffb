@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportBalefulHexRoll;
@@ -39,6 +40,7 @@ import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -75,22 +77,18 @@ public class StepBalefulHex extends AbstractStepWithReRoll {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_PLAYER_CHOICE:
-					ClientCommandPlayerChoice clientCommandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-					if (StringTool.isProvided(clientCommandPlayerChoice.getPlayerId())) {
-						playerId = clientCommandPlayerChoice.getPlayerId();
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					} else {
-						commandStatus = StepCommandStatus.SKIP_STEP;
-						Game game = getGameState().getGame();
-						ActingPlayer actingPlayer = game.getActingPlayer();
-						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn), false, SkillUse.MAKE_OPPONENT_MISS_TURN));
-						getResult().setNextAction(StepAction.NEXT_STEP);
-					}
-					break;
-				default:
-					break;
+			if (Objects.requireNonNull(pReceivedCommand.getId()) == NetCommandId.CLIENT_PLAYER_CHOICE) {
+				ClientCommandPlayerChoice clientCommandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+				if (StringTool.isProvided(clientCommandPlayerChoice.getPlayerId())) {
+					playerId = clientCommandPlayerChoice.getPlayerId();
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				} else {
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					Game game = getGameState().getGame();
+					ActingPlayer actingPlayer = game.getActingPlayer();
+					getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn), false, SkillUse.MAKE_OPPONENT_MISS_TURN));
+					getResult().setNextAction(StepAction.NEXT_STEP);
+				}
 			}
 		}
 
@@ -192,6 +190,7 @@ public class StepBalefulHex extends AbstractStepWithReRoll {
 		switch (actingPlayer.getPlayerAction()) {
 			case BLITZ:
 			case BLITZ_MOVE:
+			case KICK_EM_BLITZ:
 				game.getTurnData().setBlitzUsed(true);
 				break;
 			case KICK_TEAM_MATE:

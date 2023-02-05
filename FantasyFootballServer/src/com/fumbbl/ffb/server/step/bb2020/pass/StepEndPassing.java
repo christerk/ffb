@@ -136,7 +136,8 @@ public final class StepEndPassing extends AbstractStep {
 		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
 
 		// failed confusion roll on throw bomb -> end player action
-		if (fEndPlayerAction && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)
+		boolean isBomb = actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB;
+		if (fEndPlayerAction && (isBomb
 			|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 			getResult().setNextAction(StepAction.NEXT_STEP);
@@ -197,13 +198,14 @@ public final class StepEndPassing extends AbstractStep {
 				catcher = game.getPlayerById(state.getInterceptorId());
 				GameResult gameResult = game.getGameResult();
 				PlayerResult catcherResult = gameResult.getPlayerResult(catcher);
-				if (state.isInterceptionSuccessful()) {
-					catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
-					FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-					game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-					game.getFieldModel().setBallMoving(false);
-				} else {
-					catcherResult.setDeflections(catcherResult.getDeflections() + 1);
+				if (!isBomb) {
+					if (state.isInterceptionSuccessful()) {
+						FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
+						game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+						game.getFieldModel().setBallMoving(false);
+					} else {
+						catcherResult.setDeflections(catcherResult.getDeflections() + 1);
+					}
 				}
 			}
 			catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());

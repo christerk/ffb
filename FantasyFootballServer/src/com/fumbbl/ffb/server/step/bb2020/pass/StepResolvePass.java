@@ -41,14 +41,20 @@ public class StepResolvePass extends AbstractStep {
 		UtilServerGame.syncGameModel(this);
 
 		if (state.isDeflectionSuccessful()) {
-			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-				game.getFieldModel().setBombCoordinate(interceptorCoordinate);
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
-					CatchScatterThrowInMode.DEFLECTED_BOMB));
+			if (!state.isInterceptionSuccessful()) {
+				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+					game.getFieldModel().setBombCoordinate(interceptorCoordinate);
+					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
+						CatchScatterThrowInMode.DEFLECTED_BOMB));
+				} else {
+					game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
+						CatchScatterThrowInMode.DEFLECTED));
+				}
 			} else {
-				game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
-					CatchScatterThrowInMode.DEFLECTED));
+				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+					game.getFieldModel().setBombCoordinate(interceptorCoordinate);
+				}
 			}
 		} else if (state.getResult() == PassResult.ACCURATE) {
 			Player<?> catcher = game.getPlayerById(state.getCatcherId());

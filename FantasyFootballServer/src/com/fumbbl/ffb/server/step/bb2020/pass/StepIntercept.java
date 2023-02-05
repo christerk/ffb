@@ -8,6 +8,7 @@ import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogInterceptionParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -17,11 +18,14 @@ import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.InterceptionContext;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.fumbbl.ffb.report.ReportInterceptionRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -41,6 +45,8 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPassing;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -56,6 +62,7 @@ import java.util.Set;
 public final class StepIntercept extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
+	private Skill interceptionSkill;
 
 	public StepIntercept(GameState pGameState) {
 		super(pGameState);
@@ -96,6 +103,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 				PassState state = getGameState().getPassState();
 				state.setInterceptorId(interceptorCommand.getInterceptorId());
 				state.setInterceptorChosen(true);
+				interceptionSkill = interceptorCommand.getInterceptionSkill();
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
 		}
@@ -121,8 +129,8 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		Player<?>[] possibleInterceptors = UtilPassing.findInterceptors(game, game.getPlayerById(game.getThrowerId()), game.getPassCoordinate());
 		boolean doNextStep = true;
 		boolean doIntercept = (possibleInterceptors.length > 0);
+		Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
 		if (doIntercept) {
-			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
 			if (ReRolledActions.INTERCEPTION == getReRolledAction()) {
 				if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), interceptor)) {
 					doIntercept = false;
@@ -130,14 +138,22 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			}
 			if (doIntercept) {
 				if (!state.isInterceptorChosen()) {
-					UtilServerDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId()), true);
+
+					Optional<Skill> foundSkill = Arrays.stream(possibleInterceptors)
+						.map(player -> UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canInterceptEasily))
+						.filter(Optional::isPresent).map(Optional::get).findFirst();
+
+					if (foundSkill.isPresent()) {
+						UtilServerDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId(), foundSkill.get(), 'o'), true);
+					} else {
+						UtilServerDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId()), true);
+					}
 					state.setOldTurnMode(game.getTurnMode());
 					game.setTurnMode(TurnMode.INTERCEPTION);
 					doNextStep = false;
 				} else if (interceptor != null) {
-					switch (intercept(interceptor)) {
+					switch (intercept(interceptor, state)) {
 						case SUCCESS:
-							doIntercept = true;
 							break;
 						case FAILURE:
 							doIntercept = false;
@@ -152,6 +168,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			}
 		}
 		if (doNextStep) {
+			if (interceptionSkill != null && interceptor != null) {
+				interceptor.markUsed(interceptionSkill, game);
+			}
 			if (state.getOldTurnMode() != null) {
 				game.setTurnMode(state.getOldTurnMode());
 			}
@@ -164,21 +183,47 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		}
 	}
 
-	private ActionStatus intercept(Player<?> pInterceptor) {
+	private ActionStatus intercept(Player<?> pInterceptor, PassState passState) {
+		boolean easyIntercept = interceptionSkill != null && pInterceptor.hasUnused(interceptionSkill);
+
 		ActionStatus status;
 		Game game = getGameState().getGame();
 		InterceptionModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.INTERCEPTION_MODIFIER);
 		Set<InterceptionModifier> interceptionModifiers = modifierFactory.findModifiers(new InterceptionContext(game, pInterceptor, getGameState().getPassState().getResult()));
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-		int minimumRoll = mechanic.minimumRollInterception(pInterceptor, interceptionModifiers);
+		int minimumRoll;
+		InterceptionModifier[] interceptionModifierArray;
 		int roll = getGameState().getDiceRoller().rollSkill();
+
+		if (easyIntercept) {
+			minimumRoll = 2;
+			interceptionModifierArray = new InterceptionModifier[0];
+		} else {
+			minimumRoll = mechanic.minimumRollInterception(pInterceptor, interceptionModifiers);
+			interceptionModifierArray = interceptionModifiers.toArray(new InterceptionModifier[0]);
+		}
+
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-		InterceptionModifier[] interceptionModifierArray = interceptionModifiers.toArray(new InterceptionModifier[0]);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.INTERCEPTION) && (getReRollSource() != null));
+
+		if (easyIntercept && !reRolled) {
+			getResult().addReport(new ReportSkillUse(pInterceptor.getId(), interceptionSkill, true, SkillUse.EASY_INTERCEPT));
+		}
+
+		boolean isBomb = PlayerAction.THROW_BOMB == game.getThrowerAction();
 		getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, reRolled,
-			interceptionModifierArray, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
+			interceptionModifierArray, isBomb, easyIntercept));
 		if (successful) {
 			status = ActionStatus.SUCCESS;
+			if (easyIntercept) {
+				if (isBomb) {
+					game.getFieldModel().setBombMoving(false);
+					publishParameter(StepParameter.from(StepParameterKey.INTERCEPTOR_ID, pInterceptor.getId()));
+				} else {
+					game.getFieldModel().setBallMoving(false);
+				}
+				passState.setInterceptionSuccessful(true);
+			}
 		} else {
 			status = ActionStatus.FAILURE;
 			if (getReRolledAction() != ReRolledActions.INTERCEPTION) {
@@ -187,7 +232,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 				if (skillRerollSource != null) {
 					setReRollSource(skillRerollSource);
 					UtilServerReRoll.useReRoll(this, getReRollSource(), pInterceptor);
-					status = intercept(pInterceptor);
+					status = intercept(pInterceptor, passState);
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), pInterceptor, ReRolledActions.INTERCEPTION,
 						minimumRoll, false)) {
@@ -205,6 +250,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.SKILL.addTo(jsonObject, interceptionSkill);
 		return jsonObject;
 	}
 
@@ -213,6 +259,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		interceptionSkill = (Skill) IServerJsonOption.SKILL.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -7,6 +7,7 @@ import com.fumbbl.ffb.INamedObject;
  */
 public enum StepId implements INamedObject {
 
+	ALL_YOU_CAN_EAT("allYouCanEat"),
 	ALWAYS_HUNGRY("alwaysHungry"), // action.ttm
 	ANIMAL_SAVAGERY("animalSavagery"), // action.common
 	ANIMOSITY("animosity"), // action.pass

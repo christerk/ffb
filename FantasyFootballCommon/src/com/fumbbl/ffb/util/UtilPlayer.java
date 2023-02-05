@@ -60,7 +60,11 @@ public class UtilPlayer {
 	public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate,
 																																 Skill pSkill, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
+		return findAdjacentOpposingPlayersWithSkill(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pSkill, pCheckAbleToMove);
+	}
+
+	public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, Player<?> player, FieldCoordinate pCenterCoordinate, Skill pSkill, boolean pCheckAbleToMove) {
+		Team otherTeam = UtilPlayer.findOtherTeam(pGame, player);
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
 		Set<Player<?>> shadowingPlayers = new HashSet<>();
 		for (Player<?> opponent : opponents) {
@@ -78,7 +82,11 @@ public class UtilPlayer {
 	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, FieldCoordinate pCenterCoordinate,
 																																		ISkillProperty pProperty, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
+		return findAdjacentOpposingPlayersWithProperty(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pProperty, pCheckAbleToMove);
+	}
+
+	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, Player<?> player, FieldCoordinate pCenterCoordinate, ISkillProperty pProperty, boolean pCheckAbleToMove) {
+		Team otherTeam = UtilPlayer.findOtherTeam(pGame, player);
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
 		Set<Player<?>> shadowingPlayers = new HashSet<>();
 		for (Player<?> opponent : opponents) {
@@ -468,6 +476,20 @@ public class UtilPlayer {
 				&& !pPlayer.hasSkillProperty(NamedProperties.preventBeingFouled));
 		}
 		return foulable;
+	}
+
+	public static boolean isKickable(Game pGame, Player<?> pPlayer) {
+		boolean kickable = false;
+		ActingPlayer actingPlayer = pGame.getActingPlayer();
+		if (pPlayer != null) {
+			PlayerState defenderState = pGame.getFieldModel().getPlayerState(pPlayer);
+			FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
+			FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			kickable = (defenderState.isProneOrStunned()
+				&& pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
+				&& defenderCoordinate.isAdjacent(attackerCoordinate));
+		}
+		return kickable;
 	}
 
 	public static boolean isPickUp(Game pGame) {

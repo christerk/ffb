@@ -6,7 +6,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -175,7 +175,7 @@ public class PlayerIconFactory {
 		boolean withBall = (playerOnPitch && !game.getFieldModel().isBallMoving()
 			&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
 
-		if (playerState.getBase() != PlayerState.PICKED_UP) {
+		if (playerState.getBase() != PlayerState.PICKED_UP && playerState.getBase() != PlayerState.IN_THE_AIR) {
 			boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
 			icon = getBasicIcon(pClient, pPlayer, homePlayer, (playerState.getBase() == PlayerState.MOVING), withBall,
 				withBomb);

@@ -56,6 +56,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandThrowKeg;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandTouchback;
 import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandUpdatePlayerMarkings;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
@@ -89,6 +90,7 @@ import com.fumbbl.ffb.net.commands.ServerCommandTalk;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamList;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamSetupList;
 import com.fumbbl.ffb.net.commands.ServerCommandUnzapPlayer;
+import com.fumbbl.ffb.net.commands.ServerCommandUpdateLocalPlayerMarkers;
 import com.fumbbl.ffb.net.commands.ServerCommandUserSettings;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.net.commands.ServerCommandZapPlayer;
@@ -143,7 +145,8 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_PILE_DRIVER("clientPileDriver"), CLIENT_USE_CHAINSAW("clientUseChainsaw"), CLIENT_USE_BRAWLER("clientUseBrawler"),
 	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie"),
 	CLIENT_PRAYER_SELECTION("clientPrayerSelection"), CLIENT_USE_TEAM_MATES_WISDOM("clientUseTeamMatesWisdom"),
-	CLIENT_THROW_KEG("clientThrowKeg"), CLIENT_SELECT_WEATHER("clientSelectWeather");
+	CLIENT_THROW_KEG("clientThrowKeg"), CLIENT_SELECT_WEATHER("clientSelectWeather"), CLIENT_UPDATE_PLAYER_MARKINGS("clientUpdatePlayerMarkings"),
+	SERVER_UPDATE_LOCAL_PLAYER_MARKERS("serverUpdateLocalPlayerMarkers");
 
 	private final String fName;
 
@@ -340,6 +343,10 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandThrowKeg();
 			case CLIENT_SELECT_WEATHER:
 				return new ClientCommandSelectWeather();
+			case CLIENT_UPDATE_PLAYER_MARKINGS:
+				return new ClientCommandUpdatePlayerMarkings();
+			case SERVER_UPDATE_LOCAL_PLAYER_MARKERS:
+				return new ServerCommandUpdateLocalPlayerMarkers();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

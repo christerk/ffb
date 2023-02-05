@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.server;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.GameListEntry;
@@ -20,6 +22,7 @@ import com.fumbbl.ffb.model.TeamSkeleton;
 import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.DbTransaction;
+import com.fumbbl.ffb.server.db.IDbStatementFactory;
 import com.fumbbl.ffb.server.db.delete.DbGamesInfoDeleteParameter;
 import com.fumbbl.ffb.server.db.delete.DbGamesSerializedDeleteParameter;
 import com.fumbbl.ffb.server.db.delete.DbPlayerMarkersDeleteParameter;
@@ -28,6 +31,7 @@ import com.fumbbl.ffb.server.db.insert.DbPlayerMarkersInsertParameterList;
 import com.fumbbl.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
 import com.fumbbl.ffb.server.db.query.DbGamesInfoInsertQuery;
 import com.fumbbl.ffb.server.db.query.DbGamesSerializedQuery;
+import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.fumbbl.ffb.server.db.update.DbGamesSerializedUpdateParameter;
 import com.fumbbl.ffb.server.net.SessionManager;
@@ -362,17 +366,30 @@ public class GameCache {
 		if (pGameState == null) {
 			return;
 		}
+
+		IDbStatementFactory statementFactory = pGameState.getServer().getDbQueryFactory();
+		DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
+			.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+
+		userSettingsQuery.execute(pGameState.getGame().getTeamHome().getCoach());
+		boolean loadAutoHome = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+
+		userSettingsQuery.execute(pGameState.getGame().getTeamAway().getCoach());
+		boolean loadAutoAway = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+
 		DbTransaction transaction = new DbTransaction();
 		Team teamHome = pGameState.getGame().getTeamHome();
-		if ((teamHome != null) && StringTool.isProvided(teamHome.getId())) {
+		if (!loadAutoHome && (teamHome != null) && StringTool.isProvided(teamHome.getId())) {
 			transaction.add(new DbPlayerMarkersDeleteParameter(teamHome.getId()));
 		}
+
 		Team teamAway = pGameState.getGame().getTeamAway();
-		if ((teamAway != null) && StringTool.isProvided(teamAway.getId())) {
+		if (!loadAutoAway && (teamAway != null) && StringTool.isProvided(teamAway.getId())) {
 			transaction.add(new DbPlayerMarkersDeleteParameter(teamAway.getId()));
 		}
+
 		DbPlayerMarkersInsertParameterList playerMarkersInsert = new DbPlayerMarkersInsertParameterList();
-		playerMarkersInsert.initFrom(pGameState);
+		playerMarkersInsert.initFrom(pGameState, loadAutoHome, loadAutoAway);
 		transaction.add(playerMarkersInsert);
 		getServer().getDbUpdater().add(transaction);
 	}

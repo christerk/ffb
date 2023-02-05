@@ -16,7 +16,8 @@ public enum ClientStateId implements INamedObject {
 	SELECT_BLITZ_TARGET("selectBlitzTarget"), SELECT_GAZE_TARGET("selectGazeTarget"), SYNCHRONOUS_MULTI_BLOCK("synchronousMultiBlock"),
 	PLACE_BALL("safePairOfHands"), SOLID_DEFENCE("solidDefence"), KICK_TEAM_MATE_THROW("kickTeamMateThrow"), THROW_KEG("throwKeg"),
 	RAIDING_PARTY("raidingParty"), SELECT_BLOCK_KIND("selectBlockKind"), MAXIMUM_CARNAGE("maximumCarnage"),
-	HIT_AND_RUN("hitAndRun");
+	HIT_AND_RUN("hitAndRun"), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz"),
+	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock"), KICK_EM_BLOCK("kickEmBlock"), KICK_EM_BLITZ("kickEmBlitz");
 
 	private final String fName;
 

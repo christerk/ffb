@@ -49,7 +49,6 @@ public class ClientStateBlock extends ClientState {
 					actingPlayer.isJumping());
 			} else {
 				createAndShowPopupMenuForBlockingPlayer();
-//        getClient().getCommunication().sendActingPlayer(null, null, false);
 			}
 		} else {
 			UtilClientStateBlocking.showPopupOrBlockPlayer(this, pPlayer, false);

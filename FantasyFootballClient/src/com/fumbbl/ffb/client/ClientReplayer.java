@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.FieldMarker;
-import com.fumbbl.ffb.PlayerMarker;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;

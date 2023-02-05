@@ -169,6 +169,12 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(thrownPlayerId);
+
+		if (thrownPlayerState != null && thrownPlayerState.getBase() == PlayerState.PICKED_UP) {
+			thrownPlayerState = thrownPlayerState.changeBase(PlayerState.IN_THE_AIR);
+			game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
+		}
+
 		if ((thrownPlayer == null) || (thrownPlayerCoordinate == null)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -197,6 +203,8 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		// thrown player will be displayed in landing square first)
 		getResult()
 			.setAnimation(new Animation(swoopDirection != null ? startCoordinate : thrownPlayerCoordinate, endCoordinate, thrownPlayerId, thrownPlayerHasBall));
+
+
 		UtilServerGame.syncGameModel(this);
 		Player<?> playerLandedUpon = null;
 		if (scatterResult.isInBounds()) {

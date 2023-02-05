@@ -173,6 +173,7 @@ public class StepLookIntoMyEyes extends AbstractStepWithReRoll {
 		switch (actingPlayer.getPlayerAction()) {
 			case BLITZ:
 			case BLITZ_MOVE:
+			case KICK_EM_BLITZ:
 				game.getTurnData().setBlitzUsed(true);
 				getGameState().getStepStack().clear();
 				game.setTurnMode(game.getLastTurnMode());

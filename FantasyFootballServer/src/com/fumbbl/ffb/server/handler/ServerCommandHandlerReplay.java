@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.handler;
 
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandReplay;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -10,6 +8,7 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.request.ServerRequestLoadReplay;
 import com.fumbbl.ffb.server.util.UtilServerReplay;
+import org.eclipse.jetty.websocket.api.Session;
 
 /**
  * 
@@ -57,12 +56,12 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
 		}
 
 		if (gameState != null) {
-			UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
+			UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession(), replayCommand.getCoach());
 
 		} else {
 			// game has been moved out of the db - request it from the backup service
 			getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr,
-					session, ServerRequestLoadReplay.LOAD_GAME));
+				session, ServerRequestLoadReplay.LOAD_GAME, null, replayCommand.getCoach()));
 		}
 
 		return true;

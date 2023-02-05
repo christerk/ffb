@@ -1,10 +1,15 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.BlockRoll;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -60,8 +65,14 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 	protected JPanel dicePanel(BlockRoll blockRoll, boolean activeButtons, List<Integer> events) {
 		JPanel panel = blockRollPanel();
 
+		ReRollSource singleDieReRollSource = null;
+		Skill skill = UtilCards.getUnusedSkillWithProperty(getClient().getGame().getActingPlayer(), NamedProperties.canRerollSingleDieOncePerPeriod);
+		if (skill != null) {
+			singleDieReRollSource = skill.getRerollSource(ReRolledActions.SINGLE_DIE);
+		}
+
 		for (int i = 0; i < blockRoll.getBlockRoll().length; i++) {
-			boolean markAsReRolled = (blockRoll.has(ReRollSources.PRO) || blockRoll.has(ReRollSources.BRAWLER) || blockRoll.has(ReRollSources.CONSUMMATE_PROFESSIONAL)) && blockRoll.indexWasReRolled(i);
+			boolean markAsReRolled = (blockRoll.has(ReRollSources.PRO) || blockRoll.has(ReRollSources.BRAWLER) || (singleDieReRollSource != null && blockRoll.has(singleDieReRollSource))) && blockRoll.indexWasReRolled(i);
 			JButton dieButton = dieButton(blockRoll.getBlockRoll()[i], markAsReRolled);
 
 			if (activeButtons) {

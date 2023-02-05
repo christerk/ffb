@@ -25,6 +25,7 @@ public interface IClientProperty extends CommonProperty {
 	String SETTING_RANGEGRID = "setting.rangegrid";
 	String SETTING_PITCH_ORIENTATION = "setting.pitch.orientation";
 	String SETTING_MARK_USED_PLAYERS = "setting.mark.used.players";
+	String SETTING_SHOW_AUTO_MARKING_DIALOG = "setting.show.autoMarkingDialog";
 
 	String SETTING_LAST_CHANGE_LOG_FINGERPRINT = "setting.lastChangeLogFingerPrint";
 
@@ -73,9 +74,12 @@ public interface IClientProperty extends CommonProperty {
 	String KEY_PLAYER_ACTION_LOOK_INTO_MY_EYES = "key.player.action.lookIntoMyEyes";
 	String KEY_PLAYER_ACTION_BALEFUL_HEX = "key.player.action.balefulHex";
 	String KEY_PLAYER_ACTION_HIT_AND_RUN = "key.player.action.hitAndRun";
+	String KEY_PLAYER_ACTION_KICK_EM_BLOCK = "key.player.action.kickEmBlock";
+	String KEY_PLAYER_ACTION_KICK_EM_BLITZ = "key.player.action.kickEmBlitz";
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";
+	String KEY_PLAYER_ACTION_ALL_YOU_CAN_EAT = "key.player.action.allYouCanEat";
 
 	String KEY_MENU_REPLAY = "key.menu.replay";
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";
@@ -86,5 +90,7 @@ public interface IClientProperty extends CommonProperty {
 		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_CHATLOG, SETTING_RIGHT_CLICK_END_ACTION,
 		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
 		SETTING_PITCH_MARKINGS, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,
-		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT, SETTING_RE_ROLL_BALL_AND_CHAIN, SETTING_MARK_USED_PLAYERS};
+		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT, SETTING_RE_ROLL_BALL_AND_CHAIN, SETTING_MARK_USED_PLAYERS,
+		SETTING_PLAYER_MARKING_TYPE, SETTING_SHOW_AUTO_MARKING_DIALOG
+	};
 }

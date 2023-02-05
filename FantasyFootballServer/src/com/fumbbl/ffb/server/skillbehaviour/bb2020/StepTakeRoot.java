@@ -80,6 +80,10 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.BLITZ,
 					actingPlayer.isJumping());
 				break;
+			case KICK_EM_BLITZ:
+				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.KICK_EM_BLOCK,
+					actingPlayer.isJumping());
+				break;
 			case PASS_MOVE:
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.PASS,
 					actingPlayer.isJumping());

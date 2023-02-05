@@ -63,7 +63,7 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract String formatPickupResult(ReportSkillRoll report, Player<?> player);
 
-	public abstract Wording interceptionWording();
+	public abstract Wording interceptionWording(boolean easyIntercept);
 
 	protected String formatRollModifiers(RollModifier<? extends ModifierContext>[] pRollModifiers) {
 		StringBuilder modifiers = new StringBuilder();

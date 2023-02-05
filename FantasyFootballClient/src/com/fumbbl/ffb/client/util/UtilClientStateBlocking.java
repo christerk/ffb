@@ -24,6 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -142,7 +143,7 @@ public class UtilClientStateBlocking {
 		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
-			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) && gameMechanic.areSpecialBlockActionsAllowed(game.getTurnMode())) {
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative) && gameMechanic.areSpecialBlockActionsAllowed(game.getTurnMode())) {
 				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender, false);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false);
@@ -170,8 +171,9 @@ public class UtilClientStateBlocking {
 			chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
 			menuItemList.add(chainsawAction);
 		}
-		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail)) {
-			JMenuItem projectileVomit = new JMenuItem("Projectile Vomit",
+		Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
+		if (vomitSkill.isPresent()) {
+			JMenuItem projectileVomit = new JMenuItem(vomitSkill.get().getName(),
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
 			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 			projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));

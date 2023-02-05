@@ -44,12 +44,15 @@ public class ArgueTheCallMessage extends ReportMessageBase<ReportArgueTheCallRol
 			print(getIndent() + 1, TextStyle.NONE, "The ref refrains from banning ");
 			print(getIndent() + 1, false, player);
 			status = new StringBuilder();
-			status.append(" and ").append(player.getPlayerGender().getNominative());
-			if (report.isStaysOnPitch()) {
-				status.append(" stays on the pitch.");
-			} else {
-				status.append(" is sent to the reserve instead.");
+			if (!game.getFieldModel().getPlayerCoordinate(player).isBoxCoordinate()) {
+				status.append(" and ").append(player.getPlayerGender().getNominative());
+				if (report.isStaysOnPitch()) {
+					status.append(" stays on the pitch");
+				} else {
+					status.append(" is sent to the reserve instead");
+				}
 			}
+			status.append(".");
 			println(getIndent() + 1, TextStyle.NONE, status.toString());
 			println(getIndent() + 1, TextStyle.NEEDED_ROLL, "Succeeded on a roll of " + minimumRoll + " (Roll" + modifiers + " >= " + target + ")");
 		} else {
