@@ -11,6 +11,11 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.16.0")
+			.addBugfix("Automatic Markings were not applied during start of spectator mode (required toggling setting")
+			.addBugfix("Markings were reset once a player rejoined")
+		);
+
+		versions.add(new VersionChangeList("2.16.0")
 			.addFeature("Thinking Man's Troll")
 			.addFeature("Halfling Luck")
 			.addFeature("Watch Out!")
