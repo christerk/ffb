@@ -10,6 +10,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -23,6 +24,8 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+
+import java.util.Objects;
 
 /**
  * Final step of the throw team mate sequence. Consumes all expected
@@ -45,7 +48,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
-	private PlayerState fThrownPlayerState;
+	private PlayerState fThrownPlayerState, oldPlayerState;
 
 	public StepEndThrowTeamMate(GameState pGameState) {
 		super(pGameState);
@@ -79,6 +82,14 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 					fThrownPlayerState = (PlayerState) pParameter.getValue();
 					consume(pParameter);
 					return true;
+				case END_PLAYER_ACTION:
+					fEndPlayerAction = (boolean) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case OLD_DEFENDER_STATE:
+					oldPlayerState = (PlayerState) pParameter.getValue();
+					consume(pParameter);
+					return true;
 				default:
 					break;
 			}
@@ -96,16 +107,12 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_ACTING_PLAYER:
-					SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-					((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-						.pushSequence(new Select.SequenceParams(getGameState(), false));
-					getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
-					commandStatus = StepCommandStatus.SKIP_STEP;
-					break;
-				default:
-					break;
+			if (Objects.requireNonNull(pReceivedCommand.getId()) == NetCommandId.CLIENT_ACTING_PLAYER) {
+				SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
+					.pushSequence(new Select.SequenceParams(getGameState(), false));
+				getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
+				commandStatus = StepCommandStatus.SKIP_STEP;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -123,10 +130,14 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		game.setThrowerId(null);
 		// reset thrown player (e.g. failed confusion roll, successful escape roll)
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
-		if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null) && (fThrownPlayerState != null)
-			&& (fThrownPlayerState.getId() > 0)) {
+		if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null)) {
+			if (fEndPlayerAction && oldPlayerState != null && oldPlayerState.getId() > 0) {
+				game.getFieldModel().setPlayerState(thrownPlayer, oldPlayerState);
+			} else if (fThrownPlayerState != null && fThrownPlayerState.getId() > 0) {
+				game.getFieldModel().setPlayerState(thrownPlayer, fThrownPlayerState);
+			}
 			game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);
-			game.getFieldModel().setPlayerState(thrownPlayer, fThrownPlayerState);
+
 			if (fThrownPlayerHasBall) {
 				game.getFieldModel().setBallCoordinate(fThrownPlayerCoordinate);
 			}
@@ -148,6 +159,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, fThrownPlayerState);
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
 		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -161,6 +173,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		fThrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(source, jsonObject);
 		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(source, jsonObject);
+		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 
