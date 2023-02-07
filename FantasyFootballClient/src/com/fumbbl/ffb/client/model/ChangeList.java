@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.16.2")
 			.addBugfix("Failing TTM due to a confusion roll caused the thrown player to vanish")
+			.addBugfix("Prone player with HG failing FA was left standing")
 		);
 
 		versions.add(new VersionChangeList("2.16.1")
