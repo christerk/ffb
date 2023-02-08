@@ -21,7 +21,7 @@ public class ServerRequestProcessor extends Thread {
 
 	public ServerRequestProcessor(FantasyFootballServer pServer) {
 		fServer = pServer;
-		fRequestQueue = new LinkedBlockingQueue<ServerRequest>();
+		fRequestQueue = new LinkedBlockingQueue<>();
 	}
 
 	public FantasyFootballServer getServer() {

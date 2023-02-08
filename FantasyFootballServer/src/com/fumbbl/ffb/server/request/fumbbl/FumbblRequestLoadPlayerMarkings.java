@@ -45,7 +45,7 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 			sessionManager.getCoachForSession(session)));
 
 		try {
- 			String response = UtilServerHttpClient.fetchPage(getRequestUrl());
+			String response = UtilServerHttpClient.fetchPage(getRequestUrl());
 			JsonValue jsonValue = JsonValue.readFrom(response);
 			if (jsonValue != null && !jsonValue.isNull()) {
 				config.initFrom(game.getRules(), jsonValue);
@@ -88,18 +88,16 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 
 		Arrays.stream(game.getPlayers()).forEach(player -> {
 			String marking = markerGenerator.generate(player, config, team.hasPlayer(player));
-			synchronized (game.getFieldModel()) {
-				PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(player.getId());
-				if (playerMarker == null) {
-					playerMarker = new PlayerMarker(player.getId());
-				}
-				if (homeCoach) {
-					playerMarker.setHomeText(marking);
-				} else {
-					playerMarker.setAwayText(marking);
-				}
-				game.getFieldModel().add(playerMarker);
+			PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(player.getId());
+			if (playerMarker == null) {
+				playerMarker = new PlayerMarker(player.getId());
 			}
+			if (homeCoach) {
+				playerMarker.setHomeText(marking);
+			} else {
+				playerMarker.setAwayText(marking);
+			}
+			game.getFieldModel().add(playerMarker);
 		});
 
 		UtilServerGame.syncGameModel(gameState, null, null, null);
