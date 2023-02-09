@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.16.2")
+			.addBugfix("Failing TTM due to a confusion roll caused the thrown player to vanish")
+			.addBugfix("Prone player with HG failing FA was left standing")
+		);
+
 		versions.add(new VersionChangeList("2.16.1")
 			.addBugfix("Automatic Markings were not applied during start of spectator mode (required toggling setting")
 			.addBugfix("Markings were reset once a player rejoined")
