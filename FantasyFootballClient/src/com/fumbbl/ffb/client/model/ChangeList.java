@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.16.3")
+			.addBugfix("Players in box were not always redrawn when an automated marker was set")
+		);
+
 		versions.add(new VersionChangeList("2.16.2")
 			.addBugfix("Failing TTM due to a confusion roll caused the thrown player to vanish")
 			.addBugfix("Prone player with HG failing FA was left standing")
