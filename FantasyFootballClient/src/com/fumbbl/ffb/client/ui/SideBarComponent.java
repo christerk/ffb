@@ -127,6 +127,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		} else {
 			fPlayerDetail.refresh();
 		}
+		fBoxComponent.initObserver();
 		fResourceComponent.init();
 		fTurnDiceStatusComponent.init();
 	}

@@ -11,9 +11,13 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.change.IModelChangeObserver;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -36,7 +40,7 @@ import java.util.List;
 /**
  * @author Kalimar
  */
-public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener {
+public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener, IModelChangeObserver {
 
 	public static final int MAX_BOX_ELEMENTS = 30;
 	public static final int FIELD_SQUARE_SIZE = 39;
@@ -66,6 +70,10 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
+	}
+
+	public void initObserver() {
+		fSideBar.getClient().getGame().addObserver(this);
 	}
 
 	public void closeBox() {
@@ -324,4 +332,23 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		return pYPosition + height;
 	}
 
+	@Override
+	public void update(ModelChange pModelChange) {
+		if ((pModelChange == null) || (pModelChange.getChangeId() == null)) {
+			return;
+		}
+
+		if (pModelChange.getChangeId() == ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER) {
+			PlayerMarker marker = (PlayerMarker) pModelChange.getValue();
+			Game game = fSideBar.getClient().getGame();
+			Player<?> player = game.getPlayerById(marker.getPlayerId());
+			if (player != null) {
+				FieldCoordinate coordinate = game.getFieldModel().getPlayerCoordinate(player);
+				if (coordinate != null && coordinate.isBoxCoordinate()
+					&& fSideBar.isHomeSide() == game.getTeamHome().hasPlayer(player)) {
+					drawPlayers();
+				}
+			}
+		}
+	}
 }
