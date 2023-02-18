@@ -12,6 +12,8 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.16.3")
 			.addBugfix("Players in box were not always redrawn when an automated marker was set")
+			.addBugfix("Potential race condition fixed that might have caused loss of marker updates")
+			.addBugfix("Force player states to active when ending setup or kick off phases, potential fix for unmovable players after kick off")
 		);
 
 		versions.add(new VersionChangeList("2.16.2")
