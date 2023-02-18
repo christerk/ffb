@@ -162,22 +162,25 @@ public class UtilServerStartGame {
 				UtilServerTimer.startTurnTimer(gameState, System.currentTimeMillis());
 			}
 
-			MarkerLoadingService loadingService = new MarkerLoadingService();
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (gameState) {
+				MarkerLoadingService loadingService = new MarkerLoadingService();
 
-			IDbStatementFactory statementFactory = server.getDbQueryFactory();
-			DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
-				.getStatement(DbStatementId.USER_SETTINGS_QUERY);
+				IDbStatementFactory statementFactory = server.getDbQueryFactory();
+				DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
+					.getStatement(DbStatementId.USER_SETTINGS_QUERY);
 
-			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfHomeCoach));
-			boolean loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
-			loadingService.loadMarker(gameState, sessionOfHomeCoach, true, loadAuto);
+				userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfHomeCoach));
+				boolean loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+				loadingService.loadMarker(gameState, sessionOfHomeCoach, true, loadAuto);
 
-			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfAwayCoach));
-			loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
-			loadingService.loadMarker(gameState, sessionOfAwayCoach, false, loadAuto);
+				userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfAwayCoach));
+				loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+				loadingService.loadMarker(gameState, sessionOfAwayCoach, false, loadAuto);
 
-			server.getCommunication().sendGameState(gameState);
-			gameState.fetchChanges(); // clear changes after sending the whole model
+				server.getCommunication().sendGameState(gameState);
+				gameState.fetchChanges(); // clear changes after sending the whole model
+			}
 		}
 	}
 

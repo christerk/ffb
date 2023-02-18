@@ -123,13 +123,13 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return getGame().getId();
 	}
 
-	public ModelChangeList fetchChanges() {
+	public synchronized ModelChangeList fetchChanges() {
 		ModelChangeList changeList = fChangeList;
 		fChangeList = new ModelChangeList();
 		return changeList;
 	}
 
-	public void update(ModelChange change) {
+	public synchronized void update(ModelChange change) {
 		if (change != null) {
 			fChangeList.add(change);
 		}
