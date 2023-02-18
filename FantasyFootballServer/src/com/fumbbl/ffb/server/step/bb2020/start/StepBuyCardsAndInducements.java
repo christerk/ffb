@@ -670,16 +670,19 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 
 		boolean alwaysUseTreasury = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
 
+		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
+			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+
 		TeamResult teamResultHome = game.getGameResult().getTeamResultHome();
 		if (teamResultHome.getPettyCashFromTvDiff() == 0 || alwaysUseTreasury) {
-			teamResultHome.setTreasurySpentOnInducements(usedInducementGoldHome);
+			teamResultHome.setTreasurySpentOnInducements(Math.max(0, usedInducementGoldHome - freeCash));
 		} else {
 			teamResultHome.setPettyCashUsed(usedInducementGoldHome);
 		}
 
 		TeamResult teamResultAway = game.getGameResult().getTeamResultAway();
 		if (teamResultAway.getPettyCashFromTvDiff() == 0 || alwaysUseTreasury) {
-			teamResultAway.setTreasurySpentOnInducements(usedInducementGoldAway);
+			teamResultAway.setTreasurySpentOnInducements(Math.max(0, usedInducementGoldAway - freeCash));
 		} else {
 			teamResultAway.setPettyCashUsed(usedInducementGoldAway);
 		}
