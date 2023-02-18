@@ -339,4 +339,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory) {
 		return Constant.getEnhancementSkillsToRemoveAtEndOfTurnWhenNotSettingActive(skillFactory);
 	}
+
+	@Override
+	public boolean rollForChefAtStartOfHalf() {
+		return false;
+	}
 }

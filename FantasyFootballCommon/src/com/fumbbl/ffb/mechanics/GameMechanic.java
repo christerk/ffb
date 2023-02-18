@@ -108,4 +108,5 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory);
 
+	public abstract boolean rollForChefAtStartOfHalf();
 }
