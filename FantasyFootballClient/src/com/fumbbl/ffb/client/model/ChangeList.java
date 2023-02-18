@@ -24,7 +24,7 @@ public class ChangeList {
 		);
 
 		versions.add(new VersionChangeList("2.16.1")
-			.addBugfix("Automatic Markings were not applied during start of spectator mode (required toggling setting")
+			.addBugfix("Automatic Markings were not applied during start of spectator mode (required toggling setting)")
 			.addBugfix("Markings were reset once a player rejoined")
 			.addBugfix("Players without tacklezones could use dodge when asked for (i.e. near side lines)")
 		);
