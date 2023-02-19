@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.server.handler;
 
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -12,6 +10,7 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.util.ArrayTool;
+import org.eclipse.jetty.websocket.api.Session;
 
 /**
  * 
@@ -43,9 +42,9 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 		if (gameState != null) {
 
 			int spectators = 0;
-			for (int i = 0; i < sessions.length; i++) {
-				if (sessionManager.getModeForSession(sessions[i]) == ClientMode.SPECTATOR) {
-					if (!sessionManager.isSessionAdmin(sessions[i])) {
+			for (Session session : sessions) {
+				if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR) {
+					if (!sessionManager.isSessionAdmin(session)) {
 						spectators++;
 					}
 				}
