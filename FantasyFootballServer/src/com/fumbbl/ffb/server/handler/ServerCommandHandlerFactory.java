@@ -36,6 +36,7 @@ public class ServerCommandHandlerFactory {
 		register(new ServerCommandHandlerCloseSession(server));
 		register(new ServerCommandHandlerPing(server));
 		register(new ServerCommandHandlerUpdatePlayerMarkings(server));
+		register(new ServerCommandHandlerApplyAutomatedPlayerMarkings(server));
 	}
 
 	public void handleCommand(ReceivedCommand receivedCommand) {

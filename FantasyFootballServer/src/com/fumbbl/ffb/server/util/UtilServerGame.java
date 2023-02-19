@@ -68,21 +68,18 @@ public class UtilServerGame {
 
 	public static boolean syncGameModel(GameState pGameState, ReportList pReportList, Animation pAnimation,
 																			SoundId pSound) {
-		//noinspection SynchronizationOnLocalVariableOrMethodParameter
-		synchronized (pGameState) {
-			boolean synced = false;
-			Game game = pGameState.getGame();
-			FantasyFootballServer server = pGameState.getServer();
-			UtilServerTimer.syncTime(pGameState, System.currentTimeMillis());
-			ModelChangeList modelChanges = pGameState.fetchChanges();
-			if ((modelChanges.size() > 0) || ((pReportList != null) && (pReportList.size() > 0)) || (pAnimation != null)
-				|| (pSound != null)) {
-				server.getCommunication().sendModelSync(pGameState, modelChanges, pReportList, pAnimation, pSound,
-					game.getGameTime(), game.getTurnTime());
-				synced = true;
-			}
-			return synced;
+		boolean synced = false;
+		Game game = pGameState.getGame();
+		FantasyFootballServer server = pGameState.getServer();
+		UtilServerTimer.syncTime(pGameState, System.currentTimeMillis());
+		ModelChangeList modelChanges = pGameState.fetchChanges();
+		if ((modelChanges.size() > 0) || ((pReportList != null) && (pReportList.size() > 0)) || (pAnimation != null)
+			|| (pSound != null)) {
+			server.getCommunication().sendModelSync(pGameState, modelChanges, pReportList, pAnimation, pSound,
+				game.getGameTime(), game.getTurnTime());
+			synced = true;
 		}
+		return synced;
 	}
 
 	public static void changeActingPlayer(IStep pStep, String pActingPlayerId, PlayerAction pPlayerAction,
