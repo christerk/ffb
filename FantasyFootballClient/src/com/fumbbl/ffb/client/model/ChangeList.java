@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Force player states to active when ending setup or kick off phases, potential fix for unmovable players after kick off")
 			.addBugfix("Free inducement cash was not subtracted from used gold")
 			.addBugfix("Moved chef rolls to occur after kick-off deviation")
+			.addImprovement("Added server side exception logging")
 		);
 
 		versions.add(new VersionChangeList("2.16.2")

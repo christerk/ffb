@@ -1,13 +1,5 @@
 package com.fumbbl.ffb.server.net;
 
-import java.nio.charset.Charset;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.LZString;
@@ -18,6 +10,14 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.handler.IReceivedCommandHandler;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandSocketClosed;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 
@@ -26,10 +26,10 @@ import com.fumbbl.ffb.server.net.commands.InternalServerCommandSocketClosed;
 @WebSocket(maxTextMessageSize = 64 * 1024)
 public class CommandSocket {
 
-	private IReceivedCommandHandler fCommandHandler;
-	private NetCommandFactory fNetCommandFactory;
-	private boolean fCommandCompression;
-	private FantasyFootballServer server;
+	private final IReceivedCommandHandler fCommandHandler;
+	private final NetCommandFactory fNetCommandFactory;
+	private final boolean fCommandCompression;
+	private final FantasyFootballServer server;
 
 	public CommandSocket(FantasyFootballServer server, boolean commandCompression) {
 		this.server = server;
@@ -39,8 +39,8 @@ public class CommandSocket {
 	}
 
 	@OnWebSocketMessage
-	public void onBinaryMessage(Session pSession, byte buf[], int offset, int length) {
-		this.onTextMessage(pSession, new String(buf, offset, length, Charset.forName("UTF8")));
+	public void onBinaryMessage(Session pSession, byte[] buf, int offset, int length) {
+		this.onTextMessage(pSession, new String(buf, offset, length, StandardCharsets.UTF_8));
 	}
 
 	@OnWebSocketMessage
@@ -50,11 +50,12 @@ public class CommandSocket {
 			return;
 		}
 
+		long gameId = 0;
 		try {
 			String decompressed = fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage;
 			JsonValue jsonValue = JsonValue.readFrom(decompressed);
 
-			long gameId = server.getSessionManager().getGameIdForSession(pSession);
+			gameId = server.getSessionManager().getGameIdForSession(pSession);
 			GameState gameState = server.getGameCache().getGameStateById(gameId);
 			Game game = gameState != null ? gameState.getGame() : null;
 			IFactorySource source = game != null ? game.getRules() : server.getFactorySource();
@@ -66,6 +67,7 @@ public class CommandSocket {
 			ReceivedCommand receivedCommand = new ReceivedCommand(netCommand, pSession);
 			fCommandHandler.handleCommand(receivedCommand);
 		} catch (Exception e) {
+			server.getDebugLog().log(gameId, e);
 		}
 
 	}
