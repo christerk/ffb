@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Moved chef rolls to occur after kick-off deviation")
 			.addImprovement("Added server side exception logging")
 			.addBugfix("Potential race condition fixed that might have caused teams to show up on the opposite side of the client")
+			.addBugfix("Rename \"Go For It\" to \"Rush\"")
 		);
 
 		versions.add(new VersionChangeList("2.16.2")

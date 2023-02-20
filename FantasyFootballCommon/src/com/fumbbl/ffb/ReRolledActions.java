@@ -17,6 +17,7 @@ import java.util.Map;
 public class ReRolledActions {
 
 	public static final ReRolledAction GO_FOR_IT = new ReRolledAction("Go For It");
+	public static final ReRolledAction RUSH = new ReRolledAction("Rush");
 	public static final ReRolledAction DODGE = new ReRolledAction("Dodge");
 	public static final ReRolledAction CATCH = new ReRolledAction("Catch");
 	public static final ReRolledAction PICK_UP = new ReRolledAction("Pick Up");
