@@ -5,6 +5,7 @@ import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandApplyAutomatedPlayerMarkings;
 import com.fumbbl.ffb.server.request.ServerRequest;
@@ -31,8 +32,9 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 		Game game = gameState.getGame();
 		AutoMarkingConfig config = new AutoMarkingConfig();
 
+		String coach = sessionManager.getCoachForSession(session);
 		setRequestUrl(StringTool.bind(processor.getServer().getProperty(IServerProperty.FUMBBL_PLAYER_MARKINGS),
-			sessionManager.getCoachForSession(session)));
+			coach));
 
 		try {
 			String response = UtilServerHttpClient.fetchPage(getRequestUrl());
@@ -44,6 +46,8 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 			processor.getServer().getDebugLog().log(game.getId(), e);
 		}
 
-		processor.getServer().getCommunication().handleCommand(new InternalServerCommandApplyAutomatedPlayerMarkings(config, gameState, session));
+		processor.getServer().getCommunication().handleCommand(
+			new ReceivedCommand(
+				new InternalServerCommandApplyAutomatedPlayerMarkings(config, gameState.getId()), session));
 	}
 }

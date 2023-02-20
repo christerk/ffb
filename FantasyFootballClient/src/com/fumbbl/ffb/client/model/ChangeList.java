@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Free inducement cash was not subtracted from used gold")
 			.addBugfix("Moved chef rolls to occur after kick-off deviation")
 			.addImprovement("Added server side exception logging")
+			.addBugfix("Potential race condition fixed that might have caused teams to show up on the opposite side of the client")
 		);
 
 		versions.add(new VersionChangeList("2.16.2")

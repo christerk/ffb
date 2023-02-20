@@ -37,6 +37,7 @@ public interface IJsonOption {
 	JsonIntOption ASSISTANT_COACHES = new JsonIntOption("assistantCoaches");
 	JsonStringOption ATTACKER_ID = new JsonStringOption("attackerId");
 	JsonBooleanOption ATTACKER_SELECTS = new JsonBooleanOption("attackerSelects");
+	JsonObjectOption AUTO_MARKING_CONFIG = new JsonObjectOption("autoMarkingConfig");
 	JsonArrayOption AUTO_MARKING_RECORDS = new JsonArrayOption("autoMarkingRecords");
 	JsonIntOption AVAILABLE_CARDS = new JsonIntOption("availableCards");
 	JsonIntOption AVAILABLE_GOLD = new JsonIntOption("availableGold");
@@ -507,6 +508,7 @@ public interface IJsonOption {
 	JsonObjectOption TARGET_SELECTION_STATE = new JsonObjectOption("targetSelectionState");
 	JsonStringOption TARGET_SELECTION_STATUS = new JsonStringOption("targetSelectionStatus");
 	JsonBooleanOption TARGET_SELECTION_STATUS_IS_COMMITTED = new JsonBooleanOption("targetSelectionStatusIsCommitted");
+	JsonObjectOption TEAM = new JsonObjectOption("team");
 	JsonObjectOption TEAM_AWAY = new JsonObjectOption("teamAway");
 	JsonStringOption TEAM_AWAY_COACH = new JsonStringOption("teamAwayCoach");
 	JsonStringOption TEAM_AWAY_ID = new JsonStringOption("teamAwayId");

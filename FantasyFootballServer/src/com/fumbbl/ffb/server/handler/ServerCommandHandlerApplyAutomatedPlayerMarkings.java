@@ -32,13 +32,15 @@ public class ServerCommandHandlerApplyAutomatedPlayerMarkings extends ServerComm
 		InternalServerCommandApplyAutomatedPlayerMarkings commandUpdatePlayerMarkings = (InternalServerCommandApplyAutomatedPlayerMarkings) receivedCommand.getCommand();
 
 		AutoMarkingConfig config = commandUpdatePlayerMarkings.getAutoMarkingConfig();
-		GameState gameState = commandUpdatePlayerMarkings.getGameState();
-		Game game = gameState.getGame();
-		Session session = commandUpdatePlayerMarkings.getSession();
-		SessionManager sessionManager = gameState.getServer().getSessionManager();
-
+		long gameId = commandUpdatePlayerMarkings.getGameId();
+		GameState gameState = getServer().getGameCache().getGameStateById(gameId);
 
 		try {
+			Game game = gameState.getGame();
+
+			SessionManager sessionManager = getServer().getSessionManager();
+			Session session = receivedCommand.getSession();
+
 			if (config.getMarkings().isEmpty()) {
 				config.getMarkings().addAll(AutoMarkingConfig.defaults(game.getRules().getSkillFactory()));
 			}
@@ -49,7 +51,7 @@ public class ServerCommandHandlerApplyAutomatedPlayerMarkings extends ServerComm
 				markForSpecOrReplay(gameState, game, config, session);
 			}
 		} catch (Throwable e) {
-			gameState.getServer().getDebugLog().log(game.getId(), e);
+			gameState.getServer().getDebugLog().log(gameState.getId(), e);
 		}
 		return true;
 	}

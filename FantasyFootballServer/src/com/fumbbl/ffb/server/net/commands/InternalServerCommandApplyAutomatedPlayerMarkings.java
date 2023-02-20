@@ -1,20 +1,20 @@
 package com.fumbbl.ffb.server.net.commands;
 
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.net.NetCommandId;
-import com.fumbbl.ffb.server.GameState;
-import org.eclipse.jetty.websocket.api.Session;
+import com.fumbbl.ffb.server.IServerJsonOption;
 
 public class InternalServerCommandApplyAutomatedPlayerMarkings extends InternalServerCommand {
 
-	private final AutoMarkingConfig autoMarkingConfig;
-	private final GameState gameState;
-	private final Session session;
+	private AutoMarkingConfig autoMarkingConfig;
 
-	public InternalServerCommandApplyAutomatedPlayerMarkings(AutoMarkingConfig autoMarkingConfig, GameState gameState, Session session) {
+	public InternalServerCommandApplyAutomatedPlayerMarkings(AutoMarkingConfig autoMarkingConfig, long gameId) {
+		super(gameId);
 		this.autoMarkingConfig = autoMarkingConfig;
-		this.gameState = gameState;
-		this.session = session;
 	}
 
 	@Override
@@ -26,11 +26,19 @@ public class InternalServerCommandApplyAutomatedPlayerMarkings extends InternalS
 		return autoMarkingConfig;
 	}
 
-	public GameState getGameState() {
-		return gameState;
+// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.AUTO_MARKING_CONFIG.addTo(jsonObject, UtilJson.toJsonObject(autoMarkingConfig.toJsonValue()));
+
+		return jsonObject;
 	}
 
-	public Session getSession() {
-		return session;
+	public InternalServerCommandApplyAutomatedPlayerMarkings initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		autoMarkingConfig = new AutoMarkingConfig().initFrom(source, IServerJsonOption.AUTO_MARKING_CONFIG.getFrom(source, jsonObject));
+		return this;
 	}
 }

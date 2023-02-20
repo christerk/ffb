@@ -185,16 +185,16 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 			if (!game.isTesting()) {
 				closeOtherSessionWithThisCoach(pGameState, pJoinApprovedCommand.getCoach(), pSession);
 			}
-			boolean homeTeam = (!StringTool.isProvided(game.getTeamHome().getId())
-					|| pJoinApprovedCommand.getTeamId().equals(game.getTeamHome().getId()));
 			if (getServer().getMode() == ServerMode.FUMBBL) {
 				getServer().getRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(),
-						pJoinApprovedCommand.getTeamId(), homeTeam, pSession, pJoinApprovedCommand.getAccountProperties()));
+					pJoinApprovedCommand.getTeamId(), null, pSession, pJoinApprovedCommand.getAccountProperties()));
 			} else {
+				boolean homeTeam = (!StringTool.isProvided(game.getTeamHome().getId())
+					|| pJoinApprovedCommand.getTeamId().equals(game.getTeamHome().getId()));
 				Team teamSkeleton = getServer().getGameCache().getTeamSkeleton(pJoinApprovedCommand.getTeamId());
 				getServer().getGameCache().addTeamToGame(pGameState, teamSkeleton, homeTeam);
 				if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
-						pJoinApprovedCommand.getCoach(), homeTeam, pJoinApprovedCommand.getAccountProperties())) {
+					pJoinApprovedCommand.getCoach(), homeTeam, pJoinApprovedCommand.getAccountProperties())) {
 					UtilServerStartGame.addDefaultGameOptions(pGameState);
 					pGameState.initRulesDependentMembers();
 					pGameState.getGame().initializeRules();
