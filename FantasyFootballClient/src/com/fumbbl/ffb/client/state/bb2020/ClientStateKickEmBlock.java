@@ -28,7 +28,9 @@ public class ClientStateKickEmBlock extends ClientStateBlock {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
 			super.clickOnPlayer(pPlayer);
-		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents) && game.getFieldModel().getPlayerState(pPlayer).isProneOrStunned()) {
+		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents)
+			&& game.getFieldModel().getPlayerState(pPlayer).isProneOrStunned()
+			&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(pPlayer))) {
 			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false);
 		}
 	}

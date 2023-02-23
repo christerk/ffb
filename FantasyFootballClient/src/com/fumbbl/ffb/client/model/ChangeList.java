@@ -19,6 +19,7 @@ public class ChangeList {
 			.addImprovement("Added server side exception logging")
 			.addBugfix("Potential race condition fixed that might have caused teams to show up on the opposite side of the client")
 			.addBugfix("Rename \"Go For It\" to \"Rush\"")
+			.addBugfix("Kick 'em while they're down! could be used against players not being adjacent")
 		);
 
 		versions.add(new VersionChangeList("2.16.2")
