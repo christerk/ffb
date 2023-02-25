@@ -10,7 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.16.3")
+		versions.add(new VersionChangeList("2.17.0")
 			.addBugfix("Players in box were not always redrawn when an automated marker was set")
 			.addBugfix("Potential race condition fixed that might have caused loss of marker updates")
 			.addBugfix("Force player states to active when ending setup or kick off phases, potential fix for unmovable players after kick off")
@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Potential race condition fixed that might have caused teams to show up on the opposite side of the client")
 			.addBugfix("Rename \"Go For It\" to \"Rush\"")
 			.addBugfix("Kick 'em while they're down! could be used against players not being adjacent")
+			.addFeature("Added option to swap team colors (User Settings -> Icons -> Swap team colors")
 		);
 
 		versions.add(new VersionChangeList("2.16.2")

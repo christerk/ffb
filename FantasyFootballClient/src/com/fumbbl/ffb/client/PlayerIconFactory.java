@@ -6,9 +6,9 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -68,20 +68,33 @@ public class PlayerIconFactory {
 			}
 		}
 
+		boolean useHomeColor = pHomePlayer;
+
+		String swapSetting = pClient.getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
+
+		if (swapColors) {
+			useHomeColor = !pHomePlayer;
+		}
+
 		if (StringTool.isProvided(iconSetUrl)) {
 			BufferedImage iconSet = iconCache.getIconByUrl(iconSetUrl);
 			if (iconSet != null) {
 				int iconSize = iconSet.getWidth() / 4;
 				int y = pPlayer.getIconSetIndex() * iconSize;
 				int x;
-				if (pHomePlayer) {
+				if (useHomeColor) {
 					x = (pMoving ? 1 : 0) * iconSize;
 				} else {
 					x = (pMoving ? 3 : 2) * iconSize;
 				}
 				icon = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g2d = icon.createGraphics();
-				g2d.drawImage(iconSet, 0, 0, iconSize, iconSize, x, y, x + iconSize, y + iconSize, null);
+				if (swapColors) {
+					g2d.drawImage(iconSet, iconSize, 0, 0, iconSize, x, y, x + iconSize, y + iconSize, null);
+				} else {
+					g2d.drawImage(iconSet, 0, 0, iconSize, iconSize, x, y, x + iconSize, y + iconSize, null);
+				}
 				g2d.dispose();
 			}
 		}
@@ -93,21 +106,21 @@ public class PlayerIconFactory {
 			BufferedImage playerIcon;
 			if ((pPlayer.getPosition() != null) && (PlayerType.BIG_GUY == pPlayer.getPosition().getType())) {
 				fontSize = 17;
-				if (pHomePlayer) {
+				if (useHomeColor) {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_HOME);
 				} else {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_AWAY);
 				}
 			} else if (pPlayer.hasSkillProperty(NamedProperties.smallIcon)) {
 				fontSize = 13;
-				if (pHomePlayer) {
+				if (useHomeColor) {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_HOME);
 				} else {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_AWAY);
 				}
 			} else {
 				fontSize = 15;
-				if (pHomePlayer) {
+				if (useHomeColor) {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_NORMAL_HOME);
 				} else {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_NORMAL_AWAY);

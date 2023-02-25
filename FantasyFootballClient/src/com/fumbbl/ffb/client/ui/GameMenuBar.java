@@ -139,6 +139,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem markUsedPlayersDefaultMenuItem;
 	private final JRadioButtonMenuItem markUsedPlayersCheckIconGreenMenuItem;
 
+	private final JRadioButtonMenuItem swapTeamColorsOffMenuItem;
+	private final JRadioButtonMenuItem swapTeamColorsOnMenuItem;
+
 	private final JRadioButtonMenuItem playersMarkingManualMenuItem;
 	private final JRadioButtonMenuItem playersMarkingAutoMenuItem;
 
@@ -306,6 +309,26 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fIconsAbstract.addActionListener(this);
 		iconsGroup.add(fIconsAbstract);
 		fIconsMenu.add(fIconsAbstract);
+
+		fIconsMenu.addSeparator();
+
+		JMenu swapTeamColorsMenu = new JMenu("Swap team colors");
+		swapTeamColorsMenu.setMnemonic(KeyEvent.VK_S);
+		fIconsMenu.add(swapTeamColorsMenu);
+
+		ButtonGroup swapTeamColorsGroup = new ButtonGroup();
+
+		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem("Off");
+		swapTeamColorsOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		swapTeamColorsOffMenuItem.addActionListener(this);
+		swapTeamColorsGroup.add(swapTeamColorsOffMenuItem);
+		swapTeamColorsMenu.add(swapTeamColorsOffMenuItem);
+
+		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem("On");
+		swapTeamColorsOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		swapTeamColorsOnMenuItem.addActionListener(this);
+		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
+		swapTeamColorsMenu.add(swapTeamColorsOnMenuItem);
 
 		JMenu fAutomoveMenu = new JMenu("Automove");
 		fAutomoveMenu.setMnemonic(KeyEvent.VK_A);
@@ -699,6 +722,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		playersMarkingManualMenuItem.setSelected(true);
 		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
 
+		String swapTeamColorsSetting = getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		swapTeamColorsOffMenuItem.setSelected(true);
+		swapTeamColorsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting));
+
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
 
@@ -926,6 +953,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
 			getClient().saveUserSettings(true);
 			getClient().getCommunication().sendUpdatePlayerMarkings(false);
+		}
+
+		if (source == swapTeamColorsOffMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == swapTeamColorsOnMenuItem) {
+			getClient().setProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON);
+			getClient().saveUserSettings(true);
 		}
 
 		if (source == fRestoreDefaultsMenuItem) {
