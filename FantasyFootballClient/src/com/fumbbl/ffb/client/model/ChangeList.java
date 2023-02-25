@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Rename \"Go For It\" to \"Rush\"")
 			.addBugfix("Kick 'em while they're down! could be used against players not being adjacent")
 			.addFeature("Added option to swap team colors (User Settings -> Icons -> Swap team colors")
+			.addBugfix("Interceptions did not generate spp")
 		);
 
 		versions.add(new VersionChangeList("2.16.2")

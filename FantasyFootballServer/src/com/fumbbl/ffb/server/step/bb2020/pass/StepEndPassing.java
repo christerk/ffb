@@ -200,6 +200,7 @@ public final class StepEndPassing extends AbstractStep {
 				PlayerResult catcherResult = gameResult.getPlayerResult(catcher);
 				if (!isBomb) {
 					if (state.isInterceptionSuccessful()) {
+						catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
 						FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 						game.getFieldModel().setBallCoordinate(interceptorCoordinate);
 						game.getFieldModel().setBallMoving(false);
