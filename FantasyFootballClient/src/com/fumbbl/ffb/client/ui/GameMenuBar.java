@@ -45,14 +45,7 @@ import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -150,6 +143,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
 	private final JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
 
+	private JRadioButtonMenuItem chatBackgroundDefault;
+	private JRadioButtonMenuItem chatBackgroundCustom;
 	private final JMenu fMissingPlayersMenu;
 
 	private final JMenu fInducementsMenu;
@@ -578,6 +573,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		playerMarkingGroup.add(playersMarkingManualMenuItem);
 		playerMarkingMenu.add(playersMarkingManualMenuItem);
 
+		JMenu backgroundStyles = new JMenu("Background Styles");
+		backgroundStyles.setMnemonic(KeyEvent.VK_B);
+		fUserSettingsMenu.add(backgroundStyles);
+		backgroundStyles.add(createChatBackgroundMenu());
+
 		fUserSettingsMenu.addSeparator();
 
 		fRestoreDefaultsMenuItem = new JMenuItem("Restore Defaults");
@@ -636,6 +636,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		refresh();
 
+	}
+
+	private JMenu createChatBackgroundMenu() {
+		JMenu chatBackground = new JMenu("Chat Background");
+		chatBackground.setMnemonic(KeyEvent.VK_C);
+
+		Color chatBackgroundColor = ChatComponent.DEFAULT_BACKGROUND_COLOR;
+
+		ButtonGroup chatBackgroundButtons = new ButtonGroup();
+		chatBackgroundDefault = new JRadioButtonMenuItem("Default", new ColorIcon(20, 20, chatBackgroundColor));
+		chatBackgroundDefault.addActionListener(this);
+		chatBackgroundButtons.add(chatBackgroundDefault);
+		chatBackground.add(chatBackgroundDefault);
+
+		String chatBackgroundProperty = getClient().getProperty(IClientProperty.SETTING_BACKGROUND_CHAT);
+		if (StringTool.isProvided(chatBackgroundProperty) &&
+			!IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT.equals(chatBackgroundProperty)) {
+			chatBackgroundColor = Color.getColor(chatBackgroundProperty);
+		}
+
+		chatBackgroundCustom = new JRadioButtonMenuItem("Custom", new ColorIcon(20, 20, chatBackgroundColor));
+		chatBackgroundCustom.addActionListener(this);
+		chatBackgroundButtons.add(chatBackgroundCustom);
+		chatBackground.add(chatBackgroundCustom);
+		return chatBackground;
 	}
 
 	public void init() {
@@ -725,6 +750,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String swapTeamColorsSetting = getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
 		swapTeamColorsOffMenuItem.setSelected(true);
 		swapTeamColorsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting));
+
+		String chatBackgroundColorSetting = getClient().getProperty(IClientProperty.SETTING_BACKGROUND_CHAT);
+		chatBackgroundDefault.setSelected(true);
+		chatBackgroundCustom.setSelected(StringTool.isProvided(chatBackgroundColorSetting) && !IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT.equals(chatBackgroundColorSetting));
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -963,6 +992,19 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == swapTeamColorsOnMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON);
 			getClient().saveUserSettings(true);
+		}
+
+		if (source == chatBackgroundDefault) {
+			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == chatBackgroundCustom) {
+			Color color = new JColorChooser().getColor();
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, color.toString());
+				getClient().saveUserSettings(true);
+			}
 		}
 
 		if (source == fRestoreDefaultsMenuItem) {

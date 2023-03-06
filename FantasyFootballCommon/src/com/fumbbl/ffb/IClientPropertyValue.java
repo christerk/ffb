@@ -55,4 +55,6 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_SWAP_TEAM_COLORS_ON = "swapTeamColorsOn";
 	String SETTING_SWAP_TEAM_COLORS_OFF = "swapTeamColorsOff";
+
+	String SETTING_BACKGROUND_CHAT_DEFAULT = "backgroundChatDefault";
 }

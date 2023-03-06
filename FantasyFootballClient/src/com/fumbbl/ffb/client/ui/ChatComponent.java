@@ -9,8 +9,7 @@ import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -23,6 +22,7 @@ import java.util.List;
  */
 public class ChatComponent extends JPanel implements MouseMotionListener {
 
+	public static final Color DEFAULT_BACKGROUND_COLOR = Color.WHITE;
 	private static final int _MAX_CHAT_LENGTH = 512;
 	private static final int _MAX_INPUT_LOG_SIZE = 100;
 
