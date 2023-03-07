@@ -152,11 +152,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
 	private final JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
 
-	private JRadioButtonMenuItem chatBackgroundDefault;
-	private JRadioButtonMenuItem chatBackgroundCustom;
+	private JMenuItem chatBackground;
+	private JMenuItem logBackground;
 
-	private JRadioButtonMenuItem logBackgroundDefault;
-	private JRadioButtonMenuItem logBackgroundCustom;
 	private final JMenu fMissingPlayersMenu;
 
 	private final JMenu fInducementsMenu;
@@ -655,45 +653,23 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return new ColorIcon(20, 20, chatBackgroundColor);
 	}
 
-	private JMenu createChatBackgroundMenu() {
-		JMenu chatBackground = new JMenu("Chat Background");
-		chatBackground.setMnemonic(KeyEvent.VK_C);
+	private JMenuItem createChatBackgroundMenu() {
 
-		Color chatBackgroundColor = ChatComponent.DEFAULT_BACKGROUND_COLOR;
+		Color chatBackgroundColor = getChatBackgroundColor(ChatComponent.DEFAULT_BACKGROUND_COLOR, IClientProperty.SETTING_BACKGROUND_CHAT, IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT);
 
-		ButtonGroup chatBackgroundButtons = new ButtonGroup();
-		chatBackgroundDefault = new JRadioButtonMenuItem("Default", createColorIcon(chatBackgroundColor));
-		chatBackgroundDefault.addActionListener(this);
-		chatBackgroundButtons.add(chatBackgroundDefault);
-		chatBackground.add(chatBackgroundDefault);
+		chatBackground = new JMenuItem("Chat Background", createColorIcon(chatBackgroundColor));
+		chatBackground.addActionListener(this);
 
-		chatBackgroundColor = getChatBackgroundColor(chatBackgroundColor, IClientProperty.SETTING_BACKGROUND_CHAT, IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT);
-
-		chatBackgroundCustom = new JRadioButtonMenuItem("Custom", createColorIcon(chatBackgroundColor));
-		chatBackgroundCustom.addActionListener(this);
-		chatBackgroundButtons.add(chatBackgroundCustom);
-		chatBackground.add(chatBackgroundCustom);
 		return chatBackground;
 	}
 
-	private JMenu createLogBackgroundMenu() {
-		JMenu logBackground = new JMenu("Log Background");
-		logBackground.setMnemonic(KeyEvent.VK_L);
+	private JMenuItem createLogBackgroundMenu() {
 
-		Color logBackgroundColor = LogComponent.DEFAULT_BACKGROUND_COLOR;
+		Color logBackgroundColor = getChatBackgroundColor(LogComponent.DEFAULT_BACKGROUND_COLOR, IClientProperty.SETTING_BACKGROUND_LOG, IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT);
 
-		ButtonGroup logBackgroundButtons = new ButtonGroup();
-		logBackgroundDefault = new JRadioButtonMenuItem("Default", createColorIcon(logBackgroundColor));
-		logBackgroundDefault.addActionListener(this);
-		logBackgroundButtons.add(logBackgroundDefault);
-		logBackground.add(logBackgroundDefault);
+		logBackground = new JMenuItem("Log Background", createColorIcon(logBackgroundColor));
+		logBackground.addActionListener(this);
 
-		logBackgroundColor = getChatBackgroundColor(logBackgroundColor, IClientProperty.SETTING_BACKGROUND_LOG, IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT);
-
-		logBackgroundCustom = new JRadioButtonMenuItem("Custom", createColorIcon(logBackgroundColor));
-		logBackgroundCustom.addActionListener(this);
-		logBackgroundButtons.add(logBackgroundCustom);
-		logBackground.add(logBackgroundCustom);
 		return logBackground;
 	}
 
@@ -795,11 +771,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		boolean uiInitialized = getClient().getUserInterface() != null;
 
-		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackgroundDefault, chatBackgroundCustom,
+		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackground,
 			IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT, ChatComponent.DEFAULT_BACKGROUND_COLOR,
 			uiInitialized ? getClient().getUserInterface().getChat() : null);
 
-		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackgroundDefault, logBackgroundCustom,
+		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackground,
 			IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT, LogComponent.DEFAULT_BACKGROUND_COLOR,
 			uiInitialized ? getClient().getUserInterface().getLog() : null);
 
@@ -827,10 +803,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	private void refreshColorMenu(String key, JRadioButtonMenuItem defaultItem, JRadioButtonMenuItem customItem,
+	private void refreshColorMenu(String key, JMenuItem customItem,
 																String defaultValue, Color defaultColor, Component component) {
 		String backgroundColorSetting = getClient().getProperty(key);
-		defaultItem.setSelected(true);
 
 		Color backgroundColor = null;
 		if (!StringTool.isProvided(backgroundColorSetting) || defaultValue.equals(backgroundColorSetting)) {
@@ -1068,12 +1043,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().saveUserSettings(true);
 		}
 
-		if (source == chatBackgroundDefault) {
-			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == chatBackgroundCustom) {
+		if (source == chatBackground) {
 			Color color = JColorChooser.showDialog(this, "Choose chat background color", getChatBackgroundColor(null, IClientProperty.SETTING_BACKGROUND_CHAT, IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT));
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
@@ -1081,12 +1051,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 
-		if (source == logBackgroundDefault) {
-			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_LOG, IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == logBackgroundCustom) {
+		if (source == logBackground) {
 			Color color = JColorChooser.showDialog(this, "Choose log background color", getChatBackgroundColor(null, IClientProperty.SETTING_BACKGROUND_LOG, IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT));
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));

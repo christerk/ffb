@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.18.0")
+			.addFeature("Added option to change background colors for log and chat windows via User Settings -> Background Styles (should make it easier to filter out background for streaming)")
+		);
+
 		versions.add(new VersionChangeList("2.17.0")
 			.addBugfix("Players in box were not always redrawn when an automated marker was set")
 			.addBugfix("Potential race condition fixed that might have caused loss of marker updates")
