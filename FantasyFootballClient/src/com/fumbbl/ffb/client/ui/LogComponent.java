@@ -167,4 +167,15 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		return fLogScrollPane;
 	}
 
+	@Override
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		if (fLogTextPane != null) {
+
+			fLogTextPane.setBackground(bg);
+		}
+		if (fLogScrollPane != null) {
+			fLogScrollPane.setBackground(bg);
+		}
+	}
 }

@@ -9,7 +9,9 @@ import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -157,4 +159,17 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatInputField.requestFocus();
 	}
 
+	@Override
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		if (fChatInputField != null) {
+			fChatInputField.setBackground(bg);
+		}
+		if (fChatScrollPane != null) {
+			fChatScrollPane.setBackground(bg);
+		}
+		if (fChatTextPane != null) {
+			fChatTextPane.setBackground(bg);
+		}
+	}
 }

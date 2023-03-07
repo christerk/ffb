@@ -55,6 +55,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -792,11 +793,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		swapTeamColorsOffMenuItem.setSelected(true);
 		swapTeamColorsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting));
 
+		boolean uiInitialized = getClient().getUserInterface() != null;
+
 		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackgroundDefault, chatBackgroundCustom,
-			IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT, ChatComponent.DEFAULT_BACKGROUND_COLOR);
+			IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT, ChatComponent.DEFAULT_BACKGROUND_COLOR,
+			uiInitialized ? getClient().getUserInterface().getChat() : null);
 
 		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackgroundDefault, logBackgroundCustom,
-			IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT, LogComponent.DEFAULT_BACKGROUND_COLOR);
+			IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT, LogComponent.DEFAULT_BACKGROUND_COLOR,
+			uiInitialized ? getClient().getUserInterface().getLog() : null);
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -822,24 +827,29 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	private void refreshColorMenu(String key, JRadioButtonMenuItem defaultItem, JRadioButtonMenuItem customItem, String defaultValue, Color defaultColor) {
-		String chatBackgroundColorSetting = getClient().getProperty(key);
+	private void refreshColorMenu(String key, JRadioButtonMenuItem defaultItem, JRadioButtonMenuItem customItem,
+																String defaultValue, Color defaultColor, Component component) {
+		String backgroundColorSetting = getClient().getProperty(key);
 		defaultItem.setSelected(true);
 
-		Color chatBackgroundColor = null;
-		if (!StringTool.isProvided(chatBackgroundColorSetting)) {
-			chatBackgroundColor = defaultColor;
-		} else if (!defaultValue.equals(chatBackgroundColorSetting)) {
+		Color backgroundColor = null;
+		if (!StringTool.isProvided(backgroundColorSetting) || defaultValue.equals(backgroundColorSetting)) {
+			backgroundColor = defaultColor;
+		} else {
 			try {
-				chatBackgroundColor = new Color(Integer.parseInt(chatBackgroundColorSetting));
+				backgroundColor = new Color(Integer.parseInt(backgroundColorSetting));
 				customItem.setSelected(true);
 			} catch (NumberFormatException ex) {
 				getClient().getFactorySource().logWithOutGameId(ex);
 			}
 		}
 
-		if (chatBackgroundColor != null) {
-			customItem.setIcon(createColorIcon(chatBackgroundColor));
+		if (backgroundColor != null) {
+			customItem.setIcon(createColorIcon(backgroundColor));
+			if (component != null && !backgroundColor.equals(component.getBackground())) {
+				component.setBackground(backgroundColor);
+				component.repaint();
+			}
 		}
 	}
 
