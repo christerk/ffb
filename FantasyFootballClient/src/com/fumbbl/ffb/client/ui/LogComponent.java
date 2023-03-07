@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.TextStyle;
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class LogComponent extends JPanel implements MouseMotionListener, IReplayMouseListener {
 
 
+	public static final Color DEFAULT_BACKGROUND_COLOR = Color.WHITE;
 	private final ChatLogScrollPane fLogScrollPane;
 	private final ChatLogTextPane fLogTextPane;
 
