@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.util;
 
 import com.fumbbl.ffb.Constant;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.PlayerAction;
@@ -8,6 +9,8 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -126,30 +129,37 @@ public class UtilServerGame {
 			addReRolls(pStep, true);
 			addReRolls(pStep, false);
 
-			// handle Master Chefs
-			int reRollsStolenHome = rollMasterChef(pStep, true);
-			int reRollsStolenAway = rollMasterChef(pStep, false);
-			int delta = reRollsStolenHome - reRollsStolenAway;
-			if (delta > 0) {
-				game.getTurnDataHome().setReRolls(game.getTurnDataHome().getReRolls() + delta);
-				game.getTurnDataAway().setReRolls(game.getTurnDataAway().getReRolls() - delta);
-				if (game.getTurnDataAway().getReRolls() < 0) {
-					game.getTurnDataAway().setReRolls(0);
-				}
-			}
-			if (delta < 0) {
-				delta = -delta;
-				game.getTurnDataAway().setReRolls(game.getTurnDataAway().getReRolls() + delta);
-				game.getTurnDataHome().setReRolls(game.getTurnDataHome().getReRolls() - delta);
-				if (game.getTurnDataHome().getReRolls() < 0) {
-					game.getTurnDataHome().setReRolls(0);
-				}
+			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			if (mechanic.rollForChefAtStartOfHalf()) {
+				handleChefRolls(pStep, game);
 			}
 		}
 		resetLeaderState(game);
 		updatePlayerStateDependentProperties(pStep);
 		resetSpecialSkillsAtHalfTime(game);
 
+	}
+
+	public static void handleChefRolls(IStep pStep, Game game) {
+		// handle Master Chefs
+		int reRollsStolenHome = rollMasterChef(pStep, true);
+		int reRollsStolenAway = rollMasterChef(pStep, false);
+		int delta = reRollsStolenHome - reRollsStolenAway;
+		if (delta > 0) {
+			game.getTurnDataHome().setReRolls(game.getTurnDataHome().getReRolls() + delta);
+			game.getTurnDataAway().setReRolls(game.getTurnDataAway().getReRolls() - delta);
+			if (game.getTurnDataAway().getReRolls() < 0) {
+				game.getTurnDataAway().setReRolls(0);
+			}
+		}
+		if (delta < 0) {
+			delta = -delta;
+			game.getTurnDataAway().setReRolls(game.getTurnDataAway().getReRolls() + delta);
+			game.getTurnDataHome().setReRolls(game.getTurnDataHome().getReRolls() - delta);
+			if (game.getTurnDataHome().getReRolls() < 0) {
+				game.getTurnDataHome().setReRolls(0);
+			}
+		}
 	}
 
 	public static void prepareForSetup(Game game) {

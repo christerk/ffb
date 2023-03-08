@@ -1,14 +1,11 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.GameStatus;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
+import com.fumbbl.ffb.server.net.commands.InternalServerCommandAddLoadedTeam;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.util.StringTool;
@@ -25,14 +22,14 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 
 	private final String fCoach;
 	private final String fTeamId;
-	private final boolean fHomeTeam;
+	private final Boolean fHomeTeam;
 	private final GameState fGameState;
 	private final List<String> fAccountProperties;
 
 	private final transient Session fSession;
 
-	public FumbblRequestLoadTeam(GameState pGameState, String pCoach, String pTeamId, boolean pHomeTeam,
-	                             Session pSession, List<String> pAccountProperties) {
+	public FumbblRequestLoadTeam(GameState pGameState, String pCoach, String pTeamId, Boolean pHomeTeam,
+															 Session pSession, List<String> pAccountProperties) {
 		fGameState = pGameState;
 		fCoach = pCoach;
 		fTeamId = pTeamId;
@@ -53,9 +50,6 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 		return fTeamId;
 	}
 
-	public boolean isHomeTeam() {
-		return fHomeTeam;
-	}
 
 	public Session getSession() {
 		return fSession;
@@ -68,7 +62,6 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 	@Override
 	public void process(ServerRequestProcessor pRequestProcessor) {
 		FantasyFootballServer server = pRequestProcessor.getServer();
-		Game game = getGameState().getGame();
 		Team team;
 		try {
 			team = UtilFumbblRequest.loadFumbblTeam(server, getTeamId());
@@ -80,22 +73,8 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 			handleInvalidTeam(getTeamId(), getGameState(), server, null);
 			return;
 		}
-		game.teamsAreSkeletons();
-		server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
-		if (GameStatus.SCHEDULED == getGameState().getStatus()) {
-			if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId())) {
-				// log game scheduled -->
-				if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
-					String logEntry = "GAME SCHEDULED " + StringTool.print(game.getTeamHome().getName()) + " vs. " +
-						StringTool.print(game.getTeamAway().getName());
-					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), logEntry);
-				}
-				// <-- log game scheduled
-			}
-		} else {
-			InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(
-					getGameState().getId(), getCoach(), isHomeTeam(), getAccountProperties());
-			server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
-		}
+
+		server.getCommunication().handleCommand(
+			new ReceivedCommand(new InternalServerCommandAddLoadedTeam(fGameState, fCoach, fHomeTeam, team, fAccountProperties), fSession));
 	}
 }

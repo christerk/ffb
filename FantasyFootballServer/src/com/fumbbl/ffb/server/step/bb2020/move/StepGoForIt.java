@@ -40,7 +40,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.Set;
 
 /**
- * Step in block sequence to handle go for it on blitz.
+ * Step in block sequence to handle rush blitz.
  * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
  * <p>
@@ -124,14 +124,14 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 			}
 			if (actingPlayer.isGoingForIt()
 				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers())) {
-				if (ReRolledActions.GO_FOR_IT == getReRolledAction()) {
+				if (ReRolledActions.RUSH == getReRolledAction()) {
 					if ((getReRollSource() == null)
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 						failGfi();
 						return;
 					}
 				}
-				switch (goForIt()) {
+				switch (rush()) {
 					case SUCCESS:
 						succeedGfi();
 						return;
@@ -175,7 +175,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 	}
 
-	private ActionStatus goForIt() {
+	private ActionStatus rush() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		GoForItModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GO_FOR_IT_MODIFIER);
@@ -183,23 +183,23 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
 		int roll = getGameState().getDiceRoller().rollGoingForIt();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-		boolean reRolled = ((getReRolledAction() == ReRolledActions.GO_FOR_IT) && (getReRollSource() != null));
+		boolean reRolled = ((getReRolledAction() == ReRolledActions.RUSH) && (getReRollSource() != null));
 		getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
 			minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
 		if (successful) {
 			return ActionStatus.SUCCESS;
 		} else {
-			if (getReRolledAction() != ReRolledActions.GO_FOR_IT) {
-				setReRolledAction(ReRolledActions.GO_FOR_IT);
-				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.GO_FOR_IT);
+			if (getReRolledAction() != ReRolledActions.RUSH) {
+				setReRolledAction(ReRolledActions.RUSH);
+				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
 
 				if (gfiRerollSource != null && TurnMode.REGULAR == game.getTurnMode()) {
 					setReRollSource(gfiRerollSource);
 					UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
-					return goForIt();
+					return rush();
 				} else {
 					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-						ReRolledActions.GO_FOR_IT, minimumRoll, false)) {
+						ReRolledActions.RUSH, minimumRoll, false)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;
