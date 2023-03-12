@@ -17,6 +17,7 @@ import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogAbout;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
@@ -55,7 +56,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -71,6 +71,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -186,6 +188,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final List<Prayer> currentPrayersAway = new ArrayList<>();
 	private final Map<String, JMenu> exposedMenus = new HashMap<>();
 
+	private final StyleProvider styleProvider;
+	private final DimensionProvider dimensionProvider;
+
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
 		private final Player<?> fPlayer;
@@ -205,11 +210,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	public GameMenuBar(FantasyFootballClient pClient) {
+	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 
 		setFont(new Font("Sans Serif", Font.PLAIN, 12));
 
 		fClient = pClient;
+		this.styleProvider = styleProvider;
+		this.dimensionProvider = dimensionProvider;
 
 		JMenu fGameMenu = new JMenu("Game");
 		fGameMenu.setMnemonic(KeyEvent.VK_G);
@@ -655,9 +662,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenuItem createChatBackgroundMenu() {
 
-		Color chatBackgroundColor = getChatBackgroundColor(ChatComponent.DEFAULT_BACKGROUND_COLOR, IClientProperty.SETTING_BACKGROUND_CHAT, IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT);
-
-		chatBackground = new JMenuItem("Chat Background", createColorIcon(chatBackgroundColor));
+		chatBackground = new JMenuItem("Chat Background", createColorIcon(styleProvider.getChatBackground()));
 		chatBackground.addActionListener(this);
 
 		return chatBackground;
@@ -665,20 +670,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenuItem createLogBackgroundMenu() {
 
-		Color logBackgroundColor = getChatBackgroundColor(LogComponent.DEFAULT_BACKGROUND_COLOR, IClientProperty.SETTING_BACKGROUND_LOG, IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT);
-
-		logBackground = new JMenuItem("Log Background", createColorIcon(logBackgroundColor));
+		logBackground = new JMenuItem("Log Background", createColorIcon(styleProvider.getLogBackground()));
 		logBackground.addActionListener(this);
 
 		return logBackground;
-	}
-
-	private Color getChatBackgroundColor(Color defaultColor, String key, String defaultValue) {
-		String chatBackgroundProperty = getClient().getProperty(key);
-		if (StringTool.isProvided(chatBackgroundProperty) && !defaultValue.equals(chatBackgroundProperty)) {
-			return Color.getColor(chatBackgroundProperty);
-		}
-		return defaultColor;
 	}
 
 	public void init() {
@@ -769,15 +764,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		swapTeamColorsOffMenuItem.setSelected(true);
 		swapTeamColorsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting));
 
-		boolean uiInitialized = getClient().getUserInterface() != null;
+		boolean refreshUi = refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackground,
+			() -> getClient().getUserInterface().getStyleProvider().getChatBackground(),
+			(color) -> getClient().getUserInterface().getStyleProvider().setChatBackground(color));
 
-		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackground,
-			IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT, ChatComponent.DEFAULT_BACKGROUND_COLOR,
-			uiInitialized ? getClient().getUserInterface().getChat() : null);
-
-		refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackground,
-			IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT, LogComponent.DEFAULT_BACKGROUND_COLOR,
-			uiInitialized ? getClient().getUserInterface().getLog() : null);
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackground,
+			() -> getClient().getUserInterface().getStyleProvider().getLogBackground(),
+			(color) -> getClient().getUserInterface().getStyleProvider().setLogBackground(color));
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -795,37 +788,45 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
-		updateOrientation();
+		refreshUi |= updateOrientation();
 
 		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 
+
+		if (refreshUi) {
+			getClient().getUserInterface().initComponents(true);
+		}
 	}
 
-	private void refreshColorMenu(String key, JMenuItem customItem,
-																String defaultValue, Color defaultColor, Component component) {
+	private boolean refreshColorMenu(String key, JMenuItem customItem,
+																	 Supplier<Color> oldColor, Consumer<Color> setter) {
+
+		if (getClient().getUserInterface() == null) {
+			return false;
+		}
+
 		String backgroundColorSetting = getClient().getProperty(key);
 
 		Color backgroundColor = null;
-		if (!StringTool.isProvided(backgroundColorSetting) || defaultValue.equals(backgroundColorSetting)) {
-			backgroundColor = defaultColor;
-		} else {
-			try {
-				backgroundColor = new Color(Integer.parseInt(backgroundColorSetting));
-				customItem.setSelected(true);
-			} catch (NumberFormatException ex) {
-				getClient().getFactorySource().logWithOutGameId(ex);
-			}
+		if (!StringTool.isProvided(backgroundColorSetting)) {
+			return false;
 		}
 
-		if (backgroundColor != null) {
-			customItem.setIcon(createColorIcon(backgroundColor));
-			if (component != null && !backgroundColor.equals(component.getBackground())) {
-				component.setBackground(backgroundColor);
-				component.repaint();
-			}
+		try {
+			backgroundColor = new Color(Integer.parseInt(backgroundColorSetting));
+			customItem.setSelected(true);
+		} catch (NumberFormatException ex) {
+			getClient().getFactorySource().logWithOutGameId(ex);
 		}
+
+		if (backgroundColor != null && !backgroundColor.equals(oldColor.get())) {
+			customItem.setIcon(createColorIcon(backgroundColor));
+			setter.accept(backgroundColor);
+			return true;
+		}
+		return false;
 	}
 
 	public FantasyFootballClient getClient() {
@@ -1044,7 +1045,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		if (source == chatBackground) {
-			Color color = JColorChooser.showDialog(this, "Choose chat background color", getChatBackgroundColor(null, IClientProperty.SETTING_BACKGROUND_CHAT, IClientPropertyValue.SETTING_BACKGROUND_CHAT_DEFAULT));
+			Color defaultColor = getClient().getUserInterface().getStyleProvider().getChatBackground();
+			Color color = JColorChooser.showDialog(this, "Choose chat background color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
@@ -1052,7 +1054,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		if (source == logBackground) {
-			Color color = JColorChooser.showDialog(this, "Choose log background color", getChatBackgroundColor(null, IClientProperty.SETTING_BACKGROUND_LOG, IClientPropertyValue.SETTING_BACKGROUND_LOG_DEFAULT));
+			Color defaultColor = getClient().getUserInterface().getStyleProvider().getLogBackground();
+			Color color = JColorChooser.showDialog(this, "Choose log background color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
@@ -1112,7 +1115,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fDialogShown.showDialog(this);
 	}
 
-	public void updateOrientation() {
+	public boolean updateOrientation() {
 
 		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
 
@@ -1131,13 +1134,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 
-		if (getClient() != null && getClient().getUserInterface() != null) {
-			DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
-			if (dimensionProvider != null && layout != dimensionProvider.getLayout()) {
-				dimensionProvider.setLayout(layout);
-				getClient().getUserInterface().initComponents(true);
-			}
+		if (layout != dimensionProvider.getLayout()) {
+			dimensionProvider.setLayout(layout);
+			return true;
 		}
+
+		return false;
 	}
 
 	public void updateGameOptions() {

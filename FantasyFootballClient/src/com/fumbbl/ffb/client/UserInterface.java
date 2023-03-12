@@ -53,6 +53,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final MouseEntropySource fMouseEntropySource;
 
 	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 
 	public UserInterface(FantasyFootballClient pClient) {
 
@@ -63,13 +64,14 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSoundEngine = new SoundEngine(getClient());
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
-		setGameMenuBar(new GameMenuBar(getClient()));
+		styleProvider = new StyleProvider();
+		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
+		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
 
-		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
@@ -95,8 +97,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDesktop = new JDesktopPane();
 
 		fFieldComponent.initLayout(dimensionProvider);
-		fLog.initLayout(dimensionProvider);
-		fChat.initLayout(dimensionProvider);
+		fLog.initLayout(dimensionProvider, styleProvider);
+		fChat.initLayout(dimensionProvider, styleProvider);
 		fSideBarHome.initLayout(dimensionProvider);
 		fSideBarAway.initLayout(dimensionProvider);
 		fScoreBar.initLayout();
@@ -216,6 +218,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		panelContent.add(logChatScorePanel);
 
 		return panelContent;
+	}
+
+	public StyleProvider getStyleProvider() {
+		return styleProvider;
 	}
 
 	public DimensionProvider getDimensionProvider() {

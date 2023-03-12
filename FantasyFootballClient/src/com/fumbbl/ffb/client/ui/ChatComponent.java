@@ -5,12 +5,12 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.ReplayControl;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class ChatComponent extends JPanel implements MouseMotionListener {
 
-	public static final Color DEFAULT_BACKGROUND_COLOR = Color.WHITE;
 	private static final int _MAX_CHAT_LENGTH = 512;
 	private static final int _MAX_INPUT_LOG_SIZE = 100;
 
@@ -107,12 +106,16 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout(DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
 		fReplayControl.initLayout(dimensionProvider);
+		setBackground(styleProvider.getChatBackground());
+		fChatTextPane.setBackground(styleProvider.getChatBackground());
+		fChatScrollPane.setBackground(styleProvider.getChatBackground());
+		fChatInputField.setBackground(styleProvider.getChatBackground());
 	}
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
@@ -157,19 +160,5 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	public void requestChatInputFocus() {
 		fChatInputField.requestFocus();
-	}
-
-	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
-		if (fChatInputField != null) {
-			fChatInputField.setBackground(bg);
-		}
-		if (fChatScrollPane != null) {
-			fChatScrollPane.setBackground(bg);
-		}
-		if (fChatTextPane != null) {
-			fChatTextPane.setBackground(bg);
-		}
 	}
 }
