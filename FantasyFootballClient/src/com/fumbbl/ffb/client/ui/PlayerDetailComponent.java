@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerState;
@@ -99,9 +101,18 @@ public class PlayerDetailComponent extends JPanel {
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+
+		String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
+
 		if (styleProvider.getFrameBackground() == null) {
 			BufferedImage background;
-			if (getSideBar().isHomeSide()) {
+
+			boolean homeSide = getSideBar().isHomeSide();
+			if (swapColors) {
+				homeSide = !homeSide;
+			}
+			if (homeSide) {
 				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED);
 			} else {
 				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
@@ -114,7 +125,11 @@ public class PlayerDetailComponent extends JPanel {
 		if (fPlayer != null) {
 			BufferedImage overlay;
 			Game game = getSideBar().getClient().getGame();
-			if ((fPlayer.getTeam() == null) || game.getTeamHome().hasPlayer(fPlayer)) {
+			boolean homePlayer = (fPlayer.getTeam() == null) || game.getTeamHome().hasPlayer(fPlayer);
+			if (swapColors) {
+				homePlayer = !homePlayer;
+			}
+			if (homePlayer) {
 				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_RED);
 			} else {
 				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_BLUE);
