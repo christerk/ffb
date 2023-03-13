@@ -16,6 +16,8 @@ public class StyleProvider {
 	private Color admin = new Color(128, 128, 0);
 	private Color dev = new Color(128, 0, 128);
 
+	private boolean swapTeamColors;
+
 	public Color getChatBackground() {
 		return chatBackground;
 	}
@@ -65,7 +67,7 @@ public class StyleProvider {
 	}
 
 	public Color getHome() {
-		return home;
+		return swapTeamColors ? away : home;
 	}
 
 	public void setHome(Color home) {
@@ -73,7 +75,7 @@ public class StyleProvider {
 	}
 
 	public Color getAway() {
-		return away;
+		return swapTeamColors ? home : away;
 	}
 
 	public void setAway(Color away) {
@@ -102,5 +104,13 @@ public class StyleProvider {
 
 	public void setDev(Color dev) {
 		this.dev = dev;
+	}
+
+	public boolean isSwapTeamColors() {
+		return swapTeamColors;
+	}
+
+	public void setSwapTeamColors(boolean swapTeamColors) {
+		this.swapTeamColors = swapTeamColors;
 	}
 }

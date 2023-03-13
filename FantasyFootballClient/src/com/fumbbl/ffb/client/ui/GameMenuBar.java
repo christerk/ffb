@@ -830,10 +830,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		playersMarkingManualMenuItem.setSelected(true);
 		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
 
-		String swapTeamColorsSetting = getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
-		swapTeamColorsOffMenuItem.setSelected(true);
-		swapTeamColorsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting));
-
 		boolean refreshUi = refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackground,
 			styleProvider::getChatBackground, styleProvider::setChatBackground);
 
@@ -846,6 +842,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		frameBackgroundColor.setSelected(useColorForFrames);
 
 		refreshUi |= refreshFrameBackgroundMenu(useColorForFrames);
+
+		String swapTeamColorsSetting = getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		swapTeamColorsOffMenuItem.setSelected(true);
+		boolean swapTeamColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting);
+		swapTeamColorsOnMenuItem.setSelected(swapTeamColors);
+
+		if (swapTeamColors != styleProvider.isSwapTeamColors()) {
+			styleProvider.setSwapTeamColors(swapTeamColors);
+			refreshUi = true;
+		}
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
