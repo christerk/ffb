@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -53,17 +54,21 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private BoxType fOpenBox;
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
+	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 
-	public BoxComponent(SideBarComponent pSideBar) {
+	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fSideBar = pSideBar;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout() {
 		size = dimensionProvider.dimension(DimensionProvider.Component.BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
@@ -87,9 +92,14 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
-		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-		BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX);
-		g2d.drawImage(background, 0, 0, size.width, size.height, null);
+		if (styleProvider.getFrameBackground() == null) {
+			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+			BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX);
+			g2d.drawImage(background, 0, 0, size.width, size.height, null);
+		} else {
+			g2d.setColor(styleProvider.getFrameBackground());
+			g2d.fillRect(0, 0, size.width, size.height);
+		}
 		g2d.dispose();
 	}
 

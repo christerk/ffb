@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -45,16 +46,20 @@ public class ResourceComponent extends JPanel {
 
 	private final Map<InducementType, Integer> inducementValues = new HashMap<>();
 
+	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 	private Dimension size;
 
-	public ResourceComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
+	public ResourceComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fSideBar = pSideBar;
 		fSlots = createResourceSlots();
 		fRefreshNecessary = true;
+		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout() {
 		size = dimensionProvider.dimension(DimensionProvider.Component.RESOURCE);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
@@ -103,14 +108,19 @@ public class ResourceComponent extends JPanel {
 
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
-		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-		BufferedImage background;
-		if (getSideBar().isHomeSide()) {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_RED);
+		if (styleProvider.getFrameBackground() == null) {
+			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+			BufferedImage background;
+			if (getSideBar().isHomeSide()) {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_RED);
+			} else {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_BLUE);
+			}
+			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_BLUE);
+			g2d.setColor(styleProvider.getFrameBackground());
+			g2d.fillRect(0, 0, size.width, size.height);
 		}
-		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 

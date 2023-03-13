@@ -70,6 +70,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -156,6 +157,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenuItem chatBackground;
 	private JMenuItem logBackground;
+
+	private JRadioButtonMenuItem frameBackgroundIcons;
+	private JRadioButtonMenuItem frameBackgroundColor;
 
 	private final JMenu fMissingPlayersMenu;
 
@@ -595,6 +599,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fUserSettingsMenu.add(backgroundStyles);
 		backgroundStyles.add(createChatBackgroundMenu());
 		backgroundStyles.add(createLogBackgroundMenu());
+		backgroundStyles.add(createFrameBackgroundMenu());
 
 		fUserSettingsMenu.addSeparator();
 
@@ -674,6 +679,24 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		logBackground.addActionListener(this);
 
 		return logBackground;
+	}
+
+	private JMenuItem createFrameBackgroundMenu() {
+
+		JMenu menu = new JMenu("Frame Background");
+		ButtonGroup group = new ButtonGroup();
+		frameBackgroundIcons = new JRadioButtonMenuItem("Graphics");
+		frameBackgroundIcons.addActionListener(this);
+
+		frameBackgroundColor = new JRadioButtonMenuItem("Color", createColorIcon(styleProvider.getFrameBackground()));
+		frameBackgroundColor.addActionListener(this);
+
+		menu.add(frameBackgroundIcons);
+		menu.add(frameBackgroundColor);
+		group.add(frameBackgroundIcons);
+		group.add(frameBackgroundColor);
+
+		return menu;
 	}
 
 	public void init() {
@@ -765,12 +788,17 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		swapTeamColorsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting));
 
 		boolean refreshUi = refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackground,
-			() -> getClient().getUserInterface().getStyleProvider().getChatBackground(),
-			(color) -> getClient().getUserInterface().getStyleProvider().setChatBackground(color));
+			styleProvider::getChatBackground, styleProvider::setChatBackground);
 
 		refreshUi |= refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackground,
-			() -> getClient().getUserInterface().getStyleProvider().getLogBackground(),
-			(color) -> getClient().getUserInterface().getStyleProvider().setLogBackground(color));
+			styleProvider::getLogBackground, styleProvider::setLogBackground);
+
+		String frameBackgroundSetting = getClient().getProperty(IClientProperty.SETTING_BACKGROUND_FRAME);
+		frameBackgroundIcons.setSelected(true);
+		boolean useColorForFrames = IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR.equals(frameBackgroundSetting);
+		frameBackgroundColor.setSelected(useColorForFrames);
+
+		refreshUi |= refreshFrameBackgroundMenu(useColorForFrames);
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -798,6 +826,20 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (refreshUi) {
 			getClient().getUserInterface().initComponents(true);
 		}
+	}
+
+	private boolean refreshFrameBackgroundMenu(boolean useColor) {
+		Color oldColor = styleProvider.getFrameBackground();
+		Color newColor = null;
+
+		if (useColor) {
+			newColor = new Color(Integer.parseInt(getClient().getProperty(IClientProperty.SETTING_BACKGROUND_FRAME_COLOR)));
+			frameBackgroundColor.setIcon(createColorIcon(newColor));
+		}
+
+		styleProvider.setFrameBackground(newColor);
+
+		return !Objects.equals(oldColor, newColor);
 	}
 
 	private boolean refreshColorMenu(String key, JMenuItem customItem,
@@ -1045,7 +1087,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		if (source == chatBackground) {
-			Color defaultColor = getClient().getUserInterface().getStyleProvider().getChatBackground();
+			Color defaultColor = styleProvider.getChatBackground();
 			Color color = JColorChooser.showDialog(this, "Choose chat background color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
@@ -1054,12 +1096,27 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		if (source == logBackground) {
-			Color defaultColor = getClient().getUserInterface().getStyleProvider().getLogBackground();
+			Color defaultColor = styleProvider.getLogBackground();
 			Color color = JColorChooser.showDialog(this, "Choose log background color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
+		}
+
+		if (source == frameBackgroundIcons) {
+			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_ICONS);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == frameBackgroundColor) {
+			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR);
+			Color defaultColor = styleProvider.getFrameBackground();
+			Color color = JColorChooser.showDialog(this, "Choose sidebar and scoreboard background color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME_COLOR, String.valueOf(color.getRGB()));
+			}
+			getClient().saveUserSettings(true);
 		}
 
 		if (source == fRestoreDefaultsMenuItem) {

@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.model.FieldModel;
 
 import javax.swing.JPanel;
@@ -27,7 +28,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class BoxButtonComponent extends JPanel implements MouseListener, MouseMotionListener {
@@ -39,19 +39,22 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private BufferedImage fImage;
 	private BoxType fOpenBox;
 	private BoxType fSelectedBox;
-
+	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 	private Dimension size;
 
-	public BoxButtonComponent(SideBarComponent pSideBar) {
+	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fSideBar = pSideBar;
 		fButtonLocations = new HashMap<>();
 		fOpenBox = null;
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout() {
 		size = dimensionProvider.dimension(DimensionProvider.Component.BUTTON_BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		Dimension button = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
@@ -97,14 +100,19 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
-		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-		BufferedImage background;
-		if (getSideBar().isHomeSide()) {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_RED);
+		if (styleProvider.getFrameBackground() == null) {
+			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+			BufferedImage background;
+			if (getSideBar().isHomeSide()) {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_RED);
+			} else {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE);
+			}
+			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE);
+			g2d.setColor(styleProvider.getFrameBackground());
+			g2d.fillRect(0, 0, size.width, size.height);
 		}
-		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 
@@ -173,6 +181,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 			return null;
 		}
 	}
+
 	public void mouseClicked(MouseEvent pMouseEvent) {
 	}
 

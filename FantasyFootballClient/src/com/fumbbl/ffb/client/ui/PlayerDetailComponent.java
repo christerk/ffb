@@ -12,6 +12,7 @@ import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -77,11 +78,13 @@ public class PlayerDetailComponent extends JPanel {
 
 	private Dimension size;
 	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 
-	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
+	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fSideBar = pSideBar;
 		fRefreshNecessary = true;
 		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 	}
 
 	public void initLayout() {
@@ -96,13 +99,18 @@ public class PlayerDetailComponent extends JPanel {
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-		BufferedImage background;
-		if (getSideBar().isHomeSide()) {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED);
+		if (styleProvider.getFrameBackground() == null) {
+			BufferedImage background;
+			if (getSideBar().isHomeSide()) {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED);
+			} else {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
+			}
+			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
+			g2d.setColor(styleProvider.getFrameBackground());
+			g2d.fillRect(0, 0, size.width, size.height);
 		}
-		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		if (fPlayer != null) {
 			BufferedImage overlay;
 			Game game = getSideBar().getClient().getGame();
