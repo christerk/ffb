@@ -38,13 +38,13 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	private final FantasyFootballClient fClient;
 
-	public ChatComponent(FantasyFootballClient pClient) {
+	public ChatComponent(FantasyFootballClient pClient, StyleProvider styleProvider) {
 
 		fClient = pClient;
 		fInputLog = new LinkedList<>();
 		fInputLogPosition = -1;
 
-		fChatTextPane = new ChatLogTextPane();
+		fChatTextPane = new ChatLogTextPane(styleProvider);
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
@@ -116,6 +116,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatTextPane.setBackground(styleProvider.getChatBackground());
 		fChatScrollPane.setBackground(styleProvider.getChatBackground());
 		fChatInputField.setBackground(styleProvider.getChatBackground());
+		fChatTextPane.update();
 	}
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {

@@ -1,25 +1,26 @@
 package com.fumbbl.ffb.client.ui;
 
-import java.awt.event.MouseEvent;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.client.ParagraphStyle;
+import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
-
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.TextStyle;
+import java.awt.event.MouseEvent;
 
 /**
- * 
  * @author Kalimar
  */
 public class ChatLogTextPane extends JTextPane {
 
 	private ChatLogDocument fChatLogDocument;
 	private IReplayMouseListener fReplayMouseListener;
+	private final StyleProvider styleProvider;
 
-	public ChatLogTextPane() {
+	public ChatLogTextPane(StyleProvider styleProvider) {
+		this.styleProvider = styleProvider;
 		setEditable(false);
 		((DefaultCaret) getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		detachDocument();
@@ -50,7 +51,7 @@ public class ChatLogTextPane extends JTextPane {
 	}
 
 	public void detachDocument() {
-		fChatLogDocument = new ChatLogDocument();
+		fChatLogDocument = new ChatLogDocument(styleProvider);
 	}
 
 	public void attachDocument() {
@@ -76,13 +77,17 @@ public class ChatLogTextPane extends JTextPane {
 
 			} else {
 				fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
-						fChatLogDocument.getStyle(TextStyle.NONE.getName()));
+					fChatLogDocument.getStyle(TextStyle.NONE.getName()));
 			}
 
 		} catch (BadLocationException ex) {
 			throw new FantasyFootballException(ex);
 		}
 
+	}
+
+	public void update() {
+		fChatLogDocument.setStyles();
 	}
 
 }
