@@ -597,8 +597,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		JMenu backgroundStyles = new JMenu("Background Styles");
 		backgroundStyles.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(backgroundStyles);
-		backgroundStyles.add(createChatBackgroundMenu());
-		backgroundStyles.add(createLogBackgroundMenu());
+		addColorItem("Chat Background", styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
+		addColorItem("Log Background", styleProvider.getLogBackground(), backgroundStyles, (item) -> logBackground = item);
 		backgroundStyles.add(createFrameBackgroundMenu());
 
 		fUserSettingsMenu.addSeparator();
@@ -665,20 +665,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return new ColorIcon(20, 20, chatBackgroundColor);
 	}
 
-	private JMenuItem createChatBackgroundMenu() {
-
-		chatBackground = new JMenuItem("Chat Background", createColorIcon(styleProvider.getChatBackground()));
-		chatBackground.addActionListener(this);
-
-		return chatBackground;
-	}
-
-	private JMenuItem createLogBackgroundMenu() {
-
-		logBackground = new JMenuItem("Log Background", createColorIcon(styleProvider.getLogBackground()));
-		logBackground.addActionListener(this);
-
-		return logBackground;
+	private void addColorItem(String title, Color color, JMenu parent, Consumer<JMenuItem> setter) {
+		JMenuItem item = new JMenuItem(title, createColorIcon(color));
+		item.addActionListener(this);
+		parent.add(item);
+		setter.accept(item);
 	}
 
 	private JMenuItem createFrameBackgroundMenu() {
