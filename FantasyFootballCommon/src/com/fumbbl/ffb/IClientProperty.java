@@ -31,6 +31,14 @@ public interface IClientProperty extends CommonProperty {
 	String SETTING_BACKGROUND_LOG = "setting.background.log";
 	String SETTING_BACKGROUND_FRAME = "setting.background.frame";
 	String SETTING_BACKGROUND_FRAME_COLOR = "setting.background.frame.color";
+	String SETTING_FONT_COLOR_TEXT = "setting.font.color.text";
+	String SETTING_FONT_COLOR_AWAY = "setting.font.color.away";
+	String SETTING_FONT_COLOR_HOME = "setting.font.color.home";
+	String SETTING_FONT_COLOR_SPEC = "setting.font.color.spec";
+	String SETTING_FONT_COLOR_DEV = "setting.font.color.dev";
+	String SETTING_FONT_COLOR_ADMIN = "setting.font.color.admin";
+	String SETTING_FONT_COLOR_FRAME = "setting.font.color.frame";
+	String SETTING_FONT_COLOR_FRAME_SHADOW = "setting.font.color.frameShadow";
 
 	String SETTING_LAST_CHANGE_LOG_FINGERPRINT = "setting.lastChangeLogFingerPrint";
 
@@ -97,6 +105,8 @@ public interface IClientProperty extends CommonProperty {
 		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT, SETTING_RE_ROLL_BALL_AND_CHAIN, SETTING_MARK_USED_PLAYERS,
 		SETTING_PLAYER_MARKING_TYPE, SETTING_SHOW_AUTO_MARKING_DIALOG, SETTING_SWAP_TEAM_COLORS,
 		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG, SETTING_BACKGROUND_FRAME,
-		SETTING_BACKGROUND_FRAME_COLOR
+		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
+		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
+		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW
 	};
 }

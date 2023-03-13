@@ -22,7 +22,6 @@ import com.fumbbl.ffb.model.change.ModelChangeId;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -324,12 +323,12 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				Rectangle2D bounds = metrics.getStringBounds(title, g2d);
 				int x = ((size.width - (int) bounds.getWidth()) / 2);
 				int y = pYPosition + metrics.getAscent() + 2;
-				UtilClientGraphics.drawShadowedText(g2d, title, x, y);
+				UtilClientGraphics.drawShadowedText(g2d, title, x, y, styleProvider);
 				y = pYPosition + ((int) bounds.getHeight() / 2) + 3;
-				g2d.setColor(Color.WHITE);
+				g2d.setColor(styleProvider.getFrame());
 				g2d.drawLine(2, y, x - 4, y);
 				g2d.drawLine(x + (int) bounds.getWidth() + 4, y, size.width - 3, y);
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(styleProvider.getFrameShadow());
 				g2d.drawLine(2, y + 1, x - 4, y + 1);
 				g2d.drawLine(x + (int) bounds.getWidth() + 4, y + 1, size.width - 3, y + 1);
 				height = (int) bounds.getHeight() + 4;

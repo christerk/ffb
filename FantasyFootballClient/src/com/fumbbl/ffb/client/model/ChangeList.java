@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.18.0")
 			.addFeature("Added options to change background colors for frame components, log and chat windows via User Settings -> Background Styles (should make it easier to filter out background for streaming)")
 			.addBugfix("Sidebars and text colors were not adjusted when swapping team colors")
+			.addFeature("Added options to change text colors in frame, log and chat components via User Settings -> Font Colors")
 		);
 
 		versions.add(new VersionChangeList("2.17.0")

@@ -102,10 +102,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
 			y += LINE_HEIGHT;
 		}
-		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y);
+		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y, styleProvider);
 		Rectangle2D boundsAway = fontMetrics.getStringBounds(scoreAway, g2d);
 		x = ((getPreferredSize().width - (int) boundsAway.getWidth()) / 2) + 40;
-		UtilClientGraphics.drawShadowedText(g2d, scoreAway, x, y);
+		UtilClientGraphics.drawShadowedText(g2d, scoreAway, x, y, styleProvider);
 		g2d.dispose();
 	}
 
@@ -146,13 +146,13 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		}
 
 		g2d.setFont(_TURN_TEXT_FONT);
-		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText);
+		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText, styleProvider);
 		x += turnPrefixBounds.getWidth() + 10;
 		g2d.setFont(_TURN_NUMBER_FONT);
-		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts);
+		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts, styleProvider);
 		x += turnBounds.getWidth() + 10;
 		g2d.setFont(_TURN_TEXT_FONT);
-		UtilClientGraphics.drawShadowedText(g2d, half, x, yText);
+		UtilClientGraphics.drawShadowedText(g2d, half, x, yText, styleProvider);
 		g2d.dispose();
 	}
 
@@ -164,7 +164,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(_SPECTATOR_FONT);
 			String spectatorString = Integer.toString(fSpectators);
-			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, spectatorLocation.y + 21);
+			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, spectatorLocation.y + 21, styleProvider);
 			g2d.dispose();
 		}
 	}

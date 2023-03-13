@@ -300,7 +300,7 @@ public class TurnDiceStatusComponent extends JPanel
 				String opponentsChoice = "Opponent's choice";
 				y += 38 + fontMetrics.getAscent();
 				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, size.width);
-				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
+				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y, styleProvider);
 			} else {
 				y += 38;
 			}
