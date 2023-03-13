@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -42,6 +43,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private static final int LINE_HEIGHT = 32;
 	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 	private Rectangle weatherLocation;
 	private Rectangle spectatorLocation;
 	private Rectangle coachBannedHome;
@@ -61,9 +63,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private boolean fRefreshNecessary;
 	private BufferedImage fImage;
 
-	public ScoreBarComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+	public ScoreBarComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		setLayout(null);
 		ToolTipManager.sharedInstance().registerComponent(this);
 		fRefreshNecessary = true;
@@ -72,11 +75,17 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
-		IconCache iconCache = getClient().getUserInterface().getIconCache();
-		String scorebarBackground = dimensionProvider.getLayout() ==
-			DimensionProvider.ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
-		BufferedImage background = iconCache.getIconByProperty(scorebarBackground);
-		g2d.drawImage(background, 0, 0, null);
+		if (styleProvider.getFrameBackground() == null) {
+			IconCache iconCache = getClient().getUserInterface().getIconCache();
+			String scorebarBackground = dimensionProvider.getLayout() ==
+				DimensionProvider.ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
+			BufferedImage background = iconCache.getIconByProperty(scorebarBackground);
+			g2d.drawImage(background, 0, 0, null);
+		} else {
+			g2d.setColor(styleProvider.getFrameBackground());
+			Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.SCORE_BOARD);
+			g2d.fillRect(0, 0, dimension.width, dimension.height);
+		}
 		g2d.dispose();
 	}
 
@@ -93,10 +102,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
 			y += LINE_HEIGHT;
 		}
-		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y);
+		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y, styleProvider);
 		Rectangle2D boundsAway = fontMetrics.getStringBounds(scoreAway, g2d);
 		x = ((getPreferredSize().width - (int) boundsAway.getWidth()) / 2) + 40;
-		UtilClientGraphics.drawShadowedText(g2d, scoreAway, x, y);
+		UtilClientGraphics.drawShadowedText(g2d, scoreAway, x, y, styleProvider);
 		g2d.dispose();
 	}
 
@@ -137,13 +146,13 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		}
 
 		g2d.setFont(_TURN_TEXT_FONT);
-		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText);
+		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText, styleProvider);
 		x += turnPrefixBounds.getWidth() + 10;
 		g2d.setFont(_TURN_NUMBER_FONT);
-		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts);
+		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts, styleProvider);
 		x += turnBounds.getWidth() + 10;
 		g2d.setFont(_TURN_TEXT_FONT);
-		UtilClientGraphics.drawShadowedText(g2d, half, x, yText);
+		UtilClientGraphics.drawShadowedText(g2d, half, x, yText, styleProvider);
 		g2d.dispose();
 	}
 
@@ -155,7 +164,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(_SPECTATOR_FONT);
 			String spectatorString = Integer.toString(fSpectators);
-			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, spectatorLocation.y + 21);
+			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, spectatorLocation.y + 21, styleProvider);
 			g2d.dispose();
 		}
 	}

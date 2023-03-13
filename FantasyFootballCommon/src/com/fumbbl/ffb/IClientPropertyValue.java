@@ -55,4 +55,8 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_SWAP_TEAM_COLORS_ON = "swapTeamColorsOn";
 	String SETTING_SWAP_TEAM_COLORS_OFF = "swapTeamColorsOff";
+
+	String SETTING_BACKGROUND_FRAME_ICONS = "backgroundFrameIcons";
+	String SETTING_BACKGROUND_FRAME_COLOR = "backgroundFrameColor";
+
 }

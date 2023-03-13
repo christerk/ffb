@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.ReplayControl;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.JPanel;
@@ -37,13 +38,13 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	private final FantasyFootballClient fClient;
 
-	public ChatComponent(FantasyFootballClient pClient) {
+	public ChatComponent(FantasyFootballClient pClient, StyleProvider styleProvider) {
 
 		fClient = pClient;
 		fInputLog = new LinkedList<>();
 		fInputLogPosition = -1;
 
-		fChatTextPane = new ChatLogTextPane();
+		fChatTextPane = new ChatLogTextPane(styleProvider);
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
@@ -105,12 +106,17 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout(DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
 		fReplayControl.initLayout(dimensionProvider);
+		setBackground(styleProvider.getChatBackground());
+		fChatTextPane.setBackground(styleProvider.getChatBackground());
+		fChatScrollPane.setBackground(styleProvider.getChatBackground());
+		fChatInputField.setBackground(styleProvider.getChatBackground());
+		fChatTextPane.update();
 	}
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
@@ -156,5 +162,4 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	public void requestChatInputFocus() {
 		fChatInputField.requestFocus();
 	}
-
 }

@@ -17,6 +17,7 @@ import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogAbout;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
@@ -48,6 +49,7 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JColorChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -68,7 +70,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -81,91 +86,105 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final FantasyFootballClient fClient;
 
-	private final JMenuItem fGameReplayMenuItem;
-	private final JMenuItem fGameConcessionMenuItem;
-	private final JMenuItem fGameStatisticsMenuItem;
+	private JMenuItem fGameReplayMenuItem;
+	private JMenuItem fGameConcessionMenuItem;
+	private JMenuItem fGameStatisticsMenuItem;
 
-	private final JMenuItem fLoadSetupMenuItem;
-	private final JMenuItem fSaveSetupMenuItem;
+	private JMenuItem fLoadSetupMenuItem;
+	private JMenuItem fSaveSetupMenuItem;
 
-	private final JMenuItem fRestoreDefaultsMenuItem;
-	private final JMenu playerMarkingMenu;
+	private JMenuItem fRestoreDefaultsMenuItem;
+	private JMenu playerMarkingMenu;
 
-	private final JMenuItem fSoundVolumeItem;
-	private final JRadioButtonMenuItem fSoundOnMenuItem;
-	private final JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
-	private final JRadioButtonMenuItem fSoundOffMenuItem;
+	private JMenuItem fSoundVolumeItem;
+	private JRadioButtonMenuItem fSoundOnMenuItem;
+	private JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
+	private JRadioButtonMenuItem fSoundOffMenuItem;
 
-	private final JRadioButtonMenuItem fIconsAbstract;
-	private final JRadioButtonMenuItem fIconsRosterOpponent;
-	private final JRadioButtonMenuItem fIconsRosterBoth;
-	private final JRadioButtonMenuItem fIconsTeam;
+	private JRadioButtonMenuItem fIconsAbstract;
+	private JRadioButtonMenuItem fIconsRosterOpponent;
+	private JRadioButtonMenuItem fIconsRosterBoth;
+	private JRadioButtonMenuItem fIconsTeam;
 
-	private final JRadioButtonMenuItem fAutomoveOnMenuItem;
-	private final JRadioButtonMenuItem fAutomoveOffMenuItem;
+	private JRadioButtonMenuItem fAutomoveOnMenuItem;
+	private JRadioButtonMenuItem fAutomoveOffMenuItem;
 
-	private final JRadioButtonMenuItem fBlitzPanelOnMenuItem;
-	private final JRadioButtonMenuItem fBlitzPanelOffMenuItem;
+	private JRadioButtonMenuItem fBlitzPanelOnMenuItem;
+	private JRadioButtonMenuItem fBlitzPanelOffMenuItem;
 
-	private final JRadioButtonMenuItem gazePanelOnMenuItem;
-	private final JRadioButtonMenuItem gazePanelOffMenuItem;
+	private JRadioButtonMenuItem gazePanelOnMenuItem;
+	private JRadioButtonMenuItem gazePanelOffMenuItem;
 
-	private final JRadioButtonMenuItem rightClickEndActionOnMenuItem;
-	private final JRadioButtonMenuItem rightClickOpensContextMenuItem;
-	private final JRadioButtonMenuItem rightClickLegacyModeItem;
-	private final JRadioButtonMenuItem rightClickEndActionOffMenuItem;
+	private JRadioButtonMenuItem rightClickEndActionOnMenuItem;
+	private JRadioButtonMenuItem rightClickOpensContextMenuItem;
+	private JRadioButtonMenuItem rightClickLegacyModeItem;
+	private JRadioButtonMenuItem rightClickEndActionOffMenuItem;
 
-	private final JRadioButtonMenuItem fCustomPitchMenuItem;
-	private final JRadioButtonMenuItem fDefaultPitchMenuItem;
-	private final JRadioButtonMenuItem fBasicPitchMenuItem;
+	private JRadioButtonMenuItem fCustomPitchMenuItem;
+	private JRadioButtonMenuItem fDefaultPitchMenuItem;
+	private JRadioButtonMenuItem fBasicPitchMenuItem;
 
-	private final JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
-	private final JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
+	private JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
+	private JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
 
-	private final JRadioButtonMenuItem pitchLandscapeMenuItem;
-	private final JRadioButtonMenuItem pitchPortraitMenuItem;
-	private final JRadioButtonMenuItem layoutSquareMenuItem;
+	private JRadioButtonMenuItem pitchLandscapeMenuItem;
+	private JRadioButtonMenuItem pitchPortraitMenuItem;
+	private JRadioButtonMenuItem layoutSquareMenuItem;
 
-	private final JRadioButtonMenuItem fTeamLogoBothMenuItem;
-	private final JRadioButtonMenuItem fTeamLogoOwnMenuItem;
-	private final JRadioButtonMenuItem fTeamLogoNoneMenuItem;
+	private JRadioButtonMenuItem fTeamLogoBothMenuItem;
+	private JRadioButtonMenuItem fTeamLogoOwnMenuItem;
+	private JRadioButtonMenuItem fTeamLogoNoneMenuItem;
 
-	private final JRadioButtonMenuItem fPitchWeatherOnMenuItem;
-	private final JRadioButtonMenuItem fPitchWeatherOffMenuItem;
+	private JRadioButtonMenuItem fPitchWeatherOnMenuItem;
+	private JRadioButtonMenuItem fPitchWeatherOffMenuItem;
 
-	private final JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
-	private final JRadioButtonMenuItem fRangeGridToggleMenuItem;
+	private JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
+	private JRadioButtonMenuItem fRangeGridToggleMenuItem;
 
-	private final JRadioButtonMenuItem markUsedPlayersDefaultMenuItem;
-	private final JRadioButtonMenuItem markUsedPlayersCheckIconGreenMenuItem;
+	private JRadioButtonMenuItem markUsedPlayersDefaultMenuItem;
+	private JRadioButtonMenuItem markUsedPlayersCheckIconGreenMenuItem;
 
-	private final JRadioButtonMenuItem swapTeamColorsOffMenuItem;
-	private final JRadioButtonMenuItem swapTeamColorsOnMenuItem;
+	private JRadioButtonMenuItem swapTeamColorsOffMenuItem;
+	private JRadioButtonMenuItem swapTeamColorsOnMenuItem;
 
-	private final JRadioButtonMenuItem playersMarkingManualMenuItem;
-	private final JRadioButtonMenuItem playersMarkingAutoMenuItem;
+	private JRadioButtonMenuItem playersMarkingManualMenuItem;
+	private JRadioButtonMenuItem playersMarkingAutoMenuItem;
 
-	private final JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
-	private final JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
-	private final JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
-	private final JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
+	private JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
+	private JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
+	private JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
+	private JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
 
-	private final JMenu fMissingPlayersMenu;
+	private JMenuItem chatBackground;
+	private JMenuItem logBackground;
+	private JMenuItem textFontColor;
+	private JMenuItem awayFontColor;
+	private JMenuItem homeFontColor;
+	private JMenuItem specFontColor;
+	private JMenuItem adminFontColor;
+	private JMenuItem devFontColor;
+	private JMenuItem frameFontColor;
+	private JMenuItem frameFontShadowColor;
 
-	private final JMenu fInducementsMenu;
+	private JRadioButtonMenuItem frameBackgroundIcons;
+	private JRadioButtonMenuItem frameBackgroundColor;
 
-	private final JMenu fActiveCardsMenu;
+	private JMenu fMissingPlayersMenu;
 
-	private final JMenu prayersMenu;
+	private JMenu fInducementsMenu;
 
-	private final JMenu fGameOptionsMenu;
+	private JMenu fActiveCardsMenu;
 
-	private final JMenuItem fAboutMenuItem;
-	private final JMenuItem fChatCommandsMenuItem;
-	private final JMenuItem fKeyBindingsMenuItem;
-	private final JMenuItem changeListItem;
-	private final JMenuItem autoMarkingItem;
-	private final JMenu reRollBallAndChainPanelMenu;
+	private JMenu prayersMenu;
+
+	private JMenu fGameOptionsMenu;
+
+	private JMenuItem fAboutMenuItem;
+	private JMenuItem fChatCommandsMenuItem;
+	private JMenuItem fKeyBindingsMenuItem;
+	private JMenuItem changeListItem;
+	private JMenuItem autoMarkingItem;
+	private JMenu reRollBallAndChainPanelMenu;
 
 	private IDialog fDialogShown;
 
@@ -180,6 +199,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final List<Prayer> currentPrayersHome = new ArrayList<>();
 	private final List<Prayer> currentPrayersAway = new ArrayList<>();
 	private final Map<String, JMenu> exposedMenus = new HashMap<>();
+
+	private final StyleProvider styleProvider;
+	private final DimensionProvider dimensionProvider;
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
@@ -200,237 +222,185 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	public GameMenuBar(FantasyFootballClient pClient) {
+	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 
 		setFont(new Font("Sans Serif", Font.PLAIN, 12));
 
 		fClient = pClient;
+		this.styleProvider = styleProvider;
+		this.dimensionProvider = dimensionProvider;
 
-		JMenu fGameMenu = new JMenu("Game");
-		fGameMenu.setMnemonic(KeyEvent.VK_G);
-		add(fGameMenu);
+		createGameMenu();
+		createTeamSetupMenu();
+		createUserSettingsMenu();
+		createGameStatusMenus();
+		createHelpMenu();
 
-		fGameReplayMenuItem = new JMenuItem(_REPLAY_MODE_ON, KeyEvent.VK_R);
-		String keyMenuReplay = getClient().getProperty(IClientProperty.KEY_MENU_REPLAY);
-		if (StringTool.isProvided(keyMenuReplay)) {
-			fGameReplayMenuItem.setAccelerator(KeyStroke.getKeyStroke(keyMenuReplay));
-		}
-		fGameReplayMenuItem.addActionListener(this);
-		fGameMenu.add(fGameReplayMenuItem);
+		refresh();
 
-		fGameConcessionMenuItem = new JMenuItem("Concede Game", KeyEvent.VK_C);
-		fGameConcessionMenuItem.addActionListener(this);
-		fGameConcessionMenuItem.setEnabled(false);
-		fGameMenu.add(fGameConcessionMenuItem);
+	}
 
-		fGameStatisticsMenuItem = new JMenuItem("Game Statistics", KeyEvent.VK_S);
-		fGameStatisticsMenuItem.addActionListener(this);
-		fGameStatisticsMenuItem.setEnabled(false);
-		fGameMenu.add(fGameStatisticsMenuItem);
+	private void createHelpMenu() {
+		JMenu fHelpMenu = new JMenu("Help");
+		fHelpMenu.setMnemonic(KeyEvent.VK_H);
+		add(fHelpMenu);
 
-		JMenu fTeamSetupMenu = new JMenu("Team Setup");
-		fTeamSetupMenu.setMnemonic(KeyEvent.VK_T);
-		add(fTeamSetupMenu);
+		fAboutMenuItem = new JMenuItem("About", KeyEvent.VK_A);
+		fAboutMenuItem.addActionListener(this);
+		fHelpMenu.add(fAboutMenuItem);
 
-		fLoadSetupMenuItem = new JMenuItem("Load Setup", KeyEvent.VK_L);
-		String menuSetupLoad = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_LOAD);
-		if (StringTool.isProvided(menuSetupLoad)) {
-			fLoadSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupLoad));
-		}
-		fLoadSetupMenuItem.addActionListener(this);
-		fTeamSetupMenu.add(fLoadSetupMenuItem);
+		fChatCommandsMenuItem = new JMenuItem("Chat Commands", KeyEvent.VK_C);
+		fChatCommandsMenuItem.addActionListener(this);
+		fHelpMenu.add(fChatCommandsMenuItem);
 
-		fSaveSetupMenuItem = new JMenuItem("Save Setup", KeyEvent.VK_S);
-		String menuSetupSave = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_SAVE);
-		if (StringTool.isProvided(menuSetupSave)) {
-			fSaveSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupSave));
-		}
-		fSaveSetupMenuItem.addActionListener(this);
-		fTeamSetupMenu.add(fSaveSetupMenuItem);
+		changeListItem = new JMenuItem("What's new?", KeyEvent.VK_L);
+		changeListItem.addActionListener(this);
+		fHelpMenu.add(changeListItem);
 
+		autoMarkingItem = new JMenuItem("Automarking Panel", KeyEvent.VK_L);
+		autoMarkingItem.addActionListener(this);
+		fHelpMenu.add(autoMarkingItem);
+
+		fKeyBindingsMenuItem = new JMenuItem("Key Bindings", KeyEvent.VK_K);
+		fKeyBindingsMenuItem.addActionListener(this);
+		fHelpMenu.add(fKeyBindingsMenuItem);
+	}
+
+	private void createGameStatusMenus() {
+		fMissingPlayersMenu = new JMenu("Missing Players");
+		fMissingPlayersMenu.setMnemonic(KeyEvent.VK_M);
+		fMissingPlayersMenu.setEnabled(false);
+		add(fMissingPlayersMenu);
+
+		fInducementsMenu = new JMenu("Inducements");
+		fInducementsMenu.setMnemonic(KeyEvent.VK_I);
+		fInducementsMenu.setEnabled(false);
+		add(fInducementsMenu);
+
+		fActiveCardsMenu = new JMenu("Active Cards");
+		fActiveCardsMenu.setMnemonic(KeyEvent.VK_C);
+		fActiveCardsMenu.setEnabled(false);
+		add(fActiveCardsMenu);
+
+		prayersMenu = new JMenu("Prayers");
+		prayersMenu.setMnemonic(KeyEvent.VK_P);
+		prayersMenu.setEnabled(false);
+		add(prayersMenu);
+
+		fGameOptionsMenu = new JMenu("Game Options");
+		fGameOptionsMenu.setMnemonic(KeyEvent.VK_O);
+		fGameOptionsMenu.setEnabled(false);
+		add(fGameOptionsMenu);
+	}
+
+	private void createUserSettingsMenu() {
 		JMenu fUserSettingsMenu = new JMenu("User Settings");
 		fUserSettingsMenu.setMnemonic(KeyEvent.VK_U);
 		add(fUserSettingsMenu);
 
-		JMenu fSoundMenu = new JMenu("Sound");
-		fSoundMenu.setMnemonic(KeyEvent.VK_S);
-		fUserSettingsMenu.add(fSoundMenu);
+		createSoundMenu(fUserSettingsMenu);
+		createIconsMenu(fUserSettingsMenu);
+		createAutmomoveMenu(fUserSettingsMenu);
+		createBlitzPanelMenu(fUserSettingsMenu);
+		createGazePanelMenu(fUserSettingsMenu);
+		createRightClickMenu(fUserSettingsMenu);
+		createBallAndChainMenu(fUserSettingsMenu);
+		createPitchMenu(fUserSettingsMenu);
+		createRangegridMenu(fUserSettingsMenu);
+		createMarkUsedPlayerMenu(fUserSettingsMenu);
+		createMarkingMenu(fUserSettingsMenu);
+		createBackgroundMenu(fUserSettingsMenu);
+		createFontMenu(fUserSettingsMenu);
 
-		fSoundVolumeItem = new JMenuItem("Sound Volume");
-		fSoundVolumeItem.setMnemonic(KeyEvent.VK_V);
-		fSoundVolumeItem.addActionListener(this);
-		fSoundMenu.add(fSoundVolumeItem);
+		fUserSettingsMenu.addSeparator();
+		createRestoreMenu(fUserSettingsMenu);
+	}
 
-		fSoundMenu.addSeparator();
+	private void createRestoreMenu(JMenu fUserSettingsMenu) {
+		fRestoreDefaultsMenuItem = new JMenuItem("Restore Defaults");
+		fRestoreDefaultsMenuItem.addActionListener(this);
+		fRestoreDefaultsMenuItem.setEnabled(false);
+		fUserSettingsMenu.add(fRestoreDefaultsMenuItem);
+	}
 
-		ButtonGroup soundGroup = new ButtonGroup();
+	private void createBackgroundMenu(JMenu fUserSettingsMenu) {
+		JMenu backgroundStyles = new JMenu("Background Styles");
+		backgroundStyles.setMnemonic(KeyEvent.VK_B);
+		fUserSettingsMenu.add(backgroundStyles);
+		addColorItem("Chat Background", styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
+		addColorItem("Log Background", styleProvider.getLogBackground(), backgroundStyles, (item) -> logBackground = item);
+		backgroundStyles.add(createFrameBackgroundMenu());
+	}
 
-		fSoundOnMenuItem = new JRadioButtonMenuItem("Sound on");
-		fSoundOnMenuItem.addActionListener(this);
-		soundGroup.add(fSoundOnMenuItem);
-		fSoundMenu.add(fSoundOnMenuItem);
+	private void createFontMenu(JMenu userSettings) {
+		JMenu fontStyles = new JMenu("Font Colors");
+		fontStyles.setMnemonic(KeyEvent.VK_F);
+		userSettings.add(fontStyles);
+		addColorItem("Regular Text", styleProvider.getText(), fontStyles, (item) -> textFontColor = item);
+		addColorItem("Away", styleProvider.getAway(), fontStyles, (item) -> awayFontColor = item);
+		addColorItem("Home", styleProvider.getHome(), fontStyles, (item) -> homeFontColor = item);
+		addColorItem("Spectators", styleProvider.getSpec(), fontStyles, (item) -> specFontColor = item);
+		addColorItem("Admin", styleProvider.getAdmin(), fontStyles, (item) -> adminFontColor = item);
+		addColorItem("Devs", styleProvider.getDev(), fontStyles, (item) -> devFontColor = item);
+		addColorItem("Sidebar/Scoreboard", styleProvider.getFrame(), fontStyles, (item) -> frameFontColor = item);
+		addColorItem("Sidebar/Scoreboard Shadow", styleProvider.getFrameShadow(), fontStyles, (item) -> frameFontShadowColor = item);
+	}
 
-		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem("Mute spectators");
-		fSoundMuteSpectatorsMenuItem.addActionListener(this);
-		soundGroup.add(fSoundMuteSpectatorsMenuItem);
-		fSoundMenu.add(fSoundMuteSpectatorsMenuItem);
+	private void createMarkingMenu(JMenu fUserSettingsMenu) {
+		playerMarkingMenu = new JMenu("Player Marking");
+		playerMarkingMenu.setMnemonic(KeyEvent.VK_L);
+		fUserSettingsMenu.add(playerMarkingMenu);
 
-		fSoundOffMenuItem = new JRadioButtonMenuItem("Sound off");
-		fSoundOffMenuItem.addActionListener(this);
-		soundGroup.add(fSoundOffMenuItem);
-		fSoundMenu.add(fSoundOffMenuItem);
+		ButtonGroup playerMarkingGroup = new ButtonGroup();
 
-		JMenu fIconsMenu = new JMenu("Icons");
-		fIconsMenu.setMnemonic(KeyEvent.VK_I);
-		fUserSettingsMenu.add(fIconsMenu);
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem("Automatic");
+		playersMarkingAutoMenuItem.addActionListener(this);
+		playerMarkingGroup.add(playersMarkingAutoMenuItem);
+		playerMarkingMenu.add(playersMarkingAutoMenuItem);
 
-		ButtonGroup iconsGroup = new ButtonGroup();
+		playersMarkingManualMenuItem = new JRadioButtonMenuItem("Manual");
+		playersMarkingManualMenuItem.addActionListener(this);
+		playerMarkingGroup.add(playersMarkingManualMenuItem);
+		playerMarkingMenu.add(playersMarkingManualMenuItem);
+	}
 
-		fIconsTeam = new JRadioButtonMenuItem("Team icons");
-		fIconsTeam.setMnemonic(KeyEvent.VK_T);
-		fIconsTeam.addActionListener(this);
-		iconsGroup.add(fIconsTeam);
-		fIconsMenu.add(fIconsTeam);
+	private void createMarkUsedPlayerMenu(JMenu fUserSettingsMenu) {
+		JMenu markUsedPlayersMenu = new JMenu("Mark used players");
+		markUsedPlayersMenu.setMnemonic(KeyEvent.VK_M);
+		fUserSettingsMenu.add(markUsedPlayersMenu);
 
-		fIconsRosterOpponent = new JRadioButtonMenuItem("Roster icons (Opponent)");
-		fIconsRosterOpponent.setMnemonic(KeyEvent.VK_O);
-		fIconsRosterOpponent.addActionListener(this);
-		iconsGroup.add(fIconsRosterOpponent);
-		fIconsMenu.add(fIconsRosterOpponent);
+		ButtonGroup markUsedPlayersGroup = new ButtonGroup();
 
-		fIconsRosterBoth = new JRadioButtonMenuItem("Roster icons (Both)");
-		fIconsRosterBoth.setMnemonic(KeyEvent.VK_B);
-		fIconsRosterBoth.addActionListener(this);
-		iconsGroup.add(fIconsRosterBoth);
-		fIconsMenu.add(fIconsRosterBoth);
+		markUsedPlayersDefaultMenuItem = new JRadioButtonMenuItem("Fade only");
+		markUsedPlayersDefaultMenuItem.addActionListener(this);
+		markUsedPlayersGroup.add(markUsedPlayersDefaultMenuItem);
+		markUsedPlayersMenu.add(markUsedPlayersDefaultMenuItem);
 
-		fIconsAbstract = new JRadioButtonMenuItem("Abstract icons");
-		fIconsAbstract.setMnemonic(KeyEvent.VK_A);
-		fIconsAbstract.addActionListener(this);
-		iconsGroup.add(fIconsAbstract);
-		fIconsMenu.add(fIconsAbstract);
+		markUsedPlayersCheckIconGreenMenuItem = new JRadioButtonMenuItem("Green check mark");
+		markUsedPlayersCheckIconGreenMenuItem.addActionListener(this);
+		markUsedPlayersGroup.add(markUsedPlayersCheckIconGreenMenuItem);
+		markUsedPlayersMenu.add(markUsedPlayersCheckIconGreenMenuItem);
+	}
 
-		fIconsMenu.addSeparator();
+	private void createRangegridMenu(JMenu fUserSettingsMenu) {
+		JMenu fRangeGridMenu = new JMenu("Range Grid");
+		fRangeGridMenu.setMnemonic(KeyEvent.VK_R);
+		fUserSettingsMenu.add(fRangeGridMenu);
 
-		JMenu swapTeamColorsMenu = new JMenu("Swap team colors");
-		swapTeamColorsMenu.setMnemonic(KeyEvent.VK_S);
-		fIconsMenu.add(swapTeamColorsMenu);
+		ButtonGroup rangeGridGroup = new ButtonGroup();
 
-		ButtonGroup swapTeamColorsGroup = new ButtonGroup();
+		fRangeGridAlwaysOnMenuItem = new JRadioButtonMenuItem("Range Grid always on");
+		fRangeGridAlwaysOnMenuItem.addActionListener(this);
+		rangeGridGroup.add(fRangeGridAlwaysOnMenuItem);
+		fRangeGridMenu.add(fRangeGridAlwaysOnMenuItem);
 
-		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem("Off");
-		swapTeamColorsOffMenuItem.setMnemonic(KeyEvent.VK_F);
-		swapTeamColorsOffMenuItem.addActionListener(this);
-		swapTeamColorsGroup.add(swapTeamColorsOffMenuItem);
-		swapTeamColorsMenu.add(swapTeamColorsOffMenuItem);
+		fRangeGridToggleMenuItem = new JRadioButtonMenuItem("Range Grid toggle");
+		fRangeGridToggleMenuItem.addActionListener(this);
+		rangeGridGroup.add(fRangeGridToggleMenuItem);
+		fRangeGridMenu.add(fRangeGridToggleMenuItem);
+	}
 
-		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem("On");
-		swapTeamColorsOnMenuItem.setMnemonic(KeyEvent.VK_N);
-		swapTeamColorsOnMenuItem.addActionListener(this);
-		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
-		swapTeamColorsMenu.add(swapTeamColorsOnMenuItem);
-
-		JMenu fAutomoveMenu = new JMenu("Automove");
-		fAutomoveMenu.setMnemonic(KeyEvent.VK_A);
-		fUserSettingsMenu.add(fAutomoveMenu);
-
-		ButtonGroup automoveGroup = new ButtonGroup();
-
-		fAutomoveOnMenuItem = new JRadioButtonMenuItem("Enable");
-		fAutomoveOnMenuItem.addActionListener(this);
-		automoveGroup.add(fAutomoveOnMenuItem);
-		fAutomoveMenu.add(fAutomoveOnMenuItem);
-
-		fAutomoveOffMenuItem = new JRadioButtonMenuItem("Disable");
-		fAutomoveOffMenuItem.addActionListener(this);
-		automoveGroup.add(fAutomoveOffMenuItem);
-		fAutomoveMenu.add(fAutomoveOffMenuItem);
-
-		ButtonGroup blitzTargetPanelGroup = new ButtonGroup();
-		JMenu blitzTargetPanelMenu = new JMenu("Blitz Target Panel");
-		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_B);
-		fUserSettingsMenu.add(blitzTargetPanelMenu);
-
-		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem("Enable");
-		fBlitzPanelOnMenuItem.addActionListener(this);
-		blitzTargetPanelGroup.add(fBlitzPanelOnMenuItem);
-		blitzTargetPanelMenu.add(fBlitzPanelOnMenuItem);
-
-		fBlitzPanelOffMenuItem = new JRadioButtonMenuItem("Disable");
-		fBlitzPanelOffMenuItem.addActionListener(this);
-		blitzTargetPanelGroup.add(fBlitzPanelOffMenuItem);
-		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
-
-		ButtonGroup gazeTargetPanelGroup = new ButtonGroup();
-		JMenu gazeTargetPanelMenu = new JMenu("Gaze Target Panel");
-		gazeTargetPanelMenu.setMnemonic(KeyEvent.VK_G);
-		fUserSettingsMenu.add(gazeTargetPanelMenu);
-
-		gazePanelOnMenuItem = new JRadioButtonMenuItem("Enable");
-		gazePanelOnMenuItem.addActionListener(this);
-		gazeTargetPanelGroup.add(gazePanelOnMenuItem);
-		gazeTargetPanelMenu.add(gazePanelOnMenuItem);
-
-		gazePanelOffMenuItem = new JRadioButtonMenuItem("Disable");
-		gazePanelOffMenuItem.addActionListener(this);
-		gazeTargetPanelGroup.add(gazePanelOffMenuItem);
-		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
-
-		ButtonGroup rightClickEndActionPanelGroup = new ButtonGroup();
-		JMenu rightClickEndActionPanelMenu = new JMenu("Right Click Behaviour");
-		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
-		fUserSettingsMenu.add(rightClickEndActionPanelMenu);
-
-		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem("Ends Action/Selection");
-		rightClickEndActionOnMenuItem.addActionListener(this);
-		rightClickEndActionPanelGroup.add(rightClickEndActionOnMenuItem);
-		rightClickEndActionPanelMenu.add(rightClickEndActionOnMenuItem);
-
-		rightClickLegacyModeItem = new JRadioButtonMenuItem("Works like Left Click (Legacy)");
-		rightClickLegacyModeItem.addActionListener(this);
-		rightClickEndActionPanelGroup.add(rightClickLegacyModeItem);
-		rightClickEndActionPanelMenu.add(rightClickLegacyModeItem);
-
-		rightClickOpensContextMenuItem = new JRadioButtonMenuItem("Selects Player/Opens Context Menu");
-		rightClickOpensContextMenuItem.addActionListener(this);
-		rightClickEndActionPanelGroup.add(rightClickOpensContextMenuItem);
-		rightClickEndActionPanelMenu.add(rightClickOpensContextMenuItem);
-
-		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem("Disabled");
-		rightClickEndActionOffMenuItem.addActionListener(this);
-		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
-		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
-
-		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
-		reRollBallAndChainPanelMenu = new JMenu("Ask for Whirling Dervish");
-		exposedMenus.put(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
-		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
-		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
-
-		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem("Always");
-		reRollBallAndChainAlwaysMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
-		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
-
-		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem("When not hitting an opponent");
-		reRollBallAndChainNoOpponentMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
-		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
-
-		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem("When hitting Team-mate");
-		reRollBallAndChainTeamMateMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
-		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
-
-		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem("Never");
-		reRollBallAndChainNeverMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
-		reRollBallAndChainNeverMenuItem.addActionListener(this);
-		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
-		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
-
+	private void createPitchMenu(JMenu fUserSettingsMenu) {
 		JMenu fPitchMenu = new JMenu("Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		fUserSettingsMenu.add(fPitchMenu);
@@ -529,113 +499,274 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fPitchWeatherOffMenuItem.addActionListener(this);
 		pitchWeatherGroup.add(fPitchWeatherOffMenuItem);
 		fPitchWeatherMenu.add(fPitchWeatherOffMenuItem);
+	}
 
-		JMenu fRangeGridMenu = new JMenu("Range Grid");
-		fRangeGridMenu.setMnemonic(KeyEvent.VK_R);
-		fUserSettingsMenu.add(fRangeGridMenu);
+	private void createBallAndChainMenu(JMenu fUserSettingsMenu) {
+		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
+		reRollBallAndChainPanelMenu = new JMenu("Ask for Whirling Dervish");
+		exposedMenus.put(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
+		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
+		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
 
-		ButtonGroup rangeGridGroup = new ButtonGroup();
+		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem("Always");
+		reRollBallAndChainAlwaysMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
+		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
 
-		fRangeGridAlwaysOnMenuItem = new JRadioButtonMenuItem("Range Grid always on");
-		fRangeGridAlwaysOnMenuItem.addActionListener(this);
-		rangeGridGroup.add(fRangeGridAlwaysOnMenuItem);
-		fRangeGridMenu.add(fRangeGridAlwaysOnMenuItem);
+		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem("When not hitting an opponent");
+		reRollBallAndChainNoOpponentMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
+		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
 
-		fRangeGridToggleMenuItem = new JRadioButtonMenuItem("Range Grid toggle");
-		fRangeGridToggleMenuItem.addActionListener(this);
-		rangeGridGroup.add(fRangeGridToggleMenuItem);
-		fRangeGridMenu.add(fRangeGridToggleMenuItem);
+		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem("When hitting Team-mate");
+		reRollBallAndChainTeamMateMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
+		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
 
-		JMenu markUsedPlayersMenu = new JMenu("Mark used players");
-		markUsedPlayersMenu.setMnemonic(KeyEvent.VK_M);
-		fUserSettingsMenu.add(markUsedPlayersMenu);
+		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem("Never");
+		reRollBallAndChainNeverMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
+		reRollBallAndChainNeverMenuItem.addActionListener(this);
+		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
+		reRollBallAndChainPanelMenu.add(reRollBallAndChainNeverMenuItem);
+	}
 
-		ButtonGroup markUsedPlayersGroup = new ButtonGroup();
+	private void createRightClickMenu(JMenu fUserSettingsMenu) {
+		ButtonGroup rightClickEndActionPanelGroup = new ButtonGroup();
+		JMenu rightClickEndActionPanelMenu = new JMenu("Right Click Behaviour");
+		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
+		fUserSettingsMenu.add(rightClickEndActionPanelMenu);
 
-		markUsedPlayersDefaultMenuItem = new JRadioButtonMenuItem("Fade only");
-		markUsedPlayersDefaultMenuItem.addActionListener(this);
-		markUsedPlayersGroup.add(markUsedPlayersDefaultMenuItem);
-		markUsedPlayersMenu.add(markUsedPlayersDefaultMenuItem);
+		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem("Ends Action/Selection");
+		rightClickEndActionOnMenuItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickEndActionOnMenuItem);
+		rightClickEndActionPanelMenu.add(rightClickEndActionOnMenuItem);
 
-		markUsedPlayersCheckIconGreenMenuItem = new JRadioButtonMenuItem("Green check mark");
-		markUsedPlayersCheckIconGreenMenuItem.addActionListener(this);
-		markUsedPlayersGroup.add(markUsedPlayersCheckIconGreenMenuItem);
-		markUsedPlayersMenu.add(markUsedPlayersCheckIconGreenMenuItem);
+		rightClickLegacyModeItem = new JRadioButtonMenuItem("Works like Left Click (Legacy)");
+		rightClickLegacyModeItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickLegacyModeItem);
+		rightClickEndActionPanelMenu.add(rightClickLegacyModeItem);
 
-		playerMarkingMenu = new JMenu("Player Marking");
-		playerMarkingMenu.setMnemonic(KeyEvent.VK_L);
-		fUserSettingsMenu.add(playerMarkingMenu);
+		rightClickOpensContextMenuItem = new JRadioButtonMenuItem("Selects Player/Opens Context Menu");
+		rightClickOpensContextMenuItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickOpensContextMenuItem);
+		rightClickEndActionPanelMenu.add(rightClickOpensContextMenuItem);
 
-		ButtonGroup playerMarkingGroup = new ButtonGroup();
+		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem("Disabled");
+		rightClickEndActionOffMenuItem.addActionListener(this);
+		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
+		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
+	}
 
-		playersMarkingAutoMenuItem = new JRadioButtonMenuItem("Automatic");
-		playersMarkingAutoMenuItem.addActionListener(this);
-		playerMarkingGroup.add(playersMarkingAutoMenuItem);
-		playerMarkingMenu.add(playersMarkingAutoMenuItem);
+	private void createGazePanelMenu(JMenu fUserSettingsMenu) {
+		ButtonGroup gazeTargetPanelGroup = new ButtonGroup();
+		JMenu gazeTargetPanelMenu = new JMenu("Gaze Target Panel");
+		gazeTargetPanelMenu.setMnemonic(KeyEvent.VK_G);
+		fUserSettingsMenu.add(gazeTargetPanelMenu);
 
-		playersMarkingManualMenuItem = new JRadioButtonMenuItem("Manual");
-		playersMarkingManualMenuItem.addActionListener(this);
-		playerMarkingGroup.add(playersMarkingManualMenuItem);
-		playerMarkingMenu.add(playersMarkingManualMenuItem);
+		gazePanelOnMenuItem = new JRadioButtonMenuItem("Enable");
+		gazePanelOnMenuItem.addActionListener(this);
+		gazeTargetPanelGroup.add(gazePanelOnMenuItem);
+		gazeTargetPanelMenu.add(gazePanelOnMenuItem);
 
-		fUserSettingsMenu.addSeparator();
+		gazePanelOffMenuItem = new JRadioButtonMenuItem("Disable");
+		gazePanelOffMenuItem.addActionListener(this);
+		gazeTargetPanelGroup.add(gazePanelOffMenuItem);
+		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
+	}
 
-		fRestoreDefaultsMenuItem = new JMenuItem("Restore Defaults");
-		fRestoreDefaultsMenuItem.addActionListener(this);
-		fRestoreDefaultsMenuItem.setEnabled(false);
-		fUserSettingsMenu.add(fRestoreDefaultsMenuItem);
+	private void createBlitzPanelMenu(JMenu fUserSettingsMenu) {
+		ButtonGroup blitzTargetPanelGroup = new ButtonGroup();
+		JMenu blitzTargetPanelMenu = new JMenu("Blitz Target Panel");
+		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_B);
+		fUserSettingsMenu.add(blitzTargetPanelMenu);
 
-		fMissingPlayersMenu = new JMenu("Missing Players");
-		fMissingPlayersMenu.setMnemonic(KeyEvent.VK_M);
-		fMissingPlayersMenu.setEnabled(false);
-		add(fMissingPlayersMenu);
+		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem("Enable");
+		fBlitzPanelOnMenuItem.addActionListener(this);
+		blitzTargetPanelGroup.add(fBlitzPanelOnMenuItem);
+		blitzTargetPanelMenu.add(fBlitzPanelOnMenuItem);
 
-		fInducementsMenu = new JMenu("Inducements");
-		fInducementsMenu.setMnemonic(KeyEvent.VK_I);
-		fInducementsMenu.setEnabled(false);
-		add(fInducementsMenu);
+		fBlitzPanelOffMenuItem = new JRadioButtonMenuItem("Disable");
+		fBlitzPanelOffMenuItem.addActionListener(this);
+		blitzTargetPanelGroup.add(fBlitzPanelOffMenuItem);
+		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
+	}
 
-		fActiveCardsMenu = new JMenu("Active Cards");
-		fActiveCardsMenu.setMnemonic(KeyEvent.VK_C);
-		fActiveCardsMenu.setEnabled(false);
-		add(fActiveCardsMenu);
+	private void createAutmomoveMenu(JMenu fUserSettingsMenu) {
+		JMenu fAutomoveMenu = new JMenu("Automove");
+		fAutomoveMenu.setMnemonic(KeyEvent.VK_A);
+		fUserSettingsMenu.add(fAutomoveMenu);
 
-		prayersMenu = new JMenu("Prayers");
-		prayersMenu.setMnemonic(KeyEvent.VK_P);
-		prayersMenu.setEnabled(false);
-		add(prayersMenu);
+		ButtonGroup automoveGroup = new ButtonGroup();
 
-		fGameOptionsMenu = new JMenu("Game Options");
-		fGameOptionsMenu.setMnemonic(KeyEvent.VK_O);
-		fGameOptionsMenu.setEnabled(false);
-		add(fGameOptionsMenu);
+		fAutomoveOnMenuItem = new JRadioButtonMenuItem("Enable");
+		fAutomoveOnMenuItem.addActionListener(this);
+		automoveGroup.add(fAutomoveOnMenuItem);
+		fAutomoveMenu.add(fAutomoveOnMenuItem);
 
-		JMenu fHelpMenu = new JMenu("Help");
-		fHelpMenu.setMnemonic(KeyEvent.VK_H);
-		add(fHelpMenu);
+		fAutomoveOffMenuItem = new JRadioButtonMenuItem("Disable");
+		fAutomoveOffMenuItem.addActionListener(this);
+		automoveGroup.add(fAutomoveOffMenuItem);
+		fAutomoveMenu.add(fAutomoveOffMenuItem);
+	}
 
-		fAboutMenuItem = new JMenuItem("About", KeyEvent.VK_A);
-		fAboutMenuItem.addActionListener(this);
-		fHelpMenu.add(fAboutMenuItem);
+	private void createIconsMenu(JMenu fUserSettingsMenu) {
+		JMenu fIconsMenu = new JMenu("Icons");
+		fIconsMenu.setMnemonic(KeyEvent.VK_I);
+		fUserSettingsMenu.add(fIconsMenu);
 
-		fChatCommandsMenuItem = new JMenuItem("Chat Commands", KeyEvent.VK_C);
-		fChatCommandsMenuItem.addActionListener(this);
-		fHelpMenu.add(fChatCommandsMenuItem);
+		ButtonGroup iconsGroup = new ButtonGroup();
 
-		changeListItem = new JMenuItem("What's new?", KeyEvent.VK_L);
-		changeListItem.addActionListener(this);
-		fHelpMenu.add(changeListItem);
+		fIconsTeam = new JRadioButtonMenuItem("Team icons");
+		fIconsTeam.setMnemonic(KeyEvent.VK_T);
+		fIconsTeam.addActionListener(this);
+		iconsGroup.add(fIconsTeam);
+		fIconsMenu.add(fIconsTeam);
 
-		autoMarkingItem = new JMenuItem("Automarking Panel", KeyEvent.VK_L);
-		autoMarkingItem.addActionListener(this);
-		fHelpMenu.add(autoMarkingItem);
+		fIconsRosterOpponent = new JRadioButtonMenuItem("Roster icons (Opponent)");
+		fIconsRosterOpponent.setMnemonic(KeyEvent.VK_O);
+		fIconsRosterOpponent.addActionListener(this);
+		iconsGroup.add(fIconsRosterOpponent);
+		fIconsMenu.add(fIconsRosterOpponent);
 
-		fKeyBindingsMenuItem = new JMenuItem("Key Bindings", KeyEvent.VK_K);
-		fKeyBindingsMenuItem.addActionListener(this);
-		fHelpMenu.add(fKeyBindingsMenuItem);
+		fIconsRosterBoth = new JRadioButtonMenuItem("Roster icons (Both)");
+		fIconsRosterBoth.setMnemonic(KeyEvent.VK_B);
+		fIconsRosterBoth.addActionListener(this);
+		iconsGroup.add(fIconsRosterBoth);
+		fIconsMenu.add(fIconsRosterBoth);
 
-		refresh();
+		fIconsAbstract = new JRadioButtonMenuItem("Abstract icons");
+		fIconsAbstract.setMnemonic(KeyEvent.VK_A);
+		fIconsAbstract.addActionListener(this);
+		iconsGroup.add(fIconsAbstract);
+		fIconsMenu.add(fIconsAbstract);
 
+		fIconsMenu.addSeparator();
+
+		JMenu swapTeamColorsMenu = new JMenu("Swap team colors");
+		swapTeamColorsMenu.setMnemonic(KeyEvent.VK_S);
+		fIconsMenu.add(swapTeamColorsMenu);
+
+		ButtonGroup swapTeamColorsGroup = new ButtonGroup();
+
+		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem("Off");
+		swapTeamColorsOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		swapTeamColorsOffMenuItem.addActionListener(this);
+		swapTeamColorsGroup.add(swapTeamColorsOffMenuItem);
+		swapTeamColorsMenu.add(swapTeamColorsOffMenuItem);
+
+		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem("On");
+		swapTeamColorsOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		swapTeamColorsOnMenuItem.addActionListener(this);
+		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
+		swapTeamColorsMenu.add(swapTeamColorsOnMenuItem);
+	}
+
+	private void createSoundMenu(JMenu fUserSettingsMenu) {
+		JMenu fSoundMenu = new JMenu("Sound");
+		fSoundMenu.setMnemonic(KeyEvent.VK_S);
+		fUserSettingsMenu.add(fSoundMenu);
+
+		fSoundVolumeItem = new JMenuItem("Sound Volume");
+		fSoundVolumeItem.setMnemonic(KeyEvent.VK_V);
+		fSoundVolumeItem.addActionListener(this);
+		fSoundMenu.add(fSoundVolumeItem);
+
+		fSoundMenu.addSeparator();
+
+		ButtonGroup soundGroup = new ButtonGroup();
+
+		fSoundOnMenuItem = new JRadioButtonMenuItem("Sound on");
+		fSoundOnMenuItem.addActionListener(this);
+		soundGroup.add(fSoundOnMenuItem);
+		fSoundMenu.add(fSoundOnMenuItem);
+
+		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem("Mute spectators");
+		fSoundMuteSpectatorsMenuItem.addActionListener(this);
+		soundGroup.add(fSoundMuteSpectatorsMenuItem);
+		fSoundMenu.add(fSoundMuteSpectatorsMenuItem);
+
+		fSoundOffMenuItem = new JRadioButtonMenuItem("Sound off");
+		fSoundOffMenuItem.addActionListener(this);
+		soundGroup.add(fSoundOffMenuItem);
+		fSoundMenu.add(fSoundOffMenuItem);
+	}
+
+	private void createTeamSetupMenu() {
+		JMenu fTeamSetupMenu = new JMenu("Team Setup");
+		fTeamSetupMenu.setMnemonic(KeyEvent.VK_T);
+		add(fTeamSetupMenu);
+
+		fLoadSetupMenuItem = new JMenuItem("Load Setup", KeyEvent.VK_L);
+		String menuSetupLoad = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_LOAD);
+		if (StringTool.isProvided(menuSetupLoad)) {
+			fLoadSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupLoad));
+		}
+		fLoadSetupMenuItem.addActionListener(this);
+		fTeamSetupMenu.add(fLoadSetupMenuItem);
+
+		fSaveSetupMenuItem = new JMenuItem("Save Setup", KeyEvent.VK_S);
+		String menuSetupSave = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_SAVE);
+		if (StringTool.isProvided(menuSetupSave)) {
+			fSaveSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupSave));
+		}
+		fSaveSetupMenuItem.addActionListener(this);
+		fTeamSetupMenu.add(fSaveSetupMenuItem);
+	}
+
+	private void createGameMenu() {
+		JMenu fGameMenu = new JMenu("Game");
+		fGameMenu.setMnemonic(KeyEvent.VK_G);
+		add(fGameMenu);
+
+		fGameReplayMenuItem = new JMenuItem(_REPLAY_MODE_ON, KeyEvent.VK_R);
+		String keyMenuReplay = getClient().getProperty(IClientProperty.KEY_MENU_REPLAY);
+		if (StringTool.isProvided(keyMenuReplay)) {
+			fGameReplayMenuItem.setAccelerator(KeyStroke.getKeyStroke(keyMenuReplay));
+		}
+		fGameReplayMenuItem.addActionListener(this);
+		fGameMenu.add(fGameReplayMenuItem);
+
+		fGameConcessionMenuItem = new JMenuItem("Concede Game", KeyEvent.VK_C);
+		fGameConcessionMenuItem.addActionListener(this);
+		fGameConcessionMenuItem.setEnabled(false);
+		fGameMenu.add(fGameConcessionMenuItem);
+
+		fGameStatisticsMenuItem = new JMenuItem("Game Statistics", KeyEvent.VK_S);
+		fGameStatisticsMenuItem.addActionListener(this);
+		fGameStatisticsMenuItem.setEnabled(false);
+		fGameMenu.add(fGameStatisticsMenuItem);
+	}
+
+	private static ColorIcon createColorIcon(Color chatBackgroundColor) {
+		return new ColorIcon(20, 20, chatBackgroundColor);
+	}
+
+	private void addColorItem(String title, Color color, JMenu parent, Consumer<JMenuItem> setter) {
+		JMenuItem item = new JMenuItem(title, createColorIcon(color));
+		item.addActionListener(this);
+		parent.add(item);
+		setter.accept(item);
+	}
+
+	private JMenuItem createFrameBackgroundMenu() {
+
+		JMenu menu = new JMenu("Frame Background");
+		ButtonGroup group = new ButtonGroup();
+		frameBackgroundIcons = new JRadioButtonMenuItem("Graphics");
+		frameBackgroundIcons.addActionListener(this);
+
+		frameBackgroundColor = new JRadioButtonMenuItem("Color", createColorIcon(styleProvider.getFrameBackground()));
+		frameBackgroundColor.addActionListener(this);
+
+		menu.add(frameBackgroundIcons);
+		menu.add(frameBackgroundColor);
+		group.add(frameBackgroundIcons);
+		group.add(frameBackgroundColor);
+
+		return menu;
 	}
 
 	public void init() {
@@ -722,9 +853,52 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		playersMarkingManualMenuItem.setSelected(true);
 		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
 
+		boolean refreshUi = refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackground,
+			styleProvider::getChatBackground, styleProvider::setChatBackground);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackground,
+			styleProvider::getLogBackground, styleProvider::setLogBackground);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_TEXT, textFontColor,
+			styleProvider::getText, styleProvider::setText);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_AWAY, awayFontColor,
+			styleProvider::getAway, styleProvider::setAway);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_HOME, homeFontColor,
+			styleProvider::getHome, styleProvider::setHome);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_SPEC, specFontColor,
+			styleProvider::getSpec, styleProvider::setSpec);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_ADMIN, adminFontColor,
+			styleProvider::getAdmin, styleProvider::setAdmin);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_DEV, devFontColor,
+			styleProvider::getDev, styleProvider::setDev);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_FRAME, frameFontColor,
+			styleProvider::getFrame, styleProvider::setFrame);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_FRAME_SHADOW, frameFontShadowColor,
+			styleProvider::getFrameShadow, styleProvider::setFrameShadow);
+
+		String frameBackgroundSetting = getClient().getProperty(IClientProperty.SETTING_BACKGROUND_FRAME);
+		frameBackgroundIcons.setSelected(true);
+		boolean useColorForFrames = IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR.equals(frameBackgroundSetting);
+		frameBackgroundColor.setSelected(useColorForFrames);
+
+		refreshUi |= refreshFrameBackgroundMenu(useColorForFrames);
+
 		String swapTeamColorsSetting = getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
 		swapTeamColorsOffMenuItem.setSelected(true);
-		swapTeamColorsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting));
+		boolean swapTeamColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting);
+		swapTeamColorsOnMenuItem.setSelected(swapTeamColors);
+
+		if (swapTeamColors != styleProvider.isSwapTeamColors()) {
+			styleProvider.setSwapTeamColors(swapTeamColors);
+			refreshUi = true;
+		}
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -742,12 +916,59 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
-		updateOrientation();
+		refreshUi |= updateOrientation();
 
 		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 
+
+		if (refreshUi) {
+			getClient().getUserInterface().initComponents(true);
+		}
+	}
+
+	private boolean refreshFrameBackgroundMenu(boolean useColor) {
+		Color oldColor = styleProvider.getFrameBackground();
+		Color newColor = null;
+
+		if (useColor) {
+			newColor = new Color(Integer.parseInt(getClient().getProperty(IClientProperty.SETTING_BACKGROUND_FRAME_COLOR)));
+			frameBackgroundColor.setIcon(createColorIcon(newColor));
+		}
+
+		styleProvider.setFrameBackground(newColor);
+
+		return !Objects.equals(oldColor, newColor);
+	}
+
+	private boolean refreshColorMenu(String key, JMenuItem customItem,
+																	 Supplier<Color> oldColor, Consumer<Color> setter) {
+
+		if (getClient().getUserInterface() == null) {
+			return false;
+		}
+
+		String colorSetting = getClient().getProperty(key);
+
+		Color color = null;
+		if (!StringTool.isProvided(colorSetting)) {
+			return false;
+		}
+
+		try {
+			color = new Color(Integer.parseInt(colorSetting));
+			customItem.setSelected(true);
+		} catch (NumberFormatException ex) {
+			getClient().getFactorySource().logWithOutGameId(ex);
+		}
+
+		if (color != null && !color.equals(oldColor.get())) {
+			customItem.setIcon(createColorIcon(color));
+			setter.accept(color);
+			return true;
+		}
+		return false;
 	}
 
 	public FantasyFootballClient getClient() {
@@ -965,6 +1186,111 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().saveUserSettings(true);
 		}
 
+		if (source == chatBackground) {
+			Color defaultColor = styleProvider.getChatBackground();
+			Color color = JColorChooser.showDialog(this, "Choose chat background color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == logBackground) {
+			Color defaultColor = styleProvider.getLogBackground();
+			Color color = JColorChooser.showDialog(this, "Choose log background color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == frameBackgroundIcons) {
+			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_ICONS);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == frameBackgroundColor) {
+			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR);
+			Color defaultColor = styleProvider.getFrameBackground();
+			Color color = JColorChooser.showDialog(this, "Choose sidebar and scoreboard background color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME_COLOR, String.valueOf(color.getRGB()));
+			}
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == textFontColor) {
+			Color defaultColor = styleProvider.getText();
+			Color color = JColorChooser.showDialog(this, "Choose text color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_TEXT, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == awayFontColor) {
+			Color defaultColor = styleProvider.getAway();
+			Color color = JColorChooser.showDialog(this, "Choose away color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_AWAY, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == homeFontColor) {
+			Color defaultColor = styleProvider.getHome();
+			Color color = JColorChooser.showDialog(this, "Choose home color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_HOME, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == specFontColor) {
+			Color defaultColor = styleProvider.getSpec();
+			Color color = JColorChooser.showDialog(this, "Choose spec color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_SPEC, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == adminFontColor) {
+			Color defaultColor = styleProvider.getAdmin();
+			Color color = JColorChooser.showDialog(this, "Choose admin color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_ADMIN, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == devFontColor) {
+			Color defaultColor = styleProvider.getDev();
+			Color color = JColorChooser.showDialog(this, "Choose dev color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_DEV, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == frameFontColor) {
+			Color defaultColor = styleProvider.getFrame();
+			Color color = JColorChooser.showDialog(this, "Choose frane color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_FRAME, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == frameFontShadowColor) {
+			Color defaultColor = styleProvider.getFrameShadow();
+			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_FRAME_SHADOW, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
 		if (source == fRestoreDefaultsMenuItem) {
 			try {
 				getClient().loadProperties();
@@ -1018,7 +1344,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fDialogShown.showDialog(this);
 	}
 
-	public void updateOrientation() {
+	public boolean updateOrientation() {
 
 		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
 
@@ -1037,13 +1363,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 
-		if (getClient() != null && getClient().getUserInterface() != null) {
-			DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
-			if (dimensionProvider != null && layout != dimensionProvider.getLayout()) {
-				dimensionProvider.setLayout(layout);
-				getClient().getUserInterface().initComponents(true);
-			}
+		if (layout != dimensionProvider.getLayout()) {
+			dimensionProvider.setLayout(layout);
+			return true;
 		}
+
+		return false;
 	}
 
 	public void updateGameOptions() {

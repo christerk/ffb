@@ -119,7 +119,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 			panelMain.add(Box.createVerticalStrut(5));
 		}
 
-		fCardLogTextPane = new ChatLogTextPane();
+		fCardLogTextPane = new ChatLogTextPane(pClient.getUserInterface().getStyleProvider());
 		ChatLogScrollPane fCardLogScrollPane = new ChatLogScrollPane(fCardLogTextPane);
 
 		JPanel panelCardLog = new JPanel();
