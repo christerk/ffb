@@ -1,20 +1,38 @@
 package com.fumbbl.ffb.client;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.fumbbl.ffb.IClientProperty.*;
 
 public class StyleProvider {
 
-	private Color chatBackground = Color.WHITE;
-	private Color logBackground = Color.WHITE;
-	private Color frameBackground;
-	private Color frame = Color.WHITE;
-	private Color frameShadow = Color.BLACK;
-	private Color text = Color.BLACK;
-	private Color home = Color.RED;
-	private Color away = Color.BLUE;
-	private Color spec = new Color(0, 128, 0);
-	private Color admin = new Color(128, 128, 0);
-	private Color dev = new Color(128, 0, 128);
+	public static Map<String, Color> defaults = new HashMap<String, Color>() {{
+		put(SETTING_BACKGROUND_CHAT, Color.WHITE);
+		put(SETTING_BACKGROUND_LOG, Color.WHITE);
+		put(SETTING_BACKGROUND_FRAME_COLOR, Color.WHITE);
+		put(SETTING_FONT_COLOR_TEXT, Color.BLACK);
+		put(SETTING_FONT_COLOR_AWAY, Color.BLUE);
+		put(SETTING_FONT_COLOR_HOME, Color.RED);
+		put(SETTING_FONT_COLOR_SPEC, new Color(0, 128, 0));
+		put(SETTING_FONT_COLOR_DEV, new Color(128, 0, 128));
+		put(SETTING_FONT_COLOR_ADMIN, new Color(128, 128, 0));
+		put(SETTING_FONT_COLOR_FRAME, Color.WHITE);
+		put(SETTING_FONT_COLOR_FRAME_SHADOW, Color.BLACK);
+	}};
+
+	private Color chatBackground = defaults.get(SETTING_BACKGROUND_CHAT);
+	private Color logBackground = defaults.get(SETTING_BACKGROUND_LOG);
+	private Color frameBackground = defaults.get(SETTING_BACKGROUND_FRAME_COLOR);
+	private Color frame = defaults.get(SETTING_FONT_COLOR_FRAME);
+	private Color frameShadow = defaults.get(SETTING_FONT_COLOR_FRAME_SHADOW);
+	private Color text = defaults.get(SETTING_FONT_COLOR_TEXT);
+	private Color home = defaults.get(SETTING_FONT_COLOR_HOME);
+	private Color away = defaults.get(SETTING_FONT_COLOR_AWAY);
+	private Color spec = defaults.get(SETTING_FONT_COLOR_SPEC);
+	private Color admin = defaults.get(SETTING_FONT_COLOR_ADMIN);
+	private Color dev = defaults.get(SETTING_FONT_COLOR_DEV);
 
 	private boolean swapTeamColors;
 

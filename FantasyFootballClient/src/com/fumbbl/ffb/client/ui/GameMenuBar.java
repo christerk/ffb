@@ -186,6 +186,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem autoMarkingItem;
 	private JMenu reRollBallAndChainPanelMenu;
 
+	private JMenuItem resetColors;
+	private JMenuItem resetBackgroundColors;
+	private JMenuItem resetFontColors;
+
 	private IDialog fDialogShown;
 
 	private int fCurrentInducementTotalHome;
@@ -321,6 +325,21 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fRestoreDefaultsMenuItem.addActionListener(this);
 		fRestoreDefaultsMenuItem.setEnabled(false);
 		fUserSettingsMenu.add(fRestoreDefaultsMenuItem);
+
+		resetColors = new JMenuItem("Reset all colors");
+		resetColors.addActionListener(this);
+		resetColors.setEnabled(true);
+		fUserSettingsMenu.add(resetColors);
+
+		resetBackgroundColors = new JMenuItem("Reset background colors");
+		resetBackgroundColors.addActionListener(this);
+		resetBackgroundColors.setEnabled(true);
+		fUserSettingsMenu.add(resetBackgroundColors);
+
+		resetFontColors = new JMenuItem("Reset font colors");
+		resetFontColors.addActionListener(this);
+		resetFontColors.setEnabled(true);
+		fUserSettingsMenu.add(resetFontColors);
 	}
 
 	private void createBackgroundMenu(JMenu fUserSettingsMenu) {
@@ -923,7 +942,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 
 
-		if (refreshUi) {
+		if (getClient().getUserInterface() != null && refreshUi) {
 			getClient().getUserInterface().initComponents(true);
 		}
 	}
@@ -1300,6 +1319,19 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			refresh();
 			getClient().saveUserSettings(true);
 		}
+
+		if (source == resetColors) {
+			resetColors(IClientProperty.COLOR_SETTINGS);
+		}
+
+		if (source == resetBackgroundColors) {
+			resetColors(IClientProperty.BACKGROUND_COLOR_SETTINGS);
+		}
+
+		if (source == resetFontColors) {
+			resetColors(IClientProperty.FONT_COLOR_SETTINGS);
+		}
+
 		if (source == fGameReplayMenuItem) {
 			fGameReplayMenuItem.setText(replayer.isReplaying() ? _REPLAY_MODE_ON : _REPLAY_MODE_OFF);
 			getClient().getClientState().actionKeyPressed(ActionKey.MENU_REPLAY);
@@ -1307,6 +1339,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == fGameConcessionMenuItem) {
 			getClient().getCommunication().sendConcedeGame(ConcedeGameStatus.REQUESTED);
 		}
+	}
+
+	private void resetColors(String[] settings) {
+		for (String setting : settings) {
+			getClient().setProperty(setting, String.valueOf(StyleProvider.defaults.get(setting).getRGB()));
+		}
+		getClient().saveUserSettings(true);
 	}
 
 	public void changeState(ClientStateId pStateId) {
