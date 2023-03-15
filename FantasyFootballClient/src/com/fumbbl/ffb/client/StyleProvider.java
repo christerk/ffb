@@ -88,12 +88,20 @@ public class StyleProvider {
 		return swapTeamColors ? away : home;
 	}
 
+	public Color getHomeUnswapped() {
+		return home;
+	}
+
 	public void setHome(Color home) {
 		this.home = home;
 	}
 
 	public Color getAway() {
 		return swapTeamColors ? home : away;
+	}
+
+	public Color getAwayUnswapped() {
+		return away;
 	}
 
 	public void setAway(Color away) {

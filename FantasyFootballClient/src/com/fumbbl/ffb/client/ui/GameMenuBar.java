@@ -882,10 +882,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			styleProvider::getText, styleProvider::setText);
 
 		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_AWAY, awayFontColor,
-			styleProvider::getAway, styleProvider::setAway);
+			styleProvider::getAwayUnswapped, styleProvider::setAway);
 
 		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_HOME, homeFontColor,
-			styleProvider::getHome, styleProvider::setHome);
+			styleProvider::getHomeUnswapped, styleProvider::setHome);
 
 		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_SPEC, specFontColor,
 			styleProvider::getSpec, styleProvider::setSpec);
