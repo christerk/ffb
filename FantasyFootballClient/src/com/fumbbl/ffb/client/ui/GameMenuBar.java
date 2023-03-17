@@ -165,6 +165,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem devFontColor;
 	private JMenuItem frameFontColor;
 	private JMenuItem frameFontShadowColor;
+	private JMenuItem inputFontColor;
 
 	private JRadioButtonMenuItem frameBackgroundIcons;
 	private JRadioButtonMenuItem frameBackgroundColor;
@@ -343,26 +344,27 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createBackgroundMenu(JMenu fUserSettingsMenu) {
-		JMenu backgroundStyles = new JMenu("Background Styles");
+		JMenu backgroundStyles = new JMenu("Background styles");
 		backgroundStyles.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(backgroundStyles);
-		addColorItem("Chat Background", styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
-		addColorItem("Log Background", styleProvider.getLogBackground(), backgroundStyles, (item) -> logBackground = item);
+		addColorItem("Chat", styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
+		addColorItem("Log", styleProvider.getLogBackground(), backgroundStyles, (item) -> logBackground = item);
 		backgroundStyles.add(createFrameBackgroundMenu());
 	}
 
 	private void createFontMenu(JMenu userSettings) {
-		JMenu fontStyles = new JMenu("Font Colors");
+		JMenu fontStyles = new JMenu("Font colors");
 		fontStyles.setMnemonic(KeyEvent.VK_F);
 		userSettings.add(fontStyles);
-		addColorItem("Regular Text", styleProvider.getText(), fontStyles, (item) -> textFontColor = item);
-		addColorItem("Away", styleProvider.getAway(), fontStyles, (item) -> awayFontColor = item);
-		addColorItem("Home", styleProvider.getHome(), fontStyles, (item) -> homeFontColor = item);
+		addColorItem("Regular text", styleProvider.getText(), fontStyles, (item) -> textFontColor = item);
+		addColorItem("Away", styleProvider.getAwayUnswapped(), fontStyles, (item) -> awayFontColor = item);
+		addColorItem("Home", styleProvider.getHomeUnswapped(), fontStyles, (item) -> homeFontColor = item);
 		addColorItem("Spectators", styleProvider.getSpec(), fontStyles, (item) -> specFontColor = item);
 		addColorItem("Admin", styleProvider.getAdmin(), fontStyles, (item) -> adminFontColor = item);
 		addColorItem("Devs", styleProvider.getDev(), fontStyles, (item) -> devFontColor = item);
+		addColorItem("Chat input", styleProvider.getInput(), fontStyles, (item) -> inputFontColor = item);
 		addColorItem("Sidebar/Scoreboard", styleProvider.getFrame(), fontStyles, (item) -> frameFontColor = item);
-		addColorItem("Sidebar/Scoreboard Shadow", styleProvider.getFrameShadow(), fontStyles, (item) -> frameFontShadowColor = item);
+		addColorItem("Sidebar/Scoreboard shadow", styleProvider.getFrameShadow(), fontStyles, (item) -> frameFontShadowColor = item);
 	}
 
 	private void createMarkingMenu(JMenu fUserSettingsMenu) {
@@ -772,7 +774,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenuItem createFrameBackgroundMenu() {
 
-		JMenu menu = new JMenu("Frame Background");
+		JMenu menu = new JMenu("Frame");
 		ButtonGroup group = new ButtonGroup();
 		frameBackgroundIcons = new JRadioButtonMenuItem("Graphics");
 		frameBackgroundIcons.addActionListener(this);
@@ -901,6 +903,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_FRAME_SHADOW, frameFontShadowColor,
 			styleProvider::getFrameShadow, styleProvider::setFrameShadow);
+
+		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_INPUT, inputFontColor,
+			styleProvider::getInput, styleProvider::setInput);
 
 		String frameBackgroundSetting = getClient().getProperty(IClientProperty.SETTING_BACKGROUND_FRAME);
 		frameBackgroundIcons.setSelected(true);
@@ -1248,7 +1253,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		if (source == awayFontColor) {
-			Color defaultColor = styleProvider.getAway();
+			Color defaultColor = styleProvider.getAwayUnswapped();
 			Color color = JColorChooser.showDialog(this, "Choose away color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_AWAY, String.valueOf(color.getRGB()));
@@ -1257,7 +1262,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		if (source == homeFontColor) {
-			Color defaultColor = styleProvider.getHome();
+			Color defaultColor = styleProvider.getHomeUnswapped();
 			Color color = JColorChooser.showDialog(this, "Choose home color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_HOME, String.valueOf(color.getRGB()));
@@ -1306,6 +1311,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_FRAME_SHADOW, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == inputFontColor) {
+			Color defaultColor = styleProvider.getInput();
+			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_INPUT, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}

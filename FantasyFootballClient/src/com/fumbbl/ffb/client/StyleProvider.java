@@ -20,6 +20,7 @@ public class StyleProvider {
 		put(SETTING_FONT_COLOR_ADMIN, new Color(128, 128, 0));
 		put(SETTING_FONT_COLOR_FRAME, Color.WHITE);
 		put(SETTING_FONT_COLOR_FRAME_SHADOW, Color.BLACK);
+		put(SETTING_FONT_COLOR_INPUT, Color.BLACK);
 	}};
 
 	private Color chatBackground = defaults.get(SETTING_BACKGROUND_CHAT);
@@ -33,6 +34,7 @@ public class StyleProvider {
 	private Color spec = defaults.get(SETTING_FONT_COLOR_SPEC);
 	private Color admin = defaults.get(SETTING_FONT_COLOR_ADMIN);
 	private Color dev = defaults.get(SETTING_FONT_COLOR_DEV);
+	private Color input = defaults.get(SETTING_FONT_COLOR_INPUT);
 
 	private boolean swapTeamColors;
 
@@ -138,5 +140,13 @@ public class StyleProvider {
 
 	public void setSwapTeamColors(boolean swapTeamColors) {
 		this.swapTeamColors = swapTeamColors;
+	}
+
+	public Color getInput() {
+		return input;
+	}
+
+	public void setInput(Color input) {
+		this.input = input;
 	}
 }

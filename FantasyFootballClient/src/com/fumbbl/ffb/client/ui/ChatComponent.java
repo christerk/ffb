@@ -116,6 +116,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatTextPane.setBackground(styleProvider.getChatBackground());
 		fChatScrollPane.setBackground(styleProvider.getChatBackground());
 		fChatInputField.setBackground(styleProvider.getChatBackground());
+		fChatInputField.setForeground(styleProvider.getInput());
 		fChatTextPane.update();
 	}
 
