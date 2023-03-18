@@ -14,6 +14,7 @@ public class ChangeList {
 			.addFeature("Added options to change background colors for frame components, log and chat windows via User Settings -> Background Styles (should make it easier to filter out background for streaming)")
 			.addBugfix("Sidebars and text colors were not adjusted when swapping team colors")
 			.addFeature("Added options to change text colors in frame, log and chat components via User Settings -> Font Colors")
+			.addBugfix("Force player states to active when coordinate change was not received by the server at the end of setup phases")
 		);
 
 		versions.add(new VersionChangeList("2.17.1")

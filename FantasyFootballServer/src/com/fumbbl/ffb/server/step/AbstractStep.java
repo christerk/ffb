@@ -322,9 +322,15 @@ public abstract class AbstractStep implements IStep {
 				if (game.getTeamAway().hasPlayer(player)) {
 					coordinate = coordinate.transform();
 				}
+				FieldCoordinate oldCoordinate = fieldModel.getPlayerCoordinate(player);
 				fieldModel.setPlayerCoordinate(player, coordinate);
 				int playerStateBase = coordinate.isBoxCoordinate() ? PlayerState.RESERVE : PlayerState.STANDING;
-				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(playerStateBase));
+				PlayerState newState = fieldModel.getPlayerState(player).changeBase(playerStateBase);
+				if (!coordinate.equals(oldCoordinate)) {
+					newState = newState.changeActive(true);
+				}
+				fieldModel.setPlayerState(player, newState);
+
 			}
 		}
 	}
