@@ -15,8 +15,6 @@ public class DimensionProvider {
 	private static final int SIDEBAR_WIDTH_L = 145;
 	private static final int SIDEBAR_WIDTH_P = 165;
 
-	private final int fieldSquareSize = 30;
-
 	public DimensionProvider(ClientLayout layout) {
 		this.layout = layout;
 	}
@@ -46,21 +44,21 @@ public class DimensionProvider {
 	}
 
 	public int fieldSquareSize() {
-		return fieldSquareSize;
+		return dimension(Component.FIELD_SQUARE).width;
 	}
 
 	public int imageOffset() {
-		return fieldSquareSize / 2;
+		return fieldSquareSize() / 2;
 	}
 
 	public Dimension mapToLocal(int x, int y, boolean addImageOffset) {
-		int offset = addImageOffset ? fieldSquareSize / 2 : 0;
+		int offset = addImageOffset ? fieldSquareSize() / 2 : 0;
 
 
 		if (isPitchPortrait()) {
-			return new Dimension(y * fieldSquareSize + offset, (25 - x) * fieldSquareSize + offset);
+			return new Dimension(y * fieldSquareSize() + offset, (25 - x) * fieldSquareSize() + offset);
 		}
-		return new Dimension(x * fieldSquareSize + offset, y * fieldSquareSize + offset);
+		return new Dimension(x * fieldSquareSize() + offset, y * fieldSquareSize() + offset);
 
 	}
 
@@ -123,7 +121,8 @@ public class DimensionProvider {
 		END_TURN_BUTTON(new Dimension(143, 31), new Dimension(163, 34)),
 		SCORE_BOARD(new Dimension(782, 32), new Dimension(782, 32), new Dimension(260, 96)),
 		REPLAY_ICON_GAP(new Dimension(10, 0), new Dimension(10, 0), new Dimension(0, 0)),
-		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0));
+		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0)),
+		FIELD_SQUARE(new Dimension(30, 30));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 
@@ -135,6 +134,10 @@ public class DimensionProvider {
 
 		Component(Dimension landscape, Dimension portrait) {
 			this(landscape, portrait, portrait);
+		}
+
+		Component(Dimension landscape) {
+			this(landscape, landscape);
 		}
 
 		private static int sidebarHeight(ClientLayout layout) {
