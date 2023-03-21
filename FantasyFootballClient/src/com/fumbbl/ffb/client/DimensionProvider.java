@@ -15,12 +15,18 @@ public class DimensionProvider {
 	private static final int SIDEBAR_WIDTH_L = 145;
 	private static final int SIDEBAR_WIDTH_P = 165;
 
+	private double scale = 1.0d;
+
 	public DimensionProvider(ClientLayout layout) {
 		this.layout = layout;
 	}
 
 	public Dimension dimension(Component component) {
-		return component.dimension(layout);
+		Dimension dimension = component.dimension(layout);
+		if (component.scalable) {
+			return scale(dimension);
+		}
+		return dimension;
 	}
 
 	public boolean isPitchPortrait() {
@@ -33,6 +39,14 @@ public class DimensionProvider {
 
 	public void setLayout(ClientLayout layout) {
 		this.layout = layout;
+	}
+
+	public double getScale() {
+		return scale;
+	}
+
+	public void setScale(double scale) {
+		this.scale = scale;
 	}
 
 	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {
@@ -95,6 +109,10 @@ public class DimensionProvider {
 		return direction;
 	}
 
+	private Dimension scale(Dimension dimension) {
+		return new Dimension((int) (dimension.width * scale), (int) (dimension.height * scale));
+	}
+
 	public enum ClientLayout {
 		LANDSCAPE, PORTRAIT, SQUARE
 	}
@@ -125,19 +143,29 @@ public class DimensionProvider {
 		FIELD_SQUARE(new Dimension(30, 30));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
+		private final boolean scalable;
 
-		Component(Dimension landscape, Dimension portrait, Dimension square) {
+		Component(Dimension landscape, Dimension portrait, Dimension square, boolean scalable) {
 			dimensions.put(ClientLayout.LANDSCAPE, landscape);
 			dimensions.put(ClientLayout.PORTRAIT, portrait);
 			dimensions.put(ClientLayout.SQUARE, square);
+			this.scalable = scalable;
+		}
+
+		Component(Dimension landscape, Dimension portrait, Dimension square) {
+			this(landscape, portrait, square, true);
 		}
 
 		Component(Dimension landscape, Dimension portrait) {
 			this(landscape, portrait, portrait);
 		}
 
+		Component(Dimension landscape, boolean scalable) {
+			this(landscape, landscape, landscape, scalable);
+		}
+
 		Component(Dimension landscape) {
-			this(landscape, landscape);
+			this(landscape, landscape, landscape);
 		}
 
 		private static int sidebarHeight(ClientLayout layout) {
