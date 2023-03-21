@@ -55,7 +55,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		setMaximumSize(size);
 
 		iconGap = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_ICON_GAP).width;
-		iconWidth = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_ICON_WIDTH).width;
+		iconWidth = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_ICON).width;
 
 		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - (iconWidth / 2)), 1), IIconProperty.REPLAY_PAUSE,
 			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED, isActive(fButtonPause));
