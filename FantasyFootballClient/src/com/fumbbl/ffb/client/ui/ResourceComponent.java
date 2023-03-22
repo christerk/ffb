@@ -38,7 +38,6 @@ public class ResourceComponent extends JPanel {
 
 	private static final int _SLOT_HEIGHT = 40;
 	private static final int _SLOT_WIDTH = 46;
-	private static final int COUNTER_SIZE = 15;
 
 	private final SideBarComponent fSideBar;
 	private BufferedImage fImage;
@@ -165,24 +164,26 @@ public class ResourceComponent extends JPanel {
 	}
 
 	private void drawCounter(IconCache iconCache, Graphics2D g2d, int x, int y, ResourceValue resourceValue, Dimension offset) {
-			Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
-			BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
-				.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
+		Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
+		BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
+			.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
 
-			g2d.drawImage(counter, x + offset.width, y + offset.height, null);
+		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		g2d.drawImage(counter, x + offset.width, y + offset.height, counterSize.width, counterSize.height, null);
 	}
 
 	private Dimension offset(Rectangle location, int index) {
-		int width = index % 2 == 0 ? location.width - COUNTER_SIZE - 5 : 0;
-		int height = index < 2 ? location.height - COUNTER_SIZE : 0;
+		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		int width = index % 2 == 0 ? location.width - counterSize.width - 5 : 0;
+		int height = index < 2 ? location.height - counterSize.height : 0;
 		return new Dimension(width, height);
 	}
 
 	private Rectangle counterCrop(int elementIndex) {
 		int row = elementIndex / 4;
 		int column = elementIndex % 4;
-
-		return new Rectangle(column * COUNTER_SIZE, row * COUNTER_SIZE, COUNTER_SIZE, COUNTER_SIZE);
+		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_CROP_SIZE);
+		return new Rectangle(column * counterSize.width, row * counterSize.height, counterSize.width, counterSize.height);
 	}
 
 	private void updateSlots() {

@@ -140,7 +140,9 @@ public class DimensionProvider {
 		SCORE_BOARD(new Dimension(782, 32), new Dimension(782, 32), new Dimension(260, 96)),
 		REPLAY_ICON_GAP(new Dimension(10, 0), new Dimension(10, 0), new Dimension(0, 0)),
 		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0)),
-		FIELD_SQUARE(new Dimension(30, 30));
+		FIELD_SQUARE(new Dimension(30, 30)),
+		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
+		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false);
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 		private final boolean scalable;
