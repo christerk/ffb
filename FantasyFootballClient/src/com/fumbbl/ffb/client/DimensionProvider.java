@@ -109,7 +109,7 @@ public class DimensionProvider {
 		return direction;
 	}
 
-	private Dimension scale(Dimension dimension) {
+	public Dimension scale(Dimension dimension) {
 		return new Dimension((int) (dimension.width * scale), (int) (dimension.height * scale));
 	}
 
@@ -142,7 +142,8 @@ public class DimensionProvider {
 		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0)),
 		FIELD_SQUARE(new Dimension(30, 30)),
 		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
-		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false);
+		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false),
+		RESOURCE_SLOT(new Dimension(46, 40));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 		private final boolean scalable;
