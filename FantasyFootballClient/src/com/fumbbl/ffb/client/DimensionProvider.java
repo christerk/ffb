@@ -143,7 +143,8 @@ public class DimensionProvider {
 		FIELD_SQUARE(new Dimension(30, 30)),
 		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
 		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false),
-		RESOURCE_SLOT(new Dimension(46, 40));
+		RESOURCE_SLOT(new Dimension(46, 40)),
+		MAX_ICON(new Dimension(40, 40));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 		private final boolean scalable;
