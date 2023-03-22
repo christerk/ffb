@@ -110,7 +110,11 @@ public class DimensionProvider {
 	}
 
 	public Dimension scale(Dimension dimension) {
-		return new Dimension((int) (dimension.width * scale), (int) (dimension.height * scale));
+		return new Dimension(scale(dimension.width), scale(dimension.height));
+	}
+
+	public int scale(int size) {
+		return (int) (size * scale);
 	}
 
 	public enum ClientLayout {
@@ -144,7 +148,8 @@ public class DimensionProvider {
 		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
 		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false),
 		RESOURCE_SLOT(new Dimension(46, 40)),
-		MAX_ICON(new Dimension(40, 40));
+		MAX_ICON(new Dimension(40, 40)),
+		ABOUT_DIALOG(new Dimension(813, 542));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 		private final boolean scalable;
