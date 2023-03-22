@@ -149,7 +149,8 @@ public class DimensionProvider {
 		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false),
 		RESOURCE_SLOT(new Dimension(46, 40)),
 		MAX_ICON(new Dimension(40, 40)),
-		ABOUT_DIALOG(new Dimension(813, 542));
+		ABOUT_DIALOG(new Dimension(813, 542)),
+		BOX_SQUARE(new Dimension(39, 39));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 		private final boolean scalable;

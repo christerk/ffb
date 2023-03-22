@@ -41,7 +41,6 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private static final Font _SPECTATOR_FONT = new Font("Sans Serif", Font.BOLD, 14);
 
-	private static final int LINE_HEIGHT = 32;
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
 	private Rectangle weatherLocation;
@@ -89,6 +88,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		g2d.dispose();
 	}
 
+	private int lineHeight() {
+		return dimensionProvider.scale(32);
+	}
+
 	private void drawScore() {
 		Graphics2D g2d = fImage.createGraphics();
 		String scoreHome = Integer.toString(fScoreHome);
@@ -98,9 +101,9 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		Rectangle2D boundsHome = fontMetrics.getStringBounds(scoreHome, g2d);
 		int x;
 		x = ((getPreferredSize().width - (int) boundsHome.getWidth()) / 2) - 40;
-		int y = ((LINE_HEIGHT + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
+		int y = ((lineHeight() + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
 		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
-			y += LINE_HEIGHT;
+			y += lineHeight();
 		}
 		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y, styleProvider);
 		Rectangle2D boundsAway = fontMetrics.getStringBounds(scoreAway, g2d);
@@ -118,12 +121,12 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 		g2d.setFont(_TURN_NUMBER_FONT);
 		FontMetrics metricsInts = g2d.getFontMetrics();
-		int yInts = ((LINE_HEIGHT + metricsInts.getHeight()) / 2) - metricsInts.getDescent() - 1;
+		int yInts = ((lineHeight() + metricsInts.getHeight()) / 2) - metricsInts.getDescent() - 1;
 		Rectangle2D turnBounds = metricsInts.getStringBounds(turn, g2d);
 
 		g2d.setFont(_TURN_TEXT_FONT);
 		FontMetrics metricsText = g2d.getFontMetrics();
-		int yText = ((LINE_HEIGHT + metricsText.getHeight()) / 2) - metricsText.getDescent();
+		int yText = ((lineHeight() + metricsText.getHeight()) / 2) - metricsText.getDescent();
 		Rectangle2D turnPrefixBounds = metricsText.getStringBounds(_TURN, g2d);
 
 		String half;

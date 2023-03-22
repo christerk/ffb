@@ -60,11 +60,13 @@ public class UtilClientPlayerDrag {
 	}
 
 	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY) {
-		Dimension boxComponentSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.BOX);
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
+		Dimension boxSquareSie = dimensionProvider.dimension(DimensionProvider.Component.BOX_SQUARE);
+		Dimension boxComponentSize = dimensionProvider.dimension(DimensionProvider.Component.BOX);
 		if ((pMouseX >= 0) && (pMouseX < boxComponentSize.width) && (pMouseY >= 0) && (pMouseY < boxComponentSize.height)) {
 			int boxTitleOffset = pClient.getUserInterface().getSideBarHome().getBoxComponent().getMaxTitleOffset();
-			int y = (((pMouseY - boxTitleOffset) / BoxComponent.FIELD_SQUARE_SIZE) * 3)
-				+ (pMouseX / BoxComponent.FIELD_SQUARE_SIZE);
+			int y = (((pMouseY - boxTitleOffset) / boxSquareSie.height) * 3)
+				+ (pMouseX / boxSquareSie.width);
 			if ((y >= 0) && (y < BoxComponent.MAX_BOX_ELEMENTS)) {
 				return new FieldCoordinate(FieldCoordinate.RSV_HOME_X, y);
 			}

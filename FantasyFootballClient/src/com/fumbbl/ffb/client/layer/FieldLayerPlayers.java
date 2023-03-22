@@ -3,12 +3,12 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -39,11 +39,12 @@ public class FieldLayerPlayers extends FieldLayer {
 		if ((pCoordinate != null) && !pCoordinate.isBoxCoordinate()) {
 			Game game = getClient().getGame();
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
-			int x = dimension.width - (PlayerIconFactory.MAX_ICON_WIDTH / 2);
-			int y = dimension.height - (PlayerIconFactory.MAX_ICON_HEIGHT / 2);
-			clear(x, y, PlayerIconFactory.MAX_ICON_WIDTH, PlayerIconFactory.MAX_ICON_HEIGHT, true); // also adds updated area
+			Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+			int x = dimension.width - (maxIconSize.width / 2);
+			int y = dimension.height - (maxIconSize.height / 2);
+			clear(x, y, maxIconSize.width, maxIconSize.height, true); // also adds updated area
 			Graphics2D g2d = getImage().createGraphics();
-			g2d.setClip(x, y, PlayerIconFactory.MAX_ICON_WIDTH, PlayerIconFactory.MAX_ICON_HEIGHT);
+			g2d.setClip(x, y, maxIconSize.width, maxIconSize.height);
 			FieldCoordinate[] adjacentCoordinates = game.getFieldModel().findAdjacentCoordinates(pCoordinate,
 				FieldCoordinateBounds.FIELD, 1, true);
 			for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {

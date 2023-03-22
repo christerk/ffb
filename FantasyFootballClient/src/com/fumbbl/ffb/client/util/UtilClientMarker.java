@@ -2,11 +2,11 @@ package com.fumbbl.ffb.client.util;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.marking.FieldMarker;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.StringTool;
@@ -23,8 +23,6 @@ import java.awt.Dimension;
  * @author Kalimar
  */
 public class UtilClientMarker {
-
-	private static final int _FIELD_SQUARE_SIZE = 30;
 
 	public static void showMarkerPopup(final FantasyFootballClient pClient, final Player<?> pPlayer, int pX, int pY) {
 		if (pPlayer != null) {

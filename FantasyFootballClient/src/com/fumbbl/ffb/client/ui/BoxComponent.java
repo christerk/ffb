@@ -43,7 +43,6 @@ import java.util.List;
 public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener, IModelChangeObserver {
 
 	public static final int MAX_BOX_ELEMENTS = 30;
-	public static final int FIELD_SQUARE_SIZE = 39;
 
 	private static final Font _BOX_FONT = new Font("Sans Serif", Font.BOLD, 12);
 
@@ -152,15 +151,16 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private int drawPlayersInBox(int pXCoordinate, int pYPosition) {
 		FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 		PlayerState boxState = findPlayerStateForXCoordinate(pXCoordinate);
+		Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.BOX_SQUARE);
 		int yPos = drawTitle(boxState, pYPosition);
 		int row = -1;
 		for (int y = 0; y < MAX_BOX_ELEMENTS; y++) {
 			Player<?> player = fieldModel.getPlayer(new FieldCoordinate(pXCoordinate, y));
 			if ((player != null) || (pXCoordinate == FieldCoordinate.RSV_HOME_X)) {
 				row = y / 3;
-				int locationX = (y % 3) * FIELD_SQUARE_SIZE;
-				int locationY = yPos + (row * FIELD_SQUARE_SIZE);
-				BoxSlot boxSlot = new BoxSlot(new Rectangle(locationX, locationY, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE),
+				int locationX = (y % 3) * dimension.width;
+				int locationY = yPos + (row * dimension.height);
+				BoxSlot boxSlot = new BoxSlot(new Rectangle(locationX, locationY, dimension.width, dimension.height),
 					boxState);
 				boxSlot.setPlayer(player);
 				fBoxSlots.add(boxSlot);
@@ -168,7 +168,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			}
 		}
 		if (row >= 0) {
-			yPos += (row + 1) * FIELD_SQUARE_SIZE;
+			yPos += (row + 1) * dimension.height;
 		}
 		return yPos;
 	}
