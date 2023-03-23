@@ -26,8 +26,8 @@ public class FieldLayerBloodspots extends FieldLayer {
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		if (fieldModel != null) {
 			BloodSpot[] bloodspots = fieldModel.getBloodSpots();
-			for (int i = 0; i < bloodspots.length; i++) {
-				drawBloodspot(bloodspots[i]);
+			for (BloodSpot bloodspot : bloodspots) {
+				drawBloodspot(bloodspot);
 			}
 		}
 	}

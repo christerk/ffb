@@ -45,7 +45,7 @@ public class FieldLayerPitch extends FieldLayer {
 		}
 
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-		g2d.drawImage(pImage, 0, 0, null);
+		g2d.drawImage(pImage, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		g2d.dispose();
 		Rectangle updatedArea = new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
 		addUpdatedArea(updatedArea);

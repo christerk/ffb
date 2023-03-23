@@ -114,7 +114,7 @@ public class DimensionProvider {
 	}
 
 	public int scale(int size) {
-		return (int) (size * scale);
+		return (int) (size * (isPitchPortrait() ? scale : 1.5 * scale));
 	}
 
 	public enum ClientLayout {

@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 /**
@@ -60,8 +61,8 @@ public abstract class FieldLayer {
 	public Rectangle drawCenteredAndScaled(BufferedImage pImage, int pX, int pY, float pAlpha, double pScaleX,
 			double pScaleY) {
 		if (pImage != null) {
-			int width = (int) (pImage.getWidth() * pScaleX);
-			int height = (int) (pImage.getHeight() * pScaleY);
+			int width = (int) (pImage.getWidth() * pScaleX * dimensionProvider.getScale());
+			int height = (int) (pImage.getHeight() * pScaleY * dimensionProvider.getScale());
 			if ((width > 0) && (height > 0)) {
 				BufferedImage scaledIcon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g2d = scaledIcon.createGraphics();
@@ -78,10 +79,24 @@ public abstract class FieldLayer {
 
 	public Rectangle draw(BufferedImage pImage, FieldCoordinate pCoordinate, float pAlpha) {
 		if ((pImage != null) && (pCoordinate != null)) {
-			return draw(pImage, findCenteredIconUpperLeftX(pImage, pCoordinate),
-					findCenteredIconUpperLeftY(pImage, pCoordinate), pAlpha);
+
+			BufferedImage scaledImage = scaleImage(pImage);
+
+			return draw(scaledImage, findCenteredIconUpperLeftX(scaledImage, pCoordinate),
+				findCenteredIconUpperLeftY(scaledImage, pCoordinate), pAlpha);
 		}
 		return null;
+	}
+
+	private BufferedImage scaleImage(BufferedImage pImage) {
+		BufferedImage scaledImage = new BufferedImage(dimensionProvider.scale(pImage.getWidth()), dimensionProvider.scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(dimensionProvider.getScale(), dimensionProvider.getScale());
+		AffineTransformOp scaleOp =
+			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+
+		scaledImage = scaleOp.filter(pImage, scaledImage);
+		return scaledImage;
 	}
 
 	protected void clear(int pX, int pY, int pWidth, int pHeight, boolean pUpdateArea) {
@@ -102,8 +117,10 @@ public abstract class FieldLayer {
 
 	public void clear(BufferedImage pImage, FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pImage != null) && (pCoordinate != null)) {
-			clear(findCenteredIconUpperLeftX(pImage, pCoordinate), findCenteredIconUpperLeftY(pImage, pCoordinate),
-					pImage.getWidth(), pImage.getHeight(), pUpdateArea);
+			BufferedImage scaledImage = scaleImage(pImage);
+
+			clear(findCenteredIconUpperLeftX(scaledImage, pCoordinate), findCenteredIconUpperLeftY(scaledImage, pCoordinate),
+				scaledImage.getWidth(), scaledImage.getHeight(), pUpdateArea);
 		}
 	}
 
