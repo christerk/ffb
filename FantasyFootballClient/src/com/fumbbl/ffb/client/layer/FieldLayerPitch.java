@@ -39,13 +39,14 @@ public class FieldLayerPitch extends FieldLayer {
 
 	protected void drawPitch(BufferedImage pImage) {
 		Graphics2D g2d = fImage.createGraphics();
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
 		if (dimensionProvider.isPitchPortrait()) {
 			g2d.translate(0, size.height);
 			g2d.rotate(-Math.PI / 2);
+			g2d.drawImage(pImage, 0, 0, fImage.getHeight(), fImage.getWidth(),null);
+		} else {
+			g2d.drawImage(pImage, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		}
-
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-		g2d.drawImage(pImage, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		g2d.dispose();
 		Rectangle updatedArea = new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
 		addUpdatedArea(updatedArea);
