@@ -61,7 +61,7 @@ public class DialogAbout extends Dialog {
 
 		Graphics2D g2d = aboutImage.createGraphics();
 		g2d.drawImage(pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_SPLASH_SCREEN), 0, 0,
-			null);
+			aboutImage.getWidth(), aboutImage.getHeight(), null);
 
 		g2d.setColor(Color.WHITE);
 
