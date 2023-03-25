@@ -86,6 +86,7 @@ public class FieldLayerPlayers extends FieldLayer {
 			if (!fieldModel.isBallInPlay()) {
 				ballIcon = PlayerIconFactory.fadeIcon(ballIcon);
 			}
+
 			pG2d.drawImage(ballIcon, findCenteredIconUpperLeftX(ballIcon, pCoordinate),
 					findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
 		}

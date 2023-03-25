@@ -5,12 +5,8 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 
-import java.awt.AlphaComposite;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 /**
@@ -80,23 +76,12 @@ public abstract class FieldLayer {
 	public Rectangle draw(BufferedImage pImage, FieldCoordinate pCoordinate, float pAlpha) {
 		if ((pImage != null) && (pCoordinate != null)) {
 
-			BufferedImage scaledImage = scaleImage(pImage);
+			BufferedImage scaledImage = dimensionProvider.scaleImage(pImage);
 
 			return draw(scaledImage, findCenteredIconUpperLeftX(scaledImage, pCoordinate),
 				findCenteredIconUpperLeftY(scaledImage, pCoordinate), pAlpha);
 		}
 		return null;
-	}
-
-	private BufferedImage scaleImage(BufferedImage pImage) {
-		BufferedImage scaledImage = new BufferedImage(dimensionProvider.scale(pImage.getWidth()), dimensionProvider.scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
-		AffineTransform at = new AffineTransform();
-		at.scale(dimensionProvider.getScale(), dimensionProvider.getScale());
-		AffineTransformOp scaleOp =
-			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-
-		scaledImage = scaleOp.filter(pImage, scaledImage);
-		return scaledImage;
 	}
 
 	protected void clear(int pX, int pY, int pWidth, int pHeight, boolean pUpdateArea) {
@@ -117,7 +102,7 @@ public abstract class FieldLayer {
 
 	public void clear(BufferedImage pImage, FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pImage != null) && (pCoordinate != null)) {
-			BufferedImage scaledImage = scaleImage(pImage);
+			BufferedImage scaledImage = dimensionProvider.scaleImage(pImage);
 
 			clear(findCenteredIconUpperLeftX(scaledImage, pCoordinate), findCenteredIconUpperLeftY(scaledImage, pCoordinate),
 				scaledImage.getWidth(), scaledImage.getHeight(), pUpdateArea);

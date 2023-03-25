@@ -4,6 +4,9 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 
 import java.awt.Dimension;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,6 +120,17 @@ public class DimensionProvider {
 		return (int) (size * (isPitchPortrait() ? scale : 1.5 * scale));
 	}
 
+	public BufferedImage scaleImage(BufferedImage pImage) {
+		BufferedImage scaledImage = new BufferedImage(scale(pImage.getWidth()), scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(scale(1), scale(1));
+		AffineTransformOp scaleOp =
+			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+
+		scaledImage = scaleOp.filter(pImage, scaledImage);
+		return scaledImage;
+	}
+
 	public enum ClientLayout {
 		LANDSCAPE, PORTRAIT, SQUARE
 	}
@@ -149,6 +163,7 @@ public class DimensionProvider {
 		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false),
 		RESOURCE_SLOT(new Dimension(46, 40)),
 		MAX_ICON(new Dimension(40, 40)),
+		MAX_ICON_UNSCALED(new Dimension(40, 40), false),
 		ABOUT_DIALOG(new Dimension(813, 542)),
 		BOX_SQUARE(new Dimension(39, 39));
 

@@ -148,12 +148,11 @@ public class PlayerIconFactory {
 				shadowColor = null;
 			}
 			if (playerIcon != null) {
-				Dimension scaledIconSize = dimensionProvider.scale(new Dimension(playerIcon.getWidth(), playerIcon.getHeight()));
-				icon = new BufferedImage(scaledIconSize.width + 2, scaledIconSize.height + 2, BufferedImage.TYPE_INT_ARGB);
+				icon = new BufferedImage(playerIcon.getWidth() + 2, playerIcon.getHeight() + 2, BufferedImage.TYPE_INT_ARGB);
 				String shorthand = (pPlayer.getPosition() != null) ? pPlayer.getPosition().getShorthand() : "?";
 				if (StringTool.isProvided(shorthand)) {
 					Graphics2D g2d = icon.createGraphics();
-					g2d.drawImage(playerIcon, 2, 2, scaledIconSize.width, scaledIconSize.height, null);
+					g2d.drawImage(playerIcon, 2, 2, null);
 					g2d.setFont(new Font("Sans Serif", Font.BOLD, fontSize));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D stringBounds = metrics.getStringBounds(shorthand, g2d);
@@ -170,7 +169,7 @@ public class PlayerIconFactory {
 			}
 		}
 
-		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON_UNSCALED);
 
 		icon = decorateIcon(icon, null, maxIconSize);
 
@@ -189,8 +188,7 @@ public class PlayerIconFactory {
 				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL), maxIconSize);
 			}
 		}
-
-		return icon;
+		return dimensionProvider.scaleImage(icon);
 
 	}
 
@@ -294,7 +292,7 @@ public class PlayerIconFactory {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
 		}
 
-		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.MAX_ICON);
+		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.MAX_ICON_UNSCALED);
 
 		if (decorationProperty1 != null) {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1), maxIconSize);
@@ -315,7 +313,7 @@ public class PlayerIconFactory {
 			markIcon(icon, playerMarker.getHomeText());
 		}
 
-		return icon;
+		return pClient.getUserInterface().getDimensionProvider().scaleImage(icon);
 
 	}
 
