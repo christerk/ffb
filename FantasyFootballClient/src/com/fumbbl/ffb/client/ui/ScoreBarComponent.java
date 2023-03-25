@@ -79,7 +79,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			String scorebarBackground = dimensionProvider.getLayout() ==
 				DimensionProvider.ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
 			BufferedImage background = iconCache.getIconByProperty(scorebarBackground);
-			g2d.drawImage(background, 0, 0, null);
+			g2d.drawImage(background, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		} else {
 			g2d.setColor(styleProvider.getFrameBackground());
 			Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.SCORE_BOARD);
