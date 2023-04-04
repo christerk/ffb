@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.ui;
 import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.model.Player;
 
@@ -25,14 +26,15 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 	private final ResourceComponent fResourceComponent;
 	private final TurnDiceStatusComponent fTurnDiceStatusComponent;
 
-	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, DimensionProvider dimensionProvider) {
+	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, DimensionProvider dimensionProvider,
+													StyleProvider styleProvider) {
 		fClient = pClient;
 		fHomeSide = pHomeSide;
-		fPlayerDetail = new PlayerDetailComponent(this, dimensionProvider);
-		fBoxComponent = new BoxComponent(this);
-		fBoxButtons = new BoxButtonComponent(this);
-		fResourceComponent = new ResourceComponent(this, dimensionProvider);
-		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, dimensionProvider);
+		fPlayerDetail = new PlayerDetailComponent(this, dimensionProvider, styleProvider);
+		fBoxComponent = new BoxComponent(this, dimensionProvider, styleProvider);
+		fBoxButtons = new BoxButtonComponent(this, dimensionProvider, styleProvider);
+		fResourceComponent = new ResourceComponent(this, dimensionProvider, styleProvider);
+		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, dimensionProvider, styleProvider);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		addComponents();
 		fPlayerDetail.addMouseMotionListener(this);
@@ -44,9 +46,9 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 
 	public void initLayout(DimensionProvider dimensionProvider) {
 		fPlayerDetail.initLayout();
-		fBoxComponent.initLayout(dimensionProvider);
-		fBoxButtons.initLayout(dimensionProvider);
-		fResourceComponent.initLayout(dimensionProvider);
+		fBoxComponent.initLayout();
+		fBoxButtons.initLayout();
+		fResourceComponent.initLayout();
 		fTurnDiceStatusComponent.initLayout();
 
 		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
@@ -141,11 +143,6 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		}
 		fResourceComponent.refresh();
 		fTurnDiceStatusComponent.refresh();
-	}
-
-	public void updatePlayer(Player<?> pPlayer) {
-		fPlayerDetail.setPlayer(pPlayer);
-		fPlayerDetail.refresh();
 	}
 
 	public Player<?> getPlayer() {

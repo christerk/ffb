@@ -10,11 +10,18 @@ public class ChangeList {
 
   public ChangeList() {
 
-    versions.add(new VersionChangeList("2.17.1")
+		versions.add(new VersionChangeList("2.18.0")
+			.addFeature("Added options to change background colors for frame components, log and chat windows via User Settings -> Background Styles (should make it easier to filter out background for streaming)")
+			.addBugfix("Sidebars and text colors were not adjusted when swapping team colors")
+			.addFeature("Added options to change text colors in frame, log and chat components via User Settings -> Font Colors")
+			.addBugfix("Force player states to active when coordinate change was not received by the server at the end of setup phases")
+		);
+
+		versions.add(new VersionChangeList("2.17.1")
         .addRemoval("Force player states to active")
     );
 
-    versions.add(new VersionChangeList("2.17.0")
+		versions.add(new VersionChangeList("2.17.0")
         .addBugfix("Players in box were not always redrawn when an automated marker was set")
         .addBugfix("Potential race condition fixed that might have caused loss of marker updates")
         .addBugfix(
@@ -29,6 +36,20 @@ public class ChangeList {
         .addFeature("Added option to swap team colors (User Settings -> Icons -> Swap team colors")
         .addBugfix("Interceptions did not generate spp")
     );
+
+		versions.add(new VersionChangeList("2.17.0")
+			.addBugfix("Players in box were not always redrawn when an automated marker was set")
+			.addBugfix("Potential race condition fixed that might have caused loss of marker updates")
+			.addBugfix("Force player states to active when ending setup or kick off phases, potential fix for unmovable players after kick off")
+			.addBugfix("Free inducement cash was not subtracted from used gold")
+			.addBugfix("Moved chef rolls to occur after kick-off deviation")
+			.addImprovement("Added server side exception logging")
+			.addBugfix("Potential race condition fixed that might have caused teams to show up on the opposite side of the client")
+			.addBugfix("Rename \"Go For It\" to \"Rush\"")
+			.addBugfix("Kick 'em while they're down! could be used against players not being adjacent")
+			.addFeature("Added option to swap team colors (User Settings -> Icons -> Swap team colors")
+			.addBugfix("Interceptions did not generate spp")
+		);
 
     versions.add(new VersionChangeList("2.16.2")
         .addBugfix("Failing TTM due to a confusion roll caused the thrown player to vanish")

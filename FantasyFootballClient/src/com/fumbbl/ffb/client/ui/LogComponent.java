@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ParagraphStyle;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.JPanel;
@@ -21,7 +22,6 @@ import java.util.Map;
  */
 public class LogComponent extends JPanel implements MouseMotionListener, IReplayMouseListener {
 
-
 	private final ChatLogScrollPane fLogScrollPane;
 	private final ChatLogTextPane fLogTextPane;
 
@@ -31,9 +31,9 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 
 	private final FantasyFootballClient fClient;
 
-	public LogComponent(FantasyFootballClient pClient) {
+	public LogComponent(FantasyFootballClient pClient, StyleProvider styleProvider) {
 		fClient = pClient;
-		fLogTextPane = new ChatLogTextPane();
+		fLogTextPane = new ChatLogTextPane(styleProvider);
 		fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
 		setLayout(new BorderLayout());
@@ -45,11 +45,15 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		fCommandHighlightAreaByCommandNr = new HashMap<>();
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout(DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.LOG);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
+		setBackground(styleProvider.getLogBackground());
+		fLogScrollPane.setBackground(styleProvider.getLogBackground());
+		fLogTextPane.setBackground(styleProvider.getLogBackground());
+		fLogTextPane.update();
 	}
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
@@ -105,7 +109,7 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	public boolean highlightCommand(int pCommandNr, boolean pShowEnd) {
 		CommandHighlightArea highlightArea = fCommandHighlightAreaByCommandNr.get(pCommandNr);
 		boolean highlightShown = ((highlightArea != null)
-				&& ((highlightArea.getEndPosition() - highlightArea.getStartPosition()) > 0));
+			&& ((highlightArea.getEndPosition() - highlightArea.getStartPosition()) > 0));
 		if (highlightShown) {
 			try {
 				((CommandHighlighter) fLogTextPane.getHighlighter()).changeHighlight(highlightArea.getStartPosition(),
@@ -164,5 +168,4 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	public ChatLogScrollPane getLogScrollPane() {
 		return fLogScrollPane;
 	}
-
 }

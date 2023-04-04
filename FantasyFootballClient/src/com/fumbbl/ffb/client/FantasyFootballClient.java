@@ -206,6 +206,10 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fProperties.setProperty(pProperty, pValue);
 	}
 
+	public void clearProperty(String property) {
+		fProperties.remove(property);
+	}
+
 	public void saveUserSettings(boolean pUserinterfaceInit) {
 		String[] settingValues = new String[IClientProperty._SAVED_USER_SETTINGS.length];
 		for (int i = 0; i < IClientProperty._SAVED_USER_SETTINGS.length; i++) {

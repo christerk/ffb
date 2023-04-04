@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.TurnMode;
@@ -9,6 +11,7 @@ import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogEndTurn;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -92,15 +95,17 @@ public class TurnDiceStatusComponent extends JPanel
 	private Dimension size;
 
 	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 	private Rectangle buttonArea;
 
 
-	public TurnDiceStatusComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
+	public TurnDiceStatusComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fSideBar = pSideBar;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		fRefreshNecessary = true;
 		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 	}
 
 	public void initLayout() {
@@ -124,14 +129,27 @@ public class TurnDiceStatusComponent extends JPanel
 
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
-		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-		BufferedImage background;
-		if (getSideBar().isHomeSide()) {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED);
+		if (styleProvider.getFrameBackground() == null) {
+			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+			BufferedImage background;
+
+			String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+			boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
+
+			boolean homeSide = getSideBar().isHomeSide();
+			if (swapColors) {
+				homeSide = !homeSide;
+			}
+			if (homeSide) {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED);
+			} else {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE);
+			}
+			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE);
+			g2d.setColor(styleProvider.getFrameBackground());
+			g2d.fillRect(0, 0, size.width, size.height);
 		}
-		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		g2d.dispose();
 	}
 
@@ -282,7 +300,7 @@ public class TurnDiceStatusComponent extends JPanel
 				String opponentsChoice = "Opponent's choice";
 				y += 38 + fontMetrics.getAscent();
 				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, size.width);
-				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
+				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y, styleProvider);
 			} else {
 				y += 38;
 			}

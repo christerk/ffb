@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -21,7 +22,6 @@ import com.fumbbl.ffb.model.change.ModelChangeId;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -53,17 +53,21 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private BoxType fOpenBox;
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
+	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 
-	public BoxComponent(SideBarComponent pSideBar) {
+	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fSideBar = pSideBar;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout() {
 		size = dimensionProvider.dimension(DimensionProvider.Component.BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
@@ -87,9 +91,14 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
-		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-		BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX);
-		g2d.drawImage(background, 0, 0, size.width, size.height, null);
+		if (styleProvider.getFrameBackground() == null) {
+			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+			BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX);
+			g2d.drawImage(background, 0, 0, size.width, size.height, null);
+		} else {
+			g2d.setColor(styleProvider.getFrameBackground());
+			g2d.fillRect(0, 0, size.width, size.height);
+		}
 		g2d.dispose();
 	}
 
@@ -314,12 +323,12 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				Rectangle2D bounds = metrics.getStringBounds(title, g2d);
 				int x = ((size.width - (int) bounds.getWidth()) / 2);
 				int y = pYPosition + metrics.getAscent() + 2;
-				UtilClientGraphics.drawShadowedText(g2d, title, x, y);
+				UtilClientGraphics.drawShadowedText(g2d, title, x, y, styleProvider);
 				y = pYPosition + ((int) bounds.getHeight() / 2) + 3;
-				g2d.setColor(Color.WHITE);
+				g2d.setColor(styleProvider.getFrame());
 				g2d.drawLine(2, y, x - 4, y);
 				g2d.drawLine(x + (int) bounds.getWidth() + 4, y, size.width - 3, y);
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(styleProvider.getFrameShadow());
 				g2d.drawLine(2, y + 1, x - 4, y + 1);
 				g2d.drawLine(x + (int) bounds.getWidth() + 4, y + 1, size.width - 3, y + 1);
 				height = (int) bounds.getHeight() + 4;

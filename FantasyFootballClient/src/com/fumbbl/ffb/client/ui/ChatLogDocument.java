@@ -1,14 +1,16 @@
 package com.fumbbl.ffb.client.ui;
 
-import java.awt.Color;
+import com.fumbbl.ffb.client.ParagraphStyle;
+import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
-
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.TextStyle;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * DefaultDocument subclass that supports batching inserts.
@@ -20,88 +22,118 @@ public class ChatLogDocument extends DefaultStyledDocument {
 	public static final String DEFAULT_FONT_FAMILY = "Arial";
 	public static final int DEFAULT_FONT_SIZE = 12;
 
-	public ChatLogDocument() {
+	private final Style defaultStyle;
+
+	private final StyleProvider styleProvider;
+
+	public ChatLogDocument(StyleProvider styleProvider) {
+		this.styleProvider = styleProvider;
+
+		defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+
+		setStyles();
+
+	}
+
+	public void setStyles() {
+
+		Enumeration<?> styles = getStyleNames();
+
+		List<String> names = new ArrayList<>();
+
+		while (styles.hasMoreElements()) {
+			Object style = styles.nextElement();
+			if (style instanceof String) {
+				names.add((String) style);
+			}
+		}
+
+		names.forEach(this::removeStyle);
 
 		// initStyles
 
-		Style defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setFontFamily(defaultStyle, DEFAULT_FONT_FAMILY);
 
-		addStyle(TextStyle.NONE.getName(), defaultStyle);
+		Style text = addStyle(TextStyle.NONE.getName(), defaultStyle);
+		StyleConstants.setForeground(text, styleProvider.getText());
 
 		Style bold = addStyle(TextStyle.BOLD.getName(), defaultStyle);
 		StyleConstants.setFontFamily(bold, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(bold, DEFAULT_FONT_SIZE);
 		StyleConstants.setBold(bold, true);
+		StyleConstants.setForeground(bold, styleProvider.getText());
 
 		Style home = addStyle(TextStyle.HOME.getName(), defaultStyle);
 		StyleConstants.setFontFamily(home, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(home, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(home, Color.RED);
+		StyleConstants.setForeground(home, styleProvider.getHome());
 
 		Style homeBold = addStyle(TextStyle.HOME_BOLD.getName(), defaultStyle);
 		StyleConstants.setFontFamily(homeBold, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(homeBold, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(homeBold, Color.RED);
+		StyleConstants.setForeground(homeBold, styleProvider.getHome());
 		StyleConstants.setBold(homeBold, true);
 
 		Style away = addStyle(TextStyle.AWAY.getName(), defaultStyle);
 		StyleConstants.setFontFamily(away, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(away, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(away, Color.BLUE);
+		StyleConstants.setForeground(away, styleProvider.getAway());
 
 		Style awayBold = addStyle(TextStyle.AWAY_BOLD.getName(), defaultStyle);
 		StyleConstants.setFontFamily(awayBold, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(awayBold, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(awayBold, Color.BLUE);
+		StyleConstants.setForeground(awayBold, styleProvider.getAway());
 		StyleConstants.setBold(awayBold, true);
 
 		Style roll = addStyle(TextStyle.ROLL.getName(), defaultStyle);
 		StyleConstants.setFontFamily(roll, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(roll, DEFAULT_FONT_SIZE);
 		StyleConstants.setBold(roll, true);
+		StyleConstants.setForeground(roll, styleProvider.getText());
 
 		Style neededRoll = addStyle(TextStyle.NEEDED_ROLL.getName(), defaultStyle);
 		StyleConstants.setFontFamily(neededRoll, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(neededRoll, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(neededRoll, Color.DARK_GRAY);
+		StyleConstants.setForeground(neededRoll, styleProvider.getText());
 
 		Style explanation = addStyle(TextStyle.EXPLANATION.getName(), defaultStyle);
 		StyleConstants.setItalic(explanation, true);
 		StyleConstants.setFontFamily(explanation, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(explanation, DEFAULT_FONT_SIZE);
+		StyleConstants.setForeground(explanation, styleProvider.getText());
 
 		Style spectator = addStyle(TextStyle.SPECTATOR.getName(), defaultStyle);
 		StyleConstants.setFontFamily(spectator, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(spectator, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(spectator, new Color(0, 128, 0));
+		StyleConstants.setForeground(spectator, styleProvider.getSpec());
 
 		Style admin = addStyle(TextStyle.ADMIN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(admin, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(admin, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(admin, new Color(128, 128, 0));
+		StyleConstants.setForeground(admin, styleProvider.getAdmin());
 
 		Style dev = addStyle(TextStyle.DEV.getName(), defaultStyle);
 		StyleConstants.setFontFamily(dev, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(dev, DEFAULT_FONT_SIZE);
-		StyleConstants.setForeground(dev, new Color(128, 0, 128));
+		StyleConstants.setForeground(dev, styleProvider.getDev());
 
 		Style turn = addStyle(TextStyle.TURN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turn, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(turn, DEFAULT_FONT_SIZE + 2);
 		StyleConstants.setBold(turn, true);
+		StyleConstants.setForeground(turn, styleProvider.getText());
 
 		Style turnHome = addStyle(TextStyle.TURN_HOME.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turnHome, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(turnHome, DEFAULT_FONT_SIZE + 2);
 		StyleConstants.setBold(turnHome, true);
-		StyleConstants.setForeground(turnHome, Color.RED);
+		StyleConstants.setForeground(turnHome, styleProvider.getHome());
 
 		Style turnAway = addStyle(TextStyle.TURN_AWAY.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turnAway, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(turnAway, DEFAULT_FONT_SIZE + 2);
 		StyleConstants.setBold(turnAway, true);
-		StyleConstants.setForeground(turnAway, Color.BLUE);
+		StyleConstants.setForeground(turnAway, styleProvider.getAway());
 
 		// init indent
 
@@ -154,7 +186,5 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setLeftIndent(spaceAboveBelow, 0);
 		StyleConstants.setSpaceAbove(spaceAboveBelow, 4.0f);
 		StyleConstants.setSpaceBelow(spaceAboveBelow, 4.0f);
-
 	}
-
 }

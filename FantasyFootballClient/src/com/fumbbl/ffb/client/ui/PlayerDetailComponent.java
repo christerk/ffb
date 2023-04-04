@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerState;
@@ -12,6 +14,7 @@ import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -77,11 +80,13 @@ public class PlayerDetailComponent extends JPanel {
 
 	private Dimension size;
 	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 
-	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider) {
+	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 		fSideBar = pSideBar;
 		fRefreshNecessary = true;
 		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 	}
 
 	public void initLayout() {
@@ -96,17 +101,35 @@ public class PlayerDetailComponent extends JPanel {
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-		BufferedImage background;
-		if (getSideBar().isHomeSide()) {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED);
+
+		String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
+
+		if (styleProvider.getFrameBackground() == null) {
+			BufferedImage background;
+
+			boolean homeSide = getSideBar().isHomeSide();
+			if (swapColors) {
+				homeSide = !homeSide;
+			}
+			if (homeSide) {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED);
+			} else {
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
+			}
+			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
-			background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
+			g2d.setColor(styleProvider.getFrameBackground());
+			g2d.fillRect(0, 0, size.width, size.height);
 		}
-		g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		if (fPlayer != null) {
 			BufferedImage overlay;
 			Game game = getSideBar().getClient().getGame();
-			if ((fPlayer.getTeam() == null) || game.getTeamHome().hasPlayer(fPlayer)) {
+			boolean homePlayer = (fPlayer.getTeam() == null) || game.getTeamHome().hasPlayer(fPlayer);
+			if (swapColors) {
+				homePlayer = !homePlayer;
+			}
+			if (homePlayer) {
 				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_RED);
 			} else {
 				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_BLUE);
