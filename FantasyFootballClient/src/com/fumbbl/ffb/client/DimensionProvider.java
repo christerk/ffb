@@ -117,13 +117,17 @@ public class DimensionProvider {
 	}
 
 	public int scale(int size) {
-		return (int) (size * (isPitchPortrait() ? scale : 1.5 * scale));
+		return (int) (size * scale);
 	}
 
 	public BufferedImage scaleImage(BufferedImage pImage) {
+		if (scale == 1) {
+			return pImage;
+		}
+
 		BufferedImage scaledImage = new BufferedImage(scale(pImage.getWidth()), scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
-		at.scale(scale(1), scale(1));
+		at.scale(scale, scale);
 		AffineTransformOp scaleOp =
 			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 
@@ -163,7 +167,6 @@ public class DimensionProvider {
 		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false),
 		RESOURCE_SLOT(new Dimension(46, 40)),
 		MAX_ICON(new Dimension(40, 40)),
-		MAX_ICON_UNSCALED(new Dimension(40, 40), false),
 		ABOUT_DIALOG(new Dimension(813, 542)),
 		BOX_SQUARE(new Dimension(39, 39));
 

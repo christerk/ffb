@@ -76,10 +76,8 @@ public abstract class FieldLayer {
 	public Rectangle draw(BufferedImage pImage, FieldCoordinate pCoordinate, float pAlpha) {
 		if ((pImage != null) && (pCoordinate != null)) {
 
-			BufferedImage scaledImage = dimensionProvider.scaleImage(pImage);
-
-			return draw(scaledImage, findCenteredIconUpperLeftX(scaledImage, pCoordinate),
-				findCenteredIconUpperLeftY(scaledImage, pCoordinate), pAlpha);
+			return draw(pImage, findCenteredIconUpperLeftX(pImage, pCoordinate),
+				findCenteredIconUpperLeftY(pImage, pCoordinate), pAlpha);
 		}
 		return null;
 	}
@@ -102,10 +100,9 @@ public abstract class FieldLayer {
 
 	public void clear(BufferedImage pImage, FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pImage != null) && (pCoordinate != null)) {
-			BufferedImage scaledImage = dimensionProvider.scaleImage(pImage);
 
-			clear(findCenteredIconUpperLeftX(scaledImage, pCoordinate), findCenteredIconUpperLeftY(scaledImage, pCoordinate),
-				scaledImage.getWidth(), scaledImage.getHeight(), pUpdateArea);
+			clear(findCenteredIconUpperLeftX(pImage, pCoordinate), findCenteredIconUpperLeftY(pImage, pCoordinate),
+				pImage.getWidth(), pImage.getHeight(), pUpdateArea);
 		}
 	}
 

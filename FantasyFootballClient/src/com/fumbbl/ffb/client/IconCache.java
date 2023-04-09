@@ -44,9 +44,11 @@ public class IconCache {
 	private final Map<String, Integer> fCurrentIndexPerKey;
 
 	private final FantasyFootballClient fClient;
+	private final DimensionProvider dimensionProvider;
 
-	public IconCache(FantasyFootballClient pClient) {
+	public IconCache(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
 		fIconByKey = new HashMap<>();
 		fCurrentIndexPerKey = new HashMap<>();
 	}
@@ -154,7 +156,11 @@ public class IconCache {
 	}
 
 	public BufferedImage getIconByUrl(String pUrl) {
-		return fIconByKey.get(pUrl);
+		BufferedImage bufferedImage = fIconByKey.get(pUrl);
+		if (bufferedImage != null) {
+			return dimensionProvider.scaleImage(bufferedImage);
+		}
+		return bufferedImage;
 	}
 
 	public BufferedImage getPitch(Game pGame, Weather pWeather) {

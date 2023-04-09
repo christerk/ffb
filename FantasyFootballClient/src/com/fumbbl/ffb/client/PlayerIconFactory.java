@@ -97,7 +97,6 @@ public class PlayerIconFactory {
 			BufferedImage iconSet = iconCache.getIconByUrl(iconSetUrl);
 			if (iconSet != null) {
 				int iconSize = iconSet.getWidth() / 4;
-				int scaledIconSize = dimensionProvider.scale(iconSize);
 				int y = pPlayer.getIconSetIndex() * iconSize;
 				int x;
 				if (useHomeColor) {
@@ -105,12 +104,12 @@ public class PlayerIconFactory {
 				} else {
 					x = (pMoving ? 3 : 2) * iconSize;
 				}
-				icon = new BufferedImage(scaledIconSize, scaledIconSize, BufferedImage.TYPE_INT_ARGB);
+				icon = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g2d = icon.createGraphics();
 				if (swapColors) {
-					g2d.drawImage(iconSet, scaledIconSize, 0, 0, scaledIconSize, x, y, x + iconSize, y + iconSize, null);
+					g2d.drawImage(iconSet, iconSize, 0, 0, iconSize, x, y, x + iconSize, y + iconSize, null);
 				} else {
-					g2d.drawImage(iconSet, 0, 0, scaledIconSize, scaledIconSize, x, y, x + iconSize, y + iconSize, null);
+					g2d.drawImage(iconSet, 0, 0, iconSize, iconSize, x, y, x + iconSize, y + iconSize, null);
 				}
 				g2d.dispose();
 			}
@@ -169,7 +168,7 @@ public class PlayerIconFactory {
 			}
 		}
 
-		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON_UNSCALED);
+		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
 
 		icon = decorateIcon(icon, null, maxIconSize);
 
@@ -188,7 +187,7 @@ public class PlayerIconFactory {
 				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL), maxIconSize);
 			}
 		}
-		return dimensionProvider.scaleImage(icon);
+		return icon;
 
 	}
 
@@ -292,7 +291,7 @@ public class PlayerIconFactory {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
 		}
 
-		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.MAX_ICON_UNSCALED);
+		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.MAX_ICON);
 
 		if (decorationProperty1 != null) {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1), maxIconSize);
@@ -313,7 +312,7 @@ public class PlayerIconFactory {
 			markIcon(icon, playerMarker.getHomeText());
 		}
 
-		return pClient.getUserInterface().getDimensionProvider().scaleImage(icon);
+		return icon;
 
 	}
 

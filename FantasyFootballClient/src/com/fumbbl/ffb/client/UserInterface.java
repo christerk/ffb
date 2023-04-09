@@ -59,13 +59,13 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		fDesktop = null;
 		fClient = pClient;
-		fIconCache = new IconCache(getClient());
+		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
+		fIconCache = new IconCache(getClient(), dimensionProvider);
 		fIconCache.init();
 		fSoundEngine = new SoundEngine(getClient());
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
-		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
 		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
