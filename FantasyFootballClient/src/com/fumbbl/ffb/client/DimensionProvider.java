@@ -25,11 +25,7 @@ public class DimensionProvider {
 	}
 
 	public Dimension dimension(Component component) {
-		Dimension dimension = component.dimension(layout);
-		if (component.scalable) {
-			return scale(dimension);
-		}
-		return dimension;
+		return scale(component.dimension(layout));
 	}
 
 	public boolean isPitchPortrait() {
@@ -164,32 +160,21 @@ public class DimensionProvider {
 		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0)),
 		FIELD_SQUARE(new Dimension(30, 30)),
 		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
-		INDUCEMENT_COUNTER_CROP_SIZE(new Dimension(15, 15), false),
 		RESOURCE_SLOT(new Dimension(46, 40)),
 		MAX_ICON(new Dimension(40, 40)),
 		ABOUT_DIALOG(new Dimension(813, 542)),
 		BOX_SQUARE(new Dimension(39, 39));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
-		private final boolean scalable;
 
-		Component(Dimension landscape, Dimension portrait, Dimension square, boolean scalable) {
+		Component(Dimension landscape, Dimension portrait, Dimension square) {
 			dimensions.put(ClientLayout.LANDSCAPE, landscape);
 			dimensions.put(ClientLayout.PORTRAIT, portrait);
 			dimensions.put(ClientLayout.SQUARE, square);
-			this.scalable = scalable;
-		}
-
-		Component(Dimension landscape, Dimension portrait, Dimension square) {
-			this(landscape, portrait, square, true);
 		}
 
 		Component(Dimension landscape, Dimension portrait) {
 			this(landscape, portrait, portrait);
-		}
-
-		Component(Dimension landscape, boolean scalable) {
-			this(landscape, landscape, landscape, scalable);
 		}
 
 		Component(Dimension landscape) {

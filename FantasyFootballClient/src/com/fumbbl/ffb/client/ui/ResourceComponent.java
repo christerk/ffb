@@ -137,19 +137,18 @@ public class ResourceComponent extends JPanel {
 			int x = pSlot.getLocation().x;
 			int y = pSlot.getLocation().y;
 			BufferedImage resourceIcon = iconCache.getIconByProperty(pSlot.getIconProperty());
-			Dimension iconDimension = dimensionProvider.scale(new Dimension(resourceIcon.getWidth(), resourceIcon.getHeight()));
 			if (getSideBar().isHomeSide()) {
-				x += pSlot.getLocation().width - iconDimension.getWidth() - 1;
+				x += pSlot.getLocation().width - resourceIcon.getWidth() - 1;
 			} else {
 				x += 1;
 			}
-			y += (pSlot.getLocation().height - iconDimension.getHeight() + 1) / 2;
-			g2d.drawImage(resourceIcon, x, y, iconDimension.width, iconDimension.height, null);
+			y += (pSlot.getLocation().height - resourceIcon.getHeight() + 1) / 2;
+			g2d.drawImage(resourceIcon, x, y, resourceIcon.getWidth(), resourceIcon.getHeight(), null);
 			if (!pSlot.isEnabled()) {
 				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED);
 				Dimension disabledDimension = dimensionProvider.scale(new Dimension(disabledIcon.getWidth(), disabledIcon.getHeight()));
-				g2d.drawImage(disabledIcon, x + (iconDimension.width - disabledDimension.width) / 2,
-					y + (iconDimension.height - disabledDimension.height) / 2, null);
+				g2d.drawImage(disabledIcon, x + (resourceIcon.getWidth() - disabledDimension.width) / 2,
+					y + (resourceIcon.getHeight() - disabledDimension.height) / 2, null);
 			}
 
 			List<ResourceValue> values = pSlot.getValues();
@@ -182,7 +181,7 @@ public class ResourceComponent extends JPanel {
 	private Rectangle counterCrop(int elementIndex) {
 		int row = elementIndex / 4;
 		int column = elementIndex % 4;
-		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_CROP_SIZE);
+		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
 		return new Rectangle(column * counterSize.width, row * counterSize.height, counterSize.width, counterSize.height);
 	}
 
