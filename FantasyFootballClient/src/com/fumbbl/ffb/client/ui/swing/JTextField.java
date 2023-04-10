@@ -12,4 +12,9 @@ public class JTextField extends javax.swing.JTextField {
 		super(columns);
 		dimensionProvider.scaleFont(this);
 	}
+
+	public JTextField(DimensionProvider dimensionProvider) {
+		super();
+		dimensionProvider.scaleFont(this);
+	}
 }

@@ -6,6 +6,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.ui.swing.JTable;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -27,7 +28,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -158,7 +158,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 		if (maxStars > 0) {
 
-			fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
+			fTableStarPlayers = new StarPlayerTable(dimensionProvider, fTableModelStarPlayers);
 			configureTable(rightPanel, fTableStarPlayers, fTableModelStarPlayers, "Star Players (varying Gold 0-" + maxStars + "):", 148);
 		}
 
@@ -168,7 +168,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		int verticalStrut = dimensionProvider.scaleFont(10);
 		if (maxStaff > 0) {
 			rightPanel.add(Box.createVerticalStrut(verticalStrut));
-			tableInfamousStaff = new InfamousStaffTable(tableModelInfamousStaff);
+			tableInfamousStaff = new InfamousStaffTable(dimensionProvider, tableModelInfamousStaff);
 			configureTable(rightPanel, tableInfamousStaff, tableModelInfamousStaff, "Infamous Coaching Staff (varying Gold 0-" + maxStaff + "):", 55);
 		}
 
@@ -177,7 +177,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX))
 			.getValue();
 		if (maxMercs > 0) {
-			fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
+			fTableMercenaries = new MercenaryTable(dimensionProvider, fTableModelMercenaries);
 			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			fTableMercenaries.getSelectionModel().addListSelectionListener(pE -> {
 				if (!pE.getValueIsAdjusting()) {

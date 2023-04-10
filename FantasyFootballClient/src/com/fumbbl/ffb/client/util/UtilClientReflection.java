@@ -1,14 +1,14 @@
 package com.fumbbl.ffb.client.util;
 
-import java.lang.reflect.Method;
+import com.fumbbl.ffb.client.ui.swing.JTable;
 
-import javax.swing.JTable;
+import java.lang.reflect.Method;
 
 public class UtilClientReflection {
 
 	public enum OS {
 		Windows, Linux, OSX, Other
-	};
+	}
 
 	private static int javaVersionMajor = -1;
 	private static int javaVersionMinor = -1;
@@ -47,7 +47,7 @@ public class UtilClientReflection {
 			m = o.getClass().getMethod(method, boolean.class);
 			m.invoke(o, flag);
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			System.out.println(e);
 		}
 	}
 
@@ -58,7 +58,7 @@ public class UtilClientReflection {
 			m = o.getClass().getMethod(method, int.class);
 			result = (Integer) m.invoke(o, value);
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			System.out.println(e);
 		}
 		return result;
 	}

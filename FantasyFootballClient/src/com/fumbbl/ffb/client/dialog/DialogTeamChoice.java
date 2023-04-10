@@ -4,6 +4,7 @@ import com.fumbbl.ffb.TeamList;
 import com.fumbbl.ffb.TeamListEntry;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JTable;
 import com.fumbbl.ffb.client.util.UtilClientJTable;
 import com.fumbbl.ffb.client.util.UtilClientReflection;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -16,7 +17,6 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
@@ -94,7 +94,7 @@ public class DialogTeamChoice extends Dialog {
 			tableModel.setValueAt(StringTool.formatThousands(teamListEntries[i].getTreasury() / 1000) + "k", i, 4);
 		}
 
-		fTable = new JTable(tableModel);
+		fTable = new JTable(dimensionProvider(), tableModel);
 		UtilClientReflection.setFillsViewportHeight(fTable, true);
 		UtilClientReflection.setAutoCreateRowSorter(fTable, true);
 		fTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

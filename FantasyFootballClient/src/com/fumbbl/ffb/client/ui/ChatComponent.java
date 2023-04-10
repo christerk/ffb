@@ -7,9 +7,9 @@ import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.ReplayControl;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.ui.swing.JTextField;
 
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
@@ -38,7 +38,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	private final FantasyFootballClient fClient;
 
-	public ChatComponent(FantasyFootballClient pClient, StyleProvider styleProvider) {
+	public ChatComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 
 		fClient = pClient;
 		fInputLog = new LinkedList<>();
@@ -48,7 +48,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
-		fChatInputField = new JTextField(35);
+		fChatInputField = new JTextField(dimensionProvider, 35);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.PLAYER_ACTIONS);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.TURN_ACTIONS);
 

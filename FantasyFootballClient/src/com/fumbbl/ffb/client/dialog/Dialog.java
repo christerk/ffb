@@ -4,13 +4,13 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
+import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -135,7 +135,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 			selectedValue = entries.get(defaultValueKey);
 		}
 
-		JComboBox<String> box = new JComboBox<>(entries.values().toArray(new String[0]));
+		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
 		box.setSelectedItem(selectedValue);
 		box.addActionListener(event -> {
 			String newValue = box.getItemAt(box.getSelectedIndex());

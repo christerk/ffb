@@ -1,12 +1,12 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.inducement.InducementType;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -38,7 +38,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		for (int i = 0; i <= fMax && i * fCost <= pAvailableGold; i++) {
 			anzahl.add(Integer.toString(i));
 		}
-		fBox = new JComboBox<>(anzahl.toArray(new String[0]));
+		fBox = new JComboBox<>(dimensionProvider, anzahl.toArray(new String[0]));
 		fBox.setSelectedIndex(0);
 		fBox.setMaximumSize(fBox.getMinimumSize());
 		fBox.addActionListener(pListener);

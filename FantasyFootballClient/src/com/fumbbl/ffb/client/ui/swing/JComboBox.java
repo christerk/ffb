@@ -7,4 +7,9 @@ public class JComboBox<T> extends javax.swing.JComboBox<T> {
 		super(items);
 		dimensionProvider.scaleFont(this);
 	}
+
+	public JComboBox(DimensionProvider dimensionProvider) {
+		super();
+		dimensionProvider.scaleFont(this);
+	}
 }

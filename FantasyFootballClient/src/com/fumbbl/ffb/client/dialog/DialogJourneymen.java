@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
@@ -13,7 +14,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -53,7 +53,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
 		fBoxes = new ArrayList<>();
 		for (int i = 0; i < fPositionIds.length; i++) {
-			fBoxes.add(new JComboBox<>());
+			fBoxes.add(new JComboBox<>(dimensionProvider()));
 		}
 		refreshModels();
 

@@ -1,12 +1,14 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
-import javax.swing.JTable;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.ui.swing.JTable;
+
 import javax.swing.table.TableCellEditor;
 
 public class StarPlayerTable extends JTable {
 
-	public StarPlayerTable(StarPlayerTableModel ab) {
-		super(ab);
+	public StarPlayerTable(DimensionProvider dimensionProvider, StarPlayerTableModel ab) {
+		super(dimensionProvider, ab);
 	}
 
 	@Override

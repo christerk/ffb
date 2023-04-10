@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
@@ -10,7 +11,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +25,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 	public static final int OK_DIALOG = 1;
 	public static final int CANCEL_DIALOG = 2;
 
-	private final JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
+	private final JCheckBox doNotShowAgainCheckbox;
 	private final int fOptionType;
 	private final String panelProperty;
 	private final String panelOffValue;
@@ -49,6 +49,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 
 		super(pClient, pTitle, false);
 		fOptionType = pOptionType;
+		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again");
 
 		this.panelProperty = panelProperty;
 		this.panelOffValue = panelOffValue;

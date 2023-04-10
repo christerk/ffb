@@ -4,6 +4,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -11,7 +12,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
@@ -75,7 +75,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 		public PlayerCheckListRenderer(DimensionProvider dimensionProvider) {
 			super();
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			fCheckBox = new JCheckBox();
+			fCheckBox = new JCheckBox(dimensionProvider);
 			add(fCheckBox);
 			fLabel = new JLabel(dimensionProvider);
 			add(fLabel);

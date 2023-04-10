@@ -8,4 +8,9 @@ public class JCheckBox extends javax.swing.JCheckBox {
 		super(text);
 		dimensionProvider.scaleFont(this);
 	}
+
+	public JCheckBox(DimensionProvider dimensionProvider) {
+		super();
+		dimensionProvider.scaleFont(this);
+	}
 }

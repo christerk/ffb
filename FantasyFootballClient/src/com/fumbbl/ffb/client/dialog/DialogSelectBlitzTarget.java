@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
@@ -10,7 +11,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 
 public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 
-	private final JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
+	private final JCheckBox doNotShowAgainCheckbox;
 
 	private final String panelProperty; // IClientProperty.SETTING_BLITZ_TARGET_PANEL;
 	private final String panelOffValue; // IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF;
@@ -32,6 +32,7 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 		this.dialogId = dialogId;
 		this.panelProperty = panelProperty;
 		this.panelOffValue = panelOffValue;
+		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again");
 
 		JButton fButton = new JButton(dimensionProvider(), "Ok");
 		fButton.addActionListener(this);

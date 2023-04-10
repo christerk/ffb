@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.client.util;
 
-import java.awt.Component;
+import com.fumbbl.ffb.client.ui.swing.JTable;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import java.awt.Component;
 
 /**
  * 

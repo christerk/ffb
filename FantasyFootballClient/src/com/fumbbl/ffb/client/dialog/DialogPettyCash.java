@@ -4,6 +4,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.IntegerField;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -11,7 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.BorderLayout;
@@ -69,7 +69,7 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 		panelOpponentTeamValue.add(fLabelOpponentTeamValue);
 		panelOpponentTeamValue.add(Box.createHorizontalGlue());
 
-		fIntegerFieldPettyCash = new IntegerField(5);
+		fIntegerFieldPettyCash = new IntegerField(dimensionProvider(), 5);
 		fIntegerFieldPettyCash.setText("0");
 		fIntegerFieldPettyCash.setHorizontalAlignment(JTextField.RIGHT);
 		fIntegerFieldPettyCash.selectAll();

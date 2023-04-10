@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -14,7 +15,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -93,7 +93,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 		buttonPanel.add(fButtonCancel);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
-		fTextfieldSetupName = new JTextField(20);
+		fTextfieldSetupName = new JTextField(dimensionProvider(), 20);
 		JPanel editPanel = new JPanel();
 		editPanel.setLayout(new BoxLayout(editPanel, BoxLayout.X_AXIS));
 		editPanel.add(fTextfieldSetupName);
