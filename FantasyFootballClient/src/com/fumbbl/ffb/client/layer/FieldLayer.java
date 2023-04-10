@@ -5,7 +5,10 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
@@ -57,8 +60,8 @@ public abstract class FieldLayer {
 	public Rectangle drawCenteredAndScaled(BufferedImage pImage, int pX, int pY, float pAlpha, double pScaleX,
 			double pScaleY) {
 		if (pImage != null) {
-			int width = (int) (pImage.getWidth() * pScaleX * dimensionProvider.getScale());
-			int height = (int) (pImage.getHeight() * pScaleY * dimensionProvider.getScale());
+			int width = (int) (pImage.getWidth() * pScaleX);
+			int height = (int) (pImage.getHeight() * pScaleY);
 			if ((width > 0) && (height > 0)) {
 				BufferedImage scaledIcon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g2d = scaledIcon.createGraphics();
