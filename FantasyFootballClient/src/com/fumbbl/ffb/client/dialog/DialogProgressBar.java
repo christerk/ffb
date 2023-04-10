@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.ui.swing.JProgressBar;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -10,7 +11,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +35,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 		JButton fButton = new JButton(dimensionProvider(), "Cancel");
 		fButton.addActionListener(this);
 
-		fProgressBar = new JProgressBar(pMinValue, pMaxValue);
+		fProgressBar = new JProgressBar(dimensionProvider(), pMinValue, pMaxValue);
 		fProgressBar.setValue(pMinValue);
 		fProgressBar.setStringPainted(true);
 
@@ -86,11 +86,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 				fProgressBar.setMinimum(pMinimum);
 			} else {
 				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						public void run() {
-							fProgressBar.setMinimum(pMinimum);
-						}
-					});
+					SwingUtilities.invokeAndWait(() -> fProgressBar.setMinimum(pMinimum));
 				} catch (InterruptedException | InvocationTargetException ignored) {
 				}
 			}
