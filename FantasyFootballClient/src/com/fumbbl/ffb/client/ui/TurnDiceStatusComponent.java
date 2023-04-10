@@ -124,7 +124,7 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private int statusTextWidth() {
-		return size.width - 10;
+		return size.width - dimensionProvider.scale(10);
 	}
 
 	private void drawBackground() {
@@ -264,7 +264,7 @@ public class TurnDiceStatusComponent extends JPanel
 				if (y <= 3 * fontMetrics.getHeight()) {
 					layoutLine = measurer.nextLayout(statusTextWidth());
 				} else {
-					layoutLine = measurer.nextLayout(statusTextWidth() - 20); // hourglass icon
+					layoutLine = measurer.nextLayout(statusTextWidth() - dimensionProvider.scale(20)); // hourglass icon
 				}
 			}
 			g2d.dispose();
@@ -272,8 +272,9 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private void drawBlockDice() {
-		int x, y = blockRolls.size() > 1 ? 0 : 38;
-		for (BlockRoll blockRoll: blockRolls) {
+		int lineHeight = dimensionProvider.scale(38);
+		int x, y = blockRolls.size() > 1 ? 0 : lineHeight;
+		for (BlockRoll blockRoll : blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
 			Composite oldComposite = g2d.getComposite();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
@@ -284,12 +285,13 @@ public class TurnDiceStatusComponent extends JPanel
 				if (!blockRoll.needsSelection() && (blockRoll.getSelectedIndex() != i)) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				}
+				int dieWidth = dimensionProvider.scale(39);
 				if (length > 2) {
-					x = 15 + (39 * i);
+					x = dimensionProvider.scale(15) + (dieWidth * i);
 				} else if (length > 1) {
-					x = 34 + (39 * i);
+					x = dimensionProvider.scale(34) + (dieWidth * i);
 				} else {
-					x = 53;
+					x = dimensionProvider.scale(53);
 				}
 				g2d.drawImage(diceIcon, x, y, null);
 			}
@@ -298,11 +300,11 @@ public class TurnDiceStatusComponent extends JPanel
 				g2d.setComposite(oldComposite);
 				FontMetrics fontMetrics = g2d.getFontMetrics();
 				String opponentsChoice = "Opponent's choice";
-				y += 38 + fontMetrics.getAscent();
+				y += lineHeight + fontMetrics.getAscent();
 				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, size.width);
 				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y, styleProvider);
 			} else {
-				y += 38;
+				y += lineHeight;
 			}
 			g2d.dispose();
 		}
