@@ -42,6 +42,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final SideBarComponent fSideBarHome;
 	private final SideBarComponent fSideBarAway;
 	private final IconCache fIconCache;
+	private final FontCache fontCache;
 	private final SoundEngine fSoundEngine;
 	private final ScoreBarComponent fScoreBar;
 	private final LogComponent fLog;
@@ -62,11 +63,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
 		fIconCache = new IconCache(getClient(), dimensionProvider);
 		fIconCache.init();
+		fontCache = new FontCache(dimensionProvider);
 		fSoundEngine = new SoundEngine(getClient());
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
-		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider));
+		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider, fontCache));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
@@ -77,8 +79,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		addWindowListener(this);
 		setResizable(false);
 
-		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider, styleProvider);
-		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
+		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider, styleProvider, fontCache);
+		fFieldComponent = new FieldComponent(getClient(), dimensionProvider, fontCache);
 		fLog = new LogComponent(getClient(), styleProvider);
 		fChat = new ChatComponent(getClient(), dimensionProvider, styleProvider);
 		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider, styleProvider);
@@ -218,6 +220,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		panelContent.add(logChatScorePanel);
 
 		return panelContent;
+	}
+
+	public FontCache getFontCache() {
+		return fontCache;
 	}
 
 	public StyleProvider getStyleProvider() {

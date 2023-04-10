@@ -6,6 +6,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
@@ -35,11 +36,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private static final String _TURN = "Turn";
 
-	private static final Font _SCORE_FONT = new Font("Sans Serif", Font.BOLD, 24);
-	private static final Font _TURN_NUMBER_FONT = new Font("Sans Serif", Font.BOLD, 22);
-	private static final Font _TURN_TEXT_FONT = new Font("Sans Serif", Font.BOLD, 14);
-
-	private static final Font _SPECTATOR_FONT = new Font("Sans Serif", Font.BOLD, 14);
+	private final FontCache fontCache;
+	private Font scoreFont;
+	private Font turnNumberFont;
+	private Font turnTextFont;
 
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
@@ -61,8 +61,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private boolean fCoachBannedAway;
 	private boolean fRefreshNecessary;
 	private BufferedImage fImage;
+	private Font spectatorFont;
 
-	public ScoreBarComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public ScoreBarComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider,
+													 StyleProvider styleProvider, FontCache fontCache) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
@@ -70,6 +72,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		ToolTipManager.sharedInstance().registerComponent(this);
 		fRefreshNecessary = true;
 		addMouseMotionListener(this);
+		this.fontCache = fontCache;
 	}
 
 	private void drawBackground() {
@@ -89,14 +92,14 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	private int lineHeight() {
-		return dimensionProvider.scaleFont(32);
+		return dimensionProvider.scale(32);
 	}
 
 	private void drawScore() {
 		Graphics2D g2d = fImage.createGraphics();
 		String scoreHome = Integer.toString(fScoreHome);
 		String scoreAway = Integer.toString(fScoreAway);
-		g2d.setFont(_SCORE_FONT);
+		g2d.setFont(scoreFont);
 		FontMetrics fontMetrics = g2d.getFontMetrics();
 		Rectangle2D boundsHome = fontMetrics.getStringBounds(scoreHome, g2d);
 		int x;
@@ -119,12 +122,12 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		String turn = game.getTurnDataHome().getTurnNr() + " / " +
 			game.getTurnDataAway().getTurnNr();
 
-		g2d.setFont(_TURN_NUMBER_FONT);
+		g2d.setFont(turnNumberFont);
 		FontMetrics metricsInts = g2d.getFontMetrics();
 		int yInts = ((lineHeight() + metricsInts.getHeight()) / 2) - metricsInts.getDescent() - 1;
 		Rectangle2D turnBounds = metricsInts.getStringBounds(turn, g2d);
 
-		g2d.setFont(_TURN_TEXT_FONT);
+		g2d.setFont(turnTextFont);
 		FontMetrics metricsText = g2d.getFontMetrics();
 		int yText = ((lineHeight() + metricsText.getHeight()) / 2) - metricsText.getDescent();
 		Rectangle2D turnPrefixBounds = metricsText.getStringBounds(_TURN, g2d);
@@ -148,13 +151,13 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			x = 4;
 		}
 
-		g2d.setFont(_TURN_TEXT_FONT);
+		g2d.setFont(turnTextFont);
 		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText, styleProvider);
 		x += turnPrefixBounds.getWidth() + 10;
-		g2d.setFont(_TURN_NUMBER_FONT);
+		g2d.setFont(turnNumberFont);
 		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts, styleProvider);
 		x += turnBounds.getWidth() + 10;
-		g2d.setFont(_TURN_TEXT_FONT);
+		g2d.setFont(turnTextFont);
 		UtilClientGraphics.drawShadowedText(g2d, half, x, yText, styleProvider);
 		g2d.dispose();
 	}
@@ -165,7 +168,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS);
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
-			g2d.setFont(_SPECTATOR_FONT);
+			g2d.setFont(spectatorFont);
 			String spectatorString = Integer.toString(fSpectators);
 			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, spectatorLocation.y + 21, styleProvider);
 			g2d.dispose();
@@ -253,6 +256,12 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void refresh() {
+		scoreFont = fontCache.font(Font.BOLD, 24);
+		turnNumberFont = fontCache.font(Font.BOLD, 22);
+		turnTextFont = fontCache.font(Font.BOLD, 14);
+
+		spectatorFont = fontCache.font(Font.BOLD, 14);
+
 		Game game = getClient().getGame();
 		if (game.getHalf() > 0) {
 			ClientData clientData = getClient().getClientData();

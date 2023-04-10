@@ -93,7 +93,8 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		g2d.fillRect(size.width / 2, 0, size.width, size.height);
 		if (replayer.isRunning()) {
 			g2d.setColor(Color.BLACK);
-			g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
+			FontCache fontCache = getClient().getUserInterface().getFontCache();
+			g2d.setFont(fontCache.font(Font.BOLD, 12));
 			String speed = ((replayer.getReplaySpeed() > 0) ? replayer.getReplaySpeed() : "0.5") +
 				"x";
 			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(speed, g2d);

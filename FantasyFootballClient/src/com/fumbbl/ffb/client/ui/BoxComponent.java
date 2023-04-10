@@ -44,7 +44,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	public static final int MAX_BOX_ELEMENTS = 30;
 
-	private static final Font _BOX_FONT = new Font("Sans Serif", Font.BOLD, 12);
+	private static final Font _BOX_FONT = fontCache().font(Font.BOLD, 12);
 
 	private final SideBarComponent fSideBar;
 	private BufferedImage fImage;
@@ -220,7 +220,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? dimensionProvider.scaleFont(5) : dimensionProvider.dimension(DimensionProvider.Component.FIELD).width - dimensionProvider.scaleFont(135);
+					int x = getSideBar().isHomeSide() ? dimensionProvider.scale(5) : dimensionProvider.dimension(DimensionProvider.Component.FIELD).width - dimensionProvider.scale(135);
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
 					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}

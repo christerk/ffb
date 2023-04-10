@@ -16,6 +16,7 @@ import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
@@ -227,9 +228,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 
-		setFont(new Font("Sans Serif", Font.PLAIN, 12));
+		setFont(fontCache.font(Font.PLAIN, 12));
 
 		fClient = pClient;
 		this.styleProvider = styleProvider;

@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class BoxButtonComponent extends JPanel implements MouseListener, MouseMotionListener {
 
-	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 11);
+	private static final Font _BUTTON_FONT = fontCache().font(Font.BOLD, 11);
 	private final Map<BoxType, Rectangle> fButtonLocations;
 
 	private final SideBarComponent fSideBar;

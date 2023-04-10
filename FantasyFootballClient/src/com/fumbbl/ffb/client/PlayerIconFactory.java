@@ -53,6 +53,32 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
+	public static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache) {
+		if ((pIcon != null) && StringTool.isProvided(pText)) {
+			Graphics2D g2d = pIcon.createGraphics();
+			g2d.setColor(_MARK_COLOR);
+			g2d.setFont(fontCache.font(Font.BOLD, 12));
+			FontMetrics metrics = g2d.getFontMetrics();
+			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
+			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
+			int y = pIcon.getHeight() - metrics.getDescent();
+			g2d.drawString(pText, x, y);
+			g2d.dispose();
+		}
+	}
+
+	public static BufferedImage fadeIcon(BufferedImage pIcon) {
+		BufferedImage resultingIcon = null;
+		if (pIcon != null) {
+			resultingIcon = new BufferedImage(pIcon.getWidth(), pIcon.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2d = resultingIcon.createGraphics();
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+			g2d.drawImage(pIcon, 0, 0, null);
+			g2d.dispose();
+		}
+		return resultingIcon;
+	}
+
 	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean pHomePlayer, boolean pMoving,
 	                                  boolean pWithBall, boolean pWithBomb) {
 
@@ -150,9 +176,10 @@ public class PlayerIconFactory {
 				icon = new BufferedImage(playerIcon.getWidth() + 2, playerIcon.getHeight() + 2, BufferedImage.TYPE_INT_ARGB);
 				String shorthand = (pPlayer.getPosition() != null) ? pPlayer.getPosition().getShorthand() : "?";
 				if (StringTool.isProvided(shorthand)) {
+					FontCache fontCache = pClient.getUserInterface().getFontCache();
 					Graphics2D g2d = icon.createGraphics();
 					g2d.drawImage(playerIcon, 2, 2, null);
-					g2d.setFont(new Font("Sans Serif", Font.BOLD, fontSize));
+					g2d.setFont(fontCache.font(Font.BOLD, fontSize));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D stringBounds = metrics.getStringBounds(shorthand, g2d);
 					int baselineX = (icon.getWidth() - (int) stringBounds.getWidth()) / 2;
@@ -189,18 +216,6 @@ public class PlayerIconFactory {
 		}
 		return icon;
 
-	}
-
-	public static BufferedImage fadeIcon(BufferedImage pIcon) {
-		BufferedImage resultingIcon = null;
-		if (pIcon != null) {
-			resultingIcon = new BufferedImage(pIcon.getWidth(), pIcon.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2d = resultingIcon.createGraphics();
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-			g2d.drawImage(pIcon, 0, 0, null);
-			g2d.dispose();
-		}
-		return resultingIcon;
 	}
 
 	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer) {
@@ -309,25 +324,11 @@ public class PlayerIconFactory {
 
 		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if ((playerMarker != null)) {
-			markIcon(icon, playerMarker.getHomeText());
+			markIcon(icon, playerMarker.getHomeText(), pClient.getUserInterface().getFontCache());
 		}
 
 		return icon;
 
-	}
-
-	public static void markIcon(BufferedImage pIcon, String pText) {
-		if ((pIcon != null) && StringTool.isProvided(pText)) {
-			Graphics2D g2d = pIcon.createGraphics();
-			g2d.setColor(_MARK_COLOR);
-			g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
-			FontMetrics metrics = g2d.getFontMetrics();
-			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
-			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
-			int y = pIcon.getHeight() - metrics.getDescent();
-			g2d.drawString(pText, x, y);
-			g2d.dispose();
-		}
 	}
 
 	public static String getPortraitUrl(Player<?> pPlayer) {

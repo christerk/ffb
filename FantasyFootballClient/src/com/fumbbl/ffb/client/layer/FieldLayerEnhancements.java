@@ -2,13 +2,14 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
 import java.awt.image.BufferedImage;
 
 public class FieldLayerEnhancements extends FieldLayer {
-	public FieldLayerEnhancements(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerEnhancements(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void addEnhancement(OnPitchEnhancement enhancement) {

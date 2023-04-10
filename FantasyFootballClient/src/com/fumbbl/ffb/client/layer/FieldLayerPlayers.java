@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
@@ -23,8 +24,8 @@ import java.util.List;
  */
 public class FieldLayerPlayers extends FieldLayer {
 
-	public FieldLayerPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void refresh(FieldCoordinateBounds pBounds) {

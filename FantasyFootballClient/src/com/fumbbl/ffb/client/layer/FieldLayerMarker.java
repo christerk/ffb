@@ -2,9 +2,10 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
@@ -28,8 +29,8 @@ public class FieldLayerMarker extends FieldLayer {
 
 	private final Map<FieldCoordinate, Rectangle> fFieldMarkerBounds;
 
-	public FieldLayerMarker(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerMarker(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 		fFieldMarkerBounds = new HashMap<>();
 	}
 
@@ -44,9 +45,9 @@ public class FieldLayerMarker extends FieldLayer {
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setColor(COLOR_MARKER);
 			if (pFieldMarker.getHomeText().length() < 2) {
-				g2d.setFont(new Font("Sans Serif", Font.BOLD, 16));
+				g2d.setFont(fontCache().font(Font.BOLD, 16));
 			} else {
-				g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
+				g2d.setFont(fontCache().font(Font.BOLD, 12));
 			}
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pFieldMarker.getHomeText(), g2d);

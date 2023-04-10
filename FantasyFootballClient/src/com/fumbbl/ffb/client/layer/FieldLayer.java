@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 
 import java.awt.AlphaComposite;
 import java.awt.Dimension;
@@ -26,9 +27,12 @@ public abstract class FieldLayer {
 
 	protected DimensionProvider dimensionProvider;
 
-	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+	protected FontCache fontCache;
+
+	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
+		this.fontCache = fontCache;
 	}
 
 	public void initLayout(DimensionProvider dimensionProvider) {

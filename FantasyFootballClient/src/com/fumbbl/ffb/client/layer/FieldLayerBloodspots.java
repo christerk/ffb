@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.model.FieldModel;
 
 import java.awt.image.BufferedImage;
@@ -12,8 +13,8 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerBloodspots extends FieldLayer {
 
-	public FieldLayerBloodspots(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerBloodspots(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void drawBloodspot(BloodSpot pBloodspot) {

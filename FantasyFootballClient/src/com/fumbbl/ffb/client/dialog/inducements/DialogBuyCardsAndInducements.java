@@ -30,8 +30,8 @@ import java.util.Map;
  */
 public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
-	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
-	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
+	private static final Font BOLD_FONT = fontCache().font(Font.BOLD, 12);
+	private static final Font REGULAR_FONT = fontCache().font(Font.PLAIN, 11);
 	private final JLabel labelAvailableGold, typeLabel;
 	@SuppressWarnings({"FieldCanBeLocal", "unused"})
 	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel,

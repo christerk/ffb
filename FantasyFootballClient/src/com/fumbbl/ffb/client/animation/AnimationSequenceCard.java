@@ -4,6 +4,7 @@ import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
@@ -88,7 +89,8 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 		Graphics2D g2d = cardIcon.createGraphics();
 		g2d.drawImage(frontIcon, 0, 0, null);
 		g2d.setColor(Color.BLACK);
-		g2d.setFont(new Font("Sans Serif", Font.BOLD, 22));
+		FontCache fontCache = pClient.getUserInterface().getFontCache();
+		g2d.setFont(fontCache.font(Font.BOLD, 22));
 		FontMetrics metrics = g2d.getFontMetrics();
 		for (int i = 0; i < lines.length; i++) {
 			Rectangle2D textBounds = metrics.getStringBounds(lines[i], g2d);

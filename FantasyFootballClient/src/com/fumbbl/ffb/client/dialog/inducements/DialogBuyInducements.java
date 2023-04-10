@@ -29,13 +29,13 @@ public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 		fGoldPanel.setLayout(new BoxLayout(fGoldPanel, BoxLayout.X_AXIS));
 
 		JLabel goldLabel = new JLabel(dimensionProvider(), "Available Gold:");
-		goldLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		goldLabel.setFont(fontCache().font(Font.BOLD, 12));
 
 		fGoldPanel.add(goldLabel);
 		fGoldPanel.add(Box.createHorizontalStrut(10));
 
 		fGoldLabelAmount = new JLabel(dimensionProvider(), StringTool.formatThousands(getAvailableGold()));
-		fGoldLabelAmount.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		fGoldLabelAmount.setFont(fontCache().font(Font.BOLD, 12));
 
 		fGoldPanel.add(fGoldLabelAmount);
 		fGoldPanel.add(Box.createHorizontalGlue());

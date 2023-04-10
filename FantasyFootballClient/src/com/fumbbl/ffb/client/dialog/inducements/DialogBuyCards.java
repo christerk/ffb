@@ -185,14 +185,14 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 	private void updateAvailableGoldLabel() {
 
 		fLabelAvailableGold.setText("Available Gold: " + StringTool.formatThousands(fAvailableGold));
-		fLabelAvailableGold.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		fLabelAvailableGold.setFont(fontCache().font(Font.BOLD, 12));
 
 	}
 
 	private void updateAvailableCardsLabel() {
 
 		fLabelAvailableCards.setText("Available Cards: " + fAvailableCards);
-		fLabelAvailableCards.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		fLabelAvailableCards.setFont(fontCache().font(Font.BOLD, 12));
 
 	}
 

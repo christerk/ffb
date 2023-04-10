@@ -5,6 +5,7 @@ import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
@@ -24,8 +25,8 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerTeamLogo extends FieldLayer {
 
-	public FieldLayerTeamLogo(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerTeamLogo(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void drawDistanceMarkers() {
@@ -38,7 +39,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 		int distance = (pX >= 13) ? (25 - pX) : pX;
 		String distanceString = Integer.toString(distance);
 		Graphics2D g2d = getImage().createGraphics();
-		g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		g2d.setFont(fontCache().font(Font.BOLD, 12));
 		FontMetrics metrics = g2d.getFontMetrics();
 		Rectangle2D distanceBounds = metrics.getStringBounds(distanceString, g2d);
 		Color distanceColor = (pX >= 13) ? new Color(120, 120, 255) : new Color(255, 120, 120);

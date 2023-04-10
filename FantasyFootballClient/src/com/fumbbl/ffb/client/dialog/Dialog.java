@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
@@ -163,5 +164,9 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 
 	protected DimensionProvider dimensionProvider() {
 		return getClient().getUserInterface().getDimensionProvider();
+	}
+
+	protected FontCache fontCache() {
+		return getClient().getUserInterface().getFontCache();
 	}
 }

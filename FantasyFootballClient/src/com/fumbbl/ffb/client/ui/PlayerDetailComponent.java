@@ -60,12 +60,12 @@ import java.util.stream.Collectors;
  */
 public class PlayerDetailComponent extends JPanel {
 
-	private static final Font _NAME_FONT = new Font("Sans Serif", Font.PLAIN, 12);
-	private static final Font _STAT_FONT = new Font("Sans Serif", Font.BOLD, 13);
-	private static final Font _POSITION_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private static final Font _SPP_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Font _SKILL_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Font _SKILL_USED_FONT = new Font("Sans Serif", Font.ITALIC + Font.BOLD, 11);
+	private static final Font _NAME_FONT = fontCache().font(Font.PLAIN, 12);
+	private static final Font _STAT_FONT = fontCache().font(Font.BOLD, 13);
+	private static final Font _POSITION_FONT = fontCache().font(Font.PLAIN, 11);
+	private static final Font _SPP_FONT = fontCache().font(Font.BOLD, 11);
+	private static final Font _SKILL_FONT = fontCache().font(Font.BOLD, 11);
+	private static final Font _SKILL_USED_FONT = fontCache().font(Font.ITALIC + Font.BOLD, 11);
 
 	private static final int _DISPLAY_NONE = 0;
 	private static final int _DISPLAY_ACTING_PLAYER = 1;

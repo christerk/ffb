@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -22,8 +23,8 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerPitch extends FieldLayer {
 
-	public FieldLayerPitch(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerPitch(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void drawWeather(Weather pWeather) {
@@ -106,7 +107,7 @@ public class FieldLayerPitch extends FieldLayer {
 		Graphics2D g2d = getImage().createGraphics();
 		g2d.setColor(Color.WHITE);
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-		g2d.setFont(new Font("Sans Serif", Font.BOLD, 20));
+		g2d.setFont(fontCache().font(Font.BOLD, 20));
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		return g2d;
 	}

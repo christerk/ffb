@@ -65,7 +65,7 @@ public class DialogAbout extends Dialog {
 
 		g2d.setColor(Color.WHITE);
 
-		g2d.setFont(new Font("Sans Serif", Font.BOLD, 17));
+		g2d.setFont(fontCache().font(Font.BOLD, 17));
 
 		String versionInfo = getClient().getParameters().getBuild();
 		if (versionInfo == null) {
@@ -74,34 +74,34 @@ public class DialogAbout extends Dialog {
 			versionInfo = "Build " + FantasyFootballConstants.CLIENT_VERSION + "-" + versionInfo;
 		}
 		Rectangle2D versionBounds = g2d.getFontMetrics().getStringBounds(versionInfo, g2d);
-		g2d.drawString(versionInfo, dimension.width - dimensionProvider.scaleFont(25) - (int) versionBounds.getWidth(), dimensionProvider.scaleFont(155));
+		g2d.drawString(versionInfo, dimension.width - dimensionProvider.scale(25) - (int) versionBounds.getWidth(), dimensionProvider.scale(155));
 
 		int y = 130;
 
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 0), "Headcoach: BattleLore");
-		drawText(g2d, dimensionProvider.scaleFont(20), dimensionProvider.scaleFont(y += 20), "thank you for providing ideas, encouragement and the occasional kick in the butt.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 0), "Headcoach: BattleLore");
+		drawText(g2d, dimensionProvider.scale(20), dimensionProvider.scale(y += 20), "thank you for providing ideas, encouragement and the occasional kick in the butt.");
 
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 25), "Assistant Coaches: WhatBall, Garion and Lakrillo");
-		drawText(g2d, dimensionProvider.scaleFont(20), dimensionProvider.scaleFont(y += 20), "thank you for helping to to pull the cart along.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 25), "Assistant Coaches: WhatBall, Garion and Lakrillo");
+		drawText(g2d, dimensionProvider.scale(20), dimensionProvider.scale(y += 20), "thank you for helping to to pull the cart along.");
 
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 25), "Sports Director: Christer");
-		drawText(g2d, dimensionProvider.scaleFont(20), dimensionProvider.scaleFont(y += 20), "thank you for the patience and energy to tackle the long road with me.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 25), "Sports Director: Christer");
+		drawText(g2d, dimensionProvider.scale(20), dimensionProvider.scale(y += 20), "thank you for the patience and energy to tackle the long road with me.");
 
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 25), "Lifetime Luxury Suite Owner: SkiJunkie");
-		drawText(g2d, dimensionProvider.scaleFont(20), dimensionProvider.scaleFont(y += 20), "thank you doing it first and giving a vision to follow.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 25), "Lifetime Luxury Suite Owner: SkiJunkie");
+		drawText(g2d, dimensionProvider.scale(20), dimensionProvider.scale(y += 20), "thank you doing it first and giving a vision to follow.");
 
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 25),
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 25),
 			"Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious and Ryanfitz");
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 20), "Playing the Stadium Organ: VocalVoodoo and Minenbonnie");
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 20), "Official supplier of game balls: Qaz");
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 20), "Thanks for the hats: ArrestedDevelopment");
-		drawText(g2d, dimensionProvider.scaleFont(20), dimensionProvider.scaleFont(y += 20), "thank you all for making FFB look and sound great.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 20), "Playing the Stadium Organ: VocalVoodoo and Minenbonnie");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 20), "Official supplier of game balls: Qaz");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 20), "Thanks for the hats: ArrestedDevelopment");
+		drawText(g2d, dimensionProvider.scale(20), dimensionProvider.scale(y += 20), "thank you all for making FFB look and sound great.");
 
-		drawBold(g2d, dimensionProvider.scaleFont(10), dimensionProvider.scaleFont(y += 25), "Cheerleaders & Pest Control:");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 25), "Cheerleaders & Pest Control:");
 
 		y += 5;
 		for (String playtesters : _PLAYTESTERS) {
-			drawText(g2d, dimensionProvider.scaleFont(20), dimensionProvider.scaleFont(y += 15), playtesters);
+			drawText(g2d, dimensionProvider.scale(20), dimensionProvider.scale(y += 15), playtesters);
 		}
 
 		g2d.dispose();
@@ -111,12 +111,12 @@ public class DialogAbout extends Dialog {
 	}
 
 	private void drawText(Graphics2D pG2d, int pX, int pY, String pText) {
-		pG2d.setFont(new Font("Sans Serif", Font.PLAIN, 12));
+		pG2d.setFont(fontCache().font(Font.PLAIN, 12));
 		pG2d.drawString(pText, pX, pY);
 	}
 
 	private void drawBold(Graphics2D pG2d, int pX, int pY, String pText) {
-		pG2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		pG2d.setFont(fontCache().font(Font.BOLD, 12));
 		pG2d.drawString(pText, pX, pY);
 	}
 

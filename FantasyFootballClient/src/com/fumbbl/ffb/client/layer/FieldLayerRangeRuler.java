@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.FieldModel;
@@ -54,8 +55,8 @@ public class FieldLayerRangeRuler extends FieldLayer {
 	private FieldCoordinate fSelectSquareCoordinate;
 	private FieldCoordinate[] fMarkedCoordinates;
 
-	public FieldLayerRangeRuler(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerRangeRuler(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void drawRangeRuler(RangeRuler pRangeRuler) {
@@ -103,7 +104,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 					// [ 0 0 1 ]
 
 					g2d.transform(new AffineTransform(cosPhi, -sinPhi, sinPhi, cosPhi, startCenter.x, startCenter.y));
-					g2d.setFont(new Font("Sans Serif", Font.BOLD, 32));
+					g2d.setFont(fontCache().font(Font.BOLD, 32));
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f));
 
 					drawRulerModifier(g2d, (int) length, pRangeRuler.getMinimumRoll());
