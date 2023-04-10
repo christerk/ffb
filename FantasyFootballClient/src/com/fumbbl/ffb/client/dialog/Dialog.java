@@ -24,7 +24,6 @@ import java.awt.event.MouseListener;
 import java.util.Map;
 
 /**
- * 
  * @author Kalimar
  */
 public abstract class Dialog extends JInternalFrame implements IDialog, MouseListener, InternalFrameListener {
@@ -160,5 +159,9 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		contentPane.add(new JSeparator());
 		contentPane.add(boxPanel);
 
+	}
+
+	protected DimensionProvider dimensionProvider() {
+		return getClient().getUserInterface().getDimensionProvider();
 	}
 }

@@ -172,7 +172,7 @@ public class ResourceComponent extends JPanel {
 
 	private Dimension offset(Rectangle location, int index) {
 		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
-		int width = index % 2 == 0 ? location.width - counterSize.width - dimensionProvider.scale(5) : 0;
+		int width = index % 2 == 0 ? location.width - counterSize.width - dimensionProvider.scaleFont(5) : 0;
 		int height = index < 2 ? location.height - counterSize.height : 0;
 		return new Dimension(width, height);
 	}

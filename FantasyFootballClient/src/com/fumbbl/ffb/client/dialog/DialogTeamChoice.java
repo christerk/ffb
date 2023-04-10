@@ -1,19 +1,18 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import com.fumbbl.ffb.TeamList;
+import com.fumbbl.ffb.TeamListEntry;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.util.UtilClientJTable;
+import com.fumbbl.ffb.client.util.UtilClientReflection;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,35 +25,22 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
-import com.fumbbl.ffb.TeamList;
-import com.fumbbl.ffb.TeamListEntry;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.util.UtilClientJTable;
-import com.fumbbl.ffb.client.util.UtilClientReflection;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class DialogTeamChoice extends Dialog {
 
-	private TeamList fTeamList;
+	private final TeamList fTeamList;
 	private int fSelectedIndex;
-	private JTable fTable;
+	private final JTable fTable;
 
-	private JButton fButtonCancel;
-	private JButton fButtonOk;
-
-	private class MyTableCellRenderer extends DefaultTableCellRenderer {
-		public MyTableCellRenderer(int pHorizontalAlignment) {
-			super();
-			setHorizontalAlignment(pHorizontalAlignment);
-		}
-
-		public Component getTableCellRendererComponent(JTable pTable, Object pValue, boolean pIsSelected, boolean pHasFocus,
-				int pRow, int pColumn) {
-			return super.getTableCellRendererComponent(pTable, pValue, pIsSelected, false, pRow, pColumn);
-		}
-	}
+	private final JButton fButtonOk;
 
 	public DialogTeamChoice(FantasyFootballClient pClient, TeamList pTeamList) {
 
@@ -168,7 +154,7 @@ public class DialogTeamChoice extends Dialog {
 		inputPanel.add(scrollPane);
 		inputPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-		fButtonCancel = new JButton("Cancel");
+		JButton fButtonCancel = new JButton(dimensionProvider(), "Cancel");
 		fButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent pActionEvent) {
 				fSelectedIndex = -1;
@@ -176,12 +162,8 @@ public class DialogTeamChoice extends Dialog {
 			}
 		});
 
-		fButtonOk = new JButton("Play");
-		fButtonOk.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent pActionEvent) {
-				checkAndCloseDialog(false);
-			}
-		});
+		fButtonOk = new JButton(dimensionProvider(), "Play");
+		fButtonOk.addActionListener(pActionEvent -> checkAndCloseDialog(false));
 
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 3, 3));
@@ -195,6 +177,18 @@ public class DialogTeamChoice extends Dialog {
 		pack();
 		setLocationToCenter();
 
+	}
+
+	private static class MyTableCellRenderer extends DefaultTableCellRenderer {
+		public MyTableCellRenderer(int pHorizontalAlignment) {
+			super();
+			setHorizontalAlignment(pHorizontalAlignment);
+		}
+
+		public Component getTableCellRendererComponent(JTable pTable, Object pValue, boolean pIsSelected, boolean pHasFocus,
+																									 int pRow, int pColumn) {
+			return super.getTableCellRendererComponent(pTable, pValue, pIsSelected, false, pRow, pColumn);
+		}
 	}
 
 	public void showDialog(IDialogCloseListener pCloseListener) {
@@ -212,10 +206,6 @@ public class DialogTeamChoice extends Dialog {
 
 	public DialogId getId() {
 		return DialogId.TEAM_CHOICE;
-	}
-
-	public TeamList getTeamList() {
-		return fTeamList;
 	}
 
 	public TeamListEntry getSelectedTeamEntry() {

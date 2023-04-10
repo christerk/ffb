@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.Dialog;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogUseInducementParameter;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
@@ -14,7 +15,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -72,7 +72,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 					"<b>" + card.getName() + "</b>" +
 					"<br>" + card.getHtmlDescription() +
 					"</html>";
-				JButton buttonCard = new JButton(buttonText);
+				JButton buttonCard = new JButton(dimensionProvider(), buttonText);
 				buttonCard.setHorizontalAlignment(SwingConstants.LEFT);
 				buttonCard.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 				buttonCard.addActionListener(this);
@@ -94,7 +94,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 				"<b>Wizard</b>" +
 				"<br>Cast a spell" +
 				"</html>";
-			fButtonWizard = new JButton(buttonText);
+			fButtonWizard = new JButton(dimensionProvider(), buttonText);
 			fButtonWizard.setHorizontalAlignment(SwingConstants.LEFT);
 			fButtonWizard.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			fButtonWizard.addActionListener(this);
@@ -113,7 +113,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 				"<b>Weather Mage</b>" +
 				"<br>Roll for weather" +
 				"</html>";
-			weatherMageButton = new JButton(buttonText);
+			weatherMageButton = new JButton(dimensionProvider(), buttonText);
 			weatherMageButton.setHorizontalAlignment(SwingConstants.LEFT);
 			weatherMageButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			weatherMageButton.addActionListener(this);
@@ -126,7 +126,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		JPanel panelContinue = new JPanel();
 		panelContinue.setLayout(new BoxLayout(panelContinue, BoxLayout.X_AXIS));
-		fButtonContinue = new JButton("Continue");
+		fButtonContinue = new JButton(dimensionProvider(), "Continue");
 		fButtonContinue.addActionListener(this);
 		panelContinue.add(Box.createHorizontalGlue());
 		panelContinue.add(fButtonContinue);

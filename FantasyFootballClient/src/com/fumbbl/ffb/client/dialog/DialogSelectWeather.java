@@ -2,11 +2,11 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -60,7 +60,7 @@ public class DialogSelectWeather extends Dialog {
 			label.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 
-			JButton button = new JButton(formattedValue);
+			JButton button = new JButton(dimensionProvider(), formattedValue);
 			button.setHorizontalAlignment(SwingConstants.CENTER);
 			button.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 

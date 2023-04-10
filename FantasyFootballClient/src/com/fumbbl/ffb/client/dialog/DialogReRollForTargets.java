@@ -8,6 +8,7 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.Game;
@@ -19,7 +20,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -44,7 +44,7 @@ public class DialogReRollForTargets extends Dialog {
 		dialogParameter = parameter;
 		ReRollSource singleUseReRollSource = parameter.getSingleUseReRollSource();
 
-		JButton fButtonNoReRoll = new JButton("No Re-Roll");
+		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 		fButtonNoReRoll.addActionListener(e -> close());
 		this.addKeyListener(new PressedKeyListener('N') {
 			@Override
@@ -183,7 +183,7 @@ public class DialogReRollForTargets extends Dialog {
 	}
 
 	private JButton createButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
-		JButton button = new JButton(buttonName);
+		JButton button = new JButton(dimensionProvider(), buttonName);
 		button.addActionListener(e -> handleUserInteraction(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override

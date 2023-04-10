@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogBlockRollParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
@@ -11,7 +12,6 @@ import com.fumbbl.ffb.model.Game;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Insets;
@@ -56,7 +56,7 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		boolean ownChoice = ((fDialogParameter.getNrOfDice() > 0)
 				|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption()));
 		for (int i = 0; i < fBlockDice.length; i++) {
-			fBlockDice[i] = new JButton();
+			fBlockDice[i] = new JButton(dimensionProvider());
 			fBlockDice[i].setOpaque(false);
 			fBlockDice[i].setBounds(0, 0, 45, 45);
 			fBlockDice[i].setFocusPainted(false);
@@ -90,17 +90,17 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 			reRollPanel.setOpaque(false);
 			reRollPanel.setLayout(new BoxLayout(reRollPanel, BoxLayout.X_AXIS));
 
-			fButtonTeamReRoll = new JButton("Team Re-Roll");
+			fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll");
 			fButtonTeamReRoll.addActionListener(this);
 			fButtonTeamReRoll.setMnemonic(KeyEvent.VK_T);
 			fButtonTeamReRoll.addKeyListener(this);
 
-			fButtonProReRoll = new JButton("Pro Re-Roll");
+			fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
 			fButtonProReRoll.addActionListener(this);
 			fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
 			fButtonProReRoll.addKeyListener(this);
 
-			fButtonNoReRoll = new JButton("No Re-Roll");
+			fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 			fButtonNoReRoll.addActionListener(this);
 			fButtonNoReRoll.setMnemonic(KeyEvent.VK_N);
 			fButtonNoReRoll.addKeyListener(this);
@@ -212,16 +212,18 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 				fReRollSource = ReRollSources.TEAM_RE_ROLL;
 			}
 			break;
-		case KeyEvent.VK_P:
-			if (getDialogParameter().hasProReRollOption()) {
-				keyHandled = true;
-				fReRollSource = ReRollSources.PRO;
-			}
-			break;
-		case KeyEvent.VK_N:
-			keyHandled = ((getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption())
+			case KeyEvent.VK_P:
+				if (getDialogParameter().hasProReRollOption()) {
+					keyHandled = true;
+					fReRollSource = ReRollSources.PRO;
+				}
+				break;
+			case KeyEvent.VK_N:
+				keyHandled = ((getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption())
 					&& (getDialogParameter().getNrOfDice() < 0));
-			break;
+				break;
+			default:
+				break;
 		}
 		if (keyHandled) {
 			if (getCloseListener() != null) {

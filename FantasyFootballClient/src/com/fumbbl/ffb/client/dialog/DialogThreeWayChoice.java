@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -8,7 +10,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Font;
@@ -55,23 +56,25 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 
 		super(pClient, pTitle, false);
 
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
+
 		this.choiceOneMnemonic = choiceOneMnemonic;
 		this.choiceTwoMnemonic = choiceTwoMnemonic;
 		this.choiceThreeMnemonic = choiceThreeMnemonic;
 
-		buttonChoiceOne = new JButton(choiceOneText);
+		buttonChoiceOne = new JButton(dimensionProvider, choiceOneText);
 		buttonChoiceOne.addActionListener(this);
 		buttonChoiceOne.addKeyListener(this);
 		buttonChoiceOne.setMnemonic(choiceOneMnemonic);
 
 		if (StringTool.isProvided(choiceTwoText)) {
-			buttonChoiceTwo = new JButton(choiceTwoText);
+			buttonChoiceTwo = new JButton(dimensionProvider, choiceTwoText);
 			buttonChoiceTwo.addActionListener(this);
 			buttonChoiceTwo.addKeyListener(this);
 			buttonChoiceTwo.setMnemonic(choiceTwoMnemonic);
 		}
 
-		JButton buttonChoiceThree = new JButton(choiceThreeText);
+		JButton buttonChoiceThree = new JButton(dimensionProvider, choiceThreeText);
 		buttonChoiceThree.addActionListener(this);
 		buttonChoiceThree.addKeyListener(this);
 		buttonChoiceThree.setMnemonic(choiceThreeMnemonic);

@@ -1,12 +1,12 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Font;
@@ -31,12 +31,12 @@ public class DialogEndTurn extends Dialog implements ActionListener, KeyListener
 
 		super(pClient, "End Turn", false);
 
-		fButtonYes = new JButton("Yes");
+		fButtonYes = new JButton(dimensionProvider(), "Yes");
 		fButtonYes.addActionListener(this);
 		fButtonYes.addKeyListener(this);
 		fButtonYes.setMnemonic('Y');
 
-		fButtonNo = new JButton("No");
+		fButtonNo = new JButton(dimensionProvider(), "No");
 		fButtonNo.addActionListener(this);
 		fButtonNo.addKeyListener(this);
 		fButtonNo.setMnemonic('N');

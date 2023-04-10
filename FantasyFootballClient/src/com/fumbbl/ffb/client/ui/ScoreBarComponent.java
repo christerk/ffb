@@ -89,7 +89,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	private int lineHeight() {
-		return dimensionProvider.scale(32);
+		return dimensionProvider.scaleFont(32);
 	}
 
 	private void drawScore() {

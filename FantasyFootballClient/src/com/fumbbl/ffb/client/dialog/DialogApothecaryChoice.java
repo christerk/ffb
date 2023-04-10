@@ -1,13 +1,13 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -53,9 +53,9 @@ public class DialogApothecaryChoice extends Dialog implements ActionListener {
 		JPanel panelButtonOld = new JPanel();
 		panelButtonOld.setLayout(new BoxLayout(panelButtonOld, BoxLayout.X_AXIS));
 		if (pDialogParameter.getSeriousInjuryOld() != null) {
-			fButtonInjuryOld = new JButton(pDialogParameter.getSeriousInjuryOld().getButtonText());
+			fButtonInjuryOld = new JButton(dimensionProvider(), pDialogParameter.getSeriousInjuryOld().getButtonText());
 		} else {
-			fButtonInjuryOld = new JButton(pDialogParameter.getPlayerStateOld().getButtonText());
+			fButtonInjuryOld = new JButton(dimensionProvider(), pDialogParameter.getPlayerStateOld().getButtonText());
 		}
 		fButtonInjuryOld.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 		fButtonInjuryOld.addActionListener(this);
@@ -67,9 +67,9 @@ public class DialogApothecaryChoice extends Dialog implements ActionListener {
 		JPanel panelButtonNew = new JPanel();
 		panelButtonNew.setLayout(new BoxLayout(panelButtonNew, BoxLayout.X_AXIS));
 		if (pDialogParameter.getSeriousInjuryNew() != null) {
-			fButtonInjuryNew = new JButton(pDialogParameter.getSeriousInjuryNew().getButtonText());
+			fButtonInjuryNew = new JButton(dimensionProvider(), pDialogParameter.getSeriousInjuryNew().getButtonText());
 		} else {
-			fButtonInjuryNew = new JButton(pDialogParameter.getPlayerStateNew().getButtonText());
+			fButtonInjuryNew = new JButton(dimensionProvider(), pDialogParameter.getPlayerStateNew().getButtonText());
 		}
 		fButtonInjuryNew.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 		fButtonInjuryNew.addActionListener(this);

@@ -1,13 +1,13 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,13 +31,13 @@ public class DialogSelectSkill extends Dialog implements ActionListener {
 		super(client, "Skill Choice", false);
 		this.minSelects = minSelects;
 
-		fButtonSelect = new JButton("Select");
+		fButtonSelect = new JButton(dimensionProvider(), "Select");
 		fButtonSelect.setToolTipText("Select the checked skill(s)");
 		fButtonSelect.addActionListener(this);
 		fButtonSelect.setMnemonic((int) 'S');
 		fButtonSelect.setEnabled((skills.size() == 1) || preSelected);
 
-		fButtonCancel = new JButton("Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
 		fButtonCancel.setToolTipText("Do not select any skill");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'C');
@@ -114,7 +114,4 @@ public class DialogSelectSkill extends Dialog implements ActionListener {
 		return selectedSkills;
 	}
 
-	public List<Integer> getSelectedIndexes() {
-		return fList.getSelectedIndexes();
-	}
 }

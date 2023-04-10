@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.ChatLogScrollPane;
 import com.fumbbl.ffb.client.ui.ChatLogTextPane;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogBuyCardsParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.factory.CardTypeFactory;
@@ -20,7 +21,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
@@ -111,7 +111,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
 
 		for (CardType cardType: cardTypes) {
-			JButton button = new JButton();
+			JButton button = new JButton(dimensionProvider());
 			button.addActionListener(this);
 			fButtonPerType.put(cardType, button);
 			fNrOfCardsPerType.put(cardType, pParameter.getNrOfCards(cardType));
@@ -134,7 +134,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		JPanel panelButtons = new JPanel();
 		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
-		fButtonContinue = new JButton("Continue");
+		fButtonContinue = new JButton(dimensionProvider(), "Continue");
 		fButtonContinue.addActionListener(this);
 
 		panelButtons.add(Box.createHorizontalGlue());

@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -8,7 +9,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -55,9 +55,9 @@ public class DialogInformation extends Dialog implements ActionListener {
 
 		JButton fButton;
 		if (getOptionType() == OK_DIALOG) {
-			fButton = new JButton("Ok");
+			fButton = new JButton(dimensionProvider(), "Ok");
 		} else {
-			fButton = new JButton("Cancel");
+			fButton = new JButton(dimensionProvider(), "Cancel");
 		}
 		fButton.addActionListener(this);
 

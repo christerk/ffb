@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
@@ -9,7 +10,6 @@ import com.fumbbl.ffb.model.InducementSet;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
@@ -44,27 +44,27 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 		panelButtons.add(Box.createHorizontalGlue());
 
 		if (spellEnabled(SpecialEffect.LIGHTNING)) {
-			fButtonLightning = new JButton("Lightning");
+			fButtonLightning = new JButton(dimensionProvider(), "Lightning");
 			fButtonLightning.addActionListener(this);
 			fButtonLightning.addKeyListener(this);
 			panelButtons.add(fButtonLightning);
 		}
 
 		if (spellEnabled(SpecialEffect.FIREBALL)) {
-			fButtonFireball = new JButton("Fireball");
+			fButtonFireball = new JButton(dimensionProvider(), "Fireball");
 			fButtonFireball.addActionListener(this);
 			fButtonFireball.addKeyListener(this);
 			panelButtons.add(fButtonFireball);
 		}
 
 		if (spellEnabled(SpecialEffect.ZAP)) {
-			buttonZap = new JButton("Zap");
+			buttonZap = new JButton(dimensionProvider(), "Zap");
 			buttonZap.addActionListener(this);
 			buttonZap.addKeyListener(this);
 			panelButtons.add(buttonZap);
 		}
 
-		fButtonCancel = new JButton("Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.addKeyListener(this);
 		panelButtons.add(fButtonCancel);

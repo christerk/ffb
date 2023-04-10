@@ -86,7 +86,6 @@ public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 				keyHandled = true;
 				break;
 			default:
-				keyHandled = false;
 				break;
 		}
 		if (keyHandled) {

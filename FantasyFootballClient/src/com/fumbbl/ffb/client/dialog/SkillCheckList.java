@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;

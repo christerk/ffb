@@ -5,6 +5,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogUseApothecariesParameter;
 import com.fumbbl.ffb.model.Game;
@@ -14,7 +15,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -36,7 +36,7 @@ public class DialogUseApothecaries extends Dialog {
 
 		dialogParameter = parameter;
 
-		JButton fButtonNoReRoll = new JButton("No Apothecaries");
+		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Apothecaries");
 		fButtonNoReRoll.addActionListener(e -> close());
 		this.addKeyListener(new PressedKeyListener('N') {
 			@Override
@@ -133,7 +133,7 @@ public class DialogUseApothecaries extends Dialog {
 	}
 
 	private JButton createButton(String target, ApothecaryType apothecaryType, char mnemonic) {
-		JButton button = new JButton("Use Apothecary (" + apothecaryType.getName() + ")");
+		JButton button = new JButton(dimensionProvider(), "Use Apothecary (" + apothecaryType.getName() + ")");
 		button.addActionListener(e -> handleUserInteraction(target, apothecaryType));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override

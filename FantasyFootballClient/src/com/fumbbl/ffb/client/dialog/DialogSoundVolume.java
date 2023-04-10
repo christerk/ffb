@@ -4,13 +4,13 @@ import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.sound.SoundEngine;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -26,7 +26,6 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
 	private final JSlider fSlider;
 	private int fVolume;
 	private final JLabel fSettingLabel;
-	private final JButton fTestButton;
 
 	public DialogSoundVolume(FantasyFootballClient pClient) {
 
@@ -54,7 +53,7 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
 		fSettingLabel.setMaximumSize(fSettingLabel.getPreferredSize());
 		fSettingLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-		fTestButton = new JButton("Test");
+		JButton fTestButton = new JButton(dimensionProvider(), "Test");
 		fTestButton.addActionListener(this);
 
 		JPanel settingPanel = new JPanel();

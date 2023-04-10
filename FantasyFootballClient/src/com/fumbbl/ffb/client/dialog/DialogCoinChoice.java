@@ -1,5 +1,15 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.dialog.DialogId;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -7,25 +17,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.dialog.DialogId;
-
 /**
  * 
  * @author Kalimar
  */
 public class DialogCoinChoice extends Dialog implements ActionListener, KeyListener {
 
-	private JButton fButtonHeads;
-	private JButton fButtonTails;
+	private final JButton fButtonHeads;
+	private final JButton fButtonTails;
 	private boolean fChoiceHeads;
 
 	public DialogCoinChoice(FantasyFootballClient pClient) {
@@ -39,13 +38,13 @@ public class DialogCoinChoice extends Dialog implements ActionListener, KeyListe
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 		ImageIcon iconHeads = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_HEADS));
-		fButtonHeads = new JButton(iconHeads);
+		fButtonHeads = new JButton(dimensionProvider(), iconHeads);
 		fButtonHeads.addActionListener(this);
 		fButtonHeads.addKeyListener(this);
 		panelButtons.add(fButtonHeads);
 
 		ImageIcon iconTails = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_TAILS));
-		fButtonTails = new JButton(iconTails);
+		fButtonTails = new JButton(dimensionProvider(), iconTails);
 		fButtonTails.addActionListener(this);
 		fButtonTails.addKeyListener(this);
 		panelButtons.add(fButtonTails);
