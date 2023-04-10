@@ -38,6 +38,7 @@ public class IconCache {
 	private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
 
 	private final Map<String, BufferedImage> fIconByKey;
+	private final Map<String, BufferedImage> scaledIcons;
 
 	private Properties fIconUrlProperties;
 
@@ -50,6 +51,7 @@ public class IconCache {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
 		fIconByKey = new HashMap<>();
+		scaledIcons = new HashMap<>();
 		fCurrentIndexPerKey = new HashMap<>();
 	}
 
@@ -156,9 +158,13 @@ public class IconCache {
 	}
 
 	public BufferedImage getIconByUrl(String pUrl) {
-		BufferedImage bufferedImage = fIconByKey.get(pUrl);
-		if (bufferedImage != null) {
-			return dimensionProvider.scaleImage(bufferedImage);
+		BufferedImage bufferedImage = scaledIcons.get(pUrl);
+		if (bufferedImage == null) {
+			bufferedImage = fIconByKey.get(pUrl);
+			if (bufferedImage != null) {
+				bufferedImage = dimensionProvider.scaleImage(bufferedImage);
+				scaledIcons.put(pUrl, bufferedImage);
+			}
 		}
 		return bufferedImage;
 	}
