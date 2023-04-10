@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -24,7 +25,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -131,7 +131,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-		labelPanel.add(new JLabel("Inducements:"));
+		labelPanel.add(new JLabel(dimensionProvider(), "Inducements:"));
 		labelPanel.add(Box.createHorizontalGlue());
 
 		leftPanel.add(labelPanel);
@@ -202,7 +202,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			JScrollPane scrollPaneMec = new JScrollPane(fTableMercenaries);
 			JPanel mecLabel = new JPanel();
 			mecLabel.setLayout(new BoxLayout(mecLabel, BoxLayout.X_AXIS));
-			mecLabel.add(new JLabel("Mercenaries (varying Gold):"));
+			mecLabel.add(new JLabel(dimensionProvider(), "Mercenaries (varying Gold):"));
 			mecLabel.add(Box.createHorizontalGlue());
 
 			rightPanel.add(Box.createVerticalStrut(verticalStrut));
@@ -241,7 +241,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-		labelPanel.add(new JLabel(label));
+		labelPanel.add(new JLabel(dimensionProvider(), label));
 		labelPanel.add(Box.createHorizontalGlue());
 
 		rightPanel.add(labelPanel);
@@ -258,7 +258,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			return;
 		}
 		int cost = findInducementCost(fTeam, pInducementType, gameOptions);
-		DropDownPanel panel = new DropDownPanel(pInducementType, maxCount, pInducementType.getDescription(), cost, this,
+		DropDownPanel panel = new DropDownPanel(dimensionProvider, pInducementType, maxCount, pInducementType.getDescription(), cost, this,
 			getAvailableGold());
 		pAddToPanel.add(panel);
 		if (pVertStrut > 0) {

@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Game;
@@ -14,7 +15,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import java.awt.Dimension;
@@ -89,7 +89,7 @@ public class UtilClientMarker {
 	private static JTextField createMarkerPopup(FieldComponent pFieldComponent, JPopupMenu pPopupMenu, String pTitle,
 			String pMarkerText, int pX, int pY) {
 		if (StringTool.isProvided(pTitle)) {
-			pPopupMenu.add(new JLabel(pTitle));
+			pPopupMenu.add(new JLabel(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), pTitle));
 		}
 		pPopupMenu.setLayout(new BoxLayout(pPopupMenu, BoxLayout.X_AXIS));
 		pPopupMenu.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));

@@ -4,6 +4,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -12,7 +13,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.event.InternalFrameEvent;
@@ -150,7 +150,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		JPanel boxPanel = new JPanel();
 		boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.X_AXIS));
 		boxPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		boxPanel.add(new JLabel(name));
+		boxPanel.add(new JLabel(dimensionProvider(), name));
 		boxPanel.add(Box.createHorizontalStrut(5));
 		boxPanel.add(box);
 

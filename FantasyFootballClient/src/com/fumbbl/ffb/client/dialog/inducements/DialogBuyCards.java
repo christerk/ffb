@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.ChatLogScrollPane;
 import com.fumbbl.ffb.client.ui.ChatLogTextPane;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogBuyCardsParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.factory.CardTypeFactory;
@@ -21,7 +22,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -67,7 +67,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		panelMain.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		fAvailableGold = pParameter.getAvailableGold();
-		fLabelAvailableGold = new JLabel();
+		fLabelAvailableGold = new JLabel(dimensionProvider());
 		updateAvailableGoldLabel();
 
 		JPanel panelGold = new JPanel();
@@ -78,7 +78,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		panelMain.add(Box.createVerticalStrut(5));
 
 		fAvailableCards = pParameter.getAvailableCards();
-		fLabelAvailableCards = new JLabel();
+		fLabelAvailableCards = new JLabel(dimensionProvider());
 		updateAvailableCardsLabel();
 
 		JPanel panelCards = new JPanel();

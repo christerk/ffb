@@ -7,6 +7,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollParameter;
 import com.fumbbl.ffb.model.Game;
@@ -18,7 +19,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -104,11 +104,11 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
-		messagePanel.add(new JLabel(message.toString()));
+		messagePanel.add(new JLabel(dimensionProvider(), message.toString()));
 
 		if (pDialogParameter.isFumble()) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel("Current roll is a FUMBLE."));
+			messagePanel.add(new JLabel(dimensionProvider(), "Current roll is a FUMBLE."));
 		}
 
 		Game game = getClient().getGame();
@@ -116,19 +116,19 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		if ((reRollingPlayer != null)
 			&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel("Player is a LONER - the Re-Roll is not guaranteed to help."));
+			messagePanel.add(new JLabel(dimensionProvider(), "Player is a LONER - the Re-Roll is not guaranteed to help."));
 		}
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel("You will need a roll of " + fDialogParameter.getMinimumRoll() + "+ to succeed."));
+			messagePanel.add(new JLabel(dimensionProvider(), "You will need a roll of " + fDialogParameter.getMinimumRoll() + "+ to succeed."));
 		}
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL);
-		infoPanel.add(new JLabel(new ImageIcon(icon)));
+		infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 		infoPanel.add(Box.createHorizontalStrut(5));
 		infoPanel.add(messagePanel);
 		infoPanel.add(Box.createHorizontalGlue());

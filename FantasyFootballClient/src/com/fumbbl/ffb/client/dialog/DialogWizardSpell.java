@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
@@ -10,7 +11,6 @@ import com.fumbbl.ffb.model.InducementSet;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +36,7 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 		this.teamId = teamId;
 		JPanel panelText = new JPanel();
 		panelText.setLayout(new BoxLayout(panelText, BoxLayout.X_AXIS));
-		panelText.add(new JLabel("Which spell should your wizard cast?"));
+		panelText.add(new JLabel(dimensionProvider(), "Which spell should your wizard cast?"));
 
 		JPanel panelButtons = new JPanel();
 		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));

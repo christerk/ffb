@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogUseInducementParameter;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
@@ -15,7 +16,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
@@ -56,7 +56,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		JPanel panelText = new JPanel();
 		panelText.setLayout(new BoxLayout(panelText, BoxLayout.X_AXIS));
-		panelText.add(new JLabel("Which inducement do you want to use?"));
+		panelText.add(new JLabel(dimensionProvider(), "Which inducement do you want to use?"));
 		panelText.add(Box.createHorizontalGlue());
 
 		panelMain.add(panelText);

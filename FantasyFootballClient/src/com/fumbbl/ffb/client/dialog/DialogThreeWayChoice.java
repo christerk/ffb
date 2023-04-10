@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -10,7 +11,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -90,7 +90,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 				}
 				JPanel messagePanel = new JPanel();
 				messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.X_AXIS));
-				JLabel messageLabel = new JLabel(pMessages[i]);
+				JLabel messageLabel = new JLabel(dimensionProvider(), pMessages[i]);
 				if (i == 0) {
 					messageLabel.setFont(new Font(messageLabel.getFont().getName(), Font.BOLD, messageLabel.getFont().getSize()));
 				}
@@ -104,7 +104,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
 			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
-			infoPanel.add(new JLabel(new ImageIcon(icon)));
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

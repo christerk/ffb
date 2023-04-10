@@ -3,13 +3,13 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.IntegerField;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -53,19 +53,19 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 
 		JPanel panelTreasury = new JPanel();
 		panelTreasury.setLayout(new BoxLayout(panelTreasury, BoxLayout.X_AXIS));
-		fLabelTreasury = new JLabel(createTreasuryText());
+		fLabelTreasury = new JLabel(dimensionProvider(), createTreasuryText());
 		panelTreasury.add(fLabelTreasury);
 		panelTreasury.add(Box.createHorizontalGlue());
 
 		JPanel panelTeamValue = new JPanel();
 		panelTeamValue.setLayout(new BoxLayout(panelTeamValue, BoxLayout.X_AXIS));
-		fLabelTeamValue = new JLabel(createTeamValueText());
+		fLabelTeamValue = new JLabel(dimensionProvider(), createTeamValueText());
 		panelTeamValue.add(fLabelTeamValue);
 		panelTeamValue.add(Box.createHorizontalGlue());
 
 		JPanel panelOpponentTeamValue = new JPanel();
 		panelOpponentTeamValue.setLayout(new BoxLayout(panelOpponentTeamValue, BoxLayout.X_AXIS));
-		JLabel fLabelOpponentTeamValue = new JLabel(createOpponentTeamValueText());
+		JLabel fLabelOpponentTeamValue = new JLabel(dimensionProvider(), createOpponentTeamValueText());
 		panelOpponentTeamValue.add(fLabelOpponentTeamValue);
 		panelOpponentTeamValue.add(Box.createHorizontalGlue());
 
@@ -97,20 +97,20 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 
 		JPanel panelPettyCash = new JPanel();
 		panelPettyCash.setLayout(new BoxLayout(panelPettyCash, BoxLayout.X_AXIS));
-		JLabel labelLeading = new JLabel("Petty Cash");
+		JLabel labelLeading = new JLabel(dimensionProvider(), "Petty Cash");
 		labelLeading.setFont(labelLeading.getFont().deriveFont(Font.BOLD));
 		panelPettyCash.add(labelLeading);
 		panelPettyCash.add(Box.createHorizontalStrut(5));
 		panelPettyCash.add(fIntegerFieldPettyCash);
 		panelPettyCash.add(Box.createHorizontalStrut(5));
-		JLabel labelTrailing = new JLabel("k gold");
+		JLabel labelTrailing = new JLabel(dimensionProvider(), "k gold");
 		labelTrailing.setFont(labelTrailing.getFont().deriveFont(Font.BOLD));
 		panelPettyCash.add(labelTrailing);
 		panelPettyCash.add(Box.createHorizontalGlue());
 
 		JPanel panelInducements = new JPanel();
 		panelInducements.setLayout(new BoxLayout(panelInducements, BoxLayout.X_AXIS));
-		fLabelInducements = new JLabel(createInducementsText());
+		fLabelInducements = new JLabel(dimensionProvider(), createInducementsText());
 		panelInducements.add(fLabelInducements);
 		panelInducements.add(Box.createHorizontalGlue());
 

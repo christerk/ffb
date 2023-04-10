@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.inducement.Card;
@@ -15,7 +16,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
@@ -32,8 +32,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private final JLabel labelAvailableGold = new JLabel(), typeLabel = new JLabel();
-	@SuppressWarnings("FieldCanBeLocal")
+	private final JLabel labelAvailableGold, typeLabel;
+	@SuppressWarnings({"FieldCanBeLocal", "unused"})
 	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel,
 		cardsListPanel = new JPanel(), cardsSummaryPanel = new JPanel();
 	private final JButton addCardButton, rerollChoiceButton, selectChoiceButton, choiceOneButton, choiceTwoButton;
@@ -57,6 +57,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		selectChoiceButton = new JButton(dimensionProvider());
 		choiceOneButton = new JButton(dimensionProvider());
 		choiceTwoButton = new JButton(dimensionProvider());
+		labelAvailableGold = new JLabel(dimensionProvider());
+		typeLabel = new JLabel(dimensionProvider());
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
 		nrOfCardsPerType = pParameter.getNrOfCardsPerType();
@@ -135,7 +137,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	private JLabel label(String text, Font font) {
-		JLabel label = new JLabel();
+		JLabel label = new JLabel(dimensionProvider());
 		label.setText(text);
 		label.setFont(font);
 		return label;
@@ -208,7 +210,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private JPanel buildAddCardPanel(DialogBuyCardsAndInducementsParameter pParameter) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		JLabel label = new JLabel();
+		JLabel label = new JLabel(dimensionProvider());
 		label.setText("<html>Buy card from random<br/>deck for "
 				+ StringTool.formatThousands(pParameter.getCardPrice()) + " gp</html>");
 		label.setAlignmentX(CENTER_ALIGNMENT);
@@ -283,7 +285,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	public void addCard(Card card) {
 		cardsListPanel.add(Box.createVerticalStrut(3));
-		cardsListPanel.add(new JLabel(card.getName()));
+		cardsListPanel.add(new JLabel(dimensionProvider(), card.getName()));
 		cardSlots--;
 		setMaximumGold(getMaximumGold() - cardPrice);
 		setAvailableGold(availableGold - cardPrice);

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -10,7 +11,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +40,7 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 		for (int i = 0; i < pMessages.length; i++) {
 			messagePanels[i] = new JPanel();
 			messagePanels[i].setLayout(new BoxLayout(messagePanels[i], BoxLayout.X_AXIS));
-			messagePanels[i].add(new JLabel(pMessages[i]));
+			messagePanels[i].add(new JLabel(dimensionProvider(), pMessages[i]));
 			messagePanels[i].add(Box.createHorizontalGlue());
 		}
 
@@ -57,7 +57,7 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
 			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
-			infoPanel.add(new JLabel(new ImageIcon(icon)));
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

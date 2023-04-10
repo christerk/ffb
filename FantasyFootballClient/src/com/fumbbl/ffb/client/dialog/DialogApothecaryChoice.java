@@ -2,13 +2,13 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -36,15 +36,15 @@ public class DialogApothecaryChoice extends Dialog implements ActionListener {
 
 		JPanel panelInfo1 = new JPanel();
 		panelInfo1.setLayout(new BoxLayout(panelInfo1, BoxLayout.X_AXIS));
-		panelInfo1.add(new JLabel("The apothecary gives you a choice."));
-		panelInfo1.add(new JLabel("Injury for " + playerName));
+		panelInfo1.add(new JLabel(dimensionProvider(), "The apothecary gives you a choice."));
+		panelInfo1.add(new JLabel(dimensionProvider(), "Injury for " + playerName));
 		panelInfo1.add(Box.createHorizontalGlue());
 
 		panelMain.add(panelInfo1);
 
 		JPanel panelInfo2 = new JPanel();
 		panelInfo2.setLayout(new BoxLayout(panelInfo2, BoxLayout.X_AXIS));
-		panelInfo2.add(new JLabel("Which injury result do you want to keep?"));
+		panelInfo2.add(new JLabel(dimensionProvider(), "Which injury result do you want to keep?"));
 		panelInfo2.add(Box.createHorizontalGlue());
 
 		panelMain.add(Box.createVerticalStrut(5));

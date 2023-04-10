@@ -4,10 +4,10 @@ import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,7 +32,7 @@ public class DialogAbout extends Dialog {
 
 		super(pClient, "About Fantasy Football", true);
 
-		JLabel aboutLabel = new JLabel(createAboutImageIcon(pClient));
+		JLabel aboutLabel = new JLabel(dimensionProvider(), createAboutImageIcon(pClient));
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(aboutLabel, BorderLayout.CENTER);

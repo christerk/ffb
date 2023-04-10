@@ -1,11 +1,12 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
@@ -18,10 +19,10 @@ import java.util.List;
 
 public class SkillCheckList extends JList<SkillCheckListItem> {
 
-	// Handles rendering cells in the list using a check box
+	// Handles rendering cells in the list using a checkbox
 
-	public SkillCheckList(List<Skill> skills, int minSelects,
-	                      int maxSelects, boolean preSelected, JButton selectButton) {
+	public SkillCheckList(DimensionProvider dimensionProvider, List<Skill> skills, int minSelects,
+												int maxSelects, boolean preSelected, JButton selectButton) {
 
 		if (skills == null || skills.isEmpty()) {
 			throw new IllegalArgumentException("Argument skills must not be empty or null.");
@@ -37,7 +38,7 @@ public class SkillCheckList extends JList<SkillCheckListItem> {
 		setListData(checkListItems.toArray(new SkillCheckListItem[0]));
 
 		// Use a CheckListRenderer (see below) to renderer list cells
-		setCellRenderer(new SkillCheckListRenderer());
+		setCellRenderer(new SkillCheckListRenderer(dimensionProvider));
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		// Add a mouse listener to handle changing selection
@@ -92,12 +93,12 @@ public class SkillCheckList extends JList<SkillCheckListItem> {
 		private final JCheckBox fCheckBox;
 		private final JLabel fLabel;
 
-		public SkillCheckListRenderer() {
+		public SkillCheckListRenderer(DimensionProvider dimensionProvider) {
 			super();
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			fCheckBox = new JCheckBox();
 			add(fCheckBox);
-			fLabel = new JLabel();
+			fLabel = new JLabel(dimensionProvider);
 			add(fLabel);
 		}
 
