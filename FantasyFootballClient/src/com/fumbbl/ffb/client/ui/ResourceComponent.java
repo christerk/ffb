@@ -146,9 +146,8 @@ public class ResourceComponent extends JPanel {
 			g2d.drawImage(resourceIcon, x, y, resourceIcon.getWidth(), resourceIcon.getHeight(), null);
 			if (!pSlot.isEnabled()) {
 				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED);
-				Dimension disabledDimension = dimensionProvider.scale(new Dimension(disabledIcon.getWidth(), disabledIcon.getHeight()));
-				g2d.drawImage(disabledIcon, x + (resourceIcon.getWidth() - disabledDimension.width) / 2,
-					y + (resourceIcon.getHeight() - disabledDimension.height) / 2, null);
+				g2d.drawImage(disabledIcon, x + (resourceIcon.getWidth() - disabledIcon.getWidth()) / 2,
+					y + (resourceIcon.getHeight() - disabledIcon.getHeight()) / 2, null);
 			}
 
 			List<ResourceValue> values = pSlot.getValues();
