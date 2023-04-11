@@ -23,7 +23,10 @@ public class DialogChangeList extends Dialog {
 		JScrollPane mainPane = new JScrollPane(createEditorPane());
 
 		Dimension clientDimension = getClient().getUserInterface().getSize();
-		mainPane.setPreferredSize(new Dimension(clientDimension.width - 150, clientDimension.height - 150));
+		int offset = dimensionProvider().scale(150);
+		mainPane.setPreferredSize(new Dimension(clientDimension.width - offset, clientDimension.height - offset));
+
+		dimensionProvider().scaleFont(this);
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
@@ -60,9 +63,9 @@ public class DialogChangeList extends Dialog {
 			.collect(Collectors.joining());
 
 		String info = "<div style=\"padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>" +
-			"<div style=\"padding-bottom:10px\">Unless stated otherwise the changes apply to 2020 rules.</div>";
+			"<div style=\"padding-bottom:" + dimensionProvider().scale(10) + "px\">Unless stated otherwise the changes apply to 2020 rules.</div>";
 
-		contentPane.setText("<div style=\"padding:10px\"><div>" + info + "</div><div>" + versionsText + "</div></div>");
+		contentPane.setText("<div style=\"padding:" + dimensionProvider().scale(10) + "px\"><div>" + info + "</div><div>" + versionsText + "</div></div>");
 		contentPane.setCaretPosition(0);
 
 		return contentPane;
@@ -72,7 +75,7 @@ public class DialogChangeList extends Dialog {
 	private String renderVersionChanges(VersionChangeList list) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("<font face=\"Sans Serif\" size=\"+2\"> <b>").append(list.getVersion()).append("</b> </font><br/>");
+		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider().scale(18)).append("px\"> <b>").append(list.getVersion()).append("</b> </font><br/>");
 
 		if (list.hasDescription()) {
 			builder.append(list.getDescription()).append("<br/>");
@@ -104,9 +107,9 @@ public class DialogChangeList extends Dialog {
 	private String renderEntries(String title, List<String> entries) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("<font face=\"Sans Serif\" size=\"+1\"> <b>").append(title).append("</b> </font>").append("<ul>");
+		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider().scale(14)).append("px\"> <b>").append(title).append("</b> </font>").append("<ul>");
 
-		entries.stream().map(entry -> "<li style=\"padding-bottom:3px;list-style-type:decimal\">" + entry + "</li>").forEach(builder::append);
+		entries.stream().map(entry -> "<li style=\"font-size:" + dimensionProvider().scale(11) + "px;padding-bottom::" + dimensionProvider().scale(3) + "px;list-style-type:decimal\">" + entry + "</li>").forEach(builder::append);
 
 		builder.append("</ul>");
 		return builder.toString();
