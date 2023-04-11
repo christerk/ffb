@@ -44,7 +44,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fInputLog = new LinkedList<>();
 		fInputLogPosition = -1;
 
-		fChatTextPane = new ChatLogTextPane(styleProvider);
+		fChatTextPane = new ChatLogTextPane(styleProvider, dimensionProvider);
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 

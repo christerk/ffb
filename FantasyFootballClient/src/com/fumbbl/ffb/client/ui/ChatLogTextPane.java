@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
@@ -18,9 +19,11 @@ public class ChatLogTextPane extends JTextPane {
 	private ChatLogDocument fChatLogDocument;
 	private IReplayMouseListener fReplayMouseListener;
 	private final StyleProvider styleProvider;
+	private final DimensionProvider dimensionProvider;
 
-	public ChatLogTextPane(StyleProvider styleProvider) {
+	public ChatLogTextPane(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
 		this.styleProvider = styleProvider;
+		this.dimensionProvider = dimensionProvider;
 		setEditable(false);
 		((DefaultCaret) getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		detachDocument();
@@ -51,7 +54,7 @@ public class ChatLogTextPane extends JTextPane {
 	}
 
 	public void detachDocument() {
-		fChatLogDocument = new ChatLogDocument(styleProvider);
+		fChatLogDocument = new ChatLogDocument(styleProvider, dimensionProvider);
 	}
 
 	public void attachDocument() {

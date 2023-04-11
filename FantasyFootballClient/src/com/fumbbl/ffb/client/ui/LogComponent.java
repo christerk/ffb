@@ -31,9 +31,9 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 
 	private final FantasyFootballClient fClient;
 
-	public LogComponent(FantasyFootballClient pClient, StyleProvider styleProvider) {
+	public LogComponent(FantasyFootballClient pClient, StyleProvider styleProvider, DimensionProvider dimensionProvider) {
 		fClient = pClient;
-		fLogTextPane = new ChatLogTextPane(styleProvider);
+		fLogTextPane = new ChatLogTextPane(styleProvider, dimensionProvider);
 		fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
 		setLayout(new BorderLayout());
