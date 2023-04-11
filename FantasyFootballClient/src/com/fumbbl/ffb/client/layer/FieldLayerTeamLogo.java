@@ -39,7 +39,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 		int distance = (pX >= 13) ? (25 - pX) : pX;
 		String distanceString = Integer.toString(distance);
 		Graphics2D g2d = getImage().createGraphics();
-		g2d.setFont(fontCache().font(Font.BOLD, 12));
+		g2d.setFont(fontCache.font(Font.BOLD, 12));
 		FontMetrics metrics = g2d.getFontMetrics();
 		Rectangle2D distanceBounds = metrics.getStringBounds(distanceString, g2d);
 		Color distanceColor = (pX >= 13) ? new Color(120, 120, 255) : new Color(255, 120, 120);

@@ -45,9 +45,9 @@ public class FieldLayerMarker extends FieldLayer {
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setColor(COLOR_MARKER);
 			if (pFieldMarker.getHomeText().length() < 2) {
-				g2d.setFont(fontCache().font(Font.BOLD, 16));
+				g2d.setFont(fontCache.font(Font.BOLD, 16));
 			} else {
-				g2d.setFont(fontCache().font(Font.BOLD, 12));
+				g2d.setFont(fontCache.font(Font.BOLD, 12));
 			}
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pFieldMarker.getHomeText(), g2d);

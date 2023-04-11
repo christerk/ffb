@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
@@ -44,7 +45,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 
 	public static final int MAX_BOX_ELEMENTS = 30;
 
-	private static final Font _BOX_FONT = fontCache().font(Font.BOLD, 12);
+	private final FontCache fontCache;
 
 	private final SideBarComponent fSideBar;
 	private BufferedImage fImage;
@@ -54,9 +55,11 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private int fMaxTitleOffset;
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
+	private Font boxFont;
 
-	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 		fSideBar = pSideBar;
+		this.fontCache = fontCache;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;
 		addMouseListener(this);
@@ -102,6 +105,8 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void refresh() {
+		boxFont = fontCache.font(Font.BOLD, 12);
+
 		drawBackground();
 		drawPlayers();
 		repaint();
@@ -318,7 +323,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			}
 			if (title != null) {
 				Graphics2D g2d = fImage.createGraphics();
-				g2d.setFont(_BOX_FONT);
+				g2d.setFont(boxFont);
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D bounds = metrics.getStringBounds(title, g2d);
 				int x = ((size.width - (int) bounds.getWidth()) / 2);

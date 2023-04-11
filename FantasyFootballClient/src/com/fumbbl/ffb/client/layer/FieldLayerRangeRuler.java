@@ -104,7 +104,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 					// [ 0 0 1 ]
 
 					g2d.transform(new AffineTransform(cosPhi, -sinPhi, sinPhi, cosPhi, startCenter.x, startCenter.y));
-					g2d.setFont(fontCache().font(Font.BOLD, 32));
+					g2d.setFont(fontCache.font(Font.BOLD, 32));
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f));
 
 					drawRulerModifier(g2d, (int) length, pRangeRuler.getMinimumRoll());

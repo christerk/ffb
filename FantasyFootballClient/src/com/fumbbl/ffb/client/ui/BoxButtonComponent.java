@@ -6,6 +6,7 @@ import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.model.FieldModel;
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 public class BoxButtonComponent extends JPanel implements MouseListener, MouseMotionListener {
 
-	private static final Font _BUTTON_FONT = fontCache().font(Font.BOLD, 11);
+	private final FontCache fontCache;
 	private final Map<BoxType, Rectangle> fButtonLocations;
 
 	private final SideBarComponent fSideBar;
@@ -43,10 +44,12 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private BoxType fSelectedBox;
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
+	private Font buttonFont;
 	private Dimension size;
 
-	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 		fSideBar = pSideBar;
+		this.fontCache = fontCache;
 		fButtonLocations = new HashMap<>();
 		fOpenBox = null;
 		addMouseListener(this);
@@ -137,7 +140,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON);
 			}
 			g2d.drawImage(buttonImage, buttonLocation.x, buttonLocation.y, buttonLocation.width, buttonLocation.height, null);
-			g2d.setFont(_BUTTON_FONT);
+			g2d.setFont(buttonFont);
 			g2d.setColor(Color.BLACK);
 			FontMetrics metrics = g2d.getFontMetrics();
 			String buttonText = countBoxElements(pBox, getSideBar().isHomeSide()) + " " +
@@ -156,6 +159,8 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void refresh() {
+		buttonFont = fontCache.font(Font.BOLD, 11);
+
 		drawBackground();
 		drawButton(BoxType.RESERVES);
 		drawButton(BoxType.OUT);

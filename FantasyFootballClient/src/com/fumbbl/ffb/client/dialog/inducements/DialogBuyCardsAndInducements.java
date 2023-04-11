@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
@@ -30,8 +31,8 @@ import java.util.Map;
  */
 public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
-	private static final Font BOLD_FONT = fontCache().font(Font.BOLD, 12);
-	private static final Font REGULAR_FONT = fontCache().font(Font.PLAIN, 11);
+	private final Font boldFont;
+	private final Font regularFont;
 	private final JLabel labelAvailableGold, typeLabel;
 	@SuppressWarnings({"FieldCanBeLocal", "unused"})
 	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel,
@@ -59,6 +60,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		choiceTwoButton = new JButton(dimensionProvider());
 		labelAvailableGold = new JLabel(dimensionProvider());
 		typeLabel = new JLabel(dimensionProvider());
+
+		FontCache fontCache = pClient.getUserInterface().getFontCache();
+
+		boldFont = fontCache.font(Font.BOLD, 12);
+		regularFont = fontCache.font(Font.PLAIN, 11);
+
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
 		nrOfCardsPerType = pParameter.getNrOfCardsPerType();
@@ -115,7 +122,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		cardsListPanel.setLayout(new BoxLayout(cardsListPanel, BoxLayout.Y_AXIS));
 		cardsListPanel.add(Box.createVerticalStrut(5));
 		cardsListPanel.setAlignmentX(CENTER_ALIGNMENT);
-		cardsListPanel.add(label("Selected Cards:", BOLD_FONT));
+		cardsListPanel.add(label("Selected Cards:", boldFont));
 
 		JPanel wrapperPanel = new JPanel();
 		wrapperPanel.setLayout(new BoxLayout(wrapperPanel, BoxLayout.Y_AXIS));
@@ -127,12 +134,12 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private void updateSummaryPanel() {
 		cardsSummaryPanel.removeAll();
 		cardsSummaryPanel.add(Box.createVerticalStrut(5));
-		cardsSummaryPanel.add(label("Available Card Slots: " + cardSlots, BOLD_FONT));
+		cardsSummaryPanel.add(label("Available Card Slots: " + cardSlots, boldFont));
 		cardsSummaryPanel.add(Box.createVerticalStrut(5));
-		cardsSummaryPanel.add(label("Available Cards:", BOLD_FONT));
+		cardsSummaryPanel.add(label("Available Cards:", boldFont));
 		nrOfCardsPerType.forEach((key, value) -> {
 			cardsSummaryPanel.add(Box.createVerticalStrut(3));
-			cardsSummaryPanel.add(label(key.getDeckName() + ": " + value, REGULAR_FONT));
+			cardsSummaryPanel.add(label(key.getDeckName() + ": " + value, regularFont));
 		});
 	}
 
@@ -166,7 +173,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		JPanel panelGold = new JPanel();
 		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
 
-		labelAvailableGold.setFont(BOLD_FONT);
+		labelAvailableGold.setFont(boldFont);
 
 		panelGold.add(Box.createHorizontalGlue());
 		panelGold.add(labelAvailableGold);

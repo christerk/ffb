@@ -69,7 +69,7 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 			clear(pCoordinate, true);
 			String numberString = Integer.toString(pNumber);
 			Graphics2D g2d = getImage().createGraphics();
-			g2d.setFont(fontCache().font(Font.BOLD, 15));
+			g2d.setFont(fontCache.font(Font.BOLD, 15));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D numberBounds = metrics.getStringBounds(numberString, g2d);
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
