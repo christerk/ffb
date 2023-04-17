@@ -4,9 +4,7 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 
 import javax.swing.border.TitledBorder;
-import javax.swing.table.JTableHeader;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -28,7 +26,7 @@ public class DimensionProvider {
 	}
 
 	public Dimension dimension(Component component) {
-		return scaleFont(component.dimension(layout));
+		return scale(component.dimension(layout));
 	}
 
 	public boolean isPitchPortrait() {
@@ -111,11 +109,11 @@ public class DimensionProvider {
 		return direction;
 	}
 
-	public Dimension scaleFont(Dimension dimension) {
-		return new Dimension(scaleFont(dimension.width), scaleFont(dimension.height));
+	public Dimension scale(Dimension dimension) {
+		return new Dimension(scale(dimension.width), scale(dimension.height));
 	}
 
-	public int scaleFont(int size) {
+	public int scale(int size) {
 		return (int) (size * scale);
 	}
 
@@ -124,7 +122,7 @@ public class DimensionProvider {
 			return pImage;
 		}
 
-		BufferedImage scaledImage = new BufferedImage(scaleFont(pImage.getWidth()), scaleFont(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage scaledImage = new BufferedImage(scale(pImage.getWidth()), scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
 		at.scale(scale, scale);
 		AffineTransformOp scaleOp =
@@ -137,7 +135,7 @@ public class DimensionProvider {
 	public void scaleFont(java.awt.Component component) {
 		Font font = component.getFont();
 		if (font != null) {
-			component.setFont(new Font(font.getFamily(), font.getStyle(), scaleFont(font.getSize())));
+			component.setFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize())));
 		}
 	}
 
@@ -145,16 +143,9 @@ public class DimensionProvider {
 	public TitledBorder scaleFont(TitledBorder border) {
 		Font font = border.getTitleFont();
 		if (font != null) {
-			border.setTitleFont(new Font(font.getFamily(), font.getStyle(), scaleFont(font.getSize())));
+			border.setTitleFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize())));
 		}
 		return border;
-	}
-
-	public void scaleFont(JTableHeader tableHeader) {
-		Font font = tableHeader.getFont();
-		if (font != null) {
-			tableHeader.setFont(new Font(font.getFamily(), font.getStyle(), scaleFont(font.getSize())));
-		}
 	}
 
 	public enum ClientLayout {

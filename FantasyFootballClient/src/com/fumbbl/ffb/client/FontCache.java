@@ -18,7 +18,7 @@ public class FontCache {
 		Key key = new Key(style, size);
 		if (!fonts.containsKey(key)) {
 			//noinspection MagicConstant
-			fonts.put(key, dimensionProvider.scale(new Font(key.getFace().getName(), key.getStyle(), key.getSize())));
+			fonts.put(key, new Font(key.getFace().getName(), key.getStyle(), dimensionProvider.scale(key.getSize())));
 		}
 		return fonts.get(key);
 	}
@@ -79,5 +79,9 @@ public class FontCache {
 			result = 31 * result + size;
 			return result;
 		}
+	}
+
+	public void clear() {
+		fonts.clear();
 	}
 }

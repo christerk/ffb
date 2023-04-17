@@ -26,13 +26,13 @@ import com.fumbbl.ffb.client.dialog.DialogChangeList;
 import com.fumbbl.ffb.client.dialog.DialogChatCommands;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
 import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
+import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
 import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
-import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
@@ -50,14 +50,8 @@ import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-import javax.swing.JMenuBar;
-import javax.swing.KeyStroke;
-import java.awt.Color;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -101,6 +95,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem fSoundOnMenuItem;
 	private JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
 	private JRadioButtonMenuItem fSoundOffMenuItem;
+
+	private JMenuItem scalingItem;
 
 	private JRadioButtonMenuItem fIconsAbstract;
 	private JRadioButtonMenuItem fIconsRosterOpponent;
@@ -317,6 +313,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createMarkingMenu(fUserSettingsMenu);
 		createBackgroundMenu(fUserSettingsMenu);
 		createFontMenu(fUserSettingsMenu);
+		createScaleItem(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
@@ -716,6 +713,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fSoundMenu.add(fSoundOffMenuItem);
 	}
 
+	private void createScaleItem(JMenu fUserSettingsMenu) {
+		scalingItem = new JMenuItem(dimensionProvider, "Resize");
+		scalingItem.setMnemonic(KeyEvent.VK_E);
+		scalingItem.addActionListener(this);
+		fUserSettingsMenu.add(scalingItem);
+	}
+
 	private void createTeamSetupMenu() {
 		JMenu fTeamSetupMenu = new JMenu(dimensionProvider, "Team Setup");
 		fTeamSetupMenu.setMnemonic(KeyEvent.VK_T);
@@ -942,6 +946,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updatePrayers();
 		updateGameOptions();
 		refreshUi |= updateOrientation();
+		refreshUi |= updateScaling();
 
 		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
@@ -1014,6 +1019,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == fSoundVolumeItem) {
 			showDialog(new DialogSoundVolume(getClient()));
+		}
+		if (source == scalingItem) {
+			showDialog(new DialogScalingFactor(getClient()));
 		}
 		if (source == fSoundOffMenuItem) {
 			getClient().setProperty(IClientProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_OFF);
@@ -1385,10 +1393,21 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
-		if (pDialog.getId() == DialogId.SOUND_VOLUME) {
-			DialogSoundVolume volumeDialog = (DialogSoundVolume) pDialog;
-			getClient().setProperty(IClientProperty.SETTING_SOUND_VOLUME, Integer.toString(volumeDialog.getVolume()));
-			getClient().saveUserSettings(true);
+		switch (pDialog.getId()) {
+			case SOUND_VOLUME:
+				DialogSoundVolume volumeDialog = (DialogSoundVolume) pDialog;
+				getClient().setProperty(IClientProperty.SETTING_SOUND_VOLUME, Integer.toString(volumeDialog.getVolume()));
+				getClient().saveUserSettings(true);
+				break;
+			case SCALING_FACTOR:
+				DialogScalingFactor scalingDialog = (DialogScalingFactor) pDialog;
+				if (scalingDialog.getFactor() != null) {
+					getClient().setProperty(IClientProperty.SETTING_SCALE_FACTOR, Double.toString(scalingDialog.getFactor()));
+					getClient().saveUserSettings(true);
+				}
+				break;
+			default:
+				break;
 		}
 		fDialogShown = null;
 	}
@@ -1401,7 +1420,25 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fDialogShown.showDialog(this);
 	}
 
-	public boolean updateOrientation() {
+	private boolean updateScaling() {
+		String factorValue = getClient().getProperty(IClientProperty.SETTING_SCALE_FACTOR);
+			if (StringTool.isProvided(factorValue)) {
+				try {
+					double factor = Double.parseDouble(factorValue);
+					if (dimensionProvider.getScale() != factor) {
+						dimensionProvider.setScale(factor);
+						getClient().getUserInterface().getIconCache().clear();
+						getClient().getUserInterface().getFontCache().clear();
+						return true;
+					}
+				} catch (Exception ignored) {
+
+				}
+			}
+			return false;
+	}
+
+	private boolean updateOrientation() {
 
 		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
 

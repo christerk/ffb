@@ -475,4 +475,7 @@ public class IconCache {
 		return fClient;
 	}
 
+	public void clear() {
+		scaledIcons.clear();
+	}
 }
