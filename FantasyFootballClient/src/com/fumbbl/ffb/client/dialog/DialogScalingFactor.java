@@ -1,13 +1,18 @@
 package com.fumbbl.ffb.client.dialog;
 
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
@@ -26,7 +31,7 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 
 		super(pClient, "Scaling Factor", true);
 
-		String property = pClient.getProperty(IClientProperty.SETTING_SCALE_FACTOR);
+		String property = pClient.getProperty(CommonProperty.SETTING_SCALE_FACTOR);
 		factor = StringTool.isProvided(property) ? Double.parseDouble(property) : 1.0;
 		if (factor < 0.5) {
 			factor = 0.5;

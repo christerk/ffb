@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 
@@ -13,7 +13,7 @@ public class DialogAutoMarking extends DialogInformation {
 		this(client, null, null);
 	}
 
-	private DialogAutoMarking(FantasyFootballClient client, String setting, String offValue) {
+	private DialogAutoMarking(FantasyFootballClient client, CommonProperty setting, String offValue) {
 		super(client, "Automatic Marking", messages(), DialogInformation.OK_DIALOG, false, null, setting, offValue);
 	}
 
@@ -29,6 +29,6 @@ public class DialogAutoMarking extends DialogInformation {
 	}
 
 	public static DialogAutoMarking create(FantasyFootballClient client, boolean withCheckbox) {
-		return withCheckbox ? new DialogAutoMarking(client, IClientProperty.SETTING_SHOW_AUTO_MARKING_DIALOG, IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG) : new DialogAutoMarking(client);
+		return withCheckbox ? new DialogAutoMarking(client, CommonProperty.SETTING_SHOW_AUTO_MARKING_DIALOG, IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG) : new DialogAutoMarking(client);
 	}
 }

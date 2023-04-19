@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -121,7 +122,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	public void internalFrameOpened(InternalFrameEvent pE) {
 	}
 
-	protected void addMenuPanel(Container contentPane, String menuProperty, String defaultValueKey) {
+	protected void addMenuPanel(Container contentPane, CommonProperty menuProperty, String defaultValueKey) {
 
 		if (!StringTool.isProvided(menuProperty)) {
 			return;

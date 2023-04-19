@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
@@ -41,7 +42,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		this(client, title, messages, iconProperty, "Yes", 'Y', choiceTwoText, choiceTwoMnemonic, "No", 'N', null, null);
 	}
 
-	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty, String menuProperty, String defaultValueKey) {
+	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty, CommonProperty menuProperty, String defaultValueKey) {
 		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', null, 0, "No", 'N', menuProperty, defaultValueKey);
 	}
 
@@ -52,7 +53,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 
 	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
 															String choiceOneText, int choiceOneMnemonic, String choiceTwoText, int choiceTwoMnemonic,
-															String choiceThreeText, int choiceThreeMnemonic, String menuProperty, String defaultValueKey) {
+															String choiceThreeText, int choiceThreeMnemonic, CommonProperty menuProperty, String defaultValueKey) {
 
 		super(pClient, pTitle, false);
 

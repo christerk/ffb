@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryManager;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
@@ -195,8 +196,16 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		System.exit(0);
 	}
 
+	public String getProperty(CommonProperty property) {
+		return getProperty(property.getKey());
+	}
+
 	public String getProperty(String pProperty) {
 		return fProperties.getProperty(pProperty);
+	}
+
+	public void setProperty(CommonProperty pProperty, String pValue) {
+		setProperty(pProperty.getKey(), pValue);
 	}
 
 	public void setProperty(String pProperty, String pValue) {
@@ -211,11 +220,11 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	}
 
 	public void saveUserSettings(boolean pUserinterfaceInit) {
-		String[] settingValues = new String[IClientProperty._SAVED_USER_SETTINGS.length];
-		for (int i = 0; i < IClientProperty._SAVED_USER_SETTINGS.length; i++) {
-			settingValues[i] = getProperty(IClientProperty._SAVED_USER_SETTINGS[i]);
+		String[] settingValues = new String[CommonProperty._SAVED_USER_SETTINGS.length];
+		for (int i = 0; i < CommonProperty._SAVED_USER_SETTINGS.length; i++) {
+			settingValues[i] = getProperty(CommonProperty._SAVED_USER_SETTINGS[i]);
 		}
-		getCommunication().sendUserSettings(IClientProperty._SAVED_USER_SETTINGS, settingValues);
+		getCommunication().sendUserSettings(CommonProperty._SAVED_USER_SETTINGS, settingValues);
 		getClientState().refreshSettings();
 		if (pUserinterfaceInit) {
 			getUserInterface().init(getGame().getOptions());
@@ -304,7 +313,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	public InetAddress getServerHost() throws UnknownHostException {
 		String serverName = StringTool.isProvided(getParameters().getServer()) ? getParameters().getServer()
-				: getProperty(IClientProperty.SERVER_HOST);
+			: getProperty(IClientProperty.SERVER_HOST);
 
 		return InetAddress.getByName(serverName);
 	}

@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
@@ -110,7 +110,7 @@ public class ResourceComponent extends JPanel {
 		if (styleProvider.getFrameBackground() == null) {
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage background;
-			String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+			String swapSetting = fSideBar.getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 			boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
 
 			boolean homeSide = getSideBar().isHomeSide();

@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -315,7 +315,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		gameTitle.setTurnTime(game.getTurnTime());
 		setGameTitle(gameTitle);
 
-		String volumeSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_VOLUME);
+		String volumeSetting = getClient().getProperty(CommonProperty.SETTING_SOUND_VOLUME);
 		int volume = StringTool.isProvided(volumeSetting) ? Integer.parseInt(volumeSetting) : 50;
 		getClient().getUserInterface().getSoundEngine().setVolume(volume);
 

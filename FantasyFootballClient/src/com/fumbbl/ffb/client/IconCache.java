@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.BloodSpot;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
@@ -325,16 +325,16 @@ public class IconCache {
 		}
 		Weather myWeather = pWeather;
 		if (IClientPropertyValue.SETTING_PITCH_WEATHER_OFF
-			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER))) {
+			.equals(getClient().getProperty(CommonProperty.SETTING_PITCH_WEATHER))) {
 			myWeather = Weather.NICE;
 		}
 		String pitchUrl = pGame.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
 		if (!StringTool.isProvided(pitchUrl) || IClientPropertyValue.SETTING_PITCH_DEFAULT
-			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+			.equals(getClient().getProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION))) {
 			pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT);
 		}
 		if (IClientPropertyValue.SETTING_PITCH_BASIC
-			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+			.equals(getClient().getProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION))) {
 			pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_BASIC);
 		}
 		return buildPitchUrl(pitchUrl, myWeather);

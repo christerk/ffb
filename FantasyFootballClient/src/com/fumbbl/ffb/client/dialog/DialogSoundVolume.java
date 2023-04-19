@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.sound.SoundEngine;
@@ -31,7 +31,7 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
 
 		super(pClient, "Sound Volume Setting", true);
 
-		String volumeProperty = pClient.getProperty(IClientProperty.SETTING_SOUND_VOLUME);
+		String volumeProperty = pClient.getProperty(CommonProperty.SETTING_SOUND_VOLUME);
 		fVolume = StringTool.isProvided(volumeProperty) ? Integer.parseInt(volumeProperty) : 50;
 		if (fVolume < 1) {
 			fVolume = 1;

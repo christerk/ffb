@@ -1,14 +1,16 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.CommonProperty;
+
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fumbbl.ffb.IClientProperty.*;
+import static com.fumbbl.ffb.CommonProperty.*;
 
 public class StyleProvider {
 
-	public static Map<String, Color> defaults = new HashMap<String, Color>() {{
+	public static Map<CommonProperty, Color> defaults = new HashMap<CommonProperty, Color>() {{
 		put(SETTING_BACKGROUND_CHAT, Color.WHITE);
 		put(SETTING_BACKGROUND_LOG, Color.WHITE);
 		put(SETTING_BACKGROUND_FRAME_COLOR, Color.WHITE);

@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.animation;
 
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -124,7 +124,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 			fFrames[fPosition].drawCenteredAndScaled(fFieldLayer, fX, fY);
 			if (fFrames[fPosition].getSound() != null) {
 				SoundEngine soundEngine = fFieldLayer.getClient().getUserInterface().getSoundEngine();
-				String soundSetting = fFieldLayer.getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
+				String soundSetting = fFieldLayer.getClient().getProperty(CommonProperty.SETTING_SOUND_MODE);
 				if (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting)
 					|| (IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting))) {
 					soundEngine.playSound(fFrames[fPosition].getSound());

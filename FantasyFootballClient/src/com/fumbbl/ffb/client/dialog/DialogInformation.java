@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
@@ -27,7 +28,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 
 	private final JCheckBox doNotShowAgainCheckbox;
 	private final int fOptionType;
-	private final String panelProperty;
+	private final CommonProperty panelProperty;
 	private final String panelOffValue;
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String pMessage, int pOptionType) {
@@ -45,7 +46,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 	}
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-													 boolean pCenteredText, String pIconProperty, String panelProperty, String panelOffValue) {
+													 boolean pCenteredText, String pIconProperty, CommonProperty panelProperty, String panelOffValue) {
 
 		super(pClient, pTitle, false);
 		fOptionType = pOptionType;

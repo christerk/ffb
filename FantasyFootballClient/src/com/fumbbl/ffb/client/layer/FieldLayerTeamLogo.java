@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -102,11 +102,11 @@ public class FieldLayerTeamLogo extends FieldLayer {
 	public void init() {
 		clear(true);
 		Game game = getClient().getGame();
-		String markingsSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_MARKINGS);
+		String markingsSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_MARKINGS);
 		if (IClientPropertyValue.SETTING_PITCH_MARKINGS_ON.equals(markingsSetting)) {
 			drawDistanceMarkers();
 		}
-		String teamLogosSetting = getClient().getProperty(IClientProperty.SETTING_TEAM_LOGOS);
+		String teamLogosSetting = getClient().getProperty(CommonProperty.SETTING_TEAM_LOGOS);
 		if (IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH.equals(teamLogosSetting)) {
 			drawTeamLogo(game.getTeamHome(), true);
 			drawTeamLogo(game.getTeamAway(), false);

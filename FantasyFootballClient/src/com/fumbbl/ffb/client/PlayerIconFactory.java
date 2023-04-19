@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
@@ -87,7 +87,7 @@ public class PlayerIconFactory {
 		}
 
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
-		String settingIcons = pClient.getProperty(IClientProperty.SETTING_ICONS);
+		String settingIcons = pClient.getProperty(CommonProperty.SETTING_ICONS);
 		BufferedImage icon = null;
 		String iconSetUrl = null;
 
@@ -111,7 +111,7 @@ public class PlayerIconFactory {
 
 		boolean useHomeColor = pHomePlayer;
 
-		String swapSetting = pClient.getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		String swapSetting = pClient.getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
 
 		if (swapColors) {
@@ -317,7 +317,7 @@ public class PlayerIconFactory {
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
 			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
-				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(IClientProperty.SETTING_MARK_USED_PLAYERS))) {
+				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
 				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN), maxIconSize);
 			}
 		}

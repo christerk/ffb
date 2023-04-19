@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
@@ -20,12 +21,12 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 
 	private final JCheckBox doNotShowAgainCheckbox;
 
-	private final String panelProperty; // IClientProperty.SETTING_BLITZ_TARGET_PANEL;
+	private final CommonProperty panelProperty; // CommonProperty.SETTING_BLITZ_TARGET_PANEL;
 	private final String panelOffValue; // IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF;
 	private final DialogId dialogId; // DialogId.SELECT_BLITZ_TARGET;
 
 	public DialogSelectBlitzTarget(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
-	                               DialogId dialogId, String panelProperty, String panelOffValue) {
+																 DialogId dialogId, CommonProperty panelProperty, String panelOffValue) {
 
 		super(pClient, pTitle, false);
 

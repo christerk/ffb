@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.db.insert;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.DbUpdateStatement;
@@ -11,11 +12,11 @@ import com.fumbbl.ffb.server.db.DefaultDbUpdateParameter;
  */
 public class DbUserSettingsInsertParameter extends DefaultDbUpdateParameter {
 
-	private String fCoach;
-	private String fSettingName;
-	private String fSettingValue;
+	private final String fCoach;
+	private final CommonProperty fSettingName;
+	private final String fSettingValue;
 
-	public DbUserSettingsInsertParameter(String pCoach, String pSettingName, String pSettingValue) {
+	public DbUserSettingsInsertParameter(String pCoach, CommonProperty pSettingName, String pSettingValue) {
 		fCoach = pCoach;
 		fSettingName = pSettingName;
 		fSettingValue = pSettingValue;
@@ -25,7 +26,7 @@ public class DbUserSettingsInsertParameter extends DefaultDbUpdateParameter {
 		return fCoach;
 	}
 
-	public String getSettingName() {
+	public CommonProperty getSettingName() {
 		return fSettingName;
 	}
 

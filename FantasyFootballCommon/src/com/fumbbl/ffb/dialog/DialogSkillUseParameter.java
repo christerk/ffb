@@ -2,6 +2,7 @@ package com.fumbbl.ffb.dialog;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -13,10 +14,12 @@ import com.fumbbl.ffb.model.skill.Skill;
  */
 public class DialogSkillUseParameter implements IDialogParameter {
 
-	private String fPlayerId, menuProperty, defaultValueKey;
+	private String fPlayerId, defaultValueKey;
 	private Skill fSkill, modifyingSkill;
 	private int fMinimumRoll;
 	private boolean showNeverUse;
+
+	private CommonProperty menuProperty;
 
 	public DialogSkillUseParameter() {
 		super();
@@ -26,7 +29,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		this(pPlayerId, pSkill, pMinimumRoll, null, null, null, false);
 	}
 
-	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, String menuProperty, String defaultValueKey) {
+	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, CommonProperty menuProperty, String defaultValueKey) {
 		this(pPlayerId, pSkill, pMinimumRoll, null, menuProperty, defaultValueKey, false);
 	}
 
@@ -39,7 +42,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 	}
 
 	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, Skill modifyingSkill,
-																 String menuProperty, String defaultValueKey, boolean showNeverUse) {
+																 CommonProperty menuProperty, String defaultValueKey, boolean showNeverUse) {
 		fPlayerId = pPlayerId;
 		fSkill = pSkill;
 		fMinimumRoll = pMinimumRoll;
@@ -69,7 +72,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		return modifyingSkill;
 	}
 
-	public String getMenuProperty() {
+	public CommonProperty getMenuProperty() {
 		return menuProperty;
 	}
 
@@ -96,7 +99,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		IJsonOption.SKILL.addTo(jsonObject, fSkill);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.MODIFYING_SKILL.addTo(jsonObject, modifyingSkill);
-		IJsonOption.MENU_PROPERTY.addTo(jsonObject, menuProperty);
+		IJsonOption.MENU_PROPERTY.addTo(jsonObject, menuProperty.getKey());
 		IJsonOption.DEFAULT_VALUE_KEY.addTo(jsonObject, defaultValueKey);
 		IJsonOption.SHOW_NEVER_USE.addTo(jsonObject, showNeverUse);
 		return jsonObject;
@@ -109,7 +112,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
 		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
-		menuProperty = IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject);
+		menuProperty = CommonProperty.forKey(IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject));
 		defaultValueKey = IJsonOption.DEFAULT_VALUE_KEY.getFrom(source, jsonObject);
 		if (IJsonOption.SHOW_NEVER_USE.isDefinedIn(jsonObject)) {
 			showNeverUse = IJsonOption.SHOW_NEVER_USE.getFrom(source, jsonObject);

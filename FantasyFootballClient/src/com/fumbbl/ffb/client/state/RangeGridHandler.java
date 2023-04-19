@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -56,7 +56,7 @@ public class RangeGridHandler {
 	}
 
 	public void refreshSettings() {
-		String rangeGridSettingProperty = getClient().getProperty(IClientProperty.SETTING_RANGEGRID);
+		String rangeGridSettingProperty = getClient().getProperty(CommonProperty.SETTING_RANGEGRID);
 		if (!fShowRangeGrid && IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON.equals(rangeGridSettingProperty)) {
 			setShowRangeGrid(true);
 			refreshRangeGrid();

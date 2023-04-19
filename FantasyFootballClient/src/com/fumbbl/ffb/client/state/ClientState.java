@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
@@ -223,7 +223,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			} else {
 				if (isClickable()) {
 					hideSelectSquare();
-					String rightClickProperty = getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION);
+					String rightClickProperty = getClient().getProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION);
 					if (getClient().getGame().getActingPlayer().getPlayer() != null
 						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
 						if (!getClient().getGame().getTurnMode().isBombTurn()) {

@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.CardEffect;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.InjuryAttribute;
@@ -105,7 +105,7 @@ public class PlayerDetailComponent extends JPanel {
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 
-		String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		String swapSetting = fSideBar.getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
 
 		if (styleProvider.getFrameBackground() == null) {

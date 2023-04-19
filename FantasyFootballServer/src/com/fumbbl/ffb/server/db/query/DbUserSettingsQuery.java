@@ -1,5 +1,12 @@
 package com.fumbbl.ffb.server.db.query;
 
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.server.FantasyFootballServer;
+import com.fumbbl.ffb.server.db.DbStatement;
+import com.fumbbl.ffb.server.db.DbStatementId;
+import com.fumbbl.ffb.server.db.IDbTableUserSettings;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,12 +14,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.server.FantasyFootballServer;
-import com.fumbbl.ffb.server.db.DbStatement;
-import com.fumbbl.ffb.server.db.DbStatementId;
-import com.fumbbl.ffb.server.db.IDbTableUserSettings;
 
 /**
  *
@@ -48,7 +49,7 @@ public class DbUserSettingsQuery extends DbStatement {
 
 	private String fCoach;
 
-	private Map<String, String> fSettings;
+	private final Map<String, String> fSettings;
 
 	public DbUserSettingsQuery(FantasyFootballServer pServer) {
 		super(pServer);
@@ -61,9 +62,7 @@ public class DbUserSettingsQuery extends DbStatement {
 
 	public void prepare(Connection pConnection) {
 		try {
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT * FROM ").append(IDbTableUserSettings.TABLE_NAME).append(" WHERE coach=? ORDER BY name");
-			fStatement = pConnection.prepareStatement(sql.toString());
+			fStatement = pConnection.prepareStatement("SELECT * FROM " + IDbTableUserSettings.TABLE_NAME + " WHERE coach=? ORDER BY name");
 		} catch (SQLException sqlE) {
 			throw new FantasyFootballException(sqlE);
 		}
@@ -93,6 +92,10 @@ public class DbUserSettingsQuery extends DbStatement {
 		String[] names = fSettings.keySet().toArray(new String[fSettings.size()]);
 		Arrays.sort(names);
 		return names;
+	}
+
+	public String getSettingValue(CommonProperty setting) {
+		return getSettingValue(setting.getKey());
 	}
 
 	public String getSettingValue(String pSettingName) {

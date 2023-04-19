@@ -1,10 +1,10 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
@@ -71,7 +71,7 @@ public class ClientStateMove extends ClientState {
 			setCustomCursor(moveSquare);
 		} else {
 			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-			String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
+			String automoveProperty = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
 			if ((actingPlayer != null) && (actingPlayer.getPlayerAction() != null)
 				&& actingPlayer.getPlayerAction().isMoving() && ArrayTool.isProvided(game.getFieldModel().getMoveSquares())
 				&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
@@ -501,7 +501,7 @@ public class ClientStateMove extends ClientState {
 
 	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,
 																	ActingPlayer actingPlayer) {
-		String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
+		String automoveProperty = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
 		if (actingPlayer != null
 			&& actingPlayer.getPlayerAction() != null
 			&& actingPlayer.getPlayerAction().isMoving()

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.handler;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -34,8 +35,8 @@ public class ServerCommandHandlerUserSettings extends ServerCommandHandler {
 			dbTransaction.add(new DbUserSettingsDeleteParameter(coach));
 
 			DbUserSettingsInsertParameterList insertParameters = new DbUserSettingsInsertParameterList();
-			String[] settingNames = userSettingsCommand.getSettingNames();
-			for (String settingName : settingNames) {
+			CommonProperty[] settingNames = userSettingsCommand.getSettingNames();
+			for (CommonProperty settingName : settingNames) {
 				insertParameters.addParameter(coach, settingName, userSettingsCommand.getSettingValue(settingName));
 			}
 			dbTransaction.add(insertParameters);

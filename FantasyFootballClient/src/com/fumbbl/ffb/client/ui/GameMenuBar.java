@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.ConcedeGameStatus;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FantasyFootballException;
@@ -50,8 +51,14 @@ import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JColorChooser;
+import javax.swing.JMenuBar;
+import javax.swing.KeyStroke;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -200,7 +207,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final List<Prayer> currentPrayersHome = new ArrayList<>();
 	private final List<Prayer> currentPrayersAway = new ArrayList<>();
-	private final Map<String, JMenu> exposedMenus = new HashMap<>();
+	private final Map<CommonProperty, JMenu> exposedMenus = new HashMap<>();
 
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
@@ -523,7 +530,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private void createBallAndChainMenu(JMenu fUserSettingsMenu) {
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
 		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, "Ask for Whirling Dervish");
-		exposedMenus.put(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
+		exposedMenus.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
 		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
 
@@ -809,117 +816,117 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		Game game = getClient().getGame();
 
-		String soundSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
+		String soundSetting = getClient().getProperty(CommonProperty.SETTING_SOUND_MODE);
 		fSoundOnMenuItem.setSelected(true);
 		fSoundMuteSpectatorsMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting));
 		fSoundOffMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_OFF.equals(soundSetting));
 
-		String iconsSetting = getClient().getProperty(IClientProperty.SETTING_ICONS);
+		String iconsSetting = getClient().getProperty(CommonProperty.SETTING_ICONS);
 		fIconsTeam.setSelected(true);
 		fIconsRosterOpponent.setSelected(IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(iconsSetting));
 		fIconsRosterBoth.setSelected(IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(iconsSetting));
 		fIconsAbstract.setSelected(IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(iconsSetting));
 
-		String automoveSetting = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
+		String automoveSetting = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
 
-		String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
+		String blitzTargetPanelSetting = getClient().getProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL);
 		fBlitzPanelOnMenuItem.setSelected(true);
 		fBlitzPanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting));
 
-		String gazeTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL);
+		String gazeTargetPanelSetting = getClient().getProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL);
 		gazePanelOnMenuItem.setSelected(true);
 		gazePanelOffMenuItem.setSelected(IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF.equals(gazeTargetPanelSetting));
 
-		String rightClickEndActionSetting = getClient().getProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION);
+		String rightClickEndActionSetting = getClient().getProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION);
 		rightClickEndActionOffMenuItem.setSelected(true);
 		rightClickEndActionOnMenuItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickEndActionSetting));
 		rightClickLegacyModeItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickEndActionSetting));
 		rightClickOpensContextMenuItem.setSelected(IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU.equals(rightClickEndActionSetting));
 
-		String reRollBallAndChainSetting = getClient().getProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
+		String reRollBallAndChainSetting = getClient().getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
 		reRollBallAndChainAlwaysMenuItem.setSelected(true);
 		reRollBallAndChainTeamMateMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE.equals(reRollBallAndChainSetting));
 		reRollBallAndChainNoOpponentMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT.equals(reRollBallAndChainSetting));
 		reRollBallAndChainNeverMenuItem.setSelected(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER.equals(reRollBallAndChainSetting));
 
-		String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
+		String pitchCustomizationSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
 		fDefaultPitchMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(pitchCustomizationSetting));
 		fBasicPitchMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_BASIC.equals(pitchCustomizationSetting));
 
-		String pitchMarkingsSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_MARKINGS);
+		String pitchMarkingsSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_MARKINGS);
 		fPitchMarkingsOffMenuItem.setSelected(true);
 		fPitchMarkingsOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ON.equals(pitchMarkingsSetting));
 
-		String orientationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION);
+		String orientationSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
 		pitchLandscapeMenuItem.setSelected(true);
 		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(orientationSetting));
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
 
-		String teamLogosSetting = getClient().getProperty(IClientProperty.SETTING_TEAM_LOGOS);
+		String teamLogosSetting = getClient().getProperty(CommonProperty.SETTING_TEAM_LOGOS);
 		fTeamLogoBothMenuItem.setSelected(true);
 		fTeamLogoOwnMenuItem.setSelected(IClientPropertyValue.SETTING_TEAM_LOGOS_OWN.equals(teamLogosSetting));
 		fTeamLogoNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TEAM_LOGOS_NONE.equals(teamLogosSetting));
 
-		String pitchWeatherSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER);
+		String pitchWeatherSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_WEATHER);
 		fPitchWeatherOnMenuItem.setSelected(true);
 		fPitchWeatherOffMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_WEATHER_OFF.equals(pitchWeatherSetting));
 
-		String rangeGridSetting = getClient().getProperty(IClientProperty.SETTING_RANGEGRID);
+		String rangeGridSetting = getClient().getProperty(CommonProperty.SETTING_RANGEGRID);
 		fRangeGridToggleMenuItem.setSelected(true);
 		fRangeGridAlwaysOnMenuItem.setSelected(IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON.equals(rangeGridSetting));
 
-		String markUsedPlayersSetting = getClient().getProperty(IClientProperty.SETTING_MARK_USED_PLAYERS);
+		String markUsedPlayersSetting = getClient().getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS);
 		markUsedPlayersDefaultMenuItem.setSelected(true);
 		markUsedPlayersCheckIconGreenMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(markUsedPlayersSetting));
 
-		String playerMarkingSetting = getClient().getProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE);
+		String playerMarkingSetting = getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
 		playersMarkingManualMenuItem.setSelected(true);
 		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
 
-		boolean refreshUi = refreshColorMenu(IClientProperty.SETTING_BACKGROUND_CHAT, chatBackground,
+		boolean refreshUi = refreshColorMenu(CommonProperty.SETTING_BACKGROUND_CHAT, chatBackground,
 			styleProvider::getChatBackground, styleProvider::setChatBackground);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_BACKGROUND_LOG, logBackground,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_BACKGROUND_LOG, logBackground,
 			styleProvider::getLogBackground, styleProvider::setLogBackground);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_TEXT, textFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_TEXT, textFontColor,
 			styleProvider::getText, styleProvider::setText);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_AWAY, awayFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_AWAY, awayFontColor,
 			styleProvider::getAwayUnswapped, styleProvider::setAway);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_HOME, homeFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_HOME, homeFontColor,
 			styleProvider::getHomeUnswapped, styleProvider::setHome);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_SPEC, specFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_SPEC, specFontColor,
 			styleProvider::getSpec, styleProvider::setSpec);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_ADMIN, adminFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_ADMIN, adminFontColor,
 			styleProvider::getAdmin, styleProvider::setAdmin);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_DEV, devFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_DEV, devFontColor,
 			styleProvider::getDev, styleProvider::setDev);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_FRAME, frameFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_FRAME, frameFontColor,
 			styleProvider::getFrame, styleProvider::setFrame);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_FRAME_SHADOW, frameFontShadowColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_FRAME_SHADOW, frameFontShadowColor,
 			styleProvider::getFrameShadow, styleProvider::setFrameShadow);
 
-		refreshUi |= refreshColorMenu(IClientProperty.SETTING_FONT_COLOR_INPUT, inputFontColor,
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_INPUT, inputFontColor,
 			styleProvider::getInput, styleProvider::setInput);
 
-		String frameBackgroundSetting = getClient().getProperty(IClientProperty.SETTING_BACKGROUND_FRAME);
+		String frameBackgroundSetting = getClient().getProperty(CommonProperty.SETTING_BACKGROUND_FRAME);
 		frameBackgroundIcons.setSelected(true);
 		boolean useColorForFrames = IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR.equals(frameBackgroundSetting);
 		frameBackgroundColor.setSelected(useColorForFrames);
 
 		refreshUi |= refreshFrameBackgroundMenu(useColorForFrames);
 
-		String swapTeamColorsSetting = getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		String swapTeamColorsSetting = getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 		swapTeamColorsOffMenuItem.setSelected(true);
 		boolean swapTeamColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapTeamColorsSetting);
 		swapTeamColorsOnMenuItem.setSelected(swapTeamColors);
@@ -963,7 +970,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		Color newColor = null;
 
 		if (useColor) {
-			newColor = new Color(Integer.parseInt(getClient().getProperty(IClientProperty.SETTING_BACKGROUND_FRAME_COLOR)));
+			newColor = new Color(Integer.parseInt(getClient().getProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR)));
 			frameBackgroundColor.setIcon(createColorIcon(newColor));
 		}
 
@@ -972,7 +979,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return !Objects.equals(oldColor, newColor);
 	}
 
-	private boolean refreshColorMenu(String key, JMenuItem customItem,
+	private boolean refreshColorMenu(CommonProperty key, JMenuItem customItem,
 																	 Supplier<Color> oldColor, Consumer<Color> setter) {
 
 		if (getClient().getUserInterface() == null) {
@@ -1024,31 +1031,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			showDialog(new DialogScalingFactor(getClient()));
 		}
 		if (source == fSoundOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_OFF);
+			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_OFF);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fSoundMuteSpectatorsMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS);
+			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fSoundOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_ON);
+			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_ON);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fIconsTeam) {
-			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_TEAM);
+			getClient().setProperty(CommonProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_TEAM);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fIconsRosterOpponent) {
-			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT);
+			getClient().setProperty(CommonProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fIconsRosterBoth) {
-			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH);
+			getClient().setProperty(CommonProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fIconsAbstract) {
-			getClient().setProperty(IClientProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ABSTRACT);
+			getClient().setProperty(CommonProperty.SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ABSTRACT);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fAboutMenuItem) {
@@ -1070,155 +1077,155 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			showDialog(new DialogGameStatistics(getClient()));
 		}
 		if (source == fAutomoveOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_OFF);
+			getClient().setProperty(CommonProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_OFF);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fAutomoveOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_ON);
+			getClient().setProperty(CommonProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_ON);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fBlitzPanelOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
+			getClient().setProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fBlitzPanelOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON);
+			getClient().setProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON);
 			getClient().saveUserSettings(false);
 		}
 		if (source == gazePanelOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_ON);
+			getClient().setProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_ON);
 			getClient().saveUserSettings(false);
 		}
 		if (source == gazePanelOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF);
+			getClient().setProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF);
 			getClient().saveUserSettings(false);
 		}
 		if (source == rightClickEndActionOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON);
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON);
 			getClient().saveUserSettings(false);
 		}
 		if (source == rightClickLegacyModeItem) {
-			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
 			getClient().saveUserSettings(false);
 		}
 		if (source == rightClickOpensContextMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
 			getClient().saveUserSettings(false);
 		}
 		if (source == rightClickEndActionOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_OFF);
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_OFF);
 			getClient().saveUserSettings(false);
 		}
 		if (source == reRollBallAndChainAlwaysMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
 			getClient().saveUserSettings(false);
 		}
 		if (source == reRollBallAndChainTeamMateMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
 			getClient().saveUserSettings(false);
 		}
 		if (source == reRollBallAndChainNoOpponentMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
 			getClient().saveUserSettings(false);
 		}
 		if (source == reRollBallAndChainNeverMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
 			getClient().saveUserSettings(false);
 		}
 		if (source == fCustomPitchMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fDefaultPitchMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_DEFAULT);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_DEFAULT);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fBasicPitchMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_BASIC);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_BASIC);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchMarkingsOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_OFF);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_OFF);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchMarkingsOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_ON);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_ON);
 			getClient().saveUserSettings(true);
 		}
 		if (source == pitchLandscapeMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_LANDSCAPE);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_LANDSCAPE);
 			getClient().saveUserSettings(true);
 		}
 		if (source == pitchPortraitMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
 			getClient().saveUserSettings(true);
 		}
 		if (source == layoutSquareMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fTeamLogoBothMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
+			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fTeamLogoOwnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_OWN);
+			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_OWN);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fTeamLogoNoneMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_NONE);
+			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_NONE);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fCustomPitchMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchWeatherOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_ON);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_ON);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fPitchWeatherOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_OFF);
+			getClient().setProperty(CommonProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_OFF);
 			getClient().saveUserSettings(true);
 		}
 		if (source == fRangeGridAlwaysOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);
+			getClient().setProperty(CommonProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);
 			getClient().saveUserSettings(false);
 		}
 
 		if (source == markUsedPlayersCheckIconGreenMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN);
+			getClient().setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN);
 			getClient().saveUserSettings(true);
 		}
 
 		if (source == markUsedPlayersDefaultMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_DEFAULT);
+			getClient().setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_DEFAULT);
 			getClient().saveUserSettings(true);
 		}
 
 		if (source == playersMarkingAutoMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+			getClient().setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
 			getClient().saveUserSettings(true);
 			getClient().getCommunication().sendUpdatePlayerMarkings(true);
 
-			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(getClient().getProperty(IClientProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
+			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(getClient().getProperty(CommonProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
 				showDialog(DialogAutoMarking.create(getClient(), true));
 			}
 		}
 
 		if (source == playersMarkingManualMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+			getClient().setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
 			getClient().saveUserSettings(true);
 			getClient().getCommunication().sendUpdatePlayerMarkings(false);
 		}
 
 		if (source == swapTeamColorsOffMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_OFF);
+			getClient().setProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_OFF);
 			getClient().saveUserSettings(true);
 		}
 
 		if (source == swapTeamColorsOnMenuItem) {
-			getClient().setProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON);
+			getClient().setProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON);
 			getClient().saveUserSettings(true);
 		}
 
@@ -1226,7 +1233,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getChatBackground();
 			Color color = JColorChooser.showDialog(this, "Choose chat background color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1235,22 +1242,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getLogBackground();
 			Color color = JColorChooser.showDialog(this, "Choose log background color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
 
 		if (source == frameBackgroundIcons) {
-			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_ICONS);
+			getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_ICONS);
 			getClient().saveUserSettings(true);
 		}
 
 		if (source == frameBackgroundColor) {
-			getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR);
+			getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR);
 			Color defaultColor = styleProvider.getFrameBackground();
 			Color color = JColorChooser.showDialog(this, "Choose sidebar and scoreboard background color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_BACKGROUND_FRAME_COLOR, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR, String.valueOf(color.getRGB()));
 			}
 			getClient().saveUserSettings(true);
 		}
@@ -1259,7 +1266,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getText();
 			Color color = JColorChooser.showDialog(this, "Choose text color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_TEXT, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_TEXT, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1268,7 +1275,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getAwayUnswapped();
 			Color color = JColorChooser.showDialog(this, "Choose away color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_AWAY, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_AWAY, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1277,7 +1284,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getHomeUnswapped();
 			Color color = JColorChooser.showDialog(this, "Choose home color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_HOME, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_HOME, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1286,7 +1293,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getSpec();
 			Color color = JColorChooser.showDialog(this, "Choose spec color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_SPEC, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_SPEC, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1295,7 +1302,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getAdmin();
 			Color color = JColorChooser.showDialog(this, "Choose admin color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_ADMIN, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_ADMIN, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1304,7 +1311,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getDev();
 			Color color = JColorChooser.showDialog(this, "Choose dev color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_DEV, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_DEV, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1313,7 +1320,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getFrame();
 			Color color = JColorChooser.showDialog(this, "Choose frane color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_FRAME, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_FRAME, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1322,7 +1329,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getFrameShadow();
 			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_FRAME_SHADOW, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_FRAME_SHADOW, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1331,7 +1338,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color defaultColor = styleProvider.getInput();
 			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
 			if (color != null) {
-				getClient().setProperty(IClientProperty.SETTING_FONT_COLOR_INPUT, String.valueOf(color.getRGB()));
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_INPUT, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}
@@ -1347,15 +1354,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		if (source == resetColors) {
-			resetColors(IClientProperty.COLOR_SETTINGS);
+			resetColors(CommonProperty.COLOR_SETTINGS);
 		}
 
 		if (source == resetBackgroundColors) {
-			resetColors(IClientProperty.BACKGROUND_COLOR_SETTINGS);
+			resetColors(CommonProperty.BACKGROUND_COLOR_SETTINGS);
 		}
 
 		if (source == resetFontColors) {
-			resetColors(IClientProperty.FONT_COLOR_SETTINGS);
+			resetColors(CommonProperty.FONT_COLOR_SETTINGS);
 		}
 
 		if (source == fGameReplayMenuItem) {
@@ -1367,8 +1374,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 	}
 
-	private void resetColors(String[] settings) {
-		for (String setting : settings) {
+	private void resetColors(CommonProperty[] settings) {
+		for (CommonProperty setting : settings) {
 			getClient().setProperty(setting, String.valueOf(StyleProvider.defaults.get(setting).getRGB()));
 		}
 		getClient().saveUserSettings(true);
@@ -1396,13 +1403,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		switch (pDialog.getId()) {
 			case SOUND_VOLUME:
 				DialogSoundVolume volumeDialog = (DialogSoundVolume) pDialog;
-				getClient().setProperty(IClientProperty.SETTING_SOUND_VOLUME, Integer.toString(volumeDialog.getVolume()));
+				getClient().setProperty(CommonProperty.SETTING_SOUND_VOLUME, Integer.toString(volumeDialog.getVolume()));
 				getClient().saveUserSettings(true);
 				break;
 			case SCALING_FACTOR:
 				DialogScalingFactor scalingDialog = (DialogScalingFactor) pDialog;
 				if (scalingDialog.getFactor() != null) {
-					getClient().setProperty(IClientProperty.SETTING_SCALE_FACTOR, Double.toString(scalingDialog.getFactor()));
+					getClient().setProperty(CommonProperty.SETTING_SCALE_FACTOR, Double.toString(scalingDialog.getFactor()));
 					getClient().saveUserSettings(true);
 				}
 				break;
@@ -1421,7 +1428,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private boolean updateScaling() {
-		String factorValue = getClient().getProperty(IClientProperty.SETTING_SCALE_FACTOR);
+		String factorValue = getClient().getProperty(CommonProperty.SETTING_SCALE_FACTOR);
 			if (StringTool.isProvided(factorValue)) {
 				try {
 					double factor = Double.parseDouble(factorValue);
@@ -1442,7 +1449,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
 
-		String orientation = getClient().getProperty(IClientProperty.SETTING_PITCH_ORIENTATION);
+		String orientation = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
 
 		if (orientation != null) {
 			switch (orientation) {
@@ -1922,12 +1929,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return Arrays.stream(allCards).collect(Collectors.groupingBy(Card::getType));
 	}
 
-	public String menuName(String menuProperty) {
+	public String menuName(CommonProperty menuProperty) {
 		JMenu exposedMenu = exposedMenus.get(menuProperty);
 		return exposedMenu != null ? exposedMenu.getText() : "";
 	}
 
-	public Map<String, String> menuEntries(String menuProperty) {
+	public Map<String, String> menuEntries(CommonProperty menuProperty) {
 		Map<String, String> entries = new LinkedHashMap<>();
 
 		JMenu exposedMenu = exposedMenus.get(menuProperty);

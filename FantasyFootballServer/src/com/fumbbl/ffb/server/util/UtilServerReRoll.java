@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.util;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.PlayerState;
@@ -132,7 +133,7 @@ public class UtilServerReRoll {
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
 																								int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill,
-																								String menuProperty, String defaultValueKey) {
+																								CommonProperty menuProperty, String defaultValueKey) {
 		boolean dialogShown = false;
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {
