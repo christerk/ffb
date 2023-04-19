@@ -3,46 +3,45 @@ package com.fumbbl.ffb;
 import java.util.Arrays;
 
 public enum CommonProperty {
-	SETTING_RE_ROLL_BALL_AND_CHAIN("setting.reRollBallAndChain"),
-	SETTING_PLAYER_MARKING_TYPE("setting.playerMarkingType"),
+	SETTING_RE_ROLL_BALL_AND_CHAIN("setting.reRollBallAndChain", "Ask for Whirling Dervish"),
+	SETTING_PLAYER_MARKING_TYPE("setting.playerMarkingType", "Player Marking"),
 
-	SETTING_SOUND_MODE("setting.sound.mode"),
-	SETTING_SOUND_VOLUME("setting.sound.volume"),
-	SETTING_ICONS("setting.icons"),
-	SETTING_CHATLOG("setting.chatlog"),
-	SETTING_AUTOMOVE("setting.automove"),
-	SETTING_BLITZ_TARGET_PANEL("setting.blitzTargetPanel"),
-	SETTING_GAZE_TARGET_PANEL("setting.gazeTargetPanel"),
-	SETTING_RIGHT_CLICK_END_ACTION("setting.rightClickEndAction"),
-	SETTING_PITCH_CUSTOMIZATION("setting.pitch.customization"),
-	SETTING_PITCH_MARKINGS("setting.pitch.markings"),
-	SETTING_TEAM_LOGOS("setting.pitch.teamLogos"),
-	SETTING_PITCH_WEATHER("setting.pitch.weather"),
-	SETTING_RANGEGRID("setting.rangegrid"),
-	SETTING_PITCH_ORIENTATION("setting.pitch.orientation"),
-	SETTING_MARK_USED_PLAYERS("setting.mark.used.players"),
-	SETTING_SHOW_AUTO_MARKING_DIALOG("setting.show.autoMarkingDialog"),
-	SETTING_SWAP_TEAM_COLORS("setting.swap.team.colors"),
-	SETTING_BACKGROUND_CHAT("setting.background.chat"),
-	SETTING_BACKGROUND_LOG("setting.background.log"),
-	SETTING_BACKGROUND_FRAME("setting.background.frame"),
-	SETTING_BACKGROUND_FRAME_COLOR("setting.background.frame.color"),
-	SETTING_FONT_COLOR_TEXT("setting.font.color.text"),
-	SETTING_FONT_COLOR_AWAY("setting.font.color.away"),
-	SETTING_FONT_COLOR_HOME("setting.font.color.home"),
-	SETTING_FONT_COLOR_SPEC("setting.font.color.spec"),
-	SETTING_FONT_COLOR_DEV("setting.font.color.dev"),
-	SETTING_FONT_COLOR_ADMIN("setting.font.color.admin"),
-	SETTING_FONT_COLOR_FRAME("setting.font.color.frame"),
-	SETTING_FONT_COLOR_FRAME_SHADOW("setting.font.color.frameShadow"),
-	SETTING_FONT_COLOR_INPUT("setting.font.color.input"),
+	SETTING_SOUND_MODE("setting.sound.mode", "Sound"),
+	SETTING_SOUND_VOLUME("setting.sound.volume", "Sound Volume"),
+	SETTING_ICONS("setting.icons", "Icons"),
+	SETTING_AUTOMOVE("setting.automove", "Automove"),
+	SETTING_BLITZ_TARGET_PANEL("setting.blitzTargetPanel", "Blitz Target Panel"),
+	SETTING_GAZE_TARGET_PANEL("setting.gazeTargetPanel", "Gaze Target Panel"),
+	SETTING_RIGHT_CLICK_END_ACTION("setting.rightClickEndAction", "Right Click Behaviour"),
+	SETTING_PITCH_CUSTOMIZATION("setting.pitch.customization", "Pitch Customization"),
+	SETTING_PITCH_MARKINGS("setting.pitch.markings", "Pitch Markings"),
+	SETTING_TEAM_LOGOS("setting.pitch.teamLogos", "Team Logo"),
+	SETTING_PITCH_WEATHER("setting.pitch.weather", "Pitch Weather"),
+	SETTING_RANGEGRID("setting.rangegrid", "Range Grid"),
+	SETTING_PITCH_ORIENTATION("setting.pitch.orientation", "Pitch Orientation"),
+	SETTING_MARK_USED_PLAYERS("setting.mark.used.players", "Mark used players"),
+	SETTING_SHOW_AUTO_MARKING_DIALOG("setting.show.autoMarkingDialog", "Show automarking dialog"),
+	SETTING_SWAP_TEAM_COLORS("setting.swap.team.colors", "Swap team colors"),
+	SETTING_BACKGROUND_CHAT("setting.background.chat", "Chat", "Background Color:"),
+	SETTING_BACKGROUND_LOG("setting.background.log", "Log", "Background Color:"),
+	SETTING_BACKGROUND_FRAME("setting.background.frame", "Frame", "Background:"),
+	SETTING_BACKGROUND_FRAME_COLOR("setting.background.frame.color", "Color", "Background Frame:"),
+	SETTING_FONT_COLOR_TEXT("setting.font.color.text", "Regular text", "Font Color:"),
+	SETTING_FONT_COLOR_AWAY("setting.font.color.away", "Away", "Font Color:"),
+	SETTING_FONT_COLOR_HOME("setting.font.color.home", "Home", "Font Color:"),
+	SETTING_FONT_COLOR_SPEC("setting.font.color.spec", "Spectators", "Font Color:"),
+	SETTING_FONT_COLOR_DEV("setting.font.color.dev", "Devs", "Font Color:"),
+	SETTING_FONT_COLOR_ADMIN("setting.font.color.admin", "Admin", "Font Color:"),
+	SETTING_FONT_COLOR_FRAME("setting.font.color.frame", "Sidebar/Scoreboard", "Font Color:"),
+	SETTING_FONT_COLOR_FRAME_SHADOW("setting.font.color.frameShadow", "Sidebar/Scoreboard shadow", "Font Color:"),
+	SETTING_FONT_COLOR_INPUT("setting.font.color.input", "Chat input", "Font Color:"),
 
-	SETTING_LAST_CHANGE_LOG_FINGERPRINT("setting.lastChangeLogFingerPrint"),
+	SETTING_LAST_CHANGE_LOG_FINGERPRINT("setting.lastChangeLogFingerPrint", "What's new?"),
 
-	SETTING_SCALE_FACTOR("setting.scaleFactor");
+	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size");
 
-	public static CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
-		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_CHATLOG, SETTING_RIGHT_CLICK_END_ACTION,
+	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
+		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_RIGHT_CLICK_END_ACTION,
 		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
 		SETTING_PITCH_MARKINGS, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,
 		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT, SETTING_RE_ROLL_BALL_AND_CHAIN, SETTING_MARK_USED_PLAYERS,
@@ -53,24 +52,34 @@ public enum CommonProperty {
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT,
 		SETTING_SCALE_FACTOR
 	};
-	public static CommonProperty[] COLOR_SETTINGS = {
+	public static final CommonProperty[] COLOR_SETTINGS = {
 		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG,
 		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
 		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT
 	};
-	public static CommonProperty[] BACKGROUND_COLOR_SETTINGS = {
+	public static final CommonProperty[] BACKGROUND_COLOR_SETTINGS = {
 		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG, SETTING_BACKGROUND_FRAME_COLOR
 	};
-	public static CommonProperty[] FONT_COLOR_SETTINGS = {
+	public static final CommonProperty[] FONT_COLOR_SETTINGS = {
 		SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
 		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW
 	};
 	private final String key;
 
-	CommonProperty(String key) {
+	private final String value;
+
+	private final String prefix;
+
+	CommonProperty(String key, String value) {
+		this(key, value, "");
+	}
+
+	CommonProperty(String key, String value, String prefix) {
 		this.key = key;
+		this.value = value;
+		this.prefix = prefix;
 	}
 
 	public static CommonProperty forKey(String key) {
@@ -79,5 +88,13 @@ public enum CommonProperty {
 
 	public String getKey() {
 		return key;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public String getQualifiedValue() {
+		return (prefix + " " + value).trim();
 	}
 }
