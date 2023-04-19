@@ -239,13 +239,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
 
-		createGameMenu();
-		createTeamSetupMenu();
-		createUserSettingsMenu();
-		createGameStatusMenus();
-		createHelpMenu();
-
-		refresh();
+		init();
 
 	}
 
@@ -809,6 +803,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fCurrentUsedCardsAway = 0;
 		fCurrentActiveCardsHome = null;
 		fCurrentActiveCardsAway = null;
+
+		this.removeAll();
+
+		createGameMenu();
+		createTeamSetupMenu();
+		createUserSettingsMenu();
+		createGameStatusMenus();
+		createHelpMenu();
+
 		refresh();
 	}
 
