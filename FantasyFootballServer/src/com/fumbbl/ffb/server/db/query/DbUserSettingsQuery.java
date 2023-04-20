@@ -35,7 +35,11 @@ public class DbUserSettingsQuery extends DbStatement {
 			try (ResultSet resultSet = fStatement.executeQuery()) {
 				while (resultSet.next()) {
 					QueryResult queryResult = new QueryResult(resultSet);
-					fSettings.put(CommonProperty.forKey(queryResult.getSettingName()), queryResult.getSettingValue());
+
+					CommonProperty key = CommonProperty.forKey(queryResult.getSettingName());
+					if (key != null) {
+						fSettings.put(key, queryResult.getSettingValue());
+					}
 				}
 			}
 		} catch (SQLException sqlE) {

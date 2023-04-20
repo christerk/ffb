@@ -45,14 +45,11 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	private Game fGame;
 	private final UserInterface fUserInterface;
 	private final ClientCommunication fCommunication;
-	private final Thread fCommunicationThread;
 	private Timer fPingTimer;
-	private ClientPingTask fClientPingTask;
 	private Properties fProperties;
 	private ClientState fState;
 	private final ClientStateFactory fStateFactory;
 	private final ClientCommandHandlerFactory fCommandHandlerFactory;
-	private boolean fConnectionEstablished;
 	private final ActionKeyBindings fActionKeyBindings;
 	private final ClientReplayer fReplayer;
 	private final ClientParameters fParameters;
@@ -64,6 +61,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	private final transient ClientData fClientData;
 
 	private final FactoryManager factoryManager;
+	@SuppressWarnings("rawtypes")
 	private final Map<Factory, INamedObjectFactory> factories;
 
 	private transient int currentMouseButton;
@@ -102,7 +100,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fCommandEndpoint = new CommandEndpoint(this);
 
 		fCommunication = new ClientCommunication(this);
-		fCommunicationThread = new Thread(fCommunication);
+		Thread fCommunicationThread = new Thread(fCommunication);
 		fCommunicationThread.start();
 
 		fPingTimer = new Timer(true);
@@ -127,13 +125,12 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	}
 
 	public void connectionEstablished(boolean pSuccessful) {
-		fConnectionEstablished = pSuccessful;
 		synchronized (this) {
 			this.notify();
 		}
 	}
 
-	public void showUserInterface() throws IOException {
+	public void showUserInterface() {
 		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
 		getUserInterface().getFieldComponent().refresh();
 		getUserInterface().setVisible(true);
@@ -170,10 +167,10 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 			pAnyException.printStackTrace();
 		}
 
-		String pingIntervalProperty = getProperty(IClientProperty.CLIENT_PING_INTERVAL);
+		String pingIntervalProperty = getProperty(CommonProperty.CLIENT_PING_INTERVAL);
 		if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
 			int pingInterval = Integer.parseInt(pingIntervalProperty);
-			fClientPingTask = new ClientPingTask(this);
+			ClientPingTask fClientPingTask = new ClientPingTask(this);
 			fPingTimer.schedule(fClientPingTask, 0, pingInterval);
 		}
 
@@ -215,10 +212,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fProperties.setProperty(pProperty, pValue);
 	}
 
-	public void clearProperty(String property) {
-		fProperties.remove(property);
-	}
-
 	public void saveUserSettings(boolean pUserinterfaceInit) {
 		String[] settingValues = new String[CommonProperty._SAVED_USER_SETTINGS.length];
 		for (int i = 0; i < CommonProperty._SAVED_USER_SETTINGS.length; i++) {
@@ -238,7 +231,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 				fState.leaveState();
 			}
 			fState = newState;
-			if (Boolean.parseBoolean(getProperty(IClientProperty.CLIENT_DEBUG_STATE))) {
+			if (Boolean.parseBoolean(getProperty(CommonProperty.CLIENT_DEBUG_STATE))) {
 				getCommunication().sendDebugClientState(fState.getId());
 			}
 			getUserInterface().getGameMenuBar().changeState(fState.getId());
@@ -253,14 +246,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	public ClientCommandHandlerFactory getCommandHandlerFactory() {
 		return fCommandHandlerFactory;
-	}
-
-	public ClientPingTask getClientPingTask() {
-		return fClientPingTask;
-	}
-
-	public boolean isConnectionEstablished() {
-		return fConnectionEstablished;
 	}
 
 	public static void main(String[] args) {
@@ -339,7 +324,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		return FactoryContext.APPLICATION;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
 		return (T) factories.get(factory);

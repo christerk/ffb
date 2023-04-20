@@ -8,11 +8,6 @@ public interface IClientProperty {
 	String SERVER_HOST = "server.host";
 	String SERVER_PORT = "server.port";
 
-	String CLIENT_COMMAND_COMPRESSION = "client.command.compression";
-
-	String CLIENT_PING_INTERVAL = "client.ping.interval";
-	String CLIENT_DEBUG_STATE = "client.debug.state";
-
 	String KEY_PLAYER_MOVE_NORTH = "key.player.move.north";
 	String KEY_PLAYER_MOVE_NORTHEAST = "key.player.move.northeast";
 	String KEY_PLAYER_MOVE_EAST = "key.player.move.east";

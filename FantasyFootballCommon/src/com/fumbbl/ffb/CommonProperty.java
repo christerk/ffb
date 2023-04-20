@@ -3,6 +3,12 @@ package com.fumbbl.ffb;
 import java.util.Arrays;
 
 public enum CommonProperty {
+
+	CLIENT_COMMAND_COMPRESSION("client.command.compression"),
+
+	CLIENT_PING_INTERVAL("client.ping.interval"),
+	CLIENT_DEBUG_STATE("client.debug.state"),
+
 	SETTING_RE_ROLL_BALL_AND_CHAIN("setting.reRollBallAndChain", "Ask for Whirling Dervish"),
 	SETTING_PLAYER_MARKING_TYPE("setting.playerMarkingType", "Player Marking"),
 
@@ -75,6 +81,10 @@ public enum CommonProperty {
 	private final String prefix;
 
 	private final boolean storedRemote;
+
+	CommonProperty(String key) {
+		this(key, null, "", true);
+	}
 
 	CommonProperty(String key, String value) {
 		this(key, value, "", false);
