@@ -38,6 +38,7 @@ public enum CommonProperty {
 
 	SETTING_LAST_CHANGE_LOG_FINGERPRINT("setting.lastChangeLogFingerPrint", "What's new?"),
 
+	SETTING_LOCAL_SETTINGS("setting.localSettings", "Local Stored Settings", "", true),
 	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size");
 
 	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
@@ -50,8 +51,9 @@ public enum CommonProperty {
 		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
 		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT,
-		SETTING_SCALE_FACTOR
+		SETTING_SCALE_FACTOR, SETTING_LOCAL_SETTINGS
 	};
+
 	public static final CommonProperty[] COLOR_SETTINGS = {
 		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG,
 		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
@@ -72,14 +74,21 @@ public enum CommonProperty {
 
 	private final String prefix;
 
+	private final boolean storedRemote;
+
 	CommonProperty(String key, String value) {
-		this(key, value, "");
+		this(key, value, "", false);
 	}
 
 	CommonProperty(String key, String value, String prefix) {
+		this(key, value, prefix, false);
+	}
+
+	CommonProperty(String key, String value, String prefix, boolean storedRemote) {
 		this.key = key;
 		this.value = value;
 		this.prefix = prefix;
+		this.storedRemote = storedRemote;
 	}
 
 	public static CommonProperty forKey(String key) {
@@ -96,5 +105,9 @@ public enum CommonProperty {
 
 	public String getQualifiedValue() {
 		return (prefix + " " + value).trim();
+	}
+
+	public boolean isStoredRemote() {
+		return storedRemote;
 	}
 }
