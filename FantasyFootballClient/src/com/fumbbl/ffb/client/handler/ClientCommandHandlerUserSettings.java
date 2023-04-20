@@ -38,6 +38,8 @@ public class ClientCommandHandlerUserSettings extends ClientCommandHandler imple
 			getClient().setProperty(settingName, userSettingsCommand.getUserSettingValue(settingName));
 		}
 
+		getClient().updateLocalPropertiesStore();
+
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
 			refreshGameMenuBar();
 		}

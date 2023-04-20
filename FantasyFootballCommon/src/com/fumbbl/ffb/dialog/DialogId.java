@@ -27,7 +27,7 @@ public enum DialogId implements INamedObject {
 	BLOCK_ROLL_PARTIAL_RE_ROLL("blockRollPartialReRoll"), INVALID_SOLID_DEFENCE("invalidSolidDefence"), SELECT_SKILL("selectSkill"),
 	BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"), SELECT_GAZE_TARGET("selectGazeTarget"),
 	CONFIRM_END_ACTION("confirmEndAction"), CHANGE_LIST("changeList"), SELECT_WEATHER("selectWeather"),
-	INFORMATION_OKAY("informationOkay");
+	INFORMATION_OKAY("informationOkay"), STORE_PROPERTIES_LOCAL("storePropertiesLocal");
 
 	private final String fName;
 

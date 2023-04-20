@@ -45,15 +45,6 @@ public class SkillCheckList extends JList<SkillCheckListItem> {
 		addMouseListener(new SkillCheckListMouseAdapter(minSelects, maxSelects, selectButton));
 	}
 
-	public Skill getSkillAtIndex(int pIndex) {
-		SkillCheckListItem checkListItem = getModel().getElementAt(pIndex);
-		if (checkListItem != null) {
-			return checkListItem.getSkill();
-		} else {
-			return null;
-		}
-	}
-
 	public Skill[] getSelectedSkills() {
 		List<Skill> selectedSkills = new ArrayList<>();
 		for (int i = 0; i < getModel().getSize(); i++) {

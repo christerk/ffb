@@ -327,9 +327,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		return false;
 	}
 
-	public void refreshSettings() {
-	}
-
 	public void endTurn() {
 	}
 

@@ -28,6 +28,7 @@ import com.fumbbl.ffb.client.dialog.DialogChatCommands;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
 import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
+import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
 import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -107,6 +108,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenuItem scalingItem;
 
+	private JMenuItem localPropertiesItem;
 	private JRadioButtonMenuItem fIconsAbstract;
 	private JRadioButtonMenuItem fIconsRosterOpponent;
 	private JRadioButtonMenuItem fIconsRosterBoth;
@@ -317,6 +319,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createBackgroundMenu(fUserSettingsMenu);
 		createFontMenu(fUserSettingsMenu);
 		createScaleItem(fUserSettingsMenu);
+		createLocalPropertiesItem(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
@@ -721,6 +724,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		scalingItem.setMnemonic(KeyEvent.VK_E);
 		scalingItem.addActionListener(this);
 		fUserSettingsMenu.add(scalingItem);
+	}
+
+	private void createLocalPropertiesItem(JMenu fUserSettingsMenu) {
+		localPropertiesItem = new JMenuItem(dimensionProvider, SETTING_LOCAL_SETTINGS.getValue());
+		localPropertiesItem.setMnemonic(KeyEvent.VK_L);
+		localPropertiesItem.addActionListener(this);
+		fUserSettingsMenu.add(localPropertiesItem);
 	}
 
 	private void createTeamSetupMenu() {
@@ -1348,6 +1358,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 
+		if (source == localPropertiesItem) {
+			showDialog(new DialogSelectLocalStoredProperties(fClient));
+		}
+
 		if (source == fRestoreDefaultsMenuItem) {
 			try {
 				getClient().loadProperties();
@@ -1416,6 +1430,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				if (scalingDialog.getFactor() != null) {
 					getClient().setProperty(CommonProperty.SETTING_SCALE_FACTOR, Double.toString(scalingDialog.getFactor()));
 					getClient().saveUserSettings(true);
+				}
+				break;
+			case STORE_PROPERTIES_LOCAL:
+				DialogSelectLocalStoredProperties dialogSelectLocalStoredProperties = (DialogSelectLocalStoredProperties) pDialog;
+				if (dialogSelectLocalStoredProperties.getSelectedProperties() != null) {
+					getClient().setLocallyStoredPropertyKeys(dialogSelectLocalStoredProperties.getSelectedProperties());
+					getClient().saveUserSettings(false);
 				}
 				break;
 			default:

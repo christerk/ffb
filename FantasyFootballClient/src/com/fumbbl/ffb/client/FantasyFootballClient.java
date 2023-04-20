@@ -33,10 +33,17 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -66,7 +73,11 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	private transient int currentMouseButton;
 
+	private final Preferences prefs;
+
 	public FantasyFootballClient(ClientParameters pParameters) throws IOException {
+		prefs = Preferences.userRoot().node("FfbUserSettings_" + pParameters.getCoach());
+
 		factoryManager = new FactoryManager();
 		factories = factoryManager.getFactoriesForContext(getContext());
 
@@ -76,6 +87,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fClientData = new ClientData();
 
 		loadProperties();
+		loadLocallyStoredProperties();
 
 		fActionKeyBindings = new ActionKeyBindings(this);
 
@@ -213,14 +225,37 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	}
 
 	public void saveUserSettings(boolean pUserinterfaceInit) {
-		String[] settingValues = new String[CommonProperty._SAVED_USER_SETTINGS.length];
-		for (int i = 0; i < CommonProperty._SAVED_USER_SETTINGS.length; i++) {
-			settingValues[i] = getProperty(CommonProperty._SAVED_USER_SETTINGS[i]);
+		List<CommonProperty> localProperties = getLocallyStoredPropertyKeys();
+
+		List<CommonProperty> remoteProperties = Arrays.stream(CommonProperty._SAVED_USER_SETTINGS)
+			.filter(property -> !localProperties.contains(property)).collect(Collectors.toList());
+
+		String[] settingValues = new String[remoteProperties.size()];
+		for (int i = 0; i < remoteProperties.size(); i++) {
+			settingValues[i] = getProperty(remoteProperties.get(i));
 		}
-		getCommunication().sendUserSettings(CommonProperty._SAVED_USER_SETTINGS, settingValues);
-		getClientState().refreshSettings();
+		getCommunication().sendUserSettings(remoteProperties.toArray(new CommonProperty[0]), settingValues);
+
+		updateLocalPropertiesStore();
+
 		if (pUserinterfaceInit) {
 			getUserInterface().init(getGame().getOptions());
+		}
+	}
+
+	public void updateLocalPropertiesStore() {
+		try {
+			prefs.clear();
+			for (CommonProperty property : CommonProperty._SAVED_USER_SETTINGS) {
+				String key = property.getKey();
+				String value = getProperty(property);
+				if (StringTool.isProvided(key) && StringTool.isProvided(value)) {
+					prefs.put(key, value);
+				}
+			}
+
+		} catch (BackingStoreException e) {
+			logError(0, "Could not update locally stored properties: " + e.getMessage());
 		}
 	}
 
@@ -277,6 +312,31 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fProperties = new Properties();
 		try (InputStream propertyInputStream = getClass().getResourceAsStream("/client.ini")) {
 			fProperties.load(propertyInputStream);
+		}
+	}
+
+	public List<CommonProperty> getLocallyStoredPropertyKeys() {
+		String property = getProperty(CommonProperty.SETTING_LOCAL_SETTINGS);
+		if (!StringTool.isProvided(property)) {
+			return Collections.emptyList();
+		}
+
+		return Arrays.stream(property.split(","))
+			.map(CommonProperty::forKey)
+			.filter(Objects::nonNull).collect(Collectors.toList());
+	}
+
+	public void setLocallyStoredPropertyKeys(List<CommonProperty> properties) {
+		setProperty(CommonProperty.SETTING_LOCAL_SETTINGS, properties.stream().map(CommonProperty::getKey).collect(Collectors.joining(",")));
+	}
+
+	public void loadLocallyStoredProperties() {
+		try {
+			Arrays.stream(prefs.keys()).map(CommonProperty::forKey)
+				.filter(Objects::nonNull)
+				.forEach(property -> setProperty(property, prefs.get(property.getKey(), "")));
+		} catch (BackingStoreException e) {
+			logDebug(0, "Could not load Preferences: " + e.getMessage());
 		}
 	}
 
