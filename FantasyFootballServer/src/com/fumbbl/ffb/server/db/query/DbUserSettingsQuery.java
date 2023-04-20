@@ -21,35 +21,27 @@ import java.util.Map;
  */
 public class DbUserSettingsQuery extends DbStatement {
 
-	private class QueryResult {
-
-		private String fSettingName;
-		private String fSettingValue;
-
-		public QueryResult(ResultSet pResultSet) throws SQLException {
-			if (pResultSet != null) {
-				int col = 1;
-				pResultSet.getString(col++); // coach
-				fSettingName = pResultSet.getString(col++);
-				fSettingValue = pResultSet.getString(col++);
-			}
-		}
-
-		public String getSettingName() {
-			return fSettingName;
-		}
-
-		public String getSettingValue() {
-			return fSettingValue;
-		}
-
-	}
+	private final Map<CommonProperty, String> fSettings;
 
 	private PreparedStatement fStatement;
 
 	private String fCoach;
 
-	private final Map<String, String> fSettings;
+	public void execute(String pCoach) {
+		fCoach = pCoach;
+		fSettings.clear();
+		try {
+			fStatement.setString(1, pCoach);
+			try (ResultSet resultSet = fStatement.executeQuery()) {
+				while (resultSet.next()) {
+					QueryResult queryResult = new QueryResult(resultSet);
+					fSettings.put(CommonProperty.forKey(queryResult.getSettingName()), queryResult.getSettingValue());
+				}
+			}
+		} catch (SQLException sqlE) {
+			throw new FantasyFootballException(sqlE);
+		}
+	}
 
 	public DbUserSettingsQuery(FantasyFootballServer pServer) {
 		super(pServer);
@@ -68,47 +60,51 @@ public class DbUserSettingsQuery extends DbStatement {
 		}
 	}
 
-	public void execute(String pCoach) {
-		fCoach = pCoach;
-		fSettings.clear();
-		try {
-			fStatement.setString(1, pCoach);
-			try (ResultSet resultSet = fStatement.executeQuery()) {
-				while (resultSet.next()) {
-					QueryResult queryResult = new QueryResult(resultSet);
-					fSettings.put(queryResult.getSettingName(), queryResult.getSettingValue());
-				}
-			}
-		} catch (SQLException sqlE) {
-			throw new FantasyFootballException(sqlE);
-		}
+	public CommonProperty[] getSettingNames() {
+		CommonProperty[] names = fSettings.keySet().toArray(new CommonProperty[0]);
+		Arrays.sort(names);
+		return names;
 	}
 
 	public String getCoach() {
 		return fCoach;
 	}
 
-	public String[] getSettingNames() {
-		String[] names = fSettings.keySet().toArray(new String[fSettings.size()]);
-		Arrays.sort(names);
-		return names;
-	}
-
-	public String getSettingValue(CommonProperty setting) {
-		return getSettingValue(setting.getKey());
-	}
-
-	public String getSettingValue(String pSettingName) {
+	public String getSettingValue(CommonProperty pSettingName) {
 		return fSettings.get(pSettingName);
 	}
 
 	public String[] getSettingValues() {
-		String[] names = getSettingNames();
+		CommonProperty[] names = getSettingNames();
 		String[] values = new String[names.length];
 		for (int i = 0; i < names.length; i++) {
 			values[i] = getSettingValue(names[i]);
 		}
 		return values;
+	}
+
+	private static class QueryResult {
+
+		private String fSettingName;
+		private String fSettingValue;
+
+		public QueryResult(ResultSet pResultSet) throws SQLException {
+			if (pResultSet != null) {
+				int col = 1;
+				pResultSet.getString(col++); // coach
+				fSettingName = pResultSet.getString(col++);
+				fSettingValue = pResultSet.getString(col);
+			}
+		}
+
+		public String getSettingName() {
+			return fSettingName;
+		}
+
+		public String getSettingValue() {
+			return fSettingValue;
+		}
+
 	}
 
 }

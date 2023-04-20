@@ -2,6 +2,7 @@ package com.fumbbl.ffb.net.commands;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -14,18 +15,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class ServerCommandUserSettings extends ServerCommand {
 
-	private final Map<String, String> fUserSettings;
+	private final Map<CommonProperty, String> fUserSettings;
 
 	public ServerCommandUserSettings() {
 		fUserSettings = new HashMap<>();
 	}
 
-	public ServerCommandUserSettings(String[] pUserSettingNames, String[] pUserSettingValues) {
+	public ServerCommandUserSettings(CommonProperty[] pUserSettingNames, String[] pUserSettingValues) {
 		this();
 		init(pUserSettingNames, pUserSettingValues);
 	}
@@ -34,21 +34,21 @@ public class ServerCommandUserSettings extends ServerCommand {
 		return NetCommandId.SERVER_USER_SETTINGS;
 	}
 
-	public void addUserSetting(String pName, String pValue) {
+	public void addUserSetting(CommonProperty pName, String pValue) {
 		fUserSettings.put(pName, pValue);
 	}
 
-	public String[] getUserSettingNames() {
-		String[] names = fUserSettings.keySet().toArray(new String[fUserSettings.size()]);
+	public CommonProperty[] getUserSettingNames() {
+		CommonProperty[] names = fUserSettings.keySet().toArray(new CommonProperty[0]);
 		Arrays.sort(names);
 		return names;
 	}
 
-	public String getUserSettingValue(String pName) {
+	public String getUserSettingValue(CommonProperty pName) {
 		return fUserSettings.get(pName);
 	}
 
-	private void init(String[] pSettingNames, String[] pSettingValues) {
+	private void init(CommonProperty[] pSettingNames, String[] pSettingValues) {
 		fUserSettings.clear();
 		if (ArrayTool.isProvided(pSettingNames) && ArrayTool.isProvided(pSettingValues)) {
 			for (int i = 0; i < pSettingNames.length; i++) {
@@ -72,12 +72,12 @@ public class ServerCommandUserSettings extends ServerCommand {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
-		String[] userSettingNames = getUserSettingNames();
+		CommonProperty[] userSettingNames = getUserSettingNames();
 		String[] userSettingValues = new String[userSettingNames.length];
 		for (int i = 0; i < userSettingNames.length; i++) {
 			userSettingValues[i] = getUserSettingValue(userSettingNames[i]);
 		}
-		IJsonOption.USER_SETTING_NAMES.addTo(jsonObject, userSettingNames);
+		IJsonOption.USER_SETTING_NAMES.addTo(jsonObject, Arrays.stream(userSettingNames).map(CommonProperty::getKey).toArray(String[]::new));
 		IJsonOption.USER_SETTING_VALUES.addTo(jsonObject, userSettingValues);
 		return jsonObject;
 	}
@@ -88,7 +88,7 @@ public class ServerCommandUserSettings extends ServerCommand {
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		String[] userSettingNames = IJsonOption.USER_SETTING_NAMES.getFrom(source, jsonObject);
 		String[] userSettingValues = IJsonOption.USER_SETTING_VALUES.getFrom(source, jsonObject);
-		init(userSettingNames, userSettingValues);
+		init(Arrays.stream(userSettingNames).map(CommonProperty::forKey).toArray(CommonProperty[]::new), userSettingValues);
 		return this;
 	}
 

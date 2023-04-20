@@ -33,8 +33,8 @@ public class ClientCommandHandlerUserSettings extends ClientCommandHandler imple
 
 		ServerCommandUserSettings userSettingsCommand = (ServerCommandUserSettings) pNetCommand;
 
-		String[] settingNames = userSettingsCommand.getUserSettingNames();
-		for (String settingName : settingNames) {
+		CommonProperty[] settingNames = userSettingsCommand.getUserSettingNames();
+		for (CommonProperty settingName : settingNames) {
 			getClient().setProperty(settingName, userSettingsCommand.getUserSettingValue(settingName));
 		}
 
