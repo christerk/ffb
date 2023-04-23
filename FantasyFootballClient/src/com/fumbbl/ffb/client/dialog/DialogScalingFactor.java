@@ -21,6 +21,9 @@ import java.awt.event.ActionListener;
 
 public class DialogScalingFactor extends Dialog implements ChangeListener, ActionListener {
 
+	private static final double MIN = 0.5;
+	private static final double MAX = 3;
+	private static final int SLIDER_FACTOR = 20;
 	private final JSlider fSlider;
 	private double factor;
 
@@ -33,20 +36,18 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 
 		String property = pClient.getProperty(CommonProperty.SETTING_SCALE_FACTOR);
 		factor = StringTool.isProvided(property) ? Double.parseDouble(property) : 1.0;
-		if (factor < 0.5) {
-			factor = 0.5;
+		if (factor < MIN) {
+			factor = MIN;
 		}
-		if (factor > 2.5) {
-			factor = 2.5;
+		if (factor > MAX) {
+			factor = MAX;
 		}
 
 		fSlider = new JSlider();
-		fSlider.setMinimum(10);
-		fSlider.setMaximum(50);
-		fSlider.setValue((int) (factor * 20));
+		fSlider.setMinimum((int) (MIN * SLIDER_FACTOR));
+		fSlider.setMaximum((int) (MAX * SLIDER_FACTOR));
+		fSlider.setValue((int) (factor * SLIDER_FACTOR));
 		fSlider.addChangeListener(this);
-		fSlider.setMinimumSize(fSlider.getPreferredSize());
-		fSlider.setMaximumSize(fSlider.getPreferredSize());
 
 		fSettingLabel = new JLabel(dimensionProvider(), "500%");
 
@@ -80,7 +81,7 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 	}
 
 	public void stateChanged(ChangeEvent pE) {
-		factor = ((double)fSlider.getValue())/20;
+		factor = ((double)fSlider.getValue())/ SLIDER_FACTOR;
 		updateSettingLabel();
 	}
 
