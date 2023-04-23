@@ -120,7 +120,7 @@ public class PlayerIconFactory {
 
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
 		if (StringTool.isProvided(iconSetUrl)) {
-			BufferedImage iconSet = iconCache.getIconByUrl(iconSetUrl);
+			BufferedImage iconSet = iconCache.getUnscaledIconByUrl(iconSetUrl);
 			if (iconSet != null) {
 				int iconSize = iconSet.getWidth() / 4;
 				int y = pPlayer.getIconSetIndex() * iconSize;
@@ -130,12 +130,13 @@ public class PlayerIconFactory {
 				} else {
 					x = (pMoving ? 3 : 2) * iconSize;
 				}
-				icon = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
+				int scaledIconSize = dimensionProvider.scale(iconSize);
+				icon = new BufferedImage(scaledIconSize, scaledIconSize, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g2d = icon.createGraphics();
 				if (swapColors) {
-					g2d.drawImage(iconSet, iconSize, 0, 0, iconSize, x, y, x + iconSize, y + iconSize, null);
+					g2d.drawImage(iconSet, scaledIconSize, 0, 0, scaledIconSize, x, y, x + iconSize, y + iconSize, null);
 				} else {
-					g2d.drawImage(iconSet, 0, 0, iconSize, iconSize, x, y, x + iconSize, y + iconSize, null);
+					g2d.drawImage(iconSet, 0, 0, scaledIconSize, scaledIconSize, x, y, x + iconSize, y + iconSize, null);
 				}
 				g2d.dispose();
 			}

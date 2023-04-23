@@ -169,6 +169,10 @@ public class IconCache {
 		return bufferedImage;
 	}
 
+	public BufferedImage getUnscaledIconByUrl(String url) {
+		return fIconByKey.get(url);
+	}
+
 	public BufferedImage getPitch(Game pGame, Weather pWeather) {
 		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather));
 		if (pWeather == Weather.INTRO || weatherPitch == null) {
