@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import javax.swing.border.TitledBorder;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -132,6 +133,10 @@ public class DimensionProvider {
 
 	public double scale(double size) {
 		return (size * scale);
+	}
+
+	public Rectangle scale(Rectangle rectangle) {
+		return new Rectangle(scale(rectangle.x), scale(rectangle.y), scale(rectangle.width), scale(rectangle.height));
 	}
 
 	public BufferedImage scaleImage(BufferedImage pImage) {

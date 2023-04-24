@@ -103,14 +103,14 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		FontMetrics fontMetrics = g2d.getFontMetrics();
 		Rectangle2D boundsHome = fontMetrics.getStringBounds(scoreHome, g2d);
 		int x;
-		x = ((getPreferredSize().width - (int) boundsHome.getWidth()) / 2) - 40;
+		x = ((getPreferredSize().width - (int) boundsHome.getWidth()) / 2) - dimensionProvider.scale(40);
 		int y = ((lineHeight() + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
 		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
 			y += lineHeight();
 		}
 		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y, styleProvider);
 		Rectangle2D boundsAway = fontMetrics.getStringBounds(scoreAway, g2d);
-		x = ((getPreferredSize().width - (int) boundsAway.getWidth()) / 2) + 40;
+		x = ((getPreferredSize().width - (int) boundsAway.getWidth()) / 2) + dimensionProvider.scale(40);
 		UtilClientGraphics.drawShadowedText(g2d, scoreAway, x, y, styleProvider);
 		g2d.dispose();
 	}
@@ -145,7 +145,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 		int x;
 		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
-			int length = (int) (turnPrefixBounds.getWidth() + turnBounds.getWidth() + halfBounds.getWidth() + 20);
+			int length = (int) (turnPrefixBounds.getWidth() + turnBounds.getWidth() + halfBounds.getWidth() + dimensionProvider.scale(20));
 			x = (getWidth() - length) / 2;
 		} else {
 			x = 4;
@@ -153,10 +153,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 		g2d.setFont(turnTextFont);
 		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText, styleProvider);
-		x += turnPrefixBounds.getWidth() + 10;
+		x += turnPrefixBounds.getWidth() + dimensionProvider.scale(10);
 		g2d.setFont(turnNumberFont);
 		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts, styleProvider);
-		x += turnBounds.getWidth() + 10;
+		x += turnBounds.getWidth() + dimensionProvider.scale(10);
 		g2d.setFont(turnTextFont);
 		UtilClientGraphics.drawShadowedText(g2d, half, x, yText, styleProvider);
 		g2d.dispose();
@@ -170,7 +170,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(spectatorFont);
 			String spectatorString = Integer.toString(fSpectators);
-			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + 108, spectatorLocation.y + 21, styleProvider);
+			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + dimensionProvider.scale(108), spectatorLocation.y + dimensionProvider.scale(21), styleProvider);
 			g2d.dispose();
 		}
 	}
@@ -242,16 +242,18 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		setMaximumSize(size);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
+		int unscaledWidth = dimensionProvider.unscaledDimension(DimensionProvider.Component.SCORE_BOARD).width;
+
 		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
-			weatherLocation = new Rectangle(159, 64, 100, 32);
-			spectatorLocation = new Rectangle(1, 64, 130, 32);
-			coachBannedHome = new Rectangle(1, 0, 36, 32);
-			coachBannedAway = new Rectangle(size.width - 37, 0, 36, 32);
+			weatherLocation = dimensionProvider.scale(new Rectangle(159, 64, 100, 32));
+			spectatorLocation = dimensionProvider.scale(new Rectangle(1, 64, 130, 32));
+			coachBannedHome = dimensionProvider.scale(new Rectangle(1, 0, 36, 32));
+			coachBannedAway = dimensionProvider.scale(new Rectangle(unscaledWidth - 37, 0, 36, 32));
 		} else {
-			weatherLocation = new Rectangle(size.width - 101, 0, 100, 32);
-			spectatorLocation = new Rectangle((size.width / 2 + 160), 0, 130, 32);
-			coachBannedHome = new Rectangle((size.width / 2 - 130 - 36), 0, 36, 32);
-			coachBannedAway = new Rectangle((size.width / 2 + 130), 0, 36, 32);
+			weatherLocation = dimensionProvider.scale(new Rectangle(unscaledWidth - 101, 0, 100, 32));
+			spectatorLocation = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 160), 0, 130, 32));
+			coachBannedHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 130 - 36), 0, 36, 32));
+			coachBannedAway = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 130), 0, 36, 32));
 		}
 	}
 
