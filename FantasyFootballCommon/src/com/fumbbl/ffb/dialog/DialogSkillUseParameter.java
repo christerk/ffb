@@ -99,7 +99,9 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		IJsonOption.SKILL.addTo(jsonObject, fSkill);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.MODIFYING_SKILL.addTo(jsonObject, modifyingSkill);
-		IJsonOption.MENU_PROPERTY.addTo(jsonObject, menuProperty.getKey());
+		if (menuProperty != null) {
+			IJsonOption.MENU_PROPERTY.addTo(jsonObject, menuProperty.getKey());
+		}
 		IJsonOption.DEFAULT_VALUE_KEY.addTo(jsonObject, defaultValueKey);
 		IJsonOption.SHOW_NEVER_USE.addTo(jsonObject, showNeverUse);
 		return jsonObject;
@@ -112,7 +114,9 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		fSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
 		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
-		menuProperty = CommonProperty.forKey(IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject));
+		if (IJsonOption.MENU_PROPERTY.isDefinedIn(jsonObject)) {
+			menuProperty = CommonProperty.forKey(IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject));
+		}
 		defaultValueKey = IJsonOption.DEFAULT_VALUE_KEY.getFrom(source, jsonObject);
 		if (IJsonOption.SHOW_NEVER_USE.isDefinedIn(jsonObject)) {
 			showNeverUse = IJsonOption.SHOW_NEVER_USE.getFrom(source, jsonObject);

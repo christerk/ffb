@@ -12,6 +12,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Kalimar
@@ -38,7 +39,7 @@ public class ClientCommandUserSettings extends ClientCommand {
 	}
 
 	public CommonProperty[] getSettingNames() {
-		CommonProperty[] names = fSettings.keySet().toArray(new CommonProperty[0]);
+		CommonProperty[] names = fSettings.keySet().stream().filter(Objects::nonNull).toArray(CommonProperty[]::new);
 		Arrays.sort(names);
 		return names;
 	}
