@@ -63,7 +63,15 @@ public class DimensionProvider {
 	}
 
 	public int fieldSquareSize() {
-		return dimension(Component.FIELD_SQUARE).width;
+		return fieldSquareSize(1);
+	}
+
+	public int fieldSquareSize(double factor) {
+		return (int) scale(unscaledFieldSquare() * factor);
+	}
+
+	public int unscaledFieldSquare() {
+		return unscaledDimension(Component.FIELD_SQUARE).width;
 	}
 
 	public int imageOffset() {
@@ -71,13 +79,13 @@ public class DimensionProvider {
 	}
 
 	public Dimension mapToLocal(int x, int y, boolean addImageOffset) {
-		int offset = addImageOffset ? fieldSquareSize() / 2 : 0;
+		int offset = addImageOffset ? unscaledFieldSquare() / 2 : 0;
 
 
 		if (isPitchPortrait()) {
-			return new Dimension(y * fieldSquareSize() + offset, (25 - x) * fieldSquareSize() + offset);
+			return scale(new Dimension(y * unscaledFieldSquare() + offset, (25 - x) * unscaledFieldSquare() + offset));
 		}
-		return new Dimension(x * fieldSquareSize() + offset, y * fieldSquareSize() + offset);
+		return scale(new Dimension(x * unscaledFieldSquare() + offset, y * unscaledFieldSquare() + offset));
 
 	}
 
@@ -120,6 +128,10 @@ public class DimensionProvider {
 
 	public int scale(int size) {
 		return (int) (size * scale);
+	}
+
+	public double scale(double size) {
+		return (size * scale);
 	}
 
 	public BufferedImage scaleImage(BufferedImage pImage) {
