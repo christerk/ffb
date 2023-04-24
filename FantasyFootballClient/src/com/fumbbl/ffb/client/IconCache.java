@@ -173,6 +173,19 @@ public class IconCache {
 		return fIconByKey.get(url);
 	}
 
+	public BufferedImage getUnscaledIconByProperty(String pIconProperty) {
+		if (!StringTool.isProvided(pIconProperty)) {
+			return null;
+		}
+		String iconUrl = getClient().getProperty(pIconProperty);
+		BufferedImage icon = getUnscaledIconByUrl(iconUrl);
+		if ((icon == null) && loadIconFromArchive(iconUrl)) {
+			icon = getUnscaledIconByUrl(iconUrl);
+		}
+		return icon;
+	}
+
+
 	public BufferedImage getPitch(Game pGame, Weather pWeather) {
 		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather));
 		if (pWeather == Weather.INTRO || weatherPitch == null) {

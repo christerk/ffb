@@ -4,7 +4,8 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 
 import javax.swing.border.TitledBorder;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -26,7 +27,11 @@ public class DimensionProvider {
 	}
 
 	public Dimension dimension(Component component) {
-		return scale(component.dimension(layout));
+		return scale(unscaledDimension(component));
+	}
+
+	public Dimension unscaledDimension(Component component) {
+		return component.dimension(layout);
 	}
 
 	public boolean isPitchPortrait() {
