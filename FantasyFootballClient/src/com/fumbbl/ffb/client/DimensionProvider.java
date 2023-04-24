@@ -31,6 +31,11 @@ public class DimensionProvider {
 		return scale(unscaledDimension(component));
 	}
 
+	public Dimension dimension(Component component, double scale) {
+		Dimension dimension = unscaledDimension(component);
+		return new Dimension(scale(dimension.width, scale), scale(dimension.height, scale));
+	}
+
 	public Dimension unscaledDimension(Component component) {
 		return component.dimension(layout);
 	}
@@ -128,6 +133,10 @@ public class DimensionProvider {
 	}
 
 	public int scale(int size) {
+		return scale(size, scale);
+	}
+
+	public int scale(int size, double scale) {
 		return (int) (size * scale);
 	}
 
@@ -202,6 +211,7 @@ public class DimensionProvider {
 		RESOURCE_SLOT(new Dimension(46, 40)),
 		MAX_ICON(new Dimension(40, 40)),
 		ABOUT_DIALOG(new Dimension(813, 542)),
+		CLIENT_SIZE(new Dimension(1078, 762), new Dimension(788, 1019), new Dimension(1050, 834)),
 		BOX_SQUARE(new Dimension(39, 39));
 
 		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
