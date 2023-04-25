@@ -56,12 +56,15 @@ public class ChatLogDocument extends DefaultStyledDocument {
 
 		int defaultFontSize = dimensionProvider.scale(12);
 		int largerSize = dimensionProvider.scale(14);
+		float lineSpacing = 0.05f;
 
 		StyleConstants.setFontFamily(defaultStyle, DEFAULT_FONT_FAMILY);
+		StyleConstants.setLineSpacing(defaultStyle, lineSpacing);
 
 		Style text = addStyle(TextStyle.NONE.getName(), defaultStyle);
 		StyleConstants.setFontSize(text, defaultFontSize);
 		StyleConstants.setForeground(text, styleProvider.getText());
+		StyleConstants.setSpaceBelow(text, lineSpacing);
 
 		Style bold = addStyle(TextStyle.BOLD.getName(), defaultStyle);
 		StyleConstants.setFontFamily(bold, DEFAULT_FONT_FAMILY);
