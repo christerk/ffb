@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -19,7 +20,6 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
@@ -186,13 +186,13 @@ public class ClientStateFoul extends ClientStateMove {
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		if (attacker.hasSkillProperty(NamedProperties.providesChainsawFoulingAlternative)) {
-			JMenuItem chainsawAction = new JMenuItem("Chainsaw",
+			JMenuItem chainsawAction = new JMenuItem(dimensionProvider(), "Chainsaw",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW)));
 			chainsawAction.setMnemonic(IPlayerPopupMenuKeys.KEY_CHAINSAW);
 			chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
 			menuItemList.add(chainsawAction);
 		}
-		JMenuItem foulAction = new JMenuItem("Foul Opponent",
+		JMenuItem foulAction = new JMenuItem(dimensionProvider(), "Foul Opponent",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_FOUL)));
 		foulAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FOUL);
 		foulAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FOUL, 0));
@@ -209,12 +209,12 @@ public class ClientStateFoul extends ClientStateMove {
 			IconCache iconCache = userInterface.getIconCache();
 			userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
 			List<JMenuItem> menuItemList = new ArrayList<>();
-			JMenuItem moveAction = new JMenuItem("Move",
+			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
-			JMenuItem endMoveAction = new JMenuItem("End Move",
+			JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), "End Move",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 			endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));

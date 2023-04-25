@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.ClientStateBlitz;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -17,7 +18,9 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+
 
 public class ClientStatePutridRegurgitationBlitz extends ClientStateBlitz {
 	public ClientStatePutridRegurgitationBlitz(FantasyFootballClient pClient) {
@@ -82,7 +85,7 @@ public class ClientStatePutridRegurgitationBlitz extends ClientStateBlitz {
 	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
 		ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
 		if (PlayerAction.PUTRID_REGURGITATION_MOVE == actingPlayer.getPlayerAction()) {
-			JMenuItem menuItem = new JMenuItem("Putrid Regurgitation",
+			JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Putrid Regurgitation",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
 			menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 			menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));

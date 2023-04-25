@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -23,7 +24,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +190,7 @@ public class ClientStatePass extends ClientStateMove {
 
 		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()) {
-			JMenuItem passAction = new JMenuItem("Pass Ball (any square)",
+			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
@@ -202,7 +202,7 @@ public class ClientStatePass extends ClientStateMove {
 			&& !game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 				: "Use Hail Mary Pass";
-			JMenuItem hailMaryPassAction = new JMenuItem(text,
+			JMenuItem hailMaryPassAction = new JMenuItem(dimensionProvider(), text,
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS)));
 			hailMaryPassAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS);
 			hailMaryPassAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS, 0));
@@ -212,10 +212,10 @@ public class ClientStatePass extends ClientStateMove {
 		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			JMenuItem jumpAction;
 			if (actingPlayer.isJumping()) {
-				jumpAction = new JMenuItem("Don't Jump",
+				jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			} else {
-				jumpAction = new JMenuItem("Jump",
+				jumpAction = new JMenuItem(dimensionProvider(), "Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
 			}
 			jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
@@ -224,7 +224,7 @@ public class ClientStatePass extends ClientStateMove {
 		}
 
 		if (!actingPlayer.hasPassed()) {
-			JMenuItem toggleRangeGridAction = new JMenuItem("Range Grid on/off",
+			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
@@ -233,7 +233,7 @@ public class ClientStatePass extends ClientStateMove {
 
 		if (!actingPlayer.hasPassed()) {
 			if (!actingPlayer.isSufferingAnimosity()) {
-				JMenuItem moveAction = new JMenuItem("Move",
+				JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 				moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 				moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));

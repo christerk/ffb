@@ -15,6 +15,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -34,7 +35,6 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import java.awt.Color;
@@ -351,7 +351,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected JMenuItem createTreacherousItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem("Treacherous",
+		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Treacherous",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
@@ -377,7 +377,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected JMenuItem createWisdomItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem("Wisdom of the White Dwarf",
+		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Wisdom of the White Dwarf",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
@@ -386,7 +386,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList, ActingPlayer actingPlayer) {
 		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
-		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
+		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
@@ -427,7 +427,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem("Raiding Party",
+		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Raiding Party",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
@@ -448,7 +448,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
-		JMenuItem lookItem = new JMenuItem("Look Into My Eyes",
+		JMenuItem lookItem = new JMenuItem(dimensionProvider(), "Look Into My Eyes",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES)));
 		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
@@ -472,11 +472,15 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem("Baleful Hex",
+		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Baleful Hex",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
 		return menuItem;
+	}
+
+	public DimensionProvider dimensionProvider() {
+		return getClient().getUserInterface().getDimensionProvider();
 	}
 
 }

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.ClientStateMove;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -23,7 +24,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +58,14 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 				IconCache iconCache = getClient().getUserInterface().getIconCache();
 				List<JMenuItem> menuItemList = new ArrayList<>();
 
-				JMenuItem shortKick = new JMenuItem("Short Kick",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				JMenuItem shortKick = new JMenuItem(dimensionProvider(), "Short Kick",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
 				shortKick.setMnemonic(IPlayerPopupMenuKeys.KEY_SHORT);
 				shortKick.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHORT, 0));
 				menuItemList.add(shortKick);
 
-				JMenuItem longKick = new JMenuItem("Long Kick",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				JMenuItem longKick = new JMenuItem(dimensionProvider(), "Long Kick",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
 				longKick.setMnemonic(IPlayerPopupMenuKeys.KEY_LONG);
 				longKick.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LONG, 0));
 				menuItemList.add(longKick);

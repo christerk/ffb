@@ -16,6 +16,7 @@ import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
@@ -24,7 +25,6 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +91,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
-			JMenuItem moveAction = new JMenuItem("Move Action",
+			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move Action",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
@@ -100,13 +100,13 @@ public class ClientStatePassBlock extends ClientStateMove {
 		if ((actingPlayer.getPlayer() != null)
 			&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			if (actingPlayer.isJumping()) {
-				JMenuItem jumpAction = new JMenuItem("Don't Jump",
+				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
 			} else {
-				JMenuItem jumpAction = new JMenuItem("Jump",
+				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
@@ -124,7 +124,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 				}
 			}
 			if (endMoveActionLabel != null) {
-				JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
+				JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 				endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 				endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
