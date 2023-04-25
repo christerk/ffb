@@ -26,7 +26,9 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
@@ -74,6 +76,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fIconCache.init();
 		fontCache = new FontCache(dimensionProvider);
 		fSoundEngine = new SoundEngine(getClient());
+		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();

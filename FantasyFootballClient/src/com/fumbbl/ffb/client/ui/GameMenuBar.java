@@ -58,6 +58,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JMenuBar;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -1461,7 +1462,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 					if (dimensionProvider.getScale() != factor) {
 						dimensionProvider.setScale(factor);
 						getClient().getUserInterface().getIconCache().clear();
-						getClient().getUserInterface().getFontCache().clear();
+						FontCache fontCache = getClient().getUserInterface().getFontCache();
+						fontCache.clear();
+						UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
 						return true;
 					}
 				} catch (Exception ignored) {
