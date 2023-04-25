@@ -21,10 +21,11 @@ public class DimensionProvider {
 	private static final int SIDEBAR_WIDTH_L = 145;
 	private static final int SIDEBAR_WIDTH_P = 165;
 
-	private double scale = 1.0d;
+	private double scale;
 
-	public DimensionProvider(ClientLayout layout) {
+	public DimensionProvider(ClientLayout layout, double scale) {
 		this.layout = layout;
+		this.scale = scale;
 	}
 
 	public Dimension dimension(Component component) {

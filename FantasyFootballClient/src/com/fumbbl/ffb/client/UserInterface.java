@@ -60,7 +60,16 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		fDesktop = null;
 		fClient = pClient;
-		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
+		String factorValue = pClient.getProperty(CommonProperty.SETTING_SCALE_FACTOR);
+		double scale = 1.0;
+		if (StringTool.isProvided(factorValue)) {
+			try {
+				scale = Double.parseDouble(factorValue);
+			} catch (Exception ignored) {
+			}
+		}
+
+		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout(), scale);
 		fIconCache = new IconCache(getClient(), dimensionProvider);
 		fIconCache.init();
 		fontCache = new FontCache(dimensionProvider);
