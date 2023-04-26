@@ -45,7 +45,7 @@ public class DialogSelectLocalStoredProperties extends Dialog implements ActionL
 			.filter(property -> !property.isStoredRemote()).collect(Collectors.toList());
 
 		fList = new CommonPropertyCheckList(dimensionProvider(), properties, client.getLocallyStoredPropertyKeys());
-		fList.setVisibleRowCount(Math.min(properties.size(), 5));
+		fList.setVisibleRowCount(Math.min(properties.size(), 20));
 
 		JScrollPane listScroller = new JScrollPane(fList);
 		listScroller.setAlignmentX(LEFT_ALIGNMENT);
