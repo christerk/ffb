@@ -13,18 +13,23 @@ import java.awt.Dimension;
 
 public class DialogKeyBindings extends Dialog {
 
-	private static final String _FONT_BOLD_OPEN = "<font face=\"Sans Serif\" size=\"-1\"><b>";
-	private static final String _FONT_BOLD_CLOSE = "</b></font>";
-	private static final String _FONT_MEDIUM_BOLD_OPEN = "<font face=\"Sans Serif\"><b>";
-	private static final String _FONT_OPEN = "<font face=\"Sans Serif\" size=\"-1\">";
-	private static final String _FONT_CLOSE = "</font>";
+	private final String fontBoldOpen;
+	private final String _FONT_BOLD_CLOSE = "</b></font>";
+	private final String fontMediumBoldOpen;
+	private final String fontOpen;
+	private final String _FONT_CLOSE = "</font>";
 
 	public DialogKeyBindings(FantasyFootballClient pClient) {
 
 		super(pClient, "Key Bindings", true);
 
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
+		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11) + "px\"><b>";
+		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\">";
+
 		JScrollPane keyBindingsPane = new JScrollPane(createKeyBindingsEditorPane());
-		keyBindingsPane.setPreferredSize(new Dimension(keyBindingsPane.getPreferredSize().width + 20, 500));
+		keyBindingsPane.setPreferredSize(new Dimension(keyBindingsPane.getPreferredSize().width + dimensionProvider().scale(20),
+			dimensionProvider().scale(500)));
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
@@ -123,12 +128,12 @@ public class DialogKeyBindings extends Dialog {
 
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
 		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_MEDIUM_BOLD_OPEN).append("Dialogs").append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("  <td>").append(fontMediumBoldOpen).append("Dialogs").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
 		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append(
+		html.append("  <td>").append(fontOpen).append(
 				"In all dialogs buttons can be activated by the first<br>letter of their label. So &lt;Y&gt; for Yes or &lt;N&gt; for No.<br>Block dices are numbered 1, 2, 3 from left to right<br>and can be activated this way.")
-				.append(_FONT_CLOSE).append("</td>\n");
+			.append(_FONT_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
 		html.append("</table>\n");
 		html.append("</body>\n");
@@ -143,25 +148,25 @@ public class DialogKeyBindings extends Dialog {
 
 	private void addDescription(StringBuilder html, String text, String property) {
 		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append(text).append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(property))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("  <td>").append(fontOpen).append(text).append(_FONT_CLOSE).append("</td>\n");
+		html.append("  <td>").append(fontBoldOpen).append(getClient().getProperty(property))
+			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
 	}
 
 	private void addDescriptionWithAlternative(StringBuilder html, String text, String property, String key) {
 		html.append("<tr>\n");
-		html.append("  <td>").append(_FONT_OPEN).append(text).append(_FONT_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(getClient().getProperty(property))
-				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		html.append("  <td>").append(_FONT_BOLD_OPEN).append(key).append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("  <td>").append(fontOpen).append(text).append(_FONT_CLOSE).append("</td>\n");
+		html.append("  <td>").append(fontBoldOpen).append(getClient().getProperty(property))
+			.append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("  <td>").append(fontBoldOpen).append(key).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
 	}
 
 	private void addTableHeader(StringBuilder html, String header, int colspan) {
 		html.append("<tr>\n");
-		html.append("  <td colspan=\"").append(colspan).append("\">").append(_FONT_MEDIUM_BOLD_OPEN).append(header).append(_FONT_BOLD_CLOSE)
-				.append("</td>\n");
+		html.append("  <td colspan=\"").append(colspan).append("\">").append(fontMediumBoldOpen).append(header).append(_FONT_BOLD_CLOSE)
+			.append("</td>\n");
 		html.append("</tr>\n");
 	}
 
@@ -171,7 +176,7 @@ public class DialogKeyBindings extends Dialog {
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
 		// Dimension menuBarSize = getClient().getGameMenuBar().getSize();
 		setLocation((frameSize.width - dialogSize.width) / 2,
-				((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
+			((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
 	}
 
 }
