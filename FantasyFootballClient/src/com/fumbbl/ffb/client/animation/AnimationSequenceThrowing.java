@@ -37,7 +37,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		fEndCoordinate = pEndCoordinate;
 		fInterceptorCoordinate = pInterceptorCoordinate;
 		fSound = pSound;
-		fTimer = new Timer(20, this);
+		fTimer = new Timer((int) (20 / dimensionProvider.getScale()), this);
 		this.dimensionProvider = dimensionProvider;
 	}
 
