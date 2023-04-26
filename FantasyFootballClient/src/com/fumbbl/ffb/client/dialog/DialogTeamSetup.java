@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JList;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -12,7 +13,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -71,7 +71,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 			}
 		}
 
-		fSetupList = new JList<>(fSetupListModel);
+		fSetupList = new JList<>(dimensionProvider(), fSetupListModel);
 		fSetupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fSetupList.setVisibleRowCount(Math.min(7, Math.max(3, pSetups.length)));
 		fSetupList.addListSelectionListener(this);
