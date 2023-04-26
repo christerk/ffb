@@ -5,9 +5,12 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.*;
+import java.awt.Dimension;
 
 public class DialogChatCommands extends Dialog {
 
@@ -29,9 +32,9 @@ public class DialogChatCommands extends Dialog {
 
 		Game game = getClient().getGame();
 		if (game.isTesting()) {
-			aboutPane.setPreferredSize(dimensionProvider().scale(new Dimension(aboutPane.getPreferredSize().width + 100, 500)));
+			aboutPane.setPreferredSize(new Dimension(aboutPane.getPreferredSize().width + 100, 500));
 		} else {
-			aboutPane.setPreferredSize(dimensionProvider().scale(new Dimension(aboutPane.getPreferredSize().width + 10, 300)));
+			aboutPane.setPreferredSize(new Dimension(aboutPane.getPreferredSize().width + 10, 300));
 		}
 
 		JPanel infoPanel = new JPanel();

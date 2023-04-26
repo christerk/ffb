@@ -398,7 +398,7 @@ public class DialogGameStatistics extends Dialog {
 	private void setPreferredSize(Component component) {
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
-		component.setPreferredSize(new Dimension(dimensionProvider().scale(this.getPreferredSize().width), frameSize.height - menuBarSize.height - dimensionProvider().scale(150)));
+		component.setPreferredSize(new Dimension(this.getPreferredSize().width, frameSize.height - menuBarSize.height - dimensionProvider().scale(150)));
 	}
 
 	protected void setLocationToCenter() {
