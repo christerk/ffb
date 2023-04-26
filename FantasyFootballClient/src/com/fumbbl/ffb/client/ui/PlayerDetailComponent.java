@@ -280,10 +280,10 @@ public class PlayerDetailComponent extends JPanel {
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = strength - position.getStrength();
-			drawStatBox(g2d, x + statSpacings[0] + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[0]) + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = agility - position.getAgility();
-			drawStatBox(g2d, x + statSpacings[1] + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[1]) + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
 				int passing = getPlayer().getPassingWithModifiers();
@@ -291,11 +291,11 @@ public class PlayerDetailComponent extends JPanel {
 					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
 				}
 				int passingModifier = passing - position.getPassing();
-				drawStatBox(g2d, x + statSpacings[2] + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
+				drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[2]) + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
 			int armourModifier = armour - position.getArmour();
-			drawStatBox(g2d, x + statSpacings[3] + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[3]) + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
