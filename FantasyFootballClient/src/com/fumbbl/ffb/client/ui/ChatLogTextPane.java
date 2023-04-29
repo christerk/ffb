@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
 
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import java.awt.event.MouseEvent;
@@ -63,29 +64,37 @@ public class ChatLogTextPane extends JTextPane {
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
 
-		try {
+		if (pText != null) {
 
-			if (pText != null) {
-
-				if (pStyle == null) {
-					pStyle = TextStyle.NONE;
-				}
-				if (pTextIndent == null) {
-					pTextIndent = ParagraphStyle.INDENT_0;
-				}
-
-				fChatLogDocument.setParagraphAttributes(fChatLogDocument.getLength(), 1,
-						fChatLogDocument.getStyle(pTextIndent.getName()), false);
-				fChatLogDocument.insertString(fChatLogDocument.getLength(), pText, fChatLogDocument.getStyle(pStyle.getName()));
-
-			} else {
-				fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
-					fChatLogDocument.getStyle(TextStyle.NONE.getName()));
+			if (pStyle == null) {
+				pStyle = TextStyle.NONE;
+			}
+			if (pTextIndent == null) {
+				pTextIndent = ParagraphStyle.INDENT_0;
 			}
 
-		} catch (BadLocationException ex) {
-			throw new FantasyFootballException(ex);
+			fChatLogDocument.setParagraphAttributes(fChatLogDocument.getLength(), 1,
+				fChatLogDocument.getStyle(pTextIndent.getName()), false);
+			String name = pStyle.getName();
+			SwingUtilities.invokeLater(() -> {
+				try {
+					fChatLogDocument.insertString(fChatLogDocument.getLength(), pText, fChatLogDocument.getStyle(name));
+				} catch (BadLocationException ex) {
+					throw new FantasyFootballException(ex);
+				}
+			});
+
+		} else {
+			SwingUtilities.invokeLater(() -> {
+				try {
+					fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
+						fChatLogDocument.getStyle(TextStyle.NONE.getName()));
+				} catch (BadLocationException ex) {
+					throw new FantasyFootballException(ex);
+				}
+			});
 		}
+
 
 	}
 
