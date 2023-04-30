@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
@@ -20,14 +21,15 @@ public class ChatLogDocument extends DefaultStyledDocument {
 	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
 	public static final String DEFAULT_FONT_FAMILY = "Arial";
-	public static final int DEFAULT_FONT_SIZE = 12;
 
 	private final Style defaultStyle;
 
 	private final StyleProvider styleProvider;
+	private final DimensionProvider dimensionProvider;
 
-	public ChatLogDocument(StyleProvider styleProvider) {
+	public ChatLogDocument(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
 		this.styleProvider = styleProvider;
+		this.dimensionProvider = dimensionProvider;
 
 		defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 
@@ -52,86 +54,93 @@ public class ChatLogDocument extends DefaultStyledDocument {
 
 		// initStyles
 
+		int defaultFontSize = dimensionProvider.scale(12);
+		int largerSize = dimensionProvider.scale(14);
+		float lineSpacing = 0.05f;
+
 		StyleConstants.setFontFamily(defaultStyle, DEFAULT_FONT_FAMILY);
+		StyleConstants.setLineSpacing(defaultStyle, lineSpacing);
 
 		Style text = addStyle(TextStyle.NONE.getName(), defaultStyle);
+		StyleConstants.setFontSize(text, defaultFontSize);
 		StyleConstants.setForeground(text, styleProvider.getText());
+		StyleConstants.setSpaceBelow(text, lineSpacing);
 
 		Style bold = addStyle(TextStyle.BOLD.getName(), defaultStyle);
 		StyleConstants.setFontFamily(bold, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(bold, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(bold, defaultFontSize);
 		StyleConstants.setBold(bold, true);
 		StyleConstants.setForeground(bold, styleProvider.getText());
 
 		Style home = addStyle(TextStyle.HOME.getName(), defaultStyle);
 		StyleConstants.setFontFamily(home, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(home, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(home, defaultFontSize);
 		StyleConstants.setForeground(home, styleProvider.getHome());
 
 		Style homeBold = addStyle(TextStyle.HOME_BOLD.getName(), defaultStyle);
 		StyleConstants.setFontFamily(homeBold, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(homeBold, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(homeBold, defaultFontSize);
 		StyleConstants.setForeground(homeBold, styleProvider.getHome());
 		StyleConstants.setBold(homeBold, true);
 
 		Style away = addStyle(TextStyle.AWAY.getName(), defaultStyle);
 		StyleConstants.setFontFamily(away, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(away, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(away, defaultFontSize);
 		StyleConstants.setForeground(away, styleProvider.getAway());
 
 		Style awayBold = addStyle(TextStyle.AWAY_BOLD.getName(), defaultStyle);
 		StyleConstants.setFontFamily(awayBold, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(awayBold, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(awayBold, defaultFontSize);
 		StyleConstants.setForeground(awayBold, styleProvider.getAway());
 		StyleConstants.setBold(awayBold, true);
 
 		Style roll = addStyle(TextStyle.ROLL.getName(), defaultStyle);
 		StyleConstants.setFontFamily(roll, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(roll, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(roll, defaultFontSize);
 		StyleConstants.setBold(roll, true);
 		StyleConstants.setForeground(roll, styleProvider.getText());
 
 		Style neededRoll = addStyle(TextStyle.NEEDED_ROLL.getName(), defaultStyle);
 		StyleConstants.setFontFamily(neededRoll, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(neededRoll, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(neededRoll, defaultFontSize);
 		StyleConstants.setForeground(neededRoll, styleProvider.getText());
 
 		Style explanation = addStyle(TextStyle.EXPLANATION.getName(), defaultStyle);
 		StyleConstants.setItalic(explanation, true);
 		StyleConstants.setFontFamily(explanation, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(explanation, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(explanation, defaultFontSize);
 		StyleConstants.setForeground(explanation, styleProvider.getText());
 
 		Style spectator = addStyle(TextStyle.SPECTATOR.getName(), defaultStyle);
 		StyleConstants.setFontFamily(spectator, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(spectator, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(spectator, defaultFontSize);
 		StyleConstants.setForeground(spectator, styleProvider.getSpec());
 
 		Style admin = addStyle(TextStyle.ADMIN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(admin, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(admin, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(admin, defaultFontSize);
 		StyleConstants.setForeground(admin, styleProvider.getAdmin());
 
 		Style dev = addStyle(TextStyle.DEV.getName(), defaultStyle);
 		StyleConstants.setFontFamily(dev, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(dev, DEFAULT_FONT_SIZE);
+		StyleConstants.setFontSize(dev, defaultFontSize);
 		StyleConstants.setForeground(dev, styleProvider.getDev());
 
 		Style turn = addStyle(TextStyle.TURN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turn, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(turn, DEFAULT_FONT_SIZE + 2);
+		StyleConstants.setFontSize(turn, largerSize);
 		StyleConstants.setBold(turn, true);
 		StyleConstants.setForeground(turn, styleProvider.getText());
 
 		Style turnHome = addStyle(TextStyle.TURN_HOME.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turnHome, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(turnHome, DEFAULT_FONT_SIZE + 2);
+		StyleConstants.setFontSize(turnHome, largerSize);
 		StyleConstants.setBold(turnHome, true);
 		StyleConstants.setForeground(turnHome, styleProvider.getHome());
 
 		Style turnAway = addStyle(TextStyle.TURN_AWAY.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turnAway, DEFAULT_FONT_FAMILY);
-		StyleConstants.setFontSize(turnAway, DEFAULT_FONT_SIZE + 2);
+		StyleConstants.setFontSize(turnAway, largerSize);
 		StyleConstants.setBold(turnAway, true);
 		StyleConstants.setForeground(turnAway, styleProvider.getAway());
 

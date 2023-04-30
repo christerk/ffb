@@ -1,31 +1,28 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.ui.swing.JProgressBar;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.StringTool;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogProgressBar extends Dialog implements ActionListener {
 
-	private JButton fButton;
-	private JLabel fMessageLabel;
-	private JProgressBar fProgressBar;
+	private final JLabel fMessageLabel;
+	private final JProgressBar fProgressBar;
 
 	public DialogProgressBar(FantasyFootballClient pClient, String pTitle) {
 		this(pClient, pTitle, 0, 0);
@@ -35,16 +32,16 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 
 		super(pClient, pTitle, false);
 
-		fButton = new JButton("Cancel");
+		JButton fButton = new JButton(dimensionProvider(), "Cancel");
 		fButton.addActionListener(this);
 
-		fProgressBar = new JProgressBar(pMinValue, pMaxValue);
+		fProgressBar = new JProgressBar(dimensionProvider(), pMinValue, pMaxValue);
 		fProgressBar.setValue(pMinValue);
 		fProgressBar.setStringPainted(true);
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.X_AXIS));
-		fMessageLabel = new JLabel("Initializing.");
+		fMessageLabel = new JLabel(dimensionProvider(), "Initializing.");
 		messagePanel.add(fMessageLabel);
 		messagePanel.add(Box.createHorizontalGlue());
 		messagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -89,13 +86,8 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 				fProgressBar.setMinimum(pMinimum);
 			} else {
 				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						public void run() {
-							fProgressBar.setMinimum(pMinimum);
-						}
-					});
-				} catch (InterruptedException ie) {
-				} catch (InvocationTargetException ite) {
+					SwingUtilities.invokeAndWait(() -> fProgressBar.setMinimum(pMinimum));
+				} catch (InterruptedException | InvocationTargetException ignored) {
 				}
 			}
 		}
@@ -111,13 +103,8 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 				fProgressBar.setMaximum(pMaximum);
 			} else {
 				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						public void run() {
-							fProgressBar.setMaximum(pMaximum);
-						}
-					});
-				} catch (InterruptedException ie) {
-				} catch (InvocationTargetException ite) {
+					SwingUtilities.invokeAndWait(() -> fProgressBar.setMaximum(pMaximum));
+				} catch (InterruptedException | InvocationTargetException ignored) {
 				}
 			}
 		}
@@ -131,16 +118,13 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 			}
 		} else {
 			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					public void run() {
-						fProgressBar.setValue(pProgress);
-						if (StringTool.isProvided(pMessage)) {
-							fMessageLabel.setText(pMessage);
-						}
+				SwingUtilities.invokeAndWait(() -> {
+					fProgressBar.setValue(pProgress);
+					if (StringTool.isProvided(pMessage)) {
+						fMessageLabel.setText(pMessage);
 					}
 				});
-			} catch (InterruptedException ie) {
-			} catch (InvocationTargetException ite) {
+			} catch (InterruptedException | InvocationTargetException ignored) {
 			}
 		}
 	}

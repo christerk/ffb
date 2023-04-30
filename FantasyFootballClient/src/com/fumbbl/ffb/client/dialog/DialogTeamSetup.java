@@ -1,31 +1,30 @@
 package com.fumbbl.ffb.client.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JList;
+import com.fumbbl.ffb.client.ui.swing.JTextField;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.util.ArrayTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.util.ArrayTool;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogTeamSetup extends Dialog implements ActionListener, ListSelectionListener {
@@ -35,13 +34,12 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 	public static final int CHOICE_CANCEL = 3;
 	public static final int CHOICE_DELETE = 4;
 
-	private JButton fButtonLoadSave;
-	private JButton fButtonCancel;
-	private JButton fButtonDelete;
-	private JTextField fTextfieldSetupName;
-	private boolean fLoadDialog;
-	private JList<String> fSetupList;
-	private DefaultListModel<String> fSetupListModel;
+	private final JButton fButtonLoadSave;
+	private final JButton fButtonCancel;
+	private final JButton fButtonDelete;
+	private final JTextField fTextfieldSetupName;
+	private final boolean fLoadDialog;
+	private final JList<String> fSetupList;
 	private int fUserChoice;
 	private String fSetupName;
 
@@ -52,28 +50,28 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 		fLoadDialog = pLoadDialog;
 
 		if (isLoadDialog()) {
-			fButtonLoadSave = new JButton("Load");
+			fButtonLoadSave = new JButton(dimensionProvider(), "Load");
 		} else {
-			fButtonLoadSave = new JButton("Save");
+			fButtonLoadSave = new JButton(dimensionProvider(), "Save");
 		}
 		fButtonLoadSave.addActionListener(this);
 
-		fButtonCancel = new JButton("Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
 		fButtonCancel.addActionListener(this);
 
 		BufferedImage deleteIcon = getClient().getUserInterface().getIconCache()
 				.getIconByProperty(IIconProperty.GAME_DELETE);
-		fButtonDelete = new JButton(new ImageIcon(deleteIcon));
+		fButtonDelete = new JButton(dimensionProvider(), new ImageIcon(deleteIcon));
 		fButtonDelete.addActionListener(this);
 
-		fSetupListModel = new DefaultListModel<String>();
+		DefaultListModel<String> fSetupListModel = new DefaultListModel<>();
 		if (ArrayTool.isProvided(pSetups)) {
-			for (int i = 0; i < pSetups.length; i++) {
-				fSetupListModel.addElement(pSetups[i]);
+			for (String pSetup : pSetups) {
+				fSetupListModel.addElement(pSetup);
 			}
 		}
 
-		fSetupList = new JList<String>(fSetupListModel);
+		fSetupList = new JList<>(dimensionProvider(), fSetupListModel);
 		fSetupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fSetupList.setVisibleRowCount(Math.min(7, Math.max(3, pSetups.length)));
 		fSetupList.addListSelectionListener(this);
@@ -95,7 +93,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 		buttonPanel.add(fButtonCancel);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
-		fTextfieldSetupName = new JTextField(20);
+		fTextfieldSetupName = new JTextField(dimensionProvider(), 20);
 		JPanel editPanel = new JPanel();
 		editPanel.setLayout(new BoxLayout(editPanel, BoxLayout.X_AXIS));
 		editPanel.add(fTextfieldSetupName);

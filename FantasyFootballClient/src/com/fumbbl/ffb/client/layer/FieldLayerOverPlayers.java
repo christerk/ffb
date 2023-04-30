@@ -10,6 +10,7 @@ import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.model.FieldModel;
@@ -40,8 +41,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private FieldCoordinate fMarkerCoordinate;
 
-	public FieldLayerOverPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerOverPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void removeThrownPlayer() {
@@ -146,7 +147,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				} else {
 					numberGoForIt.append(6);
 				}
-				g2d.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+				g2d.setFont(fontCache.font(Font.PLAIN, 10));
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D numberBounds = metrics.getStringBounds(numberGoForIt.toString(), g2d);
 				x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) - 5;
@@ -159,7 +160,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 
 				StringBuilder numberDodge = new StringBuilder();
 				numberDodge.append(pMoveSquare.getMinimumRollDodge()).append("+");
-				g2d.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+				g2d.setFont(fontCache.font(Font.PLAIN, 10));
 				metrics = g2d.getFontMetrics();
 				numberBounds = metrics.getStringBounds(numberDodge.toString(), g2d);
 				x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) + 7;
@@ -176,7 +177,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 					} else {
 						number.append(6);
 					}
-					g2d.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+					g2d.setFont(fontCache.font(Font.PLAIN, 11));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D numberBounds = metrics.getStringBounds(number.toString(), g2d);
 					x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) + 1;

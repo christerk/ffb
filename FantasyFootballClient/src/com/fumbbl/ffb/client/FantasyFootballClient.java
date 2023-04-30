@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryManager;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
@@ -32,10 +33,17 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -44,14 +52,11 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	private Game fGame;
 	private final UserInterface fUserInterface;
 	private final ClientCommunication fCommunication;
-	private final Thread fCommunicationThread;
 	private Timer fPingTimer;
-	private ClientPingTask fClientPingTask;
 	private Properties fProperties;
 	private ClientState fState;
 	private final ClientStateFactory fStateFactory;
 	private final ClientCommandHandlerFactory fCommandHandlerFactory;
-	private boolean fConnectionEstablished;
 	private final ActionKeyBindings fActionKeyBindings;
 	private final ClientReplayer fReplayer;
 	private final ClientParameters fParameters;
@@ -63,11 +68,16 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	private final transient ClientData fClientData;
 
 	private final FactoryManager factoryManager;
+	@SuppressWarnings("rawtypes")
 	private final Map<Factory, INamedObjectFactory> factories;
 
 	private transient int currentMouseButton;
 
+	private final Preferences prefs;
+
 	public FantasyFootballClient(ClientParameters pParameters) throws IOException {
+		prefs = Preferences.userRoot().node("FfbUserSettings_" + pParameters.getCoach());
+
 		factoryManager = new FactoryManager();
 		factories = factoryManager.getFactoriesForContext(getContext());
 
@@ -77,6 +87,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fClientData = new ClientData();
 
 		loadProperties();
+		loadLocallyStoredProperties();
 
 		fActionKeyBindings = new ActionKeyBindings(this);
 
@@ -101,7 +112,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fCommandEndpoint = new CommandEndpoint(this);
 
 		fCommunication = new ClientCommunication(this);
-		fCommunicationThread = new Thread(fCommunication);
+		Thread fCommunicationThread = new Thread(fCommunication);
 		fCommunicationThread.start();
 
 		fPingTimer = new Timer(true);
@@ -126,13 +137,12 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	}
 
 	public void connectionEstablished(boolean pSuccessful) {
-		fConnectionEstablished = pSuccessful;
 		synchronized (this) {
 			this.notify();
 		}
 	}
 
-	public void showUserInterface() throws IOException {
+	public void showUserInterface() {
 		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
 		getUserInterface().getFieldComponent().refresh();
 		getUserInterface().setVisible(true);
@@ -169,10 +179,10 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 			pAnyException.printStackTrace();
 		}
 
-		String pingIntervalProperty = getProperty(IClientProperty.CLIENT_PING_INTERVAL);
+		String pingIntervalProperty = getProperty(CommonProperty.CLIENT_PING_INTERVAL);
 		if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
 			int pingInterval = Integer.parseInt(pingIntervalProperty);
-			fClientPingTask = new ClientPingTask(this);
+			ClientPingTask fClientPingTask = new ClientPingTask(this);
 			fPingTimer.schedule(fClientPingTask, 0, pingInterval);
 		}
 
@@ -195,8 +205,16 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		System.exit(0);
 	}
 
+	public String getProperty(CommonProperty property) {
+		return getProperty(property.getKey());
+	}
+
 	public String getProperty(String pProperty) {
 		return fProperties.getProperty(pProperty);
+	}
+
+	public void setProperty(CommonProperty pProperty, String pValue) {
+		setProperty(pProperty.getKey(), pValue);
 	}
 
 	public void setProperty(String pProperty, String pValue) {
@@ -206,19 +224,38 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		fProperties.setProperty(pProperty, pValue);
 	}
 
-	public void clearProperty(String property) {
-		fProperties.remove(property);
-	}
-
 	public void saveUserSettings(boolean pUserinterfaceInit) {
-		String[] settingValues = new String[IClientProperty._SAVED_USER_SETTINGS.length];
-		for (int i = 0; i < IClientProperty._SAVED_USER_SETTINGS.length; i++) {
-			settingValues[i] = getProperty(IClientProperty._SAVED_USER_SETTINGS[i]);
+		List<CommonProperty> localProperties = getLocallyStoredPropertyKeys();
+
+		List<CommonProperty> remoteProperties = Arrays.stream(CommonProperty._SAVED_USER_SETTINGS)
+			.filter(property -> !localProperties.contains(property)).collect(Collectors.toList());
+
+		String[] settingValues = new String[remoteProperties.size()];
+		for (int i = 0; i < remoteProperties.size(); i++) {
+			settingValues[i] = getProperty(remoteProperties.get(i));
 		}
-		getCommunication().sendUserSettings(IClientProperty._SAVED_USER_SETTINGS, settingValues);
-		getClientState().refreshSettings();
+		getCommunication().sendUserSettings(remoteProperties.toArray(new CommonProperty[0]), settingValues);
+
+		updateLocalPropertiesStore();
+
 		if (pUserinterfaceInit) {
 			getUserInterface().init(getGame().getOptions());
+		}
+	}
+
+	public void updateLocalPropertiesStore() {
+		try {
+			prefs.clear();
+			for (CommonProperty property : CommonProperty._SAVED_USER_SETTINGS) {
+				String key = property.getKey();
+				String value = getProperty(property);
+				if (StringTool.isProvided(key) && StringTool.isProvided(value)) {
+					prefs.put(key, value);
+				}
+			}
+
+		} catch (BackingStoreException e) {
+			logError(0, "Could not update locally stored properties: " + e.getMessage());
 		}
 	}
 
@@ -229,7 +266,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 				fState.leaveState();
 			}
 			fState = newState;
-			if (Boolean.parseBoolean(getProperty(IClientProperty.CLIENT_DEBUG_STATE))) {
+			if (Boolean.parseBoolean(getProperty(CommonProperty.CLIENT_DEBUG_STATE))) {
 				getCommunication().sendDebugClientState(fState.getId());
 			}
 			getUserInterface().getGameMenuBar().changeState(fState.getId());
@@ -244,14 +281,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	public ClientCommandHandlerFactory getCommandHandlerFactory() {
 		return fCommandHandlerFactory;
-	}
-
-	public ClientPingTask getClientPingTask() {
-		return fClientPingTask;
-	}
-
-	public boolean isConnectionEstablished() {
-		return fConnectionEstablished;
 	}
 
 	public static void main(String[] args) {
@@ -286,6 +315,31 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		}
 	}
 
+	public List<CommonProperty> getLocallyStoredPropertyKeys() {
+		String property = getProperty(CommonProperty.SETTING_LOCAL_SETTINGS);
+		if (!StringTool.isProvided(property)) {
+			return Collections.emptyList();
+		}
+
+		return Arrays.stream(property.split(","))
+			.map(CommonProperty::forKey)
+			.filter(Objects::nonNull).collect(Collectors.toList());
+	}
+
+	public void setLocallyStoredPropertyKeys(List<CommonProperty> properties) {
+		setProperty(CommonProperty.SETTING_LOCAL_SETTINGS, properties.stream().map(CommonProperty::getKey).collect(Collectors.joining(",")));
+	}
+
+	public void loadLocallyStoredProperties() {
+		try {
+			Arrays.stream(prefs.keys()).map(CommonProperty::forKey)
+				.filter(Objects::nonNull)
+				.forEach(property -> setProperty(property, prefs.get(property.getKey(), "")));
+		} catch (BackingStoreException e) {
+			logDebug(0, "Could not load Preferences: " + e.getMessage());
+		}
+	}
+
 	public ClientData getClientData() {
 		return fClientData;
 	}
@@ -304,7 +358,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	public InetAddress getServerHost() throws UnknownHostException {
 		String serverName = StringTool.isProvided(getParameters().getServer()) ? getParameters().getServer()
-				: getProperty(IClientProperty.SERVER_HOST);
+			: getProperty(IClientProperty.SERVER_HOST);
 
 		return InetAddress.getByName(serverName);
 	}
@@ -330,7 +384,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		return FactoryContext.APPLICATION;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
 		return (T) factories.get(factory);

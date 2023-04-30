@@ -5,10 +5,12 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -20,7 +22,6 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,16 +157,17 @@ public class UtilClientStateBlocking {
 
 	public static void createAndShowBlockOptionsPopupMenu(ClientState pClientState, Player<?> attacker, Player<?> defender, boolean multiBlock) {
 		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
+		DimensionProvider dimensionProvider = pClientState.dimensionProvider();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
-			JMenuItem stabAction = new JMenuItem("Stab Opponent",
+			JMenuItem stabAction = new JMenuItem(dimensionProvider, "Stab Opponent",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
 			stabAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAB);
 			stabAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAB, 0));
 			menuItemList.add(stabAction);
 		}
 		if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative) && !multiBlock) {
-			JMenuItem chainsawAction = new JMenuItem("Chainsaw",
+			JMenuItem chainsawAction = new JMenuItem(dimensionProvider, "Chainsaw",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW)));
 			chainsawAction.setMnemonic(IPlayerPopupMenuKeys.KEY_CHAINSAW);
 			chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
@@ -173,13 +175,13 @@ public class UtilClientStateBlocking {
 		}
 		Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
 		if (vomitSkill.isPresent()) {
-			JMenuItem projectileVomit = new JMenuItem(vomitSkill.get().getName(),
+			JMenuItem projectileVomit = new JMenuItem(dimensionProvider, vomitSkill.get().getName(),
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
 			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 			projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
 			menuItemList.add(projectileVomit);
 		}
-		JMenuItem blockAction = new JMenuItem("Block Opponent",
+		JMenuItem blockAction = new JMenuItem(dimensionProvider, "Block Opponent",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
 		blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
 		blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));

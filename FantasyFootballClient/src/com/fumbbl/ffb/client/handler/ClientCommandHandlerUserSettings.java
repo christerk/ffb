@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.handler;
 
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.DialogChangeList;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -33,22 +33,24 @@ public class ClientCommandHandlerUserSettings extends ClientCommandHandler imple
 
 		ServerCommandUserSettings userSettingsCommand = (ServerCommandUserSettings) pNetCommand;
 
-		String[] settingNames = userSettingsCommand.getUserSettingNames();
-		for (String settingName : settingNames) {
+		CommonProperty[] settingNames = userSettingsCommand.getUserSettingNames();
+		for (CommonProperty settingName : settingNames) {
 			getClient().setProperty(settingName, userSettingsCommand.getUserSettingValue(settingName));
 		}
+
+		getClient().updateLocalPropertiesStore();
 
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
 			refreshGameMenuBar();
 		}
 
 
-		String lastFingerPrint = getClient().getProperty(IClientProperty.SETTING_LAST_CHANGE_LOG_FINGERPRINT);
+		String lastFingerPrint = getClient().getProperty(CommonProperty.SETTING_LAST_CHANGE_LOG_FINGERPRINT);
 
 		if (!ChangeList.INSTANCE.fingerPrint().equals(lastFingerPrint) && dialogChangeList == null) {
 			dialogChangeList = new DialogChangeList(getClient());
 			dialogChangeList.showDialog(this);
-			getClient().setProperty(IClientProperty.SETTING_LAST_CHANGE_LOG_FINGERPRINT, ChangeList.INSTANCE.fingerPrint());
+			getClient().setProperty(CommonProperty.SETTING_LAST_CHANGE_LOG_FINGERPRINT, ChangeList.INSTANCE.fingerPrint());
 			getClient().saveUserSettings(false);
 		}
 

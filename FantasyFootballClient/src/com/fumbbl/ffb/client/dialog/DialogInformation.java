@@ -1,6 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JCheckBox;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -8,9 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,9 +26,9 @@ public class DialogInformation extends Dialog implements ActionListener {
 	public static final int OK_DIALOG = 1;
 	public static final int CANCEL_DIALOG = 2;
 
-	private final JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
+	private final JCheckBox doNotShowAgainCheckbox;
 	private final int fOptionType;
-	private final String panelProperty;
+	private final CommonProperty panelProperty;
 	private final String panelOffValue;
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String pMessage, int pOptionType) {
@@ -45,19 +46,20 @@ public class DialogInformation extends Dialog implements ActionListener {
 	}
 
 	public DialogInformation(FantasyFootballClient pClient, String pTitle, String[] pMessages, int pOptionType,
-													 boolean pCenteredText, String pIconProperty, String panelProperty, String panelOffValue) {
+													 boolean pCenteredText, String pIconProperty, CommonProperty panelProperty, String panelOffValue) {
 
 		super(pClient, pTitle, false);
 		fOptionType = pOptionType;
+		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again");
 
 		this.panelProperty = panelProperty;
 		this.panelOffValue = panelOffValue;
 
 		JButton fButton;
 		if (getOptionType() == OK_DIALOG) {
-			fButton = new JButton("Ok");
+			fButton = new JButton(dimensionProvider(), "Ok");
 		} else {
-			fButton = new JButton("Cancel");
+			fButton = new JButton(dimensionProvider(), "Cancel");
 		}
 		fButton.addActionListener(this);
 
@@ -65,7 +67,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 		for (int i = 0; i < pMessages.length; i++) {
 			messagePanels[i] = new JPanel();
 			messagePanels[i].setLayout(new BoxLayout(messagePanels[i], BoxLayout.X_AXIS));
-			messagePanels[i].add(new JLabel(pMessages[i]));
+			messagePanels[i].add(new JLabel(dimensionProvider(), pMessages[i]));
 			if (!pCenteredText) {
 				messagePanels[i].add(Box.createHorizontalGlue());
 			}
@@ -84,7 +86,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
 			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
-			infoPanel.add(new JLabel(new ImageIcon(icon)));
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

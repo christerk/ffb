@@ -1,18 +1,18 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.ui.swing.JComboBox;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.inducement.InducementType;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import com.fumbbl.ffb.inducement.InducementType;
 
 public class DropDownPanel extends JPanel implements ActionListener {
 
@@ -25,8 +25,8 @@ public class DropDownPanel extends JPanel implements ActionListener {
 	private boolean fHandleEvents = true;
 	private final InducementType fInducementType;
 
-	public DropDownPanel(InducementType pInducementType, int pMax, String pText, int pCost, ActionListener pListener,
-			int pAvailableGold) {
+	public DropDownPanel(DimensionProvider dimensionProvider, InducementType pInducementType, int pMax, String pText, int pCost, ActionListener pListener,
+											 int pAvailableGold) {
 		super();
 		fInducementType = pInducementType;
 		fMax = pMax;
@@ -38,7 +38,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		for (int i = 0; i <= fMax && i * fCost <= pAvailableGold; i++) {
 			anzahl.add(Integer.toString(i));
 		}
-		fBox = new JComboBox<>(anzahl.toArray(new String[0]));
+		fBox = new JComboBox<>(dimensionProvider, anzahl.toArray(new String[0]));
 		fBox.setSelectedIndex(0);
 		fBox.setMaximumSize(fBox.getMinimumSize());
 		fBox.addActionListener(pListener);
@@ -48,8 +48,8 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		add(fBox);
 		add(Box.createHorizontalStrut(10));
-		JLabel label = new JLabel(
-				pText + " (Max: " + fMax + "  " + formatGold(fCost) + " Gold" + (pMax > 1 ? " each)" : ")"));
+		JLabel label = new JLabel(dimensionProvider,
+			pText + " (Max: " + fMax + "  " + formatGold(fCost) + " Gold" + (pMax > 1 ? " each)" : ")"));
 		add(label);
 		add(Box.createHorizontalGlue());
 

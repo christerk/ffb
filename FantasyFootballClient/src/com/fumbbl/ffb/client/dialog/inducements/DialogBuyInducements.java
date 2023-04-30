@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.util.StringTool;
@@ -8,7 +9,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Font;
 import java.awt.Point;
@@ -28,14 +28,14 @@ public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 		JPanel fGoldPanel = new JPanel();
 		fGoldPanel.setLayout(new BoxLayout(fGoldPanel, BoxLayout.X_AXIS));
 
-		JLabel goldLabel = new JLabel("Available Gold:");
-		goldLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		JLabel goldLabel = new JLabel(dimensionProvider(), "Available Gold:");
+		goldLabel.setFont(fontCache().font(Font.BOLD, 12));
 
 		fGoldPanel.add(goldLabel);
 		fGoldPanel.add(Box.createHorizontalStrut(10));
 
-		fGoldLabelAmount = new JLabel(StringTool.formatThousands(getAvailableGold()));
-		fGoldLabelAmount.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		fGoldLabelAmount = new JLabel(dimensionProvider(), StringTool.formatThousands(getAvailableGold()));
+		fGoldLabelAmount.setFont(fontCache().font(Font.BOLD, 12));
 
 		fGoldPanel.add(fGoldLabelAmount);
 		fGoldPanel.add(Box.createHorizontalGlue());
@@ -86,7 +86,6 @@ public class DialogBuyInducements extends AbstractBuyInducementsDialog {
 				keyHandled = true;
 				break;
 			default:
-				keyHandled = false;
 				break;
 		}
 		if (keyHandled) {

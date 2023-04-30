@@ -3,14 +3,14 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Player;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
@@ -36,13 +36,13 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		super(client, "Player Choice", false);
 		fMinSelects = minSelects;
 
-		fButtonSelect = new JButton("Select");
+		fButtonSelect = new JButton(dimensionProvider(), "Select");
 		fButtonSelect.setToolTipText("Select the checked player(s)");
 		fButtonSelect.addActionListener(this);
 		fButtonSelect.setMnemonic((int) 'S');
 		fButtonSelect.setEnabled((playerIds.length == 1) || preSelected);
 
-		fButtonCancel = new JButton("Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
 		fButtonCancel.setToolTipText("Do not select any player");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'C');
@@ -71,7 +71,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 		JPanel headerPanel = new JPanel();
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-		JLabel headerLabel = new JLabel(header);
+		JLabel headerLabel = new JLabel(dimensionProvider(), header);
 		headerLabel.setFont(new Font(headerLabel.getFont().getName(), Font.BOLD, headerLabel.getFont().getSize()));
 		headerPanel.add(headerLabel);
 		headerPanel.add(Box.createHorizontalGlue());

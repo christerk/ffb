@@ -1,6 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JCheckBox;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -8,9 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,29 +19,30 @@ import java.awt.image.BufferedImage;
 
 public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 
-	private final JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this panel again");
+	private final JCheckBox doNotShowAgainCheckbox;
 
-	private final String panelProperty; // IClientProperty.SETTING_BLITZ_TARGET_PANEL;
+	private final CommonProperty panelProperty; // CommonProperty.SETTING_BLITZ_TARGET_PANEL;
 	private final String panelOffValue; // IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF;
 	private final DialogId dialogId; // DialogId.SELECT_BLITZ_TARGET;
 
 	public DialogSelectBlitzTarget(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
-	                               DialogId dialogId, String panelProperty, String panelOffValue) {
+																 DialogId dialogId, CommonProperty panelProperty, String panelOffValue) {
 
 		super(pClient, pTitle, false);
 
 		this.dialogId = dialogId;
 		this.panelProperty = panelProperty;
 		this.panelOffValue = panelOffValue;
+		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again");
 
-		JButton fButton = new JButton("Ok");
+		JButton fButton = new JButton(dimensionProvider(), "Ok");
 		fButton.addActionListener(this);
 
 		JPanel[] messagePanels = new JPanel[pMessages.length];
 		for (int i = 0; i < pMessages.length; i++) {
 			messagePanels[i] = new JPanel();
 			messagePanels[i].setLayout(new BoxLayout(messagePanels[i], BoxLayout.X_AXIS));
-			messagePanels[i].add(new JLabel(pMessages[i]));
+			messagePanels[i].add(new JLabel(dimensionProvider(), pMessages[i]));
 			messagePanels[i].add(Box.createHorizontalGlue());
 		}
 
@@ -57,7 +59,7 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
 			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
-			infoPanel.add(new JLabel(new ImageIcon(icon)));
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.net;
 
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.GameTitle;
 import com.fumbbl.ffb.client.ui.GameTitleUpdateTask;
@@ -42,10 +42,7 @@ public class CommandEndpoint {
 		fClient = pClient;
 		fNetCommandFactory = new NetCommandFactory(pClient.getFactorySource());
 		fCloseLatch = new CountDownLatch(1);
-		String commandCompressionProperty = null;
-		if (fClient != null) {
-			commandCompressionProperty = fClient.getProperty(IClientProperty.CLIENT_COMMAND_COMPRESSION);
-		}
+		String commandCompressionProperty = fClient.getProperty(CommonProperty.CLIENT_COMMAND_COMPRESSION);
 		fCommandCompression = false;
 		if (StringTool.isProvided(commandCompressionProperty)) {
 			fCommandCompression = Boolean.parseBoolean(commandCompressionProperty);
@@ -53,13 +50,13 @@ public class CommandEndpoint {
 	}
 
 	@OnOpen
-	public void onOpen(Session session, EndpointConfig endpointConfig) {
+	public void onOpen(Session session, EndpointConfig unused) {
 		fSession = session;
 	}
 
 	@OnMessage
-	public void onBinary(byte[] buf, boolean last, Session session) {
-		this.onMessage(new String(buf, 0, buf.length, StandardCharsets.UTF_8));
+	public void onBinary(byte[] buf, boolean unused, Session ignored) {
+		this.onMessage(new String(buf, StandardCharsets.UTF_8));
 	}
 
 	@OnMessage
@@ -76,11 +73,12 @@ public class CommandEndpoint {
 	}
 
 	@OnClose
-	public void onClose(Session session, CloseReason closeReason) {
+	public void onClose(Session ignoredUnused, CloseReason ignored) {
 		fClient.getUserInterface().getStatusReport().reportSocketClosed();
 		fCloseLatch.countDown();
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
 		return fCloseLatch.await(duration, unit);
 	}
@@ -116,17 +114,18 @@ public class CommandEndpoint {
 	}
 
 	private void handleNetCommand(NetCommand netCommand) {
-		if (netCommand == null) {
-		} else if (NetCommandId.SERVER_PONG == netCommand.getId()) {
-			ServerCommandPong pongCommand = (ServerCommandPong) netCommand;
-			if (pongCommand.getTimestamp() > 0) {
-				long received = System.currentTimeMillis();
-				GameTitle gameTitle = new GameTitle();
-				gameTitle.setPingTime(received - pongCommand.getTimestamp());
-				fClient.getUserInterface().invokeLater(new GameTitleUpdateTask(fClient, gameTitle));
+		if (netCommand != null) {
+			if (NetCommandId.SERVER_PONG == netCommand.getId()) {
+				ServerCommandPong pongCommand = (ServerCommandPong) netCommand;
+				if (pongCommand.getTimestamp() > 0) {
+					long received = System.currentTimeMillis();
+					GameTitle gameTitle = new GameTitle();
+					gameTitle.setPingTime(received - pongCommand.getTimestamp());
+					fClient.getUserInterface().invokeLater(new GameTitleUpdateTask(fClient, gameTitle));
+				}
+			} else {
+				fClient.getCommunication().handleCommand(netCommand);
 			}
-		} else {
-			fClient.getCommunication().handleCommand(netCommand);
 		}
 	}
 

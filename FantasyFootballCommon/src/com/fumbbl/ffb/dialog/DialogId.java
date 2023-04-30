@@ -18,7 +18,7 @@ public enum DialogId implements INamedObject {
 	GAME_CHOICE("gameChoice"), KEY_BINDINGS("keyBindings"), BLOCK_ROLL("blockRoll"), PLAYER_CHOICE("playerChoice"),
 	DEFENDER_ACTION("defenderAction"), JOIN("join"), CONCEDE_GAME("concedeGame"), ABOUT("about"), END_TURN("endTurn"),
 	LEAVE_GAME("leaveGame"), BRIBES("bribes"), PILING_ON("pilingOn"), BUY_INDUCEMENTS("buyInducements"),
-	SOUND_VOLUME("soundVolume"), JOURNEYMEN("journeymen"),
+	SOUND_VOLUME("soundVolume"), JOURNEYMEN("journeymen"), SCALING_FACTOR("scalingFactor"),
 	CHAT_COMMANDS("chatCommands"), KICK_SKILL("kickSkill"), USE_IGOR("useIgor"), USE_MORTUARY_ASSISTANT("useMortuaryAssistant"),
 	KICKOFF_RETURN("kickoffReturn"), SWARMING("swarming"), SWARMING_ERROR("swarmingError"), PETTY_CASH("pettyCash"),
 	WIZARD_SPELL("wizardSpell"), USE_INDUCEMENT("useInducement"), PASS_BLOCK("passBlock"), BUY_CARDS("buyCards"),
@@ -27,7 +27,7 @@ public enum DialogId implements INamedObject {
 	BLOCK_ROLL_PARTIAL_RE_ROLL("blockRollPartialReRoll"), INVALID_SOLID_DEFENCE("invalidSolidDefence"), SELECT_SKILL("selectSkill"),
 	BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"), SELECT_GAZE_TARGET("selectGazeTarget"),
 	CONFIRM_END_ACTION("confirmEndAction"), CHANGE_LIST("changeList"), SELECT_WEATHER("selectWeather"),
-	INFORMATION_OKAY("informationOkay");
+	INFORMATION_OKAY("informationOkay"), STORE_PROPERTIES_LOCAL("storePropertiesLocal");
 
 	private final String fName;
 

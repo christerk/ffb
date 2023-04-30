@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.client.ui;
 
-import javax.swing.JTextField;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.ui.swing.JTextField;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -17,8 +19,8 @@ public class IntegerField extends JTextField {
 	/**
 	 * Default ctor.
 	 */
-	public IntegerField() {
-		super();
+	public IntegerField(DimensionProvider dimensionProvider) {
+		super(dimensionProvider);
 	}
 
 	/**
@@ -26,8 +28,8 @@ public class IntegerField extends JTextField {
 	 *
 	 * @param cols Number of columns.
 	 */
-	public IntegerField(int cols) {
-		super(cols);
+	public IntegerField(DimensionProvider dimensionProvider, int cols) {
+		super(dimensionProvider, cols);
 	}
 
 	/**

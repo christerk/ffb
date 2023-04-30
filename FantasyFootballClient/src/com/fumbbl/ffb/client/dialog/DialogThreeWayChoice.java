@@ -1,6 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -8,8 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -40,7 +42,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		this(client, title, messages, iconProperty, "Yes", 'Y', choiceTwoText, choiceTwoMnemonic, "No", 'N', null, null);
 	}
 
-	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty, String menuProperty, String defaultValueKey) {
+	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty, CommonProperty menuProperty, String defaultValueKey) {
 		this(pClient, pTitle, pMessages, pIconProperty, "Yes", 'Y', null, 0, "No", 'N', menuProperty, defaultValueKey);
 	}
 
@@ -51,27 +53,29 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 
 	public DialogThreeWayChoice(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
 															String choiceOneText, int choiceOneMnemonic, String choiceTwoText, int choiceTwoMnemonic,
-															String choiceThreeText, int choiceThreeMnemonic, String menuProperty, String defaultValueKey) {
+															String choiceThreeText, int choiceThreeMnemonic, CommonProperty menuProperty, String defaultValueKey) {
 
 		super(pClient, pTitle, false);
+
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
 
 		this.choiceOneMnemonic = choiceOneMnemonic;
 		this.choiceTwoMnemonic = choiceTwoMnemonic;
 		this.choiceThreeMnemonic = choiceThreeMnemonic;
 
-		buttonChoiceOne = new JButton(choiceOneText);
+		buttonChoiceOne = new JButton(dimensionProvider, choiceOneText);
 		buttonChoiceOne.addActionListener(this);
 		buttonChoiceOne.addKeyListener(this);
 		buttonChoiceOne.setMnemonic(choiceOneMnemonic);
 
 		if (StringTool.isProvided(choiceTwoText)) {
-			buttonChoiceTwo = new JButton(choiceTwoText);
+			buttonChoiceTwo = new JButton(dimensionProvider, choiceTwoText);
 			buttonChoiceTwo.addActionListener(this);
 			buttonChoiceTwo.addKeyListener(this);
 			buttonChoiceTwo.setMnemonic(choiceTwoMnemonic);
 		}
 
-		JButton buttonChoiceThree = new JButton(choiceThreeText);
+		JButton buttonChoiceThree = new JButton(dimensionProvider, choiceThreeText);
 		buttonChoiceThree.addActionListener(this);
 		buttonChoiceThree.addKeyListener(this);
 		buttonChoiceThree.setMnemonic(choiceThreeMnemonic);
@@ -87,7 +91,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 				}
 				JPanel messagePanel = new JPanel();
 				messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.X_AXIS));
-				JLabel messageLabel = new JLabel(pMessages[i]);
+				JLabel messageLabel = new JLabel(dimensionProvider(), pMessages[i]);
 				if (i == 0) {
 					messageLabel.setFont(new Font(messageLabel.getFont().getName(), Font.BOLD, messageLabel.getFont().getSize()));
 				}
@@ -101,7 +105,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
 			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
-			infoPanel.add(new JLabel(new ImageIcon(icon)));
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

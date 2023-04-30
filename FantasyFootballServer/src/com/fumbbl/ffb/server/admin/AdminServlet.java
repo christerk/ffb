@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server.admin;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameStatus;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.factory.GameStatusFactory;
@@ -449,7 +449,7 @@ public class AdminServlet extends HttpServlet {
 		DbUserSettingsQuery listQuery = (DbUserSettingsQuery) getServer().getDbQueryFactory()
 			.getStatement(DbStatementId.USER_SETTINGS_QUERY);
 		listQuery.execute(coach);
-		boolean isPortrait = IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(listQuery.getSettingValue(IClientProperty.SETTING_PITCH_ORIENTATION));
+		boolean isPortrait = IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(listQuery.getSettingValue(CommonProperty.SETTING_PITCH_ORIENTATION));
 		UtilXml.addValueElement(handler, "isPortrait", isPortrait);
 
 		return true;

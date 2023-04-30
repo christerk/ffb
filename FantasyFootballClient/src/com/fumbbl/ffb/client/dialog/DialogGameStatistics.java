@@ -24,13 +24,13 @@ import java.awt.Dimension;
 
 public class DialogGameStatistics extends Dialog {
 
-	private static final String _FONT_BOLD_OPEN = "<font face=\"Sans Serif\" size=\"-1\"><b>";
 	private static final String _FONT_BOLD_CLOSE = "</b></font>";
-	private static final String _FONT_LARGE_BOLD_OPEN = "<font face=\"Sans Serif\" size=\"+1\"><b>";
-	private static final String _FONT_BLUE_BOLD_OPEN = "<font color=\"#0000ff\" face=\"Sans Serif\" size=\"-1\"><b>";
-	private static final String _FONT_LARGE_BLUE_BOLD_OPEN = "<font color=\"#0000ff\" face=\"Sans Serif\" size=\"+1\"><b>";
-	private static final String _FONT_RED_BOLD_OPEN = "<font color=\"#ff0000\" face=\"Sans Serif\" size=\"-1\"><b>";
-	private static final String _FONT_LARGE_RED_BOLD_OPEN = "<font color=\"#ff0000\" face=\"Sans Serif\" size=\"+1\"><b>";
+	private final String fontBoldOpen;
+	private final String fontLargeBoldOpen;
+	private final String fontBlueBoldOpen;
+	private final String fontLargeBlueBoldOpen;
+	private final String fontRedBoldOpen;
+	private final String fontLargeRedBoldOpen;
 
 	private static final String _BACKGROUND_COLOR_SPP = "#e0e0e0";
 	private static final String _BACKGROUND_COLOR_TOTAL_SPP = "#c0c0c0";
@@ -38,6 +38,13 @@ public class DialogGameStatistics extends Dialog {
 	public DialogGameStatistics(FantasyFootballClient pClient) {
 
 		super(pClient, "Game Statistics", true);
+
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
+		fontLargeBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(13) + "px\"><b>";
+		fontBlueBoldOpen = "<font color=\"#0000ff\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
+		fontLargeBlueBoldOpen = "<font color=\"#0000ff\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(13) + "px\"><b>";
+		fontRedBoldOpen = "<font color=\"#ff0000\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
+		fontLargeRedBoldOpen = "<font color=\"#ff0000\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(13) + "px\"><b>";
 
 		Game game = getClient().getGame();
 
@@ -91,122 +98,122 @@ public class DialogGameStatistics extends Dialog {
 		StringBuilder statistics = new StringBuilder();
 		statistics.append("<html>\n");
 		statistics.append("<body>\n");
-		statistics.append(_FONT_LARGE_BOLD_OPEN).append("Team Comparison").append(_FONT_BOLD_CLOSE).append("<br/>\n");
+		statistics.append(fontLargeBoldOpen).append("Team Comparison").append(_FONT_BOLD_CLOSE).append("<br/>\n");
 		statistics.append("<br/>\n");
 		statistics.append("<table border=\"1\" cellspacing=\"0\">\n");
 		statistics.append("<tr>\n");
 		statistics.append("  <td></td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN).append(game.getTeamHome().getName())
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen).append(game.getTeamHome().getName())
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN).append(game.getTeamAway().getName())
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen).append(game.getTeamAway().getName())
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Team Value").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Team Value").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(StringTool.formatThousands(gameResult.getTeamResultHome().getTeamValue() / 1000)).append("k")
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(StringTool.formatThousands(gameResult.getTeamResultAway().getTeamValue() / 1000)).append("k")
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Completions").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Completions").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalCompletions()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().totalCompletions()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Touchdowns").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Touchdowns").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().getScore()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().getScore()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Deflections").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Deflections").append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 			.append(gameResult.getTeamResultHome().totalDeflections()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 			.append(gameResult.getTeamResultAway().totalDeflections()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Interceptions").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Interceptions").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalInterceptions()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().totalInterceptions()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Casualties").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Casualties").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalCasualties()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().totalCasualties()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Earned SPPs").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Earned SPPs").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalEarnedSpps()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().totalEarnedSpps()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Suffered Injuries")
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Suffered Injuries")
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN);
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen);
 		statistics.append(gameResult.getTeamResultHome().getBadlyHurtSuffered());
 		statistics.append(" / ").append(gameResult.getTeamResultHome().getSeriousInjurySuffered());
 		statistics.append(" / ").append(gameResult.getTeamResultHome().getRipSuffered());
 		statistics.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN);
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen);
 		statistics.append(gameResult.getTeamResultAway().getBadlyHurtSuffered());
 		statistics.append(" / ").append(gameResult.getTeamResultAway().getSeriousInjurySuffered());
 		statistics.append(" / ").append(gameResult.getTeamResultAway().getRipSuffered());
 		statistics.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Passing").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Passing").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalPassing()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().totalPassing()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Rushing").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Rushing").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalRushing()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().totalRushing()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Blocks").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Blocks").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalBlocks()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().totalBlocks()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Fouls").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Fouls").append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 			.append(gameResult.getTeamResultHome().totalFouls()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 			.append(gameResult.getTeamResultAway().totalFouls()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append(gameMechanic.fanModificationName()).append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append(gameMechanic.fanModificationName()).append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
 		StringBuilder fanFactorHome = new StringBuilder();
 		fanFactorHome.append(gameMechanic.fans(game.getTeamHome()));
@@ -217,7 +224,7 @@ public class DialogGameStatistics extends Dialog {
 		if (fanModifierHome < 0) {
 			fanFactorHome.append(" - ").append(Math.abs(fanModifierHome));
 		}
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN).append(fanFactorHome)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen).append(fanFactorHome)
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		StringBuilder fanFactorAway = new StringBuilder();
 		fanFactorAway.append(gameMechanic.fans(game.getTeamAway()));
@@ -228,48 +235,48 @@ public class DialogGameStatistics extends Dialog {
 		if (fanModifierAway < 0) {
 			fanFactorAway.append(" - ").append(Math.abs(fanModifierAway));
 		}
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN).append(fanFactorAway)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen).append(fanFactorAway)
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Assistant Coaches")
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Assistant Coaches")
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 			.append(game.getTeamHome().getAssistantCoaches()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 			.append(game.getTeamAway().getAssistantCoaches()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Cheerleaders").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Cheerleaders").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN).append(game.getTeamHome().getCheerleaders())
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen).append(game.getTeamHome().getCheerleaders())
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(game.getTeamAway().getCheerleaders()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Spectators").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Spectators").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().getSpectators()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 				.append(gameResult.getTeamResultAway().getSpectators()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append(gameMechanic.audienceName()).append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append(gameMechanic.audienceName()).append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 			.append(gameMechanic.audience(gameResult.getTeamResultHome())).append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 			.append(gameMechanic.audience(gameResult.getTeamResultAway())).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		if ((gameResult.getTeamResultHome().getWinnings() > 0) || (gameResult.getTeamResultAway().getWinnings() > 0)) {
 			statistics.append("<tr>\n");
-			statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Winnings").append(_FONT_BOLD_CLOSE)
+			statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Winnings").append(_FONT_BOLD_CLOSE)
 					.append("</td>\n");
-			statistics.append("  <td align=\"right\">").append(_FONT_RED_BOLD_OPEN)
+			statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 					.append(gameResult.getTeamResultHome().getWinnings()).append(_FONT_BOLD_CLOSE).append("</td>\n");
-			statistics.append("  <td align=\"right\">").append(_FONT_BLUE_BOLD_OPEN)
+			statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
 					.append(gameResult.getTeamResultAway().getWinnings()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 			statistics.append("</tr>\n");
 		}
@@ -295,49 +302,49 @@ public class DialogGameStatistics extends Dialog {
 		StringBuilder statistics = new StringBuilder();
 		statistics.append("<html>\n");
 		statistics.append("<body>\n");
-		statistics.append(homeTeam ? _FONT_LARGE_RED_BOLD_OPEN : _FONT_LARGE_BLUE_BOLD_OPEN).append(pTeam.getName())
+		statistics.append(homeTeam ? fontLargeRedBoldOpen : fontLargeBlueBoldOpen).append(pTeam.getName())
 				.append(_FONT_BOLD_CLOSE).append("<br/>\n");
 		statistics.append("<br/>\n");
 		statistics.append("<table border=\"1\" cellspacing=\"0\">\n");
 		// Player Cps TDs Int Cas MVP SPP Pass Rush Blocks Fouls
 		statistics.append("<tr>\n");
-		statistics.append("  <td colspan=\"2\" align=\"left\">").append(_FONT_BOLD_OPEN).append("Player")
+		statistics.append("  <td colspan=\"2\" align=\"left\">").append(fontBoldOpen).append("Player")
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Turns").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Turns").append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("Cps").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("Cps").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("Cps+").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("Cps+").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("TDs").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("TDs").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("Def").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("Def").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("Int").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("Int").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("Cas").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("Cas").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("Cas+").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("Cas+").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("MVP").append(_FONT_BOLD_CLOSE).append("</td>\n");
+			.append(fontBoldOpen).append("MVP").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_TOTAL_SPP).append("\">")
-			.append(_FONT_BOLD_OPEN).append("SPP").append(_FONT_BOLD_CLOSE).append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Pass").append(_FONT_BOLD_CLOSE)
+			.append(fontBoldOpen).append("SPP").append(_FONT_BOLD_CLOSE).append("</td>\n");
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Pass").append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Rush").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Rush").append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Blocks").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Blocks").append(_FONT_BOLD_CLOSE)
 			.append("</td>\n");
-		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Fouls").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Fouls").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
 		statistics.append("</tr>\n");
 		for (Player<?> player : pTeam.getPlayers()) {
 			PlayerResult playerResult = gameResult.getPlayerResult(player);
 			statistics.append("<tr>\n");
-			statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append(player.getNr())
+			statistics.append("  <td align=\"right\">").append(fontBoldOpen).append(player.getNr())
 				.append(_FONT_BOLD_CLOSE).append("</td>\n");
-			statistics.append("  <td align=\"left\">").append(homeTeam ? _FONT_RED_BOLD_OPEN : _FONT_BLUE_BOLD_OPEN)
+			statistics.append("  <td align=\"left\">").append(homeTeam ? fontRedBoldOpen : fontBlueBoldOpen)
 				.append(player.getName()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 			statistics.append("  <td align=\"right\">").append(formatPlayerStat(playerResult.getTurnsPlayed()))
 				.append("</td>\n");
@@ -381,7 +388,7 @@ public class DialogGameStatistics extends Dialog {
 	private String formatPlayerStat(int pPlayerStat) {
 		StringBuilder formattedStat = new StringBuilder();
 		if (pPlayerStat != 0) {
-			formattedStat.append(_FONT_BOLD_OPEN).append(pPlayerStat).append(_FONT_BOLD_CLOSE);
+			formattedStat.append(fontBoldOpen).append(pPlayerStat).append(_FONT_BOLD_CLOSE);
 		} else {
 			formattedStat.append("&nbsp;");
 		}
@@ -391,7 +398,7 @@ public class DialogGameStatistics extends Dialog {
 	private void setPreferredSize(Component component) {
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
-		component.setPreferredSize(new Dimension(this.getPreferredSize().width, frameSize.height - menuBarSize.height - 150));
+		component.setPreferredSize(new Dimension(this.getPreferredSize().width, frameSize.height - menuBarSize.height - dimensionProvider().scale(150)));
 	}
 
 	protected void setLocationToCenter() {

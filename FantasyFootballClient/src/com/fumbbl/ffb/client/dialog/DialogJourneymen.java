@@ -1,5 +1,20 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JComboBox;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.util.StringTool;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -10,39 +25,22 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.model.RosterPosition;
-import com.fumbbl.ffb.util.StringTool;
-
 /**
- * 
  * @author Kalimar
  */
 public class DialogJourneymen extends Dialog implements ActionListener, KeyListener {
 
-	private int fSlotsAvailable;
-	private String[] fPositionIds;
+	private final int fSlotsAvailable;
+	private final String[] fPositionIds;
 
-	private List<JComboBox<String>> fBoxes;
-	private int[] fSlotsSelected;
+	private final List<JComboBox<String>> fBoxes;
+	private final int[] fSlotsSelected;
 
-	private int fOldTeamValue;
+	private final int fOldTeamValue;
 	private int fNewTeamValue;
 
-	private JLabel fLabelNewTeamValue;
-	private JButton fButtonHire;
+	private final JLabel fLabelNewTeamValue;
+	private final JButton fButtonHire;
 
 	public DialogJourneymen(FantasyFootballClient pClient, int pSlots, String[] pPositionIds) {
 
@@ -55,7 +53,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
 		fBoxes = new ArrayList<>();
 		for (int i = 0; i < fPositionIds.length; i++) {
-			fBoxes.add(new JComboBox<String>());
+			fBoxes.add(new JComboBox<>(dimensionProvider()));
 		}
 		refreshModels();
 
@@ -72,8 +70,8 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 			boxLabelPanel.setLayout(new BoxLayout(boxLabelPanel, BoxLayout.X_AXIS));
 			boxLabelPanel.add(Box.createHorizontalGlue());
 			boxLabelPanel
-					.add(new JLabel(StringTool.isProvided(rosterPosition.getDisplayName()) ? rosterPosition.getDisplayName()
-							: rosterPosition.getName()));
+				.add(new JLabel(dimensionProvider(), StringTool.isProvided(rosterPosition.getDisplayName()) ? rosterPosition.getDisplayName()
+					: rosterPosition.getName()));
 			boxPanel.add(boxLabelPanel);
 			JPanel boxSelectPanel = new JPanel();
 			boxSelectPanel.setLayout(new BoxLayout(boxSelectPanel, BoxLayout.X_AXIS));
@@ -82,21 +80,20 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 			boxPanel.add(boxSelectPanel);
 		}
 
-		StringBuilder oldTeamValueText = new StringBuilder();
-		oldTeamValueText.append("Current Team Value is ").append(StringTool.formatThousands(fOldTeamValue / 1000))
-				.append("k.");
-		JLabel labelOldTeamValue = new JLabel(oldTeamValueText.toString());
+		String oldTeamValueText = "Current Team Value is " + StringTool.formatThousands(fOldTeamValue / 1000) +
+			"k.";
+		JLabel labelOldTeamValue = new JLabel(dimensionProvider(), oldTeamValueText);
 		labelOldTeamValue
-				.setFont(new Font(labelOldTeamValue.getFont().getName(), Font.BOLD, labelOldTeamValue.getFont().getSize()));
+			.setFont(new Font(labelOldTeamValue.getFont().getName(), Font.BOLD, labelOldTeamValue.getFont().getSize()));
 
 		JPanel oldTeamValuePanel = new JPanel();
 		oldTeamValuePanel.setLayout(new BoxLayout(oldTeamValuePanel, BoxLayout.X_AXIS));
 		oldTeamValuePanel.add(labelOldTeamValue);
 		oldTeamValuePanel.add(Box.createHorizontalGlue());
 
-		fLabelNewTeamValue = new JLabel();
+		fLabelNewTeamValue = new JLabel(dimensionProvider());
 		fLabelNewTeamValue
-				.setFont(new Font(fLabelNewTeamValue.getFont().getName(), Font.BOLD, fLabelNewTeamValue.getFont().getSize()));
+			.setFont(new Font(fLabelNewTeamValue.getFont().getName(), Font.BOLD, fLabelNewTeamValue.getFont().getSize()));
 		updateLabelNewTeamValue();
 
 		JPanel newTeamValuePanel = new JPanel();
@@ -104,16 +101,14 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 		newTeamValuePanel.add(fLabelNewTeamValue);
 		newTeamValuePanel.add(Box.createHorizontalGlue());
 
-		StringBuilder infoText = new StringBuilder();
-		infoText.append("You may hire up to ").append(fSlotsAvailable).append(" Journeymen.");
-		JLabel infoLabel = new JLabel(infoText.toString());
+		JLabel infoLabel = new JLabel(dimensionProvider(), "You may hire up to " + fSlotsAvailable + " Journeymen.");
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.add(infoLabel);
 		infoPanel.add(Box.createHorizontalGlue());
 
-		fButtonHire = new JButton("Hire");
+		fButtonHire = new JButton(dimensionProvider(), "Hire");
 		fButtonHire.addActionListener(this);
 		fButtonHire.addKeyListener(this);
 		fButtonHire.setMnemonic((int) 'H');
@@ -159,8 +154,8 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
 	private void refreshModels() {
 		int freeSlots = fSlotsAvailable;
-		for (int i = 0; i < fSlotsSelected.length; i++) {
-			freeSlots -= fSlotsSelected[i];
+		for (int k : fSlotsSelected) {
+			freeSlots -= k;
 		}
 		for (int i = 0; i < fBoxes.size(); i++) {
 			String[] selection = new String[fSlotsSelected[i] + freeSlots + 1];
@@ -169,7 +164,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 			}
 			JComboBox<String> box = fBoxes.get(i);
 			box.removeActionListener(this);
-			box.setModel(new DefaultComboBoxModel<String>(selection));
+			box.setModel(new DefaultComboBoxModel<>(selection));
 			box.setSelectedIndex(fSlotsSelected[i]);
 			box.setPreferredSize(box.getMinimumSize());
 			box.addActionListener(this);
@@ -183,7 +178,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 			}
 		} else {
 			for (int i = 0; i < fBoxes.size(); i++) {
-				JComboBox box = fBoxes.get(i);
+				JComboBox<String> box = fBoxes.get(i);
 				if (pActionEvent.getSource() == box) {
 					fSlotsSelected[i] = box.getSelectedIndex();
 					break;
@@ -215,9 +210,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 	}
 
 	private void updateLabelNewTeamValue() {
-		StringBuilder newTeamValueText = new StringBuilder();
-		newTeamValueText.append("New Team Value is ").append(StringTool.formatThousands(fNewTeamValue / 1000)).append("k.");
-		fLabelNewTeamValue.setText(newTeamValueText.toString());
+		fLabelNewTeamValue.setText("New Team Value is " + StringTool.formatThousands(fNewTeamValue / 1000) + "k.");
 	}
 
 }

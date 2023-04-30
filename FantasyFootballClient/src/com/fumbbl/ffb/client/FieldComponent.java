@@ -3,9 +3,7 @@ package com.fumbbl.ffb.client;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.TrackNumber;
@@ -21,6 +19,8 @@ import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.layer.FieldLayerTeamLogo;
 import com.fumbbl.ffb.client.layer.FieldLayerUnderPlayers;
 import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -64,19 +64,19 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private FieldCoordinate fBombCoordinate;
 	private final Map<String, FieldCoordinate> fCoordinateByPlayerId;
 
-	public FieldComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+	public FieldComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
 
 		fClient = pClient;
-		fLayerField = new FieldLayerPitch(pClient, dimensionProvider);
-		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, dimensionProvider);
-		fLayerBloodspots = new FieldLayerBloodspots(pClient, dimensionProvider);
-		fLayerRangeGrid = new FieldLayerRangeGrid(pClient, dimensionProvider);
-		fLayerMarker = new FieldLayerMarker(pClient, dimensionProvider);
-		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient, dimensionProvider);
-		fLayerPlayers = new FieldLayerPlayers(pClient, dimensionProvider);
-		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, dimensionProvider);
-		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, dimensionProvider);
-		layerEnhancements = new FieldLayerEnhancements(pClient, dimensionProvider);
+		fLayerField = new FieldLayerPitch(pClient, dimensionProvider, fontCache);
+		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, dimensionProvider, fontCache);
+		fLayerBloodspots = new FieldLayerBloodspots(pClient, dimensionProvider, fontCache);
+		fLayerRangeGrid = new FieldLayerRangeGrid(pClient, dimensionProvider, fontCache);
+		fLayerMarker = new FieldLayerMarker(pClient, dimensionProvider, fontCache);
+		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient, dimensionProvider, fontCache);
+		fLayerPlayers = new FieldLayerPlayers(pClient, dimensionProvider, fontCache);
+		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, dimensionProvider, fontCache);
+		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, dimensionProvider, fontCache);
+		layerEnhancements = new FieldLayerEnhancements(pClient, dimensionProvider, fontCache);
 
 		fCoordinateByPlayerId = new HashMap<>();
 

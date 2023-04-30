@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.net;
 
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
@@ -319,7 +320,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 	// Server Commands
 
-	public void sendUserSettings(Session pSession, String[] pSettingNames, String[] pSettingValues) {
+	public void sendUserSettings(Session pSession, CommonProperty[] pSettingNames, String[] pSettingValues) {
 		ServerCommandUserSettings userSettingsCommand = new ServerCommandUserSettings(pSettingNames, pSettingValues);
 		send(pSession, userSettingsCommand, true);
 		// not logged in Game Log

@@ -1,12 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -19,10 +12,16 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -75,16 +74,16 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
-			JMenuItem moveAction = new JMenuItem("Move Action",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move Action",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
 		}
 		if (actingPlayer.getPlayer() == pPlayer) {
 			String endMoveActionLabel = game.getActingPlayer().hasActed() ? "End Move" : "Deselect Player";
-			JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+			JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 			endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 			menuItemList.add(endMoveAction);

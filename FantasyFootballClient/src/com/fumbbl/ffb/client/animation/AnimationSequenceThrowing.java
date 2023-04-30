@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.animation;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.SoundId;
@@ -37,7 +37,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		fEndCoordinate = pEndCoordinate;
 		fInterceptorCoordinate = pInterceptorCoordinate;
 		fSound = pSound;
-		fTimer = new Timer(20, this);
+		fTimer = new Timer((int) (20 / dimensionProvider.getScale()), this);
 		this.dimensionProvider = dimensionProvider;
 	}
 
@@ -160,7 +160,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		fPositionX = fStartX;
 		fPositionY = fStartY;
 
-		String soundSetting = fFieldLayer.getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
+		String soundSetting = fFieldLayer.getClient().getProperty(CommonProperty.SETTING_SOUND_MODE);
 		if ((fSound != null) && (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting)
 				|| IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting))) {
 			SoundEngine soundEngine = fFieldLayer.getClient().getUserInterface().getSoundEngine();

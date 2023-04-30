@@ -8,6 +8,8 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.Game;
@@ -19,8 +21,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
@@ -44,7 +44,7 @@ public class DialogReRollForTargets extends Dialog {
 		dialogParameter = parameter;
 		ReRollSource singleUseReRollSource = parameter.getSingleUseReRollSource();
 
-		JButton fButtonNoReRoll = new JButton("No Re-Roll");
+		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 		fButtonNoReRoll.addActionListener(e -> close());
 		this.addKeyListener(new PressedKeyListener('N') {
 			@Override
@@ -83,7 +83,7 @@ public class DialogReRollForTargets extends Dialog {
 		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		mainMessages.stream().map(JLabel::new).forEach(label -> {
+		mainMessages.stream().map(message -> new JLabel(dimensionProvider(), message)).forEach(label -> {
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			mainMessagePanel.add(label);
 			mainMessagePanel.add(Box.createVerticalStrut(5));
@@ -106,12 +106,12 @@ public class DialogReRollForTargets extends Dialog {
 					textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 					textPanel.setAlignmentX(CENTER_ALIGNMENT);
 					textPanel.setBackground(HIGHLIGHT);
-					Arrays.stream(new String[] { "<html>The roll against " + player.getName() + " failed</html>",
-						"<html>You will need a roll of " + parameter.getMinimumRolls().get(target) + "+ to succeed.</html>" })
-					.map(JLabel::new).forEach(label -> {
-						label.setHorizontalAlignment(SwingConstants.CENTER);
-						textPanel.add(label);
-					});
+					Arrays.stream(new String[]{"<html>The roll against " + player.getName() + " failed</html>",
+							"<html>You will need a roll of " + parameter.getMinimumRolls().get(target) + "+ to succeed.</html>"})
+						.map(message -> new JLabel(dimensionProvider(), message)).forEach(label -> {
+							label.setHorizontalAlignment(SwingConstants.CENTER);
+							textPanel.add(label);
+						});
 					targetPanel.add(textPanel);
 				}
 
@@ -166,7 +166,7 @@ public class DialogReRollForTargets extends Dialog {
 		infoPanel.setAlignmentX(CENTER_ALIGNMENT);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL);
-		JLabel iconLabel = new JLabel(new ImageIcon(icon));
+		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
 		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(iconLabel);
 		infoPanel.add(Box.createHorizontalStrut(5));
@@ -183,7 +183,7 @@ public class DialogReRollForTargets extends Dialog {
 	}
 
 	private JButton createButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
-		JButton button = new JButton(buttonName);
+		JButton button = new JButton(dimensionProvider(), buttonName);
 		button.addActionListener(e -> handleUserInteraction(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override

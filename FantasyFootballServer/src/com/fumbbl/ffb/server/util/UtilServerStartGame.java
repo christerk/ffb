@@ -81,7 +81,7 @@ public class UtilServerStartGame {
 		}
 		String[] players = playerList.toArray(new String[0]);
 
-		Map<String, String> settingsMap = sendUserSettings(pGameState.getServer(), pCoach, pSession);
+		Map<CommonProperty, String> settingsMap = sendUserSettings(pGameState.getServer(), pCoach, pSession);
 
 		boolean silentJoin = pMode == ClientMode.SPECTATOR && pAccountProperties.contains("ADMIN");
 		if (!silentJoin) {
@@ -97,13 +97,13 @@ public class UtilServerStartGame {
 
 	}
 
-	public static Map<String, String> sendUserSettings(FantasyFootballServer server, String pCoach, Session pSession) {
-		List<String> settingNames = new ArrayList<>();
+	public static Map<CommonProperty, String> sendUserSettings(FantasyFootballServer server, String pCoach, Session pSession) {
+		List<CommonProperty> settingNames = new ArrayList<>();
 		List<String> settingValues = new ArrayList<>();
 		// always send any client settings defined in server.ini
 		for (String serverProperty : server.getProperties()) {
 			if (serverProperty.startsWith("client.")) {
-				settingNames.add(serverProperty);
+				settingNames.add(CommonProperty.forKey(serverProperty));
 				settingValues.add(server.getProperty(serverProperty));
 			}
 		}
@@ -114,10 +114,10 @@ public class UtilServerStartGame {
 		Collections.addAll(settingNames, userSettingsQuery.getSettingNames());
 		Collections.addAll(settingValues, userSettingsQuery.getSettingValues());
 		if ((settingNames.size() > 0) && (settingValues.size() > 0)) {
-			server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new String[0]),
+			server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new CommonProperty[0]),
 				settingValues.toArray(new String[0]));
 		}
-		Map<String, String> settingsMap = new HashMap<>();
+		Map<CommonProperty, String> settingsMap = new HashMap<>();
 		for (int i = 0; i < settingNames.size() && i < settingValues.size(); i++) {
 			settingsMap.put(settingNames.get(i), settingValues.get(i));
 		}

@@ -1,6 +1,9 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.inducement.Card;
@@ -14,8 +17,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
@@ -30,13 +31,13 @@ import java.util.Map;
  */
 public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
-	private static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
-	private static final Font REGULAR_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private final JLabel labelAvailableGold = new JLabel(), typeLabel = new JLabel();
+	private final Font boldFont;
+	private final Font regularFont;
+	private final JLabel labelAvailableGold, typeLabel;
+	@SuppressWarnings({"FieldCanBeLocal", "unused"})
 	private final JPanel dynamicPanel = new JPanel(), addCardPanel, deckChoicePanel, cardChoicePanel,
 		cardsListPanel = new JPanel(), cardsSummaryPanel = new JPanel();
-	private final JButton addCardButton = new JButton(), rerollChoiceButton = new JButton(), selectChoiceButton = new JButton(),
-		choiceOneButton = new JButton(), choiceTwoButton = new JButton();
+	private final JButton addCardButton, rerollChoiceButton, selectChoiceButton, choiceOneButton, choiceTwoButton;
 	private final Map<CardType, Integer> nrOfCardsPerType;
 	private final int cardPrice;
 	private int availableGold, cardSlots, maximumGold;
@@ -51,6 +52,20 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		this.parameter = pParameter;
 		superInitialized = true;
 		this.cardChoices = pParameter.getCardChoices();
+
+		addCardButton = new JButton(dimensionProvider());
+		rerollChoiceButton = new JButton(dimensionProvider());
+		selectChoiceButton = new JButton(dimensionProvider());
+		choiceOneButton = new JButton(dimensionProvider());
+		choiceTwoButton = new JButton(dimensionProvider());
+		labelAvailableGold = new JLabel(dimensionProvider());
+		typeLabel = new JLabel(dimensionProvider());
+
+		FontCache fontCache = pClient.getUserInterface().getFontCache();
+
+		boldFont = fontCache.font(Font.BOLD, 12);
+		regularFont = fontCache.font(Font.PLAIN, 11);
+
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
 		nrOfCardsPerType = pParameter.getNrOfCardsPerType();
@@ -107,7 +122,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		cardsListPanel.setLayout(new BoxLayout(cardsListPanel, BoxLayout.Y_AXIS));
 		cardsListPanel.add(Box.createVerticalStrut(5));
 		cardsListPanel.setAlignmentX(CENTER_ALIGNMENT);
-		cardsListPanel.add(label("Selected Cards:", BOLD_FONT));
+		cardsListPanel.add(label("Selected Cards:", boldFont));
 
 		JPanel wrapperPanel = new JPanel();
 		wrapperPanel.setLayout(new BoxLayout(wrapperPanel, BoxLayout.Y_AXIS));
@@ -119,17 +134,17 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private void updateSummaryPanel() {
 		cardsSummaryPanel.removeAll();
 		cardsSummaryPanel.add(Box.createVerticalStrut(5));
-		cardsSummaryPanel.add(label("Available Card Slots: " + cardSlots, BOLD_FONT));
+		cardsSummaryPanel.add(label("Available Card Slots: " + cardSlots, boldFont));
 		cardsSummaryPanel.add(Box.createVerticalStrut(5));
-		cardsSummaryPanel.add(label("Available Cards:", BOLD_FONT));
+		cardsSummaryPanel.add(label("Available Cards:", boldFont));
 		nrOfCardsPerType.forEach((key, value) -> {
 			cardsSummaryPanel.add(Box.createVerticalStrut(3));
-			cardsSummaryPanel.add(label(key.getDeckName() + ": " + value, REGULAR_FONT));
+			cardsSummaryPanel.add(label(key.getDeckName() + ": " + value, regularFont));
 		});
 	}
 
 	private JLabel label(String text, Font font) {
-		JLabel label = new JLabel();
+		JLabel label = new JLabel(dimensionProvider());
 		label.setText(text);
 		label.setFont(font);
 		return label;
@@ -145,7 +160,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		return verticalMainPanel;
 	}
 
-	private JPanel horizontalMainPanel(GameOptions gameOptions, JPanel panelCards) {
+	private JPanel horizontalMainPanel(GameOptions gameOptions, @SuppressWarnings("unused") JPanel panelCards) {
 		JPanel horizontalMainPanel = new JPanel();
 		horizontalMainPanel.setLayout(new BoxLayout(horizontalMainPanel, BoxLayout.X_AXIS));
 		horizontalMainPanel.add(buildInducementPanel(gameOptions));
@@ -158,7 +173,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		JPanel panelGold = new JPanel();
 		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
 
-		labelAvailableGold.setFont(BOLD_FONT);
+		labelAvailableGold.setFont(boldFont);
 
 		panelGold.add(Box.createHorizontalGlue());
 		panelGold.add(labelAvailableGold);
@@ -202,7 +217,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private JPanel buildAddCardPanel(DialogBuyCardsAndInducementsParameter pParameter) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		JLabel label = new JLabel();
+		JLabel label = new JLabel(dimensionProvider());
 		label.setText("<html>Buy card from random<br/>deck for "
 				+ StringTool.formatThousands(pParameter.getCardPrice()) + " gp</html>");
 		label.setAlignmentX(CENTER_ALIGNMENT);
@@ -277,7 +292,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	public void addCard(Card card) {
 		cardsListPanel.add(Box.createVerticalStrut(3));
-		cardsListPanel.add(new JLabel(card.getName()));
+		cardsListPanel.add(new JLabel(dimensionProvider(), card.getName()));
 		cardSlots--;
 		setMaximumGold(getMaximumGold() - cardPrice);
 		setAvailableGold(availableGold - cardPrice);

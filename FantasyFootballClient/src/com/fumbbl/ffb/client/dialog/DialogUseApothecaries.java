@@ -5,6 +5,8 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogUseApothecariesParameter;
 import com.fumbbl.ffb.model.Game;
@@ -14,8 +16,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
@@ -36,7 +36,7 @@ public class DialogUseApothecaries extends Dialog {
 
 		dialogParameter = parameter;
 
-		JButton fButtonNoReRoll = new JButton("No Apothecaries");
+		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Apothecaries");
 		fButtonNoReRoll.addActionListener(e -> close());
 		this.addKeyListener(new PressedKeyListener('N') {
 			@Override
@@ -53,7 +53,7 @@ public class DialogUseApothecaries extends Dialog {
 		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		JLabel mainLabel = new JLabel("<html>Do you want to use an Apothecary ?</html>");
+		JLabel mainLabel = new JLabel(dimensionProvider(), "<html>Do you want to use an Apothecary ?</html>");
 		mainLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		mainMessagePanel.add(mainLabel);
 		mainMessagePanel.add(Box.createVerticalStrut(5));
@@ -78,7 +78,7 @@ public class DialogUseApothecaries extends Dialog {
 			textPanel.setBackground(HIGHLIGHT);
 			String injury = injuryDescription.getSeriousInjury() != null ? injuryDescription.getSeriousInjury().getDescription() : injuryDescription.getPlayerState().getDescription();
 			Arrays.stream(new String[]{"<html>" + player.getName() + " suffered " + injury + "</html>"})
-				.map(JLabel::new).forEach(label -> {
+				.map(message -> new JLabel(dimensionProvider(), message)).forEach(label -> {
 					label.setHorizontalAlignment(SwingConstants.CENTER);
 					textPanel.add(label);
 				});
@@ -116,7 +116,7 @@ public class DialogUseApothecaries extends Dialog {
 		infoPanel.setAlignmentX(CENTER_ALIGNMENT);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.RESOURCE_APOTHECARY);
-		JLabel iconLabel = new JLabel(new ImageIcon(icon));
+		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
 		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(iconLabel);
 		infoPanel.add(Box.createHorizontalStrut(5));
@@ -133,7 +133,7 @@ public class DialogUseApothecaries extends Dialog {
 	}
 
 	private JButton createButton(String target, ApothecaryType apothecaryType, char mnemonic) {
-		JButton button = new JButton("Use Apothecary (" + apothecaryType.getName() + ")");
+		JButton button = new JButton(dimensionProvider(), "Use Apothecary (" + apothecaryType.getName() + ")");
 		button.addActionListener(e -> handleUserInteraction(target, apothecaryType));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override

@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
@@ -36,10 +36,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ResourceComponent extends JPanel {
 
-	private static final int _SLOT_HEIGHT = 40;
-	private static final int _SLOT_WIDTH = 46;
-	private static final int COUNTER_SIZE = 15;
-
 	private final SideBarComponent fSideBar;
 	private BufferedImage fImage;
 	private boolean fRefreshNecessary;
@@ -53,10 +49,10 @@ public class ResourceComponent extends JPanel {
 	private Dimension size;
 
 	public ResourceComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+		this.dimensionProvider = dimensionProvider;
 		fSideBar = pSideBar;
 		fSlots = createResourceSlots();
 		fRefreshNecessary = true;
-		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
@@ -72,34 +68,35 @@ public class ResourceComponent extends JPanel {
 
 	private ResourceSlot[] createResourceSlots() {
 		ResourceSlot[] resourceSlots;
+		Dimension dimension = dimensionProvider.unscaledDimension(DimensionProvider.Component.RESOURCE_SLOT);
 		if (getSideBar().isHomeSide()) {
 			resourceSlots = new ResourceSlot[]{
-				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
+				new ResourceSlot(new Rectangle(0, 3 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, 3 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), 3 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(0, 2 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, 2 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), 2 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(0, (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(0, 0, dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, 0, dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), 0, dimension.width, dimension.height))};
 		} else {
 			resourceSlots = new ResourceSlot[]{
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 3 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 2 * (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, (_SLOT_HEIGHT + 2), _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(2 * (_SLOT_WIDTH + 2), 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(_SLOT_WIDTH + 2, 0, _SLOT_WIDTH, _SLOT_HEIGHT)),
-				new ResourceSlot(new Rectangle(0, 0, _SLOT_WIDTH, _SLOT_HEIGHT))};
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), 3 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, 3 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(0, 3 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), 2 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, 2 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(0, 2 * (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(0, (dimension.height + 2), dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(2 * (dimension.width + 2), 0, dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(dimension.width + 2, 0, dimension.width, dimension.height)),
+				new ResourceSlot(new Rectangle(0, 0, dimension.width, dimension.height))};
 		}
 		return resourceSlots;
 	}
@@ -113,7 +110,7 @@ public class ResourceComponent extends JPanel {
 		if (styleProvider.getFrameBackground() == null) {
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage background;
-			String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+			String swapSetting = fSideBar.getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 			boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
 
 			boolean homeSide = getSideBar().isHomeSide();
@@ -139,18 +136,21 @@ public class ResourceComponent extends JPanel {
 			Graphics2D g2d = fImage.createGraphics();
 			int x = pSlot.getLocation().x;
 			int y = pSlot.getLocation().y;
-			BufferedImage resourceIcon = iconCache.getIconByProperty(pSlot.getIconProperty());
+			BufferedImage resourceIcon = iconCache.getUnscaledIconByProperty(pSlot.getIconProperty());
 			if (getSideBar().isHomeSide()) {
 				x += pSlot.getLocation().width - resourceIcon.getWidth() - 1;
 			} else {
 				x += 1;
 			}
 			y += (pSlot.getLocation().height - resourceIcon.getHeight() + 1) / 2;
-			g2d.drawImage(resourceIcon, x, y, null);
+			int scaledX = dimensionProvider.scale(x);
+			int scaledY = dimensionProvider.scale(y);
+			Dimension resourceDimension = dimensionProvider.scale(new Dimension(resourceIcon.getWidth(), resourceIcon.getHeight()));
+			g2d.drawImage(resourceIcon, scaledX, scaledY, resourceDimension.width, resourceDimension.height, null);
 			if (!pSlot.isEnabled()) {
 				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED);
-				g2d.drawImage(disabledIcon, x + (resourceIcon.getWidth() - disabledIcon.getWidth()) / 2,
-					y + (resourceIcon.getHeight() - disabledIcon.getHeight()) / 2, null);
+				g2d.drawImage(disabledIcon, scaledX + (resourceDimension.width - disabledIcon.getWidth()) / 2,
+					scaledY + (resourceDimension.height - disabledIcon.getHeight()) / 2, null);
 			}
 
 			List<ResourceValue> values = pSlot.getValues();
@@ -165,24 +165,26 @@ public class ResourceComponent extends JPanel {
 	}
 
 	private void drawCounter(IconCache iconCache, Graphics2D g2d, int x, int y, ResourceValue resourceValue, Dimension offset) {
-			Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
-			BufferedImage counter = iconCache.getIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
-				.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
+		Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
+		BufferedImage counter = iconCache.getUnscaledIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
+			.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
 
-			g2d.drawImage(counter, x + offset.width, y + offset.height, null);
+		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		g2d.drawImage(counter, dimensionProvider.scale(x + offset.width), dimensionProvider.scale(y + offset.height), counterSize.width, counterSize.height, null);
 	}
 
 	private Dimension offset(Rectangle location, int index) {
-		int width = index % 2 == 0 ? location.width - COUNTER_SIZE - 5 : 0;
-		int height = index < 2 ? location.height - COUNTER_SIZE : 0;
+		Dimension counterSize = dimensionProvider.unscaledDimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		int width = index % 2 == 0 ? location.width - counterSize.width - 5 : 0;
+		int height = index < 2 ? location.height - counterSize.height : 0;
 		return new Dimension(width, height);
 	}
 
 	private Rectangle counterCrop(int elementIndex) {
 		int row = elementIndex / 4;
 		int column = elementIndex % 4;
-
-		return new Rectangle(column * COUNTER_SIZE, row * COUNTER_SIZE, COUNTER_SIZE, COUNTER_SIZE);
+		Dimension counterSize = dimensionProvider.unscaledDimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		return new Rectangle(column * counterSize.width, row * counterSize.height, counterSize.width, counterSize.height);
 	}
 
 	private void updateSlots() {

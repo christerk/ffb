@@ -2,11 +2,13 @@ package com.fumbbl.ffb.client.util;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.marking.FieldMarker;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.ui.swing.JTextField;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.StringTool;
@@ -14,17 +16,13 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
 import java.awt.Dimension;
 
 /**
  * @author Kalimar
  */
 public class UtilClientMarker {
-
-	private static final int _FIELD_SQUARE_SIZE = 30;
 
 	public static void showMarkerPopup(final FantasyFootballClient pClient, final Player<?> pPlayer, int pX, int pY) {
 		if (pPlayer != null) {
@@ -91,11 +89,11 @@ public class UtilClientMarker {
 	private static JTextField createMarkerPopup(FieldComponent pFieldComponent, JPopupMenu pPopupMenu, String pTitle,
 			String pMarkerText, int pX, int pY) {
 		if (StringTool.isProvided(pTitle)) {
-			pPopupMenu.add(new JLabel(pTitle));
+			pPopupMenu.add(new JLabel(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), pTitle));
 		}
 		pPopupMenu.setLayout(new BoxLayout(pPopupMenu, BoxLayout.X_AXIS));
 		pPopupMenu.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-		JTextField markerField = new JTextField(7);
+		JTextField markerField = new JTextField(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), 7);
 		if (StringTool.isProvided(pMarkerText)) {
 			markerField.setText(pMarkerText);
 		}

@@ -9,6 +9,11 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+		versions.add(new VersionChangeList("2.19.0")
+			.addFeature("Add option to store user settings locally only")
+			.addFeature("Store remotely stored options also locally to init the client before connecting")
+			.addFeature("Resizing")
+		);
 
 		versions.add(new VersionChangeList("2.18.0")
 			.addFeature("Added options to change background colors for frame components, log and chat windows via User Settings -> Background Styles (should make it easier to filter out background for streaming)")
@@ -18,7 +23,7 @@ public class ChangeList {
 		);
 
 		versions.add(new VersionChangeList("2.17.1")
-        .addRemoval("Force player states to active")
+			.addRemoval("Force player states to active")
     );
 
 		versions.add(new VersionChangeList("2.17.0")

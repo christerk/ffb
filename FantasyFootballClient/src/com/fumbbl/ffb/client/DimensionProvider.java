@@ -3,7 +3,13 @@ package com.fumbbl.ffb.client;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 
+import javax.swing.border.TitledBorder;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,110 +21,24 @@ public class DimensionProvider {
 	private static final int SIDEBAR_WIDTH_L = 145;
 	private static final int SIDEBAR_WIDTH_P = 165;
 
-	private final Map<ClientLayout, Map<Component, Dimension>> dimensions = new HashMap<>();
-	private final int fieldSquareSize = 30;
+	private double scale;
 
-	public DimensionProvider(ClientLayout layout) {
+	public DimensionProvider(ClientLayout layout, double scale) {
 		this.layout = layout;
-		Map<Component, Dimension> portraitDimensions = new HashMap<>();
-		Map<Component, Dimension> squareDimensions = new HashMap<>();
-		Map<Component, Dimension> landscapeDimensions = new HashMap<>();
-
-		dimensions.put(ClientLayout.LANDSCAPE, landscapeDimensions);
-		dimensions.put(ClientLayout.PORTRAIT, portraitDimensions);
-		dimensions.put(ClientLayout.SQUARE, squareDimensions);
-
-		portraitDimensions.put(Component.FIELD, new Dimension(452, 782));
-		squareDimensions.put(Component.FIELD, new Dimension(452, 782));
-		landscapeDimensions.put(Component.FIELD, new Dimension(782, 452));
-
-		portraitDimensions.put(Component.CHAT, new Dimension(389, 153));
-		squareDimensions.put(Component.CHAT, new Dimension(260, 343));
-		landscapeDimensions.put(Component.CHAT, new Dimension(389, 226));
-
-		portraitDimensions.put(Component.LOG, new Dimension(389, 153));
-		squareDimensions.put(Component.LOG, new Dimension(260, 343));
-		landscapeDimensions.put(Component.LOG, new Dimension(389, 226));
-
-		portraitDimensions.put(Component.REPLAY_CONTROL, new Dimension(389, 26));
-		squareDimensions.put(Component.REPLAY_CONTROL, new Dimension(260, 26));
-		landscapeDimensions.put(Component.REPLAY_CONTROL, new Dimension(389, 26));
-
-		portraitDimensions.put(Component.TURN_DICE_STATUS, new Dimension(SIDEBAR_WIDTH_P, 101));
-		squareDimensions.put(Component.TURN_DICE_STATUS, new Dimension(SIDEBAR_WIDTH_P, 101));
-		landscapeDimensions.put(Component.TURN_DICE_STATUS, new Dimension(SIDEBAR_WIDTH_L, 92));
-
-		portraitDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_P, 185));
-		squareDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_P, 185));
-		landscapeDimensions.put(Component.RESOURCE, new Dimension(SIDEBAR_WIDTH_L, 168));
-
-		portraitDimensions.put(Component.BUTTON_BOX, new Dimension(SIDEBAR_WIDTH_P, 24));
-		squareDimensions.put(Component.BUTTON_BOX, new Dimension(SIDEBAR_WIDTH_P, 24));
-		landscapeDimensions.put(Component.BUTTON_BOX, new Dimension(SIDEBAR_WIDTH_L, 22));
-
-		portraitDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_P, 472));
-		squareDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_P, 472));
-		landscapeDimensions.put(Component.BOX, new Dimension(SIDEBAR_WIDTH_L, 430));
-
-		portraitDimensions.put(Component.PLAYER_DETAIL, new Dimension(SIDEBAR_WIDTH_P, 472));
-		squareDimensions.put(Component.PLAYER_DETAIL, new Dimension(SIDEBAR_WIDTH_P, 472));
-		landscapeDimensions.put(Component.PLAYER_DETAIL, new Dimension(SIDEBAR_WIDTH_L, 430));
-
-		portraitDimensions.put(Component.SIDEBAR, new Dimension(SIDEBAR_WIDTH_P, sidebarHeight(portraitDimensions)));
-		squareDimensions.put(Component.SIDEBAR, new Dimension(SIDEBAR_WIDTH_P, sidebarHeight(portraitDimensions)));
-		landscapeDimensions.put(Component.SIDEBAR, new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(landscapeDimensions)));
-
-		portraitDimensions.put(Component.PLAYER_PORTRAIT, new Dimension(133, 162));
-		squareDimensions.put(Component.PLAYER_PORTRAIT, new Dimension(133, 162));
-		landscapeDimensions.put(Component.PLAYER_PORTRAIT, new Dimension(121, 147));
-
-		portraitDimensions.put(Component.PLAYER_PORTRAIT_OFFSET, new Dimension(13, 32));
-		squareDimensions.put(Component.PLAYER_PORTRAIT_OFFSET, new Dimension(13, 32));
-		landscapeDimensions.put(Component.PLAYER_PORTRAIT_OFFSET, new Dimension(3, 32));
-
-		portraitDimensions.put(Component.PLAYER_STAT_OFFSET, new Dimension(4, 198));
-		squareDimensions.put(Component.PLAYER_STAT_OFFSET, new Dimension(4, 198));
-		landscapeDimensions.put(Component.PLAYER_STAT_OFFSET, new Dimension(3, 179));
-
-		portraitDimensions.put(Component.PLAYER_STAT_BOX, new Dimension(31, 30));
-		squareDimensions.put(Component.PLAYER_STAT_BOX, new Dimension(31, 30));
-		landscapeDimensions.put(Component.PLAYER_STAT_BOX, new Dimension(28, 29));
-
-		portraitDimensions.put(Component.PLAYER_STAT_BOX_MISC, new Dimension(0, 15));
-		squareDimensions.put(Component.PLAYER_STAT_BOX_MISC, new Dimension(0, 15));
-		landscapeDimensions.put(Component.PLAYER_STAT_BOX_MISC, new Dimension(0, 14));
-
-		portraitDimensions.put(Component.PLAYER_SPP_OFFSET, new Dimension(10, 245));
-		squareDimensions.put(Component.PLAYER_SPP_OFFSET, new Dimension(10, 245));
-		landscapeDimensions.put(Component.PLAYER_SPP_OFFSET, new Dimension(8, 222));
-
-		portraitDimensions.put(Component.PLAYER_SKILL_OFFSET, new Dimension(10, 270));
-		squareDimensions.put(Component.PLAYER_SKILL_OFFSET, new Dimension(10, 270));
-		landscapeDimensions.put(Component.PLAYER_SKILL_OFFSET, new Dimension(8, 246));
-
-		portraitDimensions.put(Component.BOX_BUTTON, new Dimension(82, 22));
-		squareDimensions.put(Component.BOX_BUTTON, new Dimension(82, 22));
-		landscapeDimensions.put(Component.BOX_BUTTON, new Dimension(72, 22));
-
-		portraitDimensions.put(Component.END_TURN_BUTTON, new Dimension(163, 34));
-		squareDimensions.put(Component.END_TURN_BUTTON, new Dimension(163, 34));
-		landscapeDimensions.put(Component.END_TURN_BUTTON, new Dimension(143, 31));
-
-		portraitDimensions.put(Component.SCORE_BOARD, new Dimension(782, 32));
-		squareDimensions.put(Component.SCORE_BOARD, new Dimension(260, 96));
-		landscapeDimensions.put(Component.SCORE_BOARD, new Dimension(782, 32));
-
-		portraitDimensions.put(Component.REPLAY_ICON_GAP, new Dimension(10, 0));
-		squareDimensions.put(Component.REPLAY_ICON_GAP, new Dimension(0, 0));
-		landscapeDimensions.put(Component.REPLAY_ICON_GAP, new Dimension(10, 0));
-
-		portraitDimensions.put(Component.REPLAY_ICON_WIDTH, new Dimension(36, 0));
-		squareDimensions.put(Component.REPLAY_ICON_WIDTH, new Dimension(30, 0));
-		landscapeDimensions.put(Component.REPLAY_ICON_WIDTH, new Dimension(36, 0));
+		this.scale = scale;
 	}
 
 	public Dimension dimension(Component component) {
-		return dimensions.get(layout).get(component);
+		return scale(unscaledDimension(component));
+	}
+
+	public Dimension dimension(Component component, double scale) {
+		Dimension dimension = unscaledDimension(component);
+		return new Dimension(scale(dimension.width, scale), scale(dimension.height, scale));
+	}
+
+	public Dimension unscaledDimension(Component component) {
+		return component.dimension(layout);
 	}
 
 	public boolean isPitchPortrait() {
@@ -133,6 +53,14 @@ public class DimensionProvider {
 		this.layout = layout;
 	}
 
+	public double getScale() {
+		return scale;
+	}
+
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+
 	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {
 		if (isPitchPortrait()) {
 			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
@@ -142,26 +70,29 @@ public class DimensionProvider {
 	}
 
 	public int fieldSquareSize() {
-		return fieldSquareSize;
+		return fieldSquareSize(1);
+	}
+
+	public int fieldSquareSize(double factor) {
+		return (int) scale(unscaledFieldSquare() * factor);
+	}
+
+	public int unscaledFieldSquare() {
+		return unscaledDimension(Component.FIELD_SQUARE).width;
 	}
 
 	public int imageOffset() {
-		return fieldSquareSize / 2;
-	}
-
-	private int sidebarHeight(Map<Component, Dimension> dimensions) {
-		return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BUTTON_BOX})
-			.map(dimensions::get).mapToDouble(Dimension::getHeight).sum();
+		return fieldSquareSize() / 2;
 	}
 
 	public Dimension mapToLocal(int x, int y, boolean addImageOffset) {
-		int offset = addImageOffset ? fieldSquareSize / 2 : 0;
+		int offset = addImageOffset ? unscaledFieldSquare() / 2 : 0;
 
 
 		if (isPitchPortrait()) {
-			return new Dimension(y * fieldSquareSize + offset, (25 - x) * fieldSquareSize + offset);
+			return scale(new Dimension(y * unscaledFieldSquare() + offset, (25 - x) * unscaledFieldSquare() + offset));
 		}
-		return new Dimension(x * fieldSquareSize + offset, y * fieldSquareSize + offset);
+		return scale(new Dimension(x * unscaledFieldSquare() + offset, y * unscaledFieldSquare() + offset));
 
 	}
 
@@ -198,14 +129,115 @@ public class DimensionProvider {
 		return direction;
 	}
 
+	public Dimension scale(Dimension dimension) {
+		return new Dimension(scale(dimension.width), scale(dimension.height));
+	}
+
+	public int scale(int size) {
+		return scale(size, scale);
+	}
+
+	public int scale(int size, double scale) {
+		return (int) (size * scale);
+	}
+
+	public double scale(double size) {
+		return (size * scale);
+	}
+
+	public Rectangle scale(Rectangle rectangle) {
+		return new Rectangle(scale(rectangle.x), scale(rectangle.y), scale(rectangle.width), scale(rectangle.height));
+	}
+
+	public BufferedImage scaleImage(BufferedImage pImage) {
+		if (scale == 1) {
+			return pImage;
+		}
+
+		BufferedImage scaledImage = new BufferedImage(scale(pImage.getWidth()), scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(scale, scale);
+		AffineTransformOp scaleOp =
+			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+
+		scaledImage = scaleOp.filter(pImage, scaledImage);
+		return scaledImage;
+	}
+
+	public void scaleFont(java.awt.Component component) {
+		Font font = component.getFont();
+		if (font != null) {
+			component.setFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize())));
+		}
+	}
+
+
+	public TitledBorder scaleFont(TitledBorder border) {
+		Font font = border.getTitleFont();
+		if (font != null) {
+			border.setTitleFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize())));
+		}
+		return border;
+	}
+
 	public enum ClientLayout {
 		LANDSCAPE, PORTRAIT, SQUARE
 	}
 
 	public enum Component {
-		FIELD, CHAT, LOG, REPLAY_CONTROL, TURN_DICE_STATUS, RESOURCE, BUTTON_BOX, BOX, PLAYER_DETAIL, SIDEBAR,
-		PLAYER_PORTRAIT, PLAYER_PORTRAIT_OFFSET, PLAYER_STAT_OFFSET, PLAYER_STAT_BOX, PLAYER_STAT_BOX_MISC,
-		PLAYER_SPP_OFFSET, PLAYER_SKILL_OFFSET, BOX_BUTTON, END_TURN_BUTTON, SCORE_BOARD, REPLAY_ICON_GAP,
-		REPLAY_ICON_WIDTH
+		FIELD(new Dimension(782, 452), new Dimension(452, 782)),
+		CHAT(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343)),
+		LOG(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343)),
+		REPLAY_CONTROL(new Dimension(389, 26), new Dimension(389, 26), new Dimension(260, 26)),
+		TURN_DICE_STATUS(new Dimension(SIDEBAR_WIDTH_L, 92), new Dimension(SIDEBAR_WIDTH_P, 101)),
+		RESOURCE(new Dimension(SIDEBAR_WIDTH_L, 168), new Dimension(SIDEBAR_WIDTH_P, 185)),
+		BUTTON_BOX(new Dimension(SIDEBAR_WIDTH_L, 22), new Dimension(SIDEBAR_WIDTH_P, 24)),
+		BOX(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472)),
+		PLAYER_DETAIL(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472)),
+		SIDEBAR(new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(ClientLayout.LANDSCAPE)), new Dimension(SIDEBAR_WIDTH_P, sidebarHeight(ClientLayout.PORTRAIT))),
+		PLAYER_PORTRAIT(new Dimension(121, 147), new Dimension(133, 162)),
+		PLAYER_PORTRAIT_OFFSET(new Dimension(3, 32), new Dimension(13, 32)),
+		PLAYER_STAT_OFFSET(new Dimension(3, 179), new Dimension(4, 198)),
+		PLAYER_STAT_BOX(new Dimension(28, 29), new Dimension(31, 30)),
+		PLAYER_STAT_BOX_MISC(new Dimension(0, 14), new Dimension(0, 15)),
+		PLAYER_SPP_OFFSET(new Dimension(8, 222), new Dimension(10, 245)),
+		PLAYER_SKILL_OFFSET(new Dimension(8, 246), new Dimension(10, 270)),
+		BOX_BUTTON(new Dimension(72, 22), new Dimension(82, 22)),
+		END_TURN_BUTTON(new Dimension(143, 31), new Dimension(163, 34)),
+		SCORE_BOARD(new Dimension(782, 32), new Dimension(782, 32), new Dimension(260, 96)),
+		REPLAY_ICON_GAP(new Dimension(10, 0), new Dimension(10, 0), new Dimension(0, 0)),
+		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0)),
+		FIELD_SQUARE(new Dimension(30, 30)),
+		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
+		RESOURCE_SLOT(new Dimension(46, 40)),
+		MAX_ICON(new Dimension(40, 40)),
+		ABOUT_DIALOG(new Dimension(813, 542)),
+		CLIENT_SIZE(new Dimension(1078, 762), new Dimension(788, 1019), new Dimension(1050, 834)),
+		BOX_SQUARE(new Dimension(39, 39));
+
+		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
+
+		Component(Dimension landscape, Dimension portrait, Dimension square) {
+			dimensions.put(ClientLayout.LANDSCAPE, landscape);
+			dimensions.put(ClientLayout.PORTRAIT, portrait);
+			dimensions.put(ClientLayout.SQUARE, square);
+		}
+
+		Component(Dimension landscape, Dimension portrait) {
+			this(landscape, portrait, portrait);
+		}
+
+		Component(Dimension landscape) {
+			this(landscape, landscape, landscape);
+		}
+
+		private static int sidebarHeight(ClientLayout layout) {
+			return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BUTTON_BOX})
+				.map(comp -> comp.dimension(layout)).mapToDouble(Dimension::getHeight).sum();
+		}
+
+		private Dimension dimension(ClientLayout layout) {
+			return dimensions.get(layout);
+		}
 	}
 }

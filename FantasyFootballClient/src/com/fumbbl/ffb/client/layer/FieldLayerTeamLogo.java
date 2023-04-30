@@ -1,10 +1,11 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
@@ -24,8 +25,8 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerTeamLogo extends FieldLayer {
 
-	public FieldLayerTeamLogo(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerTeamLogo(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void drawDistanceMarkers() {
@@ -38,7 +39,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 		int distance = (pX >= 13) ? (25 - pX) : pX;
 		String distanceString = Integer.toString(distance);
 		Graphics2D g2d = getImage().createGraphics();
-		g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
+		g2d.setFont(fontCache.font(Font.BOLD, 12));
 		FontMetrics metrics = g2d.getFontMetrics();
 		Rectangle2D distanceBounds = metrics.getStringBounds(distanceString, g2d);
 		Color distanceColor = (pX >= 13) ? new Color(120, 120, 255) : new Color(255, 120, 120);
@@ -66,7 +67,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
 	private void drawTeamLogo(Team pTeam, boolean pHomeTeam) {
 		if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
-			Dimension fieldDimension = getClient().getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD);
+			Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam));
 			if (teamLogo != null) {
@@ -101,11 +102,11 @@ public class FieldLayerTeamLogo extends FieldLayer {
 	public void init() {
 		clear(true);
 		Game game = getClient().getGame();
-		String markingsSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_MARKINGS);
+		String markingsSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_MARKINGS);
 		if (IClientPropertyValue.SETTING_PITCH_MARKINGS_ON.equals(markingsSetting)) {
 			drawDistanceMarkers();
 		}
-		String teamLogosSetting = getClient().getProperty(IClientProperty.SETTING_TEAM_LOGOS);
+		String teamLogosSetting = getClient().getProperty(CommonProperty.SETTING_TEAM_LOGOS);
 		if (IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH.equals(teamLogosSetting)) {
 			drawTeamLogo(game.getTeamHome(), true);
 			drawTeamLogo(game.getTeamAway(), false);

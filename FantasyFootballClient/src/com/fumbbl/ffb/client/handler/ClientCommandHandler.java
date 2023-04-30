@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.handler;
 
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -34,7 +34,7 @@ public abstract class ClientCommandHandler {
 		if (pSoundId != null) {
 			// System.out.println("play " + pSound.getName());
 			SoundEngine soundEngine = getClient().getUserInterface().getSoundEngine();
-			String soundSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
+			String soundSetting = getClient().getProperty(CommonProperty.SETTING_SOUND_MODE);
 			if ((pMode == ClientCommandHandlerMode.PLAYING) || ((pMode == ClientCommandHandlerMode.REPLAYING)
 					&& getClient().getReplayer().isReplayingSingleSpeedForward())) {
 				if (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting)

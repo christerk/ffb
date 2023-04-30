@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
@@ -22,6 +22,7 @@ import com.fumbbl.ffb.util.UtilUrl;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -35,8 +36,48 @@ public class PlayerIconFactory {
 
 	private static final Color _MARK_COLOR = new Color(1.0f, 1.0f, 0.0f, 1.0f);
 
-	public static final int MAX_ICON_WIDTH = 40;
-	public static final int MAX_ICON_HEIGHT = 40;
+	public static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
+		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = resultingIcon.createGraphics();
+		if (pIcon != null) {
+			int x = (resultingIcon.getWidth() - pIcon.getWidth()) / 2;
+			int y = (resultingIcon.getHeight() - pIcon.getHeight()) / 2;
+			g2d.drawImage(pIcon, x, y, null);
+		}
+		if (pDecoration != null) {
+			int x = (resultingIcon.getWidth() - pDecoration.getWidth()) / 2;
+			int y = (resultingIcon.getHeight() - pDecoration.getHeight()) / 2;
+			g2d.drawImage(pDecoration, x, y, null);
+		}
+		g2d.dispose();
+		return resultingIcon;
+	}
+
+	public static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache) {
+		if ((pIcon != null) && StringTool.isProvided(pText)) {
+			Graphics2D g2d = pIcon.createGraphics();
+			g2d.setColor(_MARK_COLOR);
+			g2d.setFont(fontCache.font(Font.BOLD, 12));
+			FontMetrics metrics = g2d.getFontMetrics();
+			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
+			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
+			int y = pIcon.getHeight() - metrics.getDescent();
+			g2d.drawString(pText, x, y);
+			g2d.dispose();
+		}
+	}
+
+	public static BufferedImage fadeIcon(BufferedImage pIcon) {
+		BufferedImage resultingIcon = null;
+		if (pIcon != null) {
+			resultingIcon = new BufferedImage(pIcon.getWidth(), pIcon.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2d = resultingIcon.createGraphics();
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+			g2d.drawImage(pIcon, 0, 0, null);
+			g2d.dispose();
+		}
+		return resultingIcon;
+	}
 
 	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean pHomePlayer, boolean pMoving,
 	                                  boolean pWithBall, boolean pWithBomb) {
@@ -46,7 +87,7 @@ public class PlayerIconFactory {
 		}
 
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
-		String settingIcons = pClient.getProperty(IClientProperty.SETTING_ICONS);
+		String settingIcons = pClient.getProperty(CommonProperty.SETTING_ICONS);
 		BufferedImage icon = null;
 		String iconSetUrl = null;
 
@@ -70,15 +111,16 @@ public class PlayerIconFactory {
 
 		boolean useHomeColor = pHomePlayer;
 
-		String swapSetting = pClient.getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		String swapSetting = pClient.getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
 
 		if (swapColors) {
 			useHomeColor = !pHomePlayer;
 		}
 
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
 		if (StringTool.isProvided(iconSetUrl)) {
-			BufferedImage iconSet = iconCache.getIconByUrl(iconSetUrl);
+			BufferedImage iconSet = iconCache.getUnscaledIconByUrl(iconSetUrl);
 			if (iconSet != null) {
 				int iconSize = iconSet.getWidth() / 4;
 				int y = pPlayer.getIconSetIndex() * iconSize;
@@ -88,12 +130,13 @@ public class PlayerIconFactory {
 				} else {
 					x = (pMoving ? 3 : 2) * iconSize;
 				}
-				icon = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
+				int scaledIconSize = dimensionProvider.scale(iconSize);
+				icon = new BufferedImage(scaledIconSize, scaledIconSize, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g2d = icon.createGraphics();
 				if (swapColors) {
-					g2d.drawImage(iconSet, iconSize, 0, 0, iconSize, x, y, x + iconSize, y + iconSize, null);
+					g2d.drawImage(iconSet, scaledIconSize, 0, 0, scaledIconSize, x, y, x + iconSize, y + iconSize, null);
 				} else {
-					g2d.drawImage(iconSet, 0, 0, iconSize, iconSize, x, y, x + iconSize, y + iconSize, null);
+					g2d.drawImage(iconSet, 0, 0, scaledIconSize, scaledIconSize, x, y, x + iconSize, y + iconSize, null);
 				}
 				g2d.dispose();
 			}
@@ -134,9 +177,10 @@ public class PlayerIconFactory {
 				icon = new BufferedImage(playerIcon.getWidth() + 2, playerIcon.getHeight() + 2, BufferedImage.TYPE_INT_ARGB);
 				String shorthand = (pPlayer.getPosition() != null) ? pPlayer.getPosition().getShorthand() : "?";
 				if (StringTool.isProvided(shorthand)) {
+					FontCache fontCache = pClient.getUserInterface().getFontCache();
 					Graphics2D g2d = icon.createGraphics();
 					g2d.drawImage(playerIcon, 2, 2, null);
-					g2d.setFont(new Font("Sans Serif", Font.BOLD, fontSize));
+					g2d.setFont(fontCache.font(Font.BOLD, fontSize));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D stringBounds = metrics.getStringBounds(shorthand, g2d);
 					int baselineX = (icon.getWidth() - (int) stringBounds.getWidth()) / 2;
@@ -152,24 +196,25 @@ public class PlayerIconFactory {
 			}
 		}
 
-		icon = decorateIcon(icon, null);
+		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+
+		icon = decorateIcon(icon, null, maxIconSize);
 
 		if (pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED));
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED), maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB));
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB), maxIconSize);
 			}
 		}
 
 		if (pWithBall && !pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED));
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED), maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL));
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL), maxIconSize);
 			}
 		}
-
 		return icon;
 
 	}
@@ -262,70 +307,29 @@ public class PlayerIconFactory {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
 		}
 
+		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.MAX_ICON);
+
 		if (decorationProperty1 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1));
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1), maxIconSize);
 		}
 		if (decorationProperty2 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty2));
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty2), maxIconSize);
 		}
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
 			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
-				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(IClientProperty.SETTING_MARK_USED_PLAYERS))) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN));
+				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN), maxIconSize);
 			}
 		}
 
 		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if ((playerMarker != null)) {
-			markIcon(icon, playerMarker.getHomeText());
+			markIcon(icon, playerMarker.getHomeText(), pClient.getUserInterface().getFontCache());
 		}
 
 		return icon;
 
-	}
-
-	public static BufferedImage fadeIcon(BufferedImage pIcon) {
-		BufferedImage resultingIcon = null;
-		if (pIcon != null) {
-			resultingIcon = new BufferedImage(pIcon.getWidth(), pIcon.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2d = resultingIcon.createGraphics();
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-			g2d.drawImage(pIcon, 0, 0, null);
-			g2d.dispose();
-		}
-		return resultingIcon;
-	}
-
-	public static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration) {
-		BufferedImage resultingIcon = new BufferedImage(MAX_ICON_WIDTH, MAX_ICON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = resultingIcon.createGraphics();
-		if (pIcon != null) {
-			int x = (resultingIcon.getWidth() - pIcon.getWidth()) / 2;
-			int y = (resultingIcon.getHeight() - pIcon.getHeight()) / 2;
-			g2d.drawImage(pIcon, x, y, null);
-		}
-		if (pDecoration != null) {
-			int x = (resultingIcon.getWidth() - pDecoration.getWidth()) / 2;
-			int y = (resultingIcon.getHeight() - pDecoration.getHeight()) / 2;
-			g2d.drawImage(pDecoration, x, y, null);
-		}
-		g2d.dispose();
-		return resultingIcon;
-	}
-
-	public static void markIcon(BufferedImage pIcon, String pText) {
-		if ((pIcon != null) && StringTool.isProvided(pText)) {
-			Graphics2D g2d = pIcon.createGraphics();
-			g2d.setColor(_MARK_COLOR);
-			g2d.setFont(new Font("Sans Serif", Font.BOLD, 12));
-			FontMetrics metrics = g2d.getFontMetrics();
-			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
-			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
-			int y = pIcon.getHeight() - metrics.getDescent();
-			g2d.drawString(pText, x, y);
-			g2d.dispose();
-		}
 	}
 
 	public static String getPortraitUrl(Player<?> pPlayer) {

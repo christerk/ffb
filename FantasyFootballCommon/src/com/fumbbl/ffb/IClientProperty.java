@@ -3,48 +3,10 @@ package com.fumbbl.ffb;
 /**
  * @author Kalimar
  */
-public interface IClientProperty extends CommonProperty {
+public interface IClientProperty {
 
 	String SERVER_HOST = "server.host";
 	String SERVER_PORT = "server.port";
-
-	String CLIENT_COMMAND_COMPRESSION = "client.command.compression";
-
-	String SETTING_SOUND_MODE = "setting.sound.mode";
-	String SETTING_SOUND_VOLUME = "setting.sound.volume";
-	String SETTING_ICONS = "setting.icons";
-	String SETTING_CHATLOG = "setting.chatlog";
-	String SETTING_AUTOMOVE = "setting.automove";
-	String SETTING_BLITZ_TARGET_PANEL = "setting.blitzTargetPanel";
-	String SETTING_GAZE_TARGET_PANEL = "setting.gazeTargetPanel";
-	String SETTING_RIGHT_CLICK_END_ACTION = "setting.rightClickEndAction";
-	String SETTING_PITCH_CUSTOMIZATION = "setting.pitch.customization";
-	String SETTING_PITCH_MARKINGS = "setting.pitch.markings";
-	String SETTING_TEAM_LOGOS = "setting.pitch.teamLogos";
-	String SETTING_PITCH_WEATHER = "setting.pitch.weather";
-	String SETTING_RANGEGRID = "setting.rangegrid";
-	String SETTING_PITCH_ORIENTATION = "setting.pitch.orientation";
-	String SETTING_MARK_USED_PLAYERS = "setting.mark.used.players";
-	String SETTING_SHOW_AUTO_MARKING_DIALOG = "setting.show.autoMarkingDialog";
-	String SETTING_SWAP_TEAM_COLORS = "setting.swap.team.colors";
-	String SETTING_BACKGROUND_CHAT = "setting.background.chat";
-	String SETTING_BACKGROUND_LOG = "setting.background.log";
-	String SETTING_BACKGROUND_FRAME = "setting.background.frame";
-	String SETTING_BACKGROUND_FRAME_COLOR = "setting.background.frame.color";
-	String SETTING_FONT_COLOR_TEXT = "setting.font.color.text";
-	String SETTING_FONT_COLOR_AWAY = "setting.font.color.away";
-	String SETTING_FONT_COLOR_HOME = "setting.font.color.home";
-	String SETTING_FONT_COLOR_SPEC = "setting.font.color.spec";
-	String SETTING_FONT_COLOR_DEV = "setting.font.color.dev";
-	String SETTING_FONT_COLOR_ADMIN = "setting.font.color.admin";
-	String SETTING_FONT_COLOR_FRAME = "setting.font.color.frame";
-	String SETTING_FONT_COLOR_FRAME_SHADOW = "setting.font.color.frameShadow";
-	String SETTING_FONT_COLOR_INPUT = "setting.font.color.input";
-
-	String SETTING_LAST_CHANGE_LOG_FINGERPRINT = "setting.lastChangeLogFingerPrint";
-
-	String CLIENT_PING_INTERVAL = "client.ping.interval";
-	String CLIENT_DEBUG_STATE = "client.debug.state";
 
 	String KEY_PLAYER_MOVE_NORTH = "key.player.move.north";
 	String KEY_PLAYER_MOVE_NORTHEAST = "key.player.move.northeast";
@@ -98,34 +60,5 @@ public interface IClientProperty extends CommonProperty {
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";
 	String KEY_MENU_SETUP_SAVE = "key.menu.setup.save";
 
-
-	String[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
-		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_CHATLOG, SETTING_RIGHT_CLICK_END_ACTION,
-		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
-		SETTING_PITCH_MARKINGS, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,
-		SETTING_RANGEGRID, SETTING_LAST_CHANGE_LOG_FINGERPRINT, SETTING_RE_ROLL_BALL_AND_CHAIN, SETTING_MARK_USED_PLAYERS,
-		SETTING_PLAYER_MARKING_TYPE, SETTING_SHOW_AUTO_MARKING_DIALOG, SETTING_SWAP_TEAM_COLORS,
-		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG, SETTING_BACKGROUND_FRAME,
-		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
-		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
-		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT
-	};
-
-	String[] COLOR_SETTINGS = {
-		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG,
-		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
-		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
-		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT
-	};
-
-	String[] BACKGROUND_COLOR_SETTINGS = {
-		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG, SETTING_BACKGROUND_FRAME_COLOR
-	};
-
-	String[] FONT_COLOR_SETTINGS = {
-		SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
-		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
-		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW
-	};
 
 }

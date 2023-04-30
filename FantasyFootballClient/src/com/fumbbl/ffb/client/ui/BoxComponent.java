@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
@@ -43,9 +44,8 @@ import java.util.List;
 public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener, IModelChangeObserver {
 
 	public static final int MAX_BOX_ELEMENTS = 30;
-	public static final int FIELD_SQUARE_SIZE = 39;
 
-	private static final Font _BOX_FONT = new Font("Sans Serif", Font.BOLD, 12);
+	private final FontCache fontCache;
 
 	private final SideBarComponent fSideBar;
 	private BufferedImage fImage;
@@ -55,9 +55,11 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private int fMaxTitleOffset;
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
+	private Font boxFont;
 
-	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 		fSideBar = pSideBar;
+		this.fontCache = fontCache;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;
 		addMouseListener(this);
@@ -103,6 +105,8 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void refresh() {
+		boxFont = fontCache.font(Font.BOLD, 12);
+
 		drawBackground();
 		drawPlayers();
 		repaint();
@@ -152,15 +156,16 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private int drawPlayersInBox(int pXCoordinate, int pYPosition) {
 		FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 		PlayerState boxState = findPlayerStateForXCoordinate(pXCoordinate);
+		Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.BOX_SQUARE);
 		int yPos = drawTitle(boxState, pYPosition);
 		int row = -1;
 		for (int y = 0; y < MAX_BOX_ELEMENTS; y++) {
 			Player<?> player = fieldModel.getPlayer(new FieldCoordinate(pXCoordinate, y));
 			if ((player != null) || (pXCoordinate == FieldCoordinate.RSV_HOME_X)) {
 				row = y / 3;
-				int locationX = (y % 3) * FIELD_SQUARE_SIZE;
-				int locationY = yPos + (row * FIELD_SQUARE_SIZE);
-				BoxSlot boxSlot = new BoxSlot(new Rectangle(locationX, locationY, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE),
+				int locationX = (y % 3) * dimension.width;
+				int locationY = yPos + (row * dimension.height);
+				BoxSlot boxSlot = new BoxSlot(new Rectangle(locationX, locationY, dimension.width, dimension.height),
 					boxState);
 				boxSlot.setPlayer(player);
 				fBoxSlots.add(boxSlot);
@@ -168,7 +173,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			}
 		}
 		if (row >= 0) {
-			yPos += (row + 1) * FIELD_SQUARE_SIZE;
+			yPos += (row + 1) * dimension.height;
 		}
 		return yPos;
 	}
@@ -220,7 +225,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? 5 : getSideBar().getClient().getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.FIELD).width - 135;
+					int x = getSideBar().isHomeSide() ? dimensionProvider.scale(5) : dimensionProvider.dimension(DimensionProvider.Component.FIELD).width - dimensionProvider.scale(135);
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
 					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}
@@ -318,7 +323,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			}
 			if (title != null) {
 				Graphics2D g2d = fImage.createGraphics();
-				g2d.setFont(_BOX_FONT);
+				g2d.setFont(boxFont);
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D bounds = metrics.getStringBounds(title, g2d);
 				int x = ((size.width - (int) bounds.getWidth()) / 2);

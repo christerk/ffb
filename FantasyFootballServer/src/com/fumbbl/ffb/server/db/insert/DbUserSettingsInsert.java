@@ -1,15 +1,15 @@
 package com.fumbbl.ffb.server.db.insert;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.DbUpdateStatement;
 import com.fumbbl.ffb.server.db.IDbTableUserSettings;
 import com.fumbbl.ffb.server.db.IDbUpdateParameter;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * 
@@ -29,9 +29,7 @@ public class DbUserSettingsInsert extends DbUpdateStatement {
 
 	public void prepare(Connection pConnection) {
 		try {
-			StringBuilder sqlInsert = new StringBuilder();
-			sqlInsert.append("INSERT INTO ").append(IDbTableUserSettings.TABLE_NAME).append(" VALUES(?, ?, ?)");
-			fStatement = pConnection.prepareStatement(sqlInsert.toString());
+			fStatement = pConnection.prepareStatement("INSERT INTO " + IDbTableUserSettings.TABLE_NAME + " VALUES(?, ?, ?)");
 		} catch (SQLException sqlE) {
 			throw new FantasyFootballException(sqlE);
 		}
@@ -42,7 +40,7 @@ public class DbUserSettingsInsert extends DbUpdateStatement {
 		fStatement.clearParameters();
 		int col = 1;
 		fStatement.setString(col++, parameter.getCoach());
-		fStatement.setString(col++, parameter.getSettingName());
+		fStatement.setString(col++, parameter.getSettingName().getKey());
 		fStatement.setString(col++, parameter.getSettingValue());
 		return fStatement;
 	}

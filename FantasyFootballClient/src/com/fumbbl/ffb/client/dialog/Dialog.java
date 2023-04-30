@@ -1,18 +1,20 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
+import com.fumbbl.ffb.client.ui.swing.JComboBox;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.event.InternalFrameEvent;
@@ -24,7 +26,6 @@ import java.awt.event.MouseListener;
 import java.util.Map;
 
 /**
- * 
  * @author Kalimar
  */
 public abstract class Dialog extends JInternalFrame implements IDialog, MouseListener, InternalFrameListener {
@@ -121,7 +122,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	public void internalFrameOpened(InternalFrameEvent pE) {
 	}
 
-	protected void addMenuPanel(Container contentPane, String menuProperty, String defaultValueKey) {
+	protected void addMenuPanel(Container contentPane, CommonProperty menuProperty, String defaultValueKey) {
 
 		if (!StringTool.isProvided(menuProperty)) {
 			return;
@@ -136,7 +137,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 			selectedValue = entries.get(defaultValueKey);
 		}
 
-		JComboBox<String> box = new JComboBox<>(entries.values().toArray(new String[0]));
+		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
 		box.setSelectedItem(selectedValue);
 		box.addActionListener(event -> {
 			String newValue = box.getItemAt(box.getSelectedIndex());
@@ -151,7 +152,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		JPanel boxPanel = new JPanel();
 		boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.X_AXIS));
 		boxPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		boxPanel.add(new JLabel(name));
+		boxPanel.add(new JLabel(dimensionProvider(), name));
 		boxPanel.add(Box.createHorizontalStrut(5));
 		boxPanel.add(box);
 
@@ -160,5 +161,13 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		contentPane.add(new JSeparator());
 		contentPane.add(boxPanel);
 
+	}
+
+	protected DimensionProvider dimensionProvider() {
+		return getClient().getUserInterface().getDimensionProvider();
+	}
+
+	protected FontCache fontCache() {
+		return getClient().getUserInterface().getFontCache();
 	}
 }

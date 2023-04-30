@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -26,7 +26,9 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +44,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final SideBarComponent fSideBarHome;
 	private final SideBarComponent fSideBarAway;
 	private final IconCache fIconCache;
+	private final FontCache fontCache;
 	private final SoundEngine fSoundEngine;
 	private final ScoreBarComponent fScoreBar;
 	private final LogComponent fLog;
@@ -59,14 +62,25 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		fDesktop = null;
 		fClient = pClient;
-		fIconCache = new IconCache(getClient());
+		String factorValue = pClient.getProperty(CommonProperty.SETTING_SCALE_FACTOR);
+		double scale = 1.0;
+		if (StringTool.isProvided(factorValue)) {
+			try {
+				scale = Double.parseDouble(factorValue);
+			} catch (Exception ignored) {
+			}
+		}
+
+		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout(), scale);
+		fIconCache = new IconCache(getClient(), dimensionProvider);
 		fIconCache.init();
+		fontCache = new FontCache(dimensionProvider);
 		fSoundEngine = new SoundEngine(getClient());
+		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
-		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout());
-		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider));
+		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider, fontCache));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
@@ -77,12 +91,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		addWindowListener(this);
 		setResizable(false);
 
-		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider, styleProvider);
-		fFieldComponent = new FieldComponent(getClient(), dimensionProvider);
-		fLog = new LogComponent(getClient(), styleProvider);
-		fChat = new ChatComponent(getClient(), styleProvider);
-		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider, styleProvider);
-		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider, styleProvider);
+		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider, styleProvider, fontCache);
+		fFieldComponent = new FieldComponent(getClient(), dimensionProvider, fontCache);
+		fLog = new LogComponent(getClient(), styleProvider, dimensionProvider);
+		fChat = new ChatComponent(getClient(), dimensionProvider, styleProvider);
+		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider, styleProvider, fontCache);
+		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider, styleProvider, fontCache);
 
 		initComponents(false);
 
@@ -220,6 +234,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		return panelContent;
 	}
 
+	public FontCache getFontCache() {
+		return fontCache;
+	}
+
 	public StyleProvider getStyleProvider() {
 		return styleProvider;
 	}
@@ -309,7 +327,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		gameTitle.setTurnTime(game.getTurnTime());
 		setGameTitle(gameTitle);
 
-		String volumeSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_VOLUME);
+		String volumeSetting = getClient().getProperty(CommonProperty.SETTING_SOUND_VOLUME);
 		int volume = StringTool.isProvided(volumeSetting) ? Integer.parseInt(volumeSetting) : 50;
 		getClient().getUserInterface().getSoundEngine().setVolume(volume);
 

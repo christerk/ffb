@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.net;
 
 import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.ConcedeGameStatus;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -434,7 +435,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandApothecaryChoice(pPlayerId, pPlayerState, pSeriousInjury, oldPlayerState));
 	}
 
-	public void sendUserSettings(String[] pSettingNames, String[] pSettingValues) {
+	public void sendUserSettings(CommonProperty[] pSettingNames, String[] pSettingValues) {
 		send(new ClientCommandUserSettings(pSettingNames, pSettingValues));
 	}
 

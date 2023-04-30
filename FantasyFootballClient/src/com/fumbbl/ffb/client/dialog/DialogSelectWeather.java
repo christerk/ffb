@@ -2,12 +2,12 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.Dimension;
@@ -35,7 +35,7 @@ public class DialogSelectWeather extends Dialog {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		JLabel title = new JLabel("<html><b>Select roll modifier</b></html>");
+		JLabel title = new JLabel(dimensionProvider(), "<html><b>Select roll modifier</b></html>");
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		title.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 		constraints.fill = GridBagConstraints.BOTH;
@@ -55,12 +55,12 @@ public class DialogSelectWeather extends Dialog {
 		weatherOptions.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
 			Integer value = entry.getValue();
 			String formattedValue = value >= 0 ? "+" + value : value.toString();
-			JLabel label = new JLabel();
+			JLabel label = new JLabel(dimensionProvider());
 			label.setText(Weather.valueOf(entry.getKey()).getName());
 			label.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 
-			JButton button = new JButton(formattedValue);
+			JButton button = new JButton(dimensionProvider(), formattedValue);
 			button.setHorizontalAlignment(SwingConstants.CENTER);
 			button.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 

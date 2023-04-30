@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 
 import java.awt.AlphaComposite;
 import java.awt.Dimension;
@@ -26,9 +27,12 @@ public abstract class FieldLayer {
 
 	protected DimensionProvider dimensionProvider;
 
-	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+	protected FontCache fontCache;
+
+	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
+		this.fontCache = fontCache;
 	}
 
 	public void initLayout(DimensionProvider dimensionProvider) {
@@ -78,8 +82,9 @@ public abstract class FieldLayer {
 
 	public Rectangle draw(BufferedImage pImage, FieldCoordinate pCoordinate, float pAlpha) {
 		if ((pImage != null) && (pCoordinate != null)) {
+
 			return draw(pImage, findCenteredIconUpperLeftX(pImage, pCoordinate),
-					findCenteredIconUpperLeftY(pImage, pCoordinate), pAlpha);
+				findCenteredIconUpperLeftY(pImage, pCoordinate), pAlpha);
 		}
 		return null;
 	}
@@ -102,8 +107,9 @@ public abstract class FieldLayer {
 
 	public void clear(BufferedImage pImage, FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pImage != null) && (pCoordinate != null)) {
+
 			clear(findCenteredIconUpperLeftX(pImage, pCoordinate), findCenteredIconUpperLeftY(pImage, pCoordinate),
-					pImage.getWidth(), pImage.getHeight(), pUpdateArea);
+				pImage.getWidth(), pImage.getHeight(), pUpdateArea);
 		}
 	}
 

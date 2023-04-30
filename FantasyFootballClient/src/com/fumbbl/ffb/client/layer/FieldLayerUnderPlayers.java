@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -23,8 +24,8 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 
 	private FieldCoordinate[] fMovePath;
 
-	public FieldLayerUnderPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
-		super(pClient, dimensionProvider);
+	public FieldLayerUnderPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+		super(pClient, dimensionProvider, fontCache);
 	}
 
 	public void drawTrackNumber(TrackNumber pTrackNumber) {
@@ -68,7 +69,7 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 			clear(pCoordinate, true);
 			String numberString = Integer.toString(pNumber);
 			Graphics2D g2d = getImage().createGraphics();
-			g2d.setFont(new Font("Sans Serif", Font.BOLD, 15));
+			g2d.setFont(fontCache.font(Font.BOLD, 15));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D numberBounds = metrics.getStringBounds(numberString, g2d);
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);

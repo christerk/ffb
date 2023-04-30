@@ -14,15 +14,19 @@ import java.awt.Dimension;
 
 public class DialogChatCommands extends Dialog {
 
-	private static final String _FONT_BOLD_OPEN = "<font face=\"Sans Serif\" size=\"-1\"><b>";
 	private static final String _FONT_BOLD_CLOSE = "</b></font>";
-	private static final String _FONT_MEDIUM_BOLD_OPEN = "<font face=\"Sans Serif\"><b>";
-	private static final String _FONT_OPEN = "<font face=\"Sans Serif\" size=\"-1\">";
 	private static final String _FONT_CLOSE = "</font>";
+	private final String fontBoldOpen;
+	private final String fontMediumBoldOpen;
+	private final String fontOpen;
 
 	public DialogChatCommands(FantasyFootballClient pClient) {
 
 		super(pClient, "Chat Commands", true);
+
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
+		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11) + "px\"><b>";
+		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\">";
 
 		JScrollPane aboutPane = new JScrollPane(createEditorPane());
 
@@ -67,14 +71,14 @@ public class DialogChatCommands extends Dialog {
 		html.append("<body>\n");
 
 		html.append("<table border=\"0\" cellspacing=\"1\" width=\"100%\">\n");
-		html.append("<tr><td>").append(_FONT_OPEN);
+		html.append("<tr><td>").append(fontOpen);
 		html.append(
 			"All commands can be given in the chat input field.<br><i>Spectator sounds are played with a 10 sec. enforced &quot;cooldown&quot; time between sounds.</i>");
 		html.append(_FONT_CLOSE).append("</td></tr>\n");
 		html.append("</table>\n<br>\n");
 		html.append("<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n");
 		html.append("<tr>\n");
-		html.append("<td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Spectator Commands")
+		html.append("<td colspan=\"2\">").append(fontMediumBoldOpen).append("Spectator Commands")
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
 		html.append(commandLine("/aah", "aaahing spectators"));
@@ -93,7 +97,7 @@ public class DialogChatCommands extends Dialog {
 		if (getClient().getMode() == ClientMode.SPECTATOR) {
 			html.append("<br>\n<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n");
 			html.append("<tr>\n");
-			html.append("<td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Admin Commands").append(_FONT_BOLD_CLOSE)
+			html.append("<td colspan=\"2\">").append(fontMediumBoldOpen).append("Admin Commands").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
 			html.append(commandLine("/action_used_home &lt;true|false&gt; &lt;actionlist&gt;", "sets the given actions to used/not used for the home team.<br/>Actions can be [blitz|foul|handOver|pass|throwBomb|kickTeamMate]."));
@@ -143,7 +147,7 @@ public class DialogChatCommands extends Dialog {
 		if (getClient().getGame().isTesting()) {
 			html.append("<br>\n<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n");
 			html.append("<tr>\n");
-			html.append("<td colspan=\"2\">").append(_FONT_MEDIUM_BOLD_OPEN).append("Test Commands").append(_FONT_BOLD_CLOSE)
+			html.append("<td colspan=\"2\">").append(fontMediumBoldOpen).append("Test Commands").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
 			html.append("</tr>\n");
 
@@ -185,7 +189,7 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/turn &lt;turnnr&gt;", "jumps to the turn with the given number."));
 			html.append(commandLine("/weather &lt;shortname&gt;", "changes the weather to nice, sunny, rain, heat or blizzard."));
 			html.append("<tr>\n");
-			html.append("<td colspan=\"2\">").append(_FONT_OPEN).append(
+			html.append("<td colspan=\"2\">").append(fontOpen).append(
 					"<i>Commands accepting a playerlist may either list player numbers separated by space or use the keyword &quot;all&quot; for all players.</i>")
 				.append(_FONT_CLOSE).append("</td>\n");
 			html.append("</tr>\n");
@@ -204,9 +208,9 @@ public class DialogChatCommands extends Dialog {
 
 	private String commandLine(String command, String description) {
 		return "<tr>\n" +
-			"<td>" + _FONT_BOLD_OPEN + command + _FONT_BOLD_CLOSE +
+			"<td>" + fontBoldOpen + command + _FONT_BOLD_CLOSE +
 			"</td>\n" +
-			"<td>" + _FONT_OPEN + description +
+			"<td>" + fontOpen + description +
 			_FONT_CLOSE + "</td>\n" +
 			"</tr>\n";
 	}

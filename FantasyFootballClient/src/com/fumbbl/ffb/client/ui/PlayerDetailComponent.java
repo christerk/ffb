@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.CardEffect;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.InjuryAttribute;
@@ -12,6 +12,7 @@ import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
@@ -60,12 +61,12 @@ import java.util.stream.Collectors;
  */
 public class PlayerDetailComponent extends JPanel {
 
-	private static final Font _NAME_FONT = new Font("Sans Serif", Font.PLAIN, 12);
-	private static final Font _STAT_FONT = new Font("Sans Serif", Font.BOLD, 13);
-	private static final Font _POSITION_FONT = new Font("Sans Serif", Font.PLAIN, 11);
-	private static final Font _SPP_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Font _SKILL_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Font _SKILL_USED_FONT = new Font("Sans Serif", Font.ITALIC + Font.BOLD, 11);
+	private final FontCache fontCache;
+	private Font nameFont;
+	private Font statFont;
+	private Font positionFont;
+	private Font sppFont;
+	private Font skillFont;
 
 	private static final int _DISPLAY_NONE = 0;
 	private static final int _DISPLAY_ACTING_PLAYER = 1;
@@ -81,9 +82,11 @@ public class PlayerDetailComponent extends JPanel {
 	private Dimension size;
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
+	private Font skillUsedFont;
 
-	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 		fSideBar = pSideBar;
+		this.fontCache = fontCache;
 		fRefreshNecessary = true;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
@@ -102,7 +105,7 @@ public class PlayerDetailComponent extends JPanel {
 		Graphics2D g2d = fImage.createGraphics();
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 
-		String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+		String swapSetting = fSideBar.getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
 
 		if (styleProvider.getFrameBackground() == null) {
@@ -143,7 +146,7 @@ public class PlayerDetailComponent extends JPanel {
 		if (fPlayer != null) {
 			int x = 3, y = 1;
 			Graphics2D g2d = fImage.createGraphics();
-			g2d.setFont(_NAME_FONT);
+			g2d.setFont(nameFont);
 			FontMetrics fontMetrics = g2d.getFontMetrics();
 			final AttributedString attStr = new AttributedString(getPlayer().getName());
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
@@ -183,7 +186,7 @@ public class PlayerDetailComponent extends JPanel {
 				positionName.append(" #").append(getPlayer().getNr());
 			}
 			String positionNameString = positionName.toString();
-			g2d.setFont(_POSITION_FONT);
+			g2d.setFont(positionFont);
 			FontMetrics metrics = g2d.getFontMetrics();
 			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl);
 			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT);
@@ -277,10 +280,10 @@ public class PlayerDetailComponent extends JPanel {
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = strength - position.getStrength();
-			drawStatBox(g2d, x + statSpacings[0] + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[0]) + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = agility - position.getAgility();
-			drawStatBox(g2d, x + statSpacings[1] + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[1]) + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
 				int passing = getPlayer().getPassingWithModifiers();
@@ -288,11 +291,11 @@ public class PlayerDetailComponent extends JPanel {
 					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
 				}
 				int passingModifier = passing - position.getPassing();
-				drawStatBox(g2d, x + statSpacings[2] + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
+				drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[2]) + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
 			int armourModifier = armour - position.getArmour();
-			drawStatBox(g2d, x + statSpacings[3] + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[3]) + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
@@ -369,7 +372,7 @@ public class PlayerDetailComponent extends JPanel {
 			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_SPP_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
-			g2d.setFont(_SPP_FONT);
+			g2d.setFont(sppFont);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Game game = getSideBar().getClient().getGame();
 			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
@@ -461,9 +464,9 @@ public class PlayerDetailComponent extends JPanel {
 			int yPos = pY;
 			for (String skill : pSkills) {
 				if (pUsedSkills.contains(skill)) {
-					pG2d.setFont(_SKILL_USED_FONT);
+					pG2d.setFont(skillUsedFont);
 				} else {
-					pG2d.setFont(_SKILL_FONT);
+					pG2d.setFont(skillFont);
 				}
 				FontMetrics metrics = pG2d.getFontMetrics();
 				for (String part : splitSkill(skill)) {
@@ -522,7 +525,7 @@ public class PlayerDetailComponent extends JPanel {
 			int innerHeight = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX_MISC).height;
 
 			pG2d.setColor(Color.BLACK);
-			pG2d.setFont(_STAT_FONT);
+			pG2d.setFont(statFont);
 			if (modifier.isImprovement()) {
 				pG2d.setColor(Color.GREEN);
 				if (modifier.getAbsoluteModifier() > 1) {
@@ -575,6 +578,13 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	public void refresh() {
+		nameFont = fontCache.font(Font.PLAIN, 12);
+		statFont = fontCache.font(Font.BOLD, 13);
+		positionFont = fontCache.font(Font.PLAIN, 11);
+		sppFont = fontCache.font(Font.BOLD, 11);
+		skillFont = fontCache.font(Font.BOLD, 11);
+		skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, 11);
+
 		ClientData clientData = getSideBar().getClient().getClientData();
 		int displayMode = findDisplayMode();
 		if (!fRefreshNecessary) {

@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.StatusType;
@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
@@ -53,7 +54,7 @@ import java.util.List;
  * @author Kalimar
  */
 public class TurnDiceStatusComponent extends JPanel
-		implements MouseListener, MouseMotionListener, IDialogCloseListener {
+	implements MouseListener, MouseMotionListener, IDialogCloseListener {
 
 	private static final String _LABEL_END_TURN = "End Turn";
 	private static final String _LABEL_END_SETUP = "End Setup";
@@ -61,11 +62,11 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final String _LABEL_KICKOFF = "Kick Off";
 	private static final String _LABEL_TIMEOUT = "Timeout";
 
-	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 14);
+	private Font buttonFont;
 
-	private static final Font _DICE_FONT = new Font("Sans Serif", Font.BOLD, 11);
-	private static final Font _STATUS_TITLE_FONT = new Font("Sans Serif", Font.BOLD, 12);
-	private static final Font _STATUS_MESSAGE_FONT = new Font("Sans Serif", Font.PLAIN, 12);
+	private Font diceFont;
+	private Font statusTitleFont;
+	private Font statusMessageFont;
 
 	private final SideBarComponent fSideBar;
 	private BufferedImage fImage;
@@ -124,7 +125,7 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private int statusTextWidth() {
-		return size.width - 10;
+		return size.width - dimensionProvider.scale(10);
 	}
 
 	private void drawBackground() {
@@ -133,7 +134,7 @@ public class TurnDiceStatusComponent extends JPanel
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage background;
 
-			String swapSetting = fSideBar.getClient().getProperty(IClientProperty.SETTING_SWAP_TEAM_COLORS);
+			String swapSetting = fSideBar.getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
 			boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
 
 			boolean homeSide = getSideBar().isHomeSide();
@@ -206,7 +207,7 @@ public class TurnDiceStatusComponent extends JPanel
 			BufferedImage buttonImage = iconCache.getIconByProperty(
 					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON);
 			g2d.drawImage(buttonImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
-			g2d.setFont(_BUTTON_FONT);
+			g2d.setFont(buttonFont);
 			g2d.setColor(Color.BLACK);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D bounds = metrics.getStringBounds(pButtonText, g2d);
@@ -245,12 +246,12 @@ public class TurnDiceStatusComponent extends JPanel
 				g2d.drawImage(statusImage, buttonArea.x, buttonArea.y, buttonArea.width, size.height, null);
 			}
 			g2d.setColor(Color.BLACK);
-			g2d.setFont(_STATUS_TITLE_FONT);
+			g2d.setFont(statusTitleFont);
 			FontMetrics fontMetrics = g2d.getFontMetrics();
 			int x = 4;
 			int y = fontMetrics.getHeight();
 			g2d.drawString(fStatusTitle, x, y);
-			g2d.setFont(_STATUS_MESSAGE_FONT);
+			g2d.setFont(statusMessageFont);
 			fontMetrics = g2d.getFontMetrics();
 			y += fontMetrics.getHeight();
 			final AttributedString attStr = new AttributedString(fStatusMessage);
@@ -264,7 +265,7 @@ public class TurnDiceStatusComponent extends JPanel
 				if (y <= 3 * fontMetrics.getHeight()) {
 					layoutLine = measurer.nextLayout(statusTextWidth());
 				} else {
-					layoutLine = measurer.nextLayout(statusTextWidth() - 20); // hourglass icon
+					layoutLine = measurer.nextLayout(statusTextWidth() - dimensionProvider.scale(20)); // hourglass icon
 				}
 			}
 			g2d.dispose();
@@ -272,8 +273,9 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private void drawBlockDice() {
-		int x, y = blockRolls.size() > 1 ? 0 : 38;
-		for (BlockRoll blockRoll: blockRolls) {
+		int lineHeight = dimensionProvider.scale(38);
+		int x, y = blockRolls.size() > 1 ? 0 : lineHeight;
+		for (BlockRoll blockRoll : blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
 			Composite oldComposite = g2d.getComposite();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
@@ -284,25 +286,26 @@ public class TurnDiceStatusComponent extends JPanel
 				if (!blockRoll.needsSelection() && (blockRoll.getSelectedIndex() != i)) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				}
+				int dieWidth = dimensionProvider.scale(39);
 				if (length > 2) {
-					x = 15 + (39 * i);
+					x = dimensionProvider.scale(15) + (dieWidth * i);
 				} else if (length > 1) {
-					x = 34 + (39 * i);
+					x = dimensionProvider.scale(34) + (dieWidth * i);
 				} else {
-					x = 53;
+					x = dimensionProvider.scale(53);
 				}
 				g2d.drawImage(diceIcon, x, y, null);
 			}
 			if (!blockRoll.isOwnChoice()) {
-				g2d.setFont(_DICE_FONT);
+				g2d.setFont(diceFont);
 				g2d.setComposite(oldComposite);
 				FontMetrics fontMetrics = g2d.getFontMetrics();
 				String opponentsChoice = "Opponent's choice";
-				y += 38 + fontMetrics.getAscent();
+				y += lineHeight + fontMetrics.getAscent();
 				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, size.width);
 				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y, styleProvider);
 			} else {
-				y += 38;
+				y += lineHeight;
 			}
 			g2d.dispose();
 		}
@@ -325,13 +328,22 @@ public class TurnDiceStatusComponent extends JPanel
 		FantasyFootballClient client = getSideBar().getClient();
 		Game game = client.getGame();
 		ClientData clientData = client.getClientData();
+
+		FontCache fontCache = client.getUserInterface().getFontCache();
+
+		buttonFont = fontCache.font(Font.BOLD, 14);
+
+		diceFont = fontCache.font(Font.BOLD, 11);
+		statusTitleFont = fontCache.font(Font.BOLD, 12);
+		statusMessageFont = fontCache.font(Font.PLAIN, 12);
+
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = (!StringTool.isEqual(fStatusTitle, clientData.getStatusTitle())
-					|| !StringTool.isEqual(fStatusMessage, clientData.getStatusMessage()));
+				|| !StringTool.isEqual(fStatusMessage, clientData.getStatusMessage()));
 		}
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = ((fTurnMode == null) || (fTurnMode != game.getTurnMode())
-					|| (fHomePlaying != game.isHomePlaying()));
+				|| (fHomePlaying != game.isHomePlaying()));
 		}
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = (fEndTurnButtonHidden != clientData.isEndTurnButtonHidden());

@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.BloodSpot;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
@@ -38,16 +38,20 @@ public class IconCache {
 	private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
 
 	private final Map<String, BufferedImage> fIconByKey;
+	private final Map<String, BufferedImage> scaledIcons;
 
 	private Properties fIconUrlProperties;
 
 	private final Map<String, Integer> fCurrentIndexPerKey;
 
 	private final FantasyFootballClient fClient;
+	private final DimensionProvider dimensionProvider;
 
-	public IconCache(FantasyFootballClient pClient) {
+	public IconCache(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
 		fIconByKey = new HashMap<>();
+		scaledIcons = new HashMap<>();
 		fCurrentIndexPerKey = new HashMap<>();
 	}
 
@@ -154,8 +158,33 @@ public class IconCache {
 	}
 
 	public BufferedImage getIconByUrl(String pUrl) {
-		return fIconByKey.get(pUrl);
+		BufferedImage bufferedImage = scaledIcons.get(pUrl);
+		if (bufferedImage == null) {
+			bufferedImage = fIconByKey.get(pUrl);
+			if (bufferedImage != null) {
+				bufferedImage = dimensionProvider.scaleImage(bufferedImage);
+				scaledIcons.put(pUrl, bufferedImage);
+			}
+		}
+		return bufferedImage;
 	}
+
+	public BufferedImage getUnscaledIconByUrl(String url) {
+		return fIconByKey.get(url);
+	}
+
+	public BufferedImage getUnscaledIconByProperty(String pIconProperty) {
+		if (!StringTool.isProvided(pIconProperty)) {
+			return null;
+		}
+		String iconUrl = getClient().getProperty(pIconProperty);
+		BufferedImage icon = getUnscaledIconByUrl(iconUrl);
+		if ((icon == null) && loadIconFromArchive(iconUrl)) {
+			icon = getUnscaledIconByUrl(iconUrl);
+		}
+		return icon;
+	}
+
 
 	public BufferedImage getPitch(Game pGame, Weather pWeather) {
 		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather));
@@ -313,16 +342,16 @@ public class IconCache {
 		}
 		Weather myWeather = pWeather;
 		if (IClientPropertyValue.SETTING_PITCH_WEATHER_OFF
-			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER))) {
+			.equals(getClient().getProperty(CommonProperty.SETTING_PITCH_WEATHER))) {
 			myWeather = Weather.NICE;
 		}
 		String pitchUrl = pGame.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
 		if (!StringTool.isProvided(pitchUrl) || IClientPropertyValue.SETTING_PITCH_DEFAULT
-			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+			.equals(getClient().getProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION))) {
 			pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT);
 		}
 		if (IClientPropertyValue.SETTING_PITCH_BASIC
-			.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+			.equals(getClient().getProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION))) {
 			pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_BASIC);
 		}
 		return buildPitchUrl(pitchUrl, myWeather);
@@ -463,4 +492,7 @@ public class IconCache {
 		return fClient;
 	}
 
+	public void clear() {
+		scaledIcons.clear();
+	}
 }

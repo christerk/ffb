@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
-import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -147,7 +147,7 @@ public class DialogManager {
 						setDialogHandler(new DialogSwarmingErrorParameterHandler(getClient()));
 						break;
 					case SELECT_BLITZ_TARGET:
-						String blitzTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_BLITZ_TARGET_PANEL);
+						String blitzTargetPanelSetting = getClient().getProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL);
 						if (IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF.equals(blitzTargetPanelSetting)) {
 							setDialogHandler(null);
 						} else {
@@ -155,7 +155,7 @@ public class DialogManager {
 						}
 						break;
 					case SELECT_GAZE_TARGET:
-						String gazeTargetPanelSetting = getClient().getProperty(IClientProperty.SETTING_GAZE_TARGET_PANEL);
+						String gazeTargetPanelSetting = getClient().getProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL);
 						if (IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF.equals(gazeTargetPanelSetting)) {
 							setDialogHandler(null);
 						} else {
