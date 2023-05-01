@@ -9,6 +9,11 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+
+		versions.add(new VersionChangeList("2.19.1")
+			.addBugfix("Invalid frame background color caused client to crash")
+		);
+
 		versions.add(new VersionChangeList("2.19.0")
 			.addFeature("Add option to store user settings locally only")
 			.addFeature("Store remotely stored options also locally to init the client before connecting")

@@ -986,8 +986,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		Color newColor = null;
 
 		if (useColor) {
-			newColor = new Color(Integer.parseInt(getClient().getProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR)));
-			frameBackgroundColor.setIcon(createColorIcon(newColor));
+			try {
+				newColor = new Color(Integer.parseInt(getClient().getProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR)));
+				frameBackgroundColor.setIcon(createColorIcon(newColor));
+			} catch (NumberFormatException ex) {
+				getClient().getFactorySource().logWithOutGameId(ex);
+			}
 		}
 
 		styleProvider.setFrameBackground(newColor);
