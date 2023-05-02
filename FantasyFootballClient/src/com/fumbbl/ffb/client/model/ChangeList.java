@@ -10,6 +10,11 @@ public class ChangeList {
 
   public ChangeList() {
 
+		versions.add(new VersionChangeList("2.19.2")
+			.addBugfix("Replays were not synced up with controls anymore")
+			.addBugfix("Remove superfluous line spacings in game log")
+		);
+
 		versions.add(new VersionChangeList("2.19.1")
 			.addBugfix("Invalid frame background color caused client to crash")
 		);
