@@ -226,7 +226,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 					String rightClickProperty = getClient().getProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION);
 					if (getClient().getGame().getActingPlayer().getPlayer() != null
 						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
-						if (!getClient().getGame().getTurnMode().isBombTurn()) {
+						if (getClient().getGame().getTurnMode().allowEndPlayerAction()) {
 							if (getClient().getGame().getFieldModel() != null) {
 								getClient().getGame().getFieldModel().setRangeRuler(null);
 								getClient().getUserInterface().getFieldComponent().refresh();
