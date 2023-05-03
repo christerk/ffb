@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("Replays were not synced up with controls anymore")
 			.addBugfix("Remove superfluous line spacings in game log")
 			.addBugfix("Using right click to end player action during dump off, froze game")
+			.addBugfix("Replays with rostered stars did not load")
 		);
 
 		versions.add(new VersionChangeList("2.19.1")

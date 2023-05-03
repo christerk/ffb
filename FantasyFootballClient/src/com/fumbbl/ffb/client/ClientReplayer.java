@@ -1,8 +1,6 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.marking.FieldMarker;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
@@ -12,6 +10,8 @@ import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
 import com.fumbbl.ffb.client.ui.LogComponent;
 import com.fumbbl.ffb.dialog.DialogStartGameParameter;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -391,7 +391,7 @@ public class ClientReplayer implements ActionListener {
 		for (Player<?> player : players) {
 			// remove mercs, stars and raised players, they will be added via command later
 			PlayerType playerType = player.getPlayerType();
-			if ((playerType == null) || (playerType == PlayerType.MERCENARY) || (playerType == PlayerType.STAR)
+			if ((playerType == null) || (playerType == PlayerType.MERCENARY)
 				|| (playerType == PlayerType.RAISED_FROM_DEAD)) {
 				fieldModel.remove(player);
 				pTeam.removePlayer(player);
