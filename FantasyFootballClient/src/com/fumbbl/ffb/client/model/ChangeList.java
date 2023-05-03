@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Remove superfluous line spacings in game log")
 			.addBugfix("Using right click to end player action during dump off, froze game")
 			.addBugfix("Replays with rostered stars did not load")
+			.addBugfix("Bombardier that got stunned by his bomb thrown back at him was able to act again")
 		);
 
 		versions.add(new VersionChangeList("2.19.1")
