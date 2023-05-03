@@ -149,6 +149,7 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 					print(getIndent() + 1, false, defender);
 					println(getIndent() + 1, " suffers a casualty.");
 					if (defender instanceof ZappedPlayer) {
+						status = new StringBuilder();
 						status.append(defender.getName()).append(" is badly hurt automatically because ")
 							.append(defender.getPlayerGender().getNominative()).append(" has been zapped.");
 						println(getIndent(), TextStyle.NONE, status.toString());

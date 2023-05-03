@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Using right click to end player action during dump off, froze game")
 			.addBugfix("Replays with rostered stars did not load")
 			.addBugfix("Bombardier that got stunned by his bomb thrown back at him was able to act again")
+			.addBugfix("Casualty against zapped player was not logged properly")
 		);
 
 		versions.add(new VersionChangeList("2.19.1")
