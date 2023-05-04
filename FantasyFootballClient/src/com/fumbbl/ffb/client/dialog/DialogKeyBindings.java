@@ -63,6 +63,16 @@ public class DialogKeyBindings extends Dialog {
 		StringBuilder html = new StringBuilder();
 		html.append("<html>\n");
 		html.append("<body>\n");
+
+		html.append("<table border=\"1\" cellspacing=\"0\">\n");
+		addTableHeader(html, "Client Resizing", 2);
+		addDescription(html, "Increase Size", IClientProperty.KEY_RESIZE_LARGER);
+		addDescription(html, "Reset Size", IClientProperty.KEY_RESIZE_RESET);
+		addDescription(html, "Decrease Size", IClientProperty.KEY_RESIZE_SMALLER);
+		html.append("</table>\n");
+
+		html.append("<br>\n");
+
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
 		addTableHeader(html, "Player Moves", 3);
 		addDescriptionWithAlternative(html, "Move North", IClientProperty.KEY_PLAYER_MOVE_NORTH, "NUMPAD 8");
