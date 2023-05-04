@@ -16,12 +16,16 @@ import java.util.Map;
 
 public class DimensionProvider {
 
-	private ClientLayout layout;
+	public static final double MIN_SCALE_FACTOR = 0.5;
+	public static final double MAX_SCALE_FACTOR = 3;
+	public static final double BASE_SCALE_FACTOR = 1.0;
+
 
 	private static final int SIDEBAR_WIDTH_L = 145;
 	private static final int SIDEBAR_WIDTH_P = 165;
-
+	private final double scaleStep = 0.05;
 	private double scale;
+	private ClientLayout layout;
 
 	public DimensionProvider(ClientLayout layout, double scale) {
 		this.layout = layout;
@@ -178,6 +182,14 @@ public class DimensionProvider {
 			border.setTitleFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize())));
 		}
 		return border;
+	}
+
+	public double largerScale() {
+		return Math.min(MAX_SCALE_FACTOR, scale + scaleStep);
+	}
+
+	public double smallerScale() {
+		return Math.max(MIN_SCALE_FACTOR, scale - scaleStep);
 	}
 
 	public enum ClientLayout {

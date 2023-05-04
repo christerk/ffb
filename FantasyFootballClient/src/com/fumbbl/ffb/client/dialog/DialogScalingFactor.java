@@ -23,8 +23,6 @@ import java.awt.event.ActionListener;
 
 public class DialogScalingFactor extends Dialog implements ChangeListener, ActionListener {
 
-	private static final double MIN = 0.5;
-	private static final double MAX = 3;
 	private static final int SLIDER_FACTOR = 20;
 	private final JSlider fSlider;
 	private double factor;
@@ -38,16 +36,16 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 
 		String property = pClient.getProperty(CommonProperty.SETTING_SCALE_FACTOR);
 		factor = StringTool.isProvided(property) ? Double.parseDouble(property) : 1.0;
-		if (factor < MIN) {
-			factor = MIN;
+		if (factor < DimensionProvider.MIN_SCALE_FACTOR) {
+			factor = DimensionProvider.MIN_SCALE_FACTOR;
 		}
-		if (factor > MAX) {
-			factor = MAX;
+		if (factor > DimensionProvider.MAX_SCALE_FACTOR) {
+			factor = DimensionProvider.MAX_SCALE_FACTOR;
 		}
 
 		fSlider = new JSlider();
-		fSlider.setMinimum((int) (MIN * SLIDER_FACTOR));
-		fSlider.setMaximum((int) (MAX * SLIDER_FACTOR));
+		fSlider.setMinimum((int) (DimensionProvider.MIN_SCALE_FACTOR * SLIDER_FACTOR));
+		fSlider.setMaximum((int) (DimensionProvider.MAX_SCALE_FACTOR * SLIDER_FACTOR));
 		fSlider.setValue((int) (factor * SLIDER_FACTOR));
 		fSlider.addChangeListener(this);
 

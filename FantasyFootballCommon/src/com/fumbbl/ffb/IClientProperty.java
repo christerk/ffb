@@ -60,5 +60,7 @@ public interface IClientProperty {
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";
 	String KEY_MENU_SETUP_SAVE = "key.menu.setup.save";
 
-
+	String KEY_RESIZE_LARGER = "key.resize.larger";
+	String KEY_RESIZE_SMALLER = "key.resize.smaller";
+	String KEY_RESIZE_RESET = "key.resize.reset";
 }

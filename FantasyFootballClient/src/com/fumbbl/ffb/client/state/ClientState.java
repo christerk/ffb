@@ -15,6 +15,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -312,6 +313,20 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
+		GameMenuBar gameMenuBar = fClient.getUserInterface().getGameMenuBar();
+		switch (pActionKey) {
+			case RESIZE_LARGER:
+				gameMenuBar.increaseScaling();
+				return true;
+			case RESIZE_RESET:
+				gameMenuBar.resetScaling();
+				return true;
+			case RESIZE_SMALLER:
+				gameMenuBar.decreaseScaling();
+				return true;
+			default:
+				break;
+		}
 		return false;
 	}
 
