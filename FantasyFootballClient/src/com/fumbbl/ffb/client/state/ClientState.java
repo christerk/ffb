@@ -322,6 +322,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 				gameMenuBar.resetScaling();
 				return true;
 			case RESIZE_SMALLER:
+			case RESIZE_SMALLER2:
 				gameMenuBar.decreaseScaling();
 				return true;
 			default:

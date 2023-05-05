@@ -63,4 +63,5 @@ public interface IClientProperty {
 	String KEY_RESIZE_LARGER = "key.resize.larger";
 	String KEY_RESIZE_SMALLER = "key.resize.smaller";
 	String KEY_RESIZE_RESET = "key.resize.reset";
+	String KEY_RESIZE_SMALLER2 = "key.resize.smaller2";
 }

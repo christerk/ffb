@@ -65,10 +65,10 @@ public class DialogKeyBindings extends Dialog {
 		html.append("<body>\n");
 
 		html.append("<table border=\"1\" cellspacing=\"0\">\n");
-		addTableHeader(html, "Client Resizing", 2);
+		addTableHeader(html, "Client Resizing", 3);
 		addDescription(html, "Increase Size", IClientProperty.KEY_RESIZE_LARGER);
 		addDescription(html, "Reset Size", IClientProperty.KEY_RESIZE_RESET);
-		addDescription(html, "Decrease Size", IClientProperty.KEY_RESIZE_SMALLER);
+		addDescriptionWithAlternativeProperty(html, "Decrease Size", IClientProperty.KEY_RESIZE_SMALLER, IClientProperty.KEY_RESIZE_SMALLER2);
 		html.append("</table>\n");
 
 		html.append("<br>\n");
@@ -162,6 +162,10 @@ public class DialogKeyBindings extends Dialog {
 		html.append("  <td>").append(fontBoldOpen).append(getClient().getProperty(property))
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
+	}
+
+	private void addDescriptionWithAlternativeProperty(StringBuilder html, String text, String property, String alternateProperty) {
+		addDescriptionWithAlternative(html, text, property, getClient().getProperty(alternateProperty));
 	}
 
 	private void addDescriptionWithAlternative(StringBuilder html, String text, String property, String key) {
