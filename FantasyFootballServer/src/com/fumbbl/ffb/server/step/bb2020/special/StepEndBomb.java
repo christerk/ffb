@@ -116,7 +116,7 @@ public final class StepEndBomb extends AbstractStep {
 			PlayerState playerState = game.getFieldModel().getPlayerState(originalBomber);
 			boolean threwOnlyFirstBomb = toPrimitive(state.getThrowTwoBombs());
 
-			if (originalBomber != game.getActingPlayer().getPlayer()) {
+			if (originalBomber != game.getActingPlayer().getPlayer() && !playerState.isProneOrStunned()) {
 				UtilServerSteps.changePlayerAction(this, originalBomber.getId(), PlayerAction.THROW_BOMB, false);
 			}
 

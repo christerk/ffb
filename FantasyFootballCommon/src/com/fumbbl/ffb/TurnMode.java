@@ -45,6 +45,10 @@ public enum TurnMode implements INamedObject {
 		return ((this == BOMB_HOME) || (this == BOMB_HOME_BLITZ) || (this == BOMB_AWAY) || (this == BOMB_AWAY_BLITZ));
 	}
 
+	public boolean allowEndPlayerAction() {
+		return !isBombTurn() && this != DUMP_OFF;
+	}
+
 	public boolean isCheckForActivePlayers() {
 		return checkForActivePlayers;
 	}

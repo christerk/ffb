@@ -10,6 +10,16 @@ public class ChangeList {
 
   public ChangeList() {
 
+		versions.add(new VersionChangeList("2.20.0")
+			.addBugfix("Replays were not synced up with controls anymore")
+			.addBugfix("Remove superfluous line spacings in game log")
+			.addBugfix("Using right click to end player action during dump off, froze game")
+			.addBugfix("Replays with rostered stars did not load")
+			.addBugfix("Bombardier that got stunned by his bomb thrown back at him was able to act again")
+			.addBugfix("Casualty against zapped player was not logged properly")
+			.addFeature("Enable Resizing using ctrl +, ctrl 0 and ctrl -")
+		);
+
 		versions.add(new VersionChangeList("2.19.1")
 			.addBugfix("Invalid frame background color caused client to crash")
 		);

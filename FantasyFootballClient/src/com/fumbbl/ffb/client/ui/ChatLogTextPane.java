@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Kalimar
@@ -64,37 +65,41 @@ public class ChatLogTextPane extends JTextPane {
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
 
-		if (pText != null) {
+		try {
+			if (pText != null) {
 
-			if (pStyle == null) {
-				pStyle = TextStyle.NONE;
-			}
-			if (pTextIndent == null) {
-				pTextIndent = ParagraphStyle.INDENT_0;
-			}
-
-			fChatLogDocument.setParagraphAttributes(fChatLogDocument.getLength(), 1,
-				fChatLogDocument.getStyle(pTextIndent.getName()), false);
-			String name = pStyle.getName();
-			SwingUtilities.invokeLater(() -> {
-				try {
-					fChatLogDocument.insertString(fChatLogDocument.getLength(), pText, fChatLogDocument.getStyle(name));
-				} catch (BadLocationException ex) {
-					throw new FantasyFootballException(ex);
+				if (pStyle == null) {
+					pStyle = TextStyle.NONE;
 				}
-			});
-
-		} else {
-			SwingUtilities.invokeLater(() -> {
-				try {
-					fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
-						fChatLogDocument.getStyle(TextStyle.NONE.getName()));
-				} catch (BadLocationException ex) {
-					throw new FantasyFootballException(ex);
+				if (pTextIndent == null) {
+					pTextIndent = ParagraphStyle.INDENT_0;
 				}
-			});
+
+				fChatLogDocument.setParagraphAttributes(fChatLogDocument.getLength(), 1,
+					fChatLogDocument.getStyle(pTextIndent.getName()), false);
+				String name = pStyle.getName();
+				SwingUtilities.invokeAndWait(() -> {
+					try {
+						fChatLogDocument.insertString(fChatLogDocument.getLength(), pText, fChatLogDocument.getStyle(name));
+					} catch (BadLocationException ex) {
+						throw new FantasyFootballException(ex);
+					}
+				});
+
+			} else {
+				SwingUtilities.invokeAndWait(() -> {
+					try {
+						fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
+							fChatLogDocument.getStyle(TextStyle.NONE.getName()));
+					} catch (BadLocationException ex) {
+						throw new FantasyFootballException(ex);
+					}
+				});
+			}
+
+		} catch (InterruptedException | InvocationTargetException e) {
+			throw new FantasyFootballException(e);
 		}
-
 
 	}
 

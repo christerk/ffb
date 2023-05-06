@@ -109,6 +109,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			getContentPane().remove(fDesktop);
 		}
 		fDesktop = new JDesktopPane();
+		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
 
 		fFieldComponent.initLayout(dimensionProvider);
 		fLog.initLayout(dimensionProvider, styleProvider);

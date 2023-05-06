@@ -99,13 +99,24 @@ public class ActionKeyBindings {
 		addActionBinding(IClientProperty.KEY_TOOLBAR_ILLEGAL_PROCEDURE, turnActions, ActionKey.TOOLBAR_ILLEGAL_PROCEDURE);
 		fActionsByGroup.put(ActionKeyGroup.TURN_ACTIONS, turnActions);
 
+		List<ActionKeyAction> resizeActions = new ArrayList<>();
+		addActionBinding(IClientProperty.KEY_RESIZE_LARGER, resizeActions, ActionKey.RESIZE_LARGER, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_SMALLER, resizeActions, ActionKey.RESIZE_SMALLER, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_RESET, resizeActions, ActionKey.RESIZE_RESET, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_SMALLER2, resizeActions, ActionKey.RESIZE_SMALLER2, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		fActionsByGroup.put(ActionKeyGroup.RESIZE, resizeActions);
+
 	}
 
 	private void addActionBinding(String keyProperty, List<ActionKeyAction> playerActions, ActionKey actionKey) {
+		addActionBinding(keyProperty, playerActions, actionKey, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+	}
+
+	private void addActionBinding(String keyProperty, List<ActionKeyAction> playerActions, ActionKey actionKey, int inputMap) {
 		String key = getClient().getProperty(keyProperty);
 		if (StringTool.isProvided(key)) {
 			playerActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(key),
-				actionKey));
+				actionKey, inputMap));
 		}
 	}
 
@@ -118,8 +129,9 @@ public class ActionKeyBindings {
 		} else {
 			List<ActionKeyAction> actions = fActionsByGroup.get(pActionKeyGroup);
 			if (actions != null) {
-				InputMap inputMap = pComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 				for (ActionKeyAction action : actions) {
+					//noinspection MagicConstant
+					InputMap inputMap = pComponent.getInputMap(action.getInputMap());
 					Object actionMapKey = inputMap.get(action.getKeyStroke());
 					if ((actionMapKey instanceof ActionKey)) {
 						Action currentAction = pComponent.getActionMap().get(action.getActionKey());

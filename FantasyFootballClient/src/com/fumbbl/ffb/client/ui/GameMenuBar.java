@@ -308,7 +308,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		createSoundMenu(fUserSettingsMenu);
 		createIconsMenu(fUserSettingsMenu);
-		createAutmomoveMenu(fUserSettingsMenu);
+		createAutomoveMenu(fUserSettingsMenu);
 		createBlitzPanelMenu(fUserSettingsMenu);
 		createGazePanelMenu(fUserSettingsMenu);
 		createRightClickMenu(fUserSettingsMenu);
@@ -620,7 +620,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
 	}
 
-	private void createAutmomoveMenu(JMenu fUserSettingsMenu) {
+	private void createAutomoveMenu(JMenu fUserSettingsMenu) {
 		JMenu fAutomoveMenu = new JMenu(dimensionProvider, SETTING_AUTOMOVE);
 		fAutomoveMenu.setMnemonic(KeyEvent.VK_A);
 		fUserSettingsMenu.add(fAutomoveMenu);
@@ -1433,8 +1433,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			case SCALING_FACTOR:
 				DialogScalingFactor scalingDialog = (DialogScalingFactor) pDialog;
 				if (scalingDialog.getFactor() != null) {
-					getClient().setProperty(CommonProperty.SETTING_SCALE_FACTOR, Double.toString(scalingDialog.getFactor()));
-					getClient().saveUserSettings(true);
+					updateScaleProperty(scalingDialog.getFactor());
 				}
 				break;
 			case STORE_PROPERTIES_LOCAL:
@@ -1449,6 +1448,24 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		fDialogShown = null;
 	}
+
+	private void updateScaleProperty(double scalingFactor) {
+		getClient().setProperty(CommonProperty.SETTING_SCALE_FACTOR, Double.toString(scalingFactor));
+		getClient().saveUserSettings(true);
+	}
+
+	public void increaseScaling() {
+		updateScaleProperty(dimensionProvider.largerScale());
+	}
+
+	public void decreaseScaling() {
+		updateScaleProperty(dimensionProvider.smallerScale());
+	}
+
+	public void resetScaling() {
+		updateScaleProperty(DimensionProvider.BASE_SCALE_FACTOR);
+	}
+
 
 	public void showDialog(IDialog pDialog) {
 		if (fDialogShown != null) {

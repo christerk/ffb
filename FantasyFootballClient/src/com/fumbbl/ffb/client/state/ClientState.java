@@ -15,6 +15,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
@@ -226,7 +227,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 					String rightClickProperty = getClient().getProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION);
 					if (getClient().getGame().getActingPlayer().getPlayer() != null
 						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
-						if (!getClient().getGame().getTurnMode().isBombTurn()) {
+						if (getClient().getGame().getTurnMode().allowEndPlayerAction()) {
 							if (getClient().getGame().getFieldModel() != null) {
 								getClient().getGame().getFieldModel().setRangeRuler(null);
 								getClient().getUserInterface().getFieldComponent().refresh();
@@ -312,6 +313,21 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
+		GameMenuBar gameMenuBar = fClient.getUserInterface().getGameMenuBar();
+		switch (pActionKey) {
+			case RESIZE_LARGER:
+				gameMenuBar.increaseScaling();
+				return true;
+			case RESIZE_RESET:
+				gameMenuBar.resetScaling();
+				return true;
+			case RESIZE_SMALLER:
+			case RESIZE_SMALLER2:
+				gameMenuBar.decreaseScaling();
+				return true;
+			default:
+				break;
+		}
 		return false;
 	}
 
