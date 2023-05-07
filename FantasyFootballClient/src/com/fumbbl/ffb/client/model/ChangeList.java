@@ -11,6 +11,10 @@ public class ChangeList {
   public ChangeList() {
 
 		versions.add(new VersionChangeList("2.20.0")
+			.addBugfix("Reduce rounding impact on scaled up clients when mapping mouse position to squares")
+		);
+
+		versions.add(new VersionChangeList("2.20.0")
 			.addBugfix("Replays were not synced up with controls anymore")
 			.addBugfix("Remove superfluous line spacings in game log")
 			.addBugfix("Using right click to end player action during dump off, froze game")
