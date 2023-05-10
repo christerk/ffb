@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.factory;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.injury.InjuryType;
@@ -36,12 +37,8 @@ public class InjuryTypeFactory implements INamedObjectFactory {
 					addInjuryType((InjuryType) field.get(null));
 				}
 			}
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			throw new FantasyFootballException("Could not initialize injury type factory", e);
 		}
 	}
 
