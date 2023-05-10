@@ -10,7 +10,7 @@ public class ChangeList {
 
   public ChangeList() {
 
-		versions.add(new VersionChangeList("2.20.0")
+		versions.add(new VersionChangeList("2.20.1")
 			.addBugfix("Reduce rounding impact on scaled up clients when mapping mouse position to squares")
 		);
 
