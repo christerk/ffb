@@ -236,6 +236,8 @@ public interface IJsonOption {
 	JsonArrayOption INJURY_MODIFIERS = new JsonArrayOption("injuryModifiers");
 	JsonIntArrayOption INJURY_ROLL = new JsonIntArrayOption("injuryRoll");
 	JsonEnumWithNameOption INJURY_TYPE = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE);
+	JsonEnumWithNameOption INJURY_TYPE_SERVER = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE_SERVER);
+
 	JsonIntOption INTERCEPTIONS = new JsonIntOption("interceptions");
 	JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");

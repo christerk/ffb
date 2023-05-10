@@ -106,7 +106,7 @@ public class StepFallDown extends AbstractStep {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
+		IServerJsonOption.INJURY_TYPE_SERVER.addTo(jsonObject, fInjuryType);
 		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
 		return jsonObject;
 	}
@@ -116,7 +116,7 @@ public class StepFallDown extends AbstractStep {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
-		fInjuryType = (InjuryTypeServer<?>) IServerJsonOption.INJURY_TYPE.getFrom(source, jsonObject);
+		fInjuryType = (InjuryTypeServer<?>) IServerJsonOption.INJURY_TYPE_SERVER.getFrom(source, jsonObject);
 		return this;
 	}
 
