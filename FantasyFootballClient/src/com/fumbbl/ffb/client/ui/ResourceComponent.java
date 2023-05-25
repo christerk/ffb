@@ -20,6 +20,7 @@ import javax.swing.ToolTipManager;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -133,36 +134,26 @@ public class ResourceComponent extends JPanel {
 	private void drawSlot(ResourceSlot pSlot) {
 		if ((pSlot != null) && (pSlot.getIconProperty() != null)) {
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+			ScaledSlot scaledSlot = scaledSlot(pSlot, iconCache);
 			Graphics2D g2d = fImage.createGraphics();
-			int x = pSlot.getLocation().x;
-			int y = pSlot.getLocation().y;
-			BufferedImage resourceIcon = iconCache.getUnscaledIconByProperty(pSlot.getIconProperty());
-			if (getSideBar().isHomeSide()) {
-				x += pSlot.getLocation().width - resourceIcon.getWidth() - 1;
-			} else {
-				x += 1;
-			}
-			y += (pSlot.getLocation().height - resourceIcon.getHeight() + 1) / 2;
-			int scaledX = dimensionProvider.scale(x);
-			int scaledY = dimensionProvider.scale(y);
-			Dimension resourceDimension = dimensionProvider.scale(new Dimension(resourceIcon.getWidth(), resourceIcon.getHeight()));
-			g2d.drawImage(resourceIcon, scaledX, scaledY, resourceDimension.width, resourceDimension.height, null);
+			g2d.drawImage(scaledSlot.resourceIcon, scaledSlot.area.x, scaledSlot.area.y, scaledSlot.area.width, scaledSlot.area.height, null);
 			if (!pSlot.isEnabled()) {
 				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED);
-				g2d.drawImage(disabledIcon, scaledX + (resourceDimension.width - disabledIcon.getWidth()) / 2,
-					scaledY + (resourceDimension.height - disabledIcon.getHeight()) / 2, null);
+				g2d.drawImage(disabledIcon, scaledSlot.area.x + (scaledSlot.area.width - disabledIcon.getWidth()) / 2,
+					scaledSlot.area.y + (scaledSlot.area.height - disabledIcon.getHeight()) / 2, null);
 			}
 
 			List<ResourceValue> values = pSlot.getValues();
 			for (int i = 0; i < Math.min(4, values.size()); i++) {
 				ResourceValue resourceValue = values.get(i);
 				if (resourceValue.getValue() > 1 || (values.size() > 1 && resourceValue.getValue() == 1)) {
-					drawCounter(iconCache, g2d, x, y, resourceValue, offset(pSlot.getLocation(), i));
+					drawCounter(iconCache, g2d, scaledSlot.origin.x, scaledSlot.origin.y, resourceValue, offset(pSlot.getLocation(), i));
 				}
 			}
 			g2d.dispose();
 		}
 	}
+
 
 	private void drawCounter(IconCache iconCache, Graphics2D g2d, int x, int y, ResourceValue resourceValue, Dimension offset) {
 		Rectangle counterCrop = counterCrop(Math.min(resourceValue.getValue() - 1, 15));
@@ -297,13 +288,43 @@ public class ResourceComponent extends JPanel {
 	}
 
 	public String getToolTipText(MouseEvent pMouseEvent) {
+		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 		String toolTip = null;
 		for (int i = 0; (toolTip == null) && (i < fSlots.length); i++) {
-			if (fSlots[i].getLocation().contains(pMouseEvent.getPoint())) {
+			ScaledSlot scaledSlot = scaledSlot(fSlots[i], iconCache);
+			if (scaledSlot.area.contains(pMouseEvent.getPoint())) {
 				toolTip = fSlots[i].getToolTip();
 			}
 		}
 		return toolTip;
+	}
+
+	private ScaledSlot scaledSlot(ResourceSlot pSlot, IconCache iconCache) {
+		int x = pSlot.getLocation().x;
+		int y = pSlot.getLocation().y;
+		BufferedImage resourceIcon = iconCache.getUnscaledIconByProperty(pSlot.getIconProperty());
+		if (getSideBar().isHomeSide()) {
+			x += pSlot.getLocation().width - resourceIcon.getWidth() - 1;
+		} else {
+			x += 1;
+		}
+		y += (pSlot.getLocation().height - resourceIcon.getHeight() + 1) / 2;
+		int scaledX = dimensionProvider.scale(x);
+		int scaledY = dimensionProvider.scale(y);
+		Dimension resourceDimension = dimensionProvider.scale(new Dimension(resourceIcon.getWidth(), resourceIcon.getHeight()));
+		return new ScaledSlot(new Rectangle(scaledX, scaledY, resourceDimension.width, resourceDimension.height), resourceIcon, new Point(x, y));
+	}
+
+	private static class ScaledSlot {
+		Rectangle area;
+		BufferedImage resourceIcon;
+		Point origin;
+
+		public ScaledSlot(Rectangle area, BufferedImage resourceIcon, Point origin) {
+			this.area = area;
+			this.resourceIcon = resourceIcon;
+			this.origin = origin;
+		}
 	}
 
 }

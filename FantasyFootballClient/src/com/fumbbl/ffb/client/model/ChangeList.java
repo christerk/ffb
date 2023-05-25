@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.20.1")
 			.addBugfix("Reduce rounding impact on scaled up clients when mapping mouse position to squares")
 			.addBugfix("Checkboxes for locally stored properties could not be checked")
+			.addBugfix("Inducement tooltips were not rendered in the proper locations")
 		);
 
 		versions.add(new VersionChangeList("2.20.0")
