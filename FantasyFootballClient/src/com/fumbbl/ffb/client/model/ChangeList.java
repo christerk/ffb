@@ -14,6 +14,8 @@ public class ChangeList {
 			.addBugfix("Reduce rounding impact on scaled up clients when mapping mouse position to squares")
 			.addBugfix("Checkboxes for locally stored properties could not be checked")
 			.addBugfix("Inducement tooltips were not rendered in the proper locations")
+			.addBugfix("BB2016: Buying cards caused the client to lock up")
+			.addImprovement("Reworking handling of chat and log messages to cause less blocking, could help with sluggish client behavior during streaming")
 		);
 
 		versions.add(new VersionChangeList("2.20.0")
