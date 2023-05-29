@@ -10,15 +10,11 @@ import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.ModifierAggregator;
 import com.fumbbl.ffb.modifiers.SpecialEffectArmourModifier;
-import com.fumbbl.ffb.modifiers.StaticArmourModifier;
-import com.fumbbl.ffb.option.GameOptionId;
-import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,37 +28,10 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 
 	private ModifierAggregator modifierAggregator;
 
-	private final Set<ArmorModifier> armorModifiers = new HashSet<ArmorModifier>() {{
-		add(new FoulAssistArmorModifier("1 Offensive Assist", 1, true));
-		add(new FoulAssistArmorModifier("2 Offensive Assists", 2, true));
-		add(new FoulAssistArmorModifier("3 Offensive Assists", 3, true));
-		add(new FoulAssistArmorModifier("4 Offensive Assists", 4, true));
-		add(new FoulAssistArmorModifier("5 Offensive Assists", 5, true));
-		add(new FoulAssistArmorModifier("6 Offensive Assists", 6, true));
-		add(new FoulAssistArmorModifier("7 Offensive Assists", 7, true));
-		add(new FoulAssistArmorModifier("1 Defensive Assist", -1, true));
-		add(new FoulAssistArmorModifier("2 Defensive Assists", -2, true));
-		add(new FoulAssistArmorModifier("3 Defensive Assists", -3, true));
-		add(new FoulAssistArmorModifier("4 Defensive Assists", -4, true));
-		add(new FoulAssistArmorModifier("5 Defensive Assists", -5, true));
-		add(new StaticArmourModifier("Foul", 1, false) {
-			@Override
-			public boolean appliesToContext(ArmorModifierContext context) {
-				Game game = context.getGame();
-				return
-					context.isFoul()
-						&& (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS)
-						|| (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE)
-						&& (UtilPlayer.findTacklezones(game, context.getAttacker()) < 1)));
-			}
-		});
-		add(new SpecialEffectArmourModifier("Bomb", 1, false, SpecialEffect.BOMB));
-		add(new SpecialEffectArmourModifier("Fireball", 1, false, SpecialEffect.FIREBALL));
-		add(new SpecialEffectArmourModifier("Lightning", 1, false, SpecialEffect.LIGHTNING));
-	}};
+	private ArmorModifiers armorModifiers;
 
 	public ArmorModifier forName(String name) {
-		return Stream.concat(armorModifiers.stream(), modifierAggregator.getArmourModifiers().stream())
+		return Stream.concat(armorModifiers.values(), modifierAggregator.getArmourModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
 			.orElse(null);
@@ -86,14 +55,14 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 	}
 
 	public Set<SpecialEffectArmourModifier> specialEffectArmourModifiers(SpecialEffect specialEffect) {
-		return armorModifiers.stream().filter(modifier -> modifier instanceof SpecialEffectArmourModifier)
+		return armorModifiers.values().filter(modifier -> modifier instanceof SpecialEffectArmourModifier)
 			.map(modifier -> (SpecialEffectArmourModifier) modifier)
 			.filter(modifier -> modifier.getEffect() == specialEffect)
 			.collect(Collectors.toSet());
 	}
 
 	public Set<ArmorModifier> getFoulAssist(ArmorModifierContext context) {
-		return armorModifiers.stream().filter(modifier -> !(modifier instanceof SpecialEffectArmourModifier) && modifier.appliesToContext(context)).collect(Collectors.toSet());
+		return armorModifiers.values().filter(modifier -> !(modifier instanceof SpecialEffectArmourModifier) && modifier.appliesToContext(context)).collect(Collectors.toSet());
 	}
 
 	public ArmorModifier[] toArray(Set<ArmorModifier> pArmorModifiers) {
@@ -106,9 +75,11 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 		}
 	}
 
+
 	@Override
 	public void initialize(Game game) {
 		modifierAggregator = game.getModifierAggregator();
+		armorModifiers = new Scanner<>(ArmorModifiers.class).getInstancesImplementing(game.getOptions()).stream().findFirst().orElse(null);
 	}
 
 	private Set<ArmorModifier> getArmorModifiers(Player<?> player, ArmorModifierContext context) {
@@ -118,15 +89,4 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 			.collect(Collectors.toSet());
 	}
 
-	private static class FoulAssistArmorModifier extends StaticArmourModifier {
-
-		public FoulAssistArmorModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
-			super(pName, pModifier, pFoulAssistModifier);
-		}
-
-		@Override
-		public boolean appliesToContext(ArmorModifierContext context) {
-			return context.isFoul() && context.getFoulAssists() == getModifier(context.getAttacker());
-		}
-	}
 }
