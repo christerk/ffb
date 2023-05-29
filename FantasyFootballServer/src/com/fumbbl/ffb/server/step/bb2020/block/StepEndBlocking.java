@@ -2,12 +2,14 @@ package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
@@ -18,10 +20,12 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -75,7 +79,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
-	private boolean fUsingStab, usingChainsaw, addBlockDie, allowSecondBlockAction, usingVomit;
+	private boolean fUsingStab, usingChainsaw, allowSecondBlockAction, usingVomit, addBlockDieHandled;
 	private Boolean usePileDriver, useHitAndRun, usePutridRegurgitation;
 	private List<String> knockedDownPlayers = new ArrayList<>();
 	private String targetPlayerId;
@@ -108,6 +112,22 @@ public class StepEndBlocking extends AbstractStep {
 					} else if (
 						commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
 						usePutridRegurgitation = commandUseSkill.isSkillUsed();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					} else if (
+						commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie)) {
+						Game game = getGameState().getGame();
+						ActingPlayer actingPlayer = game.getActingPlayer();
+						TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+						if (targetSelectionState != null && UtilCards.hasUnusedSkill(actingPlayer, commandUseSkill.getSkill())) {
+							FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
+							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+							DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
+							if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2) && targetCoordinate.isAdjacent(playerCoordinate)) {
+								targetSelectionState.addUsedSkill(commandUseSkill.getSkill());
+								getResult().addReport(new ReportSkillUse(commandUseSkill.getSkill(), true, SkillUse.ADD_BLOCK_DIE));
+								ServerUtilBlock.updateDiceDecorations(game);
+							}
+						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -154,10 +174,6 @@ public class StepEndBlocking extends AbstractStep {
 					}
 					consume(parameter);
 					return true;
-				case ADD_BLOCK_DIE:
-					addBlockDie = (boolean) parameter.getValue();
-					consume(parameter);
-					break;
 				case ALLOW_SECOND_BLOCK_ACTION:
 					allowSecondBlockAction = (boolean) parameter.getValue();
 					break;
@@ -231,11 +247,33 @@ public class StepEndBlocking extends AbstractStep {
 				&& attackerState.hasTacklezones() && fDefenderPushed
 				&& (actingPlayer.getPlayerAction() != PlayerAction.MULTIPLE_BLOCK)
 				&& UtilPlayer.isNextMovePossible(game, false)) {
+
+				TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+				Skill addBlockDieSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);
+
+				if (!addBlockDieHandled
+					&& !usingChainsaw
+					&& !usingVomit
+					&& !fUsingStab
+					&& addBlockDieSkill != null
+					&& PlayerAction.BLITZ == actingPlayer.getPlayerAction()
+					&& targetSelectionState != null
+					&& !targetSelectionState.getUsedSkills().contains(addBlockDieSkill)) {
+					ServerUtilBlock.updateDiceDecorations(game, true);
+					DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(defenderPosition);
+					if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2)) {
+						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), addBlockDieSkill, 0), false);
+						addBlockDieHandled = true;
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
+					}
+				}
+
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
 				boolean askForBlockKind = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative);
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), defenderId, fUsingStab, true, null, askForBlockKind, addBlockDie));
+					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), defenderId, fUsingStab, true, null, askForBlockKind));
 				} else {
 					blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(defenderId).useStab(fUsingStab).askForBlockKind(askForBlockKind).build());
 					publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, allowSecondBlockAction));
@@ -387,12 +425,12 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, knockedDownPlayers);
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, targetPlayerId);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
-		IServerJsonOption.ADD_BLOCK_DIE.addTo(jsonObject, addBlockDie);
 		IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.addTo(jsonObject, allowSecondBlockAction);
 		IServerJsonOption.USING_PILE_DRIVER.addTo(jsonObject, usePileDriver);
 		IServerJsonOption.USING_HIT_AND_RUN.addTo(jsonObject, useHitAndRun);
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IServerJsonOption.USING_PUTRID_REGURGITATION.addTo(jsonObject, usePutridRegurgitation);
+		IServerJsonOption.ADD_BLOCK_DIE_HANDLED.addTo(jsonObject, addBlockDieHandled);
 		return jsonObject;
 	}
 
@@ -408,11 +446,11 @@ public class StepEndBlocking extends AbstractStep {
 		knockedDownPlayers = Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList());
 		targetPlayerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject));
-		addBlockDie = toPrimitive(IServerJsonOption.ADD_BLOCK_DIE.getFrom(source, jsonObject));
 		allowSecondBlockAction = toPrimitive(IServerJsonOption.ALLOW_SECOND_BLOCK_ACTION.getFrom(source, jsonObject));
 		useHitAndRun = IServerJsonOption.USING_HIT_AND_RUN.getFrom(source, jsonObject);
 		usePileDriver = IServerJsonOption.USING_PILE_DRIVER.getFrom(source, jsonObject);
 		usePutridRegurgitation = IServerJsonOption.USING_PUTRID_REGURGITATION.getFrom(source, jsonObject);
+		addBlockDieHandled = toPrimitive(IServerJsonOption.ADD_BLOCK_DIE_HANDLED.getFrom(source, jsonObject));
 		return this;
 	}
 

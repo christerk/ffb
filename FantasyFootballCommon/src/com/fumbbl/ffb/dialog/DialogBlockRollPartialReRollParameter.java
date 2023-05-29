@@ -7,7 +7,6 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.skill.Skill;
 
 public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 
@@ -16,7 +15,6 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 	private int[] fBlockRoll, reRolledDiceIndexes;
 	private boolean fTeamReRollOption, fProReRollOption, brawlerOption, consummateOption;
 	private ReRollSource singleUseReRollSource;
-	private Skill addBlockDieSkill;
 
 	public DialogBlockRollPartialReRollParameter() {
 		super();
@@ -24,7 +22,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 
 	public DialogBlockRollPartialReRollParameter(String pChoosingTeamId, int pNrOfDice, int[] pBlockRoll, boolean pTeamReRollOption,
 																							 boolean pProReRollOption, boolean brawlerOption, boolean consummateOption,
-																							 int[] reRolledDiceIndexes, ReRollSource singleUseReRollSource, Skill addBlockDieSkill) {
+																							 int[] reRolledDiceIndexes, ReRollSource singleUseReRollSource) {
 		fChoosingTeamId = pChoosingTeamId;
 		fNrOfDice = pNrOfDice;
 		fBlockRoll = pBlockRoll;
@@ -34,7 +32,6 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		this.consummateOption = consummateOption;
 		this.reRolledDiceIndexes = reRolledDiceIndexes;
 		this.singleUseReRollSource = singleUseReRollSource;
-		this.addBlockDieSkill = addBlockDieSkill;
 	}
 
 	public DialogId getId() {
@@ -77,15 +74,11 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		return consummateOption;
 	}
 
-	public Skill getAddBlockDieSkill() {
-		return addBlockDieSkill;
-	}
-
 // transformation
 
 	public IDialogParameter transform() {
 		return new DialogBlockRollPartialReRollParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(), hasTeamReRollOption(),
-			hasProReRollOption(), brawlerOption, consummateOption, reRolledDiceIndexes, singleUseReRollSource, addBlockDieSkill);
+			hasProReRollOption(), brawlerOption, consummateOption, reRolledDiceIndexes, singleUseReRollSource);
 	}
 
 	// JSON serialization
@@ -102,7 +95,6 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 		IJsonOption.BRAWLER_OPTION.addTo(jsonObject, brawlerOption);
 		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
 		IJsonOption.CONSUMMATE_OPTION.addTo(jsonObject, consummateOption);
-		IJsonOption.ADD_BLOCK_DIE_SKILL.addTo(jsonObject, addBlockDieSkill);
 		return jsonObject;
 	}
 
@@ -120,9 +112,6 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 			consummateOption = IJsonOption.CONSUMMATE_OPTION.getFrom(source, jsonObject);
 		}
 		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
-		if (IJsonOption.ADD_BLOCK_DIE_SKILL.isDefinedIn(jsonObject)) {
-			addBlockDieSkill = (Skill) IJsonOption.ADD_BLOCK_DIE_SKILL.getFrom(source, jsonObject);
-		}
 		return this;
 	}
 

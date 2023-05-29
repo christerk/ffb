@@ -20,6 +20,7 @@ public class ChangeList {
 			.addImprovement("Reworking handling of chat and log messages to cause less blocking, could help with sluggish client behavior during streaming")
 			.addRuleChange("Chainsaw causes turnover if armour breaks on kickbacks")
 			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName() + " to allow control in what cases chainsaw causes turnovers")
+			.addRuleChange("\"Gored By The Bull\" must new be declared before rolling block dice. To activate click the active player before performing the block.")
 		);
 
 		versions.add(new VersionChangeList("2.20.0")

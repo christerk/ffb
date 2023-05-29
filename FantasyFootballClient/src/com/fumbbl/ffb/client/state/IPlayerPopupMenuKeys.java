@@ -48,4 +48,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_ALL_YOU_CAN_EAT = KeyEvent.VK_Y;
 	int KEY_KICK_EM_BLOCK = KeyEvent.VK_C;
 	int KEY_KICK_EM_BLITZ = KeyEvent.VK_I;
+	int KEY_GORED_BY_THE_BULL = KeyEvent.VK_O;
 }

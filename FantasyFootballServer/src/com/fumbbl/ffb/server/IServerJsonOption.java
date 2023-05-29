@@ -21,6 +21,7 @@ import com.fumbbl.ffb.json.JsonStringOption;
 public interface IServerJsonOption extends IJsonOption {
 
     JsonObjectOption ACTIVE_EFFECTS = new JsonObjectOption("activeEffects");
+    JsonBooleanOption ADD_BLOCK_DIE_HANDLED = new JsonBooleanOption("addBlockDieHandled");
     JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
     JsonBooleanOption ALREADY_REPORTED = new JsonBooleanOption("alreadyReported");
     JsonBooleanOption ALLOW_MOVE_AFTER_PASS = new JsonBooleanOption("allowMoveAfterPass");

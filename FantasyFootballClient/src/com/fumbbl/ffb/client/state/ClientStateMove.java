@@ -149,6 +149,7 @@ public class ClientStateMove extends ClientState {
 				|| isLookIntoMyEyesAvailable(actingPlayer)
 				|| isBalefulHexAvailable(actingPlayer)
 				|| isPutridRegurgitationAvailable()
+				|| isGoredAvailable()
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -354,6 +355,9 @@ public class ClientStateMove extends ClientState {
 		if (isPutridRegurgitationAvailable()) {
 			menuItemList.add(createPutridRegurgitationItem(iconCache));
 		}
+		if (isGoredAvailable()) {
+			menuItemList.add(createGoredItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -421,6 +425,9 @@ public class ClientStateMove extends ClientState {
 					return true;
 				case PLAYER_ACTION_PROJECTILE_VOMIT:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
+					return true;
+				case PLAYER_ACTION_GORED:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
 					return true;
 				default:
 					actionHandled = false;
@@ -496,6 +503,14 @@ public class ClientStateMove extends ClientState {
 	}
 
 	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
+		return null;
+	}
+
+	protected boolean isGoredAvailable() {
+		return false;
+	}
+
+	protected JMenuItem createGoredItem(IconCache iconCache) {
 		return null;
 	}
 
