@@ -229,6 +229,10 @@ public class UtilServerStartGame {
 			GameOptionBoolean alwaysTreasury = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
 			alwaysTreasury.setValue(true);
 			//	game.getOptions().addOption(alwaysTreasury);
+			GameOptionString chainsaw = (GameOptionString) optionFactory.createGameOption(GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK);
+			chainsaw.setValue(GameOptionString.CHAINSAW_TURNOVER_NEVER);
+			chainsaw.setValue(GameOptionString.CHAINSAW_TURNOVER_ALWAYS);
+			game.getOptions().addOption(chainsaw);
 		}
 	}
 

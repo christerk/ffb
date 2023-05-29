@@ -2,15 +2,23 @@ package com.fumbbl.ffb.option;
 
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 
  * @author Kalimar
  */
 public class GameOptionString extends GameOptionAbstract {
 
+	public static final String CHAINSAW_TURNOVER_NEVER = "never";
+	public static final String CHAINSAW_TURNOVER_KICKBACK_ONLY = "kickbackOnly";
+	public static final String CHAINSAW_TURNOVER_ALWAYS = "always";
+
 	private String fDefault;
 	private String fValue;
 	private String fMessage;
+
+	private final Map<String, String> messages = new HashMap<>();
 
 	public GameOptionString(GameOptionId pId) {
 		super(pId);
@@ -50,9 +58,20 @@ public class GameOptionString extends GameOptionAbstract {
 		return this;
 	}
 
+
+	public GameOptionString addValueMessage(String value, String pMessage) {
+		messages.put(value, pMessage);
+		return this;
+	}
+
 	@Override
 	public String getDisplayMessage() {
-		return StringTool.bind(fMessage, getValueAsString());
+		String param = messages.get(getValueAsString());
+		if (!StringTool.isProvided(param)) {
+			param = getValueAsString();
+		}
+
+		return StringTool.bind(fMessage, param);
 	}
 
 }
