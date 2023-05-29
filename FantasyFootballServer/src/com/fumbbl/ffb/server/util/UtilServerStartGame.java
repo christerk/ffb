@@ -235,6 +235,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean bombardier = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER);
 			bombardier.setValue(true);
 			//game.getOptions().addOption(bombardier);
+			GameOptionBoolean sneaky = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL);
+			sneaky.setValue(true);
+			game.getOptions().addOption(sneaky);
 		}
 	}
 

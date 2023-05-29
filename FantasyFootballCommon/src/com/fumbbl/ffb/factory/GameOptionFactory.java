@@ -311,6 +311,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Bombardier placed prone causes turnover")
 					.setMessageTrue("Bombardier placed prone ignores turnover");
+			case SNEAKY_GIT_CAN_MOVE_AFTER_FOUL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Sneaky Git has to end action after fouling")
+					.setMessageTrue("Sneaky Git may move after fouling");
 			default:
 				return null;
 		}

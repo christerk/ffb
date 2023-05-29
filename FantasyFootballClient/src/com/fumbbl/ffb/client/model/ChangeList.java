@@ -25,6 +25,8 @@ public class ChangeList {
 			.addRuleChange("Bombs no longer modify armour or injury")
 			.addRuleChange("Bombardier placed prone by own bomb now causes a turnover")
 			.addFeature("Add game option " + GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER.getName() + " to allow control if Bombardier can cause turnovers")
+			.addRuleChange("Sneaky Git can no longer move after foul")
+			.addFeature("Add game option " + GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL.getName() + " to allow control if sneaky git may move after foul")
 		);
 
 		versions.add(new VersionChangeList("2.20.0")

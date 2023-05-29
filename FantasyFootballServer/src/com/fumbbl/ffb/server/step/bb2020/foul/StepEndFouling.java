@@ -12,6 +12,8 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -79,7 +81,9 @@ public class StepEndFouling extends AbstractStep {
 		boolean isOnPitch = FieldCoordinateBounds.FIELD.isInBounds(game.getFieldModel().getPlayerCoordinate(player));
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-		if (!fEndTurn && isOnPitch && player.hasSkillProperty(NamedProperties.canMoveAfterFoul) && UtilPlayer.isNextMovePossible(game, false)) {
+		GameOptionBoolean sneakyMove = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL);
+
+		if (!fEndTurn && isOnPitch && sneakyMove.isEnabled() && player.hasSkillProperty(NamedProperties.canMoveAfterFoul) && UtilPlayer.isNextMovePossible(game, false)) {
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 				.pushSequence(new Select.SequenceParams(getGameState(), true));
 			UtilServerSteps.changePlayerAction(this, player.getId(),
