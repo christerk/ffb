@@ -21,6 +21,7 @@ public class ChangeList {
 			.addRuleChange("Chainsaw causes turnover if armour breaks on kickbacks")
 			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName() + " to allow control in what cases chainsaw causes turnovers")
 			.addRuleChange("\"Gored By The Bull\" must new be declared before rolling block dice. To activate click the active player before performing the block.")
+			.addRuleChange("Star pairs now only use one star slot")
 		);
 
 		versions.add(new VersionChangeList("2.20.0")

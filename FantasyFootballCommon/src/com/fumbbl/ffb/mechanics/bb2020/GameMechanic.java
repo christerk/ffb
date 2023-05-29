@@ -271,11 +271,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean starPairCountsAsTwo() {
-		return true;
-	}
-
-	@Override
 	public String fanModificationName() {
 		return "Dedicated Fans";
 	}

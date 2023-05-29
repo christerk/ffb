@@ -112,41 +112,5 @@
 		<skillList><skill>Leader</skill></skillList>
 	</player>
 
-	<player nr="12" id="teamGoblinKalimar12">
-		<name>Goblin6</name>
-		<gender>male</gender>
-		<positionId>goblin.goblin</positionId>
-		<skillList>
-			<skill>Dodge</skill>
-			<skill>Right Stuff</skill>
-			<skill>Stunty</skill>
-			<skill>Thick Skull</skill>
-		</skillList>
-	</player>
-
-	<player nr="13" id="teamGoblinKalimar13">
-		<name>Goblin7</name>
-		<gender>male</gender>
-		<positionId>goblin.goblin</positionId>
-		<skillList>
-			<skill>Dodge</skill>
-			<skill>Right Stuff</skill>
-			<skill>Stunty</skill>
-			<skill>Thick Skull</skill>
-		</skillList>
-	</player>
-
-	<player nr="14" id="teamGoblinKalimar14">
-		<name>Goblin8</name>
-		<gender>male</gender>
-		<positionId>goblin.goblin</positionId>
-		<skillList>
-			<skill>Dodge</skill>
-			<skill>Right Stuff</skill>
-			<skill>Stunty</skill>
-			<skill>Thick Skull</skill>
-		</skillList>
-	</player>
-
 
 </team>
