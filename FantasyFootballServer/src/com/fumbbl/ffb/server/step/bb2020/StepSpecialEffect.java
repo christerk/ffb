@@ -16,6 +16,8 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.ZappedPlayer;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.report.ReportSpecialEffectRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -152,6 +154,10 @@ public final class StepSpecialEffect extends AbstractStep {
 					boolean playerHitIsFromBombTeam = (bombFromHome && game.getTeamHome().hasPlayer(player)) || (bombFromAway && game.getTeamAway().hasPlayer(player));
 
 					suppressEndTurn = !(playerHitIsFromBombTeam && UtilPlayer.hasBall(game, player));
+					GameOptionBoolean bomberTurnoverIgnored = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER);
+					if (player.getId().equals(getGameState().getPassState().getOriginalBombardier()) && !bomberTurnoverIgnored.isEnabled()) {
+						suppressEndTurn = false;
+					}
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
 						new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT)));
 					StepParameterSet parameterSet = UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT, true);

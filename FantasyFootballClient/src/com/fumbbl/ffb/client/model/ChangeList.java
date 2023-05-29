@@ -23,6 +23,8 @@ public class ChangeList {
 			.addRuleChange("\"Gored By The Bull\" must new be declared before rolling block dice. To activate click the active player before performing the block.")
 			.addRuleChange("Star pairs now only use one star slot")
 			.addRuleChange("Bombs no longer modify armour or injury")
+			.addRuleChange("Bombardier placed prone by own bomb now causes a turnover")
+			.addFeature("Add game option " + GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER.getName() + " to allow control if Bombardier can cause turnovers")
 		);
 
 		versions.add(new VersionChangeList("2.20.0")

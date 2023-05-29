@@ -231,8 +231,10 @@ public class UtilServerStartGame {
 			//	game.getOptions().addOption(alwaysTreasury);
 			GameOptionString chainsaw = (GameOptionString) optionFactory.createGameOption(GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK);
 			chainsaw.setValue(GameOptionString.CHAINSAW_TURNOVER_NEVER);
-			chainsaw.setValue(GameOptionString.CHAINSAW_TURNOVER_ALWAYS);
-			game.getOptions().addOption(chainsaw);
+			//game.getOptions().addOption(chainsaw);
+			GameOptionBoolean bombardier = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER);
+			bombardier.setValue(true);
+			//game.getOptions().addOption(bombardier);
 		}
 	}
 

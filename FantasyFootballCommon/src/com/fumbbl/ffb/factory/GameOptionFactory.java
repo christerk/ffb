@@ -307,6 +307,10 @@ public class GameOptionFactory {
 					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_NEVER, "Never")
 					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_ONLY, "Only on kickback AV breaks")
 					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_ALWAYS, "On all AV breaks");
+			case BOMBER_PLACED_PRONE_IGNORES_TURNOVER:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Bombardier placed prone causes turnover")
+					.setMessageTrue("Bombardier placed prone ignores turnover");
 			default:
 				return null;
 		}
