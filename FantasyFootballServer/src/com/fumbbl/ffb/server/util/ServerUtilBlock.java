@@ -15,14 +15,19 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.util.UtilPlayer;
+import javafx.util.Pair;
 
 public class ServerUtilBlock {
 
 	public static void updateDiceDecorations(Game pGame) {
+		updateDiceDecorations(pGame, false);
+	}
+
+	public static void updateDiceDecorations(Game pGame, boolean decorateForFrenzyBlitz) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
 		PlayerAction playerAction = actingPlayer.getPlayerAction();
-		boolean isBlitz = PlayerAction.BLITZ_MOVE == playerAction;
+		boolean isBlitz = PlayerAction.BLITZ_MOVE == playerAction || (PlayerAction.BLITZ == playerAction && decorateForFrenzyBlitz);
 		boolean isCarnage = PlayerAction.MAXIMUM_CARNAGE == playerAction;
 		boolean isPutrid = playerAction != null && playerAction.isPutrid();
 		boolean isBlock = PlayerAction.BLOCK == playerAction;
@@ -32,7 +37,8 @@ public class ServerUtilBlock {
 		boolean kicksDowned = playerAction != null && playerAction.isKickingDowned();
 
 		if ((actingPlayer.getPlayer() != null)
-			&& (blocksDuringMove || ((!actingPlayer.hasBlocked()) && (isBlitz || isBlock || isMultiBlock || kicksDowned)) || isCarnage || isPutrid)) {
+			&& (blocksDuringMove
+			|| ((!actingPlayer.hasBlocked() || decorateForFrenzyBlitz) && (isBlitz || isBlock || isMultiBlock || kicksDowned)) || isCarnage || isPutrid)) {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
@@ -79,8 +85,11 @@ public class ServerUtilBlock {
 						continue;
 					}
 					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.needsNoDiceDecorations)) {
+						boolean addBlockDie = targetSelectionState != null && targetSelectionState.getUsedSkills().stream()
+							.anyMatch(skill -> skill.hasSkillProperty(NamedProperties.canAddBlockDie));
+
 						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayer,
-							usingMultiBlock, false);
+							usingMultiBlock, false, false, addBlockDie).getKey();
 					}
 				}
 				FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
@@ -115,13 +124,14 @@ public class ServerUtilBlock {
 	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
 																			boolean usingMultiBlock, boolean successfulDauntless) {
 
-		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false, false);
+		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false, false).getKey();
 	}
 
-	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
-																			boolean usingMultiBlock, boolean successfulDauntless,
-																			boolean doubleTargetStrength, boolean addBlockDie) {
+	public static Pair<Integer, Boolean> findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
+																												 boolean usingMultiBlock, boolean successfulDauntless,
+																												 boolean doubleTargetStrength, boolean addBlockDie) {
 		int nrOfDice = 0;
+		boolean addedDie = false;
 		if ((attacker != null) && (defender != null)) {
 			nrOfDice = 1;
 			RollMechanic mechanic = (RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
@@ -158,9 +168,10 @@ public class ServerUtilBlock {
 			}
 
 			if (addBlockDie && (nrOfDice == 2 || nrOfDice == 1)) {
+				addedDie = true;
 				nrOfDice++;
 			}
 		}
-		return nrOfDice;
+		return new Pair<>(nrOfDice, addedDie);
 	}
 }

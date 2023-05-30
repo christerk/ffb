@@ -94,7 +94,7 @@ public class CommonPropertyCheckList extends JList<CommonPropertyCheckListItem> 
 				JCheckBox fCheckBox = new JCheckBox(dimensionProvider);
 				add(fCheckBox);
 				fCheckBox.setBackground(pList.getBackground());
-				fCheckBox.setSelected(false);
+				fCheckBox.setSelected(pValue.isSelected());
 				add(fLabel);
 				fLabel.setText(pValue.getText());
 			} else {

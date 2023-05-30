@@ -86,8 +86,6 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean isLegalConcession(Game game, Team team);
 
-	public abstract boolean starPairCountsAsTwo();
-
 	public abstract String fanModificationName();
 
 	public abstract int fanModification(TeamResult teamResult);

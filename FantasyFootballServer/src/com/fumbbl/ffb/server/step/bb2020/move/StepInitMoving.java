@@ -2,18 +2,22 @@ package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
@@ -23,6 +27,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -36,9 +42,11 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Objects;
@@ -242,6 +250,22 @@ public class StepInitMoving extends AbstractStep {
 						getResult().addReport(new ReportFumblerooskie(player.getId(), true));
 						actingPlayer.setFumblerooskiePending(true);
 					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					Skill skill = clientCommandUseSkill.getSkill();
+					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+					if (targetSelectionState != null && skill.hasSkillProperty(NamedProperties.canAddBlockDie) && UtilCards.hasUnusedSkill(actingPlayer, skill)) {
+						FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
+						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+						DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
+						if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2) && targetCoordinate.isAdjacent(playerCoordinate)) {
+							targetSelectionState.addUsedSkill(skill);
+							getResult().addReport(new ReportSkillUse(skill, true, SkillUse.ADD_BLOCK_DIE));
+							ServerUtilBlock.updateDiceDecorations(game);
+						}
+					}
+					commandStatus = StepCommandStatus.SKIP_STEP;
 					break;
 				default:
 					break;

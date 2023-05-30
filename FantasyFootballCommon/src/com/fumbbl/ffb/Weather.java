@@ -6,8 +6,7 @@ public enum Weather implements INamedObject {
 	VERY_SUNNY("Very Sunny", "sunny"),
 	NICE("Nice Weather", "nice"),
 	POURING_RAIN("Pouring Rain", "rain"),
-	BLIZZARD("Blizzard", "blizzard"
-	),
+	BLIZZARD("Blizzard", "blizzard"),
 	INTRO("Intro", "intro");
 
 	private final String fName;

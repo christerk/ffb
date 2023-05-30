@@ -127,7 +127,8 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
 		Dimension field = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
 		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
-			coordinate = new FieldCoordinate((x / dimensionProvider.fieldSquareSize()), (y / dimensionProvider.fieldSquareSize()));
+			coordinate = new FieldCoordinate((int) ((x / dimensionProvider().getScale()) / dimensionProvider.unscaledFieldSquare()),
+				(int) ((y / dimensionProvider.getScale()) / dimensionProvider.unscaledFieldSquare()));
 			coordinate = getClient().getUserInterface().getDimensionProvider().mapToGlobal(coordinate);
 		}
 		return coordinate;

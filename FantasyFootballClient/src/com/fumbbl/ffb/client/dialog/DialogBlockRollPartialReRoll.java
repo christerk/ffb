@@ -40,10 +40,8 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 	private JButton fButtonNoReRoll;
 	private final ReRollSource singleUseReRollSource;
 	private JButton brawlerButton, proButton1, proButton2, proButton3,
-		consummateButton, consummateButton1, consummateButton2, consummateButton3,
-		addDieButton;
+		consummateButton, consummateButton1, consummateButton2, consummateButton3;
 
-	private Skill addBlockDieSkill;
 	private int fDiceIndex, proIndex;
 	private ReRollSource fReRollSource, singleDieReRollSource;
 	private JButton buttonSingleUseReRoll;
@@ -57,7 +55,6 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		fDiceIndex = -1;
 		fDialogParameter = pDialogParameter;
 		singleUseReRollSource = pDialogParameter.getSingleUseReRollSource();
-		Skill addBlockDieSkill = pDialogParameter.getAddBlockDieSkill();
 
 		Skill singleDieReRollSkill = getClient().getGame().getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
 		if (singleDieReRollSkill != null) {
@@ -109,7 +106,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		}
 
 		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption() || getDialogParameter().hasConsummateOption()
-			|| pDialogParameter.hasBrawlerOption() || singleUseReRollSource != null || addBlockDieSkill != null) {
+			|| pDialogParameter.hasBrawlerOption() || singleUseReRollSource != null) {
 
 			JPanel reRollPanel = new JPanel();
 			reRollPanel.setOpaque(false);
@@ -169,14 +166,6 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 			if (getDialogParameter().getNrOfDice() < 0) {
 				reRollPanel.add(fButtonNoReRoll);
-			}
-
-			if (addBlockDieSkill != null) {
-				addDieButton = new JButton(dimensionProvider(), addBlockDieSkill.getName());
-				addDieButton.addActionListener(this);
-				addDieButton.addKeyListener(this);
-				addDieButton.setMnemonic(KeyEvent.VK_A);
-				reRollPanel.add(addDieButton);
 			}
 
 			Box.Filler verticalGlue2 = (Box.Filler) Box.createVerticalGlue();
@@ -356,11 +345,8 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		if (homeChoice && (fBlockDice.length >= 3) && (pActionEvent.getSource() == fBlockDice[2])) {
 			fDiceIndex = 2;
 		}
-		if (pActionEvent.getSource() == addDieButton) {
-			addBlockDieSkill = getDialogParameter().getAddBlockDieSkill();
-		}
 
-		if (addBlockDieSkill != null || (fReRollSource != null) || (fDiceIndex >= 0) || (pActionEvent.getSource() == fButtonNoReRoll)) {
+		if ((fReRollSource != null) || (fDiceIndex >= 0) || (pActionEvent.getSource() == fButtonNoReRoll)) {
 			if (getCloseListener() != null) {
 				getCloseListener().dialogClosed(this);
 			}
@@ -376,10 +362,6 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 	public int getDiceIndex() {
 		return fDiceIndex;
-	}
-
-	public Skill getAddBlockDieSkill() {
-		return addBlockDieSkill;
 	}
 
 	public DialogBlockRollPartialReRollParameter getDialogParameter() {
@@ -482,12 +464,6 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 				if (brawlerButton != null) {
 					keyHandled = true;
 					setBrawler();
-				}
-				break;
-			case KeyEvent.VK_A:
-				if (addDieButton != null) {
-					keyHandled = true;
-					addBlockDieSkill = getDialogParameter().getAddBlockDieSkill();
 				}
 				break;
 			default:

@@ -89,6 +89,10 @@ public class DialogChangeList extends Dialog {
 			builder.append(renderEntries("Features", list.getFeatures()));
 		}
 
+		if (list.hasRuleChanges()) {
+			builder.append(renderEntries("Rule Changes", list.getRuleChanges()));
+		}
+
 		if (list.hasImprovements()) {
 			builder.append(renderEntries("Improvements", list.getImprovements()));
 		}

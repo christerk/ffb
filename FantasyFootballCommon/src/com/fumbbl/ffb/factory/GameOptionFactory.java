@@ -18,15 +18,6 @@ import org.xml.sax.Attributes;
  */
 public class GameOptionFactory {
 
-	// LRB6 ------------------------------
-	// ARGUE_THE_CALL false
-	// FORCE_TREASURY_TO_PETTY_CASH false
-	// MVP_NOMINATIONS 0
-	// PETTY_CASH_AFFECTS_TV true
-	// PILING_ON_USES_A_TEAM_REROLL false
-	// WIZARD_AVAILABLE true
-	// -----------------------------------
-
 	public IGameOption createGameOption(GameOptionId pOptionId) {
 		if (pOptionId == null) {
 			return null;
@@ -310,6 +301,20 @@ public class GameOptionFactory {
 			case INDUCEMENT_WEATHER_MAGE_COST:
 				return new GameOptionInt(pOptionId).setDefault(30000)
 					.setMessage("Weather Mages can be hired for $1 gps each.");
+			case CHAINSAW_TURNOVER_ON_AV_BREAK:
+				return new GameOptionString(pOptionId).setDefault(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_ONLY)
+					.setMessage("Chainsaw causes turnover: $1")
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_NEVER, "Never")
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_ONLY, "Only on kickback AV breaks")
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_ALWAYS, "On all AV breaks");
+			case BOMBER_PLACED_PRONE_IGNORES_TURNOVER:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Bombardier placed prone causes turnover")
+					.setMessageTrue("Bombardier placed prone ignores turnover");
+			case SNEAKY_GIT_CAN_MOVE_AFTER_FOUL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Sneaky Git has to end action after fouling")
+					.setMessageTrue("Sneaky Git may move after fouling");
 			default:
 				return null;
 		}

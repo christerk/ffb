@@ -229,6 +229,15 @@ public class UtilServerStartGame {
 			GameOptionBoolean alwaysTreasury = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
 			alwaysTreasury.setValue(true);
 			//	game.getOptions().addOption(alwaysTreasury);
+			GameOptionString chainsaw = (GameOptionString) optionFactory.createGameOption(GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK);
+			chainsaw.setValue(GameOptionString.CHAINSAW_TURNOVER_NEVER);
+			//game.getOptions().addOption(chainsaw);
+			GameOptionBoolean bombardier = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER);
+			bombardier.setValue(true);
+			//game.getOptions().addOption(bombardier);
+			GameOptionBoolean sneaky = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL);
+			sneaky.setValue(true);
+			game.getOptions().addOption(sneaky);
 		}
 	}
 

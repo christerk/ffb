@@ -4,6 +4,7 @@ import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class VersionChangeList {
 
@@ -12,6 +13,7 @@ public class VersionChangeList {
 	private final List<String> improvements = new ArrayList<>();
 	private final List<String> behaviorChanges = new ArrayList<>();
 	private final List<String> removals = new ArrayList<>();
+	private final List<String> ruleChanges = new ArrayList<>();
 	private String description;
 
 	private final String version;
@@ -49,6 +51,10 @@ public class VersionChangeList {
 		return add(removals, removal);
 	}
 
+	public VersionChangeList addRuleChange(String ruleChange) {
+		return add(ruleChanges, ruleChange);
+	}
+
 	public List<String> getBugfixes() {
 		return bugfixes;
 	}
@@ -67,6 +73,10 @@ public class VersionChangeList {
 
 	public List<String> getRemovals() {
 		return removals;
+	}
+
+	public List<String> getRuleChanges() {
+		return ruleChanges;
 	}
 
 	public VersionChangeList setDescription(String description) {
@@ -102,8 +112,12 @@ public class VersionChangeList {
 		return !removals.isEmpty();
 	}
 
+	public boolean hasRuleChanges() {
+		return !ruleChanges.isEmpty();
+	}
+
 	public boolean hasEntries() {
-		return hasBugfixes() || hasFeatures() || hasImprovements() || hasBehaviorChanges() || hasDescription() || hasRemovals();
+		return hasBugfixes() || hasFeatures() || hasImprovements() || hasBehaviorChanges() || hasDescription() || hasRemovals() || hasRuleChanges();
 	}
 
 
@@ -119,8 +133,9 @@ public class VersionChangeList {
 		if (!improvements.equals(that.improvements)) return false;
 		if (!behaviorChanges.equals(that.behaviorChanges)) return false;
 		if (!removals.equals(that.removals)) return false;
-		if (description != null ? !description.equals(that.description) : that.description != null) return false;
-		return version != null ? version.equals(that.version) : that.version == null;
+		if (!ruleChanges.equals(that.ruleChanges)) return false;
+		if (!Objects.equals(description, that.description)) return false;
+		return Objects.equals(version, that.version);
 	}
 
 	@Override
@@ -130,6 +145,7 @@ public class VersionChangeList {
 		result = 31 * result + improvements.hashCode();
 		result = 31 * result + behaviorChanges.hashCode();
 		result = 31 * result + removals.hashCode();
+		result = 31 * result + ruleChanges.hashCode();
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (version != null ? version.hashCode() : 0);
 		return result;

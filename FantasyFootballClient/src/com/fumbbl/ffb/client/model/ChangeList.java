@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.client.model;
 
+import com.fumbbl.ffb.option.GameOptionId;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,25 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+
+		versions.add(new VersionChangeList("2.21.0")
+			.addBugfix("Reduce rounding impact on scaled up clients when mapping mouse position to squares")
+			.addBugfix("Checkboxes for locally stored properties could not be checked")
+			.addBugfix("Inducement tooltips were not rendered in the proper locations")
+			.addBugfix("BB2016: Buying cards caused the client to lock up")
+			.addImprovement("Reworking handling of chat and log messages to cause less blocking, could help with sluggish client behavior during streaming")
+			.addRuleChange("Chainsaw causes turnover if armour breaks on kickbacks")
+			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName() + " to allow control in what cases chainsaw causes turnovers")
+			.addRuleChange("\"Gored By The Bull\" must new be declared before rolling block dice. To activate click the active player before performing the block.")
+			.addRuleChange("Star pairs now only use one star slot")
+			.addRuleChange("Bombs no longer modify armour or injury")
+			.addRuleChange("Bombardier placed prone by own bomb now causes a turnover")
+			.addFeature("Add game option " + GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER.getName() + " to allow control if Bombardier can cause turnovers")
+			.addRuleChange("Sneaky Git can no longer move after foul")
+			.addFeature("Add game option " + GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL.getName() + " to allow control if sneaky git may move after foul")
+			.addRuleChange("Raiding Party can now be used on the active player, still only after declaring an action")
+			.addBugfix("Weather tool tip for blizzard still showed \"go for it\" instead of \"rushes\"")
+		);
 
 		versions.add(new VersionChangeList("2.20.0")
 			.addBugfix("Replays were not synced up with controls anymore")

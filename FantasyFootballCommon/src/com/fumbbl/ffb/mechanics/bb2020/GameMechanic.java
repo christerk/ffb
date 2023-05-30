@@ -271,11 +271,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean starPairCountsAsTwo() {
-		return true;
-	}
-
-	@Override
 	public String fanModificationName() {
 		return "Dedicated Fans";
 	}
@@ -323,7 +318,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			case POURING_RAIN:
 				return "A -1 modifier applies to all catch, intercept, or pick-up rolls.";
 			case BLIZZARD:
-				return "Going For It fails on a roll of 1 or 2 and only quick or short passes can be attempted.";
+				return "Rushes fail on a roll of 1 or 2 and only quick or short passes can be attempted.";
 			default:
 				return "No weather at all, but the intro screen shown by the client.";
 		}
