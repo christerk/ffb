@@ -237,7 +237,10 @@ public class UtilServerStartGame {
 			//game.getOptions().addOption(bombardier);
 			GameOptionBoolean sneaky = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL);
 			sneaky.setValue(true);
-			game.getOptions().addOption(sneaky);
+			//		game.getOptions().addOption(sneaky);
+			GameOptionBoolean bomb = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMB_USES_MB);
+			bomb.setValue(true);
+			//	game.getOptions().addOption(bomb);
 		}
 	}
 

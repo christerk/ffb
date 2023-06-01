@@ -315,6 +315,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Sneaky Git has to end action after fouling")
 					.setMessageTrue("Sneaky Git may move after fouling");
+			case BOMB_USES_MB:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Bombs do not use MB")
+					.setMessageTrue("Bombs use MB");
 			default:
 				return null;
 		}

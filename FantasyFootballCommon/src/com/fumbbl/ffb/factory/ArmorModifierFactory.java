@@ -10,6 +10,8 @@ import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.ModifierAggregator;
 import com.fumbbl.ffb.modifiers.SpecialEffectArmourModifier;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -31,7 +33,7 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 	private ArmorModifiers armorModifiers;
 
 	public ArmorModifier forName(String name) {
-		return Stream.concat(armorModifiers.values(), modifierAggregator.getArmourModifiers().stream())
+		return Stream.concat(armorModifiers.allValues(), modifierAggregator.getArmourModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
 			.orElse(null);
@@ -80,6 +82,9 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 	public void initialize(Game game) {
 		modifierAggregator = game.getModifierAggregator();
 		armorModifiers = new Scanner<>(ArmorModifiers.class).getInstancesImplementing(game.getOptions()).stream().findFirst().orElse(null);
+		if (armorModifiers != null) {
+			armorModifiers.setUseAll(((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.BOMB_USES_MB)).isEnabled());
+		}
 	}
 
 	private Set<ArmorModifier> getArmorModifiers(Player<?> player, ArmorModifierContext context) {

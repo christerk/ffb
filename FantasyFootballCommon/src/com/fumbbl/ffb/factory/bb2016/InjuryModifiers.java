@@ -1,14 +1,14 @@
 package com.fumbbl.ffb.factory.bb2016;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.SpecialEffectInjuryModifier;
 import com.fumbbl.ffb.modifiers.StaticInjuryModifier;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class InjuryModifiers implements com.fumbbl.ffb.factory.InjuryModifiers {
@@ -31,5 +31,15 @@ public class InjuryModifiers implements com.fumbbl.ffb.factory.InjuryModifiers {
 	@Override
 	public Stream<? extends InjuryModifier> values() {
 		return injuryModifiers.stream();
+	}
+
+	@Override
+	public Stream<? extends InjuryModifier> allValues() {
+		return values();
+	}
+
+	@Override
+	public void setUseAll(boolean useAll) {
+
 	}
 }

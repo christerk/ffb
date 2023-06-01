@@ -12,6 +12,11 @@ public class ChangeList {
 
   public ChangeList() {
 
+		versions.add(new VersionChangeList("2.22.0")
+			.addFeature("Add game option " + GameOptionId.BOMB_USES_MB.getName() + " to allow granting Mighty Blow to bombs")
+			.addBugfix("Replays with applied bomb modifiers (armour or injury) did not load")
+		);
+
 		versions.add(new VersionChangeList("2.21.0")
 			.addBugfix("Reduce rounding impact on scaled up clients when mapping mouse position to squares")
 			.addBugfix("Checkboxes for locally stored properties could not be checked")
