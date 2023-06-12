@@ -360,7 +360,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public void invokeAndWait(Runnable pRunnable) {
 		try {
-			SwingUtilities.invokeAndWait(pRunnable);
+			if (SwingUtilities.isEventDispatchThread()) {
+				pRunnable.run();
+			} else {
+				SwingUtilities.invokeAndWait(pRunnable);
+			}
 		} catch (InterruptedException | InvocationTargetException e) {
 			throw new FantasyFootballException(e);
 		}
