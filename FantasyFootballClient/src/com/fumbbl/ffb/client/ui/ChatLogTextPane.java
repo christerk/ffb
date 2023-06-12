@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.ParagraphStyle;
@@ -23,12 +22,10 @@ public class ChatLogTextPane extends JTextPane {
 	private IReplayMouseListener fReplayMouseListener;
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
-	private final boolean waitForDispatch;
 
-	public ChatLogTextPane(StyleProvider styleProvider, DimensionProvider dimensionProvider, ClientMode clientMode) {
+	public ChatLogTextPane(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
-		this.waitForDispatch = clientMode == ClientMode.REPLAY;
 		setEditable(false);
 		((DefaultCaret) getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		detachDocument();
@@ -103,10 +100,8 @@ public class ChatLogTextPane extends JTextPane {
 
 			if (SwingUtilities.isEventDispatchThread()) {
 				runnable.run();
-			} else if (waitForDispatch) {
-				SwingUtilities.invokeAndWait(runnable);
 			} else {
-				SwingUtilities.invokeLater(runnable);
+				SwingUtilities.invokeAndWait(runnable);
 			}
 
 		} catch (InterruptedException | InvocationTargetException e) {
