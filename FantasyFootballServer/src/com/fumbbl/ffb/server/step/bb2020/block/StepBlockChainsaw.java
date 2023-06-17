@@ -137,7 +137,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 					dropChainsawPlayer = true;
 				}
 			}
-			String chainsawOption = game.getOptions().getOptionWithDefault(GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK).getValueAsString();
+			String chainsawOption = game.getOptions().getOptionWithDefault(GameOptionId.CHAINSAW_TURNOVER).getValueAsString();
 			if (!dropChainsawPlayer) {
 				boolean reRolled = ((getReRolledAction() == ReRolledActions.CHAINSAW) && (getReRollSource() != null));
 				if (!reRolled) {
@@ -154,7 +154,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(),
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
-						new DropPlayerContext(injuryResultDefender, GameOptionString.CHAINSAW_TURNOVER_ALWAYS.equalsIgnoreCase(chainsawOption),
+						new DropPlayerContext(injuryResultDefender, GameOptionString.CHAINSAW_TURNOVER_ALL_AV_BREAKS.equalsIgnoreCase(chainsawOption),
 							true, fGotoLabelOnSuccess, game.getDefenderId(),
 							ApothecaryMode.DEFENDER, true, defenderState.isProneOrStunned())));
 					getResult().setNextAction(StepAction.NEXT_STEP);
@@ -175,6 +175,8 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 					if (!GameOptionString.CHAINSAW_TURNOVER_NEVER.equalsIgnoreCase(chainsawOption)) {
 						causesTurnOver = true;
 					}
+				} else if (GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption)) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
 
 				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,

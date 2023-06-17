@@ -229,7 +229,7 @@ public class UtilServerStartGame {
 			GameOptionBoolean alwaysTreasury = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
 			alwaysTreasury.setValue(true);
 			//	game.getOptions().addOption(alwaysTreasury);
-			GameOptionString chainsaw = (GameOptionString) optionFactory.createGameOption(GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK);
+			GameOptionString chainsaw = (GameOptionString) optionFactory.createGameOption(GameOptionId.CHAINSAW_TURNOVER);
 			chainsaw.setValue(GameOptionString.CHAINSAW_TURNOVER_NEVER);
 			//game.getOptions().addOption(chainsaw);
 			GameOptionBoolean bombardier = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER);

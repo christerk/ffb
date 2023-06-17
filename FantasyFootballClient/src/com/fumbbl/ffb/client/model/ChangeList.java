@@ -17,6 +17,9 @@ public class ChangeList {
 			.addBugfix("Replays with applied bomb modifiers (armour or injury) did not load")
 			.addBugfix("Skippuing forward in replay mode did not always jump to the next turn in the dice log")
 			.addBugfix("Menu entry for switching between replay and spec mode was not always updated correctly")
+			.addRuleChange("Chainsaw kickback now always causes turnover")
+			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER.getName() + " to allow control in what cases chainsaw causes turnovers")
+			.addRemoval("Remove game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName())
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
@@ -26,7 +29,7 @@ public class ChangeList {
 			.addBugfix("BB2016: Buying cards caused the client to lock up")
 			.addImprovement("Reworking handling of chat and log messages to cause less blocking, could help with sluggish client behavior during streaming")
 			.addRuleChange("Chainsaw causes turnover if armour breaks on kickbacks")
-			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName() + " to allow control in what cases chainsaw causes turnovers")
+			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER.getName() + " to allow control in what cases chainsaw causes turnovers")
 			.addRuleChange("\"Gored By The Bull\" must new be declared before rolling block dice. To activate click the active player before performing the block.")
 			.addRuleChange("Star pairs now only use one star slot")
 			.addRuleChange("Bombs no longer modify armour or injury")

@@ -301,12 +301,13 @@ public class GameOptionFactory {
 			case INDUCEMENT_WEATHER_MAGE_COST:
 				return new GameOptionInt(pOptionId).setDefault(30000)
 					.setMessage("Weather Mages can be hired for $1 gps each.");
-			case CHAINSAW_TURNOVER_ON_AV_BREAK:
-				return new GameOptionString(pOptionId).setDefault(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_ONLY)
+			case CHAINSAW_TURNOVER:
+				return new GameOptionString(pOptionId).setDefault(GameOptionString.CHAINSAW_TURNOVER_KICKBACK)
 					.setMessage("Chainsaw causes turnover: $1")
 					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_NEVER, "Never")
-					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_ONLY, "Only on kickback AV breaks")
-					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_ALWAYS, "On all AV breaks");
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_AV_BREAK_ONLY, "Only on kickback AV breaks")
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK, "On all kickbacks")
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_ALL_AV_BREAKS, "On all AV breaks");
 			case BOMBER_PLACED_PRONE_IGNORES_TURNOVER:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Bombardier placed prone causes turnover")

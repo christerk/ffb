@@ -11,6 +11,11 @@ import java.util.Map;
 public class GameOptionString extends GameOptionAbstract {
 
 	public static final String CHAINSAW_TURNOVER_NEVER = "never";
+	public static final String CHAINSAW_TURNOVER_KICKBACK = "kickback";
+	public static final String CHAINSAW_TURNOVER_KICKBACK_AV_BREAK_ONLY = "kickbackAvBreak";
+	public static final String CHAINSAW_TURNOVER_ALL_AV_BREAKS = "allAvBreaks";
+
+	// legacy, keep around for old replays and ongoing matches after update
 	public static final String CHAINSAW_TURNOVER_KICKBACK_ONLY = "kickbackOnly";
 	public static final String CHAINSAW_TURNOVER_ALWAYS = "always";
 
