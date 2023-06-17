@@ -146,28 +146,29 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 		UserInterface userInterface = getClient().getUserInterface();
 
 		Animation animation = fSyncCommand.getAnimation();
-		switch (animation.getAnimationType()) {
-			case THROW_BOMB:
-			case HAIL_MARY_BOMB:
-				game.getFieldModel().setBombCoordinate(fBombCoordinate);
-				break;
-			case PASS:
-			case KICK:
-			case HAIL_MARY_PASS:
-				game.getFieldModel().setBallCoordinate(fBallCoordinate);
-				break;
-			case THROW_TEAM_MATE:
-				Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
-				game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);
-				break;
-			case KICK_TEAM_MATE:
-				Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
-				game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
-				break;
-			default:
-				break;
+		if (animation != null) {
+			switch (animation.getAnimationType()) {
+				case THROW_BOMB:
+				case HAIL_MARY_BOMB:
+					game.getFieldModel().setBombCoordinate(fBombCoordinate);
+					break;
+				case PASS:
+				case KICK:
+				case HAIL_MARY_PASS:
+					game.getFieldModel().setBallCoordinate(fBallCoordinate);
+					break;
+				case THROW_TEAM_MATE:
+					Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
+					game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);
+					break;
+				case KICK_TEAM_MATE:
+					Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
+					game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
+					break;
+				default:
+					break;
+			}
 		}
-
 		userInterface.getFieldComponent().refresh();
 		playSound(fSyncCommand.getSound(), fMode, true);
 
