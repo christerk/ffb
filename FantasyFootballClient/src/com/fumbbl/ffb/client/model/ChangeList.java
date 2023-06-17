@@ -21,6 +21,7 @@ public class ChangeList {
 			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER.getName() + " to allow control in what cases chainsaw causes turnovers")
 			.addRemoval("Remove game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName())
 			.addBugfix("Failed hand offs/passes by rooted players did not cause turnovers")
+			.addBugfix("Exclude Infamous Staff from MVP")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")

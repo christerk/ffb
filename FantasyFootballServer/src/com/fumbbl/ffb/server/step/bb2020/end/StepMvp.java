@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
@@ -70,9 +71,8 @@ public final class StepMvp extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
-		if ((receivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)) {
-			switch (receivedCommand.getId()) {
-			case CLIENT_PLAYER_CHOICE:
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			if (receivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) receivedCommand.getCommand();
 				if (PlayerChoiceMode.MVP == playerChoiceCommand.getPlayerChoiceMode()) {
 					if (playerChoiceCommand.getPlayerId() != null) {
@@ -86,9 +86,6 @@ public final class StepMvp extends AbstractStep {
 					}
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-				default:
-					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -141,7 +138,7 @@ public final class StepMvp extends AbstractStep {
 					} else {
 						int maxSelects = Math.min(mvpNominations, playersForMvp.length);
 						DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(game.getTeamHome().getId(),
-								PlayerChoiceMode.MVP, findPlayerIdsForMvp(game.getTeamHome()), null,
+							PlayerChoiceMode.MVP, findPlayerIdsForMvp(game.getTeamHome()), null,
 							maxSelects, maxSelects);
 						UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
 					}
@@ -160,7 +157,7 @@ public final class StepMvp extends AbstractStep {
 					} else {
 						int maxSelects = Math.min(mvpNominations, playersForMvp.length);
 						DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(game.getTeamAway().getId(),
-								PlayerChoiceMode.MVP, playersForMvp, null, maxSelects, maxSelects);
+							PlayerChoiceMode.MVP, playersForMvp, null, maxSelects, maxSelects);
 						UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
 					}
 				} else {
@@ -213,7 +210,7 @@ public final class StepMvp extends AbstractStep {
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
 		for (Player<?> player : pTeam.getPlayers()) {
-			if (player.getPlayerType() == PlayerType.STAR || player.getPlayerType() == PlayerType.MERCENARY) {
+			if (player.getPlayerType() == PlayerType.STAR || player.getPlayerType() == PlayerType.MERCENARY || player.getPlayerType() == PlayerType.INFAMOUS_STAFF) {
 				continue;
 			}
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -227,7 +224,7 @@ public final class StepMvp extends AbstractStep {
 			}
 			playerIds.add(player.getId());
 		}
-		return playerIds.toArray(new String[playerIds.size()]);
+		return playerIds.toArray(new String[0]);
 	}
 
 	// JSON serialization
