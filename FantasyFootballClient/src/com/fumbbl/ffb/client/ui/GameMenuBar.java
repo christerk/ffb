@@ -761,7 +761,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fGameMenu.setMnemonic(KeyEvent.VK_G);
 		add(fGameMenu);
 
-		fGameReplayMenuItem = new JMenuItem(dimensionProvider, _REPLAY_MODE_ON, KeyEvent.VK_R);
+		boolean replaying = false;
+		if (getClient() != null && getClient().getReplayer() != null) {
+			replaying = getClient().getReplayer().isReplaying();
+		}
+
+		fGameReplayMenuItem = new JMenuItem(dimensionProvider, replaying ? _REPLAY_MODE_OFF : _REPLAY_MODE_ON, KeyEvent.VK_R);
 		String keyMenuReplay = getClient().getProperty(IClientProperty.KEY_MENU_REPLAY);
 		if (StringTool.isProvided(keyMenuReplay)) {
 			fGameReplayMenuItem.setAccelerator(KeyStroke.getKeyStroke(keyMenuReplay));
@@ -1477,22 +1482,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private boolean updateScaling() {
 		String factorValue = getClient().getProperty(CommonProperty.SETTING_SCALE_FACTOR);
-			if (StringTool.isProvided(factorValue)) {
-				try {
-					double factor = Double.parseDouble(factorValue);
-					if (dimensionProvider.getScale() != factor) {
-						dimensionProvider.setScale(factor);
-						getClient().getUserInterface().getIconCache().clear();
-						FontCache fontCache = getClient().getUserInterface().getFontCache();
-						fontCache.clear();
-						UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
-						return true;
-					}
-				} catch (Exception ignored) {
-
+		if (StringTool.isProvided(factorValue)) {
+			try {
+				double factor = Double.parseDouble(factorValue);
+				if (dimensionProvider.getScale() != factor) {
+					dimensionProvider.setScale(factor);
+					getClient().getUserInterface().getIconCache().clear();
+					FontCache fontCache = getClient().getUserInterface().getFontCache();
+					fontCache.clear();
+					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
+					return true;
 				}
+			} catch (Exception ignored) {
+
 			}
-			return false;
+		}
+		return false;
 	}
 
 	private boolean updateOrientation() {

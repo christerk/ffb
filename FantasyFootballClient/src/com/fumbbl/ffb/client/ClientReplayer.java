@@ -73,6 +73,9 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public boolean isReplaying() {
+		if (getClient().getUserInterface() == null) {
+			return false;
+		}
 		return getClient().getUserInterface().getChat().isReplayShown();
 	}
 

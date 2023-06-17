@@ -15,6 +15,8 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.22.0")
 			.addFeature("Add game option " + GameOptionId.BOMB_USES_MB.getName() + " to allow granting Mighty Blow to bombs")
 			.addBugfix("Replays with applied bomb modifiers (armour or injury) did not load")
+			.addBugfix("Skippuing forward in replay mode did not always jump to the next turn in the dice log")
+			.addBugfix("Menu entry for switching between replay and spec mode was not always updated correctly")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
