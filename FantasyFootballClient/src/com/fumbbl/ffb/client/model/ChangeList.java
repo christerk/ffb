@@ -20,6 +20,7 @@ public class ChangeList {
 			.addRuleChange("Chainsaw kickback now always causes turnover")
 			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER.getName() + " to allow control in what cases chainsaw causes turnovers")
 			.addRemoval("Remove game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName())
+			.addBugfix("Failed hand offs/passes by rooted players did not cause turnovers")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
