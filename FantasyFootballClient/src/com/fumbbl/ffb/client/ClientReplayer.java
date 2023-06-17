@@ -352,10 +352,18 @@ public class ClientReplayer implements ActionListener {
 	private void highlightCommand(int pCommandNr) {
 		LogComponent log = getClient().getUserInterface().getLog();
 		boolean commandShown = log.highlightCommand(pCommandNr, fReplayDirectionForward);
-		if (!commandShown && !fReplayDirectionForward) {
+		if (!commandShown) {
 			int commandNr = pCommandNr;
-			while (!commandShown && (commandNr > log.getMinimumCommandNr())) {
-				commandShown = log.highlightCommand(--commandNr, fReplayDirectionForward);
+			if (fReplayDirectionForward) {
+				int lastCommand = getReplayCommand(getReplaySize() - 1).getCommandNr();
+				while (!commandShown && (commandNr <= lastCommand)) {
+					commandShown = log.highlightCommand(++commandNr, fReplayDirectionForward);
+				}
+
+			} else {
+				while (!commandShown && (commandNr > log.getMinimumCommandNr())) {
+					commandShown = log.highlightCommand(--commandNr, fReplayDirectionForward);
+				}
 			}
 		}
 	}
