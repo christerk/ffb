@@ -326,6 +326,13 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Overtime ends after first touchdown")
 					.setMessageFalse("Overtime lasts a whole half");
+			case OVERTIME_KICK_OFF_RESULTS:
+				return new GameOptionString(pOptionId).setDefault(GameOptionString.OVERTIME_KICK_OFF_ALL)
+					.setMessage("Kick off events in overtime: $1")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_ALL, "all events")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ, "Blitz")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_SOLID_DEFENCE, "Solid Defence")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE, "Choice of Blitz or Solid Defence");
 			default:
 				return null;
 		}

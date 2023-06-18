@@ -123,6 +123,8 @@ public class DialogParameterFactory {
                 return new DialogUseMortuaryAssistantParameter();
             case USE_MORTUARY_ASSISTANTS:
                 return new DialogUseMortuaryAssistantsParameter();
+            case KICK_OFF_RESULT:
+                return new DialogKickOffResultParameter();
             default:
                 return null;
         }

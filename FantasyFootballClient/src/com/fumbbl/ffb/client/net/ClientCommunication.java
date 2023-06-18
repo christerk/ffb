@@ -23,6 +23,7 @@ import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
 import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.FieldModel;
@@ -57,6 +58,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandIllegalProcedure;
 import com.fumbbl.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandJoin;
 import com.fumbbl.ffb.net.commands.ClientCommandJourneymen;
+import com.fumbbl.ffb.net.commands.ClientCommandKickOffResultChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandKickTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandKickoff;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
@@ -548,6 +550,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUpdatePlayerMarkings(boolean auto) {
 		send(new ClientCommandUpdatePlayerMarkings(auto));
+	}
+
+	public void sendKickOffResultChoice(KickoffResult kickoffResult) {
+		send(new ClientCommandKickOffResultChoice(kickoffResult));
 	}
 
 	public FantasyFootballClient getClient() {

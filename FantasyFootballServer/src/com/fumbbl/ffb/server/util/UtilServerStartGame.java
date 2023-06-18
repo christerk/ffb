@@ -244,6 +244,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean overtimeGG = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME_GOLDEN_GOAL);
 			overtimeGG.setValue(true);
 			//game.getOptions().addOption(overtimeGG);
+			GameOptionString overtimeKO = (GameOptionString) optionFactory.createGameOption(GameOptionId.OVERTIME_KICK_OFF_RESULTS);
+			overtimeKO.setValue(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE);
+			game.getOptions().addOption(overtimeKO);
 		}
 	}
 

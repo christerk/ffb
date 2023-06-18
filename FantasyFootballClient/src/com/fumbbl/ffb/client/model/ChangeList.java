@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Exclude Infamous Staff from MVP")
 			.addImprovement("Add additional log entry when juggernaut prevents use of wrestle")
 			.addFeature("Add game option " + GameOptionId.OVERTIME_GOLDEN_GOAL.getName() + " which will end overtime after first td")
+			.addFeature("Add game option " + GameOptionId.OVERTIME_KICK_OFF_RESULTS.getName() + " defining the available kick-off results during overtime")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")

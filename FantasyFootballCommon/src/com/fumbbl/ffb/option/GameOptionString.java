@@ -10,6 +10,11 @@ import java.util.Map;
  */
 public class GameOptionString extends GameOptionAbstract {
 
+	public static final String OVERTIME_KICK_OFF_ALL = "all";
+	public static final String OVERTIME_KICK_OFF_BLITZ = "blitz";
+	public static final String OVERTIME_KICK_OFF_SOLID_DEFENCE = "solidDefence";
+	public static final String OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE = "blitzOrSolidDefence";
+
 	public static final String CHAINSAW_TURNOVER_NEVER = "never";
 	public static final String CHAINSAW_TURNOVER_KICKBACK = "kickback";
 	public static final String CHAINSAW_TURNOVER_KICKBACK_AV_BREAK_ONLY = "kickbackAvBreak";
