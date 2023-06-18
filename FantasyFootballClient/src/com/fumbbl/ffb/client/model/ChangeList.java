@@ -23,6 +23,7 @@ public class ChangeList {
 			.addBugfix("Failed hand offs/passes by rooted players did not cause turnovers")
 			.addBugfix("Exclude Infamous Staff from MVP")
 			.addImprovement("Add additional log entry when juggernaut prevents use of wrestle")
+			.addFeature("Add game option " + GameOptionId.OVERTIME_GOLDEN_GOAL.getName() + " which will end overtime after first td")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")

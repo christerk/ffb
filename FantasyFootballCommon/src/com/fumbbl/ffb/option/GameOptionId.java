@@ -78,6 +78,7 @@ public enum GameOptionId implements INamedObject {
 	CHAINSAW_TURNOVER_ON_AV_BREAK("chainsawTurnoverOnAvBreak"), // legacy, keep around to make sure old replays or running games do not break after update
 	CHAINSAW_TURNOVER("chainsawTurnover"), BOMBER_PLACED_PRONE_IGNORES_TURNOVER("bomberPlacedProneIgnoresTurnover"),
 	SNEAKY_GIT_CAN_MOVE_AFTER_FOUL("sneakyGitCanMoveAfterFoul"), BOMB_USES_MB("bombUsesMb"),
+	OVERTIME_GOLDEN_GOAL("overtimeGoldenGoal"),
 
 	PITCH_URL("pitchUrl");
 

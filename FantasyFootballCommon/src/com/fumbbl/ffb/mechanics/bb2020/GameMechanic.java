@@ -26,6 +26,8 @@ import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -249,7 +251,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean touchdownEndsGame(Game game) {
-		return false;
+		return game.getHalf() == 3 && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.OVERTIME_GOLDEN_GOAL)).isEnabled();
 	}
 
 	@Override

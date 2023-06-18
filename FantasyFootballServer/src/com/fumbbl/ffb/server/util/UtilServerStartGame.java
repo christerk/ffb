@@ -207,7 +207,7 @@ public class UtilServerStartGame {
 			game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
 			overtime.setValue(true);
-			//		game.getOptions().addOption(overtime);
+			game.getOptions().addOption(overtime);
 			GameOptionBoolean allowConcessions = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_CONCESSIONS);
 			allowConcessions.setValue(false);
 			//game.getOptions().addOption(allowConcessions);
@@ -241,6 +241,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean bomb = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMB_USES_MB);
 			bomb.setValue(true);
 			//	game.getOptions().addOption(bomb);
+			GameOptionBoolean overtimeGG = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME_GOLDEN_GOAL);
+			overtimeGG.setValue(true);
+			//game.getOptions().addOption(overtimeGG);
 		}
 	}
 

@@ -320,6 +320,12 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Bombs do not use MB")
 					.setMessageTrue("Bombs use MB");
+			case CHAINSAW_TURNOVER_ON_AV_BREAK:
+				return new GameOptionBoolean(pOptionId).setDefault(false);
+			case OVERTIME_GOLDEN_GOAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Overtime ends after first touchdown")
+					.setMessageFalse("Overtime lasts a whole half");
 			default:
 				return null;
 		}
