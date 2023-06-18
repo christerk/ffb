@@ -22,6 +22,7 @@ public class ChangeList {
 			.addRemoval("Remove game option " + GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK.getName())
 			.addBugfix("Failed hand offs/passes by rooted players did not cause turnovers")
 			.addBugfix("Exclude Infamous Staff from MVP")
+			.addImprovement("Add additional log entry when juggernaut prevents use of wrestle")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
