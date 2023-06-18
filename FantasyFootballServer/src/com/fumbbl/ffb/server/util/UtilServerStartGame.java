@@ -246,7 +246,10 @@ public class UtilServerStartGame {
 			//game.getOptions().addOption(overtimeGG);
 			GameOptionString overtimeKO = (GameOptionString) optionFactory.createGameOption(GameOptionId.OVERTIME_KICK_OFF_RESULTS);
 			overtimeKO.setValue(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE);
-			game.getOptions().addOption(overtimeKO);
+			//game.getOptions().addOption(overtimeKO);
+			GameOptionBoolean overdogSpending = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING);
+			overdogSpending.setValue(false);
+			//game.getOptions().addOption(overdogSpending);
 		}
 	}
 

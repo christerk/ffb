@@ -26,6 +26,7 @@ public class ChangeList {
 			.addFeature("Add game option " + GameOptionId.OVERTIME_GOLDEN_GOAL.getName() + " which will end overtime after first td")
 			.addFeature("Add game option " + GameOptionId.OVERTIME_KICK_OFF_RESULTS.getName() + " defining the available kick-off results during overtime")
 			.addBugfix("Hovering over empty resource slots caused NPEs")
+			.addFeature("Add game option " + GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING.getName() + " defining if overdog can spend treasury")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")

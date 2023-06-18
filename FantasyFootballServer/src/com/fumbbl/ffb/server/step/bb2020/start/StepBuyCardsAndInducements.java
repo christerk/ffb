@@ -271,7 +271,9 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				return;
 			}
 
-			if (!showDialog(overDog, freeCash, true)) {
+			boolean allowOverdogSpending = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING);
+
+			if (!allowOverdogSpending || !showDialog(overDog, freeCash, true)) {
 				swapTeam();
 			}
 		}
