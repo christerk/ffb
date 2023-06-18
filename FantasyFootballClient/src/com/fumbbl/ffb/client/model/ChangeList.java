@@ -27,6 +27,7 @@ public class ChangeList {
 			.addFeature("Add game option " + GameOptionId.OVERTIME_KICK_OFF_RESULTS.getName() + " defining the available kick-off results during overtime")
 			.addBugfix("Hovering over empty resource slots caused NPEs")
 			.addFeature("Add game option " + GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING.getName() + " defining if overdog can spend treasury")
+			.addImprovement("Display treasury in red on inducements dialog")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
