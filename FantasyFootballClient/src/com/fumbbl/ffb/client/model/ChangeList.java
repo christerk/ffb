@@ -28,6 +28,7 @@ public class ChangeList {
 			.addBugfix("Hovering over empty resource slots caused NPEs")
 			.addFeature("Add game option " + GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING.getName() + " defining if overdog can spend treasury")
 			.addImprovement("Display treasury in red on inducements dialog")
+			.addImprovement("Raiding Party and Hit and Run do not auto select if only one square is available")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")

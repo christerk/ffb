@@ -138,17 +138,9 @@ public class StepHitAndRun extends AbstractStep {
 
 			FieldModel fieldModel = game.getFieldModel();
 			if (coordinate == null) {
-
 				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.MOVE_SQUARE));
-				if (eligibleSquares.size() == 1) {
-					coordinate = eligibleSquares.get(0);
-				} else {
-					prepareClientData(game, eligibleSquares);
-					return;
-				}
-			}
-
-			if (coordinate != null) {
+				prepareClientData(game, eligibleSquares);
+			} else {
 
 				FieldCoordinate fromCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 				Direction direction = FieldCoordinate.getDirection(fromCoordinate, coordinate);
