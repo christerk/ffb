@@ -45,6 +45,7 @@ public enum CommonProperty {
 	SETTING_LAST_CHANGE_LOG_FINGERPRINT("setting.lastChangeLogFingerPrint", "What's new?", "Configuration"),
 
 	SETTING_LOCAL_SETTINGS("setting.localSettings", "Local Stored Settings", "", "", true),
+	SETTING_SHOW_CRATERS_AND_BLOODSPOTS("setting.showCratersAndBloodspots", "Craters and bloodspots", "Graphics"),
 	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size", "Configuration");
 
 	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
@@ -57,7 +58,7 @@ public enum CommonProperty {
 		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
 		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT,
-		SETTING_SCALE_FACTOR, SETTING_LOCAL_SETTINGS
+		SETTING_SCALE_FACTOR, SETTING_LOCAL_SETTINGS, SETTING_SHOW_CRATERS_AND_BLOODSPOTS
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {

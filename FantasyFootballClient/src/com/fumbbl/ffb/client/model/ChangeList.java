@@ -29,6 +29,7 @@ public class ChangeList {
 			.addFeature("Add game option " + GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING.getName() + " defining if overdog can spend treasury")
 			.addImprovement("Display treasury in red on inducements dialog")
 			.addImprovement("Raiding Party and Hit and Run do not auto select if only one square is available")
+			.addFeature("Add user setting to hide explosion craters and blood spots on the pitch, can be found under \"User Settings\" -> \"Pitch\"")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
