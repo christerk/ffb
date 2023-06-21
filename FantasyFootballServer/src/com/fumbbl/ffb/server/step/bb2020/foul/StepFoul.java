@@ -12,6 +12,8 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.GameOptionString;
 import com.fumbbl.ffb.report.ReportFoul;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -90,6 +92,12 @@ public class StepFoul extends AbstractStep {
 			? new InjuryTypeFoulForSpp(usingChainsaw) : new InjuryTypeFoul(usingChainsaw);
 		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, injuryTypeServer,
 			actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
+
+		String chainsawOption = game.getOptions().getOptionWithDefault(GameOptionId.CHAINSAW_TURNOVER).getValueAsString();
+		if (injuryResultDefender.injuryContext().isArmorBroken() && GameOptionString.CHAINSAW_TURNOVER_ALL_AV_BREAKS.equalsIgnoreCase(chainsawOption)) {
+			publishParameter(StepParameter.from(StepParameterKey.END_TURN, true));
+		}
+
 		publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 			new DropPlayerContext(injuryResultDefender, game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
 		getResult().setNextAction(StepAction.NEXT_STEP);
