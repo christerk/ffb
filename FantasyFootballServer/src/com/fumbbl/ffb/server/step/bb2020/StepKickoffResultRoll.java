@@ -79,6 +79,11 @@ public final class StepKickoffResultRoll extends AbstractStep {
 			if (game.getHalf() < 3 || GameOptionString.OVERTIME_KICK_OFF_ALL.equals(overTimeKickOffs.getValue())) {
 				rollKickoff = getGameState().getDiceRoller().rollKickoff();
 				fKickoffResult = DiceInterpreter.getInstance().interpretRollKickoff(getGameState().getGame(), rollKickoff);
+			} else if (GameOptionString.OVERTIME_KICK_OFF_RANDOM_BLITZ_OR_SOLID_DEFENCE.equals(overTimeKickOffs.getValue())) {
+				int[][] validRolls = {{1, 3}, {2, 2}, {3, 1}, {6, 4}, {5, 5}, {4, 6}};
+				int index = getGameState().getDiceRoller().rollDice(6) - 1;
+				rollKickoff = validRolls[index];
+				fKickoffResult = DiceInterpreter.getInstance().interpretRollKickoff(getGameState().getGame(), rollKickoff);
 			} else if (GameOptionString.OVERTIME_KICK_OFF_BLITZ.equals(overTimeKickOffs.getValue())) {
 				fKickoffResult = com.fumbbl.ffb.kickoff.bb2020.KickoffResult.BLITZ;
 			} else if (GameOptionString.OVERTIME_KICK_OFF_SOLID_DEFENCE.equals(overTimeKickOffs.getValue())) {

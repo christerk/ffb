@@ -332,7 +332,8 @@ public class GameOptionFactory {
 					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_ALL, "all events")
 					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ, "Blitz")
 					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_SOLID_DEFENCE, "Solid Defence")
-					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE, "Choice of Blitz or Solid Defence");
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE, "Choice of Blitz or Solid Defence")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_RANDOM_BLITZ_OR_SOLID_DEFENCE, "Blitz or Solid Defence, chosen randomly");
 			case INDUCEMENTS_ALLOW_OVERDOG_SPENDING:
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Overdog can not spend treasury")
