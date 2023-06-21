@@ -30,7 +30,7 @@ public class ChangeList {
 			.addImprovement("Display treasury in red on inducements dialog")
 			.addImprovement("Raiding Party and Hit and Run do not auto select if only one square is available")
 			.addFeature("Add user setting to hide explosion craters and blood spots on the pitch, can be found under \"User Settings\" -> \"Pitch\"")
-			.addBugfix("Chainsaw could be used on block an d pile driver foul in the same action")
+			.addBugfix("Chainsaw could be used on block and pile driver foul in the same action")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
