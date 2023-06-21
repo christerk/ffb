@@ -123,6 +123,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw) && usingChainsaw) {
+			actingPlayer.markSkillUsed(NamedProperties.blocksLikeChainsaw);
 			if (actingPlayer.getPlayerAction() == PlayerAction.MAXIMUM_CARNAGE) {
 				Optional<Skill> skillWithProperty = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canPerformSecondChainsawAttack);
 				if (skillWithProperty.isPresent()) {

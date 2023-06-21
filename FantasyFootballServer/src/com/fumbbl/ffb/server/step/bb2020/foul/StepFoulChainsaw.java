@@ -33,6 +33,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
@@ -101,7 +102,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksLikeChainsaw) && usingChainsaw) {
+		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.blocksLikeChainsaw) && usingChainsaw) {
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {
 				if ((getReRollSource() == null)
