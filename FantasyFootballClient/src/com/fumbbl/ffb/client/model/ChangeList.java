@@ -31,6 +31,7 @@ public class ChangeList {
 			.addImprovement("Raiding Party and Hit and Run do not auto select if only one square is available")
 			.addFeature("Add user setting to hide explosion craters and blood spots on the pitch, can be found under \"User Settings\" -> \"Pitch\"")
 			.addBugfix("Chainsaw could be used on block and pile driver foul in the same action")
+			.addBugfix("Crushing Blow was not offered when Mighty Blow was used to break armour")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")
