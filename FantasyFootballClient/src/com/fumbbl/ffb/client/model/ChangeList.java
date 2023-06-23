@@ -33,6 +33,7 @@ public class ChangeList {
 			.addBugfix("Chainsaw could be used on block and pile driver foul in the same action")
 			.addBugfix("Crushing Blow was not offered when Mighty Blow was used to break armour")
 			.addBugfix("Chainsaw using Pile Driver still performed foul after kick back")
+			.addBugfix("Kick back on Kick 'em, while they're down! resulted in opponent standing")
 		);
 
 		versions.add(new VersionChangeList("2.21.0")

@@ -214,6 +214,12 @@ public class StepEndBlocking extends AbstractStep {
 			.ifPresent(skill -> game.getDefender().markUsed(skill, game));
 
 		if (fEndTurn || fEndPlayerAction) {
+			if (actingPlayer.getPlayerAction().isKickingDowned()) {
+				// special case where we need to reset player state base. Otherwise, when changing the acting player to null
+				// all 'BLOCKED' players will become 'STANDING' which must not happen for 'Kick 'em...' as that can only
+				// be used on prone or stunned players
+				ServerUtilBlock.removePlayerBlockStates(game, oldDefenderState);
+			}
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else {
