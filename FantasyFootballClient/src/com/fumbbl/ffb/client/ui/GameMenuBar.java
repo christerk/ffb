@@ -164,6 +164,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem reRollBallAndChainTeamMateMenuItem;
 	private JRadioButtonMenuItem reRollBallAndChainAlwaysMenuItem;
 
+	private JRadioButtonMenuItem showCratersAndBloodsptsMenuItem;
+	private JRadioButtonMenuItem hideCratersAndBloodsptsMenuItem;
+
 	private JMenuItem chatBackground;
 	private JMenuItem logBackground;
 	private JMenuItem textFontColor;
@@ -489,6 +492,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		orientationGroup.add(layoutSquareMenuItem);
 		orientationMenu.add(layoutSquareMenuItem);
 
+		JMenu cratersAndBloodspotsMenu = new JMenu(dimensionProvider, SETTING_SHOW_CRATERS_AND_BLOODSPOTS);
+		cratersAndBloodspotsMenu.setMnemonic(KeyEvent.VK_B);
+		fPitchMenu.add(cratersAndBloodspotsMenu);
+
+		ButtonGroup cratersAndBloodspotsGroup = new ButtonGroup();
+
+		showCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show");
+		showCratersAndBloodsptsMenuItem.addActionListener(this);
+		cratersAndBloodspotsGroup.add(showCratersAndBloodsptsMenuItem);
+		cratersAndBloodspotsMenu.add(showCratersAndBloodsptsMenuItem);
+
+		hideCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Hide");
+		hideCratersAndBloodsptsMenuItem.addActionListener(this);
+		cratersAndBloodspotsGroup.add(hideCratersAndBloodsptsMenuItem);
+		cratersAndBloodspotsMenu.add(hideCratersAndBloodsptsMenuItem);
+
 		JMenu fTeamLogoMenu = new JMenu(dimensionProvider, SETTING_TEAM_LOGOS);
 		fTeamLogoMenu.setMnemonic(KeyEvent.VK_T);
 		fPitchMenu.add(fTeamLogoMenu);
@@ -761,7 +780,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fGameMenu.setMnemonic(KeyEvent.VK_G);
 		add(fGameMenu);
 
-		fGameReplayMenuItem = new JMenuItem(dimensionProvider, _REPLAY_MODE_ON, KeyEvent.VK_R);
+		boolean replaying = false;
+		if (getClient() != null && getClient().getReplayer() != null) {
+			replaying = getClient().getReplayer().isReplaying();
+		}
+
+		fGameReplayMenuItem = new JMenuItem(dimensionProvider, replaying ? _REPLAY_MODE_OFF : _REPLAY_MODE_ON, KeyEvent.VK_R);
 		String keyMenuReplay = getClient().getProperty(IClientProperty.KEY_MENU_REPLAY);
 		if (StringTool.isProvided(keyMenuReplay)) {
 			fGameReplayMenuItem.setAccelerator(KeyStroke.getKeyStroke(keyMenuReplay));
@@ -901,6 +925,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String playerMarkingSetting = getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
 		playersMarkingManualMenuItem.setSelected(true);
 		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
+
+		String showCratersAndBloodspotsSetting = getClient().getProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS);
+		showCratersAndBloodsptsMenuItem.setSelected(true);
+		hideCratersAndBloodsptsMenuItem.setSelected(IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_HIDE.equals(showCratersAndBloodspotsSetting));
 
 		boolean refreshUi = refreshColorMenu(CommonProperty.SETTING_BACKGROUND_CHAT, chatBackground,
 			styleProvider::getChatBackground, styleProvider::setChatBackground);
@@ -1184,6 +1212,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
 			getClient().saveUserSettings(true);
 		}
+
+		if (source == showCratersAndBloodsptsMenuItem) {
+			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_SHOW);
+			getClient().saveUserSettings(true);
+		}
+		if (source == hideCratersAndBloodsptsMenuItem) {
+			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_HIDE);
+			getClient().saveUserSettings(true);
+		}
+
 		if (source == fTeamLogoBothMenuItem) {
 			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
 			getClient().saveUserSettings(true);
@@ -1477,22 +1515,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private boolean updateScaling() {
 		String factorValue = getClient().getProperty(CommonProperty.SETTING_SCALE_FACTOR);
-			if (StringTool.isProvided(factorValue)) {
-				try {
-					double factor = Double.parseDouble(factorValue);
-					if (dimensionProvider.getScale() != factor) {
-						dimensionProvider.setScale(factor);
-						getClient().getUserInterface().getIconCache().clear();
-						FontCache fontCache = getClient().getUserInterface().getFontCache();
-						fontCache.clear();
-						UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
-						return true;
-					}
-				} catch (Exception ignored) {
-
+		if (StringTool.isProvided(factorValue)) {
+			try {
+				double factor = Double.parseDouble(factorValue);
+				if (dimensionProvider.getScale() != factor) {
+					dimensionProvider.setScale(factor);
+					getClient().getUserInterface().getIconCache().clear();
+					FontCache fontCache = getClient().getUserInterface().getFontCache();
+					fontCache.clear();
+					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
+					return true;
 				}
+			} catch (Exception ignored) {
+
 			}
-			return false;
+		}
+		return false;
 	}
 
 	private boolean updateOrientation() {

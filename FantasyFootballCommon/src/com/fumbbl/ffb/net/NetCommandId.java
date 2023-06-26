@@ -25,6 +25,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandIllegalProcedure;
 import com.fumbbl.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandJoin;
 import com.fumbbl.ffb.net.commands.ClientCommandJourneymen;
+import com.fumbbl.ffb.net.commands.ClientCommandKickOffResultChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandKickTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandKickoff;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
@@ -146,6 +147,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie"),
 	CLIENT_PRAYER_SELECTION("clientPrayerSelection"), CLIENT_USE_TEAM_MATES_WISDOM("clientUseTeamMatesWisdom"),
 	CLIENT_THROW_KEG("clientThrowKeg"), CLIENT_SELECT_WEATHER("clientSelectWeather"), CLIENT_UPDATE_PLAYER_MARKINGS("clientUpdatePlayerMarkings"),
+	CLIENT_KICK_OFF_RESULT_CHOICE("clientKickOffResultChoice"),
 	SERVER_UPDATE_LOCAL_PLAYER_MARKERS("serverUpdateLocalPlayerMarkers"),
 	INTERNAL_SERVER_ADD_LOADED_TEAM("internalServerAddLoadedTeam"),
 	INTERNAL_APPLY_AUTOMATIC_PLAYER_MARKINGS("internalApplyAutomaticPlayerMarkings");
@@ -349,6 +351,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUpdatePlayerMarkings();
 			case SERVER_UPDATE_LOCAL_PLAYER_MARKERS:
 				return new ServerCommandUpdateLocalPlayerMarkers();
+			case CLIENT_KICK_OFF_RESULT_CHOICE:
+				return new ClientCommandKickOffResultChoice();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

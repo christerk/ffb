@@ -19,6 +19,10 @@ import java.util.stream.Stream;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class ArmorModifiers implements com.fumbbl.ffb.factory.ArmorModifiers {
 
+	private final Set<? extends ArmorModifier> legacyModifiers = new HashSet<ArmorModifier>() {{
+		add(new SpecialEffectArmourModifier("Bomb", 1, false, SpecialEffect.BOMB));
+	}};
+
 	private final Set<? extends ArmorModifier> armorModifiers = new HashSet<ArmorModifier>() {{
 		add(new FoulAssistArmorModifier("1 Offensive Assist", 1, true));
 		add(new FoulAssistArmorModifier("2 Offensive Assists", 2, true));
@@ -46,6 +50,7 @@ public class ArmorModifiers implements com.fumbbl.ffb.factory.ArmorModifiers {
 		add(new SpecialEffectArmourModifier("Fireball", 1, false, SpecialEffect.FIREBALL));
 		add(new SpecialEffectArmourModifier("Lightning", 1, false, SpecialEffect.LIGHTNING));
 	}};
+	private boolean useAll;
 
 	@Override
 	public String getName() {
@@ -54,6 +59,16 @@ public class ArmorModifiers implements com.fumbbl.ffb.factory.ArmorModifiers {
 
 	@Override
 	public Stream<? extends ArmorModifier> values() {
-		return armorModifiers.stream();
+		return useAll ? allValues() : armorModifiers.stream();
+	}
+
+	@Override
+	public Stream<? extends ArmorModifier> allValues() {
+		return Stream.concat(legacyModifiers.stream(), armorModifiers.stream());
+	}
+
+	@Override
+	public void setUseAll(boolean useAll) {
+		this.useAll = useAll;
 	}
 }

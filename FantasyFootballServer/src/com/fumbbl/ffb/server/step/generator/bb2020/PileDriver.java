@@ -24,6 +24,7 @@ public class PileDriver extends com.fumbbl.ffb.server.step.generator.PileDriver 
 		sequence.add(StepId.PILE_DRIVER, from(StepParameterKey.PLAYER_ID, params.getTargetPlayerId()),
 			from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.SKIP_PILE_DRIVER));
 		sequence.add(StepId.FOUL_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER));
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.FOUL);
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));

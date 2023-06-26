@@ -12,6 +12,8 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifierContext;
 import com.fumbbl.ffb.modifiers.ModifierAggregator;
 import com.fumbbl.ffb.modifiers.SpecialEffectInjuryModifier;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -33,7 +35,7 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 	private InjuryModifiers injuryModifiers;
 
 	public InjuryModifier forName(String name) {
-		return Stream.concat(injuryModifiers.values(), modifierAggregator.getInjuryModifiers().stream())
+		return Stream.concat(injuryModifiers.allValues(), modifierAggregator.getInjuryModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
 			.orElse(null);
@@ -94,6 +96,9 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 	public void initialize(Game game) {
 		this.modifierAggregator = game.getModifierAggregator();
 		injuryModifiers = new Scanner<>(InjuryModifiers.class).getInstancesImplementing(game.getOptions()).stream().findFirst().orElse(null);
+		if (injuryModifiers != null) {
+			injuryModifiers.setUseAll(((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.BOMB_USES_MB)).isEnabled());
+		}
 	}
 
 }

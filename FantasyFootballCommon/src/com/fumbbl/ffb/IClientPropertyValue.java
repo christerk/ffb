@@ -59,4 +59,6 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_BACKGROUND_FRAME_ICONS = "backgroundFrameIcons";
 	String SETTING_BACKGROUND_FRAME_COLOR = "backgroundFrameColor";
 
+	String SETTING_CRATERS_AND_BLOODSPOTS_SHOW = "cratersAndBloodspotsShow";
+	String SETTING_CRATERS_AND_BLOODSPOTS_HIDE = "cratersAndBloodspotsHide";
 }

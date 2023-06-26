@@ -207,6 +207,9 @@ public class DialogManager {
 					case USE_MORTUARY_ASSISTANTS:
 						setDialogHandler(new DialogUseMortuaryAssistantsHandler(getClient()));
 						break;
+					case KICK_OFF_RESULT:
+						setDialogHandler(new DialogKickOffResultHandler(getClient()));
+						break;
 					default:
 						break;
 				}

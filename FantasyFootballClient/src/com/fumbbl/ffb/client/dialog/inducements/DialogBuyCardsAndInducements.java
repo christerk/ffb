@@ -20,6 +20,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -285,7 +286,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	protected void updateGoldValue() {
 		if (superInitialized) {
 			labelAvailableGold.setText((parameter.isUsesTreasury() ? "Treasury: " : "Petty Cash: ") + StringTool.formatThousands(availableGold) + " gp");
-
+			labelAvailableGold.setForeground(parameter.isUsesTreasury() ? Color.RED : Color.BLACK);
 			getContentPane().validate();
 		}
 	}

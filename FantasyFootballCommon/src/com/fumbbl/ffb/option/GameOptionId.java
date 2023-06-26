@@ -70,13 +70,15 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_PART_TIME_COACH_MAX("inducementPartTimeCoachMax"), INDUCEMENT_PART_TIME_COACH_TOTAL_MAX("inducementPartTimeCoachTotalMax"), INDUCEMENT_PART_TIME_COACH_COST("inducementPartTimeCoachCost"),
 	INDUCEMENT_WEATHER_MAGE_MAX("inducementWeatherMageMax"), INDUCEMENT_WEATHER_MAGE_COST("inducementWeatherMageCost"),
 	INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV("inducementsAllowSpendingTreasuryOnEqualCTV"),
-	INDUCEMENTS_ALWAYS_USE_TREASURY("inducementsAlwaysUseTreasury"),
+	INDUCEMENTS_ALWAYS_USE_TREASURY("inducementsAlwaysUseTreasury"), INDUCEMENTS_ALLOW_OVERDOG_SPENDING("inducementsAllowOverdogSpending"),
 
 	ENABLE_STALLING_CHECK("enableStallingCheck"), ALLOW_BALL_AND_CHAIN_RE_ROLL("allowBallAndChainReRoll"),
 	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"), SWOOP_DISTANCE("swoopDistance"),
 	ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN("allowSpecialBlocksWithBallAndChain"),
-	CHAINSAW_TURNOVER_ON_AV_BREAK("chainsawTurnoverOnAvBreak"), BOMBER_PLACED_PRONE_IGNORES_TURNOVER("bomberPlacedProneIgnoresTurnover"),
-	SNEAKY_GIT_CAN_MOVE_AFTER_FOUL("sneakyGitCanMoveAfterFoul"),
+	CHAINSAW_TURNOVER_ON_AV_BREAK("chainsawTurnoverOnAvBreak"), // legacy, keep around to make sure old replays or running games do not break after update
+	CHAINSAW_TURNOVER("chainsawTurnover"), BOMBER_PLACED_PRONE_IGNORES_TURNOVER("bomberPlacedProneIgnoresTurnover"),
+	SNEAKY_GIT_CAN_MOVE_AFTER_FOUL("sneakyGitCanMoveAfterFoul"), BOMB_USES_MB("bombUsesMb"),
+	OVERTIME_GOLDEN_GOAL("overtimeGoldenGoal"), OVERTIME_KICK_OFF_RESULTS("overtimeKickOffResults"),
 
 	PITCH_URL("pitchUrl");
 

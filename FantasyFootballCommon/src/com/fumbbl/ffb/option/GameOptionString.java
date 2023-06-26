@@ -10,7 +10,18 @@ import java.util.Map;
  */
 public class GameOptionString extends GameOptionAbstract {
 
+	public static final String OVERTIME_KICK_OFF_ALL = "all";
+	public static final String OVERTIME_KICK_OFF_BLITZ = "blitz";
+	public static final String OVERTIME_KICK_OFF_SOLID_DEFENCE = "solidDefence";
+	public static final String OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE = "blitzOrSolidDefence";
+	public static final String OVERTIME_KICK_OFF_RANDOM_BLITZ_OR_SOLID_DEFENCE = "randomBlitzOrSolidDefence";
+
 	public static final String CHAINSAW_TURNOVER_NEVER = "never";
+	public static final String CHAINSAW_TURNOVER_KICKBACK = "kickback";
+	public static final String CHAINSAW_TURNOVER_KICKBACK_AV_BREAK_ONLY = "kickbackAvBreak";
+	public static final String CHAINSAW_TURNOVER_ALL_AV_BREAKS = "allAvBreaks";
+
+	// legacy, keep around for old replays and ongoing matches after update
 	public static final String CHAINSAW_TURNOVER_KICKBACK_ONLY = "kickbackOnly";
 	public static final String CHAINSAW_TURNOVER_ALWAYS = "always";
 

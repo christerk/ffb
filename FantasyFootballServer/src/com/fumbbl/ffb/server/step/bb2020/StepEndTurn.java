@@ -500,7 +500,7 @@ public class StepEndTurn extends AbstractStep {
 					result = true;
 				} else {
 					boolean friendsWithTheRef = getGameState().getPrayerState().isFriendsWithRef(team);
-					reRollArgue(team, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
+					briberyReRoll.ifPresent(inducementType -> reRollArgue(team, friendsWithTheRef, playerId, turnData, inducementType));
 					playerIdsNaturalOnes.clear();
 				}
 			} else {

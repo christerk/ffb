@@ -207,7 +207,7 @@ public class UtilServerStartGame {
 			game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
 			overtime.setValue(true);
-			//		game.getOptions().addOption(overtime);
+			game.getOptions().addOption(overtime);
 			GameOptionBoolean allowConcessions = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_CONCESSIONS);
 			allowConcessions.setValue(false);
 			//game.getOptions().addOption(allowConcessions);
@@ -229,7 +229,7 @@ public class UtilServerStartGame {
 			GameOptionBoolean alwaysTreasury = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
 			alwaysTreasury.setValue(true);
 			//	game.getOptions().addOption(alwaysTreasury);
-			GameOptionString chainsaw = (GameOptionString) optionFactory.createGameOption(GameOptionId.CHAINSAW_TURNOVER_ON_AV_BREAK);
+			GameOptionString chainsaw = (GameOptionString) optionFactory.createGameOption(GameOptionId.CHAINSAW_TURNOVER);
 			chainsaw.setValue(GameOptionString.CHAINSAW_TURNOVER_NEVER);
 			//game.getOptions().addOption(chainsaw);
 			GameOptionBoolean bombardier = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMBER_PLACED_PRONE_IGNORES_TURNOVER);
@@ -237,7 +237,19 @@ public class UtilServerStartGame {
 			//game.getOptions().addOption(bombardier);
 			GameOptionBoolean sneaky = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL);
 			sneaky.setValue(true);
-			game.getOptions().addOption(sneaky);
+			//		game.getOptions().addOption(sneaky);
+			GameOptionBoolean bomb = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.BOMB_USES_MB);
+			bomb.setValue(true);
+			//	game.getOptions().addOption(bomb);
+			GameOptionBoolean overtimeGG = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME_GOLDEN_GOAL);
+			overtimeGG.setValue(true);
+			//game.getOptions().addOption(overtimeGG);
+			GameOptionString overtimeKO = (GameOptionString) optionFactory.createGameOption(GameOptionId.OVERTIME_KICK_OFF_RESULTS);
+			overtimeKO.setValue(GameOptionString.OVERTIME_KICK_OFF_RANDOM_BLITZ_OR_SOLID_DEFENCE);
+			//game.getOptions().addOption(overtimeKO);
+			GameOptionBoolean overdogSpending = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING);
+			overdogSpending.setValue(false);
+			//game.getOptions().addOption(overdogSpending);
 		}
 	}
 

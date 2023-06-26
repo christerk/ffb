@@ -12,10 +12,15 @@ import java.util.stream.Stream;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class InjuryModifiers implements com.fumbbl.ffb.factory.InjuryModifiers {
 
+	private final Set<? extends InjuryModifier> legacyModifiers = new HashSet<InjuryModifier>() {{
+		add(new SpecialEffectInjuryModifier("Bomb", 1, false, SpecialEffect.BOMB));
+	}};
+
 	private final Set<? extends InjuryModifier> injuryModifiers = new HashSet<InjuryModifier>() {{
 		add(new SpecialEffectInjuryModifier("Fireball", 1, false, SpecialEffect.FIREBALL));
 		add(new SpecialEffectInjuryModifier("Lightning", 1, false, SpecialEffect.LIGHTNING));
 	}};
+	private boolean useAll;
 
 	@Override
 	public String getName() {
@@ -24,6 +29,16 @@ public class InjuryModifiers implements com.fumbbl.ffb.factory.InjuryModifiers {
 
 	@Override
 	public Stream<? extends InjuryModifier> values() {
-		return injuryModifiers.stream();
+		return useAll ? allValues() : injuryModifiers.stream();
+	}
+
+	@Override
+	public Stream<? extends InjuryModifier> allValues() {
+		return Stream.concat(legacyModifiers.stream(), injuryModifiers.stream());
+	}
+
+	@Override
+	public void setUseAll(boolean useAll) {
+		this.useAll = useAll;
 	}
 }

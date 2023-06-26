@@ -57,4 +57,14 @@ public class ArmorModifiers implements com.fumbbl.ffb.factory.ArmorModifiers {
 	public Stream<? extends ArmorModifier> values() {
 		return armorModifiers.stream();
 	}
+
+	@Override
+	public Stream<? extends ArmorModifier> allValues() {
+		return values();
+	}
+
+	@Override
+	public void setUseAll(boolean useAll) {
+
+	}
 }

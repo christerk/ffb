@@ -7,7 +7,6 @@ import com.fumbbl.ffb.dialog.DialogUseChainsawParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
@@ -25,6 +24,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepPileDriver extends AbstractStep {
@@ -101,8 +101,7 @@ public class StepPileDriver extends AbstractStep {
 				if (targetPlayerId == null) {
 					getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelEnd);
 				} else {
-					Player<?> player = game.getActingPlayer().getPlayer();
-					if (player.hasSkillProperty(NamedProperties.blocksLikeChainsaw)) {
+					if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.blocksLikeChainsaw)) {
 						UtilServerDialog.showDialog(getGameState(), new DialogUseChainsawParameter(game.getActingTeam().getId()), false);
 					} else {
 						leaveStep();

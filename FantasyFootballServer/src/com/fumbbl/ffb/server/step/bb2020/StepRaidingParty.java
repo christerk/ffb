@@ -202,12 +202,8 @@ public class StepRaidingParty extends AbstractStep {
 					return;
 				}
 
-				if (eligibleSquares.size() == 1) {
-					coordinate = eligibleSquares.get(0);
-				} else {
-					prepareClientData(game, eligibleSquares);
-					return;
-				}
+				prepareClientData(game, eligibleSquares);
+				return;
 			}
 
 			if (StringTool.isProvided(playerId) && coordinate != null) {

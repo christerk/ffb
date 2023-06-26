@@ -301,12 +301,13 @@ public class GameOptionFactory {
 			case INDUCEMENT_WEATHER_MAGE_COST:
 				return new GameOptionInt(pOptionId).setDefault(30000)
 					.setMessage("Weather Mages can be hired for $1 gps each.");
-			case CHAINSAW_TURNOVER_ON_AV_BREAK:
-				return new GameOptionString(pOptionId).setDefault(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_ONLY)
+			case CHAINSAW_TURNOVER:
+				return new GameOptionString(pOptionId).setDefault(GameOptionString.CHAINSAW_TURNOVER_KICKBACK)
 					.setMessage("Chainsaw causes turnover: $1")
 					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_NEVER, "Never")
-					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_ONLY, "Only on kickback AV breaks")
-					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_ALWAYS, "On all AV breaks");
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK_AV_BREAK_ONLY, "Only on kickback AV breaks")
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_KICKBACK, "On all kickbacks")
+					.addValueMessage(GameOptionString.CHAINSAW_TURNOVER_ALL_AV_BREAKS, "On all AV breaks");
 			case BOMBER_PLACED_PRONE_IGNORES_TURNOVER:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Bombardier placed prone causes turnover")
@@ -315,6 +316,28 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Sneaky Git has to end action after fouling")
 					.setMessageTrue("Sneaky Git may move after fouling");
+			case BOMB_USES_MB:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Bombs do not use MB")
+					.setMessageTrue("Bombs use MB");
+			case CHAINSAW_TURNOVER_ON_AV_BREAK:
+				return new GameOptionBoolean(pOptionId).setDefault(false);
+			case OVERTIME_GOLDEN_GOAL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Overtime ends after first touchdown")
+					.setMessageFalse("Overtime lasts a whole half");
+			case OVERTIME_KICK_OFF_RESULTS:
+				return new GameOptionString(pOptionId).setDefault(GameOptionString.OVERTIME_KICK_OFF_ALL)
+					.setMessage("Kick off events in overtime: $1")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_ALL, "all events")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ, "Blitz")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_SOLID_DEFENCE, "Solid Defence")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE, "Choice of Blitz or Solid Defence")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_RANDOM_BLITZ_OR_SOLID_DEFENCE, "Blitz or Solid Defence, chosen randomly");
+			case INDUCEMENTS_ALLOW_OVERDOG_SPENDING:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Overdog can not spend treasury")
+					.setMessageTrue("Overdog can spend treasury");
 			default:
 				return null;
 		}

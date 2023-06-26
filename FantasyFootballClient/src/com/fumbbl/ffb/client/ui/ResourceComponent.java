@@ -14,6 +14,7 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -291,9 +292,11 @@ public class ResourceComponent extends JPanel {
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 		String toolTip = null;
 		for (int i = 0; (toolTip == null) && (i < fSlots.length); i++) {
-			ScaledSlot scaledSlot = scaledSlot(fSlots[i], iconCache);
-			if (scaledSlot.area.contains(pMouseEvent.getPoint())) {
-				toolTip = fSlots[i].getToolTip();
+			if (StringTool.isProvided(fSlots[i].getIconProperty())) {
+				ScaledSlot scaledSlot = scaledSlot(fSlots[i], iconCache);
+				if (scaledSlot.area.contains(pMouseEvent.getPoint())) {
+					toolTip = fSlots[i].getToolTip();
+				}
 			}
 		}
 		return toolTip;

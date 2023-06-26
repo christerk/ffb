@@ -35,7 +35,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepWrestle step, StepState state,
-			                                           ClientCommandUseSkill useSkillCommand) {
+																								 ClientCommandUseSkill useSkillCommand) {
 
 				if (state.usingWrestleAttacker == null) {
 					state.usingWrestleAttacker = useSkillCommand.isSkillUsed();
@@ -65,7 +65,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean defenderHasTacklezones = state.oldDefenderState.hasTacklezones();
-				
+
 				if (state.usingWrestleAttacker) {
 					step.getResult()
 						.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
@@ -73,10 +73,9 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 					step.getResult()
 						.addReport(new ReportSkillUse(game.getDefenderId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
 				} else {
-					if(!defenderHasTacklezones && UtilCards.hasSkill(game.getDefender(), skill)) {
+					if (!defenderHasTacklezones && UtilCards.hasSkill(game.getDefender(), skill)) {
 						step.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skill, false, SkillUse.NO_TACKLEZONE));
-					}
-					else if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
+					} else if (UtilCards.hasSkill(actingPlayer, skill) || UtilCards.hasSkill(game.getDefender(), skill)) {
 						step.getResult().addReport(new ReportSkillUse(null, skill, false, null));
 					}
 				}
@@ -100,12 +99,17 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean defenderCanUseSkill = UtilCards.hasSkill(game.getDefender(), skill) && state.oldDefenderState.hasTacklezones();
 				boolean actingPlayerIsBlitzing = actingPlayer.getPlayerAction() == PlayerAction.BLITZ;
+				boolean wrestlePrevented = actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill);
 				if (!state.usingWrestleAttacker && defenderCanUseSkill
-					&& !(actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill))) {
+					&& !wrestlePrevented) {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
 						true);
 					return StepAction.CONTINUE;
 				} else {
+					if (wrestlePrevented) {
+						step.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
+							UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill), true, SkillUse.CANCEL_WRESTLE));
+					}
 					state.usingWrestleDefender = false;
 					return StepAction.REPEAT;
 				}
