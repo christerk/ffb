@@ -55,7 +55,7 @@
 		<portrait>portraits/vampire_vampire.png</portrait>
 		<iconSet size="5">iconsets/vampire_vampire.png</iconSet>
 		<skillList>
-			<skill>Blood Lust</skill>
+			<skill value="3">Bloodlust</skill>
 			<skill>Hypnotic Gaze</skill>
 			<skill>Regeneration</skill>
 		</skillList>

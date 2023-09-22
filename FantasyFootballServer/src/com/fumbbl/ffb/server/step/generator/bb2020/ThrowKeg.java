@@ -33,6 +33,7 @@ public class ThrowKeg extends com.fumbbl.ffb.server.step.generator.ThrowKeg {
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
+		sequence.add(StepId.BLOOD_LUST);
 		sequence.add(StepId.THROW_KEG, from(StepParameterKey.TARGET_PLAYER_ID, params.getPlayerId()));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.APOTHECARY,

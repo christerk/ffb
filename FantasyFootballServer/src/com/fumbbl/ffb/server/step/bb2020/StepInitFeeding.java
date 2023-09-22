@@ -21,7 +21,6 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.IReport;
-import com.fumbbl.ffb.report.ReportBiteSpectator;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.server.GameState;
@@ -41,7 +40,6 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
-import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
@@ -199,11 +197,10 @@ public class StepInitFeeding extends AbstractStep {
 					if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
 						game.getFieldModel().setBallMoving(true);
 						publishParameter(
-								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 					}
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-					UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-					getResult().addReport(new ReportBiteSpectator(actingPlayer.getPlayerId()));
+					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
+					getResult().setSound(SoundId.ROAR);
 				}
 				doNextStep = true;
 			}
