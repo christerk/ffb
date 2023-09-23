@@ -5,6 +5,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 
 /**
  * Vampires must occasionally feed on the blood of the living. Immediately after
@@ -40,4 +41,8 @@ public class Bloodlust extends Skill {
 		return "needs to bite a thrall";
 	}
 
+	@Override
+	public SkillValueEvaluator evaluator() {
+		return SkillValueEvaluator.ROLL;
+	}
 }

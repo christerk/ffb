@@ -434,6 +434,7 @@ public final class StepEndSelecting extends AbstractStep {
 		blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
 		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
 		IJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
+		IJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -462,6 +463,7 @@ public final class StepEndSelecting extends AbstractStep {
 			.map(value -> new BlockTarget().initFrom(source, value))
 			.forEach(value -> blockTargets.add(value));
 		targetPlayerId = IServerJsonOption.TARGET_PLAYER_ID.getFrom(source, jsonObject);
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 

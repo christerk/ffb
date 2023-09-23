@@ -13,7 +13,7 @@ public class DialogBloodlustAction extends DialogThreeWayChoice {
 	}
 
 	public DialogId getId() {
-		return DialogId.FOLLOWUP_CHOICE;
+		return DialogId.BLOODLUST_ACTION;
 	}
 
 }

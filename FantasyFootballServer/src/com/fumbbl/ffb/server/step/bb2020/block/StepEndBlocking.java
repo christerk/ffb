@@ -14,6 +14,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -79,6 +80,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
+	private PlayerAction bloodlustAction;
 	private boolean fUsingStab, usingChainsaw, allowSecondBlockAction, usingVomit, addBlockDieHandled;
 	private Boolean usePileDriver, useHitAndRun, usePutridRegurgitation;
 	private List<String> knockedDownPlayers = new ArrayList<>();
@@ -180,6 +182,9 @@ public class StepEndBlocking extends AbstractStep {
 				case OLD_DEFENDER_STATE:
 					oldDefenderState = (PlayerState) parameter.getValue();
 					break;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) parameter.getValue();
+					break;
 				default:
 					break;
 			}
@@ -216,6 +221,12 @@ public class StepEndBlocking extends AbstractStep {
 		if (fEndTurn || fEndPlayerAction) {
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+		} else if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
+			game.getFieldModel().setPlayerState(game.getDefender(), oldDefenderState);
+			game.setDefenderId(null);
+			ServerUtilBlock.updateDiceDecorations(game);
+			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
+			moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 		} else {
 			// Revert back strength gained from HORNS and DAUNTLESS to avoid interaction
 			// with tentacles.
@@ -431,6 +442,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IServerJsonOption.USING_PUTRID_REGURGITATION.addTo(jsonObject, usePutridRegurgitation);
 		IServerJsonOption.ADD_BLOCK_DIE_HANDLED.addTo(jsonObject, addBlockDieHandled);
+		IJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -451,6 +463,7 @@ public class StepEndBlocking extends AbstractStep {
 		usePileDriver = IServerJsonOption.USING_PILE_DRIVER.getFrom(source, jsonObject);
 		usePutridRegurgitation = IServerJsonOption.USING_PUTRID_REGURGITATION.getFrom(source, jsonObject);
 		addBlockDieHandled = toPrimitive(IServerJsonOption.ADD_BLOCK_DIE_HANDLED.getFrom(source, jsonObject));
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 

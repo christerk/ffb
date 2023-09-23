@@ -47,7 +47,12 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 
 				if (state.status == ActionStatus.WAIT_FOR_ACTION_CHANGE) {
 					step.publishParameter(StepParameter.from(StepParameterKey.BLOOD_LUST_ACTION, state.bloodlustAction));
-					leaveOnFailure(step, state);
+					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
+					if (StringTool.isProvided(state.goToLabelOnFailure) && state.bloodlustAction != null) {
+						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+					} else {
+						step.getResult().setNextAction(StepAction.NEXT_STEP);
+					}
 					return false;
 				}
 
@@ -107,20 +112,13 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 
 						UtilServerDialog.showDialog(step.getGameState(), new DialogBloodlustActionParameter(changeToMove), false);
 						step.getResult().setNextAction(StepAction.CONTINUE);
+						state.status = ActionStatus.WAIT_FOR_ACTION_CHANGE;
 					} else {
-						leaveOnFailure(step, state);
+						step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
+						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 				}
 				return false;
-			}
-
-			private void leaveOnFailure(StepBloodLust step, StepState state) {
-				step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
-				if (StringTool.isProvided(state.goToLabelOnFailure)) {
-					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-				} else {
-					step.getResult().setNextAction(StepAction.NEXT_STEP);
-				}
 			}
 		});
 	}
