@@ -8,6 +8,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandBloodlustAction;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyCard;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
 import com.fumbbl.ffb.net.commands.ClientCommandCloseSession;
@@ -147,7 +148,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_FIELD_COORDINATE("clientFieldCoordinate"), CLIENT_USE_FUMBLEROOSKIE("clientUseFumblerooskie"),
 	CLIENT_PRAYER_SELECTION("clientPrayerSelection"), CLIENT_USE_TEAM_MATES_WISDOM("clientUseTeamMatesWisdom"),
 	CLIENT_THROW_KEG("clientThrowKeg"), CLIENT_SELECT_WEATHER("clientSelectWeather"), CLIENT_UPDATE_PLAYER_MARKINGS("clientUpdatePlayerMarkings"),
-	CLIENT_KICK_OFF_RESULT_CHOICE("clientKickOffResultChoice"),
+	CLIENT_KICK_OFF_RESULT_CHOICE("clientKickOffResultChoice"), CLIENT_BLOODLUST_ACTION("clientBloodlustAction"),
 	SERVER_UPDATE_LOCAL_PLAYER_MARKERS("serverUpdateLocalPlayerMarkers"),
 	INTERNAL_SERVER_ADD_LOADED_TEAM("internalServerAddLoadedTeam"),
 	INTERNAL_APPLY_AUTOMATIC_PLAYER_MARKINGS("internalApplyAutomaticPlayerMarkings");
@@ -353,6 +354,8 @@ public enum NetCommandId implements INamedObject {
 				return new ServerCommandUpdateLocalPlayerMarkers();
 			case CLIENT_KICK_OFF_RESULT_CHOICE:
 				return new ClientCommandKickOffResultChoice();
+			case CLIENT_BLOODLUST_ACTION:
+				return new ClientCommandBloodlustAction();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

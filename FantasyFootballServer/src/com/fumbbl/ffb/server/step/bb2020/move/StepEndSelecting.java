@@ -78,6 +78,7 @@ public final class StepEndSelecting extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private PlayerAction fDispatchPlayerAction;
+	private PlayerAction bloodlustAction;
 	// moveSequence
 	private FieldCoordinate[] fMoveStack;
 	private FieldCoordinate moveStart;
@@ -205,6 +206,10 @@ public final class StepEndSelecting extends AbstractStep {
 					targetPlayerId = (String) parameter.getValue();
 					consume(parameter);
 					return true;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
+					return true;
 				default:
 					break;
 			}
@@ -224,10 +229,10 @@ public final class StepEndSelecting extends AbstractStep {
 				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else if (actingPlayer.isSufferingBloodLust()) {
 			if (fDispatchPlayerAction != null) {
-				if (!fDispatchPlayerAction.isMoving()) {
-					fDispatchPlayerAction = PlayerAction.MOVE;
+				if (bloodlustAction != null) {
+					fDispatchPlayerAction = bloodlustAction;
 				}
-				dispatchPlayerAction(fDispatchPlayerAction, false);
+				dispatchPlayerAction(fDispatchPlayerAction, bloodlustAction == null || !fDispatchPlayerAction.isMoving());
 			} else {
 				if ((actingPlayer.getPlayerAction() != null) && !actingPlayer.getPlayerAction().isMoving()) {
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE,

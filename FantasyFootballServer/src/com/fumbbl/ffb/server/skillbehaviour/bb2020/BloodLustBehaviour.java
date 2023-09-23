@@ -4,6 +4,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.dialog.DialogBloodlustActionParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -18,12 +19,15 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2020.StepBloodLust;
 import com.fumbbl.ffb.server.step.bb2020.StepBloodLust.StepState;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.Bloodlust;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
-import static com.fumbbl.ffb.PlayerAction.BLOCK;
+import java.util.Arrays;
+
+import static com.fumbbl.ffb.PlayerAction.*;
 
 @RulesCollection(Rules.BB2020)
 public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
@@ -40,6 +44,13 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 
 			@Override
 			public boolean handleExecuteStepHook(StepBloodLust step, StepState state) {
+
+				if (state.status == ActionStatus.WAIT_FOR_ACTION_CHANGE) {
+					step.publishParameter(StepParameter.from(StepParameterKey.BLOOD_LUST_ACTION, state.bloodlustAction));
+					leaveOnFailure(step, state);
+					return false;
+				}
+
 				ActionStatus status = ActionStatus.SUCCESS;
 				Game game = step.getGameState().getGame();
 				if (!game.getTurnMode().checkNegatraits()) {
@@ -88,14 +99,28 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}
 				if (status == ActionStatus.FAILURE) {
-					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
-					if (StringTool.isProvided(state.goToLabelOnFailure)) {
-						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+					if (Arrays.asList(new PlayerAction[]
+							{BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ}
+						)
+						.contains(actingPlayer.getPlayerAction())) {
+						boolean changeToMove = Arrays.asList(new PlayerAction[]{BLOCK, THROW_BOMB, STAND_UP}).contains(actingPlayer.getPlayerAction());
+
+						UtilServerDialog.showDialog(step.getGameState(), new DialogBloodlustActionParameter(changeToMove), false);
+						step.getResult().setNextAction(StepAction.CONTINUE);
 					} else {
-						step.getResult().setNextAction(StepAction.NEXT_STEP);
+						leaveOnFailure(step, state);
 					}
 				}
 				return false;
+			}
+
+			private void leaveOnFailure(StepBloodLust step, StepState state) {
+				step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
+				if (StringTool.isProvided(state.goToLabelOnFailure)) {
+					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+				} else {
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+				}
 			}
 		});
 	}

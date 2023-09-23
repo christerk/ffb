@@ -41,6 +41,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandBloodlustAction;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyCard;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
 import com.fumbbl.ffb.net.commands.ClientCommandCloseSession;
@@ -554,6 +555,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendKickOffResultChoice(KickoffResult kickoffResult) {
 		send(new ClientCommandKickOffResultChoice(kickoffResult));
+	}
+
+	public void sendChangeBloodlustAction(boolean change) {
+		send(new ClientCommandBloodlustAction(change));
 	}
 
 	public FantasyFootballClient getClient() {
