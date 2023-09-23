@@ -45,10 +45,12 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 			@Override
 			public boolean handleExecuteStepHook(StepBloodLust step, StepState state) {
 
+				Game game = step.getGameState().getGame();
 				if (state.status == ActionStatus.WAIT_FOR_ACTION_CHANGE) {
 					step.publishParameter(StepParameter.from(StepParameterKey.BLOOD_LUST_ACTION, state.bloodlustAction));
 					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
-					if (StringTool.isProvided(state.goToLabelOnFailure) && state.bloodlustAction != null) {
+					if (StringTool.isProvided(state.goToLabelOnFailure)
+						&& (state.bloodlustAction != null || game.getActingPlayer().getPlayerAction().isPassing())) {
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 					} else {
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
@@ -57,7 +59,6 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 				}
 
 				ActionStatus status = ActionStatus.SUCCESS;
-				Game game = step.getGameState().getGame();
 				if (!game.getTurnMode().checkNegatraits()) {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 					return false;

@@ -61,6 +61,7 @@ public final class StepEndPassing extends AbstractStep {
 	private boolean fBombOutOfBounds;
 	private boolean dontDropFumble;
 	private PassingDistance passingDistance;
+	private PlayerAction bloodlustAction;
 
 	public StepEndPassing(GameState pGameState) {
 		super(pGameState);
@@ -110,6 +111,10 @@ public final class StepEndPassing extends AbstractStep {
 					passingDistance = (PassingDistance) parameter.getValue();
 					consume(parameter);
 					return true;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
+					return true;
 				default:
 					break;
 			}
@@ -140,6 +145,14 @@ public final class StepEndPassing extends AbstractStep {
 		if (fEndPlayerAction && (isBomb
 			|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+			getResult().setNextAction(StepAction.NEXT_STEP);
+			return;
+		}
+		if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
+			actingPlayer.setHasPassed(false);
+			game.setPassCoordinate(null);
+			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
+			moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
@@ -247,6 +260,7 @@ public final class StepEndPassing extends AbstractStep {
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
 		IServerJsonOption.DONT_DROP_FUMBLE.addTo(jsonObject, dontDropFumble);
 		IServerJsonOption.PASSING_DISTANCE.addTo(jsonObject, passingDistance);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -262,6 +276,7 @@ public final class StepEndPassing extends AbstractStep {
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		dontDropFumble = IServerJsonOption.DONT_DROP_FUMBLE.getFrom(source, jsonObject);
 		passingDistance = (PassingDistance) IServerJsonOption.PASSING_DISTANCE.getFrom(source, jsonObject);
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -432,9 +432,9 @@ public final class StepEndSelecting extends AbstractStep {
 		IServerJsonOption.NR_OF_DICE.addTo(jsonObject, fNumDice);
 		JsonArray jsonArray = new JsonArray();
 		blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
-		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
-		IJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
-		IJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
+		IServerJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
+		IServerJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 

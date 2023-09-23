@@ -14,7 +14,6 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -442,7 +441,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IServerJsonOption.USING_PUTRID_REGURGITATION.addTo(jsonObject, usePutridRegurgitation);
 		IServerJsonOption.ADD_BLOCK_DIE_HANDLED.addTo(jsonObject, addBlockDieHandled);
-		IJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
