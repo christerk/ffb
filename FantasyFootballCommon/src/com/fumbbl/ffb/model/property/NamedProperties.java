@@ -36,6 +36,7 @@ public class NamedProperties {
 	public static final ISkillProperty canBeThrown = new NamedProperty("Can Be Thrown");
 	public static final ISkillProperty canBeThrownIfStrengthIs3orLess = new NamedProperty("Can Be Thrown If Strength is 3 Or Less");
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
+	public static final ISkillProperty canBiteOpponents = new NamedProperty("Can Bite Opponents");
 	public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
 	public static final ISkillProperty canBlockTwoAtOnce = new NamedProperty("Can Block Two At Once");
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");

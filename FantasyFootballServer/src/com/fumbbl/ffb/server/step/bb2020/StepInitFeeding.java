@@ -5,8 +5,10 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
@@ -15,9 +17,11 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlitzTurnState;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.IReport;
@@ -40,7 +44,12 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Step in any sequence to handle the feeding on another player.
@@ -120,9 +129,16 @@ public class StepInitFeeding extends AbstractStep {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 				if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
-					fFeedOnPlayerChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-					game.setDefenderId(playerChoiceCommand.getPlayerId());
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					String playerId = playerChoiceCommand.getPlayerId();
+					boolean victimOnSameTeam = game.getActingPlayer().getPlayer().getTeam() == game.getPlayerById(playerId).getTeam();
+					if (victimOnSameTeam || UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canBiteOpponents)) {
+						if (!victimOnSameTeam) {
+							game.getActingPlayer().markSkillUsed(NamedProperties.canBiteOpponents);
+						}
+						fFeedOnPlayerChoice = StringTool.isProvided(playerId);
+						game.setDefenderId(playerId);
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
 				}
 			}
 		}
@@ -172,9 +188,13 @@ public class StepInitFeeding extends AbstractStep {
 			game.setDefenderId(null);
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			Player<?>[] victims = UtilPlayer.findAdjacentPlayersToFeedOn(game, team, playerCoordinate);
+			List<Player<?>> allVictims = new ArrayList<>(Arrays.asList(victims));
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canBiteOpponents)) {
+				allVictims.addAll(findOpponentsToFeedOn(game, team, playerCoordinate));
+			}
 			if (ArrayTool.isProvided(victims)) {
 				UtilServerDialog.showDialog(getGameState(),
-						new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1), false);
+					new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, allVictims.toArray(new Player[0]), null, 1), false);
 			} else {
 				fFeedOnPlayerChoice = false;
 			}
@@ -213,6 +233,21 @@ public class StepInitFeeding extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, fEndTurn));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+	}
+
+	private List<Player<?>> findOpponentsToFeedOn(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+		List<Player<?>> adjacentPlayers = new ArrayList<>();
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
+			1, false);
+		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
+			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
+			if ((player != null) && (player.getTeam() != pTeam) && player.getPosition().getType() != PlayerType.STAR
+				&& player.getStrengthWithModifiers() <= 3) {
+				adjacentPlayers.add(player);
+			}
+		}
+		return adjacentPlayers;
 	}
 
 	// JSON serialization
