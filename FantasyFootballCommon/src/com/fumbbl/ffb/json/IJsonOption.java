@@ -244,6 +244,7 @@ public interface IJsonOption {
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
 	JsonBooleanOption IS_OWN_CHOICE = new JsonBooleanOption("isOwnChoice");
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
+	JsonStringArrayOption KEYWORDS = new JsonStringArrayOption("keywords");
 	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
 	JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", Factory.KICKOFF_RESULT);

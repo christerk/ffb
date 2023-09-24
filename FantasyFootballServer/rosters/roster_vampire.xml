@@ -11,6 +11,9 @@
 	<necromancer>false</necromancer>
 	<undead>true</undead>
 	<nameGenerator>vampire</nameGenerator>
+	<keywords>
+		<keyword>vampire lord</keyword>
+	</keywords>
 
 
 	<position id="47520">
@@ -88,6 +91,9 @@
 			<double>Agility</double>
 			<double>Passing</double>
 		</skillCategoryList>
+		<keywords>
+			<keyword>Thrall</keyword>
+		</keywords>
 	</position>
 
 	<position id="vampire.Helmut">

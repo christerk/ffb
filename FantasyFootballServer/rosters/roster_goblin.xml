@@ -118,6 +118,9 @@
             <double>Strength</double>
             <double>Passing</double>
         </skillCategoryList>
+        <keywords>
+            <keyword>Dwarf</keyword>
+        </keywords>
     </position>
 
     <position id="goblin.troll">
