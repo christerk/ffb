@@ -11,9 +11,9 @@ import com.fumbbl.ffb.server.GameState;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class RamModification extends InjuryContextModification<ModificationParams> {
+public class AvOrInjModification extends InjuryContextModification<ModificationParams> {
 
-	public RamModification() {
+	public AvOrInjModification() {
 		super(Collections.singleton(Block.class));
 	}
 

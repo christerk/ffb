@@ -3,12 +3,12 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.injury.modification.AvOrInjModification;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
-import com.fumbbl.ffb.skill.bb2020.special.Ram;
+import com.fumbbl.ffb.skill.bb2020.special.DwarfenScourge;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class RamBehaviour extends SkillBehaviour<Ram> {
+public class DwarfenScourgeBehaviour extends SkillBehaviour<DwarfenScourge> {
 
-	public RamBehaviour() {
+	public DwarfenScourgeBehaviour() {
 		super();
 
 		registerModifier(new AvOrInjModification());

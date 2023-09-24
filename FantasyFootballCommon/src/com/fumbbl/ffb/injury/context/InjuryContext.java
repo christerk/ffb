@@ -117,7 +117,7 @@ public class InjuryContext {
 	public int getArmorModifierTotal(Game game) {
 		int totalModifiers = 0;
 		for (ArmorModifier armorModifier : fArmorModifiers) {
-			totalModifiers += armorModifier.getModifier(game.getPlayerById(fAttackerId));
+			totalModifiers += armorModifier.getModifier(game.getPlayerById(fAttackerId), game.getPlayerById(fDefenderId));
 		}
 		return totalModifiers;
 	}

@@ -2,8 +2,8 @@ package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
@@ -49,19 +49,19 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
   			boolean usingClaws = Arrays.stream(report.getArmorModifiers())
   				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue));
   			for (ArmorModifier armorModifier : report.getArmorModifiers()) {
-  				if (armorModifier.getModifier(attacker) != 0) {
-  					armorModifierTotal += armorModifier.getModifier(attacker);
-  					if (armorModifier.getModifier(attacker) > 0) {
-  						status.append(" + ");
-  					} else {
-  						status.append(" - ");
-  					}
-  					if (!armorModifier.isFoulAssistModifier()) {
-  						status.append(Math.abs(armorModifier.getModifier(attacker))).append(" ");
-  					}
-  					status.append(armorModifier.getName());
-  				}
-  			}
+					if (armorModifier.getModifier(attacker, defender) != 0) {
+						armorModifierTotal += armorModifier.getModifier(attacker, defender);
+						if (armorModifier.getModifier(attacker, defender) > 0) {
+							status.append(" + ");
+						} else {
+							status.append(" - ");
+						}
+						if (!armorModifier.isFoulAssistModifier()) {
+							status.append(Math.abs(armorModifier.getModifier(attacker, defender))).append(" ");
+						}
+						status.append(armorModifier.getName());
+					}
+				}
   			if (armorModifierTotal != 0) {
   				status.append(" = ").append(rolledTotal + armorModifierTotal);
   			}

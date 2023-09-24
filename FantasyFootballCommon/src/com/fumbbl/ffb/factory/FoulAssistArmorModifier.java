@@ -11,6 +11,6 @@ public class FoulAssistArmorModifier extends StaticArmourModifier {
 
 	@Override
 	public boolean appliesToContext(ArmorModifierContext context) {
-		return context.isFoul() && context.getFoulAssists() == getModifier(context.getAttacker());
+		return context.isFoul() && context.getFoulAssists() == getModifier(context.getAttacker(), context.getDefender());
 	}
 }
