@@ -4,7 +4,6 @@ import com.fumbbl.ffb.skill.Dauntless;
 import com.fumbbl.ffb.skill.FoulAppearance;
 import com.fumbbl.ffb.skill.JumpUp;
 import com.fumbbl.ffb.skill.Pass;
-import com.fumbbl.ffb.skill.bb2016.BloodLust;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
 import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
@@ -47,7 +46,7 @@ public class ReRolledActions {
 	public static final ReRolledAction JUMP_UP = new ReRolledAction(JumpUp.class);
 	public static final ReRolledAction STAND_UP = new ReRolledAction("standUp");
 	public static final ReRolledAction CHAINSAW = new ReRolledAction("Chainsaw");
-	public static final ReRolledAction BLOOD_LUST = new ReRolledAction(BloodLust.class);
+	public static final ReRolledAction BLOOD_LUST = new ReRolledAction("Bloodlust");
 	public static final ReRolledAction HYPNOTIC_GAZE = new ReRolledAction("Hypnotic Gaze");
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
 	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);

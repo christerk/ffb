@@ -33,6 +33,7 @@ public class RaidingParty extends com.fumbbl.ffb.server.step.generator.RadingPar
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
+		sequence.add(StepId.BLOOD_LUST);
 		sequence.add(StepId.RAIDING_PARTY, IStepLabel.END, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, params.getFailureLabel()),
 			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, params.getSuccessLabel()));
 		gameState.getStepStack().push(sequence.getSequence());

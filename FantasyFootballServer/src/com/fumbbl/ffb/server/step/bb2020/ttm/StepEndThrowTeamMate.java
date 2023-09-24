@@ -4,10 +4,12 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -20,10 +22,13 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.bb2020.Move;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 
 import java.util.Objects;
 
@@ -49,6 +54,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 	private boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
 	private PlayerState fThrownPlayerState, oldPlayerState;
+	private PlayerAction bloodlustAction;
 
 	public StepEndThrowTeamMate(GameState pGameState) {
 		super(pGameState);
@@ -90,6 +96,10 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 					oldPlayerState = (PlayerState) pParameter.getValue();
 					consume(pParameter);
 					return true;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) pParameter.getValue();
+					consume(pParameter);
+					return true;
 				default:
 					break;
 			}
@@ -128,10 +138,12 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		game.getFieldModel().setRangeRuler(null);
 		game.setDefenderId(null);
 		game.setThrowerId(null);
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		boolean moveDueToBloodlust = actingPlayer.isSufferingBloodLust() && bloodlustAction != null;
 		// reset thrown player (e.g. failed confusion roll, successful escape roll)
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null)) {
-			if (fEndPlayerAction && oldPlayerState != null && oldPlayerState.getId() > 0) {
+			if ((fEndPlayerAction || moveDueToBloodlust) && oldPlayerState != null && oldPlayerState.getId() > 0) {
 				game.getFieldModel().setPlayerState(thrownPlayer, oldPlayerState);
 			} else if (fThrownPlayerState != null && fThrownPlayerState.getId() > 0) {
 				game.getFieldModel().setPlayerState(thrownPlayer, fThrownPlayerState);
@@ -143,8 +155,14 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 			}
 		}
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
-			.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+		if (moveDueToBloodlust) {
+			UtilServerGame.syncGameModel(this);
+			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
+			((Move) factory.forName(SequenceGenerator.Type.Move.name())).pushSequence(new Move.SequenceParams(getGameState()));
+		} else {
+			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
+				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
@@ -160,6 +178,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
 		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -174,6 +193,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 

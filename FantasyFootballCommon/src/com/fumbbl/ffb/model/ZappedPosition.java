@@ -21,6 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ZappedPosition implements Position {
@@ -181,6 +182,11 @@ public class ZappedPosition implements Position {
 	}
 
 	@Override
+	public boolean isDwarf() {
+		return false;
+	}
+
+	@Override
 	public String getTeamWithPositionId() {
 		return originalPosition.getTeamWithPositionId();
 	}
@@ -193,6 +199,11 @@ public class ZappedPosition implements Position {
 	@Override
 	public SkillCategory[] getSkillCategories(boolean b) {
 		return new SkillCategory[0];
+	}
+
+	@Override
+	public List<Keyword> getKeywords() {
+		return Collections.emptyList();
 	}
 
 	public void addToXml(TransformerHandler pHandler) {

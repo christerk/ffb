@@ -7,6 +7,8 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 
+import java.util.List;
+
 public interface Position extends IXmlSerializable, IJsonSerializable {
 	PlayerType getType();
 
@@ -63,4 +65,8 @@ public interface Position extends IXmlSerializable, IJsonSerializable {
 	boolean isDoubleCategory(SkillCategory category);
 
 	SkillCategory[] getSkillCategories(boolean b);
+
+	List<Keyword> getKeywords();
+
+	boolean isDwarf();
 }

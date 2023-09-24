@@ -1,10 +1,9 @@
-package com.fumbbl.ffb.server.step.action.common;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -23,7 +22,6 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
-import com.fumbbl.ffb.util.UtilBox;
 
 /**
  * Step in move sequence to drop the acting player.
@@ -35,7 +33,7 @@ import com.fumbbl.ffb.util.UtilBox;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepFallDown extends AbstractStep {
 
 	private InjuryTypeServer<?> fInjuryType;
@@ -88,12 +86,6 @@ public class StepFallDown extends AbstractStep {
 		InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(),
 			playerCoordinate, fCoordinateFrom, null, ApothecaryMode.ATTACKER);
 		publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-		if (actingPlayer.isSufferingBloodLust()) {
-			game.getFieldModel().clearMoveSquares();
-			PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-			UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-		}
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
 		if (fInjuryType.fallingDownCausesTurnover() && (game.getTurnMode() != TurnMode.PASS_BLOCK)) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));

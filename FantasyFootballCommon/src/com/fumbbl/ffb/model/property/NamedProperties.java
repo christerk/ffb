@@ -36,6 +36,7 @@ public class NamedProperties {
 	public static final ISkillProperty canBeThrown = new NamedProperty("Can Be Thrown");
 	public static final ISkillProperty canBeThrownIfStrengthIs3orLess = new NamedProperty("Can Be Thrown If Strength is 3 Or Less");
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
+	public static final ISkillProperty canBiteOpponents = new NamedProperty("Can Bite Opponents");
 	public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
 	public static final ISkillProperty canBlockTwoAtOnce = new NamedProperty("Can Block Two At Once");
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
@@ -61,6 +62,7 @@ public class NamedProperties {
 	public static final ISkillProperty canGainFrenzyForBlitz = new NamedProperty("Can Gain Frenzy For Blitz");
 	public static final ISkillProperty canGainGaze = new NamedProperty("Can Gain Gaze");
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
+	public static final ISkillProperty canGrantReRollAfterTouchdown = new NamedProperty("Can Grant Re-Roll After Touchdown");
 	public static final ISkillProperty canGrantSkillsToTeamMates = new NamedProperty("Can Grant Skills to Team-Mates");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
 	public static final ISkillProperty canInterceptEasily = new NamedProperty("Can Intercept Easily");

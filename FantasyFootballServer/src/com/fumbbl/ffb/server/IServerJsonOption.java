@@ -181,6 +181,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption TOUCHDOWN = new JsonBooleanOption("touchdown");
     JsonBooleanOption USE_ALTERNATE_LABEL = new JsonBooleanOption("useAlternateLabel");
     JsonBooleanOption USE_KICK_CHOICE = new JsonBooleanOption("useKickChoice");
+    JsonBooleanOption USE_STAR_OF_THE_SHOW = new JsonBooleanOption("useStarOfTheShow");
     JsonBooleanOption USING_BLAST_IT = new JsonBooleanOption("usingBlastIt");
     JsonBooleanOption USING_BREAK_TACKLE = new JsonBooleanOption("usingBreakTackle");
     JsonBooleanOption USING_DIVING_TACKLE = new JsonBooleanOption("usingDivingTackle");

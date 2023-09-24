@@ -11,11 +11,18 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+		versions.add(new VersionChangeList("2.23.0")
+			.addFeature("Bloodlust")
+			.addFeature("Vampire Lord")
+			.addFeature("Tasty Morsel")
+			.addFeature("Star of the Show")
+			.addFeature("Dwarfen Scourge")
+		);
 
 		versions.add(new VersionChangeList("2.22.0")
 			.addFeature("Add game option " + GameOptionId.BOMB_USES_MB.getName() + " to allow granting Mighty Blow to bombs")
 			.addBugfix("Replays with applied bomb modifiers (armour or injury) did not load")
-			.addBugfix("Skippuing forward in replay mode did not always jump to the next turn in the dice log")
+			.addBugfix("Skipping forward in replay mode did not always jump to the next turn in the dice log")
 			.addBugfix("Menu entry for switching between replay and spec mode was not always updated correctly")
 			.addRuleChange("Chainsaw kickback now always causes turnover")
 			.addFeature("Add game option " + GameOptionId.CHAINSAW_TURNOVER.getName() + " to allow control in what cases chainsaw causes turnovers")

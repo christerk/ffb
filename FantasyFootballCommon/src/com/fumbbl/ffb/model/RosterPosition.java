@@ -29,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -71,6 +72,8 @@ public class RosterPosition implements Position {
 	private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
 
 	private static final String _XML_TAG_REPLACES_POSITION = "replacesPosition";
+	private static final String _XML_TAG_KEYWORDS = "keywords";
+	private static final String _XML_TAG_KEYWORD = "keyword";
 
 	private String fId;
 	private Roster fRoster;
@@ -99,6 +102,7 @@ public class RosterPosition implements Position {
 	private int fCurrentIconSetIndex;
 	private String nameGenerator;
 	private String replacesPosition;
+	private final List<Keyword> keywords;
 
 	private final Map<Skill, String> fSkillValues;
 	private final Map<Skill, String> displayValues;
@@ -122,6 +126,7 @@ public class RosterPosition implements Position {
 		fSkillCategoriesOnDoubleRoll = new HashSet<>();
 		displayValues = new LinkedHashMap<>();
 		fCurrentIconSetIndex = -1;
+		keywords = new ArrayList<>();
 	}
 
 	@Override
@@ -193,6 +198,11 @@ public class RosterPosition implements Position {
 		} else {
 			return fSkillCategoriesOnNormalRoll.toArray(new SkillCategory[0]);
 		}
+	}
+
+	@Override
+	public List<Keyword> getKeywords() {
+		return keywords;
 	}
 
 	@Override
@@ -348,7 +358,12 @@ public class RosterPosition implements Position {
 
 	@Override
 	public boolean isThrall() {
-		return fThrall;
+		return fThrall || keywords.contains(Keyword.THRALL);
+	}
+
+	@Override
+	public boolean isDwarf() {
+		return keywords.contains(Keyword.DWARF);
 	}
 
 	public void setThrall(boolean pThrall) {
@@ -373,10 +388,6 @@ public class RosterPosition implements Position {
 
 	public String getReplacesPosition() {
 		return replacesPosition;
-	}
-
-	public void setReplacesPosition(String replacesPosition) {
-		this.replacesPosition = replacesPosition;
 	}
 
 	// XML serialization
@@ -444,6 +455,14 @@ public class RosterPosition implements Position {
 		}
 
 		UtilXml.endElement(pHandler, _XML_TAG_SKILL_LIST);
+
+		UtilXml.startElement(pHandler, _XML_TAG_KEYWORDS);
+
+		for (Keyword keyword : keywords) {
+			UtilXml.addValueElement(pHandler, _XML_TAG_KEYWORD, keyword.getName());
+		}
+
+		UtilXml.endElement(pHandler, _XML_TAG_KEYWORDS);
 
 		UtilXml.endElement(pHandler, XML_TAG);
 
@@ -584,6 +603,9 @@ public class RosterPosition implements Position {
 			if (_XML_TAG_REPLACES_POSITION.equals(pTag)) {
 				replacesPosition = pValue;
 			}
+			if (_XML_TAG_KEYWORD.equalsIgnoreCase(pTag)) {
+				keywords.add(Keyword.forName(pValue));
+			}
 		}
 		return complete;
 	}
@@ -648,6 +670,8 @@ public class RosterPosition implements Position {
 			IJsonOption.SKILL_DISPLAY_VALUES.addTo(jsonObject, displayValues);
 		}
 
+		IJsonOption.KEYWORDS.addTo(jsonObject, keywords.stream().map(Keyword::getName).collect(Collectors.toList()));
+
 		return jsonObject;
 
 	}
@@ -710,6 +734,12 @@ public class RosterPosition implements Position {
 						this.displayValues.put(skill, displayValues[i]);
 					}
 				}
+			}
+		}
+
+		if (IJsonOption.KEYWORDS.isDefinedIn(jsonObject)) {
+			for (String name : IJsonOption.KEYWORDS.getFrom(source, jsonObject)) {
+				keywords.add(Keyword.forName(name));
 			}
 		}
 

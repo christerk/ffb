@@ -235,9 +235,10 @@ public class UtilServerInjury {
 		boolean deadPlayerPreventsRaisedFromDead = deadPlayer.hasSkillProperty(NamedProperties.preventRaiseFromDead);
 
 		if (pInjuryResult.injuryContext().getPlayerState() != null && PlayerState.RIP == pInjuryResult.injuryContext().getPlayerState().getBase()) {
-			if (mechanic.canRaiseDead(necroTeam) && (necroTeamResult.getRaisedDead() == 0)
+			if ((mechanic.canRaiseDead(necroTeam) || necroTeam.getRoster().hasVampireLord()) && (necroTeamResult.getRaisedDead() == 0)
 				&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead) {
-				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
+				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(),
+					necroTeam.getRoster().hasVampireLord() ? RaiseType.THRALL : RaiseType.ZOMBIE,
 					deadPlayer.getId());
 			} else {
 				Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
@@ -247,7 +248,7 @@ public class UtilServerInjury {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
 						nurglesRot = true;
-						raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
+						raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), RaiseType.ROTTER,
 							deadPlayer.getId());
 					}
 				}
@@ -271,12 +272,12 @@ public class UtilServerInjury {
 	}
 
 	private static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult, String pPlayerName,
-																					boolean pNurglesRot, String killedId) {
+																					RaiseType raiseType, String killedId) {
 		RosterPlayer raisedPlayer = null;
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
 			GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-			PlayerType playerType = pNurglesRot ? mechanic.raisedNurgleType() : PlayerType.RAISED_FROM_DEAD;
+			PlayerType playerType = raiseType == RaiseType.ROTTER ? mechanic.raisedNurgleType() : PlayerType.RAISED_FROM_DEAD;
 
 			pNecroTeamResult.setRaisedDead(pNecroTeamResult.getRaisedDead() + 1);
 			raisedPlayer = new RosterPlayer();
@@ -291,13 +292,15 @@ public class UtilServerInjury {
 			PlayerResult playerResult = pGame.getGameResult().getPlayerResult(raisedPlayer);
 			playerResult.setSendToBoxHalf(pGame.getHalf());
 			playerResult.setSendToBoxTurn(pGame.getTurnData().getTurnNr());
-			if (pNurglesRot) {
+			if (raiseType == RaiseType.ROTTER) {
 				int newPlayerState = mechanic.infectedGoesToReserves() ? PlayerState.RESERVE : PlayerState.MISSING;
 				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(newPlayerState));
 				playerResult.setSendToBoxReason(mechanic.raisedByNurgleReason());
-			} else {
+			} else if (raiseType == RaiseType.ZOMBIE) {
 				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(PlayerState.RESERVE));
 				playerResult.setSendToBoxReason(SendToBoxReason.RAISED);
+			} else if (raiseType == RaiseType.THRALL) {
+				pGame.getFieldModel().setPlayerState(raisedPlayer, new PlayerState(PlayerState.MISSING));
 			}
 			UtilBox.putPlayerIntoBox(pGame, raisedPlayer);
 		}
@@ -380,6 +383,10 @@ public class UtilServerInjury {
 		}
 		UtilServerPlayerMove.updateMoveSquares(gameState, false);
 		return stepParameters;
+	}
+
+	private enum RaiseType {
+		ZOMBIE, ROTTER, THRALL
 	}
 
 }

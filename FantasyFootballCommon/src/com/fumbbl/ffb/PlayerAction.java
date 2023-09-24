@@ -103,4 +103,8 @@ public enum PlayerAction implements INamedObject {
 	public boolean isBlitzMove() {
 		return this == BLITZ_MOVE || this == PUTRID_REGURGITATION_MOVE || this == KICK_EM_BLITZ;
 	}
+
+	public boolean isStandingUp() {
+		return this == STAND_UP || this == STAND_UP_BLITZ;
+	}
 }
