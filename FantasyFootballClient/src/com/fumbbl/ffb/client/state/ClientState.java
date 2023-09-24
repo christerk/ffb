@@ -402,7 +402,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList, ActingPlayer actingPlayer) {
-		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
+		String endMoveActionLabel = actingPlayer.hasActed() ? "End Action" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);

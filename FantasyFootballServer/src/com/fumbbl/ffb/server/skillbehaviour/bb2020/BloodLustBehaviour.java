@@ -76,6 +76,7 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 					doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
 				}
 				if (doRoll) {
+					step.commitTargetSelection();
 					PlayerAction playerAction = actingPlayer.getPlayerAction();
 					boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
 						|| (playerAction != null && playerAction.isKickingDowned())
