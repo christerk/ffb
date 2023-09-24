@@ -9,6 +9,7 @@
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<apothecary>false</apothecary>
 	<necromancer>false</necromancer>
+	<raisedPositionId>vampire.thrall</raisedPositionId>
 	<undead>true</undead>
 	<nameGenerator>vampire</nameGenerator>
 	<keywords>
