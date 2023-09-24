@@ -24,6 +24,7 @@ public class TurnData implements IJsonSerializable {
 	private int fReRolls;
 	private int singleUseReRolls;
 	private int reRollsBrilliantCoachingOneDrive;
+	private int reRollShowStarOneDrive;
 	private int reRollsPumpUpTheCrowdOneDrive;
 	private int fApothecaries;
 	private int wanderingApothecaries;
@@ -135,6 +136,18 @@ public class TurnData implements IJsonSerializable {
 		}
 		this.reRollsPumpUpTheCrowdOneDrive = reRollsPumpUpTheCrowdOneDrive;
 		notifyObservers(ModelChangeId.TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE, reRollsPumpUpTheCrowdOneDrive);
+	}
+
+	public int getReRollShowStarOneDrive() {
+		return reRollShowStarOneDrive;
+	}
+
+	public void setReRollShowStarOneDrive(int reRollShowStarOneDrive) {
+		if (this.reRollShowStarOneDrive == reRollShowStarOneDrive) {
+			return;
+		}
+		notifyObservers(ModelChangeId.TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE, reRollShowStarOneDrive);
+		this.reRollShowStarOneDrive = reRollShowStarOneDrive;
 	}
 
 	public boolean isBlitzUsed() {

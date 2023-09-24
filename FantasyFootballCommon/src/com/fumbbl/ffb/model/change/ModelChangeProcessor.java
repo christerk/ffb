@@ -6,12 +6,10 @@ import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RangeRuler;
@@ -26,6 +24,8 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.marking.FieldMarker;
+import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.PlayerResult;
@@ -499,6 +499,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollsPumpUpTheCrowdOneDrive((Integer) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_RE_ROLLS_SHOW_STAR_ONE_DRIVE:
+				getTurnData(pGame, isHomeData(pModelChange)).setReRollShowStarOneDrive((Integer) pModelChange.getValue());
+				return true;
 			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
 				getTurnData(pGame, isHomeData(pModelChange)).setSingleUseReRolls((Integer) pModelChange.getValue());
 				return true;
@@ -647,6 +650,7 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_RE_ROLLS:
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
 			case TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE:
+			case TURN_DATA_SET_RE_ROLLS_SHOW_STAR_ONE_DRIVE:
 			case TURN_DATA_SET_RE_ROLLS_SINGLE_USE:
 			case TURN_DATA_SET_RE_ROLL_USED:
 			case TURN_DATA_SET_TURN_NR:

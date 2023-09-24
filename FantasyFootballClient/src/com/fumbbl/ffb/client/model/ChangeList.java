@@ -15,6 +15,7 @@ public class ChangeList {
 			.addFeature("Bloodlust")
 			.addFeature("Vampire Lord")
 			.addFeature("Tasty Morsel")
+			.addFeature("Star of the Show")
 		);
 
 		versions.add(new VersionChangeList("2.22.0")
