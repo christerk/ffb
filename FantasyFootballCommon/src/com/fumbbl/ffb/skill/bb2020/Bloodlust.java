@@ -5,6 +5,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 
 /**
@@ -27,7 +28,7 @@ import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 public class Bloodlust extends Skill {
 
 	public Bloodlust() {
-		super("Bloodlust", SkillCategory.EXTRAORDINARY, 2);
+		super("Bloodlust", SkillCategory.EXTRAORDINARY, 2, true, SkillUsageType.REGULAR);
 	}
 
 	@Override

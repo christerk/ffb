@@ -228,7 +228,7 @@ public final class StepEndSelecting extends AbstractStep {
 			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
 				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else if (actingPlayer.isSufferingBloodLust()) {
-			if (fDispatchPlayerAction != null) {
+			if (fDispatchPlayerAction != null || bloodlustAction != null) {
 				if (bloodlustAction != null) {
 					fDispatchPlayerAction = bloodlustAction;
 				}

@@ -98,7 +98,7 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 			case FOUL:
 				return FOUL_MOVE;
 			case STAND_UP_BLITZ:
-				return BLITZ_MOVE;
+				return BLITZ_SELECT;
 			case THROW_TEAM_MATE:
 				return THROW_TEAM_MATE_MOVE;
 			case KICK_TEAM_MATE:
