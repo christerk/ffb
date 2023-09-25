@@ -130,13 +130,17 @@ public class StepInitFeeding extends AbstractStep {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 				if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
 					String playerId = playerChoiceCommand.getPlayerId();
-					boolean victimOnSameTeam = game.getActingPlayer().getPlayer().getTeam() == game.getPlayerById(playerId).getTeam();
-					if (victimOnSameTeam || UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canBiteOpponents)) {
-						if (!victimOnSameTeam) {
-							game.getActingPlayer().markSkillUsed(NamedProperties.canBiteOpponents);
+					fFeedOnPlayerChoice = StringTool.isProvided(playerId);
+					if (fFeedOnPlayerChoice) {
+						boolean victimOnSameTeam = game.getActingPlayer().getPlayer().getTeam() == game.getPlayerById(playerId).getTeam();
+						if (victimOnSameTeam || UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canBiteOpponents)) {
+							if (!victimOnSameTeam) {
+								game.getActingPlayer().markSkillUsed(NamedProperties.canBiteOpponents);
+							}
+							game.setDefenderId(playerId);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
-						fFeedOnPlayerChoice = StringTool.isProvided(playerId);
-						game.setDefenderId(playerId);
+					} else {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 				}
@@ -194,7 +198,9 @@ public class StepInitFeeding extends AbstractStep {
 			}
 			if (ArrayTool.isProvided(victims)) {
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, allVictims.toArray(new Player[0]), null, 1), false);
+					new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED,
+						allVictims.stream().map(Player::getId).toArray(String[]::new), null, 1, 0),
+					false);
 			} else {
 				fFeedOnPlayerChoice = false;
 			}
