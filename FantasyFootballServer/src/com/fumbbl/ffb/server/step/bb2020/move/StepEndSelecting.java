@@ -230,7 +230,10 @@ public final class StepEndSelecting extends AbstractStep {
 			if (fDispatchPlayerAction != null || bloodlustAction != null) {
 				if (bloodlustAction != null) {
 					fDispatchPlayerAction = bloodlustAction;
+				} else if (fDispatchPlayerAction == PlayerAction.BLITZ) {
+					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), fDispatchPlayerAction, actingPlayer.isJumping());
 				}
+
 				dispatchPlayerAction(fDispatchPlayerAction, bloodlustAction == null || !fDispatchPlayerAction.isMoving());
 			} else {
 				if ((actingPlayer.getPlayerAction() != null) && !actingPlayer.getPlayerAction().isMoving()) {
