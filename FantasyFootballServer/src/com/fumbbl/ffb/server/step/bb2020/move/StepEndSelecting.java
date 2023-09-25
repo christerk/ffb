@@ -14,7 +14,6 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -362,11 +361,7 @@ public final class StepEndSelecting extends AbstractStep {
 				endGenerator.pushSequence(endParams);
 				break;
 			case STAND_UP:
-				if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.inflictsConfusion)) {
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-				} else {
-					endGenerator.pushSequence(endParams);
-				}
+				endGenerator.pushSequence(endParams);
 				break;
 			case STAND_UP_BLITZ:
 				game.getTurnData().setBlitzUsed(true);
