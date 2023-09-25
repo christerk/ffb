@@ -11,6 +11,10 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+		versions.add(new VersionChangeList("2.23.1")
+			.addBugfix("Special abilities like Crushing Blow did not always print injuries correctly in log")
+		);
+
 		versions.add(new VersionChangeList("2.23.0")
 			.addFeature("Bloodlust")
 			.addFeature("Vampire Lord")
