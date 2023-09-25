@@ -14,6 +14,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.23.1")
 			.addBugfix("Special abilities like Crushing Blow did not always print injuries correctly in log")
 			.addBugfix("Players never have animosity vs mercenaries")
+			.addBugfix("TTM scattering out of bounds after the first scatter was logged incorrectly as bounce")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")

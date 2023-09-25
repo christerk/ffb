@@ -24,8 +24,8 @@ public class UtilThrowTeamMateSequence {
 
 	public static class ScatterResult {
 
-		private FieldCoordinate fLastValidCoordinate;
-		private boolean fInBounds;
+		private final FieldCoordinate fLastValidCoordinate;
+		private final boolean fInBounds;
 
 		public ScatterResult(FieldCoordinate pLastValidCoordinate, boolean pInBounds) {
 			fLastValidCoordinate = pLastValidCoordinate;
@@ -77,8 +77,8 @@ public class UtilThrowTeamMateSequence {
 		for (int i = 0; i < rolls.length; i++) {
 			rolls[i] = rollList.get(i);
 		}
-		Direction[] directions = directionList.toArray(new Direction[directionList.size()]);
-		pStep.getResult().addReport(new ReportScatterPlayer(pStartCoordinate, endCoordinate, directions, rolls));
+		Direction[] directions = directionList.toArray(new Direction[0]);
+		pStep.getResult().addReport(new ReportScatterPlayer(pStartCoordinate, endCoordinate, directions, rolls, pThrowScatter));
 
 		return new ScatterResult(lastValidCoordinate, inBounds);
 
