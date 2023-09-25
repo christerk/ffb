@@ -278,6 +278,8 @@ public class StepEndTurn extends AbstractStep {
 						return;
 					}
 				}
+			} else {
+				useStarOfTheShow = false;
 			}
 
 			if (handleStallers()) {
