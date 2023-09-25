@@ -219,7 +219,7 @@ public class StepInitFeeding extends AbstractStep {
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 					}
-					if (playerState.getBase() == PlayerState.STANDING) {
+					if (!playerState.isProneOrStunned()) {
 						game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
 						getResult().setSound(SoundId.ROAR);
 					}
