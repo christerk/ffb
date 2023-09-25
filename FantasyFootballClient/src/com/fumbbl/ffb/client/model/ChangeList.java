@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Special abilities like Crushing Blow did not always print injuries correctly in log")
 			.addBugfix("Players never have animosity vs mercenaries")
 			.addBugfix("TTM scattering out of bounds after the first scatter was logged incorrectly as bounce")
+			.addBugfix("B&C was able to use Brawler")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")
