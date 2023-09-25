@@ -13,6 +13,7 @@ public class ChangeList {
   public ChangeList() {
 		versions.add(new VersionChangeList("2.23.1")
 			.addBugfix("Special abilities like Crushing Blow did not always print injuries correctly in log")
+			.addBugfix("Players never have animosity vs mercenaries")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")
