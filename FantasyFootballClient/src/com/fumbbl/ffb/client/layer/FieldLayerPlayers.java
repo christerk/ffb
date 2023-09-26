@@ -108,6 +108,9 @@ public class FieldLayerPlayers extends FieldLayer {
 		if (pPlayerMarker == null) {
 			return;
 		}
+		String marker = pPlayerMarker.getPlayerId() + " with " + pPlayerMarker.getHomeText();
+		getClient().logDebug(0, Thread.currentThread().getName() + " entering update for " + marker);
+
 		Game game = getClient().getGame();
 		Player<?> player = game.getPlayerById(pPlayerMarker.getPlayerId());
 		if (player == null) {
@@ -115,6 +118,7 @@ public class FieldLayerPlayers extends FieldLayer {
 		}
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		updateBallAndPlayers(playerCoordinate, true);
+		getClient().logDebug(0, Thread.currentThread().getName() + " leaving update for " + marker);
 	}
 
 	public void init() {
