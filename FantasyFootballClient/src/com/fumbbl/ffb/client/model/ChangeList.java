@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Players never have animosity vs mercenaries")
 			.addBugfix("TTM scattering out of bounds after the first scatter was logged incorrectly as bounce")
 			.addBugfix("B&C was able to use Brawler")
+			.addBugfix("Sidestepper with Shadowing prevented second Frenzy block by shadowing back into the square the blocker came from")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")

@@ -156,6 +156,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringOption SESSION_MODE = new JsonStringOption("sessionMode");
     JsonFieldCoordinateOption SETUP_PLAYER_COORDINATE = new JsonFieldCoordinateOption("setupPlayerCoordinate");
     JsonStringOption SETUP_PLAYER_ID = new JsonStringOption("setupPlayerId");
+    JsonBooleanOption SHADOWER_WAS_PREVIOUS_DEFENDER = new JsonBooleanOption("shadowerWasPreviousDefender");
     JsonStringArrayOption SHOULD_NOT_STALL = new JsonStringArrayOption("shouldNotStall");
     JsonBooleanOption SHOW_REPORT = new JsonBooleanOption("showReport");
     JsonStringArrayOption STALLERS = new JsonStringArrayOption("stallers");
