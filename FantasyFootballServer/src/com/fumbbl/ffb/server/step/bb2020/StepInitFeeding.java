@@ -27,6 +27,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
+import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -228,6 +229,7 @@ public class StepInitFeeding extends AbstractStep {
 					if (!playerState.isProneOrStunned()) {
 						game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
 						getResult().setSound(SoundId.ROAR);
+						getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "failed to bite anyone causing a turnover"));
 					}
 				}
 				doNextStep = true;
