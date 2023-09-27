@@ -54,12 +54,12 @@ import java.util.List;
 
 /**
  * Step in any sequence to handle the feeding on another player.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. Needs to be
  * initialized with stepParameter FEEDING_ALLOWED. May be initialized with
  * stepParameter END_PLAYER_ACTION. May be initialized with stepParameter
  * END_TURN.
- *
+ * <p>
  * Sets stepParameter END_PLAYER_ACTION for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack.
  *
@@ -87,24 +87,24 @@ public class StepInitFeeding extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_END:
-					fGotoLabelOnEnd = (String) parameter.getValue();
-					break;
-				// mandatory
-				case FEEDING_ALLOWED:
-					fFeedingAllowed = (Boolean) parameter.getValue();
-					break;
-				// optional
-				case END_PLAYER_ACTION:
-					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				// optional
-				case END_TURN:
-					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_END:
+						fGotoLabelOnEnd = (String) parameter.getValue();
+						break;
+					// mandatory
+					case FEEDING_ALLOWED:
+						fFeedingAllowed = (Boolean) parameter.getValue();
+						break;
+					// optional
+					case END_PLAYER_ACTION:
+						fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					// optional
+					case END_TURN:
+						fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -210,7 +210,7 @@ public class StepInitFeeding extends AbstractStep {
 			if ((fFeedOnPlayerChoice != null) && fFeedOnPlayerChoice && (game.getDefender() != null)) {
 				FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 				InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, new InjuryTypeBitten(),
-						actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, null, ApothecaryMode.FEEDING);
+					actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, null, ApothecaryMode.FEEDING);
 				fEndTurn = UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
 				publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));
@@ -220,17 +220,15 @@ public class StepInitFeeding extends AbstractStep {
 			} else {
 				fEndTurn = true;
 				if (!playerState.isCasualty() && (playerState.getBase() != PlayerState.KNOCKED_OUT)
-						&& (playerState.getBase() != PlayerState.RESERVE)) {
+					&& (playerState.getBase() != PlayerState.RESERVE)) {
 					if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
 						game.getFieldModel().setBallMoving(true);
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 					}
-					if (!playerState.isProneOrStunned()) {
-						game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
-						getResult().setSound(SoundId.ROAR);
-						getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "failed to bite anyone causing a turnover"));
-					}
+					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
+					getResult().setSound(SoundId.ROAR);
+					getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "failed to bite anyone causing a turnover"));
 				}
 				doNextStep = true;
 			}
