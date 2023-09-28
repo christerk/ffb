@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogBloodlustActionParameter;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -20,10 +21,12 @@ public class DialogBloodlustActionHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 		Player<?> player = game.getActingPlayer().getPlayer();
+		PlayerAction playerAction = game.getActingPlayer().getPlayerAction();
 
 		if ((getClient().getMode() == ClientMode.PLAYER) && game.getTeamHome().hasPlayer(player)) {
 			boolean changeToMove = ((DialogBloodlustActionParameter) game.getDialogParameter()).isChangeToMove();
-			setDialog(new DialogBloodlustAction(getClient(), changeToMove));
+			boolean hasReceiver = playerAction == PlayerAction.PASS || playerAction == PlayerAction.HAND_OVER;
+			setDialog(new DialogBloodlustAction(getClient(), changeToMove, hasReceiver));
 			getDialog().showDialog(this);
 		}
 
