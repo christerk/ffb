@@ -14,7 +14,6 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -78,6 +77,7 @@ public final class StepEndSelecting extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private PlayerAction fDispatchPlayerAction;
+	private PlayerAction bloodlustAction;
 	// moveSequence
 	private FieldCoordinate[] fMoveStack;
 	private FieldCoordinate moveStart;
@@ -205,6 +205,10 @@ public final class StepEndSelecting extends AbstractStep {
 					targetPlayerId = (String) parameter.getValue();
 					consume(parameter);
 					return true;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
+					return true;
 				default:
 					break;
 			}
@@ -223,11 +227,17 @@ public final class StepEndSelecting extends AbstractStep {
 			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
 				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else if (actingPlayer.isSufferingBloodLust()) {
-			if (fDispatchPlayerAction != null) {
-				if (!fDispatchPlayerAction.isMoving()) {
-					fDispatchPlayerAction = PlayerAction.MOVE;
+			if (fDispatchPlayerAction != null || bloodlustAction != null) {
+				if (bloodlustAction != null) {
+					fDispatchPlayerAction = bloodlustAction;
+					if (bloodlustAction == PlayerAction.MOVE) {
+						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
+					}
+				} else if (fDispatchPlayerAction == PlayerAction.BLITZ) {
+					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), fDispatchPlayerAction, actingPlayer.isJumping());
 				}
-				dispatchPlayerAction(fDispatchPlayerAction, false);
+
+				dispatchPlayerAction(fDispatchPlayerAction, bloodlustAction == null || !fDispatchPlayerAction.isMoving());
 			} else {
 				if ((actingPlayer.getPlayerAction() != null) && !actingPlayer.getPlayerAction().isMoving()) {
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE,
@@ -357,11 +367,7 @@ public final class StepEndSelecting extends AbstractStep {
 				endGenerator.pushSequence(endParams);
 				break;
 			case STAND_UP:
-				if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.inflictsConfusion)) {
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-				} else {
-					endGenerator.pushSequence(endParams);
-				}
+				endGenerator.pushSequence(endParams);
 				break;
 			case STAND_UP_BLITZ:
 				game.getTurnData().setBlitzUsed(true);
@@ -427,8 +433,9 @@ public final class StepEndSelecting extends AbstractStep {
 		IServerJsonOption.NR_OF_DICE.addTo(jsonObject, fNumDice);
 		JsonArray jsonArray = new JsonArray();
 		blockTargets.stream().map(BlockTarget::toJsonValue).forEach(jsonArray::add);
-		IJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
-		IJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
+		IServerJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
+		IServerJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -457,6 +464,7 @@ public final class StepEndSelecting extends AbstractStep {
 			.map(value -> new BlockTarget().initFrom(source, value))
 			.forEach(value -> blockTargets.add(value));
 		targetPlayerId = IServerJsonOption.TARGET_PLAYER_ID.getFrom(source, jsonObject);
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 

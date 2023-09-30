@@ -62,15 +62,15 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 				.filter(skill -> skill.canCancel(NamedProperties.reducesArmourToFixedValue)).findFirst();
 
 			for (ArmorModifier armorModifier : report.getArmorModifiers()) {
-				if (armorModifier.getModifier(attacker) != 0) {
-					armorModifierTotal += armorModifier.getModifier(attacker);
-					if (armorModifier.getModifier(attacker) > 0) {
+				if (armorModifier.getModifier(attacker, defender) != 0) {
+					armorModifierTotal += armorModifier.getModifier(attacker, defender);
+					if (armorModifier.getModifier(attacker, defender) > 0) {
 						status.append(" + ");
 					} else {
 						status.append(" - ");
 					}
 					if (!armorModifier.isFoulAssistModifier()) {
-						status.append(Math.abs(armorModifier.getModifier(attacker))).append(" ");
+						status.append(Math.abs(armorModifier.getModifier(attacker, defender))).append(" ");
 					}
 					status.append(armorModifier.getName());
 				}

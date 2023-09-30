@@ -210,6 +210,9 @@ public class DialogManager {
 					case KICK_OFF_RESULT:
 						setDialogHandler(new DialogKickOffResultHandler(getClient()));
 						break;
+					case BLOODLUST_ACTION:
+						setDialogHandler(new DialogBloodlustActionHandler(getClient()));
+						break;
 					default:
 						break;
 				}

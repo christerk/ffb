@@ -12,8 +12,8 @@ public class VariableArmourModifier extends RegistrationAwareModifier implements
 		fFoulAssistModifier = pFoulAssistModifier;
 	}
 
-	public int getModifier(Player<?> player) {
-		return player.getSkillIntValue(registeredTo);
+	public int getModifier(Player<?> attacker, Player<?> defender) {
+		return attacker.getSkillIntValue(registeredTo);
 	}
 
 	public String getName() {

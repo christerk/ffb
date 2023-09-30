@@ -20,7 +20,7 @@ public class StaticArmourModifier extends RegistrationAwareModifier implements A
 		this.chainsaw = chainsaw;
 	}
 
-	public int getModifier(Player<?> player) {
+	public int getModifier(Player<?> attacker, Player<?> defender) {
 		return fModifier;
 	}
 

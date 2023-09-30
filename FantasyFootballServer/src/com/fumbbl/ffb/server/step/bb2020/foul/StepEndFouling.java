@@ -25,14 +25,15 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.bb2020.Move;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Final step of the foul sequence. Consumes all expected stepParameters.
- * 
+ * <p>
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -40,6 +41,7 @@ public class StepEndFouling extends AbstractStep {
 
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
+	private PlayerAction bloodlustAction;
 
 	public StepEndFouling(GameState pGameState) {
 		super(pGameState);
@@ -53,16 +55,20 @@ public class StepEndFouling extends AbstractStep {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-			case END_PLAYER_ACTION:
-				fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				consume(parameter);
-				return true;
-			case END_TURN:
-				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				consume(parameter);
-				return true;
-			default:
-				break;
+				case END_PLAYER_ACTION:
+					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				case END_TURN:
+					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -82,8 +88,12 @@ public class StepEndFouling extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 		GameOptionBoolean sneakyMove = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.SNEAKY_GIT_CAN_MOVE_AFTER_FOUL);
-
-		if (!fEndTurn && isOnPitch && sneakyMove.isEnabled() && player.hasSkillProperty(NamedProperties.canMoveAfterFoul) && UtilPlayer.isNextMovePossible(game, false)) {
+		if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
+			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
+			((Move) factory.forName(SequenceGenerator.Type.Move.name())).pushSequence(new Move.SequenceParams(getGameState()));
+			actingPlayer.setHasFouled(false);
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		} else if (!fEndTurn && isOnPitch && sneakyMove.isEnabled() && player.hasSkillProperty(NamedProperties.canMoveAfterFoul) && UtilPlayer.isNextMovePossible(game, false)) {
 			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 				.pushSequence(new Select.SequenceParams(getGameState(), true));
 			UtilServerSteps.changePlayerAction(this, player.getId(),
@@ -103,6 +113,7 @@ public class StepEndFouling extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -112,6 +123,7 @@ public class StepEndFouling extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 

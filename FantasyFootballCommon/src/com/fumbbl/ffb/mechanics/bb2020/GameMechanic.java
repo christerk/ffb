@@ -65,6 +65,11 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
 			return ReRollSources.PUMP_UP_THE_CROWD;
 		}
+		if (turnData.getReRollShowStarOneDrive() > 0) {
+			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
+			return ReRollSources.SHOW_STAR;
+		}
+
 		return null;
 	}
 

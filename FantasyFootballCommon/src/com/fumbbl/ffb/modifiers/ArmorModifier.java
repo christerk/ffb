@@ -5,7 +5,7 @@ import com.fumbbl.ffb.model.Player;
 
 public interface ArmorModifier extends INamedObject, IRegistrationAwareModifier {
 
-	int getModifier(Player<?> player);
+	int getModifier(Player<?> attacker, Player<?> defender);
 
 	String getName();
 

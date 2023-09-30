@@ -14,8 +14,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -40,7 +43,8 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private static final String _XML_TAG_RIOTOUS_POSITION_ID = "riotousPositionId";
 	private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
 	private static final String _XML_TAG_MAX_BIG_GUYS = "maxBigGuys";
-
+	private static final String _XML_TAG_KEYWORDS = "keywords";
+	private static final String _XML_TAG_KEYWORD = "keyword";
 	private String fId;
 	private String fName;
 	private int fReRollCost;
@@ -54,6 +58,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private String riotousPositionId;
 	private String nameGenerator;
 	private int maxBigGuys;
+	private final List<Keyword> keywords;
 
 	private RosterPosition fCurrentlyParsedRosterPosition;
 
@@ -64,6 +69,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		fRosterPositionById = new HashMap<>();
 		fRosterPositionByName = new HashMap<>();
 		fApothecary = true;
+		keywords = new ArrayList<>();
 	}
 
 	public String getName() {
@@ -100,6 +106,10 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 
 	public void setMaxReRolls(int maxReRolls) {
 		fMaxReRolls = maxReRolls;
+	}
+
+	public List<Keyword> getKeywords() {
+		return keywords;
 	}
 
 	public String getId() {
@@ -185,6 +195,10 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		return maxBigGuys;
 	}
 
+	public boolean hasVampireLord() {
+		return keywords.contains(Keyword.VAMPIRE_LORD);
+	}
+
 	// XML serialization
 
 	public void addToXml(TransformerHandler pHandler) {
@@ -209,6 +223,15 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		for (RosterPosition position : getPositions()) {
 			position.addToXml(pHandler);
 		}
+
+		UtilXml.startElement(pHandler, _XML_TAG_KEYWORDS);
+
+		for (Keyword keyword : keywords) {
+			UtilXml.addValueElement(pHandler, _XML_TAG_KEYWORD, keyword.getName());
+		}
+
+		UtilXml.endElement(pHandler, _XML_TAG_KEYWORDS);
+
 
 		UtilXml.endElement(pHandler, XML_TAG);
 
@@ -279,6 +302,10 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			if (_XML_TAG_MAX_BIG_GUYS.equals(pXmlTag)) {
 				maxBigGuys = Integer.parseInt(pValue);
 			}
+
+			if (_XML_TAG_KEYWORD.equalsIgnoreCase(pXmlTag)) {
+				keywords.add(Keyword.forName(pValue));
+			}
 		}
 		return complete;
 	}
@@ -308,6 +335,8 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			positionArray.add(position.toJsonValue());
 		}
 		IJsonOption.POSITION_ARRAY.addTo(jsonObject, positionArray);
+
+		IJsonOption.KEYWORDS.addTo(jsonObject, keywords.stream().map(Keyword::getName).collect(Collectors.toList()));
 
 		return jsonObject;
 
@@ -340,6 +369,13 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		}
 
 		maxBigGuys = IJsonOption.MAX_BIG_GUYS.getFrom(source, jsonObject);
+
+		if (IJsonOption.KEYWORDS.isDefinedIn(jsonObject)) {
+			for (String name : IJsonOption.KEYWORDS.getFrom(source, jsonObject)) {
+				keywords.add(Keyword.forName(name));
+			}
+		}
+
 
 		return this;
 

@@ -9,8 +9,12 @@
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<apothecary>false</apothecary>
 	<necromancer>false</necromancer>
+	<raisedPositionId>vampire.thrall</raisedPositionId>
 	<undead>true</undead>
 	<nameGenerator>vampire</nameGenerator>
+	<keywords>
+		<keyword>vampire lord</keyword>
+	</keywords>
 
 
 	<position id="47520">
@@ -55,7 +59,7 @@
 		<portrait>portraits/vampire_vampire.png</portrait>
 		<iconSet size="5">iconsets/vampire_vampire.png</iconSet>
 		<skillList>
-			<skill>Blood Lust</skill>
+			<skill value="3">Bloodlust</skill>
 			<skill>Hypnotic Gaze</skill>
 			<skill>Regeneration</skill>
 		</skillList>
@@ -88,6 +92,9 @@
 			<double>Agility</double>
 			<double>Passing</double>
 		</skillCategoryList>
+		<keywords>
+			<keyword>Thrall</keyword>
+		</keywords>
 	</position>
 
 	<position id="vampire.Helmut">

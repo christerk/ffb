@@ -42,6 +42,7 @@ public class MultiBlock extends SequenceGenerator<MultiBlock.SequenceParams> {
 		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.BLOOD_LUST);
 		sequence.add(StepId.FOUL_APPEARANCE_MULTIPLE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING),
 			from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));
 		sequence.add(StepId.DISPATCH_DUMP_OFF, from(StepParameterKey.BLOCK_TARGETS, params.blockTargets));

@@ -42,10 +42,10 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		fButtonSelect.setMnemonic((int) 'S');
 		fButtonSelect.setEnabled((playerIds.length == 1) || preSelected);
 
-		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Skip");
 		fButtonCancel.setToolTipText("Do not select any player");
 		fButtonCancel.addActionListener(this);
-		fButtonCancel.setMnemonic((int) 'C');
+		fButtonCancel.setMnemonic((int) 'i');
 
 		fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect);
 		fList.setVisibleRowCount(Math.min(playerIds.length, 5));

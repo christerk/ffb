@@ -21,6 +21,7 @@ import com.fumbbl.ffb.dialog.DialogArgueTheCallParameter;
 import com.fumbbl.ffb.dialog.DialogBriberyAndCorruptionParameter;
 import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -48,6 +49,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBribesRoll;
@@ -58,6 +60,8 @@ import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
 import com.fumbbl.ffb.report.bb2020.ReportPrayerEnd;
 import com.fumbbl.ffb.report.bb2020.ReportPumpUpTheCrowdReRollsLost;
+import com.fumbbl.ffb.report.bb2020.ReportShowStarReRoll;
+import com.fumbbl.ffb.report.bb2020.ReportShowStarReRollsLost;
 import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -117,6 +121,7 @@ public class StepEndTurn extends AbstractStep {
 	private Boolean fBribesChoiceAway;
 	private Boolean fArgueTheCallChoiceHome;
 	private Boolean fArgueTheCallChoiceAway;
+	private Boolean useStarOfTheShow;
 	private boolean fNextSequencePushed;
 	private boolean fRemoveUsedSecretWeapons;
 	private boolean fNewHalf;
@@ -194,6 +199,18 @@ public class StepEndTurn extends AbstractStep {
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					Player<?> player = game.getPlayerById(useSkillCommand.getPlayerId());
+					Skill skill = useSkillCommand.getSkill();
+					if (player.hasUnused(skill) && skill.hasSkillProperty(NamedProperties.canGrantReRollAfterTouchdown)) {
+						useStarOfTheShow = useSkillCommand.isSkillUsed();
+						if (useStarOfTheShow) {
+							player.markUsed(skill, game);
+						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
 				default:
 					break;
 			}
@@ -246,6 +263,25 @@ public class StepEndTurn extends AbstractStep {
 				fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
 			}
 
+			if (fTouchdown) {
+				touchdownPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+				if (useStarOfTheShow == null) {
+					if (!UtilCards.hasUnusedSkillWithProperty(touchdownPlayer, NamedProperties.canGrantReRollAfterTouchdown)) {
+						useStarOfTheShow = false;
+					}
+					if (useStarOfTheShow == null) {
+						UtilServerDialog.showDialog(getGameState(),
+							new DialogSkillUseParameter(touchdownPlayer.getId(),
+								touchdownPlayer.getSkillWithProperty(NamedProperties.canGrantReRollAfterTouchdown),
+								0), false);
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
+					}
+				}
+			} else {
+				useStarOfTheShow = false;
+			}
+
 			if (handleStallers()) {
 				return;
 			}
@@ -261,7 +297,6 @@ public class StepEndTurn extends AbstractStep {
 
 				if (fTouchdown) {
 
-					touchdownPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 					boolean offTurnTouchDown;
 					if (touchdownPlayer != null) {
 
@@ -464,6 +499,13 @@ public class StepEndTurn extends AbstractStep {
 				}
 			}
 
+			if ((fNewHalf || fTouchdown) && useStarOfTheShow) {
+				TurnData turnData = isHomeTurnEnding ? game.getTurnDataHome() : game.getTurnDataAway();
+				turnData.setReRolls(turnData.getReRolls() + 1);
+				turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() + 1);
+				getResult().addReport(new ReportShowStarReRoll(touchdownPlayerId));
+			}
+
 			game.startTurn();
 			UtilServerGame.updatePlayerStateDependentProperties(this);
 
@@ -611,7 +653,9 @@ public class StepEndTurn extends AbstractStep {
 
 		int reRollsBrilliantCoaching = turnData.getReRollsBrilliantCoachingOneDrive();
 		int reRollsPumpUpTheCrowd = turnData.getReRollsPumpUpTheCrowdOneDrive();
-		if (reRollsBrilliantCoaching + reRollsPumpUpTheCrowd > 0) {
+		int reRollsShowStar = turnData.getReRollShowStarOneDrive();
+		int sumOfOneDriveReRolls = reRollsBrilliantCoaching + reRollsPumpUpTheCrowd + reRollsShowStar;
+		if (sumOfOneDriveReRolls > 0) {
 			if (reRollsBrilliantCoaching > 0) {
 				turnData.setReRollsBrilliantCoachingOneDrive(0);
 				getResult().addReport(new ReportBrilliantCoachingReRollsLost(teamId, reRollsBrilliantCoaching));
@@ -620,8 +664,12 @@ public class StepEndTurn extends AbstractStep {
 				turnData.setReRollsPumpUpTheCrowdOneDrive(0);
 				getResult().addReport(new ReportPumpUpTheCrowdReRollsLost(teamId, reRollsPumpUpTheCrowd));
 			}
+			if (reRollsShowStar > 0) {
+				turnData.setReRollShowStarOneDrive(0);
+				getResult().addReport(new ReportShowStarReRollsLost(teamId, reRollsShowStar));
+			}
 			if (!fNewHalf || getGameState().getGame().getHalf() > 1) {
-				turnData.setReRolls(Math.max(turnData.getReRolls() - (reRollsBrilliantCoaching + reRollsPumpUpTheCrowd), 0));
+				turnData.setReRolls(Math.max(turnData.getReRolls() - sumOfOneDriveReRolls, 0));
 			}
 		}
 
@@ -972,6 +1020,7 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.PLAYER_IDS_NATURAL_ONES.addTo(jsonObject, playerIdsNaturalOnes);
 		IServerJsonOption.PLAYER_IDS_FAILED_BRIBE.addTo(jsonObject, playerIdsFailedBribes);
 		IServerJsonOption.PLAYER_IDS_ARGUED.addTo(jsonObject, playerIdsArgued);
+		IServerJsonOption.USE_STAR_OF_THE_SHOW.addTo(jsonObject, useStarOfTheShow);
 		return jsonObject;
 	}
 
@@ -1001,6 +1050,7 @@ public class StepEndTurn extends AbstractStep {
 		if (IServerJsonOption.PLAYER_IDS_ARGUED.isDefinedIn(jsonObject)) {
 			playerIdsArgued = Arrays.stream(IServerJsonOption.PLAYER_IDS_ARGUED.getFrom(source, jsonObject)).collect(Collectors.toSet());
 		}
+		useStarOfTheShow = IServerJsonOption.USE_STAR_OF_THE_SHOW.getFrom(source, jsonObject);
 		return this;
 	}
 

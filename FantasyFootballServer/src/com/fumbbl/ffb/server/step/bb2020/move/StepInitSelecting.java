@@ -150,6 +150,9 @@ public final class StepInitSelecting extends AbstractStep {
 							forceGotoOnDispatch = true;
 						} else {
 							PassState passState = getGameState().getPassState();
+							if (playerAction != null) {
+								actingPlayer.setStandingUp(playerAction.isStandingUp());
+							}
 							if (playerAction != null && playerAction.isBomb()) {
 								passState.setOriginalBombardier(actingPlayerCommand.getPlayerId());
 								if (playerAction == PlayerAction.ALL_YOU_CAN_EAT) {
@@ -448,15 +451,16 @@ public final class StepInitSelecting extends AbstractStep {
 	private void prepareStandingUp() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((actingPlayer.getPlayer() != null) && (actingPlayer.getPlayerAction() != null)) {
-			if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)) {
+		PlayerAction playerAction = actingPlayer.getPlayerAction();
+		if ((actingPlayer.getPlayer() != null) && (playerAction != null)) {
+			if ((playerAction == PlayerAction.BLITZ)
+				|| (playerAction == PlayerAction.BLITZ_MOVE)
+				|| (playerAction == PlayerAction.KICK_EM_BLITZ)
+				|| (playerAction == PlayerAction.BLOCK)
+				|| (playerAction == PlayerAction.MULTIPLE_BLOCK)) {
 				ServerUtilBlock.updateDiceDecorations(game);
 			}
-			if (actingPlayer.getPlayerAction().isMoving()) {
+			if (playerAction.isMoving() || playerAction.isStandingUp()) {
 				if (actingPlayer.isStandingUp()
 					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
 					actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,

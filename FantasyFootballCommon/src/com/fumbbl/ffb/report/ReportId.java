@@ -46,7 +46,7 @@ public enum ReportId implements INamedObject {
 	FAN_FACTOR("fanFactor"), SELECT_BLITZ_TARGET("selectBlitzTarget"), SELECT_GAZE_TARGET("selectGazeTarget"), BOMB_EXPLODES_AFTER_CATCH("bombExplodesAfterCatch"),
 	PLACE_BALL_DIRECTION("placedBallDirection"), FUMBLEROOSKIE("fumblerooskie"),
 	ANIMAL_SAVAGERY("animalSavagery"), PROJECTILE_VOMIT("projectileVomit"), BRILLIANT_COACHING_RE_ROLLS_LOST("brilliantCoachingReRoll"),
-	PUMP_UP_THE_CROWD_RE_ROLLS_LOST("pumpUpTheCrowdReRollLost"),
+	PUMP_UP_THE_CROWD_RE_ROLLS_LOST("pumpUpTheCrowdReRollLost"), SHOW_STAR_RE_ROLLS_LOST("showStarReRollLost"),
 	KICK_TEAM_MATE_FUMBLE("kickTeamMateFumble"), BLOCK_RE_ROLL("blockReRoll"), TRAP_DOOR("trapDoor"),
 	PRAYER_AMOUNT("prayerAmount"), PRAYER_ROLL("prayerRoll"), PRAYER_END("prayerEnd"),
 	PRAYER_WASTED("prayerWasted"), KICKOFF_CHEERING_FANS("cheeringFans"), BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"),
@@ -56,6 +56,7 @@ public enum ReportId implements INamedObject {
 	MODIFIED_PASS_RESULT("modifiedPassResult"), MODIFIED_DODGE_RESULT_SUCCESSFUL("modifiedDodgeResultSuccessful"),
 	RAIDING_PARTY("raidingParty"), EVENT("event"), HIT_AND_RUN("hitAndRun"),
 	SKILL_USE_OTHER_PLAYER("skillUseOtherPlayer"), THROWN_KEG("thrownKeg"), PUMP_UP_THE_CROWD_RE_ROLL("pumpUpTheCrowdReRoll"),
+	SHOW_STAR_RE_ROLL("showStarReRoll"),
 	BIASED_REF("biasedRef"), WEATHER_MAGE_ROLL("weatherMageRoll"), WEATHER_MAGE_RESULT("weatherMageResult"),
 	LOOK_INTO_MY_EYES_ROLL("lookIntoMyEyesRoll"), BALEFUL_HEX("balefulHex"), ALL_YOU_CAN_EAT("allYouCanEat");
 

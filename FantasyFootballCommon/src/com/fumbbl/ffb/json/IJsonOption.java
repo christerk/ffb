@@ -99,6 +99,7 @@ public interface IJsonOption {
 	JsonIntArrayOption CASUALTY_ROLL_DECAY = new JsonIntArrayOption("casualtyRollDecay");
 	JsonStringOption CATCHER_ID = new JsonStringOption("catcherId");
 	JsonStringOption CHALLENGE = new JsonStringOption("challenge");
+	JsonBooleanOption CHANGE_TO_MOVE = new JsonBooleanOption("changeToMove");
 	JsonIntOption CHEERLEADERS = new JsonIntOption("cheerleaders");
 	JsonBooleanOption CHOICE_FOLLOWUP = new JsonBooleanOption("choiceFollowup");
 	JsonBooleanOption CHOICE_HEADS = new JsonBooleanOption("choiceHeads");
@@ -243,6 +244,7 @@ public interface IJsonOption {
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
 	JsonBooleanOption IS_OWN_CHOICE = new JsonBooleanOption("isOwnChoice");
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
+	JsonStringArrayOption KEYWORDS = new JsonStringArrayOption("keywords");
 	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
 	JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", Factory.KICKOFF_RESULT);
@@ -406,6 +408,7 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLLS_LEFT_AWAY = new JsonIntOption("reRollsLeftAway");
 	JsonIntOption RE_ROLLS_LEFT_HOME = new JsonIntOption("reRollsLeftHome");
 	JsonIntOption RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE = new JsonIntOption("rerollPumpUpTheCrowdOneDrive");
+	JsonIntOption RE_ROLLS_SHOW_STAR_ONE_DRIVE = new JsonIntOption("rerollShowStarOneDrive");
 	JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
 	JsonStringOption RIOTOUS_POSITION_ID = new JsonStringOption("riotousPositionId");
 	JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");

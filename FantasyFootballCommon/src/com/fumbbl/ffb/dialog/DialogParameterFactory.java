@@ -125,6 +125,8 @@ public class DialogParameterFactory {
                 return new DialogUseMortuaryAssistantsParameter();
             case KICK_OFF_RESULT:
                 return new DialogKickOffResultParameter();
+            case BLOODLUST_ACTION:
+                return new DialogBloodlustActionParameter();
             default:
                 return null;
         }

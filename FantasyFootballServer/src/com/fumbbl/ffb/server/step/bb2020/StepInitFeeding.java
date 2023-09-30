@@ -5,8 +5,10 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
@@ -15,15 +17,17 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlitzTurnState;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.IReport;
-import com.fumbbl.ffb.report.ReportBiteSpectator;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
+import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -41,17 +45,21 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
-import com.fumbbl.ffb.util.UtilBox;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Step in any sequence to handle the feeding on another player.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. Needs to be
  * initialized with stepParameter FEEDING_ALLOWED. May be initialized with
  * stepParameter END_PLAYER_ACTION. May be initialized with stepParameter
  * END_TURN.
- *
+ * <p>
  * Sets stepParameter END_PLAYER_ACTION for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack.
  *
@@ -79,24 +87,24 @@ public class StepInitFeeding extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case GOTO_LABEL_ON_END:
-					fGotoLabelOnEnd = (String) parameter.getValue();
-					break;
-				// mandatory
-				case FEEDING_ALLOWED:
-					fFeedingAllowed = (Boolean) parameter.getValue();
-					break;
-				// optional
-				case END_PLAYER_ACTION:
-					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				// optional
-				case END_TURN:
-					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				default:
-					break;
+					// mandatory
+					case GOTO_LABEL_ON_END:
+						fGotoLabelOnEnd = (String) parameter.getValue();
+						break;
+					// mandatory
+					case FEEDING_ALLOWED:
+						fFeedingAllowed = (Boolean) parameter.getValue();
+						break;
+					// optional
+					case END_PLAYER_ACTION:
+						fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					// optional
+					case END_TURN:
+						fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -122,9 +130,20 @@ public class StepInitFeeding extends AbstractStep {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 				if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
-					fFeedOnPlayerChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-					game.setDefenderId(playerChoiceCommand.getPlayerId());
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					String playerId = playerChoiceCommand.getPlayerId();
+					fFeedOnPlayerChoice = StringTool.isProvided(playerId);
+					if (fFeedOnPlayerChoice) {
+						boolean victimOnSameTeam = game.getActingPlayer().getPlayer().getTeam() == game.getPlayerById(playerId).getTeam();
+						if (victimOnSameTeam || UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canBiteOpponents)) {
+							if (!victimOnSameTeam) {
+								game.getActingPlayer().markSkillUsed(NamedProperties.canBiteOpponents);
+							}
+							game.setDefenderId(playerId);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
+					} else {
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
 				}
 			}
 		}
@@ -174,9 +193,15 @@ public class StepInitFeeding extends AbstractStep {
 			game.setDefenderId(null);
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			Player<?>[] victims = UtilPlayer.findAdjacentPlayersToFeedOn(game, team, playerCoordinate);
+			List<Player<?>> allVictims = new ArrayList<>(Arrays.asList(victims));
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canBiteOpponents)) {
+				allVictims.addAll(findOpponentsToFeedOn(game, team, playerCoordinate));
+			}
 			if (ArrayTool.isProvided(victims)) {
 				UtilServerDialog.showDialog(getGameState(),
-						new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1), false);
+					new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED,
+						allVictims.stream().map(Player::getId).toArray(String[]::new), null, 1, 0),
+					false);
 			} else {
 				fFeedOnPlayerChoice = false;
 			}
@@ -185,7 +210,7 @@ public class StepInitFeeding extends AbstractStep {
 			if ((fFeedOnPlayerChoice != null) && fFeedOnPlayerChoice && (game.getDefender() != null)) {
 				FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 				InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, new InjuryTypeBitten(),
-						actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, null, ApothecaryMode.FEEDING);
+					actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, null, ApothecaryMode.FEEDING);
 				fEndTurn = UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
 				publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));
@@ -195,15 +220,15 @@ public class StepInitFeeding extends AbstractStep {
 			} else {
 				fEndTurn = true;
 				if (!playerState.isCasualty() && (playerState.getBase() != PlayerState.KNOCKED_OUT)
-						&& (playerState.getBase() != PlayerState.RESERVE)) {
+					&& (playerState.getBase() != PlayerState.RESERVE)) {
 					if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
 						game.getFieldModel().setBallMoving(true);
 						publishParameter(
-								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 					}
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-					UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-					getResult().addReport(new ReportBiteSpectator(actingPlayer.getPlayerId()));
+					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(true));
+					getResult().setSound(SoundId.ROAR);
+					getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "failed to bite anyone causing a turnover"));
 				}
 				doNextStep = true;
 			}
@@ -214,6 +239,21 @@ public class StepInitFeeding extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, fEndTurn));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+	}
+
+	private List<Player<?>> findOpponentsToFeedOn(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+		List<Player<?>> adjacentPlayers = new ArrayList<>();
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
+			1, false);
+		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
+			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
+			if ((player != null) && (player.getTeam() != pTeam) && player.getPosition().getType() != PlayerType.STAR
+				&& player.getStrengthWithModifiers() <= 3) {
+				adjacentPlayers.add(player);
+			}
+		}
+		return adjacentPlayers;
 	}
 
 	// JSON serialization
