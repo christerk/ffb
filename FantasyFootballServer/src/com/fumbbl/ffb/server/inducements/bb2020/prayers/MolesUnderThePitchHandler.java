@@ -19,7 +19,7 @@ public class MolesUnderThePitchHandler extends PrayerHandler {
 	}
 
 	@Override
-	public void removeEffect(GameState gameState, Team team) {
+	public void removeEffectInternal(GameState gameState, Team team) {
 		gameState.getPrayerState().removeMolesUnderThePitch(team);
 	}
 }

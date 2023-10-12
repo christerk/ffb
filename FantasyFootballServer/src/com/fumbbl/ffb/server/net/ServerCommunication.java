@@ -448,6 +448,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 				pPlayerResult);
 		addPlayersCommand.setCommandNr(gameState.generateCommandNr());
 		sendAllSessions(gameState, addPlayersCommand, true);
+		gameState.updatePlayerMarkings();
 	}
 
 	public void sendRemovePlayer(GameState gameState, String pPlayerId) {

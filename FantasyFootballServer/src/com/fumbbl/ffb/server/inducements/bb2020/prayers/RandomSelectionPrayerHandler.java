@@ -28,7 +28,7 @@ public abstract class RandomSelectionPrayerHandler extends PrayerHandler {
 	}
 
 	@Override
-	public final void removeEffect(GameState gameState, Team team) {
+	public final void removeEffectInternal(GameState gameState, Team team) {
 		enhancementRemover.removeEnhancement(gameState, team, selector(), handledPrayer());
 	}
 }

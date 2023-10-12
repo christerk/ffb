@@ -41,7 +41,7 @@ public abstract class DialogPrayerHandler extends PrayerHandler {
 	protected abstract boolean handled(Game game);
 
 	@Override
-	public final void removeEffect(GameState gameState, Team team) {
+	public final void removeEffectInternal(GameState gameState, Team team) {
 		enhancementRemover.removeEnhancement(gameState, team, selector, handledPrayer());
 	}
 

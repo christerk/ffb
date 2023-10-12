@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Sidestepper with Shadowing prevented second Frenzy block by shadowing back into the square the blocker came from")
 			.addFeature("Black Ink")
 			.addFeature("Add setting to show sweet spot during offence setup/kick off sequence")
+			.addImprovement("Auto markings now also get updated for added players (e.g. mercenaries) and prayer effects")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")
