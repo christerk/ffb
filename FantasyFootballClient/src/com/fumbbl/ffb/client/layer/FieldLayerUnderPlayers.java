@@ -1,7 +1,11 @@
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.TrackNumber;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -16,6 +20,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Kalimar
@@ -92,13 +97,40 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 
 	public void init() {
 		clear(true);
-		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		Game game = getClient().getGame();
+		FieldModel fieldModel = game.getFieldModel();
 		if (fieldModel != null) {
 			TrackNumber[] trackNumbers = fieldModel.getTrackNumbers();
 			for (TrackNumber trackNumber : trackNumbers) {
 				drawTrackNumber(trackNumber);
 			}
 		}
+
+		FieldCoordinate coordinate = null;
+
+		if (game.getTurnMode() == TurnMode.SETUP && game.isHomePlaying() && game.isSetupOffense()) {
+			coordinate = FieldCoordinate.SWEET_SPOT_HOME;
+		}
+
+		if (game.getTurnMode() == TurnMode.KICKOFF && game.isHomePlaying()) {
+			coordinate = FieldCoordinate.SWEET_SPOT_AWAY;
+		}
+
+		if (coordinate != null) {
+			String sweetSpot = getClient().getProperty(CommonProperty.SETTING_SWEET_SPOT);
+
+			if (IClientPropertyValue.SETTING_SWEET_SPOT_BLACK.equals(sweetSpot)) {
+				drawSweetSpot(IIconProperty.AUGMENTS_SWEET_BLACK, coordinate);
+			} else if (IClientPropertyValue.SETTING_SWEET_SPOT_WHITE.equals(sweetSpot)) {
+				drawSweetSpot(IIconProperty.AUGMENTS_SWEET_WHITE, coordinate);
+			}
+
+		}
 	}
 
+
+	private void drawSweetSpot(String iconProperty, FieldCoordinate coordinate) {
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty);
+		draw(icon, coordinate, 1.0f);
+	}
 }

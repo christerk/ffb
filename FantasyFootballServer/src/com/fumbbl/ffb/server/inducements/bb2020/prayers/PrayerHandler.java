@@ -41,6 +41,9 @@ public abstract class PrayerHandler implements INamedObject {
 			reports.forEach(report -> step.getResult().addReport(report));
 			reports.clear();
 		}
+		if (handledPrayer().isChangingPlayer()) {
+			gameState.updatePlayerMarkings();
+		}
 	}
 
 	public final void applySelection(IStep step, Game game, PrayerDialogSelection selection) {
@@ -59,5 +62,13 @@ public abstract class PrayerHandler implements INamedObject {
 	 */
 	abstract boolean initEffect(GameState gameState, Team prayingTeam);
 
-	public abstract void removeEffect(GameState gameState, Team team);
+	abstract void removeEffectInternal(GameState gameState, Team team);
+
+	public void removeEffect(GameState gameState, Team team) {
+		removeEffectInternal(gameState, team);
+		if (handledPrayer().isChangingPlayer()) {
+			gameState.updatePlayerMarkings();
+		}
+	}
+
 }

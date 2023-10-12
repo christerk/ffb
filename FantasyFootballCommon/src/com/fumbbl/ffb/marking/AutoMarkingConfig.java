@@ -54,10 +54,14 @@ public class AutoMarkingConfig implements IJsonSerializable {
 
 	@Override
 	public AutoMarkingConfig initFrom(IFactorySource source, JsonValue jsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		markings = IJsonOption.AUTO_MARKING_RECORDS.getFrom(source, jsonObject).values().stream()
-			.map(value -> new AutoMarkingRecord().initFrom(source, value)).collect(Collectors.toSet());
-		separator = IJsonOption.SEPARATOR.getFrom(source, jsonObject);
+		try {
+			JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+			markings = IJsonOption.AUTO_MARKING_RECORDS.getFrom(source, jsonObject).values().stream()
+				.map(value -> new AutoMarkingRecord().initFrom(source, value)).collect(Collectors.toSet());
+			separator = IJsonOption.SEPARATOR.getFrom(source, jsonObject);
+		} catch (Exception e) {
+			source.logError(0, "Could not init auto marking config: " + e.getMessage());
+		}
 		return this;
 	}
 

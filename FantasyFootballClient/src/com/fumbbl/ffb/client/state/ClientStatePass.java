@@ -251,6 +251,9 @@ public class ClientStatePass extends ClientStateMove {
 		if (isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			menuItemList.add(createBlackInkItem(iconCache));
+		}
 		addEndActionLabel(iconCache, menuItemList, actingPlayer);
 
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));

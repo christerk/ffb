@@ -54,6 +54,7 @@ public enum SkillUse implements INamedObject {
 	EASY_INTERCEPT("easyIntercept", "to try an easy interception"),
 	PERFORM_ADDITIONAL_ATTACK("performAdditionalAttack", "to perform an additional attack"),
 	CANCEL_WRESTLE("cancelWrestle", "to cancel wrestle"),
+	REMOVE_TACKLEZONE("removeTacklezone", "to remove opponents tacklezone"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

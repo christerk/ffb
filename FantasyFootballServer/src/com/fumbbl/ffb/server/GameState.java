@@ -7,6 +7,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.BlitzTurnState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.ISkillBehaviour;
@@ -19,6 +20,8 @@ import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.server.net.commands.InternalServerCommandApplyAutomatedPlayerMarkings;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepException;
@@ -28,6 +31,7 @@ import com.fumbbl.ffb.server.step.StepStack;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
+import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -491,4 +495,18 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return false;
 	}
 
+	public void updatePlayerMarkings() {
+
+		SessionManager sessionManager = getServer().getSessionManager();
+
+		for (Session session : sessionManager.getSessionsForGameId(getId())) {
+			AutoMarkingConfig config = sessionManager.getAutoMarking(session);
+			if (config != null) {
+				getServer().getCommunication().handleCommand(
+					new ReceivedCommand(
+						new InternalServerCommandApplyAutomatedPlayerMarkings(config, getId()), session));
+			}
+		}
+
+	}
 }

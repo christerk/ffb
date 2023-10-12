@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -56,40 +57,20 @@ public class ClientStateFoul extends ClientStateMove {
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
-		boolean actionHandled = false;
+		boolean actionHandled;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.isSufferingBloodLust()) {
-			switch (pActionKey) {
-				case PLAYER_SELECT:
-					createAndShowPopupMenuForBloodLustPlayer();
-					break;
-				case PLAYER_ACTION_MOVE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_MOVE);
-					break;
-				case PLAYER_ACTION_END_MOVE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
-					break;
-				case PLAYER_ACTION_TREACHEROUS:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_TREACHEROUS);
-					break;
-				case PLAYER_ACTION_WISDOM:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_WISDOM);
-					break;
-				default:
-					break;
-			}
+
+		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		FieldCoordinate defenderPosition = UtilClientActionKeys.findMoveCoordinate(playerPosition,
+			pActionKey);
+		Player<?> defender = game.getFieldModel().getPlayer(defenderPosition);
+		if (defender != null) {
+			actionHandled = playerSelected(defender);
 		} else {
-			FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-			FieldCoordinate defenderPosition = UtilClientActionKeys.findMoveCoordinate(playerPosition,
-				pActionKey);
-			Player<?> defender = game.getFieldModel().getPlayer(defenderPosition);
-			if (defender != null) {
-				actionHandled = playerSelected(defender);
-			} else {
-				actionHandled = super.actionKeyPressed(pActionKey);
-			}
+			actionHandled = super.actionKeyPressed(pActionKey);
 		}
+
 		return actionHandled;
 	}
 
@@ -126,19 +107,20 @@ public class ClientStateFoul extends ClientStateMove {
 		if (pPlayer != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
+			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
-					getClient().getCommunication().sendActingPlayer(null, null, false);
+					communication.sendActingPlayer(null, null, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_JUMP:
 					if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(),
+						communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(),
 							!actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_MOVE:
 					if (actingPlayer.isSufferingBloodLust()) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
+						communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_FOUL:
@@ -150,30 +132,36 @@ public class ClientStateFoul extends ClientStateMove {
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					if (isTreacherousAvailable(actingPlayer)) {
 						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-						getClient().getCommunication().sendUseSkill(skill, true, pPlayer.getId());
+						communication.sendUseSkill(skill, true, pPlayer.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
 					if (isWisdomAvailable(actingPlayer)) {
-						getClient().getCommunication().sendUseWisdom();
+						communication.sendUseWisdom();
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
 					if (isRaidingPartyAvailable(actingPlayer)) {
 						Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-						getClient().getCommunication().sendUseSkill(raidingSkill, true, pPlayer.getId());
+						communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
 					if (isLookIntoMyEyesAvailable(pPlayer)) {
 						UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
-							.ifPresent(lookSkill -> getClient().getCommunication().sendUseSkill(lookSkill, true, pPlayer.getId()));
+							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
 					if (isBalefulHexAvailable(actingPlayer)) {
 						Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
-						getClient().getCommunication().sendUseSkill(balefulSkill, true, pPlayer.getId());
+						communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
+					if (isBlackInkAvailable(actingPlayer)) {
+						Skill blackInkSkill = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
+						communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
 					}
 					break;
 				default:

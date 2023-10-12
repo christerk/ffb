@@ -182,6 +182,9 @@ public class ClientStateBomb extends ClientState {
 		if (isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			menuItemList.add(createBlackInkItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
@@ -246,6 +249,12 @@ public class ClientStateBomb extends ClientState {
 					communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
 				}
 				break;
+			case IPlayerPopupMenuKeys.KEY_BLACK_INK:
+				if (isBlackInkAvailable(actingPlayer)) {
+					Skill blackInkSkill = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
+					communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
+				}
+				break;
 			default:
 				break;
 		}
@@ -280,6 +289,9 @@ public class ClientStateBomb extends ClientState {
 				return true;
 			case PLAYER_ACTION_BALEFUL_HEX:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+				return true;
+			case PLAYER_ACTION_BLACK_INK:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey);

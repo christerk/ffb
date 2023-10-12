@@ -22,7 +22,7 @@ public class MarkerGenerator {
 	public String generate(Player<?> player, AutoMarkingConfig config, boolean playsForMarkingCoach) {
 
 		List<Skill> baseSkills = new ArrayList<>(Arrays.asList(player.getPosition().getSkills()));
-		List<Skill> gainedSkills = new ArrayList<>(Arrays.asList(player.getSkills()));
+		List<Skill> gainedSkills = new ArrayList<>(player.getSkillsIncludingTemporaryOnes());
 		gainedSkills.removeAll(baseSkills);
 		List<InjuryAttribute> injuries = Arrays.stream(player.getLastingInjuries()).map(SeriousInjury::getInjuryAttribute).collect(Collectors.toList());
 

@@ -26,6 +26,7 @@ public class ReportScatterPlayer extends NoDiceReport {
 	private FieldCoordinate fEndCoordinate;
 	private final List<Direction> fDirections;
 	private final List<Integer> fRolls;
+	private Boolean scatter;
 
 	public ReportScatterPlayer() {
 		fDirections = new ArrayList<>();
@@ -33,12 +34,18 @@ public class ReportScatterPlayer extends NoDiceReport {
 	}
 
 	public ReportScatterPlayer(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, Direction[] pDirections,
-			int[] pRolls) {
+														 int[] pRolls) {
+		this(pStartCoordinate, pEndCoordinate, pDirections, pRolls, null);
+	}
+
+	public ReportScatterPlayer(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, Direction[] pDirections,
+														 int[] pRolls, Boolean scatter) {
 		this();
 		fStartCoordinate = pStartCoordinate;
 		fEndCoordinate = pEndCoordinate;
 		addDirections(pDirections);
 		addRolls(pRolls);
+		this.scatter = scatter;
 	}
 
 	public ReportId getId() {
@@ -54,7 +61,7 @@ public class ReportScatterPlayer extends NoDiceReport {
 	}
 
 	public Direction[] getDirections() {
-		return fDirections.toArray(new Direction[fDirections.size()]);
+		return fDirections.toArray(new Direction[0]);
 	}
 
 	private void addDirection(Direction pDirection) {
@@ -91,11 +98,15 @@ public class ReportScatterPlayer extends NoDiceReport {
 		}
 	}
 
-	// transformation
+	public Boolean getScatter() {
+		return scatter;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
 		return new ReportScatterPlayer(FieldCoordinate.transform(getStartCoordinate()),
-				FieldCoordinate.transform(getEndCoordinate()), source.<DirectionFactory>getFactory(Factory.DIRECTION).transform(getDirections()), getRolls());
+			FieldCoordinate.transform(getEndCoordinate()), source.<DirectionFactory>getFactory(Factory.DIRECTION)
+			.transform(getDirections()), getRolls(), scatter);
 	}
 
 	// JSON serialization
@@ -111,6 +122,7 @@ public class ReportScatterPlayer extends NoDiceReport {
 		}
 		IJsonOption.DIRECTION_ARRAY.addTo(jsonObject, directionArray);
 		IJsonOption.ROLLS.addTo(jsonObject, fRolls);
+		IJsonOption.IS_SCATTER.addTo(jsonObject, scatter);
 		return jsonObject;
 	}
 
@@ -126,6 +138,7 @@ public class ReportScatterPlayer extends NoDiceReport {
 			}
 		}
 		addRolls(IJsonOption.ROLLS.getFrom(source, jsonObject));
+		scatter = IJsonOption.IS_SCATTER.getFrom(source, jsonObject);
 		return this;
 	}
 

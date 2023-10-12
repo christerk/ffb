@@ -10,6 +10,7 @@ import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadPlayerMarkings;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.MarkerLoadingService;
+import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Collections;
 
@@ -25,18 +26,23 @@ public class ServerCommandHandlerUpdatePlayerMarkings extends ServerCommandHandl
 		ClientCommandUpdatePlayerMarkings commandUpdatePlayerMarkings = (ClientCommandUpdatePlayerMarkings) receivedCommand.getCommand();
 
 		SessionManager sessionManager = getServer().getSessionManager();
-		long gameId = sessionManager.getGameIdForSession(receivedCommand.getSession());
+		Session session = receivedCommand.getSession();
+		long gameId = sessionManager.getGameIdForSession(session);
 		GameState gameState = getServer().getGameCache().getGameStateById(gameId);
-		ClientMode mode = sessionManager.getModeForSession(receivedCommand.getSession());
+		ClientMode mode = sessionManager.getModeForSession(session);
 		boolean isHome = UtilServerSteps.checkCommandIsFromHomePlayer(gameState, receivedCommand);
 
+		if (!commandUpdatePlayerMarkings.isAuto()) {
+			sessionManager.removeAutoMarking(session);
+		}
+
 		if (mode == ClientMode.PLAYER) {
-			new MarkerLoadingService().loadMarker(gameState, receivedCommand.getSession(), isHome, commandUpdatePlayerMarkings.isAuto());
+			new MarkerLoadingService().loadMarker(gameState, session, isHome, commandUpdatePlayerMarkings.isAuto());
 		} else if (mode == ClientMode.SPECTATOR) {
 			if (commandUpdatePlayerMarkings.isAuto()) {
-				getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(gameState, receivedCommand.getSession()));
+				getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(gameState, session));
 			} else {
-				getServer().getCommunication().sendUpdateLocalPlayerMarkers(receivedCommand.getSession(), Collections.emptyList());
+				getServer().getCommunication().sendUpdateLocalPlayerMarkers(session, Collections.emptyList());
 			}
 		}
 
