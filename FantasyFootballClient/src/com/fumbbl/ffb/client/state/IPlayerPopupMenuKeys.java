@@ -49,4 +49,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_KICK_EM_BLOCK = KeyEvent.VK_C;
 	int KEY_KICK_EM_BLITZ = KeyEvent.VK_I;
 	int KEY_GORED_BY_THE_BULL = KeyEvent.VK_O;
+	int KEY_BLACK_INK = KeyEvent.VK_L;
 }

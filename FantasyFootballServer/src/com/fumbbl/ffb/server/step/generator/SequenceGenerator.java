@@ -19,7 +19,7 @@ public abstract class SequenceGenerator<T extends SequenceGenerator.SequencePara
 	public abstract void pushSequence(T params);
 
 	public enum Type {
-		BalefulHex, BlitzBlock, BlitzMove, Block, Bomb, Card, EndGame, EndPlayerAction, EndTurn, Foul,
+		BalefulHex, BlitzBlock, BlitzMove, BlackInk, Block, Bomb, Card, EndGame, EndPlayerAction, EndTurn, Foul,
 		Inducement, KickTeamMate, Kickoff, LookIntoMyEyes,
 		MultiBlock, Move, Pass, PileDriver, RaidingParty, RiotousRookies, ScatterPlayer, Select, SelectBlitzTarget, SelectGazeTarget,
 		SpecialEffect, SpikedBallApo, StartGame, ThrowKeg, ThrowTeamMate, Treacherous, Wizard

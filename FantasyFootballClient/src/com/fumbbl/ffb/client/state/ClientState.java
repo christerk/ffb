@@ -496,6 +496,29 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		return menuItem;
 	}
 
+	protected boolean isBlackInkAvailable(ActingPlayer player) {
+		return !player.hasActed() && isBlackInkAvailable(player.getPlayer());
+	}
+
+	protected boolean isBlackInkAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGazeAutomatically)
+			&& ArrayTool.isProvided(UtilPlayer
+			.findAdjacentStandingOrPronePlayers(game, game.getOtherTeam(game.getActingTeam()), playerCoordinate));
+	}
+
+	protected JMenuItem createBlackInkItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Black Ink",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BLACK_INK);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
+		return menuItem;
+	}
+
 	public DimensionProvider dimensionProvider() {
 		return getClient().getUserInterface().getDimensionProvider();
 	}

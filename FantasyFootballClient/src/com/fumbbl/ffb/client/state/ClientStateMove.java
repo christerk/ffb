@@ -150,6 +150,7 @@ public class ClientStateMove extends ClientState {
 				|| isBalefulHexAvailable(actingPlayer)
 				|| isPutridRegurgitationAvailable()
 				|| isGoredAvailable()
+				|| isBlackInkAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -266,6 +267,12 @@ public class ClientStateMove extends ClientState {
 						communication.sendUseSkill(putridSkill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
+					if (isBlackInkAvailable(actingPlayer)) {
+						Skill blackInkSkill = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
+						communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -358,6 +365,9 @@ public class ClientStateMove extends ClientState {
 		if (isGoredAvailable()) {
 			menuItemList.add(createGoredItem(iconCache));
 		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			menuItemList.add(createBlackInkItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -428,6 +438,9 @@ public class ClientStateMove extends ClientState {
 					return true;
 				case PLAYER_ACTION_GORED:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
+					return true;
+				case PLAYER_ACTION_BLACK_INK:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
 					return true;
 				default:
 					actionHandled = false;

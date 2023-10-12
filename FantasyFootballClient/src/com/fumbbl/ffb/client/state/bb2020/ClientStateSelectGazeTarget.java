@@ -120,6 +120,9 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 		if (isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			menuItemList.add(createBlackInkItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -151,6 +154,9 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 				break;
 			case PLAYER_ACTION_BALEFUL_HEX:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+				return true;
+			case PLAYER_ACTION_BLACK_INK:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
 				return true;
 			default:
 				actionHandled = false;
@@ -193,6 +199,12 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 					if (isBalefulHexAvailable(player)) {
 						Skill balefulSkill = player.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
 						communication.sendUseSkill(balefulSkill, true, player.getId());
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
+					if (isBlackInkAvailable(player)) {
+						Skill blackInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomatically);
+						communication.sendUseSkill(blackInkSkill, true, player.getId());
 					}
 					break;
 				default:

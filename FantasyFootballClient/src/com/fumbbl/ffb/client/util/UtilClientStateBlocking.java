@@ -123,6 +123,10 @@ public class UtilClientStateBlocking {
 					Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
 					communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
 					break;
+				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
+					Skill blackInk = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
+					communication.sendUseSkill(blackInk, true, pPlayer.getId());
+					break;
 				default:
 					break;
 			}

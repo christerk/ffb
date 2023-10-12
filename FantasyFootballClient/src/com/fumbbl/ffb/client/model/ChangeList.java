@@ -11,13 +11,14 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
-		versions.add(new VersionChangeList("2.23.1")
+		versions.add(new VersionChangeList("2.24.0")
 			.addImprovement("When failing Bloodlust an no re-roll is used or available player will not move so they can be redirected")
 			.addBugfix("Special abilities like Crushing Blow did not always print injuries correctly in log")
 			.addBugfix("Players never have animosity vs mercenaries")
 			.addBugfix("TTM scattering out of bounds after the first scatter was logged incorrectly as bounce")
 			.addBugfix("B&C was able to use Brawler")
 			.addBugfix("Sidestepper with Shadowing prevented second Frenzy block by shadowing back into the square the blocker came from")
+			.addFeature("Black Ink")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")

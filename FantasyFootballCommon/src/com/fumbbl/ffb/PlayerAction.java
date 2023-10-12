@@ -23,7 +23,8 @@ public enum PlayerAction implements INamedObject {
 	BALEFUL_HEX("balefulHex", 38, null), ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB),
 	PUTRID_REGURGITATION_MOVE("putridRegurgitationMove", 40, null), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz", 40, "performs an additional Projectile Vomit attack"),
 	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock", 40, "performs an additional Projectile Vomit attack"),
-	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent");
+	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent"),
+	BLACK_INK("blackInk", 42, "uses Black Ink");
 
 	private final String fName;
 	private final int fType;

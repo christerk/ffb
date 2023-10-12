@@ -16,6 +16,7 @@ public enum StepId implements INamedObject {
 	APPLY_KICKOFF_RESULT("applyKickoffResult"), // phase.kickoff
 	ASSIGN_TOUCHDOWNS("assignTouchdowns"), // game.end
 	BALEFUL_HEX("balefulHex"), // action.special
+	BLACK_INK("blackInk"), // action.special
 	BLITZ_TURN("blitzTurn"), // phase.kickoff
 	BLOCK_BALL_AND_CHAIN("blockBallAndChain"), // action.block
 	BLOCK_CHAINSAW("blockChainsaw"), // action.block
