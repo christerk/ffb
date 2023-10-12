@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("B&C was able to use Brawler")
 			.addBugfix("Sidestepper with Shadowing prevented second Frenzy block by shadowing back into the square the blocker came from")
 			.addFeature("Black Ink")
+			.addFeature("Add setting to show sweet spot during offence setup/kick off sequence")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")

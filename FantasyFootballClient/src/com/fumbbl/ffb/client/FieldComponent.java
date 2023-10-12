@@ -298,6 +298,11 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			case FIELD_MODEL_SET_WEATHER:
 				getLayerField().drawWeather((Weather) pModelChange.getValue());
 				break;
+			case GAME_SET_SETUP_OFFENSE:
+			case GAME_SET_HOME_PLAYING:
+			case GAME_SET_TURN_MODE:
+				getLayerUnderPlayers().init();
+				break;
 			default:
 				break;
 		}

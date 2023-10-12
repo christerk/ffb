@@ -110,7 +110,7 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 				fieldCoordinates.add(new FieldCoordinate(i, k));
 			}
 		}
-		return fieldCoordinates.toArray(new FieldCoordinate[fieldCoordinates.size()]);
+		return fieldCoordinates.toArray(new FieldCoordinate[0]);
 	}
 
 	public int width() {
