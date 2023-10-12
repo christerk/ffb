@@ -117,7 +117,11 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 						state.status = ActionStatus.WAIT_FOR_ACTION_CHANGE;
 					} else {
 						step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
-						step.getResult().setNextAction(StepAction.NEXT_STEP);
+						if (StringTool.isProvided(state.goToLabelOnFailure)) {
+							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+						} else {
+							step.getResult().setNextAction(StepAction.NEXT_STEP);
+						}
 					}
 				}
 				return false;
