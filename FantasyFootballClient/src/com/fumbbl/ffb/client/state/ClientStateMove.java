@@ -135,6 +135,17 @@ public class ClientStateMove extends ClientState {
 		}
 	}
 
+	protected boolean isSpecialAbilityAvailable(ActingPlayer actingPlayer) {
+		return isTreacherousAvailable(actingPlayer)
+			|| isWisdomAvailable(actingPlayer)
+			|| isRaidingPartyAvailable(actingPlayer)
+			|| isLookIntoMyEyesAvailable(actingPlayer)
+			|| isBalefulHexAvailable(actingPlayer)
+			|| isPutridRegurgitationAvailable()
+			|| isGoredAvailable()
+			|| isBlackInkAvailable(actingPlayer);
+	}
+
 	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -143,14 +154,7 @@ public class ClientStateMove extends ClientState {
 			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 			if (actingPlayer.hasActed() || mechanic.canJump(game, pPlayer, position)
 				|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
-				|| isTreacherousAvailable(actingPlayer)
-				|| isWisdomAvailable(actingPlayer)
-				|| isRaidingPartyAvailable(actingPlayer)
-				|| isLookIntoMyEyesAvailable(actingPlayer)
-				|| isBalefulHexAvailable(actingPlayer)
-				|| isPutridRegurgitationAvailable()
-				|| isGoredAvailable()
-				|| isBlackInkAvailable(actingPlayer)
+				|| isSpecialAbilityAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))

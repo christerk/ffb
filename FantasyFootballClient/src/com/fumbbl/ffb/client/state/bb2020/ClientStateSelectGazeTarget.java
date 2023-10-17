@@ -38,13 +38,7 @@ public class ClientStateSelectGazeTarget extends ClientStateMove {
 	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer.equals(actingPlayer.getPlayer()) && (
-			isTreacherousAvailable(actingPlayer)
-				|| isWisdomAvailable(actingPlayer)
-				|| isRaidingPartyAvailable(actingPlayer)
-				|| isBalefulHexAvailable(actingPlayer)
-				|| isLookIntoMyEyesAvailable(actingPlayer)
-		)) {
+		if (pPlayer.equals(actingPlayer.getPlayer()) && isSpecialAbilityAvailable(actingPlayer)) {
 			createAndShowPopupMenuForActingPlayer();
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (isValidGazeTarget(game, pPlayer))) {
 			getClient().getCommunication().sendTargetSelected(pPlayer.getId());
