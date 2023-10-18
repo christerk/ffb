@@ -24,6 +24,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -178,7 +179,7 @@ public class ClientStateSelect extends ClientState {
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		if (isBlockActionAvailable(pPlayer)) {
-			JMenuItem blockAction = new JMenuItem(dimensionProvider(), "Block Action",
+			JMenuItem blockAction = new JMenuItem(dimensionProvider(), blockActionLabel(pPlayer),
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
 			blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
 			blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));
@@ -443,6 +444,17 @@ public class ClientStateSelect extends ClientState {
 		getClient().getClientData().setEndTurnButtonHidden(true);
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		sideBarHome.refresh();
+	}
+
+	private String blockActionLabel(Player<?> pPlayer) {
+		List<String> actions = new ArrayList<>();
+		actions.add("Block Action");
+		pPlayer.getSkillsIncludingTemporaryOnes().stream().filter(skill ->
+				skill.hasSkillProperty(NamedProperties.providesBlockAlternative)
+					&& SkillUsageType.REGULAR == skill.getSkillUsageType())
+			.map(Skill::getName)
+			.forEach(actions::add);
+		return String.join("/", actions);
 	}
 
 	private boolean isBlockActionAvailable(Player<?> pPlayer) {

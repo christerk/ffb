@@ -22,6 +22,7 @@ public class ChangeList {
 			.addFeature("Add setting to show sweet spot during offence setup/kick off sequence")
 			.addImprovement("Auto markings now also get updated for added players (e.g. mercenaries) and prayer effects")
 			.addBugfix("Raised thralls could become MVP")
+			.addImprovement("Block action now also shows when alternative block actions like Stab or Chainsaw are available")
 		);
 
 		versions.add(new VersionChangeList("2.23.0")
