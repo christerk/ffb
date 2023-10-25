@@ -32,6 +32,9 @@ public class FieldCoordinate implements IJsonSerializable {
 	public static final int BAN_AWAY_X = 35;
 	public static final int MNG_AWAY_X = 36;
 
+	public static final FieldCoordinate SWEET_SPOT_AWAY = new FieldCoordinate(19, 7);
+	public static final FieldCoordinate SWEET_SPOT_HOME = new FieldCoordinate(6, 7);
+
 	private int fX;
 	private int fY;
 

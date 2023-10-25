@@ -103,12 +103,11 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 
 		// report injury roll
 		if (report.isArmorBroken()) {
-			if (!report.getSkip().isInjury()) {
 				boolean thickSkullUsed = false;
 				boolean stuntyUsed = false;
 				status = new StringBuilder();
 				int[] injuryRoll = report.getInjuryRoll();
-				if (ArrayTool.isProvided(injuryRoll)) {
+				if (ArrayTool.isProvided(injuryRoll) && !report.getSkip().isInjury()) {
 					status.append("Injury Roll [ ").append(injuryRoll[0]).append(" ][ ").append(injuryRoll[1]).append(" ]");
 					println(getIndent(), TextStyle.ROLL, status.toString());
 					status = new StringBuilder();
@@ -145,17 +144,17 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 						println(getIndent() + 1, status.toString());
 					}
 				}
-				if (ArrayTool.isProvided(report.getCasualtyRoll())) {
-					print(getIndent() + 1, false, defender);
-					println(getIndent() + 1, " suffers a casualty.");
-					if (defender instanceof ZappedPlayer) {
-						status = new StringBuilder();
-						status.append(defender.getName()).append(" is badly hurt automatically because ")
-							.append(defender.getPlayerGender().getNominative()).append(" has been zapped.");
-						println(getIndent(), TextStyle.NONE, status.toString());
-					} else {
-						int[] casualtyRoll = report.getCasualtyRoll();
-						status = new StringBuilder();
+			if (ArrayTool.isProvided(report.getCasualtyRoll()) && !report.getSkip().isCas()) {
+				print(getIndent() + 1, false, defender);
+				println(getIndent() + 1, " suffers a casualty.");
+				if (defender instanceof ZappedPlayer) {
+					status = new StringBuilder();
+					status.append(defender.getName()).append(" is badly hurt automatically because ")
+						.append(defender.getPlayerGender().getNominative()).append(" has been zapped.");
+					println(getIndent(), TextStyle.NONE, status.toString());
+				} else {
+					int[] casualtyRoll = report.getCasualtyRoll();
+					status = new StringBuilder();
 						status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ]");
 						println(getIndent(), TextStyle.ROLL, status.toString());
 						if (!report.getCasualtyModifiers().isEmpty()) {
@@ -174,13 +173,12 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 							status.append(" = ").append(casualtyRoll[0] + modifiers);
 							println(getIndent() + 1, TextStyle.NONE, status.toString());
 						}
-						reportInjury(defender, report.getInjury(), report.getSeriousInjury(), casualtyRoll[1], report.getOriginalInjury());
-					}
-				} else if (report.getInjury() != null) {
-					reportInjury(defender, report.getInjury(), null, 0, null);
+					reportInjury(defender, report.getInjury(), report.getSeriousInjury(), casualtyRoll[1], report.getOriginalInjury());
 				}
+			} else if (report.getInjury() != null && !report.getSkip().isInjury()) {
+				reportInjury(defender, report.getInjury(), null, 0, null);
 			}
-		}
+			}
 	}
 
 	private void reportInjury(Player<?> pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury, int siRoll, SeriousInjury originalInury) {

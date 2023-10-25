@@ -6,7 +6,6 @@ import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -208,18 +207,13 @@ public final class StepMvp extends AbstractStep {
 	private String[] findPlayerIdsForMvp(Team pTeam) {
 		List<String> playerIds = new ArrayList<>();
 		Game game = getGameState().getGame();
-		GameResult gameResult = game.getGameResult();
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (player.getPlayerType() == PlayerType.STAR || player.getPlayerType() == PlayerType.MERCENARY || player.getPlayerType() == PlayerType.INFAMOUS_STAFF) {
 				continue;
 			}
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			if (playerState.isKilled()) {
-				continue;
-			}
-			PlayerResult playerResult = gameResult.getPlayerResult(player);
-			if ((player.getRecoveringInjury() != null)
-				|| (SendToBoxReason.NURGLES_ROT == playerResult.getSendToBoxReason())) {
+			// MISSING covers lasting injuries from previous games as well as raised thralls
+			if (playerState.isKilled() || playerState.getBase() == PlayerState.MISSING) {
 				continue;
 			}
 			playerIds.add(player.getId());

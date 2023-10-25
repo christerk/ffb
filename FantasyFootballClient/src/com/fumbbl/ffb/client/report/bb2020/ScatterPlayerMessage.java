@@ -19,7 +19,7 @@ public class ScatterPlayerMessage extends ReportMessageBase<ReportScatterPlayer>
 		int[] rolls = report.getRolls();
 		if (ArrayTool.isProvided(rolls)) {
 			StringBuilder status = new StringBuilder();
-			boolean scatters = rolls.length > 1;
+			boolean scatters = report.getScatter() != null ? report.getScatter() : rolls.length > 1;
 			if (scatters) {
 				status.append("Scatter Rolls [ ");
 			} else {

@@ -61,4 +61,8 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_CRATERS_AND_BLOODSPOTS_SHOW = "cratersAndBloodspotsShow";
 	String SETTING_CRATERS_AND_BLOODSPOTS_HIDE = "cratersAndBloodspotsHide";
+
+	String SETTING_SWEET_SPOT_OFF = "sweetSpotOff";
+	String SETTING_SWEET_SPOT_BLACK = "sweetSpotBlack";
+	String SETTING_SWEET_SPOT_WHITE = "sweetSpotWhite";
 }

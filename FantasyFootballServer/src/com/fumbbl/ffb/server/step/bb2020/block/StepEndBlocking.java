@@ -254,7 +254,7 @@ public class StepEndBlocking extends AbstractStep {
 				NamedProperties.forceSecondBlock);
 
 			if (activePlayer.hasSkillProperty(NamedProperties.forceSecondBlock)) {
-				actingPlayer.setGoingForIt(true);
+					actingPlayer.setGoingForIt(true);
 			}
 
 			String defenderId = game.getDefenderId();

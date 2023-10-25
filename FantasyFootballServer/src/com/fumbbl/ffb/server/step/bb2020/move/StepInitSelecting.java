@@ -384,6 +384,10 @@ public final class StepInitSelecting extends AbstractStep {
 									ServerUtilBlock.updateDiceDecorations(game);
 								}
 							}
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGazeAutomatically)) {
+							fDispatchPlayerAction = PlayerAction.BLACK_INK;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
 						}
 					}
 					break;

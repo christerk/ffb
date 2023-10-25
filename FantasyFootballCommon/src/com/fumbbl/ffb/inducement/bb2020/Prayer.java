@@ -22,7 +22,7 @@ public enum Prayer implements INamedObject {
 		InducementDuration.UNTIL_END_OF_HALF, true),
 	FRIENDS_WITH_THE_REF("Friends with the Ref", "Argue the call succeeds on 5+"),
 	STILETTO("Stiletto",
-		"One random player available to play during this drive without Loner gains Stab") {
+		"One random player available to play during this drive without Loner gains Stab", false, true) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
@@ -37,7 +37,7 @@ public enum Prayer implements INamedObject {
 	},
 	IRON_MAN("Iron Man",
 		"One chosen player available to play during this drive without Loner improves AV by 1 (Max 11+)",
-		InducementDuration.UNTIL_END_OF_GAME) {
+		InducementDuration.UNTIL_END_OF_GAME, false, true) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
@@ -51,7 +51,7 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	KNUCKLE_DUSTERS("Knuckle Dusters",
-		"One chosen player available to play during this drive without Loner gains Mighty Blow (+1)") {
+		"One chosen player available to play during this drive without Loner gains Mighty Blow (+1)", false, true) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
@@ -65,7 +65,7 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	BAD_HABITS("Bad Habits",
-		"D3 random opponent players available to play during this drive without Loner gain Loner (2+)") {
+		"D3 random opponent players available to play during this drive without Loner gain Loner (2+)", false, true) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
@@ -79,7 +79,7 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	GREASY_CLEATS("Greasy Cleats",
-		"One random opponent player available to play during this drive has his MA reduced by 1") {
+		"One random opponent player available to play during this drive has his MA reduced by 1", false, true) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
@@ -93,7 +93,7 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	BLESSED_STATUE_OF_NUFFLE("Blessed Statue of Nuffle",
-		"One chosen player available to play during this drive without Loner gains Pro", InducementDuration.UNTIL_END_OF_GAME) {
+		"One chosen player available to play during this drive without Loner gains Pro", InducementDuration.UNTIL_END_OF_GAME, false, true) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
 			return new TemporaryEnhancements().withSkills(new HashSet<SkillClassWithValue>() {{
@@ -123,9 +123,9 @@ public enum Prayer implements INamedObject {
 		InducementDuration.UNTIL_END_OF_HALF),
 	INTENSIVE_TRAINING("Intensive Training",
 		"One random player available to play during this drive without Loner gains a chosen Primary skill",
-		InducementDuration.UNTIL_END_OF_GAME);
+		InducementDuration.UNTIL_END_OF_GAME, false, true);
 	private final String name, description;
-	private final boolean affectsBothTeams;
+	private final boolean affectsBothTeams, changingPlayer;
 	private final InducementDuration duration;
 
 	Prayer(String name, String description) {
@@ -133,14 +133,23 @@ public enum Prayer implements INamedObject {
 	}
 
 	Prayer(String name, String description, InducementDuration duration) {
-		this(name, description, duration, false);
+		this(name, description, duration, false, false);
+	}
+
+	Prayer(String name, String description, boolean affectsBothTeams, boolean changingPlayer) {
+		this(name, description, InducementDuration.UNTIL_END_OF_DRIVE, affectsBothTeams, changingPlayer);
 	}
 
 	Prayer(String name, String description, InducementDuration duration, boolean affectsBothTeams) {
+		this(name, description, duration, affectsBothTeams, false);
+	}
+
+	Prayer(String name, String description, InducementDuration duration, boolean affectsBothTeams, boolean changingPlayer) {
 		this.name = name;
 		this.description = description;
 		this.affectsBothTeams = affectsBothTeams;
 		this.duration = duration;
+		this.changingPlayer = changingPlayer;
 	}
 
 	@Override
@@ -166,5 +175,9 @@ public enum Prayer implements INamedObject {
 
 	public String eventMessage() {
 		return "";
+	}
+
+	public boolean isChangingPlayer() {
+		return changingPlayer;
 	}
 }

@@ -4,7 +4,6 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -144,8 +143,7 @@ public final class StepAssignTouchdowns extends AbstractStep {
 		return Arrays.stream(team.getPlayers())
 			.filter(player ->
 				player.getRecoveringInjury() == null
-					&& !game.getFieldModel().getPlayerState(player).isKilled()
-					&& game.getGameResult().getPlayerResult(player).getSendToBoxReason() != SendToBoxReason.NURGLES_ROT)
+					&& !game.getFieldModel().getPlayerState(player).isKilled())
 			.collect(Collectors.toList());
 	}
 

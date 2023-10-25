@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.net;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class SessionManager {
 	private final Map<Long, Set<Session>> fSessionsByGameId;
 	private final Map<Session, JoinedClient> fClientBySession;
 	private final Map<Session, Long> fLastPingBySession;
+	private final Map<Session, AutoMarkingConfig> autoMarkingBySession;
 
 	public synchronized boolean isSessionDev(Session pSession) {
 		JoinedClient client = fClientBySession.get(pSession);
@@ -27,6 +29,7 @@ public class SessionManager {
 		fSessionsByGameId = new HashMap<>();
 		fClientBySession = new HashMap<>();
 		fLastPingBySession = new HashMap<>();
+		autoMarkingBySession = new HashMap<>();
 	}
 
 	public synchronized long getGameIdForSession(Session pSession) {
@@ -208,6 +211,7 @@ public class SessionManager {
 		long gameId = getGameIdForSession(pSession);
 		fClientBySession.remove(pSession);
 		fLastPingBySession.remove(pSession);
+		autoMarkingBySession.remove(pSession);
 		Set<Session> sessions = fSessionsByGameId.get(gameId);
 		if (sessions != null) {
 			sessions.remove(pSession);
@@ -215,6 +219,18 @@ public class SessionManager {
 				fSessionsByGameId.remove(gameId);
 			}
 		}
+	}
+
+	public synchronized void removeAutoMarking(Session session) {
+		autoMarkingBySession.remove(session);
+	}
+
+	public synchronized void addAutoMarking(Session session, AutoMarkingConfig autoMarkingConfig) {
+		autoMarkingBySession.put(session, autoMarkingConfig);
+	}
+
+	public synchronized AutoMarkingConfig getAutoMarking(Session session) {
+		return autoMarkingBySession.get(session);
 	}
 
 	public synchronized void setLastPing(Session pSession, long pPing) {

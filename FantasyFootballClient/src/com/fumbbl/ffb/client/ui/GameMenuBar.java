@@ -167,6 +167,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem showCratersAndBloodsptsMenuItem;
 	private JRadioButtonMenuItem hideCratersAndBloodsptsMenuItem;
 
+	private JRadioButtonMenuItem sweetSpotOff;
+	private JRadioButtonMenuItem sweetSpotBlack;
+	private JRadioButtonMenuItem sweetSpotWhite;
+
 	private JMenuItem chatBackground;
 	private JMenuItem logBackground;
 	private JMenuItem textFontColor;
@@ -507,6 +511,27 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		hideCratersAndBloodsptsMenuItem.addActionListener(this);
 		cratersAndBloodspotsGroup.add(hideCratersAndBloodsptsMenuItem);
 		cratersAndBloodspotsMenu.add(hideCratersAndBloodsptsMenuItem);
+
+		JMenu sweetSpotMenu = new JMenu(dimensionProvider, SETTING_SWEET_SPOT);
+		sweetSpotMenu.setMnemonic(KeyEvent.VK_S);
+		fPitchMenu.add(sweetSpotMenu);
+
+		ButtonGroup sweetSpotGroup = new ButtonGroup();
+
+		sweetSpotOff = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		sweetSpotOff.addActionListener(this);
+		sweetSpotGroup.add(sweetSpotOff);
+		sweetSpotMenu.add(sweetSpotOff);
+
+		sweetSpotBlack = new JRadioButtonMenuItem(dimensionProvider, "Black");
+		sweetSpotBlack.addActionListener(this);
+		sweetSpotGroup.add(sweetSpotBlack);
+		sweetSpotMenu.add(sweetSpotBlack);
+
+		sweetSpotWhite = new JRadioButtonMenuItem(dimensionProvider, "White");
+		sweetSpotWhite.addActionListener(this);
+		sweetSpotGroup.add(sweetSpotWhite);
+		sweetSpotMenu.add(sweetSpotWhite);
 
 		JMenu fTeamLogoMenu = new JMenu(dimensionProvider, SETTING_TEAM_LOGOS);
 		fTeamLogoMenu.setMnemonic(KeyEvent.VK_T);
@@ -930,6 +955,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		showCratersAndBloodsptsMenuItem.setSelected(true);
 		hideCratersAndBloodsptsMenuItem.setSelected(IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_HIDE.equals(showCratersAndBloodspotsSetting));
 
+		String sweetSpotSetting = getClient().getProperty(SETTING_SWEET_SPOT);
+		sweetSpotOff.setSelected(true);
+		sweetSpotBlack.setSelected(IClientPropertyValue.SETTING_SWEET_SPOT_BLACK.equals(sweetSpotSetting));
+		sweetSpotWhite.setSelected(IClientPropertyValue.SETTING_SWEET_SPOT_WHITE.equals(sweetSpotSetting));
+
 		boolean refreshUi = refreshColorMenu(CommonProperty.SETTING_BACKGROUND_CHAT, chatBackground,
 			styleProvider::getChatBackground, styleProvider::setChatBackground);
 
@@ -1219,6 +1249,19 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == hideCratersAndBloodsptsMenuItem) {
 			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_HIDE);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == sweetSpotOff) {
+			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_OFF);
+			getClient().saveUserSettings(true);
+		}
+		if (source == sweetSpotBlack) {
+			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_BLACK);
+			getClient().saveUserSettings(true);
+		}
+		if (source == sweetSpotWhite) {
+			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_WHITE);
 			getClient().saveUserSettings(true);
 		}
 

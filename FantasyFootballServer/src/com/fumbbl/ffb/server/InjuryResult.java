@@ -161,24 +161,39 @@ public class InjuryResult implements IJsonSerializable {
 	public void report(IStep pStep) {
 
 		SkipInjuryParts skip = SkipInjuryParts.NONE;
+		boolean playSound = true;
 		if (injuryContext instanceof ModifiedInjuryContext) {
 			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
 			if (modification == InjuryModification.INJURY) {
 				skip = SkipInjuryParts.ARMOUR;
 			}
-		} else if (alreadyReported && injuryContext.getModifiedInjuryContext() != null) {
+		} else if (injuryContext.getModifiedInjuryContext() != null) {
 			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
-			switch (modification) {
-				case ARMOUR:
-					skip = SkipInjuryParts.ARMOUR;
-					break;
-				case INJURY:
-					skip = SkipInjuryParts.ARMOUR_AND_INJURY;
-					break;
-				default:
-					break;
+			if (alreadyReported) {
+				switch (modification) {
+					case ARMOUR:
+						skip = SkipInjuryParts.ARMOUR;
+						break;
+					case INJURY:
+						skip = SkipInjuryParts.ARMOUR_AND_INJURY;
+						break;
+					default:
+						break;
+				}
+				alreadyReported = false;
+			} else {
+				playSound = false;
+				switch (modification) {
+					case ARMOUR:
+						skip = SkipInjuryParts.INJURY;
+						break;
+					case INJURY:
+						skip = SkipInjuryParts.CAS;
+						break;
+					default:
+						break;
+				}
 			}
-			alreadyReported = false;
 		}
 
 		if (alreadyReported) {
@@ -188,7 +203,9 @@ public class InjuryResult implements IJsonSerializable {
 		ReportFactory factory = pStep.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
 		ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
 		pStep.getResult().addReport(reportInjury.init(injuryContext, skip));
-		pStep.getResult().setSound(injuryContext.getSound());
+		if (playSound) {
+			pStep.getResult().setSound(injuryContext.getSound());
+		}
 		alreadyReported = true;
 	}
 

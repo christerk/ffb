@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.BalefulHex;
+import com.fumbbl.ffb.server.step.generator.BlackInk;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.BlitzMove;
 import com.fumbbl.ffb.server.step.generator.Block;
@@ -404,6 +405,12 @@ public final class StepEndSelecting extends AbstractStep {
 				BalefulHex.SequenceParams balefulParams = new BalefulHex.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
 				BalefulHex balefulGenerator = (BalefulHex) factory.forName(SequenceGenerator.Type.BalefulHex.name());
 				balefulGenerator.pushSequence(balefulParams);
+				break;
+			case BLACK_INK:
+				selectGenerator.pushSequence(selectParams);
+				BlackInk.SequenceParams blackInkParams = new BlackInk.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
+				BlackInk blackInkGenerator = (BlackInk) factory.forName(SequenceGenerator.Type.BlackInk.name());
+				blackInkGenerator.pushSequence(blackInkParams);
 				break;
 
 			default:

@@ -287,6 +287,10 @@ public interface IIconProperty {
 	String ANIMATION_KEG_FUMBLE_150 = "animation.keg.fumble.150";
 
 
+	// Augments
+	String AUGMENTS_SWEET_WHITE = "augments.sweet.white";
+	String AUGMENTS_SWEET_BLACK = "augments.sweet.black";
+
 	// Pitches
 	String PITCH_INTRO = "pitch.intro";
 	String PITCH_URL_DEFAULT = "pitch.url.default";

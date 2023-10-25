@@ -12,8 +12,6 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.injury.context.InjuryModification;
-import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
@@ -78,25 +76,6 @@ public class ReportInjury extends NoDiceReport implements com.fumbbl.ffb.report.
 		int[] injuryRoll = injuryContext.getInjuryRoll();
 		int[] casualtyRoll = injuryContext.getCasualtyRoll();
 		PlayerState injury = injuryContext.getInjury();
-
-		ModifiedInjuryContext modifiedInjuryContext = injuryContext.getModifiedInjuryContext();
-		if (modifiedInjuryContext != null) {
-			InjuryModification modification = modifiedInjuryContext.getModification();
-			switch (modification) {
-				case ARMOUR:
-					injuryRoll = null;
-					casualtyRoll = null;
-					injury = null;
-					break;
-				case INJURY:
-					casualtyRoll = null;
-					injury = null;
-					break;
-				default:
-					break;
-			}
-		}
-
 
 		init(injuryContext.getDefenderId(), injuryContext.getInjuryType(),
 			injuryContext.isArmorBroken(), injuryContext.getArmorModifiers(), injuryContext.getArmorRoll(),

@@ -11,6 +11,20 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+		versions.add(new VersionChangeList("2.24.0")
+			.addImprovement("When failing Bloodlust an no re-roll is used or available player will not move so they can be redirected")
+			.addBugfix("Special abilities like Crushing Blow did not always print injuries correctly in log")
+			.addBugfix("Players never have animosity vs mercenaries")
+			.addBugfix("TTM scattering out of bounds after the first scatter was logged incorrectly as bounce")
+			.addBugfix("B&C was able to use Brawler")
+			.addBugfix("Sidestepper with Shadowing prevented second Frenzy block by shadowing back into the square the blocker came from")
+			.addFeature("Black Ink")
+			.addFeature("Add setting to show sweet spot during offence setup/kick off sequence")
+			.addImprovement("Auto markings now also get updated for added players (e.g. mercenaries) and prayer effects")
+			.addBugfix("Raised thralls could become MVP")
+			.addImprovement("Block action now also shows when alternative block actions like Stab or Chainsaw are available")
+		);
+
 		versions.add(new VersionChangeList("2.23.0")
 			.addFeature("Bloodlust")
 			.addFeature("Vampire Lord")
