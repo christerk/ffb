@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
@@ -44,6 +45,7 @@ public class StepBlackInk extends AbstractStep {
 
 	private boolean endPlayerAction, endTurn;
 	private String goToLabelOnFailure, playerId;
+	private PlayerState oldPlayerState;
 
 	public StepBlackInk(GameState pGameState) {
 		super(pGameState);
@@ -62,6 +64,9 @@ public class StepBlackInk extends AbstractStep {
 				switch (parameter.getKey()) {
 					case GOTO_LABEL_ON_FAILURE:
 						goToLabelOnFailure = (String) parameter.getValue();
+						break;
+					case OLD_PLAYER_STATE:
+						oldPlayerState = (PlayerState) parameter.getValue();
 						break;
 					default:
 						break;
@@ -87,6 +92,9 @@ public class StepBlackInk extends AbstractStep {
 						ActingPlayer actingPlayer = game.getActingPlayer();
 						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomatically), false, SkillUse.REMOVE_TACKLEZONE));
 						getResult().setNextAction(StepAction.NEXT_STEP);
+						if (!actingPlayer.hasActed()) {
+							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), oldPlayerState);
+						}
 					}
 					break;
 				case CLIENT_END_TURN:
@@ -140,7 +148,7 @@ public class StepBlackInk extends AbstractStep {
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canGazeAutomatically);
 		if (skill != null) {
 
-			if (endTurn || endPlayerAction) {
+			if (endTurn || endPlayerAction || actingPlayer.isStandingUp()) {
 				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 				return;
 			}
@@ -192,6 +200,7 @@ public class StepBlackInk extends AbstractStep {
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		JsonArray jsonArray = new JsonArray();
 		IServerJsonOption.MOVE_SQUARE_ARRAY.addTo(jsonObject, jsonArray);
+		IServerJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -203,6 +212,7 @@ public class StepBlackInk extends AbstractStep {
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		oldPlayerState = IServerJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		return this;
 	}
 }

@@ -497,7 +497,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected boolean isBlackInkAvailable(ActingPlayer player) {
-		return !player.hasActed() && isBlackInkAvailable(player.getPlayer());
+		return !player.hasActed() && !player.isStandingUp() && isBlackInkAvailable(player.getPlayer());
 	}
 
 	protected boolean isBlackInkAvailable(Player<?> player) {

@@ -11,6 +11,12 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+
+		versions.add(new VersionChangeList("2.24.1")
+			.addBugfix("Black Ink was available for prone players")
+			.addBugfix("Skipping Black Ink and deselecting player removed confusion state")
+		);
+
 		versions.add(new VersionChangeList("2.24.0")
 			.addImprovement("When failing Bloodlust an no re-roll is used or available player will not move so they can be redirected")
 			.addBugfix("Special abilities like Crushing Blow did not always print injuries correctly in log")

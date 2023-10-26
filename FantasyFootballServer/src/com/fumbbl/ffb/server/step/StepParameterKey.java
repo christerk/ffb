@@ -98,6 +98,7 @@ public enum StepParameterKey {
 	NR_OF_DICE, // Integer
 	OFFICIOUS_REF, // Boolean
 	OLD_DEFENDER_STATE, // PlayerState
+	OLD_PLAYER_STATE, // PlayerState
 	PASS_ACCURATE, // Boolean
 	PASS_DEVIATES, // Boolean
 	PASS_FUMBLE, // Boolean

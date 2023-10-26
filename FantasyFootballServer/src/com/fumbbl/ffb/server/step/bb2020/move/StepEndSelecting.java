@@ -408,7 +408,7 @@ public final class StepEndSelecting extends AbstractStep {
 				break;
 			case BLACK_INK:
 				selectGenerator.pushSequence(selectParams);
-				BlackInk.SequenceParams blackInkParams = new BlackInk.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
+				BlackInk.SequenceParams blackInkParams = new BlackInk.SequenceParams(getGameState(), IStepLabel.END_SELECTING, playerState);
 				BlackInk blackInkGenerator = (BlackInk) factory.forName(SequenceGenerator.Type.BlackInk.name());
 				blackInkGenerator.pushSequence(blackInkParams);
 				break;
