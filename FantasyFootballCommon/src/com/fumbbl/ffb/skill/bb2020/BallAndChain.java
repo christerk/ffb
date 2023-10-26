@@ -38,7 +38,6 @@ public class BallAndChain extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.grabOutsideBlock);
 		registerProperty(NamedProperties.placedProneCausesInjuryRoll);
 		registerProperty(NamedProperties.ignoreBlockAssists);
 		registerProperty(NamedProperties.preventAutoMove);
@@ -67,7 +66,6 @@ public class BallAndChain extends Skill {
 		registerProperty(new CancelSkillProperty(NamedProperties.inflictsConfusion));
 		registerProperty(new CancelSkillProperty(NamedProperties.preventOpponentFollowingUp));
 		registerConflictingProperty(NamedProperties.forceSecondBlock);
-		registerConflictingProperty(NamedProperties.canPushBackToAnySquare);
 		registerConflictingProperty(NamedProperties.canAttemptToTackleDodgingPlayer);
 		registerConflictingProperty(NamedProperties.canLeap);
 		registerConflictingProperty(NamedProperties.canBlockTwoAtOnce);
