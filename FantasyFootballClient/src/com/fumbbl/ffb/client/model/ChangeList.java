@@ -15,6 +15,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.24.1")
 			.addBugfix("Black Ink was available for prone players")
 			.addBugfix("Skipping Black Ink and deselecting player removed confusion state")
+			.addBugfix("Tasty Morsel only worked if at least one player of the own team was eligible to be bitten")
 		);
 
 		versions.add(new VersionChangeList("2.24.0")
