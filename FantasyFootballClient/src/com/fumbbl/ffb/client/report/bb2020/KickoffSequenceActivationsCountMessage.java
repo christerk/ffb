@@ -12,13 +12,12 @@ import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 public class KickoffSequenceActivationsCountMessage extends ReportMessageBase<ReportKickoffSequenceActivationsCount> {
 	@Override
 	protected void render(ReportKickoffSequenceActivationsCount report) {
-		String builder = "Moved " +
-			report.getAmount() +
-			" of the allowed " +
+		String remain = report.getAvailable() == 1 ? "remains" : "remain";
+		String builder = "Max " +
 			report.getLimit() +
-			" players (" +
-			report.getAvailable() +
-			" still open).";
+			" open players can be used - " +
+			report.getAmount() + " used (" +
+			report.getAvailable() + " " + remain + " open).";
 		println(getIndent() + 1, TextStyle.EXPLANATION, builder);
 	}
 }

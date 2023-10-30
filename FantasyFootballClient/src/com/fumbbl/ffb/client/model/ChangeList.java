@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Black Ink was available for prone players")
 			.addBugfix("Skipping Black Ink and deselecting player removed confusion state")
 			.addBugfix("Tasty Morsel only worked if at least one player of the own team was eligible to be bitten")
+			.addImprovement("Reworded log messages for activation counts during Blitz! and Quick Snap kick-off events")
 		);
 
 		versions.add(new VersionChangeList("2.24.0")
