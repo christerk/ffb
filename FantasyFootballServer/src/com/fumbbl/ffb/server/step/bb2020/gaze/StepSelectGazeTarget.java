@@ -210,7 +210,7 @@ public class StepSelectGazeTarget extends AbstractStep {
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
 				TargetSelectionState targetSelectionState = new TargetSelectionState(selectedPlayerId);
 				if (game.getActingPlayer().hasActed()) {
-					targetSelectionState.commit();
+					targetSelectionState.commit(getGameState().getGame());
 				}
 				game.getFieldModel().setTargetSelectionState(targetSelectionState.select());
 				getResult().setSound(SoundId.CLICK);

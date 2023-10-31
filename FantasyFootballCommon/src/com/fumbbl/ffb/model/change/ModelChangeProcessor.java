@@ -411,6 +411,12 @@ public class ModelChangeProcessor {
 				getPlayerResult(pGame, pModelChange.getKey()).setTurnsPlayed((Integer) pModelChange.getValue());
 				return true;
 
+			case TARGET_SELECTION_COMMITTED:
+				if (pGame.getFieldModel().getTargetSelectionState() != null) {
+					pGame.getFieldModel().getTargetSelectionState().commit(pGame);
+				}
+				return true;
+
 			case TEAM_RESULT_SET_CONCEDED:
 				getTeamResult(pGame, isHomeData(pModelChange)).setConceded((Boolean) pModelChange.getValue());
 				return true;

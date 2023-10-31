@@ -305,7 +305,7 @@ public abstract class AbstractStep implements IStep {
 	public void commitTargetSelection() {
 		TargetSelectionState targetSelectionState = getGameState().getGame().getFieldModel().getTargetSelectionState();
 		if (targetSelectionState != null) {
-			targetSelectionState.commit();
+			targetSelectionState.commit(getGameState().getGame());
 		}
 	}
 
