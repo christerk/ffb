@@ -402,12 +402,16 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList, ActingPlayer actingPlayer) {
-		String endMoveActionLabel = actingPlayer.hasActed() ? "End Action" : "Deselect Player";
+		String endMoveActionLabel = playerActivationUsed() ? "End Action" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
+	}
+
+	protected boolean playerActivationUsed() {
+		return getClient().getGame().getActingPlayer().hasActed();
 	}
 
 	protected boolean isRaidingPartyAvailable(ActingPlayer player) {
@@ -497,7 +501,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}
 
 	protected boolean isBlackInkAvailable(ActingPlayer player) {
-		return !player.hasActed() && isBlackInkAvailable(player.getPlayer());
+		return !player.hasActed() && !player.isStandingUp() && isBlackInkAvailable(player.getPlayer());
 	}
 
 	protected boolean isBlackInkAvailable(Player<?> player) {

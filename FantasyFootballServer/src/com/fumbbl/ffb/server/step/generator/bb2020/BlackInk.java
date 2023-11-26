@@ -37,7 +37,8 @@ public class BlackInk extends com.fumbbl.ffb.server.step.generator.BlackInk {
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.BLOOD_LUST);
 		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
-		sequence.add(StepId.BLACK_INK, IStepLabel.END, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SELECTING));
+		sequence.add(StepId.BLACK_INK, IStepLabel.END, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, params.getGoToLabelFailure()),
+			from(StepParameterKey.OLD_PLAYER_STATE, params.getOldPlayerState()));
 
 		gameState.getStepStack().push(sequence.getSequence());
 	}

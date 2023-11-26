@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
@@ -110,6 +111,15 @@ public class ClientStateBlitz extends ClientStateMove {
 					break;
 			}
 		}
+	}
+
+	@Override
+	protected boolean playerActivationUsed() {
+		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		if (fieldModel.getTargetSelectionState() == null) {
+			return super.playerActivationUsed();
+		}
+		return fieldModel.getTargetSelectionState().isCommitted();
 	}
 
 	@Override

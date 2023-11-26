@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -72,6 +73,16 @@ public class ClientStateGaze extends ClientStateMove {
 		UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
 		return true;
 	}
+
+	@Override
+	protected boolean playerActivationUsed() {
+		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		if (fieldModel.getTargetSelectionState() == null) {
+			return super.playerActivationUsed();
+		}
+		return fieldModel.getTargetSelectionState().isCommitted();
+	}
+
 
 	// Added a check to see if the player had tacklezones so no prone players could
 	// be gazed or already gazed players.

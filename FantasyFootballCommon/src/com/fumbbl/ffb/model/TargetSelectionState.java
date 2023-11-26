@@ -10,10 +10,13 @@ import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class TargetSelectionState implements IJsonSerializable {
@@ -78,12 +81,11 @@ public class TargetSelectionState implements IJsonSerializable {
 		return committed;
 	}
 
-	public void commit() {
-		committed = true;
-	}
-
-	public void removePlayer() {
-		selectedPlayerId = null;
+	public void commit(Game game) {
+		if (!committed) {
+			committed = true;
+			notifyObservers(game, ModelChangeId.TARGET_SELECTION_COMMITTED, null, true);
+		}
 	}
 
 	public PlayerState getOldPlayerState() {
@@ -103,6 +105,13 @@ public class TargetSelectionState implements IJsonSerializable {
 		usedSkills.add(skill);
 	}
 
+	private void notifyObservers(Game game, ModelChangeId pChangeId, String pKey, Object pValue) {
+		if ((game == null) || (pChangeId == null)) {
+			return;
+		}
+		game.notifyObservers(new ModelChange(pChangeId, pKey, pValue));
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -112,9 +121,9 @@ public class TargetSelectionState implements IJsonSerializable {
 
 		if (committed != that.committed) return false;
 		if (status != that.status) return false;
-		if (selectedPlayerId != null ? !selectedPlayerId.equals(that.selectedPlayerId) : that.selectedPlayerId != null)
+		if (!Objects.equals(selectedPlayerId, that.selectedPlayerId))
 			return false;
-		if (oldPlayerState != null ? !oldPlayerState.equals(that.oldPlayerState) : that.oldPlayerState != null)
+		if (!Objects.equals(oldPlayerState, that.oldPlayerState))
 			return false;
 		return usedSkills.equals(that.usedSkills);
 	}

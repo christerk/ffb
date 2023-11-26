@@ -127,10 +127,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 							generator.pushSequence(new LookIntoMyEyes.SequenceParams(getGameState(), false, gotoLabelOnEnd));
 							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGazeAutomatically)) {
+							Game game = getGameState().getGame();
+							PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
 							getGameState().pushCurrentStepOnStack();
 							BlackInk generator = (BlackInk) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
 								.forName(SequenceGenerator.Type.BlackInk.name());
-							generator.pushSequence(new BlackInk.SequenceParams(getGameState(), gotoLabelOnEnd));
+							generator.pushSequence(new BlackInk.SequenceParams(getGameState(), gotoLabelOnEnd, playerState));
 							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							usedSkill = commandUseSkill.getSkill();
@@ -218,7 +220,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				game.getFieldModel().setPlayerState(targetPlayer, newState);
 				TargetSelectionState targetSelectionState = new TargetSelectionState(selectedPlayerId);
 				if (game.getActingPlayer().hasActed()) {
-					targetSelectionState.commit();
+					targetSelectionState.commit(getGameState().getGame());
 				}
 				game.getFieldModel().setTargetSelectionState(targetSelectionState.select());
 				getResult().setSound(SoundId.CLICK);

@@ -43,7 +43,6 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -197,7 +196,7 @@ public class StepInitFeeding extends AbstractStep {
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canBiteOpponents)) {
 				allVictims.addAll(findOpponentsToFeedOn(game, team, playerCoordinate));
 			}
-			if (ArrayTool.isProvided(victims)) {
+			if (!allVictims.isEmpty()) {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED,
 						allVictims.stream().map(Player::getId).toArray(String[]::new), null, 1, 0),
