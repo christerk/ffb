@@ -12,7 +12,8 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 
 public class DropPlayerContext implements IJsonSerializable {
 	private InjuryResult injuryResult;
-	private boolean endTurn, eligibleForSafePairOfHands, requiresArmourBreak, alreadyDropped;
+	private boolean endTurn, eligibleForSafePairOfHands, requiresArmourBreak, alreadyDropped,
+		modifiedInjuryEndsTurn, endTurnWithoutKnockdown;
 	private String label, playerId;
 	private ApothecaryMode apothecaryMode;
 	private StepParameterKey victimStateKey;
@@ -39,8 +40,15 @@ public class DropPlayerContext implements IJsonSerializable {
 		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, false, victimStateKey);
 	}
 
-	private DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
-														String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, boolean alreadyDropped, StepParameterKey victimStateKey) {
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
+														String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, boolean alreadyDropped,
+														StepParameterKey victimStateKey) {
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, alreadyDropped, victimStateKey, false, false);
+	}
+
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
+														String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, boolean alreadyDropped,
+														StepParameterKey victimStateKey, boolean modifiedInjuryEndsTurn, boolean endTurnWithoutKnockdown) {
 		this.injuryResult = injuryResult;
 		this.endTurn = endTurn;
 		this.eligibleForSafePairOfHands = eligibleForSafePairOfHands;
@@ -50,6 +58,8 @@ public class DropPlayerContext implements IJsonSerializable {
 		this.requiresArmourBreak = requiresArmourBreak;
 		this.alreadyDropped = alreadyDropped;
 		this.victimStateKey = victimStateKey;
+		this.endTurnWithoutKnockdown = endTurnWithoutKnockdown;
+		this.modifiedInjuryEndsTurn = modifiedInjuryEndsTurn;
 	}
 
 	public InjuryResult getInjuryResult() {
@@ -88,6 +98,18 @@ public class DropPlayerContext implements IJsonSerializable {
 		return victimStateKey;
 	}
 
+	public boolean isModifiedInjuryEndsTurn() {
+		return modifiedInjuryEndsTurn;
+	}
+
+	public boolean isEndTurnWithoutKnockdown() {
+		return endTurnWithoutKnockdown;
+	}
+
+	public void setEndTurn(boolean endTurn) {
+		this.endTurn = endTurn;
+	}
+
 	@Override
 	public DropPlayerContext initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -101,6 +123,13 @@ public class DropPlayerContext implements IJsonSerializable {
 		alreadyDropped = IServerJsonOption.ALREADY_DROPPED.getFrom(source, jsonObject);
 		if (IServerJsonOption.STEP_PARAMETER_KEY.isDefinedIn(jsonObject)) {
 			victimStateKey = StepParameterKey.valueOf(IServerJsonOption.STEP_PARAMETER_KEY.getFrom(source, jsonObject));
+		}
+		if (IServerJsonOption.MODIFIED_INJURY_ENDS_TURN.isDefinedIn(jsonObject)) {
+			modifiedInjuryEndsTurn = IServerJsonOption.MODIFIED_INJURY_ENDS_TURN.getFrom(source, jsonObject);
+		}
+
+		if (IServerJsonOption.END_TURN_WITHOUT_KNOCKDOWN.isDefinedIn(jsonObject)) {
+			endTurnWithoutKnockdown = IServerJsonOption.END_TURN_WITHOUT_KNOCKDOWN.getFrom(source, jsonObject);
 		}
 		return this;
 	}
@@ -119,6 +148,8 @@ public class DropPlayerContext implements IJsonSerializable {
 		if (victimStateKey != null) {
 			IServerJsonOption.STEP_PARAMETER_KEY.addTo(jsonObject, victimStateKey.name());
 		}
+		IServerJsonOption.MODIFIED_INJURY_ENDS_TURN.addTo(jsonObject, modifiedInjuryEndsTurn);
+		IServerJsonOption.END_TURN_WITHOUT_KNOCKDOWN.addTo(jsonObject, endTurnWithoutKnockdown);
 		return jsonObject;
 	}
 }

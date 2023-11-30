@@ -11,6 +11,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -45,10 +46,10 @@ import java.util.Optional;
 
 /**
  * Step in block sequence to handle skill CHAINSAW.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE. Needs to be
  * initialized with stepParameter GOTO_LABEL_ON_SUCCESS.
- * 
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
@@ -171,23 +172,36 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(), null,
 					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 
-				boolean causesTurnOver = UtilPlayer.hasBall(game, actingPlayer.getPlayer());
-				if (injuryResultAttacker.injuryContext().isArmorBroken()) {
-					if (!GameOptionString.CHAINSAW_TURNOVER_NEVER.equalsIgnoreCase(chainsawOption)) {
-						causesTurnOver = true;
-					}
-				} else if (GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption)) {
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				boolean causesTurnOver = causesTurnOver(UtilPlayer.hasBall(game, actingPlayer.getPlayer()), chainsawOption, injuryResultAttacker.injuryContext());
+				boolean modifiedInjuryCausesTurnover = false;
+				if (injuryResultAttacker.injuryContext().getModifiedInjuryContext() != null) {
+					modifiedInjuryCausesTurnover = causesTurnOver(UtilPlayer.hasBall(game, actingPlayer.getPlayer()), chainsawOption, injuryResultAttacker.injuryContext().getModifiedInjuryContext());
 				}
 
 				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 					new DropPlayerContext(injuryResultAttacker, causesTurnOver, true,
-						fGotoLabelOnFailure, actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true)));
+						fGotoLabelOnFailure, actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true,
+						false, null, modifiedInjuryCausesTurnover,
+						GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption))));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+	}
+
+	private boolean causesTurnOver(boolean playerHasBall, String chainsawOption, InjuryContext injuryContext) {
+		boolean causesTurnOver = false;
+		if (injuryContext.isArmorBroken()) {
+			causesTurnOver = playerHasBall;
+			if (!GameOptionString.CHAINSAW_TURNOVER_NEVER.equalsIgnoreCase(chainsawOption)) {
+				causesTurnOver = true;
+			}
+		} else if (GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption)) {
+			causesTurnOver = true;
+		}
+
+		return causesTurnOver;
 	}
 
 	// JSON serialization

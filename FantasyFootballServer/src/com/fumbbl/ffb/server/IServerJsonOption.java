@@ -63,6 +63,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption END_INDUCEMENT_PHASE = new JsonBooleanOption("endInducementPhase");
     JsonBooleanOption END_KICKOFF = new JsonBooleanOption("endKickoff");
     JsonBooleanOption END_TURN = new JsonBooleanOption("endTurn");
+    JsonBooleanOption END_TURN_WITHOUT_KNOCKDOWN = new JsonBooleanOption("endTurnWithoutKnockdown");
     JsonBooleanOption EVALUATE = new JsonBooleanOption("evaluate");
     JsonStringArrayOption FAN_INTERACTION = new JsonStringArrayOption("fanInteraction");
     JsonBooleanOption FEED_ON_PLAYER_CHOICE = new JsonBooleanOption("feedOnPlayerChoice");
@@ -121,6 +122,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonObjectOption KICKOFF_BOUNDS = new JsonObjectOption("kickoffBounds");
     JsonFieldCoordinateOption KICKOFF_START_COORDINATE = new JsonFieldCoordinateOption("kickoffStartCoordinate");
     JsonStringOption LABEL = new JsonStringOption("label");
+    JsonBooleanOption MODIFIED_INJURY_ENDS_TURN = new JsonBooleanOption("modifiedInjuryEndsTurn");
     JsonStringArrayOption MOLES_UNDER_THE_PITCH = new JsonStringArrayOption("molesUnderThePitch");
     JsonFieldCoordinateOption MOVE_START = new JsonFieldCoordinateOption("moveStart");
     JsonFieldCoordinateArrayOption MOVE_STACK = new JsonFieldCoordinateArrayOption("moveStack");
