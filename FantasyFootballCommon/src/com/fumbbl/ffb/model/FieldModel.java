@@ -774,6 +774,8 @@ public class FieldModel implements IJsonSerializable {
 		}
 		fPlayerMarkers.remove(pPlayerMarker);
 		fPlayerMarkers.add(pPlayerMarker);
+		fGame.getApplicationSource().logDebug(fGame.getId(), "Notifying about model change: " + pPlayerMarker);
+
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER, null, pPlayerMarker);
 	}
 

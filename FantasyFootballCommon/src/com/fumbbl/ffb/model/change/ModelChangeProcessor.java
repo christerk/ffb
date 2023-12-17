@@ -133,7 +133,9 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().add((MoveSquare) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_PLAYER_MARKER:
-				pGame.getFieldModel().add((PlayerMarker) pModelChange.getValue());
+				PlayerMarker marker = (PlayerMarker) pModelChange.getValue();
+				pGame.getApplicationSource().logDebug(pGame.getId(), "Processing model change: " + (marker != null ? marker.toString() : "null"));
+				pGame.getFieldModel().add(marker);
 				return true;
 			case FIELD_MODEL_ADD_PRAYER:
 				pGame.getFieldModel().addPrayerEnhancements(pGame.getPlayerById(pModelChange.getKey()), Prayer.valueOf((String) pModelChange.getValue()));
