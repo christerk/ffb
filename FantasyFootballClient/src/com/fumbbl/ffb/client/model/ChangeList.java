@@ -11,6 +11,9 @@ public class ChangeList {
   private final List<VersionChangeList> versions = new ArrayList<>();
 
   public ChangeList() {
+		versions.add(new VersionChangeList("2.25.0")
+			.addBugfix("Using Old Pro to save player from kick back av break, did not generate a turnover even if game options are set to default (turnover on all kickbacks)")
+		);
 
 		versions.add(new VersionChangeList("2.24.1")
 			.addBugfix("Black Ink was available for prone players")
