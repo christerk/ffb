@@ -53,7 +53,7 @@ public class ClientCommandHandlerFactory {
 			if (commandHandler != null) {
 				boolean completed = commandHandler.handleNetCommand(pNetCommand, pMode);
 				if (completed) {
-					updateClientState(pNetCommand, pMode, false);
+					updateClientState(pNetCommand, false);
 				} else {
 					if (pMode == ClientCommandHandlerMode.PLAYING) {
 						synchronized (this) {
@@ -65,7 +65,7 @@ public class ClientCommandHandlerFactory {
 					}
 				}
 			} else {
-				updateClientState(pNetCommand, pMode, false);
+				updateClientState(pNetCommand, false);
 			}
 		} else {
 			fClient.logDebug(gameId, "Received null command");
@@ -73,11 +73,11 @@ public class ClientCommandHandlerFactory {
 		}
 	}
 
-	public void updateClientState(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
-		updateClientState(pNetCommand, pMode, true);
+	public void updateClientState(NetCommand pNetCommand) {
+		updateClientState(pNetCommand, true);
 	}
 
-	private void updateClientState(NetCommand pNetCommand, ClientCommandHandlerMode pMode, boolean pNotify) {
+	private void updateClientState(NetCommand pNetCommand, boolean pNotify) {
 		ClientState clientState = getClient().updateClientState();
 		if (clientState != null) {
 			clientState.handleCommand(pNetCommand);

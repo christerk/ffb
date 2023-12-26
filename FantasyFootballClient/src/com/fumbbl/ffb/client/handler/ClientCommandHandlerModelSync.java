@@ -172,7 +172,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 		userInterface.getFieldComponent().refresh();
 		playSound(fSyncCommand.getSound(), fMode, true);
 
-		getClient().getCommandHandlerFactory().updateClientState(fSyncCommand, fMode); // also signals to continue
+		getClient().getCommandHandlerFactory().updateClientState(fSyncCommand); // also signals to continue
 
 		if (fMode == ClientCommandHandlerMode.REPLAYING) {
 			getClient().getReplayer().resume();
