@@ -13,6 +13,7 @@ public class ChangeList {
   public ChangeList() {
 		versions.add(new VersionChangeList("2.25.0")
 			.addBugfix("Using Old Pro to save player from kick back av break, did not generate a turnover even if game options are set to default (turnover on all kickbacks)")
+			.addBugfix("When Cindy was knocked down by an intercepted \"All You Can Eat\" bomb the ref ejected the interceptor instead of Cindy")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
