@@ -14,6 +14,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.25.0")
 			.addBugfix("Using Old Pro to save player from kick back av break, did not generate a turnover even if game options are set to default (turnover on all kickbacks)")
 			.addBugfix("When Cindy was knocked down by an intercepted \"All You Can Eat\" bomb the ref ejected the interceptor instead of Cindy")
+			.addBugfix("Dump-Off was counted as negative passing yards")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
@@ -22,7 +23,6 @@ public class ChangeList {
 			.addBugfix("Tasty Morsel only worked if at least one player of the own team was eligible to be bitten")
 			.addImprovement("Reworded log messages for activation counts during Blitz! and Quick Snap kick-off events")
 			.addImprovement("Player action menu should now properly reflect if a Blitz or Gaze action can be cancelled")
-			.addBugfix("Dump-Off was counted as negative passing yards")
 		);
 
 		versions.add(new VersionChangeList("2.24.0")
