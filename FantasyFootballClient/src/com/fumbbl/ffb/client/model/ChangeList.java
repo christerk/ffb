@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Using Old Pro to save player from kick back av break, did not generate a turnover even if game options are set to default (turnover on all kickbacks)")
 			.addBugfix("When Cindy was knocked down by an intercepted \"All You Can Eat\" bomb the ref ejected the interceptor instead of Cindy")
 			.addBugfix("Dump-Off was counted as negative passing yards")
+			.addBugfix("Failed Foul Appearance roll still allowed use of Hit and Run")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
