@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Tasty Morsel only worked if at least one player of the own team was eligible to be bitten")
 			.addImprovement("Reworded log messages for activation counts during Blitz! and Quick Snap kick-off events")
 			.addImprovement("Player action menu should now properly reflect if a Blitz or Gaze action can be cancelled")
+			.addBugfix("Dump-Off was counted as negative passing yards")
 		);
 
 		versions.add(new VersionChangeList("2.24.0")
