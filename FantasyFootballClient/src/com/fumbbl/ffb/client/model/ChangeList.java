@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Dump-Off was counted as negative passing yards")
 			.addBugfix("Failed Foul Appearance roll still allowed use of Hit and Run")
 			.addBugfix("Failed pickup for bloodlusting player allowed feeding which did prevent the turnover when no re-roll was used for the pickup")
+			.addRuleChange("Players starting their turn stunned and getting stunned again still roll over (client performs roll over at turn start and ignores further stunned results)")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")

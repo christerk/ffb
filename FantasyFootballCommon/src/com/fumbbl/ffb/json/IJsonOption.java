@@ -11,7 +11,9 @@ public interface IJsonOption {
 	JsonObjectOption ACTING_PLAYER = new JsonObjectOption("actingPlayer");
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ACTING_PLAYER_WAS_CHANGED = new JsonBooleanOption("actingPlayerWasChanged");
+	@SuppressWarnings("unused") // Required to deserialize old games
 	JsonBooleanOption ADD_BLOCK_DIE = new JsonBooleanOption("addBlockDie");
+	@SuppressWarnings("unused") // Required to deserialize old games
 	JsonEnumWithNameOption ADD_BLOCK_DIE_SKILL = new JsonEnumWithNameOption("addBlockDieSkill", Factory.SKILL);
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
@@ -422,6 +424,7 @@ public interface IJsonOption {
 	JsonIntOption ROLL_AWAY = new JsonIntOption("rollAway");
 	JsonIntOption ROLL_HOME = new JsonIntOption("rollHome");
 	JsonArrayOption ROLL_MODIFIERS = new JsonArrayOption("rollModifiers");
+	JsonStringArrayOption ROLLED_OVER = new JsonStringArrayOption("rolledOver");
 	JsonIntArrayOption ROLLS = new JsonIntArrayOption("rolls");
 	JsonIntArrayOption ROLLS_AWAY = new JsonIntArrayOption("rollsAway");
 	JsonIntArrayOption ROLLS_HOME = new JsonIntArrayOption("rollsHome");
