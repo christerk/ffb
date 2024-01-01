@@ -122,6 +122,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
 					doPickUp = false;
+					publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
 					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					publishParameter(
 						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
