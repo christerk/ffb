@@ -38,6 +38,7 @@ public class BallAndChain extends Skill {
 
 	@Override
 	public void postConstruct() {
+		registerProperty(NamedProperties.grabOutsideBlock);
 		registerProperty(NamedProperties.placedProneCausesInjuryRoll);
 		registerProperty(NamedProperties.ignoreBlockAssists);
 		registerProperty(NamedProperties.preventAutoMove);
