@@ -64,6 +64,7 @@ import com.fumbbl.ffb.server.step.generator.common.SpikedBallApo;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -468,6 +469,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			if (divingCatchers.isEmpty()) {
 				return CatchScatterThrowInMode.SCATTER_BALL;
 			}
+			UtilServerGame.syncGameModel(this);
 			if (divingCatchers.size() == 1) {
 				repeat = true;
 				fCatcherId = divingCatchers.get(0);
