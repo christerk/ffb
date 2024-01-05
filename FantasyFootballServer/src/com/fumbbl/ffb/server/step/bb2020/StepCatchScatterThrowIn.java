@@ -552,7 +552,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				if (getReRolledAction() != ReRolledActions.CATCH) {
 
 					boolean stopProcessing = getGameState().executeStepHooks(this, state);
-					if (state.rerollCatch) {
+					if (state.rerollCatch && !fCatchScatterThrowInMode.isBomb()) {
 						if (successfulWithBlastIt) {
 							UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(fCatcherId, catchSkill.orElse(null),
 								minimumRoll, game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver)), false);
