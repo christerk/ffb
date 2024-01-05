@@ -324,6 +324,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Catch and Monstrous Mouth can not be used for bombs")
 					.setMessageTrue("Catch and Monstrous Mouth can be used for bombs");
+			case ONLY_ONE_BRIBE_PER_SEND_OFF:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Multiple Bribes can be used")
+					.setMessageTrue("Only one Bribe can be used");
 			case CHAINSAW_TURNOVER_ON_AV_BREAK:
 				return new GameOptionBoolean(pOptionId).setDefault(false);
 			case OVERTIME_GOLDEN_GOAL:

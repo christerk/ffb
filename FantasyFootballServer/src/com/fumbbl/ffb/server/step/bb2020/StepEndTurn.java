@@ -50,6 +50,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBribesRoll;
@@ -855,7 +856,10 @@ public class StepEndTurn extends AbstractStep {
 						PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 						playerResult.setHasUsedSecretWeapon(false);
 					} else {
-						playerIdsFailedBribes.add(playerId);
+						GameOptionBoolean bribeOption = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ONLY_ONE_BRIBE_PER_SEND_OFF);
+						if (bribeOption.isEnabled()) {
+							playerIdsFailedBribes.add(playerId);
+						}
 					}
 				}
 			}

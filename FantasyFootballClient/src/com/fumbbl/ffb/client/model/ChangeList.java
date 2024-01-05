@@ -23,6 +23,8 @@ public class ChangeList {
 			.addRuleChange("Catch and Monstrous Mouth can not be used for bombs")
 			.addRuleChange("B&C may use Brawler")
 			.addFeature("Adding game option \"catchWorksForBombs\" to retain old behavior for catch and monstrous mouth")
+			.addRuleChange("Multiple bribes can be used per send off")
+			.addFeature("Adding game option \"onlyOneBribePerSendOff\" to retain old behavior for bribes")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
