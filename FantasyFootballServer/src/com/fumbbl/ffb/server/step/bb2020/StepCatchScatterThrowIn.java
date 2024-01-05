@@ -464,6 +464,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				setReRolledAction(null);
 				setReRollSource(null);
 			}
+			setReRolledAction(null);
 			if (divingCatchers.isEmpty()) {
 				return CatchScatterThrowInMode.SCATTER_BALL;
 			}
