@@ -320,6 +320,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageFalse("Bombs do not use MB")
 					.setMessageTrue("Bombs use MB");
+			case CATCH_WORKS_FOR_BOMBS:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Catch and Monstrous Mouth can not be used for bombs")
+					.setMessageTrue("Catch and Monstrous Mouth can be used for bombs");
 			case CHAINSAW_TURNOVER_ON_AV_BREAK:
 				return new GameOptionBoolean(pOptionId).setDefault(false);
 			case OVERTIME_GOLDEN_GOAL:

@@ -36,6 +36,7 @@ import com.fumbbl.ffb.modifiers.CatchContext;
 import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportCatchRoll;
@@ -552,7 +553,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				if (getReRolledAction() != ReRolledActions.CATCH) {
 
 					boolean stopProcessing = getGameState().executeStepHooks(this, state);
-					if (state.rerollCatch && !fCatchScatterThrowInMode.isBomb()) {
+					GameOptionBoolean catchForBombs = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.CATCH_WORKS_FOR_BOMBS);
+					if (state.rerollCatch && (!fCatchScatterThrowInMode.isBomb() || catchForBombs.isEnabled())) {
 						if (successfulWithBlastIt) {
 							UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(fCatcherId, catchSkill.orElse(null),
 								minimumRoll, game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver)), false);

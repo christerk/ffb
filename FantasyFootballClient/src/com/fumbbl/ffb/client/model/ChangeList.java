@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Game log did not get updated for each diving catch attempt when several players tried to catch the ball")
 			.addRuleChange("Catch and Monstrous Mouth can not be used for bombs")
 			.addRuleChange("B&C may use Brawler")
+			.addFeature("Adding game option \"catchWorksForBombs\" to retain old behavior for catch and monstrous mouth")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
