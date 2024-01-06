@@ -63,7 +63,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 									description.append("(equal ST)");
 								}
 								if (attributeDiff < 0) {
-									description.append("(").append(Math.abs(attributeDiff)).append(" ST disadavantage)");
+									description.append("(").append(Math.abs(attributeDiff)).append(" ST disadvantage)");
 								}
 								descriptionArray[i] = description.toString();
 							}
