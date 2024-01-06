@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.dialog.DialogPenaltyShootoutParameter;
 import com.fumbbl.ffb.model.Game;
 
 /**
@@ -16,7 +17,7 @@ public class DialogPenaltyShootoutHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 
-		setDialog(new DialogPenaltyShootout(getClient()));
+		setDialog(new DialogPenaltyShootout(getClient(), (DialogPenaltyShootoutParameter) game.getDialogParameter()));
 		getDialog().showDialog(this);
 
 	}

@@ -21,16 +21,19 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 	private int homeScore;
 	private int awayScore;
 
+	private boolean homeTeamWins;
+
 	public DialogPenaltyShootoutParameter() {
 		super();
 	}
 
-	public DialogPenaltyShootoutParameter(List<Integer> homeRolls, List<Integer> awayRolls, List<Boolean> homeWon, int homeScore, int awayScore) {
+	public DialogPenaltyShootoutParameter(List<Integer> homeRolls, List<Integer> awayRolls, List<Boolean> homeWon, int homeScore, int awayScore, boolean homeTeamWins) {
 		this.homeRolls = homeRolls;
 		this.awayRolls = awayRolls;
 		this.homeWon = homeWon;
 		this.homeScore = homeScore;
 		this.awayScore = awayScore;
+		this.homeTeamWins = homeTeamWins;
 	}
 
 	public DialogId getId() {
@@ -41,6 +44,10 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		homeRolls.add(home);
 		awayRolls.add(away);
 		homeWon.add(homeWin);
+	}
+
+	public boolean homeTeamWins() {
+		return homeTeamWins;
 	}
 
 	public List<Integer> getHomeRolls() {
@@ -74,7 +81,7 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 // transformation
 
 	public IDialogParameter transform() {
-		return new DialogPenaltyShootoutParameter(awayRolls, homeRolls, homeWon.stream().map(win -> !win).collect(Collectors.toList()), awayScore, homeScore);
+		return new DialogPenaltyShootoutParameter(awayRolls, homeRolls, homeWon.stream().map(win -> !win).collect(Collectors.toList()), awayScore, homeScore, !homeTeamWins);
 	}
 
 	// JSON serialization
@@ -90,6 +97,7 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		}
 		homeScore = IJsonOption.PENALTY_SCORE_HOME.getFrom(source, jsonObject);
 		awayScore = IJsonOption.PENALTY_SCORE_AWAY.getFrom(source, jsonObject);
+		homeTeamWins = IJsonOption.HOME_TEAM.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -101,6 +109,7 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		IJsonOption.PENALTY_SCORE_HOME.addTo(jsonObject, homeScore);
 		IJsonOption.PENALTY_SCORE_AWAY.addTo(jsonObject, awayScore);
 		IJsonOption.PENALTY_WINS.addTo(jsonObject, homeWon);
+		IJsonOption.HOME_TEAM.addTo(jsonObject, homeTeamWins);
 		return jsonObject;
 	}
 }
