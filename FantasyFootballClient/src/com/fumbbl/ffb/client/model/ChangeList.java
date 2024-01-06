@@ -25,6 +25,7 @@ public class ChangeList {
 			.addFeature("Adding game option \"catchWorksForBombs\" to retain old behavior for catch and monstrous mouth")
 			.addRuleChange("Multiple bribes can be used per send off")
 			.addFeature("Adding game option \"onlyOneBribePerSendOff\" to retain old behavior for bribes")
+			.addBugfix("Piling On was still available for mercenaries and Intensive Training")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
