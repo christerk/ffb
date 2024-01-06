@@ -127,6 +127,8 @@ public class DialogParameterFactory {
                 return new DialogKickOffResultParameter();
             case BLOODLUST_ACTION:
                 return new DialogBloodlustActionParameter();
+            case PENALTY_SHOOTOUT:
+                return new DialogPenaltyShootoutParameter();
             default:
                 return null;
         }

@@ -325,6 +325,7 @@ public interface IJsonOption {
 	JsonIntOption PENALTY_SCORE = new JsonIntOption("penaltyScore");
 	JsonIntOption PENALTY_SCORE_AWAY = new JsonIntOption("penaltyScoreAway");
 	JsonIntOption PENALTY_SCORE_HOME = new JsonIntOption("penaltyScoreHome");
+	JsonBooleanArrayOption PENALTY_WINS = new JsonBooleanArrayOption("penaltyWins");
 	JsonIntOption PETTY_CASH = new JsonIntOption("pettyCash");
 	JsonIntOption PETTY_CASH_FROM_TV_DIFF = new JsonIntOption("pettyCashFromTvDiff");
 	JsonIntOption PETTY_CASH_TRANSFERRED = new JsonIntOption("pettyCashTransferred");
