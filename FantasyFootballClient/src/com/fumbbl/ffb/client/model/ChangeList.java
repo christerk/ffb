@@ -26,6 +26,7 @@ public class ChangeList {
 			.addRuleChange("Multiple bribes can be used per send off")
 			.addFeature("Adding game option \"onlyOneBribePerSendOff\" to retain old behavior for bribes")
 			.addBugfix("Piling On was still available for mercenaries and Intensive Training")
+			.addBugfix("Block knockdowns where not handled when the blocker followed up and a player from the opposing team failed their tentacle roll and after that succeeded with their shadowing roll")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")

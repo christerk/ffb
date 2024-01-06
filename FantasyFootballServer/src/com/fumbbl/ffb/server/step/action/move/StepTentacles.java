@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -100,7 +101,11 @@ public class StepTentacles extends AbstractStepWithReRoll {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 				if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.TENTACLES) {
 					state.usingTentacles = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-					getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
+					if (state.usingTentacles) {
+						Game game = getGameState().getGame();
+						game.setLastDefenderId(game.getDefenderId());
+						game.setDefenderId(playerChoiceCommand.getPlayerId());
+					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 				break;

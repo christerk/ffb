@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.Tentacles;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.BB2020)
@@ -126,6 +127,10 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 							UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 							game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), state.coordinateFrom);
 							step.publishParameter(StepParameter.from(StepParameterKey.COORDINATE_FROM, null));
+						}
+						if (StringTool.isProvided(game.getLastDefenderId())) {
+							game.setDefenderId(game.getLastDefenderId());
+							game.setLastDefenderId(null);
 						}
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					}
