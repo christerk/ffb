@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -32,7 +32,7 @@ import com.fumbbl.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepTentacles extends AbstractStepWithReRoll {
 
 	public class StepState {
