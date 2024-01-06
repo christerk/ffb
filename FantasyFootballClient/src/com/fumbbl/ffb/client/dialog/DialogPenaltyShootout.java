@@ -11,6 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.Component;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Kalimar
@@ -20,26 +23,20 @@ public class DialogPenaltyShootout extends Dialog {
 	public DialogPenaltyShootout(FantasyFootballClient pClient, DialogPenaltyShootoutParameter parameter) {
 		super(pClient, "Penalty Shootout", true);
 
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-
-		getContentPane().add(verticalHeaderPanel());
-
-
-		JPanel rollPanel = new JPanel();
-		rollPanel.setLayout(new BoxLayout(rollPanel, BoxLayout.Y_AXIS));
-
 		int limit = Math.min(Math.min(parameter.getAwayRolls().size(), parameter.getHomeRolls().size()), parameter.getHomeWon().size());
 
-		rollPanel.add(linePanel("HOME", "AWAY"));
+		getContentPane().setLayout(new GridLayout(limit + 2, 3));
+
+		//getContentPane().add(verticalHeaderPanel());
+
+
+		linePanel("", "HOME", "AWAY").forEach(getContentPane()::add);
 
 		for (int i = 0; i < limit; i++) {
-			rollPanel.add(panel(parameter.getHomeRolls().get(i), parameter.getAwayRolls().get(i), parameter.getHomeWon().get(i)));
+			panel(parameter.getHomeRolls().get(i), parameter.getAwayRolls().get(i), parameter.getHomeWon().get(i)).forEach(getContentPane()::add);
 		}
 
-		rollPanel.add(panel(parameter.getHomeScore(), parameter.getAwayScore(), parameter.homeTeamWins()));
-
-		getContentPane().add(Box.createHorizontalStrut(5));
-		getContentPane().add(rollPanel);
+		panel("Score", parameter.getHomeScore(), parameter.getAwayScore(), parameter.homeTeamWins()).forEach(getContentPane()::add);
 
 		pack();
 		setLocationToCenter();
@@ -66,16 +63,21 @@ public class DialogPenaltyShootout extends Dialog {
 		}
 	}
 
-	private JPanel linePanel(String home, String away) {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+	private List<JLabel> linePanel(String header, String home, String away) {
+		List<JLabel> panel = new ArrayList<>();
+		panel.add(new JLabel(dimensionProvider(), header));
 		panel.add(new JLabel(dimensionProvider(), home));
 		panel.add(new JLabel(dimensionProvider(), away));
 		return panel;
 	}
 
-	private JPanel panel(int homeRoll, int awayRoll, boolean homeWin) {
-		return linePanel(String.valueOf(homeRoll), String.valueOf(awayRoll));
+	private List<JLabel> panel(int homeRoll, int awayRoll, boolean homeWin) {
+		return panel("", homeRoll, awayRoll, homeWin);
+	}
+
+	private List<JLabel> panel(String header, int homeRoll, int awayRoll, boolean homeWin) {
+
+		return linePanel(header, String.valueOf(homeRoll), String.valueOf(awayRoll));
 	}
 
 }
