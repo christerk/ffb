@@ -18,19 +18,21 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 	private List<Integer> homeRolls = new ArrayList<>();
 	private List<Integer> awayRolls = new ArrayList<>();
 	private List<Boolean> homeWon = new ArrayList<>();
+	private List<String> descriptions = new ArrayList<>();
 	private int homeScore;
 	private int awayScore;
-
 	private boolean homeTeamWins;
 
 	public DialogPenaltyShootoutParameter() {
 		super();
 	}
 
-	public DialogPenaltyShootoutParameter(List<Integer> homeRolls, List<Integer> awayRolls, List<Boolean> homeWon, int homeScore, int awayScore, boolean homeTeamWins) {
+	public DialogPenaltyShootoutParameter(List<Integer> homeRolls, List<Integer> awayRolls, List<Boolean> homeWon,
+																				List<String> descriptions, int homeScore, int awayScore, boolean homeTeamWins) {
 		this.homeRolls = homeRolls;
 		this.awayRolls = awayRolls;
 		this.homeWon = homeWon;
+		this.descriptions = descriptions;
 		this.homeScore = homeScore;
 		this.awayScore = awayScore;
 		this.homeTeamWins = homeTeamWins;
@@ -40,10 +42,11 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		return DialogId.PENALTY_SHOOTOUT;
 	}
 
-	public void addShootout(int home, int away, boolean homeWin) {
+	public void addShootout(int home, int away, boolean homeWin, String round) {
 		homeRolls.add(home);
 		awayRolls.add(away);
 		homeWon.add(homeWin);
+		descriptions.add(round);
 	}
 
 	public boolean homeTeamWins() {
@@ -60,6 +63,10 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 
 	public List<Boolean> getHomeWon() {
 		return homeWon;
+	}
+
+	public List<String> getDescriptions() {
+		return descriptions;
 	}
 
 	public int getHomeScore() {
@@ -81,7 +88,8 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 // transformation
 
 	public IDialogParameter transform() {
-		return new DialogPenaltyShootoutParameter(awayRolls, homeRolls, homeWon.stream().map(win -> !win).collect(Collectors.toList()), awayScore, homeScore, !homeTeamWins);
+		return new DialogPenaltyShootoutParameter(awayRolls, homeRolls, homeWon.stream().map(win -> !win).collect(Collectors.toList()),
+			descriptions, awayScore, homeScore, !homeTeamWins);
 	}
 
 	// JSON serialization
@@ -98,6 +106,7 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		homeScore = IJsonOption.PENALTY_SCORE_HOME.getFrom(source, jsonObject);
 		awayScore = IJsonOption.PENALTY_SCORE_AWAY.getFrom(source, jsonObject);
 		homeTeamWins = IJsonOption.HOME_TEAM.getFrom(source, jsonObject);
+		descriptions.addAll(Arrays.asList(IJsonOption.DESCRIPTIONS.getFrom(source, jsonObject)));
 		return this;
 	}
 
@@ -110,6 +119,7 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		IJsonOption.PENALTY_SCORE_AWAY.addTo(jsonObject, awayScore);
 		IJsonOption.PENALTY_WINS.addTo(jsonObject, homeWon);
 		IJsonOption.HOME_TEAM.addTo(jsonObject, homeTeamWins);
+		IJsonOption.DESCRIPTIONS.addTo(jsonObject, descriptions);
 		return jsonObject;
 	}
 }

@@ -6,6 +6,7 @@ import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPenaltyShootoutParameter;
+import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -50,7 +51,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		rootPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, BorderFactory.createCompoundBorder(middleBorder, innerBorder)));
 		getContentPane().add(rootPanel);
 
-		timer = new Timer(500, this);
+		timer = new Timer(1000, this);
 
 		limit = Math.min(Math.min(parameter.getAwayRolls().size(), parameter.getHomeRolls().size()), parameter.getHomeWon().size());
 
@@ -70,7 +71,8 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		labels.add(headerLabel("Away", false));
 
 		for (int i = 0; i < currentLimit; i++) {
-			labels.addAll(rollPanel(parameter.getHomeRolls().get(i), parameter.getAwayRolls().get(i), parameter.getHomeWon().get(i)));
+			labels.addAll(rollPanel(parameter.getHomeRolls().get(i), parameter.getAwayRolls().get(i),
+				parameter.getHomeWon().get(i), parameter.getDescriptions().get(i)));
 		}
 
 		if (currentLimit == this.limit) {
@@ -103,6 +105,10 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		label.setHorizontalTextPosition(SwingConstants.CENTER);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setOpaque(true);
+		if (StringTool.isProvided(label.getText())) {
+			Font font = label.getFont();
+			label.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+		}
 		rootPanel.add(label);
 	}
 
@@ -110,7 +116,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		StyleProvider styleProvider = getClient().getUserInterface().getStyleProvider();
 		JLabel label = new JLabel(dimensionProvider(), text);
 		label.setForeground(home ? styleProvider.getHome() : styleProvider.getAway());
-		return boldLabel(label);
+		return label;
 	}
 
 
@@ -120,23 +126,15 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		labels.add(new JLabel(dimensionProvider(), "Score"));
 		labels.add(new JLabel(dimensionProvider(), String.valueOf(awayRoll)));
 
-		JLabel winnerLabel = labels.get(homeWin ? 0 : 2);
-		boldLabel(winnerLabel);
 		JLabel loserLabel = labels.get(homeWin ? 2 : 0);
 		loserLabel.setForeground(Color.LIGHT_GRAY);
 		return labels;
 	}
 
-	private JLabel boldLabel(JLabel label) {
-		Font font = label.getFont();
-		label.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
-		return label;
-	}
-
-	private List<JLabel> rollPanel(int home, int away, boolean homeWin) {
+	private List<JLabel> rollPanel(int home, int away, boolean homeWin, String description) {
 		List<JLabel> labels = new ArrayList<>();
 		labels.add(new JLabel(dimensionProvider(), icon(home)));
-		labels.add(new JLabel(dimensionProvider()));
+		labels.add(new JLabel(dimensionProvider(), description));
 		labels.add(new JLabel(dimensionProvider(), icon(away)));
 		JLabel winnerLabel = labels.get(homeWin ? 0 : 2);
 		winnerLabel.setBackground(HIGHLIGHT);
