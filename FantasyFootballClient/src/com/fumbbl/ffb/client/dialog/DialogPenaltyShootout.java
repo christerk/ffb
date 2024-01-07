@@ -12,25 +12,35 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Kalimar
  */
-public class DialogPenaltyShootout extends Dialog {
+public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 	private static final Color HIGHLIGHT = Color.lightGray;
 
 	private final JPanel rootPanel;
+	private final int limit;
+
+	private final Timer timer;
+	private final DialogPenaltyShootoutParameter parameter;
+	private int currentLimit = 1;
 
 	public DialogPenaltyShootout(FantasyFootballClient pClient, DialogPenaltyShootoutParameter parameter) {
 		super(pClient, "Penalty Shootout", true);
+
+		this.parameter = parameter;
 
 		rootPanel = new JPanel();
 
@@ -38,13 +48,20 @@ public class DialogPenaltyShootout extends Dialog {
 		Border middleBorder = BorderFactory.createLineBorder(Color.BLACK, 1, true);
 		Border outerBorder = BorderFactory.createLineBorder(Color.WHITE, 5);
 		rootPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, BorderFactory.createCompoundBorder(middleBorder, innerBorder)));
-
-
 		getContentPane().add(rootPanel);
 
-		int limit = Math.min(Math.min(parameter.getAwayRolls().size(), parameter.getHomeRolls().size()), parameter.getHomeWon().size());
+		timer = new Timer(500, this);
 
-		rootPanel.setLayout(new GridLayout(limit + 2, 3, 0, 5));
+		limit = Math.min(Math.min(parameter.getAwayRolls().size(), parameter.getHomeRolls().size()), parameter.getHomeWon().size());
+
+		populate();
+		timer.start();
+
+	}
+
+	private void populate() {
+		rootPanel.removeAll();
+		rootPanel.setLayout(new GridLayout(currentLimit + 2, 3, 0, 5));
 
 
 		List<JLabel> labels = new ArrayList<>();
@@ -52,16 +69,24 @@ public class DialogPenaltyShootout extends Dialog {
 		labels.add(new JLabel(dimensionProvider()));
 		labels.add(headerLabel("Away", false));
 
-		for (int i = 0; i < limit; i++) {
+		for (int i = 0; i < currentLimit; i++) {
 			labels.addAll(rollPanel(parameter.getHomeRolls().get(i), parameter.getAwayRolls().get(i), parameter.getHomeWon().get(i)));
 		}
 
-		labels.addAll(scorePanel(parameter.getHomeScore(), parameter.getAwayScore(), parameter.homeTeamWins()));
+		if (currentLimit == this.limit) {
+			timer.stop();
+			labels.addAll(scorePanel(parameter.getHomeScore(), parameter.getAwayScore(), parameter.homeTeamWins()));
+		} else {
+			labels.add(new JLabel(dimensionProvider(), "X"));
+			labels.add(new JLabel(dimensionProvider(), "Score"));
+			labels.add(new JLabel(dimensionProvider(), "X"));
+		}
 
 		labels.forEach(this::addDecorated);
 
 		pack();
 		setLocationToCenter();
+		currentLimit++;
 	}
 
 	public DialogId getId() {
@@ -141,4 +166,8 @@ public class DialogPenaltyShootout extends Dialog {
 		}
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		populate();
+	}
 }
