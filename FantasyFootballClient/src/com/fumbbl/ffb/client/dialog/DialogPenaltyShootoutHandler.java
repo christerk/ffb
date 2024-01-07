@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogPenaltyShootoutParameter;
@@ -26,7 +27,9 @@ public class DialogPenaltyShootoutHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
-		getClient().getCommunication().sendConfirm();
+		if (ClientMode.PLAYER == getClient().getMode()) {
+			getClient().getCommunication().sendConfirm();
+		}
 	}
 
 }
